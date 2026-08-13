@@ -1,0 +1,24 @@
+{
+  "name": "files",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "build": "node build.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:e2e": "node tests/e2e/regression-sweep.mjs && node tests/e2e/quiz-authoring.mjs && node tests/e2e/timezones.mjs",
+    "lint": "node --check --input-type=module < main.js && node --check --input-type=module < data.js && node --check build.js && npm run lint:i18n",
+    "lint:i18n": "node scripts/lint-i18n.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "csso-cli": "^4.0.2",
+    "html-minifier-terser": "^7.2.0",
+    "mapshaper": "^0.7.51",
+    "playwright": "^1.49.0",
+    "terser": "^5.49.0"
+  }
+}

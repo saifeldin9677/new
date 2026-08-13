@@ -1865,10 +1865,6 @@ body {
     min-width: 26px;
     text-align: center;
 }
-/* Annotation label font sizes (body classes set from the toolbar) */
-body.annotate-font-small .annotation-pin-label { font-size: 9px; }
-body.annotate-font-medium .annotation-pin-label { font-size: 11px; }
-body.annotate-font-large .annotation-pin-label { font-size: 16px; }
 .annotation-help-item {
     display: flex;
     gap: 8px;

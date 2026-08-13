@@ -1276,34 +1276,39 @@ export function redrawAnnotations() {
                      gAnnotations.selectAll('*').remove();
                      var proj = getActiveProjection();
                      var parts = null;
+                     var fontScale = annotateFontSize === 'small' ? 0.7 : annotateFontSize === 'large' ? 1.5 : 1;
                      annotationsList.forEach(function(a) {
                          if (a.hidden) return;
                          var col = a.color || '#eab308';
                          if (a.type === 'pin') {
                              var xy = proj(a.coords);
                              if (!xy || isNaN(xy[0])) return;
-                             gAnnotations.append('circle').attr('class', 'annotation-pin-circle').attr('cx', xy[0]).attr('cy', xy[1]).attr('r', 6).style('fill', col);
-                             gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', xy[0] + 9).attr('y', xy[1] + 4).text(a.label || t('annotationPin'));
+                             gAnnotations.append('circle').attr('class', 'annotation-pin-circle').attr('cx', xy[0]).attr('cy', xy[1]).attr('r', 6 * fontScale).style('fill', col).style('stroke-width', 1.5 * fontScale);
+                             if (a.label) {
+                                 gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', xy[0] + 9).attr('y', xy[1] + 4).text(a.label);
+                             }
                          } else if (a.type === 'region' && Array.isArray(a.coords) && a.coords.length >= 3) {
                              var pts = a.coords.map(function(c) { return proj(c); });
                              if (pts.some(function(p) { return !p || isNaN(p[0]); })) return;
                              var d = 'M' + pts.map(function(p) { return p[0] + ',' + p[1]; }).join('L') + 'Z';
-                             gAnnotations.append('path').attr('class', 'annotation-region-poly').attr('d', d).style('stroke', col).style('fill', col + '26');
-                             var cx = 0, cy = 0;
-                             pts.forEach(function(p) { cx += p[0]; cy += p[1]; });
-                             cx /= pts.length; cy /= pts.length;
-                             gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', cx).attr('y', cy).attr('text-anchor', 'middle').text(a.label || t('annotationRegion'));
+                             gAnnotations.append('path').attr('class', 'annotation-region-poly').attr('d', d).style('stroke', col).style('fill', col + '26').style('stroke-width', 2 * fontScale);
+                             if (a.label) {
+                                 var cx = 0, cy = 0;
+                                 pts.forEach(function(p) { cx += p[0]; cy += p[1]; });
+                                 cx /= pts.length; cy /= pts.length;
+                                 gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', cx).attr('y', cy).attr('text-anchor', 'middle').text(a.label);
+                             }
                          } else if (a.type === 'freehand' && Array.isArray(a.coords) && a.coords.length >= 2) {
                              parts = _projectAnnotationParts(a.coords, proj);
                              if (!parts.length) return;
                              var freeLabelPos = null;
                              parts.forEach(function(part) {
                                  var pd = 'M' + part.map(function(p) { return p[0] + ',' + p[1]; }).join('L');
-                                 gAnnotations.append('path').attr('class', 'annotation-freehand-path').attr('d', pd).style('stroke', col);
+                                 gAnnotations.append('path').attr('class', 'annotation-freehand-path').attr('d', pd).style('stroke', col).style('stroke-width', 2.5 * fontScale);
                                  if (!freeLabelPos && part.length) freeLabelPos = part[0];
                              });
-                             if (freeLabelPos) {
-                                 gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', freeLabelPos[0] + 9).attr('y', freeLabelPos[1] + 4).text(a.label || t('annotationDraw'));
+                             if (a.label && freeLabelPos) {
+                                 gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', freeLabelPos[0] + 9).attr('y', freeLabelPos[1] + 4).text(a.label);
                              }
                          } else if (a.type === 'arrow' && Array.isArray(a.coords) && a.coords.length >= 2) {
                              parts = _projectAnnotationParts(a.coords, proj);
@@ -1312,7 +1317,7 @@ export function redrawAnnotations() {
                              var arrowLabelPos = null;
                              parts.forEach(function(part) {
                                  var pd = 'M' + part.map(function(p) { return p[0] + ',' + p[1]; }).join('L');
-                                 gAnnotations.append('path').attr('class', 'annotation-arrow-line').attr('d', pd).style('stroke', col);
+                                 gAnnotations.append('path').attr('class', 'annotation-arrow-line').attr('d', pd).style('stroke', col).style('stroke-width', 2.5 * fontScale);
                                  if (part.length > 1) arrowLabelPos = part[0];
                              });
                              var headProj = proj(headCoords);
@@ -1329,14 +1334,14 @@ export function redrawAnnotations() {
                                  });
                                  if (!hp) { hp = headProj; tailOfHead = parts[parts.length - 1][parts[parts.length - 1].length - 2]; }
                                  var ang = Math.atan2(hp[1] - tailOfHead[1], hp[0] - tailOfHead[0]);
-                                 var AL = 13, AW = 6;
+                                 var AL = 13 * fontScale, AW = 6 * fontScale;
                                  var ax1 = hp[0], ay1 = hp[1];
                                  var bxp = ax1 - AL * Math.cos(ang), byp = ay1 - AL * Math.sin(ang);
                                  var perpx = -Math.sin(ang), perpy = Math.cos(ang);
                                  gAnnotations.append('path').attr('class', 'annotation-arrow-head').attr('d',
                                      'M' + ax1 + ',' + ay1 + 'L' + (bxp + AW * perpx) + ',' + (byp + AW * perpy) + 'L' + (bxp - AW * perpx) + ',' + (byp - AW * perpy) + 'Z').style('fill', col);
-                                 if (arrowLabelPos) {
-                                     gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', arrowLabelPos[0] + 9).attr('y', arrowLabelPos[1] + 4).text(a.label || t('annotationArrow'));
+                                 if (a.label && arrowLabelPos) {
+                                     gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', arrowLabelPos[0] + 9).attr('y', arrowLabelPos[1] + 4).text(a.label);
                                  }
                              }
                          }
@@ -1353,17 +1358,18 @@ export function redrawAnnotationDrawing() {
                     var proj = getActiveProjection();
                     var finishBtn = document.getElementById('annotationFinishBtn');
                     if (finishBtn) finishBtn.style.display = (annotatePoints.length >= 3) ? '' : 'none';
+                    var fontScale = annotateFontSize === 'small' ? 0.7 : annotateFontSize === 'large' ? 1.5 : 1;
                     annotatePoints.forEach(function(c) {
                         var xy = proj(c);
                         if (!xy || isNaN(xy[0])) return;
-                        gAnnotations.append('circle').attr('class', 'annotation-region-vertex annotation-draw-vertex').attr('cx', xy[0]).attr('cy', xy[1]).attr('r', 4).style('fill', annotateColor);
+                        gAnnotations.append('circle').attr('class', 'annotation-region-vertex annotation-draw-vertex').attr('cx', xy[0]).attr('cy', xy[1]).attr('r', 4 * fontScale).style('fill', annotateColor);
                     });
                     if (annotatePoints.length >= 2) {
                         var pts = annotatePoints.map(function(c) { return proj(c); }).filter(function(p) { return p && !isNaN(p[0]); });
                         if (pts.length >= 2) {
                             var d = 'M' + pts.map(function(p) { return p[0] + ',' + p[1]; }).join('L');
                             if (annotatePoints.length >= 3) d += 'Z';
-                            gAnnotations.append('path').attr('class', 'annotation-region-poly annotation-draw-poly').attr('d', d).style('stroke', annotateColor).style('fill', annotateColor + '1f');
+                            gAnnotations.append('path').attr('class', 'annotation-region-poly annotation-draw-poly').attr('d', d).style('stroke', annotateColor).style('fill', annotateColor + '1f').style('stroke-width', 2 * fontScale);
                         }
                     }
                 }
@@ -1434,6 +1440,7 @@ function _annotStrokeUpdatePreview() {
                         _annotPreviewEl = gAnnotations.append('path').attr('class', 'annotation-region-poly annotation-draw-poly').node();
                         _annotPreviewEl.style.stroke = annotateColor;
                         _annotPreviewEl.style.fill = annotateColor + '1f';
+                        _annotPreviewEl.style.strokeWidth = (annotateKind === 'region' ? 2 : 2.5) * (annotateFontSize === 'small' ? 0.7 : annotateFontSize === 'large' ? 1.5 : 1);
                     }
                     if (finishBtn) finishBtn.style.display = '';
                     var d;
@@ -1743,11 +1750,10 @@ export function setAnnotationColor(color) {
 export function setAnnotationFontSize(size) {
                     if (['small', 'medium', 'large'].indexOf(size) === -1) return;
                     setState('annotateFontSize', size);
-                    document.body.classList.remove('annotate-font-small', 'annotate-font-medium', 'annotate-font-large');
-                    document.body.classList.add('annotate-font-' + size);
                     try { localStorage.setItem('annotateFontSize', size); } catch (e) {}
                     setAnnotationToolbarActive();
                     redrawAnnotations();
+                    if (annotateKind === 'region' && annotatePoints.length > 0) redrawAnnotationDrawing();
                 }
 
 export function clearAllAnnotations() {
@@ -2896,10 +2902,7 @@ export async function init() {
                     var savedColor = localStorage.getItem('annotateColor');
                     if (savedColor && /^#[0-9a-f]{6}$/i.test(savedColor)) setState('annotateColor', savedColor);
                     var savedFont = localStorage.getItem('annotateFontSize');
-                    if (['small', 'medium', 'large'].indexOf(savedFont) !== -1) {
-                        setState('annotateFontSize', savedFont);
-                        document.body.classList.add('annotate-font-' + savedFont);
-                    }
+                    if (['small', 'medium', 'large'].indexOf(savedFont) !== -1) setState('annotateFontSize', savedFont);
                 } catch (e) {}
                 try { redrawAnnotations(); } catch(e) { console.error('annotation draw error:', e); }
                 try { loadFromHash(); } catch(e) {}

@@ -1063,8 +1063,11 @@ export function setupZoom() {
                 // arrow keys pan, +/− zoom, Home resets. Active when the map
                 // container or a country path receives focus via keyboard.
                 mapContainer.addEventListener('keydown', function(e) {
-                    // Freehand/arrow stroke controls: Enter finalizes, Escape cancels
-                    if (_annotStrokeIsDrawKind()) {
+                    // Freehand/arrow stroke controls: Enter finalizes, Escape
+                    // cancels — but only while the map itself has focus, so
+                    // keyboard users can still activate toolbar buttons.
+                    var mapFocused = document.activeElement === mapContainer || document.activeElement === document.getElementById('mapSvg') || document.activeElement === document.body || document.activeElement === null;
+                    if (_annotStrokeIsDrawKind() && mapFocused) {
                         if (e.key === 'Enter') { e.preventDefault(); finishAnnotationTool(); return; }
                         if (e.key === 'Escape') { e.preventDefault(); cancelAnnotationStroke(); return; }
                     }
@@ -1484,29 +1487,25 @@ function _annotFinalizeStroke(silent) {
                     }
                     _annotStrokeActive = false;
                     if (_annotStrokeRAF) { cancelAnimationFrame(_annotStrokeRAF); _annotStrokeRAF = null; }
-                    var coords = isArrow ? [pts[0], pts[pts.length - 1]] : pts;
-                    var distanceKm = isArrow ? _annotStrokeKilometers(coords) : _annotStrokeKilometers(pts);
-                    _annotPreviewEl = null;
-                    setState('annotatePoints', []);
-                    var promptKey = isArrow ? t('annotationArrowPromptLabel') : t('annotationDrawPromptLabel');
-                    // Accessible label dialog (blank allowed — unlabeled strokes are valid)
-                    clearAnnotationDrawing();
-                    openAnnotationLabelDialog(promptKey, '', function(label) {
-                        annotationsList.push({
-                            id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-                            type: isArrow ? 'arrow' : 'freehand',
-                            coords: coords,
-                            label: label,
-                            distanceKm: distanceKm,
-                            createdAt: Date.now()
-                        });
-                        saveAnnotations();
-                        redrawAnnotations();
-                        announce(t('annotationAdded'));
-                        if (silent) return;
-                        showToast(t('annotationLengthLabel').replace('{km}', fmtNum(distanceKm)));
-                    }, true);
-                }
+                     var coords = isArrow ? [pts[0], pts[pts.length - 1]] : pts;
+                     var distanceKm = isArrow ? _annotStrokeKilometers(coords) : _annotStrokeKilometers(pts);
+                     _annotPreviewEl = null;
+                     setState('annotatePoints', []);
+                     clearAnnotationDrawing();
+                     annotationsList.push({
+                         id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+                         type: isArrow ? 'arrow' : 'freehand',
+                         coords: coords,
+                         label: '',
+                         distanceKm: distanceKm,
+                         createdAt: Date.now()
+                     });
+                     saveAnnotations();
+                     redrawAnnotations();
+                     announce(t('annotationAdded'));
+                     if (silent) return;
+                     showToast(t('annotationLengthLabel').replace('{km}', fmtNum(distanceKm)));
+                 }
 
 export function finishAnnotationTool() {
                     if (!annotateActive) return;
@@ -1581,24 +1580,23 @@ export function setPanSpaceHeld(v) { _panSpaceHeld = v; }
 
 export function finishAnnotationRegion() {
                      if (annotatePoints.length < 3) return;
-                     // Accessible inline label input instead of window.prompt()
+                     // Place the region immediately — the teacher draws during
+                     // interactive explanation and shouldn't be forced to label.
                      var pendingCoords = annotatePoints.slice();
                      setState('annotatePoints', []);
-                     openAnnotationLabelDialog(t('annotationRegionPromptLabel'), null, function(label) {
-                         annotationsList.push({
-                             id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-                             type: 'region', coords: pendingCoords, label: label, createdAt: Date.now()
-                         });
-                         saveAnnotations();
-                         redrawAnnotations();
-                         announce(t('annotationAdded'));
-                         showToast(t('annotationAdded'));
+                     annotationsList.push({
+                         id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+                         type: 'region', coords: pendingCoords, label: '', createdAt: Date.now()
                      });
+                     saveAnnotations();
+                     redrawAnnotations();
+                     announce(t('annotationAdded'));
+                     showToast(t('annotationAdded'));
                  }
 
 export function handleAnnotationClick(e) {
                      if (!annotateActive) return;
-                     if (e.target && e.target.closest && e.target.closest('.annotation-toolbar, .measure-toolbar, .layers-modal, .quiz-overlay, .country-panel, .projection-compare-dock')) return;
+                     if (e.target && e.target.closest && !e.target.closest('#mapSvg')) return;
                      if (e.target && e.target.closest && e.target.closest('.annotation-pin-circle, .annotation-pin-label, .annotation-region-poly')) return;
                      var rect = getMapRect();
                      var clickX = e.clientX - rect.left;
@@ -1606,27 +1604,26 @@ export function handleAnnotationClick(e) {
                      var svgPoint = currentTransform.invert([clickX, clickY]);
                      var coords = getActiveProjection().invert(svgPoint);
                      if (!coords || isNaN(coords[0]) || isNaN(coords[1])) return;
-                     if (annotateKind === 'pin') {
-                         // Accessible inline label input — no window.prompt()
-                         setState('pendingAnnotation', { type: 'pin', coords: [coords[0], coords[1]] });
-                         openAnnotationLabelDialog(t('annotationPromptLabel'), null, function(label) {
-                             annotationsList.push({
-                                 id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-                                 type: 'pin', coords: [coords[0], coords[1]],
-                                 label: label, createdAt: Date.now()
-                             });
-                             saveAnnotations();
-                             redrawAnnotations();
-                             announce(t('annotationAdded'));
-                             showToast(t('annotationAdded'));
+if (annotateKind === 'pin') {
+                         // Place the pin immediately — teachers draw during
+                         // interactive explanation without forced labeling.
+                         annotationsList.push({
+                             id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+                             type: 'pin', coords: [coords[0], coords[1]],
+                             label: '', createdAt: Date.now()
                          });
-} else if (annotateKind === 'region') {
+                         saveAnnotations();
+                         redrawAnnotations();
+                         announce(t('annotationAdded'));
+                         showToast(t('annotationAdded'));
+                     } else if (annotateKind === 'region') {
                           annotatePoints.push([coords[0], coords[1]]);
                           redrawAnnotationDrawing();
                       }
                   }
 
 export function toggleAnnotationMode() {
+                     var wasActive = annotateActive;
                      setState('annotateActive', !annotateActive);
                      var btn = document.getElementById('annotateBtn');
                      if (btn) {
@@ -1640,13 +1637,37 @@ export function toggleAnnotationMode() {
                          toolbar.setAttribute('aria-hidden', String(!annotateActive));
                      }
                      if (annotateActive) {
-                          if (measureActive) toggleMeasureMode();
-                          setAnnotationToolbarActive();
-                          announce(t('annotationModeOn'));
-                      } else {
-                          clearAnnotationDrawing();
-                          announce(t('annotationModeOff'));
-                      }
+                         // New session: start with a blank annotation canvas.
+                         // The previous session stays stored for explicit restore.
+                         setState('annotationsList', []);
+                         clearAnnotationDrawing();
+                         clearAnnotationsView();
+                         if (measureActive) toggleMeasureMode();
+                         setAnnotationToolbarActive();
+                         announce(t('annotationModeOn'));
+                     } else {
+                         // End of session: keep the drawn markers stored, then
+                         // clear the canvas so reopening starts blank.
+                         saveAnnotations();
+                         setState('annotationsList', []);
+                         clearAnnotationDrawing();
+                         clearAnnotationsView();
+                         announce(t('annotationModeOff'));
+                     }
+                 }
+
+export function restorePreviousAnnotations() {
+                     var saved = loadAnnotations();
+                     if (!saved || !saved.length) {
+                         announce(t('annotationNoSavedSession'));
+                         showToast(t('annotationNoSavedSession'));
+                         return;
+                     }
+                     setState('annotationsList', saved);
+                     redrawAnnotations();
+                     if (renderAnnotationsModal) renderAnnotationsModal();
+announce(t('annotationSessionRestored'));
+                      showToast(t('annotationSessionRestored'));
                   }
 
 // ── Accessible annotation label dialog ──────────────────────────────────
@@ -1713,12 +1734,19 @@ export function toggleAnnotationKind(kind) {
                 }
 
 export function renderAnnotationsModal() {
-                    var body = document.getElementById('annotationsModalBody');
-                    if (!body) return;
-                    if (annotationsList.length === 0) {
-                        body.innerHTML = '<p style="color:var(--text-secondary);font-size:0.78em;text-align:center;">' + t('annotationEmpty') + '</p>';
-                        return;
-                    }
+                     var body = document.getElementById('annotationsModalBody');
+                     if (!body) return;
+                     if (annotationsList.length === 0) {
+                         var stored = loadAnnotations();
+                         var html = '<p style="color:var(--text-secondary);font-size:0.78em;text-align:center;">' + t('annotationEmpty') + '</p>';
+                         if (stored && stored.length) {
+                             html += '<button class="btn annotation-restore-btn" id="annotationRestoreBtn" data-i18n="annotationRestoreSession">' + t('annotationRestoreSession') + '</button>';
+                         }
+                         body.innerHTML = html;
+                         var restoreBtn = document.getElementById('annotationRestoreBtn');
+                         if (restoreBtn) restoreBtn.addEventListener('click', restorePreviousAnnotations);
+                         return;
+                     }
                     body.innerHTML = '';
                     annotationsList.forEach(function(a, idx) {
                         var label = escapeHtml(a.label || _annotationTypeLabel(a));
@@ -1754,14 +1782,26 @@ export function renderAnnotationsModal() {
                             renderAnnotationsModal();
                             redrawAnnotations();
                         });
-                        actions.appendChild(visBtn);
-                        actions.appendChild(delBtn);
-                        row.appendChild(typeEl);
-                        row.appendChild(labelEl);
-                        row.appendChild(actions);
-                        body.appendChild(row);
-                    });
-                }
+actions.appendChild(visBtn);
+                     actions.appendChild(delBtn);
+                     row.appendChild(typeEl);
+                     row.appendChild(labelEl);
+                     row.appendChild(actions);
+                     body.appendChild(row);
+                     });
+                     var stored = loadAnnotations();
+                     var restoreWrap = document.createElement('div');
+                     restoreWrap.style.textAlign = 'center';
+                     restoreWrap.style.marginTop = '10px';
+                     var restoreBtn = document.createElement('button');
+                     restoreBtn.className = 'btn annotation-restore-btn';
+                     restoreBtn.id = 'annotationRestoreBtn';
+                     restoreBtn.textContent = t('annotationRestoreSession');
+                     restoreBtn.disabled = !(stored && stored.length);
+                     restoreBtn.addEventListener('click', restorePreviousAnnotations);
+                     restoreWrap.appendChild(restoreBtn);
+                     body.appendChild(restoreWrap);
+                 }
 
 export function openAnnotationsModal() {
                      renderAnnotationsModal();
@@ -2777,7 +2817,9 @@ export async function init() {
                 } catch (e) {}
 
                 renderCountries(features);
-                setState('annotationsList', loadAnnotations());
+                // New session starts with a blank annotation canvas; the
+                // previous session stays stored for explicit restore.
+                setState('annotationsList', []);
                 try { redrawAnnotations(); } catch(e) { console.error('annotation draw error:', e); }
                 try { loadFromHash(); } catch(e) {}
                 try { applyLanguage(); } catch(e) { console.error('applyLanguage error:', e); }

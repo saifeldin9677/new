@@ -408,7 +408,7 @@ body {
     z-index: var(--z-toolbar);
     pointer-events: none;
 }
-.legend-color {
+.legend .legend-color {
     width: 10px;
     height: 10px;
     border-radius: 2px;
@@ -1136,7 +1136,7 @@ body {
         padding: 8px 10px;
         max-height: 38vh;
     }
-    .legend-color {
+    .legend .legend-color {
         width: 8px;
         height: 8px;
     }
@@ -1340,7 +1340,7 @@ body {
         background: var(--legend-bg);
         backdrop-filter: none;
     }
-    .legend-color {
+    .legend .legend-color {
         width: 14px;
         height: 14px;
         border-radius: 4px;
@@ -1827,6 +1827,16 @@ body {
     font-size: 0.85em;
     font-weight: normal;
 }
+.annotation-restore-btn {
+    margin-top: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.annotation-restore-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
 .annotation-draw-vertex {
     fill: #eab308;
     stroke: #fff;
@@ -1901,7 +1911,7 @@ body.annotate-active .annotation-toolbar { box-shadow: 0 0 0 2px var(--brand-acc
 }
 .measure-toolbar {
     position: fixed;
-    bottom: 92px;
+    bottom: 60px;
     right: 20px;
     display: flex;
     align-items: center;
@@ -1945,7 +1955,9 @@ body.annotate-active .annotation-toolbar { box-shadow: 0 0 0 2px var(--brand-acc
 }
 body.measure-active .measure-toolbar { display: flex; }
 .annotation-toolbar {
-    bottom: 148px;
+    /* Same slot as the measure toolbar (modes are mutually exclusive);
+       anchored low enough to stay clear of the zoom bar on the right. */
+    bottom: 60px;
 }
 body.annotate-active .annotation-toolbar { display: flex; }
 .annotation-pin-circle {
@@ -4004,7 +4016,7 @@ th[data-sort-key][aria-sort="descending"] .th-sort-btn::after {
         left: 12px;
         max-height: 42vh;
     }
-    .legend-color {
+    .legend .legend-color {
         width: 8px;
         height: 8px;
     }
@@ -4031,6 +4043,10 @@ th[data-sort-key][aria-sort="descending"] .th-sort-btn::after {
 @media (max-height: 640px) and (min-width: 769px) {
     :root {
         --header-height: 42px;
+    }
+    .measure-toolbar,
+    .annotation-toolbar {
+        bottom: 40px;
     }
     .header h1 {
         font-size: 0.7em;

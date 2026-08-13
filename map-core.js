@@ -1,5 +1,5 @@
 import { MAP_COLORS, additionalWaterwaysData, borderDisputesData, capitalsRussian, capitalsSpanish, capitalsUzbek, continentArabic, continentRussian, continentSpanish, continentUzbek, corridorsData, countryInfo, denominationArabic, denominationRussian, denominationSpanish, denominationUzbek, densitySpotEnglish, densitySpotRussian, densitySpotSpanish, densitySpotUzbek, densitySpots, desertsForestsData, earthquakesData, ethnicGroupsData, featureRussian, featureSpanish, featureUzbek, geopoliticalBlocsData, governmentArabic, governmentRussian, governmentSpanish, governmentUzbek, langsRussian, langsSpanish, langsUzbek, majorCitiesData, mountainRanges, naturalResourcesData, oceanCurrentsData, religionArabic, religionRussian, religionSpanish, religionUzbek, rivers, tectonicPlatesData, timezoneOffsets, volcanoesData, windsData } from './data.js';
-import { MOBILE_BREAKPOINT, _frozenCitySize, _isZooming, _lastPanelRenderTime, _pendingTooltipEvent, _tooltipRAFPending, _tooltipSize, additionalWaterwaysVisible, allCountryFeatures, annotateActive, annotateKind, annotatePoints, annotationsList, announce, applyTheme, borderDisputesVisible, capitalsVisible, colorMode, colorblindMode, compareCountriesG, compareCountry, compareG, compareInitialized, compareProjectionType, compareSvg, compareZoomBehavior, controlsBar, coordinatesDisplay, coordsVisible, copyNotification, corridorsVisible, countryLabelSelection, countryNamesList, countryPanel, countryPaths, currentReligionFilter, currentSessionCode, currentStudentName, currentTransform, debounce, densitySpotsMode, desertsForestsVisible, earthquakesVisible, ethnicGroupsVisible, gAdminBoundaries, gAnnotations, gAuthoringMarkers, gBorderDisputes, gCapitals, gCorridors, gCountries, gCountryGlow, gCountryLabels, gDesertsForests, gEarthquakes, gEthnicGroups, gGeopoliticalBlocs, gGraticule, gMajorCities, gMap, gMeasure, gNaturalResources, gOcean, gOceanCurrents, gPhysical, gQuizMarkers, gTemperature, gTimezones, gVolcanoes, gWinds, geopoliticalBlocsVisible, getMapRect, globeModeActive, globeProjection, highlightTimeout, infoOverlay, initDensityCanvas, isMobile, lang, lastQuizResults, legendEl, majorCitiesVisible, mapContainer, measureActive, measureFinalized, measureGeodesic, measureKind, measurePoints, menuToggle, naturalResourcesVisible, oceanCurrentsVisible, onWindowResize, onboardingHint, panelContent, pathGen, prefersReducedMotion, presentationModeActive, projection, quizActive, religionButtons, riversVisible, searchInput, sectMode, selectedBloc, selectedCountry, setActiveByAttr, setState, showLabels, suggestionsList, svg, svgEl, timezonesVisible, tooltip, volcanoesVisible, windsVisible, zoomBehavior } from './state.js';
+import { MOBILE_BREAKPOINT, _frozenCitySize, _isZooming, _lastPanelRenderTime, _pendingTooltipEvent, _tooltipRAFPending, _tooltipSize, additionalWaterwaysVisible, allCountryFeatures, annotateActive, annotateColor, annotateFontSize, annotateKind, annotatePoints, annotationsList, announce, applyTheme, borderDisputesVisible, capitalsVisible, colorMode, colorblindMode, compareCountriesG, compareCountry, compareG, compareInitialized, compareProjectionType, compareSvg, compareZoomBehavior, controlsBar, coordinatesDisplay, coordsVisible, copyNotification, corridorsVisible, countryLabelSelection, countryNamesList, countryPanel, countryPaths, currentReligionFilter, currentSessionCode, currentStudentName, currentTransform, debounce, densitySpotsMode, desertsForestsVisible, earthquakesVisible, ethnicGroupsVisible, gAdminBoundaries, gAnnotations, gAuthoringMarkers, gBorderDisputes, gCapitals, gCorridors, gCountries, gCountryGlow, gCountryLabels, gDesertsForests, gEarthquakes, gEthnicGroups, gGeopoliticalBlocs, gGraticule, gMajorCities, gMap, gMeasure, gNaturalResources, gOcean, gOceanCurrents, gPhysical, gQuizMarkers, gTemperature, gTimezones, gVolcanoes, gWinds, geopoliticalBlocsVisible, getMapRect, globeModeActive, globeProjection, highlightTimeout, infoOverlay, initDensityCanvas, isMobile, lang, lastQuizResults, legendEl, majorCitiesVisible, mapContainer, measureActive, measureFinalized, measureGeodesic, measureKind, measurePoints, menuToggle, naturalResourcesVisible, oceanCurrentsVisible, onWindowResize, onboardingHint, panelContent, pathGen, prefersReducedMotion, presentationModeActive, projection, quizActive, religionButtons, riversVisible, searchInput, sectMode, selectedBloc, selectedCountry, setActiveByAttr, setState, showLabels, suggestionsList, svg, svgEl, timezonesVisible, tooltip, volcanoesVisible, windsVisible, zoomBehavior } from './state.js';
 import { applyLanguage, fmtNum, getCleanName, getDenomination, getDisplayName, getReligion, htmlEscape, setLanguage, t } from './i18n.js';
 import { LAYER_DEFS, _adminSeamSplitGeometries, closeFeatureDetail, drawBorderDisputes, drawCapitals, drawCorridors, drawCountryLabels, drawDesertsForests, drawEarthquakes, drawGeopoliticalBlocs, drawMajorCities, drawOceanCurrents, drawPhysicalFeatures, drawPointLayersCanvas, drawRoutes, drawTimezones, drawVolcanoes, drawWinds, fullGlobeRedraw, getActiveProjection, getContinent, getCountryFill, getCountryFilterAttr, getCountryInfo, getDensity, getElevation, getGDP, getGovernment, getHDI, getOpacity, getPrecipitation, getStroke, getStrokeWidth, getTemperature, highlightSelectedCountry, initGlobeProjection, isPointVisibleOnGlobe, rebuildPathGen, scheduleAdminBoundariesRedraw, setMode, showCityDetail, toggleBorderDisputes, toggleCapitals, toggleColorblindMode, toggleCoords, toggleCorridors, toggleDensitySpots, toggleDesertsForests, toggleEarthquakes, toggleEthnicGroups, toggleGeopoliticalBlocs, toggleGlobeMode, toggleLabels, toggleLayerByName, toggleMajorCities, toggleNaturalResources, toggleOceanCurrents, toggleRivers, toggleSect, toggleTimezones, toggleVolcanoes, toggleWinds, updateActiveLayerCount, updateLabels, updateLegend } from './layers.js';
 import { initQuiz, measureResultLabel } from './quiz.js';
@@ -1272,79 +1272,80 @@ function _annotationTypeLabel(a) {
                 }
 
 export function redrawAnnotations() {
-                    if (!gAnnotations) setState('gAnnotations', gMap.append('g').attr('class', 'annotation-layer'));
-                    gAnnotations.selectAll('*').remove();
-                    var proj = getActiveProjection();
-                    var parts = null;
-                    annotationsList.forEach(function(a) {
-                        if (a.hidden) return;
-                        if (a.type === 'pin') {
-                            var xy = proj(a.coords);
-                            if (!xy || isNaN(xy[0])) return;
-                            gAnnotations.append('circle').attr('class', 'annotation-pin-circle').attr('cx', xy[0]).attr('cy', xy[1]).attr('r', 6);
-                            if (a.label) {
-                                gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', xy[0] + 9).attr('y', xy[1] + 4).text(a.label);
-                            }
-                        } else if (a.type === 'region' && Array.isArray(a.coords) && a.coords.length >= 3) {
-                            var pts = a.coords.map(function(c) { return proj(c); });
-                            if (pts.some(function(p) { return !p || isNaN(p[0]); })) return;
-                            var d = 'M' + pts.map(function(p) { return p[0] + ',' + p[1]; }).join('L') + 'Z';
-                            gAnnotations.append('path').attr('class', 'annotation-region-poly').attr('d', d);
-                            if (a.label) {
-                                var cx = 0, cy = 0;
-                                pts.forEach(function(p) { cx += p[0]; cy += p[1]; });
-                                cx /= pts.length; cy /= pts.length;
-                                gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', cx).attr('y', cy).attr('text-anchor', 'middle').text(a.label);
-                            }
-                        } else if (a.type === 'freehand' && Array.isArray(a.coords) && a.coords.length >= 2) {
-                            parts = _projectAnnotationParts(a.coords, proj);
-                            if (!parts.length) return;
-                            var freeLabelPos = null;
-                            parts.forEach(function(part) {
-                                var pd = 'M' + part.map(function(p) { return p[0] + ',' + p[1]; }).join('L');
-                                gAnnotations.append('path').attr('class', 'annotation-freehand-path').attr('d', pd);
-                                if (!freeLabelPos && part.length) freeLabelPos = part[0];
-                            });
-                            if (a.label && freeLabelPos) {
-                                gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', freeLabelPos[0] + 9).attr('y', freeLabelPos[1] + 4).text(a.label);
-                            }
-                        } else if (a.type === 'arrow' && Array.isArray(a.coords) && a.coords.length >= 2) {
-                            parts = _projectAnnotationParts(a.coords, proj);
-                            if (!parts.length) return;
-                            var headCoords = a.coords[a.coords.length - 1];
-                            var arrowLabelPos = null;
-                            parts.forEach(function(part) {
-                                var pd = 'M' + part.map(function(p) { return p[0] + ',' + p[1]; }).join('L');
-                                gAnnotations.append('path').attr('class', 'annotation-arrow-line').attr('d', pd);
-                                if (part.length > 1) arrowLabelPos = part[0];
-                            });
-                            var headProj = proj(headCoords);
-                            if (headProj && !isNaN(headProj[0])) {
-                                var hp = null;
-                                var tailOfHead = null;
-                                parts.forEach(function(part) {
-                                    if (part.length < 2) return;
-                                    var last = part[part.length - 1];
-                                    if (Math.abs(last[0] - headProj[0]) < 0.5 && Math.abs(last[1] - headProj[1]) < 0.5) {
-                                        hp = last;
-                                        tailOfHead = part[part.length - 2];
-                                    }
-                                });
-                                if (!hp) { hp = headProj; tailOfHead = parts[parts.length - 1][parts[parts.length - 1].length - 2]; }
-                                var ang = Math.atan2(hp[1] - tailOfHead[1], hp[0] - tailOfHead[0]);
-                                var AL = 13, AW = 6;
-                                var ax1 = hp[0], ay1 = hp[1];
-                                var bxp = ax1 - AL * Math.cos(ang), byp = ay1 - AL * Math.sin(ang);
-                                var perpx = -Math.sin(ang), perpy = Math.cos(ang);
-                                gAnnotations.append('path').attr('class', 'annotation-arrow-head').attr('d',
-                                    'M' + ax1 + ',' + ay1 + 'L' + (bxp + AW * perpx) + ',' + (byp + AW * perpy) + 'L' + (bxp - AW * perpx) + ',' + (byp - AW * perpy) + 'Z');
-                                if (a.label && arrowLabelPos) {
-                                    gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', arrowLabelPos[0] + 9).attr('y', arrowLabelPos[1] + 4).text(a.label);
-                                }
-                            }
-                        }
-                    });
-                }
+                     if (!gAnnotations) setState('gAnnotations', gMap.append('g').attr('class', 'annotation-layer'));
+                     gAnnotations.selectAll('*').remove();
+                     var proj = getActiveProjection();
+                     var parts = null;
+                     annotationsList.forEach(function(a) {
+                         if (a.hidden) return;
+                         var col = a.color || '#eab308';
+                         if (a.type === 'pin') {
+                             var xy = proj(a.coords);
+                             if (!xy || isNaN(xy[0])) return;
+                             gAnnotations.append('circle').attr('class', 'annotation-pin-circle').attr('cx', xy[0]).attr('cy', xy[1]).attr('r', 6).style('fill', col);
+                             if (a.label) {
+                                 gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', xy[0] + 9).attr('y', xy[1] + 4).text(a.label);
+                             }
+                         } else if (a.type === 'region' && Array.isArray(a.coords) && a.coords.length >= 3) {
+                             var pts = a.coords.map(function(c) { return proj(c); });
+                             if (pts.some(function(p) { return !p || isNaN(p[0]); })) return;
+                             var d = 'M' + pts.map(function(p) { return p[0] + ',' + p[1]; }).join('L') + 'Z';
+                             gAnnotations.append('path').attr('class', 'annotation-region-poly').attr('d', d).style('stroke', col).style('fill', col + '26');
+                             if (a.label) {
+                                 var cx = 0, cy = 0;
+                                 pts.forEach(function(p) { cx += p[0]; cy += p[1]; });
+                                 cx /= pts.length; cy /= pts.length;
+                                 gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', cx).attr('y', cy).attr('text-anchor', 'middle').text(a.label);
+                             }
+                         } else if (a.type === 'freehand' && Array.isArray(a.coords) && a.coords.length >= 2) {
+                             parts = _projectAnnotationParts(a.coords, proj);
+                             if (!parts.length) return;
+                             var freeLabelPos = null;
+                             parts.forEach(function(part) {
+                                 var pd = 'M' + part.map(function(p) { return p[0] + ',' + p[1]; }).join('L');
+                                 gAnnotations.append('path').attr('class', 'annotation-freehand-path').attr('d', pd).style('stroke', col);
+                                 if (!freeLabelPos && part.length) freeLabelPos = part[0];
+                             });
+                             if (a.label && freeLabelPos) {
+                                 gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', freeLabelPos[0] + 9).attr('y', freeLabelPos[1] + 4).text(a.label);
+                             }
+                         } else if (a.type === 'arrow' && Array.isArray(a.coords) && a.coords.length >= 2) {
+                             parts = _projectAnnotationParts(a.coords, proj);
+                             if (!parts.length) return;
+                             var headCoords = a.coords[a.coords.length - 1];
+                             var arrowLabelPos = null;
+                             parts.forEach(function(part) {
+                                 var pd = 'M' + part.map(function(p) { return p[0] + ',' + p[1]; }).join('L');
+                                 gAnnotations.append('path').attr('class', 'annotation-arrow-line').attr('d', pd).style('stroke', col);
+                                 if (part.length > 1) arrowLabelPos = part[0];
+                             });
+                             var headProj = proj(headCoords);
+                             if (headProj && !isNaN(headProj[0])) {
+                                 var hp = null;
+                                 var tailOfHead = null;
+                                 parts.forEach(function(part) {
+                                     if (part.length < 2) return;
+                                     var last = part[part.length - 1];
+                                     if (Math.abs(last[0] - headProj[0]) < 0.5 && Math.abs(last[1] - headProj[1]) < 0.5) {
+                                         hp = last;
+                                         tailOfHead = part[part.length - 2];
+                                     }
+                                 });
+                                 if (!hp) { hp = headProj; tailOfHead = parts[parts.length - 1][parts[parts.length - 1].length - 2]; }
+                                 var ang = Math.atan2(hp[1] - tailOfHead[1], hp[0] - tailOfHead[0]);
+                                 var AL = 13, AW = 6;
+                                 var ax1 = hp[0], ay1 = hp[1];
+                                 var bxp = ax1 - AL * Math.cos(ang), byp = ay1 - AL * Math.sin(ang);
+                                 var perpx = -Math.sin(ang), perpy = Math.cos(ang);
+                                 gAnnotations.append('path').attr('class', 'annotation-arrow-head').attr('d',
+                                     'M' + ax1 + ',' + ay1 + 'L' + (bxp + AW * perpx) + ',' + (byp + AW * perpy) + 'L' + (bxp - AW * perpx) + ',' + (byp - AW * perpy) + 'Z').style('fill', col);
+                                 if (a.label && arrowLabelPos) {
+                                     gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', arrowLabelPos[0] + 9).attr('y', arrowLabelPos[1] + 4).text(a.label);
+                                 }
+                             }
+                         }
+                     });
+                 }
 
 export function clearAnnotationsView() {
                     if (gAnnotations) gAnnotations.selectAll('*').remove();
@@ -1359,14 +1360,14 @@ export function redrawAnnotationDrawing() {
                     annotatePoints.forEach(function(c) {
                         var xy = proj(c);
                         if (!xy || isNaN(xy[0])) return;
-                        gAnnotations.append('circle').attr('class', 'annotation-region-vertex annotation-draw-vertex').attr('cx', xy[0]).attr('cy', xy[1]).attr('r', 4);
+                        gAnnotations.append('circle').attr('class', 'annotation-region-vertex annotation-draw-vertex').attr('cx', xy[0]).attr('cy', xy[1]).attr('r', 4).style('fill', annotateColor);
                     });
                     if (annotatePoints.length >= 2) {
                         var pts = annotatePoints.map(function(c) { return proj(c); }).filter(function(p) { return p && !isNaN(p[0]); });
                         if (pts.length >= 2) {
                             var d = 'M' + pts.map(function(p) { return p[0] + ',' + p[1]; }).join('L');
                             if (annotatePoints.length >= 3) d += 'Z';
-                            gAnnotations.append('path').attr('class', 'annotation-region-poly annotation-draw-poly').attr('d', d);
+                            gAnnotations.append('path').attr('class', 'annotation-region-poly annotation-draw-poly').attr('d', d).style('stroke', annotateColor).style('fill', annotateColor + '1f');
                         }
                     }
                 }
@@ -1435,13 +1436,18 @@ function _annotStrokeUpdatePreview() {
                         if (!_annotStrokePoints.length) return;
                         gAnnotations.selectAll('.annotation-draw-poly').remove();
                         _annotPreviewEl = gAnnotations.append('path').attr('class', 'annotation-region-poly annotation-draw-poly').node();
+                        _annotPreviewEl.style.stroke = annotateColor;
+                        _annotPreviewEl.style.fill = annotateColor + '1f';
                     }
                     if (finishBtn) finishBtn.style.display = '';
                     var d;
                     if (annotateKind === 'arrow' && _annotStrokePoints.length >= 2) {
                         var p0 = proj(_annotStrokePoints[0]);
                         var p1 = proj(_annotStrokePoints[_annotStrokePoints.length - 1]);
-                        if (p0 && p1 && !isNaN(p0[0]) && !isNaN(p1[0])) d = 'M' + p0[0] + ',' + p0[1] + 'L' + p1[0] + ',' + p1[1];
+                        if (p0 && p1 && !isNaN(p0[0]) && !isNaN(p1[0])) {
+                            d = 'M' + p0[0] + ',' + p0[1] + 'L' + p1[0] + ',' + p1[1];
+                            if (_annotPreviewEl && !_annotPreviewEl.style.stroke) _annotPreviewEl.style.stroke = annotateColor;
+                        }
                     } else if (annotateKind === 'freehand' && _annotStrokePoints.length >= 2) {
                         var parts = _projectAnnotationParts(_annotStrokePoints, proj);
                         d = parts.map(function(part) { return 'M' + part.map(function(p) { return p[0] + ',' + p[1]; }).join('L'); }).join('');
@@ -1497,6 +1503,7 @@ function _annotFinalizeStroke(silent) {
                          type: isArrow ? 'arrow' : 'freehand',
                          coords: coords,
                          label: '',
+                         color: annotateColor,
                          distanceKm: distanceKm,
                          createdAt: Date.now()
                      });
@@ -1586,7 +1593,7 @@ export function finishAnnotationRegion() {
                      setState('annotatePoints', []);
                      annotationsList.push({
                          id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-                         type: 'region', coords: pendingCoords, label: '', createdAt: Date.now()
+                         type: 'region', coords: pendingCoords, label: '', color: annotateColor, createdAt: Date.now()
                      });
                      saveAnnotations();
                      redrawAnnotations();
@@ -1610,7 +1617,7 @@ if (annotateKind === 'pin') {
                          annotationsList.push({
                              id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
                              type: 'pin', coords: [coords[0], coords[1]],
-                             label: '', createdAt: Date.now()
+                             label: '', color: annotateColor, createdAt: Date.now()
                          });
                          saveAnnotations();
                          redrawAnnotations();
@@ -1623,7 +1630,6 @@ if (annotateKind === 'pin') {
                   }
 
 export function toggleAnnotationMode() {
-                     var wasActive = annotateActive;
                      setState('annotateActive', !annotateActive);
                      var btn = document.getElementById('annotateBtn');
                      if (btn) {
@@ -1645,6 +1651,7 @@ export function toggleAnnotationMode() {
                          if (measureActive) toggleMeasureMode();
                          setAnnotationToolbarActive();
                          announce(t('annotationModeOn'));
+                         openAnnotationHelpModal();
                      } else {
                          // End of session: keep the drawn markers stored, then
                          // clear the canvas so reopening starts blank.
@@ -1666,9 +1673,9 @@ export function restorePreviousAnnotations() {
                      setState('annotationsList', saved);
                      redrawAnnotations();
                      if (renderAnnotationsModal) renderAnnotationsModal();
-announce(t('annotationSessionRestored'));
-                      showToast(t('annotationSessionRestored'));
-                  }
+                     announce(t('annotationSessionRestored'));
+                     showToast(t('annotationSessionRestored'));
+                 }
 
 // ── Accessible annotation label dialog ──────────────────────────────────
 // Replaces window.prompt() so annotation labels can be entered by keyboard
@@ -1720,7 +1727,76 @@ export function setAnnotationToolbarActive() {
                     if (regionBtn) regionBtn.classList.toggle('toggle-on', annotateKind === 'region');
                     if (drawBtn) drawBtn.classList.toggle('toggle-on', annotateKind === 'freehand');
                     if (arrowBtn) arrowBtn.classList.toggle('toggle-on', annotateKind === 'arrow');
+                    document.querySelectorAll('#annotationToolbar .annotation-color-swatch').forEach(function(s) {
+                        s.classList.toggle('toggle-on', s.getAttribute('data-color') === annotateColor);
+                    });
+                    ['small', 'medium', 'large'].forEach(function(size) {
+                        var b = document.getElementById('annotationFont' + size.charAt(0).toUpperCase() + size.slice(1) + 'Btn');
+                        if (b) { b.classList.toggle('toggle-on', annotateFontSize === size); b.setAttribute('aria-pressed', String(annotateFontSize === size)); }
+                    });
                     if (annotateKind === 'region' && annotatePoints.length > 0) redrawAnnotationDrawing(); else redrawAnnotations();
+                }
+
+export function setAnnotationColor(color) {
+                    if (!/^#[0-9a-f]{6}$/i.test(color)) return;
+                    setState('annotateColor', color);
+                    try { localStorage.setItem('annotateColor', color); } catch (e) {}
+                    setAnnotationToolbarActive();
+                }
+
+export function setAnnotationFontSize(size) {
+                    if (['small', 'medium', 'large'].indexOf(size) === -1) return;
+                    setState('annotateFontSize', size);
+                    document.body.classList.remove('annotate-font-small', 'annotate-font-medium', 'annotate-font-large');
+                    document.body.classList.add('annotate-font-' + size);
+                    try { localStorage.setItem('annotateFontSize', size); } catch (e) {}
+                    setAnnotationToolbarActive();
+                    redrawAnnotations();
+                }
+
+export function clearAllAnnotations() {
+                    if (!annotationsList.length) { announce(t('annotationModeEmpty')); return; }
+                    var msg = t('annotationClearConfirm');
+                    if (!window.confirm(msg)) return;
+                    setState('annotationsList', []);
+                    saveAnnotations();
+                    clearAnnotationDrawing();
+                    clearAnnotationsView();
+                    announce(t('annotationCleared'));
+                    showToast(t('annotationCleared'));
+                }
+
+export function openAnnotationHelpModal() {
+                    var modal = document.getElementById('annotationHelpModal');
+                    if (!modal) return;
+                    var body = document.getElementById('annotationHelpBody');
+                    if (body) {
+                        var items = [
+                            ['annotationKindPin', 'annotationHelpPinText'],
+                            ['annotationKindRegion', 'annotationHelpRegionText'],
+                            ['annotationKindDraw', 'annotationHelpDrawText'],
+                            ['annotationKindArrow', 'annotationHelpArrowText'],
+                            ['annotationHelpColors', 'annotationHelpColorsText'],
+                            ['annotationHelpFonts', 'annotationHelpFontsText'],
+                            ['annotationHelpClear', 'annotationHelpClearText'],
+                            ['annotationHelpManage', 'annotationHelpManageText']
+                        ];
+                        body.innerHTML = items.map(function(pair) {
+                            return '<div class="annotation-help-item"><strong>' + t(pair[0]) + '</strong><span>' + t(pair[1]) + '</span></div>';
+                        }).join('') +
+                        '<div class="annotation-help-footer"><button class="btn quiz-start-btn" id="annotationHelpGotIt" data-i18n="annotationHelpGotIt">' + t('annotationHelpGotIt') + '</button></div>';
+                        var gotIt = document.getElementById('annotationHelpGotIt');
+                        if (gotIt) gotIt.addEventListener('click', closeAnnotationHelpModal);
+                    }
+                    modal.style.display = 'flex';
+                    modal.classList.add('visible');
+                    _setA11yDialogTrigger(document.activeElement);
+                    setTimeout(function() { _a11yFocusFirstInDialog(modal); _a11yHideBackground(modal); }, 0);
+                }
+
+export function closeAnnotationHelpModal() {
+                    var modal = document.getElementById('annotationHelpModal');
+                    if (modal) { modal.style.display = 'none'; modal.classList.remove('visible'); _a11yRestoreFocus(); }
                 }
 
 export function toggleAnnotationKind(kind) {
@@ -2820,6 +2896,15 @@ export async function init() {
                 // New session starts with a blank annotation canvas; the
                 // previous session stays stored for explicit restore.
                 setState('annotationsList', []);
+                try {
+                    var savedColor = localStorage.getItem('annotateColor');
+                    if (savedColor && /^#[0-9a-f]{6}$/i.test(savedColor)) setState('annotateColor', savedColor);
+                    var savedFont = localStorage.getItem('annotateFontSize');
+                    if (['small', 'medium', 'large'].indexOf(savedFont) !== -1) {
+                        setState('annotateFontSize', savedFont);
+                        document.body.classList.add('annotate-font-' + savedFont);
+                    }
+                } catch (e) {}
                 try { redrawAnnotations(); } catch(e) { console.error('annotation draw error:', e); }
                 try { loadFromHash(); } catch(e) {}
                 try { applyLanguage(); } catch(e) { console.error('applyLanguage error:', e); }

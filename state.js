@@ -326,6 +326,10 @@ export let annotateActive = false;
 
 export let annotateKind = 'pin';
 
+export let annotateColor = '#eab308';
+
+export let annotateFontSize = 'medium';
+
 export let annotatePoints = [];
 
 export let gAnnotations = null;
@@ -472,6 +476,8 @@ export function setState(name, value) {
         case 'allCountryFeatures': allCountryFeatures = value; return value;
         case 'annotateActive': annotateActive = value; return value;
         case 'annotateKind': annotateKind = value; return value;
+        case 'annotateColor': annotateColor = value; return value;
+        case 'annotateFontSize': annotateFontSize = value; return value;
         case 'annotatePoints': annotatePoints = value; return value;
         case 'annotationsList': annotationsList = value; return value;
         case 'borderDisputesVisible': borderDisputesVisible = value; return value;

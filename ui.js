@@ -725,6 +725,18 @@ export const annotationClearBtn2 = document.getElementById('annotationClearBtn')
 
 export const annotationManageBtn2 = document.getElementById('annotationManageBtn');
 
+export const annotationHelpBtn = document.getElementById('annotationHelpBtn');
+
+export const annotationHelpClose = document.getElementById('annotationHelpClose');
+
+export const annotationFontSmallBtn = document.getElementById('annotationFontSmallBtn');
+
+export const annotationFontMediumBtn = document.getElementById('annotationFontMediumBtn');
+
+export const annotationFontLargeBtn = document.getElementById('annotationFontLargeBtn');
+
+export const annotationColorSwatches = Array.prototype.slice.call(document.querySelectorAll('#annotationToolbar .annotation-color-swatch'));
+
 export const mobileAnnotateBtn = document.getElementById('mobileAnnotateBtn');
 
 export function maybeShowProjectionExplainer(force) {

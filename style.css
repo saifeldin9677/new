@@ -1837,6 +1837,56 @@ body {
     opacity: 0.55;
     cursor: not-allowed;
 }
+.annotation-color-seg {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 2px;
+}
+.annotation-color-swatch {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    padding: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+.annotation-color-swatch:hover {
+    transform: scale(1.15);
+}
+.annotation-color-swatch.toggle-on {
+    border-color: var(--brand-accent);
+    box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.5);
+    transform: scale(1.2);
+}
+.annot-font-btn {
+    min-width: 26px;
+    text-align: center;
+}
+/* Annotation label font sizes (body classes set from the toolbar) */
+body.annotate-font-small .annotation-pin-label { font-size: 9px; }
+body.annotate-font-medium .annotation-pin-label { font-size: 11px; }
+body.annotate-font-large .annotation-pin-label { font-size: 16px; }
+.annotation-help-item {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.78em;
+    color: var(--text);
+}
+.annotation-help-item:last-child { border-bottom: none; }
+.annotation-help-item strong {
+    color: var(--brand-accent);
+    white-space: nowrap;
+}
+.annotation-help-footer {
+    margin-top: 12px;
+    text-align: center;
+}
 .annotation-draw-vertex {
     fill: #eab308;
     stroke: #fff;
@@ -1955,9 +2005,15 @@ body.annotate-active .annotation-toolbar { box-shadow: 0 0 0 2px var(--brand-acc
 }
 body.measure-active .measure-toolbar { display: flex; }
 .annotation-toolbar {
-    /* Same slot as the measure toolbar (modes are mutually exclusive);
-       anchored low enough to stay clear of the zoom bar on the right. */
+    /* Centered at the bottom: fully visible, clear of the zoom bar
+       on the right and the legend on the left (modes are exclusive). */
+    right: auto;
     bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    justify-content: center;
+    max-width: 92vw;
+    flex-wrap: wrap;
 }
 body.annotate-active .annotation-toolbar { display: flex; }
 .annotation-pin-circle {

@@ -2,9 +2,9 @@ import { countryInfo, geopoliticalBlocsData } from './data.js';
 import { a11yDialogWasOpen, a11yLastOutside, adminBoundariesToggle, applyTheme, capitalsToggle, closePanelBtn, controlsBar, coordsToggle, corridorsToggle, countryNamesList, dataTableBtn, dataTableClose, dataTableOverlay, dataTableSearch, dataTableSortAsc, dataTableSortKey, densitySpotsToggle, exportBtn, geopoliticalBlocsVisible, globeViewBtn, labelsToggle, lang, langDropdownMenu, langToggle, layersModal, layersModalBackdrop, layersModalClose, layersToggleBtn, majorCitiesToggle, mapContainer, measureKind, measurePoints, menuToggle, modeButtons, onWindowResize, positionLangDropdown, prefersReducedMotion, presentationModeActive, quizActive, resetBtn, sectToggle, selectedBloc, selectedCountry, setState, shareBtn, shortcutsBtn, shortcutsClose, shortcutsOverlay, svg, timezonesToggle, zoomBehavior, zoomInBtn, zoomOutBtn, zoomResetBtn } from './state.js';
 import { getCleanName, getDisplayName, setLanguage, t } from './i18n.js';
 import { drawGeopoliticalBlocs, getDensity, setMode, toggleAdminBoundaries, toggleBorderDisputes, toggleCapitals, toggleColorblindMode, toggleCoords, toggleCorridors, toggleDensitySpots, toggleDesertsForests, toggleEarthquakes, toggleEthnicGroups, toggleGeopoliticalBlocs, toggleGlobeMode, toggleLabels, toggleMajorCities, toggleNaturalResources, toggleOceanCurrents, toggleRivers, toggleSect, toggleTimezones, toggleVolcanoes, toggleWinds, updateLegend } from './layers.js';
-import { cancelAnnotationStroke, clearAnnotationDrawing, clearMeasurement, closeAnnotationsModal, closeCountryPanel, finishAnnotationTool, flyToCountry, getCountryFlag, handleAnnotationClick, handleMeasureClick, init, onAnnotationPointerDown, onAnnotationPointerMove, onAnnotationPointerUp, openAnnotationsModal, redrawMeasureLayer, resetAll, resetZoom, setPanSpaceHeld, shareMap, toggleAnnotationKind, toggleAnnotationMode, toggleMeasureCalcMode, toggleMeasureKind, toggleMeasureMode, togglePresentationMode, updateHash } from './map-core.js';
+import { cancelAnnotationStroke, clearAllAnnotations, clearAnnotationDrawing, clearMeasurement, closeAnnotationHelpModal, closeAnnotationsModal, closeCountryPanel, finishAnnotationTool, flyToCountry, getCountryFlag, handleAnnotationClick, handleMeasureClick, init, onAnnotationPointerDown, onAnnotationPointerMove, onAnnotationPointerUp, openAnnotationHelpModal, openAnnotationsModal, redrawMeasureLayer, resetAll, resetZoom, setAnnotationColor, setAnnotationFontSize, setPanSpaceHeld, shareMap, toggleAnnotationKind, toggleAnnotationMode, toggleMeasureCalcMode, toggleMeasureKind, toggleMeasureMode, togglePresentationMode, updateHash } from './map-core.js';
 import { exportMapPDF } from './export.js';
-import { A11Y_DIALOG_SELECTOR, A11Y_FOCUSABLE, a11yIsVisible, a11yOpenDialog, a11ySkipLink, aboutBtn, aboutModal, aboutModalBackdrop, aboutModalClose, annotateBtn, annotationClearBtn2, annotationFinishBtn2, annotationKindArrowBtn, annotationKindDrawBtn, annotationKindPinBtn, annotationKindRegionBtn, annotationManageBtn2, annotationsModal, annotationsModalBackdrop, annotationsModalClose, blocSelect, closeAboutModal, closeDataTable, closeLayersModal, closeMobileToolsMenu, closePresetsModal, maybeShowProjectionExplainer, measureClearBtn2, measureFinishBtn2, measureGeodesicBtn2, measureKindAreaBtn, measureKindDistBtn, measurePlanarBtn2, mobileAboutBtn, mobileAnnotateBtn, mobileCoordsBtn, mobileFilterBtns, mobileLangBtn, mobileLayersBtn, mobileModeBtn, mobileModeBtns, mobileOnboardBtn, mobilePdfBtn, mobilePresetsBtn, mobileResetBtn2, mobileSearchInput, mobileShareBtn, mobileShortcutsBtn, mobileToolsBtn, mobileToolsMenu, modeSheet, modeSheetBackdrop, modeSheetClose, onboardBtn, openAboutModal, openDataTable, openLayersModal, openPresetsModal, presetsBtn, presetsModal, presetsModalBackdrop, presetsModalClose, renderDataTable, riversToggle, setupReligionButtons } from './ui.js';
+import { A11Y_DIALOG_SELECTOR, A11Y_FOCUSABLE, a11yIsVisible, a11yOpenDialog, a11ySkipLink, aboutBtn, aboutModal, aboutModalBackdrop, aboutModalClose, annotateBtn, annotationClearBtn2, annotationColorSwatches, annotationFinishBtn2, annotationFontLargeBtn, annotationFontMediumBtn, annotationFontSmallBtn, annotationHelpBtn, annotationHelpClose, annotationKindArrowBtn, annotationKindDrawBtn, annotationKindPinBtn, annotationKindRegionBtn, annotationManageBtn2, annotationsModal, annotationsModalBackdrop, annotationsModalClose, blocSelect, closeAboutModal, closeDataTable, closeLayersModal, closeMobileToolsMenu, closePresetsModal, maybeShowProjectionExplainer, measureClearBtn2, measureFinishBtn2, measureGeodesicBtn2, measureKindAreaBtn, measureKindDistBtn, measurePlanarBtn2, mobileAboutBtn, mobileAnnotateBtn, mobileCoordsBtn, mobileFilterBtns, mobileLangBtn, mobileLayersBtn, mobileModeBtn, mobileModeBtns, mobileOnboardBtn, mobilePdfBtn, mobilePresetsBtn, mobileResetBtn2, mobileSearchInput, mobileShareBtn, mobileShortcutsBtn, mobileToolsBtn, mobileToolsMenu, modeSheet, modeSheetBackdrop, modeSheetClose, onboardBtn, openAboutModal, openDataTable, openLayersModal, openPresetsModal, presetsBtn, presetsModal, presetsModalBackdrop, presetsModalClose, renderDataTable, riversToggle, setupReligionButtons } from './ui.js';
 
 // Entry module: owns all top-level wiring / executable statements
 // extracted from the original app.js monolith.
@@ -455,9 +455,21 @@ if (annotationKindArrowBtn) annotationKindArrowBtn.addEventListener('click', fun
 
 if (annotationFinishBtn2) annotationFinishBtn2.addEventListener('click', finishAnnotationTool);
 
-if (annotationClearBtn2) annotationClearBtn2.addEventListener('click', clearAnnotationDrawing);
+if (annotationClearBtn2) annotationClearBtn2.addEventListener('click', clearAllAnnotations);
 
 if (annotationManageBtn2) annotationManageBtn2.addEventListener('click', openAnnotationsModal);
+
+annotationColorSwatches.forEach(function(sw) { sw.addEventListener('click', function() { setAnnotationColor(sw.getAttribute('data-color')); }); });
+
+if (annotationFontSmallBtn) annotationFontSmallBtn.addEventListener('click', function() { setAnnotationFontSize('small'); });
+
+if (annotationFontMediumBtn) annotationFontMediumBtn.addEventListener('click', function() { setAnnotationFontSize('medium'); });
+
+if (annotationFontLargeBtn) annotationFontLargeBtn.addEventListener('click', function() { setAnnotationFontSize('large'); });
+
+if (annotationHelpBtn) annotationHelpBtn.addEventListener('click', openAnnotationHelpModal);
+
+if (annotationHelpClose) annotationHelpClose.addEventListener('click', closeAnnotationHelpModal);
 
 mapContainer.addEventListener('click', handleAnnotationClick, true);
 

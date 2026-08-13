@@ -138,16 +138,30 @@
             <button class="measure-mode-btn" id="measureClearBtn" data-i18n="measureClear">Clear</button>
         </div>
 
-        <div class="measure-toolbar annotation-toolbar" id="annotationToolbar" style="display:none" role="toolbar" aria-label="Annotate">
+        <div class="measure-toolbar annotation-toolbar" id="annotationToolbar" style="display:none" role="toolbar" aria-label="توضيح" data-i18n-aria-label="annotationToolLabel">
             <div class="measure-seg">
-                <button class="measure-mode-btn" id="annotationKindPin" data-i18n="annotationPin">Pin</button>
-                <button class="measure-mode-btn" id="annotationKindRegion" data-i18n="annotationRegion">Region</button>
-                <button class="measure-mode-btn" id="annotationKindDraw" data-i18n="annotationDraw">Draw</button>
-                <button class="measure-mode-btn" id="annotationKindArrow" data-i18n="annotationArrow">Arrow</button>
+                <button class="measure-mode-btn" id="annotationKindPin" data-i18n="annotationPin">نقطة</button>
+                <button class="measure-mode-btn" id="annotationKindRegion" data-i18n="annotationRegion">منطقة</button>
+                <button class="measure-mode-btn" id="annotationKindDraw" data-i18n="annotationDraw">رسم</button>
+                <button class="measure-mode-btn" id="annotationKindArrow" data-i18n="annotationArrow">سهم</button>
             </div>
-            <button class="measure-mode-btn" id="annotationFinishBtn" style="display:none" data-i18n="measureFinish">Finish</button>
-            <button class="measure-mode-btn" id="annotationClearBtn" data-i18n="annotationClear">Clear</button>
-            <button class="measure-mode-btn" id="annotationManageBtn" data-i18n="annotationManage">Manage</button>
+            <div class="measure-seg annotation-color-seg" role="group" aria-label="لون الرسم" data-i18n-aria-label="annotationColorLabel">
+                <button class="annotation-color-swatch" data-color="#eab308" style="background:#eab308" title="أصفر" data-i18n-title="annotationColorYellow" aria-label="أصفر"></button>
+                <button class="annotation-color-swatch" data-color="#ef4444" style="background:#ef4444" title="أحمر" data-i18n-title="annotationColorRed" aria-label="أحمر"></button>
+                <button class="annotation-color-swatch" data-color="#3b82f6" style="background:#3b82f6" title="أزرق" data-i18n-title="annotationColorBlue" aria-label="أزرق"></button>
+                <button class="annotation-color-swatch" data-color="#22c55e" style="background:#22c55e" title="أخضر" data-i18n-title="annotationColorGreen" aria-label="أخضر"></button>
+                <button class="annotation-color-swatch" data-color="#a855f7" style="background:#a855f7" title="بنفسجي" data-i18n-title="annotationColorPurple" aria-label="بنفسجي"></button>
+                <button class="annotation-color-swatch" data-color="#ffffff" style="background:#ffffff" title="أبيض" data-i18n-title="annotationColorWhite" aria-label="أبيض"></button>
+            </div>
+            <div class="measure-seg" role="group" aria-label="حجم الخط" data-i18n-aria-label="annotationFontLabel">
+                <button class="measure-mode-btn annot-font-btn" id="annotationFontSmallBtn" title="خط صغير" data-i18n-title="annotationFontSmall" aria-pressed="false">A−</button>
+                <button class="measure-mode-btn annot-font-btn" id="annotationFontMediumBtn" title="خط متوسط" data-i18n-title="annotationFontMedium" aria-pressed="true">A</button>
+                <button class="measure-mode-btn annot-font-btn" id="annotationFontLargeBtn" title="خط كبير" data-i18n-title="annotationFontLarge" aria-pressed="false">A+</button>
+            </div>
+            <button class="measure-mode-btn" id="annotationFinishBtn" style="display:none" data-i18n="measureFinish">إنهاء</button>
+            <button class="measure-mode-btn" id="annotationClearBtn" data-i18n="annotationClear">مسح</button>
+            <button class="measure-mode-btn" id="annotationManageBtn" data-i18n="annotationManage">إدارة</button>
+            <button class="measure-mode-btn" id="annotationHelpBtn" title="مساعدة الوضع" data-i18n-title="annotationHelpButton" aria-label="مساعدة">؟</button>
         </div>
 
         <div class="controls-bar" id="controlsBar" role="toolbar" aria-label="شريط التحكم">
@@ -243,6 +257,18 @@
                     <button class="layers-modal-close" id="annotationsModalClose" aria-label="إغلاق">&times;</button>
                 </div>
                 <div class="layers-modal-body" id="annotationsModalBody"></div>
+            </div>
+        </div>
+
+        <!-- Explanation-mode help / info screen -->
+        <div class="layers-modal about-modal" id="annotationHelpModal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="annotationHelpTitle">
+            <div class="layers-modal-backdrop"></div>
+            <div class="layers-modal-content" style="max-width:520px">
+                <div class="layers-modal-header">
+                    <h3 id="annotationHelpTitle" data-i18n="annotationHelpTitle"><i data-lucide="info" class="lucide-icon"></i><span class="btn-text">وضع الشرح</span></h3>
+                    <button class="layers-modal-close" id="annotationHelpClose" aria-label="إغلاق">&times;</button>
+                </div>
+                <div class="layers-modal-body" id="annotationHelpBody"></div>
             </div>
         </div>
 

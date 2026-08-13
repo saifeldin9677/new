@@ -1283,20 +1283,16 @@ export function redrawAnnotations() {
                              var xy = proj(a.coords);
                              if (!xy || isNaN(xy[0])) return;
                              gAnnotations.append('circle').attr('class', 'annotation-pin-circle').attr('cx', xy[0]).attr('cy', xy[1]).attr('r', 6).style('fill', col);
-                             if (a.label) {
-                                 gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', xy[0] + 9).attr('y', xy[1] + 4).text(a.label);
-                             }
+                             gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', xy[0] + 9).attr('y', xy[1] + 4).text(a.label || t('annotationPin'));
                          } else if (a.type === 'region' && Array.isArray(a.coords) && a.coords.length >= 3) {
                              var pts = a.coords.map(function(c) { return proj(c); });
                              if (pts.some(function(p) { return !p || isNaN(p[0]); })) return;
                              var d = 'M' + pts.map(function(p) { return p[0] + ',' + p[1]; }).join('L') + 'Z';
                              gAnnotations.append('path').attr('class', 'annotation-region-poly').attr('d', d).style('stroke', col).style('fill', col + '26');
-                             if (a.label) {
-                                 var cx = 0, cy = 0;
-                                 pts.forEach(function(p) { cx += p[0]; cy += p[1]; });
-                                 cx /= pts.length; cy /= pts.length;
-                                 gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', cx).attr('y', cy).attr('text-anchor', 'middle').text(a.label);
-                             }
+                             var cx = 0, cy = 0;
+                             pts.forEach(function(p) { cx += p[0]; cy += p[1]; });
+                             cx /= pts.length; cy /= pts.length;
+                             gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', cx).attr('y', cy).attr('text-anchor', 'middle').text(a.label || t('annotationRegion'));
                          } else if (a.type === 'freehand' && Array.isArray(a.coords) && a.coords.length >= 2) {
                              parts = _projectAnnotationParts(a.coords, proj);
                              if (!parts.length) return;
@@ -1306,8 +1302,8 @@ export function redrawAnnotations() {
                                  gAnnotations.append('path').attr('class', 'annotation-freehand-path').attr('d', pd).style('stroke', col);
                                  if (!freeLabelPos && part.length) freeLabelPos = part[0];
                              });
-                             if (a.label && freeLabelPos) {
-                                 gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', freeLabelPos[0] + 9).attr('y', freeLabelPos[1] + 4).text(a.label);
+                             if (freeLabelPos) {
+                                 gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', freeLabelPos[0] + 9).attr('y', freeLabelPos[1] + 4).text(a.label || t('annotationDraw'));
                              }
                          } else if (a.type === 'arrow' && Array.isArray(a.coords) && a.coords.length >= 2) {
                              parts = _projectAnnotationParts(a.coords, proj);
@@ -1339,8 +1335,8 @@ export function redrawAnnotations() {
                                  var perpx = -Math.sin(ang), perpy = Math.cos(ang);
                                  gAnnotations.append('path').attr('class', 'annotation-arrow-head').attr('d',
                                      'M' + ax1 + ',' + ay1 + 'L' + (bxp + AW * perpx) + ',' + (byp + AW * perpy) + 'L' + (bxp - AW * perpx) + ',' + (byp - AW * perpy) + 'Z').style('fill', col);
-                                 if (a.label && arrowLabelPos) {
-                                     gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', arrowLabelPos[0] + 9).attr('y', arrowLabelPos[1] + 4).text(a.label);
+                                 if (arrowLabelPos) {
+                                     gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', arrowLabelPos[0] + 9).attr('y', arrowLabelPos[1] + 4).text(a.label || t('annotationArrow'));
                                  }
                              }
                          }

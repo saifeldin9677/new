@@ -1036,7 +1036,7 @@ export function setupZoom() {
                         drawPointLayersCanvas();
                         setState('_adminBakeDirty', true);
                         scheduleAdminBoundariesRedraw();
-                        if (!(_annotStrokePoints && _annotStrokePoints.length)) { try { redrawAnnotations(); } catch(e) {} }
+                        if (!(_annotStrokePoints && _annotStrokePoints.length)) { try { redrawAnnotations(); if (annotateKind === 'region' && annotatePoints && annotatePoints.length > 0) redrawAnnotationDrawing(); } catch(e) {} }
                         var _pendingLayers = [
                             [corridorsVisible || additionalWaterwaysVisible, function() { drawRoutes(true); }],
                             [borderDisputesVisible, function() { drawBorderDisputes(true); }],
@@ -1832,10 +1832,11 @@ export function openAnnotationHelpModal() {
                             ['annotationHelpClear', 'annotationHelpClearText'],
                             ['annotationHelpManage', 'annotationHelpManageText']
                         ];
-                        body.innerHTML = items.map(function(pair) {
-                            return '<div class="annotation-help-item"><strong>' + t(pair[0]) + '</strong><span>' + t(pair[1]) + '</span></div>';
+                        body.innerHTML = '<p class="annotation-help-lead">' + t('annotationHelpIntro') + '</p>' +
+                        items.map(function(pair) {
+                            return '<p class="annotation-help-line"><strong>' + t(pair[0]) + ': </strong>' + t(pair[1]) + '</p>';
                         }).join('') +
-                        '<div class="annotation-help-footer"><button class="btn quiz-start-btn" id="annotationHelpGotIt" data-i18n="annotationHelpGotIt">' + t('annotationHelpGotIt') + '</button></div>';
+                        '<div class="onboard-card-actions"><span></span><button class="onboard-btn onboard-next" id="annotationHelpGotIt" data-i18n="annotationHelpGotIt">' + t('annotationHelpGotIt') + '</button></div>';
                         var gotIt = document.getElementById('annotationHelpGotIt');
                         if (gotIt) gotIt.addEventListener('click', closeAnnotationHelpModal);
                     }

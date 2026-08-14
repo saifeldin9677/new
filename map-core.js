@@ -1793,6 +1793,17 @@ export function setAnnotationFontSize(size) {
                     }
                 }
 
+export function undoLastAnnotation() {
+                    if (!annotationsList.length) { announce(t('annotationModeEmpty')); return; }
+                    annotationsList.pop();
+                    saveAnnotations();
+                    clearAnnotationDrawing();
+                    redrawAnnotations();
+                    renderAnnotationsModal();
+                    announce(t('annotationUndone'));
+                    showToast(t('annotationUndone'));
+                }
+
 export function clearAllAnnotations() {
                     if (!annotationsList.length) { announce(t('annotationModeEmpty')); return; }
                     var msg = t('annotationClearConfirm');
@@ -1801,6 +1812,7 @@ export function clearAllAnnotations() {
                     saveAnnotations();
                     clearAnnotationDrawing();
                     clearAnnotationsView();
+                    renderAnnotationsModal();
                     announce(t('annotationCleared'));
                     showToast(t('annotationCleared'));
                 }
@@ -1897,13 +1909,26 @@ export function renderAnnotationsModal() {
                             renderAnnotationsModal();
                             redrawAnnotations();
                         });
-actions.appendChild(visBtn);
+                     actions.appendChild(visBtn);
                      actions.appendChild(delBtn);
                      row.appendChild(typeEl);
                      row.appendChild(labelEl);
                      row.appendChild(actions);
                      body.appendChild(row);
                      });
+                     var actionsWrap = document.createElement('div');
+                     actionsWrap.style.display = 'flex';
+                     actionsWrap.style.flexWrap = 'wrap';
+                     actionsWrap.style.gap = '8px';
+                     actionsWrap.style.justifyContent = 'center';
+                     actionsWrap.style.marginTop = '12px';
+                     var deleteAllBtn = document.createElement('button');
+                     deleteAllBtn.className = 'btn annotation-del-all-btn';
+                     deleteAllBtn.id = 'annotationDeleteAllBtn';
+                     deleteAllBtn.textContent = t('annotationDeleteAll');
+                     deleteAllBtn.addEventListener('click', clearAllAnnotations);
+                     actionsWrap.appendChild(deleteAllBtn);
+                     body.appendChild(actionsWrap);
                      var stored = loadAnnotations();
                      var restoreWrap = document.createElement('div');
                      restoreWrap.style.textAlign = 'center';

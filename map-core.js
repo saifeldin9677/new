@@ -1278,7 +1278,7 @@ export function redrawAnnotations() {
                      var proj = getActiveProjection();
                      var parts = null;
                      var zoomStroke = Math.min(4, Math.max(1, currentTransform.k));
-                     function itemScale(a) { return (a && a.size === 'small') ? 0.7 : (a && a.size === 'large') ? 1.5 : 1; }
+                     function itemScale(a) { return _annotNormalizeSize(a && a.size) / 10; }
                      annotationsList.forEach(function(a) {
                          if (a.hidden) return;
                          var col = a.color || '#eab308';
@@ -1361,7 +1361,7 @@ export function redrawAnnotationDrawing() {
                     var proj = getActiveProjection();
                     var finishBtn = document.getElementById('annotationFinishBtn');
                     if (finishBtn) finishBtn.style.display = (annotatePoints.length >= 3) ? '' : 'none';
-                    var fontScale = annotateFontSize === 'small' ? 0.7 : annotateFontSize === 'large' ? 1.5 : 1;
+                    var fontScale = _annotNormalizeSize(annotateFontSize) / 10;
                     var zoomStroke = Math.min(4, Math.max(1, currentTransform.k));
                     annotatePoints.forEach(function(c) {
                         var xy = proj(c);
@@ -1444,7 +1444,7 @@ function _annotStrokeUpdatePreview() {
                         _annotPreviewEl = gAnnotations.append('path').attr('class', 'annotation-region-poly annotation-draw-poly').node();
                         _annotPreviewEl.style.stroke = annotateColor;
                         _annotPreviewEl.style.fill = annotateColor + '1f';
-                        _annotPreviewEl.style.strokeWidth = (annotateKind === 'region' ? 2 : 2.5) * (annotateFontSize === 'small' ? 0.7 : annotateFontSize === 'large' ? 1.5 : 1) * Math.min(4, Math.max(1, currentTransform.k));
+                        _annotPreviewEl.style.strokeWidth = String((annotateKind === 'region' ? 2 : 2.5) * (_annotNormalizeSize(annotateFontSize) / 10) * Math.min(4, Math.max(1, currentTransform.k)));
                     }
                     if (finishBtn) finishBtn.style.display = '';
                     var d;
@@ -1461,7 +1461,7 @@ function _annotStrokeUpdatePreview() {
                     }
                     if (d) {
                         _annotPreviewEl.setAttribute('d', d);
-                        _annotPreviewEl.style.strokeWidth = String((annotateKind === 'region' ? 2 : 2.5) * (annotateFontSize === 'small' ? 0.7 : annotateFontSize === 'large' ? 1.5 : 1) * Math.min(4, Math.max(1, currentTransform.k)));
+                        _annotPreviewEl.style.strokeWidth = String((annotateKind === 'region' ? 2 : 2.5) * (_annotNormalizeSize(annotateFontSize) / 10) * Math.min(4, Math.max(1, currentTransform.k)));
                     }
                 }
 
@@ -1741,10 +1741,17 @@ export function setAnnotationToolbarActive() {
                     document.querySelectorAll('#annotationToolbar .annotation-color-swatch').forEach(function(s) {
                         s.classList.toggle('toggle-on', s.getAttribute('data-color') === annotateColor);
                     });
-                    ['small', 'medium', 'large'].forEach(function(size) {
+                    var cur = _annotNormalizeSize(annotateFontSize);
+                    var pressed = {};
+                    pressed.small = (cur === ANNOT_FONT_LEVELS[0]);
+                    pressed.medium = (cur === 10);
+                    pressed.large = (cur === ANNOT_FONT_LEVELS[ANNOT_FONT_LEVELS.length - 1]);
+                    Object.keys(pressed).forEach(function(size) {
                         var b = document.getElementById('annotationFont' + size.charAt(0).toUpperCase() + size.slice(1) + 'Btn');
-                        if (b) { b.classList.toggle('toggle-on', annotateFontSize === size); b.setAttribute('aria-pressed', String(annotateFontSize === size)); }
+                        if (b) { b.classList.toggle('toggle-on', pressed[size]); b.setAttribute('aria-pressed', String(pressed[size])); }
                     });
+                    var fv = document.getElementById('annotationFontValue');
+                    if (fv) fv.textContent = String(cur);
                     if (annotateKind === 'region' && annotatePoints.length > 0) redrawAnnotationDrawing(); else redrawAnnotations();
                 }
 
@@ -1755,13 +1762,32 @@ export function setAnnotationColor(color) {
                     setAnnotationToolbarActive();
                 }
 
+var ANNOT_FONT_LEVELS = [8, 10, 12, 14, 16, 20, 24];
+
+function _annotNormalizeSize(v) {
+                    if (v === 'small') return 8;
+                    if (v === 'large') return 16;
+                    if (v === 'medium' || v === null || v === undefined || v === '') return 10;
+                    var n = parseInt(String(v), 10);
+                    return isNaN(n) ? 10 : n;
+                }
+
+export function stepAnnotationFontSize(delta) {
+                    var cur = _annotNormalizeSize(annotateFontSize);
+                    var idx = ANNOT_FONT_LEVELS.indexOf(cur);
+                    if (idx === -1) idx = ANNOT_FONT_LEVELS.indexOf(10);
+                    idx = Math.max(0, Math.min(ANNOT_FONT_LEVELS.length - 1, idx + delta));
+                    setAnnotationFontSize(ANNOT_FONT_LEVELS[idx]);
+                }
+
 export function setAnnotationFontSize(size) {
-                    if (['small', 'medium', 'large'].indexOf(size) === -1) return;
+                    if (ANNOT_FONT_LEVELS.indexOf(size) === -1) return;
                     setState('annotateFontSize', size);
-                    try { localStorage.setItem('annotateFontSize', size); } catch (e) {}
+                    try { localStorage.setItem('annotateFontSize', String(size)); } catch (e) {}
                     setAnnotationToolbarActive();
+                    var scale = size / 10;
                     if (_annotPreviewEl && _annotStrokeActive) {
-                        _annotPreviewEl.style.strokeWidth = String((annotateKind === 'region' ? 2 : 2.5) * (size === 'small' ? 0.7 : size === 'large' ? 1.5 : 1) * Math.min(4, Math.max(1, currentTransform.k)));
+                        _annotPreviewEl.style.strokeWidth = String((annotateKind === 'region' ? 2 : 2.5) * scale * Math.min(4, Math.max(1, currentTransform.k)));
                     } else if (annotateKind === 'region' && annotatePoints.length > 0) {
                         redrawAnnotationDrawing();
                     }
@@ -2913,7 +2939,7 @@ export async function init() {
                     var savedColor = localStorage.getItem('annotateColor');
                     if (savedColor && /^#[0-9a-f]{6}$/i.test(savedColor)) setState('annotateColor', savedColor);
                     var savedFont = localStorage.getItem('annotateFontSize');
-                    if (['small', 'medium', 'large'].indexOf(savedFont) !== -1) setState('annotateFontSize', savedFont);
+                    if (savedFont && ANNOT_FONT_LEVELS.indexOf(_annotNormalizeSize(savedFont)) !== -1) setState('annotateFontSize', _annotNormalizeSize(savedFont));
                 } catch (e) {}
                 try { redrawAnnotations(); } catch(e) { console.error('annotation draw error:', e); }
                 try { loadFromHash(); } catch(e) {}

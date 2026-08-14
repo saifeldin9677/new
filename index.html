@@ -155,8 +155,9 @@
             </div>
             <div class="measure-seg" role="group" aria-label="حجم الخط" data-i18n-aria-label="annotationFontLabel">
                 <button class="measure-mode-btn annot-font-btn" id="annotationFontSmallBtn" title="خط صغير" data-i18n-title="annotationFontSmall" aria-pressed="false">A−</button>
-                <button class="measure-mode-btn annot-font-btn" id="annotationFontMediumBtn" title="خط متوسط" data-i18n-title="annotationFontMedium" aria-pressed="true">A</button>
+                <output class="annot-font-btn annot-font-value" id="annotationFontValue" aria-live="polite" aria-label="حجم الخط" data-i18n-aria-label="annotationFontLabel">10</output>
                 <button class="measure-mode-btn annot-font-btn" id="annotationFontLargeBtn" title="خط كبير" data-i18n-title="annotationFontLarge" aria-pressed="false">A+</button>
+                <button class="measure-mode-btn annot-font-btn" id="annotationFontMediumBtn" title="خط متوسط" data-i18n-title="annotationFontMedium" aria-pressed="false">A</button>
             </div>
             <button class="measure-mode-btn" id="annotationFinishBtn" style="display:none" data-i18n="measureFinish">إنهاء</button>
             <button class="measure-mode-btn" id="annotationClearBtn" data-i18n="annotationClear">مسح</button>
@@ -265,7 +266,7 @@
             <div class="layers-modal-backdrop"></div>
             <div class="layers-modal-content" style="max-width:520px">
                 <div class="layers-modal-header">
-                    <h3 id="annotationHelpTitle" data-i18n="annotationHelpTitle"><i data-lucide="info" class="lucide-icon"></i><span class="btn-text">وضع الشرح</span></h3>
+                    <h2 id="annotationHelpTitle" data-i18n="annotationHelpTitle"><i data-lucide="info" class="lucide-icon"></i><span class="btn-text">وضع الشرح</span></h2>
                     <button class="layers-modal-close" id="annotationHelpClose" aria-label="إغلاق">&times;</button>
                 </div>
                 <div class="layers-modal-body" id="annotationHelpBody"></div>

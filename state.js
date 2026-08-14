@@ -328,7 +328,7 @@ export let annotateKind = 'pin';
 
 export let annotateColor = '#eab308';
 
-export let annotateFontSize = 'medium';
+export let annotateFontSize = 10;
 
 export let annotatePoints = [];
 

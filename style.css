@@ -1,6 +1,7 @@
 :root {
     --brand-primary: #1B3A5C;
     --brand-accent: #14B8A6;
+    --brand-strong: #2dd4bf;
     --bg: #1a1d23;
     --panel-bg: #21252b;
     --text: #e0e0e0;
@@ -126,6 +127,7 @@ path:focus-visible {
     :root:not([data-theme]) {
         --brand-primary: #1B3A5C;
         --brand-accent: #0d9488;
+        --brand-strong: #0f766e;
         --bg: #f0f2f5;
         --panel-bg: #ffffff;
         --text: #1a1d23;
@@ -167,6 +169,7 @@ path:focus-visible {
 [data-theme="light"] {
     --brand-primary: #1B3A5C;
     --brand-accent: #0d9488;
+        --brand-strong: #0f766e;
     --bg: #f0f2f5;
     --panel-bg: #ffffff;
     --text: #1a1d23;
@@ -1865,6 +1868,21 @@ body {
     min-width: 26px;
     text-align: center;
 }
+.annot-font-value {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    padding: 0 4px;
+    font-size: 0.78em;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    cursor: default;
+    user-select: none;
+}
 .annotation-help-item {
     display: flex;
     gap: 8px;
@@ -1876,7 +1894,7 @@ body {
 }
 .annotation-help-item:last-child { border-bottom: none; }
 .annotation-help-item strong {
-    color: var(--brand-accent);
+    color: var(--brand-strong);
     white-space: nowrap;
 }
 .annotation-help-footer {

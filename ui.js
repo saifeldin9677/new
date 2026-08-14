@@ -192,8 +192,12 @@ export function setupKeyboard() {
                                     closeCountryPanel();
                                 } else {
                                     var escapeOnboardEl = document.getElementById('onboardOverlay');
-                                    if (escapeOnboardEl && escapeOnboardEl.classList.contains('active') && window.closeOnboarding) {
-                                        window.closeOnboarding();
+                                    if (escapeOnboardEl && escapeOnboardEl.classList.contains('active')) {
+                                        if (window.annotationTutorialActive && window.closeAnnotationTutorial) {
+                                            window.closeAnnotationTutorial();
+                                        } else if (window.closeOnboarding) {
+                                            window.closeOnboarding();
+                                        }
                                     }
                                 }
                             }
@@ -727,7 +731,6 @@ export const annotationManageBtn2 = document.getElementById('annotationManageBtn
 
 export const annotationHelpBtn = document.getElementById('annotationHelpBtn');
 
-export const annotationHelpClose = document.getElementById('annotationHelpClose');
 
 export const annotationFontSmallBtn = document.getElementById('annotationFontSmallBtn');
 

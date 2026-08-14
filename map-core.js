@@ -1662,7 +1662,7 @@ export function toggleAnnotationMode() {
                          if (measureActive) toggleMeasureMode();
                          setAnnotationToolbarActive();
                          announce(t('annotationModeOn'));
-                         openAnnotationHelpModal();
+                         maybeStartAnnotationTutorial();
                      } else {
                          // End of session: keep the drawn markers stored, then
                          // clear the canvas so reopening starts blank.
@@ -1817,38 +1817,9 @@ export function clearAllAnnotations() {
                     showToast(t('annotationCleared'));
                 }
 
-export function openAnnotationHelpModal() {
-                    var modal = document.getElementById('annotationHelpModal');
-                    if (!modal) return;
-                    var body = document.getElementById('annotationHelpBody');
-                    if (body) {
-                        var items = [
-                            ['annotationKindPin', 'annotationHelpPinText'],
-                            ['annotationKindRegion', 'annotationHelpRegionText'],
-                            ['annotationKindDraw', 'annotationHelpDrawText'],
-                            ['annotationKindArrow', 'annotationHelpArrowText'],
-                            ['annotationHelpColors', 'annotationHelpColorsText'],
-                            ['annotationHelpFonts', 'annotationHelpFontsText'],
-                            ['annotationHelpClear', 'annotationHelpClearText'],
-                            ['annotationHelpManage', 'annotationHelpManageText']
-                        ];
-                        body.innerHTML = '<p class="annotation-help-lead">' + t('annotationHelpIntro') + '</p>' +
-                        items.map(function(pair) {
-                            return '<p class="annotation-help-line"><strong>' + t(pair[0]) + ': </strong>' + t(pair[1]) + '</p>';
-                        }).join('') +
-                        '<div class="onboard-card-actions"><span></span><button class="onboard-btn onboard-next" id="annotationHelpGotIt" data-i18n="annotationHelpGotIt">' + t('annotationHelpGotIt') + '</button></div>';
-                        var gotIt = document.getElementById('annotationHelpGotIt');
-                        if (gotIt) gotIt.addEventListener('click', closeAnnotationHelpModal);
-                    }
-                    modal.style.display = 'flex';
-                    modal.classList.add('visible');
-                    _setA11yDialogTrigger(document.activeElement);
-                    setTimeout(function() { _a11yFocusFirstInDialog(modal); _a11yHideBackground(modal); }, 0);
-                }
-
-export function closeAnnotationHelpModal() {
-                    var modal = document.getElementById('annotationHelpModal');
-                    if (modal) { modal.style.display = 'none'; modal.classList.remove('visible'); _a11yRestoreFocus(); }
+export function maybeStartAnnotationTutorial() {
+                    try { if (localStorage.getItem('annotateExplained') === '1') return; } catch(e) {}
+                    setTimeout(function() { if (window.startAnnotationTutorial) window.startAnnotationTutorial(); }, 300);
                 }
 
 export function toggleAnnotationKind(kind) {
@@ -3206,6 +3177,8 @@ export async function init() {
                     }
 
                     function openTutorial() {
+                        annotateOpen = false;
+                        window.annotationTutorialActive = false;
                         currentStep = 0;
                         overlay.classList.add('active');
                         isOpen = true;
@@ -3213,9 +3186,19 @@ export async function init() {
                         renderStep();
                     }
 
-                    skipBtn.addEventListener('click', closeTutorial);
-                    nextBtn.addEventListener('click', nextStep);
+                    skipBtn.addEventListener('click', function() {
+                        if (annotateOpen) { annotateClose(); return; }
+                        closeTutorial();
+                    });
+                    nextBtn.addEventListener('click', function() {
+                        if (annotateOpen) { annotateNext(); return; }
+                        nextStep();
+                    });
                     overlay.addEventListener('click', function(e) {
+                        if (annotateOpen) {
+                            if (e.target === overlay) annotateClose();
+                            return;
+                        }
                         if (e.target === overlay) closeTutorial();
                     });
 
@@ -3224,6 +3207,94 @@ export async function init() {
                     // Expose so the Escape key handler can close the tutorial too
                     window.closeOnboarding = closeTutorial;
 
+                    // ── Annotation-mode walkthrough (same first-run tutorial UI) ──
+                    var annotateSteps = [
+                        { getEl: function() { return document.getElementById('annotationKindPin'); }, icon: '📍', titleKey: 'annotationPin', textKey: 'annotationHelpPinText' },
+                        { getEl: function() { return document.getElementById('annotationKindRegion'); }, icon: '📐', titleKey: 'annotationRegion', textKey: 'annotationHelpRegionText' },
+                        { getEl: function() { return document.getElementById('annotationKindDraw'); }, icon: '✏️', titleKey: 'annotationDraw', textKey: 'annotationHelpDrawText' },
+                        { getEl: function() { return document.getElementById('annotationKindArrow'); }, icon: '➡️', titleKey: 'annotationArrow', textKey: 'annotationHelpArrowText' },
+                        { getEl: function() { return document.querySelector('#annotationToolbar .annotation-color-seg'); }, icon: '🎨', titleKey: 'annotationColorLabel', textKey: 'annotationHelpColorsText' },
+                        { getEl: function() { return document.getElementById('annotationFontLargeBtn').parentElement; }, icon: '🔠', titleKey: 'annotationFontLabel', textKey: 'annotationHelpFontsText' },
+                        { getEl: function() { return document.getElementById('annotationClearBtn'); }, icon: '↩️', titleKey: 'annotationClear', textKey: 'annotationHelpClearText' },
+                        { getEl: function() { return document.getElementById('annotationManageBtn'); }, icon: '🗂️', titleKey: 'annotationManage', textKey: 'annotationHelpManageText' },
+                        { getEl: function() { return document.getElementById('annotationHelpBtn'); }, icon: '❓', titleKey: 'annotationHelpButton', textKey: 'annotationHelpButtonText' }
+                    ];
+                    var annotateIdx = 0;
+                    var annotateOpen = false;
+
+                    function annotateRenderStep() {
+                        var step = annotateSteps[annotateIdx];
+                        var el = step.getEl ? step.getEl() : null;
+                        if (el) {
+                            glow.style.display = '';
+                            card.style.transform = '';
+                        } else {
+                            glow.style.display = 'none';
+                            card.style.left = '50%';
+                            card.style.top = '50%';
+                            card.style.transform = 'translate(-50%,-50%)';
+                        }
+                        cardIcon.textContent = step.icon;
+                        cardTitle.textContent = t(step.titleKey);
+                        cardText.textContent = t(step.textKey);
+                        cardDots.innerHTML = '';
+                        annotateSteps.forEach(function(_, i) {
+                            var dot = document.createElement('span');
+                            dot.className = 'onboard-dot' + (i === annotateIdx ? ' active' : '');
+                            cardDots.appendChild(dot);
+                        });
+                        skipBtn.textContent = t('onboardSkip');
+                        nextBtn.textContent = annotateIdx === annotateSteps.length - 1 ? t('onboardFinish') : t('onboardNext');
+                        if (lang === 'ar') {
+                            nextBtn.textContent = nextBtn.textContent.replace('←', '→');
+                        } else {
+                            nextBtn.textContent = nextBtn.textContent.replace('→', '→');
+                        }
+                        if (el) {
+                            positionGlow(el);
+                            positionCard(el);
+                        }
+                    }
+
+                    function annotateNext() {
+                        annotateIdx++;
+                        if (annotateIdx >= annotateSteps.length) { annotateClose(); return; }
+                        card.style.animation = 'none';
+                        card.offsetHeight;
+                        card.style.animation = 'onboardCardIn 0.35s ease both';
+                        annotateRenderStep();
+                    }
+
+                    function annotateClose() {
+                        annotateOpen = false;
+                        window.annotationTutorialActive = false;
+                        overlay.classList.remove('active');
+                        glow.style.width = '0';
+                        glow.style.height = '0';
+                        glow.style.opacity = '0';
+                        try { localStorage.setItem('annotateExplained', '1'); } catch(e) {}
+                    }
+
+                    function annotateOpenTut() {
+                        if (overlay.classList.contains('active')) return;
+                        isOpen = false;
+                        annotateIdx = 0;
+                        overlay.classList.add('active');
+                        annotateOpen = true;
+                        window.annotationTutorialActive = true;
+                        glow.style.opacity = '1';
+                        annotateRenderStep();
+                    }
+
+                    window.startAnnotationTutorial = annotateOpenTut;
+                    window.closeAnnotationTutorial = annotateClose;
+
+                    onWindowResize(function() {
+                        if (annotateOpen && annotateSteps[annotateIdx]) {
+                            var el = annotateSteps[annotateIdx].getEl ? annotateSteps[annotateIdx].getEl() : null;
+                            if (el) { positionGlow(el); positionCard(el); }
+                        }
+                    });
                     // Auto-show on first visit
                     var alreadyDone = false;
                     try { alreadyDone = localStorage.getItem('onboardDone') === '1'; } catch(e) {}

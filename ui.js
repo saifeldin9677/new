@@ -276,6 +276,12 @@ export var mobileToolsMenu = document.getElementById('mobileToolsMenu');
 
 export var mobileOnboardBtn = document.getElementById('mobileOnboardBtn');
 
+export var mobileQuizBtn = document.getElementById('mobileQuizBtn');
+
+export var mobileGlobeBtn = document.getElementById('mobileGlobeBtn');
+
+export var mobileCompareBtn = document.getElementById('mobileCompareBtn');
+
 export var mobileShortcutsBtn = document.getElementById('mobileShortcutsBtn');
 
 export var mobilePdfBtn = document.getElementById('mobilePdfBtn');

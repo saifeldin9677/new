@@ -26,7 +26,7 @@
             <span class="logo-icon"><i data-lucide="map" class="lucide-icon"></i></span>
             <div><h1 id="appTitle" data-i18n="appName"></h1><div class="header-line"></div></div>
         </div>
-        <span id="headerProjectionLabel" data-i18n="headerProjectionType" style="font-size:0.7em;color:var(--text-secondary);"></span>
+        <span id="headerProjectionLabel" data-i18n="headerProjectionType"></span>
 
         <div class="row" id="toolsRow">
             <div class="tools-row-start" id="toolsRowStart">
@@ -34,6 +34,16 @@
                     <i data-lucide="search" class="lucide-icon search-box-icon"></i>
                     <input type="text" id="searchInput" placeholder="بحث..." autocomplete="off" title="ابحث عن دولة" data-i18n-title="searchInput_title" data-i18n-placeholder="searchPlaceholder">
                     <ul class="suggestions-list" id="suggestionsList"></ul>
+                </div>
+                <div class="lang-dropdown header-lang-dropdown">
+                    <button class="btn" id="langToggle" title="تبديل اللغة" aria-label="تبديل اللغة" data-i18n-title="langToggle_title"><i data-lucide="globe" class="lucide-icon"></i><span id="langToggleText" data-i18n="langButton">English</span><i data-lucide="chevron-down" class="lucide-icon dropdown-arrow"></i></button>
+                    <div class="lang-dropdown-menu" id="langDropdownMenu">
+                        <button class="lang-option active" data-lang="ar" type="button">العربية</button>
+                        <button class="lang-option" data-lang="en" type="button">English</button>
+                        <button class="lang-option" data-lang="ru" type="button">Русский</button>
+                        <button class="lang-option" data-lang="uz" type="button">O'zbekcha</button>
+                        <button class="lang-option" data-lang="es" type="button">Español</button>
+                    </div>
                 </div>
             </div>
             <div class="tools-row-middle" id="toolsRowMiddle">
@@ -46,20 +56,9 @@
                 <button class="btn" id="colorblindToggleBtn" data-i18n-title="colorblindModeLabel" aria-pressed="false" title="وضع عمى الألوان"><i data-lucide="palette" class="lucide-icon"></i></button>
                 <button class="btn" id="shareBtn" title="مشاركة الخريطة" data-i18n-title="shareBtn_title"><i data-lucide="share-2" class="lucide-icon"></i></button>
                 <button class="btn" id="shortcutsBtn" title="اختصارات لوحة المفاتيح" data-i18n-title="shortcutsBtn_title"><i data-lucide="keyboard" class="lucide-icon"></i><span class="btn-text">?</span></button>
-                <button class="btn" id="onboardBtn" title="شرح الخريطة" data-i18n-title="onboardMapGuide"><i data-lucide="book-open" class="lucide-icon"></i><span class="btn-text">📘</span></button>
                 <button class="btn" id="aboutBtn" title="حول التطبيق" data-i18n-title="aboutTitle"><i data-lucide="info" class="lucide-icon"></i><span class="btn-text">ⓘ</span></button>
                 <button class="btn" id="presetsBtn" title="المحفوظات التعليمية" data-i18n-title="presetsTitle"><i data-lucide="bookmark" class="lucide-icon"></i><span class="btn-text">📚</span></button>
                 <button class="btn" id="pdfExportBtn" title="تصدير الخريطة كملف PDF" data-i18n-title="pdfExportBtn_title"><i data-lucide="file-text" class="lucide-icon"></i><span class="btn-text">PDF</span></button>
-                <div class="lang-dropdown">
-                    <button class="btn" id="langToggle" title="تبديل اللغة" aria-label="تبديل اللغة" data-i18n-title="langToggle_title"><i data-lucide="globe" class="lucide-icon"></i><span id="langToggleText" data-i18n="langButton">English</span><i data-lucide="chevron-down" class="lucide-icon dropdown-arrow"></i></button>
-                    <div class="lang-dropdown-menu" id="langDropdownMenu">
-                        <button class="lang-option active" data-lang="ar" type="button">العربية</button>
-                        <button class="lang-option" data-lang="en" type="button">English</button>
-                        <button class="lang-option" data-lang="ru" type="button">Русский</button>
-                        <button class="lang-option" data-lang="uz" type="button">O'zbekcha</button>
-                        <button class="lang-option" data-lang="es" type="button">Español</button>
-                    </div>
-                </div>
                 <button class="btn" id="measureToolBtn" data-i18n-title="measureToolLabel">
                     <i data-lucide="ruler" class="lucide-icon"></i>
                     <span class="btn-text" data-i18n="measureToolLabel"></span>
@@ -75,11 +74,6 @@
                 <button class="btn" id="resetBtn" title="إعادة تعيين كل شيء (الوضع، الفلاتر، التكبير)" data-i18n="resetBtn" data-i18n-title="resetBtn_title"><i data-lucide="rotate-ccw" class="lucide-icon"></i><span class="btn-text">إعادة</span></button>
                 <button class="btn" id="dataTableBtn" data-i18n-title="dataTableBtn_title"><i data-lucide="table" class="lucide-icon"></i><span class="btn-text" data-i18n="dataTableBtn"></span></button>
                 <button class="btn" id="coordsToggle" title="إظهار/إخفاء شريط الإحداثيات" data-i18n="coordsToggle" data-i18n-title="coordsToggle_title" aria-pressed="true"><i data-lucide="map-pin" class="lucide-icon"></i><span class="btn-text">إحداثيات</span></button>
-            </div>
-            <div class="tools-row-end" id="toolsRowEnd">
-                <button class="btn" id="globeViewBtn" title="عرض الكرة الأرضية" data-i18n-title="globeViewBtn_title"><i data-lucide="earth" class="lucide-icon"></i><span class="btn-text" data-i18n="globeViewBtn">كرة أرضية</span></button>
-                <button class="btn quiz-btn" id="quizBtn" data-i18n-title="quizMode"><i data-lucide="brain" class="lucide-icon"></i><span class="btn-text" data-i18n="quizMode"></span></button>
-                <button class="btn" id="compareProjectionsBtn" data-i18n-title="compareProjectionsBtn_title"><i data-lucide="git-compare" class="lucide-icon"></i><span class="btn-text" data-i18n="compareProjectionsBtn_title">مقارنة</span></button>
             </div>
         </div>
     </header>
@@ -114,6 +108,18 @@
         </div>
 
             <div class="zoom-controls" role="group" aria-label="التحكم بالتكبير">
+            <div class="dock" id="dock" role="group" aria-label="الأدوات الرئيسية">
+                <div class="dock-group">
+                    <button class="zoom-btn" id="onboardBtn" title="شرح الخريطة" aria-label="شرح الخريطة" data-i18n-title="onboardMapGuide"><i data-lucide="book-open" class="lucide-icon"></i></button>
+                    <button class="zoom-btn quiz-btn" id="quizBtn" title="الاختبار" aria-label="الاختبار" data-i18n-title="quizMode"><i data-lucide="brain" class="lucide-icon"></i></button>
+                </div>
+                <span class="dock-divider" aria-hidden="true"></span>
+                <div class="dock-group">
+                    <button class="zoom-btn" id="globeViewBtn" title="عرض الكرة الأرضية" aria-label="عرض الكرة الأرضية" data-i18n-title="globeViewBtn_title"><i data-lucide="earth" class="lucide-icon"></i></button>
+                    <button class="zoom-btn" id="compareProjectionsBtn" title="مقارنة الإسقاطات" aria-label="مقارنة الإسقاطات" data-i18n-title="compareProjectionsBtn_title"><i data-lucide="git-compare" class="lucide-icon"></i></button>
+                </div>
+            </div>
+            <span class="dock-divider" aria-hidden="true"></span>
             <button class="zoom-btn" id="zoomInBtn" title="تكبير" aria-label="تكبير" data-i18n-title="zoomIn"><i data-lucide="plus" class="lucide-icon"></i></button>
             <button class="zoom-btn" id="zoomOutBtn" title="تصغير" aria-label="تصغير" data-i18n-title="zoomOut"><i data-lucide="minus" class="lucide-icon"></i></button>
             <button class="zoom-btn" id="zoomResetBtn" title="إعادة تعيين التكبير" aria-label="إعادة تعيين التكبير" data-i18n-title="zoomReset"><i data-lucide="home" class="lucide-icon"></i></button>
@@ -304,6 +310,9 @@
                         <button class="mobile-tools-item" id="mobilePdfBtn" data-i18n-title="pdfExport"><i data-lucide="file-text" class="lucide-icon"></i><span class="btn-text">PDF</span></button>
                         <button class="mobile-tools-item" id="mobileAboutBtn" data-i18n-title="aboutTitle"><i data-lucide="info" class="lucide-icon"></i><span class="btn-text" data-i18n="aboutTitle">حول التطبيق</span></button>
                         <button class="mobile-tools-item" id="mobilePresetsBtn" data-i18n-title="presetsTitle"><i data-lucide="bookmark" class="lucide-icon"></i><span class="btn-text" data-i18n="presetsTitle">المحفوظات التعليمية</span></button>
+                        <button class="mobile-tools-item" id="mobileQuizBtn" data-i18n-title="quizMode"><i data-lucide="brain" class="lucide-icon"></i><span class="btn-text" data-i18n="quizMode">الاختبار</span></button>
+                        <button class="mobile-tools-item" id="mobileGlobeBtn" data-i18n-title="globeViewBtn_title"><i data-lucide="earth" class="lucide-icon"></i><span class="btn-text" data-i18n="globeViewBtn">كرة أرضية</span></button>
+                        <button class="mobile-tools-item" id="mobileCompareBtn" data-i18n-title="compareProjectionsBtn_title"><i data-lucide="git-compare" class="lucide-icon"></i><span class="btn-text" data-i18n="compareProjectionsBtn_title">مقارنة</span></button>
                         <button class="mobile-tools-item" id="mobileShareBtn" data-i18n-title="shareBtn_title"><i data-lucide="share-2" class="lucide-icon"></i><span class="btn-text" data-i18n="shareBtn">مشاركة</span></button>
                         <button class="mobile-tools-item" id="mobileResetBtn2" data-i18n-title="mobileReset_title"><i data-lucide="rotate-ccw" class="lucide-icon"></i><span class="btn-text" data-i18n="resetBtn">إعادة تعيين</span></button>
                         <button class="mobile-tools-item" id="mobileCoordsBtn" data-i18n-title="coordsToggle_title"><i data-lucide="map-pin" class="lucide-icon"></i><span class="btn-text" data-i18n="coordsToggle">إحداثيات</span></button>

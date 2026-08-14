@@ -4,7 +4,7 @@ import { getCleanName, getDisplayName, setLanguage, t } from './i18n.js';
 import { drawGeopoliticalBlocs, getDensity, setMode, toggleAdminBoundaries, toggleBorderDisputes, toggleCapitals, toggleColorblindMode, toggleCoords, toggleCorridors, toggleDensitySpots, toggleDesertsForests, toggleEarthquakes, toggleEthnicGroups, toggleGeopoliticalBlocs, toggleGlobeMode, toggleLabels, toggleMajorCities, toggleNaturalResources, toggleOceanCurrents, toggleRivers, toggleSect, toggleTimezones, toggleVolcanoes, toggleWinds, updateLegend } from './layers.js';
 import { cancelAnnotationStroke, clearAllAnnotations, clearAnnotationDrawing, clearMeasurement, closeAnnotationsModal, closeCountryPanel, finishAnnotationTool, flyToCountry, getCountryFlag, handleAnnotationClick, handleMeasureClick, init, onAnnotationPointerDown, onAnnotationPointerMove, onAnnotationPointerUp, openAnnotationsModal, redrawMeasureLayer, resetAll, resetZoom, setAnnotationColor, setAnnotationFontSize, setPanSpaceHeld, shareMap, stepAnnotationFontSize, toggleAnnotationKind, toggleAnnotationMode, toggleMeasureCalcMode, toggleMeasureKind, toggleMeasureMode, togglePresentationMode, undoLastAnnotation, updateHash } from './map-core.js';
 import { exportMapPDF } from './export.js';
-import { A11Y_DIALOG_SELECTOR, A11Y_FOCUSABLE, a11yIsVisible, a11yOpenDialog, a11ySkipLink, aboutBtn, aboutModal, aboutModalBackdrop, aboutModalClose, annotateBtn, annotationClearBtn2, annotationColorSwatches, annotationFinishBtn2, annotationFontLargeBtn, annotationFontMediumBtn, annotationFontSmallBtn, annotationHelpBtn, annotationKindArrowBtn, annotationKindDrawBtn, annotationKindPinBtn, annotationKindRegionBtn, annotationManageBtn2, annotationsModal, annotationsModalBackdrop, annotationsModalClose, blocSelect, closeAboutModal, closeDataTable, closeLayersModal, closeMobileToolsMenu, closePresetsModal, maybeShowProjectionExplainer, measureClearBtn2, measureFinishBtn2, measureGeodesicBtn2, measureKindAreaBtn, measureKindDistBtn, measurePlanarBtn2, mobileAboutBtn, mobileAnnotateBtn, mobileCoordsBtn, mobileFilterBtns, mobileLangBtn, mobileLayersBtn, mobileModeBtn, mobileModeBtns, mobileOnboardBtn, mobilePdfBtn, mobilePresetsBtn, mobileResetBtn2, mobileSearchInput, mobileShareBtn, mobileShortcutsBtn, mobileToolsBtn, mobileToolsMenu, modeSheet, modeSheetBackdrop, modeSheetClose, onboardBtn, openAboutModal, openDataTable, openLayersModal, openPresetsModal, presetsBtn, presetsModal, presetsModalBackdrop, presetsModalClose, renderDataTable, riversToggle, setupReligionButtons } from './ui.js';
+import { A11Y_DIALOG_SELECTOR, A11Y_FOCUSABLE, a11yIsVisible, a11yOpenDialog, a11ySkipLink, aboutBtn, aboutModal, aboutModalBackdrop, aboutModalClose, annotateBtn, annotationClearBtn2, annotationColorSwatches, annotationFinishBtn2, annotationFontLargeBtn, annotationFontMediumBtn, annotationFontSmallBtn, annotationHelpBtn, annotationKindArrowBtn, annotationKindDrawBtn, annotationKindPinBtn, annotationKindRegionBtn, annotationManageBtn2, annotationsModal, annotationsModalBackdrop, annotationsModalClose, blocSelect, closeAboutModal, closeDataTable, closeLayersModal, closeMobileToolsMenu, closePresetsModal, maybeShowProjectionExplainer, measureClearBtn2, measureFinishBtn2, measureGeodesicBtn2, measureKindAreaBtn, measureKindDistBtn, measurePlanarBtn2, mobileAboutBtn, mobileAnnotateBtn, mobileCoordsBtn, mobileCompareBtn, mobileFilterBtns, mobileGlobeBtn, mobileLangBtn, mobileLayersBtn, mobileModeBtn, mobileModeBtns, mobileOnboardBtn, mobilePdfBtn, mobilePresetsBtn, mobileQuizBtn, mobileResetBtn2, mobileSearchInput, mobileShareBtn, mobileShortcutsBtn, mobileToolsBtn, mobileToolsMenu, modeSheet, modeSheetBackdrop, modeSheetClose, onboardBtn, openAboutModal, openDataTable, openLayersModal, openPresetsModal, presetsBtn, presetsModal, presetsModalBackdrop, presetsModalClose, renderDataTable, riversToggle, setupReligionButtons } from './ui.js';
 
 // Entry module: owns all top-level wiring / executable statements
 // extracted from the original app.js monolith.
@@ -324,6 +324,22 @@ if (mobileToolsBtn) mobileToolsBtn.addEventListener('click', function(e) {
             });
 
 if (mobileOnboardBtn) mobileOnboardBtn.addEventListener('click', function() { closeMobileToolsMenu(); maybeShowProjectionExplainer(true); });
+
+if (mobileQuizBtn) mobileQuizBtn.addEventListener('click', function() {
+                closeMobileToolsMenu();
+                var qb = document.getElementById('quizBtn');
+                if (qb) qb.click();
+            });
+if (mobileGlobeBtn) mobileGlobeBtn.addEventListener('click', function() {
+                closeMobileToolsMenu();
+                var gb = document.getElementById('globeViewBtn');
+                if (gb) gb.click();
+            });
+if (mobileCompareBtn) mobileCompareBtn.addEventListener('click', function() {
+                closeMobileToolsMenu();
+                var cb = document.getElementById('compareProjectionsBtn');
+                if (cb) cb.click();
+            });
 
 if (mobileAboutBtn) mobileAboutBtn.addEventListener('click', function() { closeMobileToolsMenu(); openAboutModal(); });
 

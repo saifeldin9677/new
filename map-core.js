@@ -1400,10 +1400,26 @@ function _annotStrokeKilometers(pts) {
                     return Math.round(km);
                 }
 
+// The Waterman butterfly projection has a singular vertex at the map center
+// (the polyhedral net's central seam): `invert` returns null/NaN for the exact
+// center pixel, silently swallowing clicks/answers there. Nudge a few pixels
+// and retry so interaction still works everywhere on the map.
+export function invertMapPoint(svgPoint, proj) {
+                    proj = proj || getActiveProjection();
+                    var coords = proj.invert(svgPoint);
+                    if (coords && !isNaN(coords[0]) && !isNaN(coords[1])) return coords;
+                    var offsets = [[2, 0], [-2, 0], [0, 2], [0, -2], [2, 2], [-2, 2], [2, -2], [-2, -2], [4, 0], [0, 4]];
+                    for (var i = 0; i < offsets.length; i++) {
+                        var c = proj.invert([svgPoint[0] + offsets[i][0], svgPoint[1] + offsets[i][1]]);
+                        if (c && !isNaN(c[0]) && !isNaN(c[1])) return c;
+                    }
+                    return coords;
+                }
+
 function _annotClientToLonLat(clientX, clientY) {
                     var rect = getMapRect();
                     var svgPoint = currentTransform.invert([clientX - rect.left, clientY - rect.top]);
-                    var coords = getActiveProjection().invert(svgPoint);
+                    var coords = invertMapPoint(svgPoint);
                     if (!coords || isNaN(coords[0]) || isNaN(coords[1])) return null;
                     return [coords[0], coords[1]];
                 }
@@ -1620,7 +1636,7 @@ export function handleAnnotationClick(e) {
                      var clickX = e.clientX - rect.left;
                      var clickY = e.clientY - rect.top;
                      var svgPoint = currentTransform.invert([clickX, clickY]);
-                     var coords = getActiveProjection().invert(svgPoint);
+                     var coords = invertMapPoint(svgPoint);
                      if (!coords || isNaN(coords[0]) || isNaN(coords[1])) return;
 if (annotateKind === 'pin') {
                          // Place the pin immediately — teachers draw during
@@ -2166,7 +2182,7 @@ export function handleMeasureClick(e) {
                     var clickX = e.clientX - rect.left;
                     var clickY = e.clientY - rect.top;
                     var svgPoint = currentTransform.invert([clickX, clickY]);
-                    var coords = getActiveProjection().invert(svgPoint);
+                    var coords = invertMapPoint(svgPoint);
                     if (!coords || isNaN(coords[0]) || isNaN(coords[1])) return;
 
                     if (measureKind === 'distance') {
@@ -3051,14 +3067,14 @@ export async function init() {
                             if (mb) return document.querySelector('#mobileLayersBtn');
                             var lr = document.querySelector('#layersRow');
                             if (lr && lr.offsetHeight > 0 && getComputedStyle(lr).display !== 'none') return lr;
-                            return document.querySelector('#layersToggleBtn');
+                            return document.querySelector('#barLayersBtn') || document.querySelector('#layersToggleBtn');
                         }, icon: '🗂️', titleKey: 'onboardStep6Title', textKey: 'onboardStep6Text' },
                         { getEl: function() {
                             var lg = document.querySelector('#legend');
                             if (lg && lg.innerHTML.trim().length > 5) return lg;
                             return document.querySelector('#mapSvg');
                         }, icon: '📋', titleKey: 'onboardStep7Title', textKey: 'onboardStep7Text' },
-                        { getEl: function() { return document.querySelector('.zoom-controls'); }, icon: '🔍', titleKey: 'onboardStep8Title', textKey: 'onboardStep8Text' },
+                        { getEl: function() { return document.querySelector('#zoomStack') || document.querySelector('.zoom-controls'); }, icon: '🔍', titleKey: 'onboardStep8Title', textKey: 'onboardStep8Text' },
                         { getEl: function() {
                             var cp = document.querySelector('.country-panel');
                             if (cp && getComputedStyle(cp).display !== 'none') return cp;
@@ -3496,7 +3512,11 @@ export async function init() {
                     if (window.innerWidth >= 1024) {
                         if (toolsRow.parentElement !== headerEl) headerEl.appendChild(toolsRow);
                     } else {
-                        if (toolsRow.parentElement !== controlsBarEl) controlsBarEl.insertBefore(toolsRow, controlsBarEl.firstChild);
+                        if (toolsRow.parentElement !== controlsBarEl) {
+                            // Keep the panel header (Controls / Layers) on top
+                            var barHeader = controlsBarEl.querySelector('.controls-bar-header');
+                            controlsBarEl.insertBefore(toolsRow, barHeader ? barHeader.nextSibling : controlsBarEl.firstChild);
+                        }
                     }
                 }
                 syncToolsRowPosition();

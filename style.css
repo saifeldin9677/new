@@ -68,6 +68,11 @@
        dark enough to pass 4.5:1 in both themes. */
     --accent-btn-bg: #0d9488;
     --accent-btn-bg-hover: #0f766e;
+    /* Active/toggle fills — theme-aware (replaces the fixed dark-teal that
+       looked broken in light mode). */
+    --active-bg: #1a3a38;
+    --active-fg: #80e0d0;
+    --active-ring: rgba(20, 184, 166, 0.4);
 
     /* ── Z-index scale ──
        One tier per distinct stacking value currently in use. Each selector
@@ -169,6 +174,9 @@ path:focus-visible {
 
         --glass-bg: rgba(255, 255, 255, 0.72);
         --glass-border: 1px solid rgba(0, 0, 0, 0.08);
+        --active-bg: #d9f3ee;
+        --active-fg: #0f766e;
+        --active-ring: rgba(13, 148, 136, 0.35);
     }
 }
 
@@ -211,6 +219,9 @@ path:focus-visible {
 
     --glass-bg: rgba(255, 255, 255, 0.72);
     --glass-border: 1px solid rgba(0, 0, 0, 0.08);
+    --active-bg: #d9f3ee;
+    --active-fg: #0f766e;
+    --active-ring: rgba(13, 148, 136, 0.35);
 }
 
 * {
@@ -436,7 +447,8 @@ body {
     right: 16px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    align-items: flex-end;
+    gap: 10px;
     z-index: var(--z-toolbar);
     transition: opacity var(--dur-slow) var(--ease);
 }
@@ -456,25 +468,58 @@ body {
     backdrop-filter: none;
     box-shadow: var(--shadow-sm);
 }
-/* ── Side dock: primary actions above the zoom stack ── */
+/* ── Vertical dock panel: the four tool icons grouped in one visible dock ── */
 .dock {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    /* Layout is pinned to LTR so `flex-end` ALWAYS means the physical right
+       edge, in every language/dir state. The buttons themselves re-reverse
+       their row below, so the icon still sits on the outer edge and the
+       label grows leftward into the map in RTL and LTR alike. */
+    direction: ltr;
+    align-items: flex-end; /* anchor buttons to the physical right */
+    gap: 0.375rem;
+    padding: 6px;
+    background: var(--panel-overlay-96);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    /* Pin the panel to the collapsed square width (button + padding + borders)
+       so hovering one button never stretches the whole dock; the expanded
+       button pops out leftward over the map instead. */
+    width: calc(26px + 12px + 2px);
 }
-.dock-group {
+.zoom-stack {
     display: flex;
     flex-direction: column;
     gap: 0.375rem;
 }
-.dock-divider {
-    height: 1px;
-    background: var(--border);
-    border-radius: 1px;
-    margin: 2px 4px;
+/* Square icon expands into a rectangle on hover: the button itself grows and
+   the label slides in beside the icon (toward the map, away from the screen
+   edge). Collapsed size mirrors the zoom-btn breakpoints below. */
+.dock .zoom-btn {
+    display: flex;
+    /* icon on the outer (right) edge, label grows leftward into the map */
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    min-width: 26px;
+    max-width: 26px;
+    gap: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: max-width var(--dur-base) var(--ease), gap var(--dur-base) var(--ease),
+                background var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
 }
-.dock .quiz-btn {
-    color: var(--brand-strong, #2dd4bf);
+.dock .zoom-btn:hover,
+.dock .zoom-btn:focus-visible {
+    max-width: 16rem;
+    gap: 6px;
+}
+.dock .zoom-btn.quiz-disabled:hover {
+    max-width: 26px;
+    gap: 0;
 }
 .dock .zoom-btn .lucide-icon {
     width: 0.875rem;
@@ -483,6 +528,87 @@ body {
 .dock .zoom-btn:hover {
     background: var(--btn-hover);
     transform: translateY(-1px);
+}
+.dock .zoom-btn.toggle-on {
+    background: var(--active-bg);
+    border-color: var(--brand-accent);
+    color: var(--active-fg);
+}
+.dock .zoom-btn.quiz-disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.dock .quiz-btn {
+    color: var(--brand-strong, #2dd4bf);
+}
+/* Tool name: hidden inside the square, slides in as the button expands */
+.dock .zoom-btn .btn-text {
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 0.72rem;
+    color: var(--text);
+    transition: max-width var(--dur-base) var(--ease), opacity var(--dur-base) var(--ease);
+}
+.dock .zoom-btn:hover .btn-text,
+.dock .zoom-btn:focus-visible .btn-text {
+    max-width: 12rem;
+    opacity: 1;
+}
+/* Collapsed square size mirrors the zoom-btn breakpoints (dock hidden ≤768px) */
+@media (min-width: 769px) and (min-height: 921px) {
+    .dock .zoom-btn {
+        min-width: 36px;
+        max-width: 36px;
+    }
+    .dock {
+        width: calc(36px + 12px + 2px);
+    }
+}
+@media (min-width: 1024px) and (min-height: 921px) {
+    .dock .zoom-btn {
+        min-width: 2.75rem;
+        max-width: 2.75rem;
+    }
+    .dock {
+        width: calc(2.75rem + 12px + 2px);
+    }
+}
+@media (min-width: 769px) and (max-height: 640px) {
+    .dock .zoom-btn {
+        min-width: 24px;
+        max-width: 24px;
+    }
+    .dock {
+        width: calc(24px + 12px + 2px);
+    }
+}
+/* Mode hover description (desktop): small card under the mode row */
+.mode-hint {
+    position: fixed;
+    z-index: var(--z-toolbar);
+    max-width: 340px;
+    padding: 8px 14px;
+    background: var(--panel-overlay-96);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease);
+}
+.mode-hint.visible {
+    opacity: 1;
+}
+@media (max-width: 1023px) {
+    .mode-hint {
+        display: none;
+    }
 }
 .zoom-btn:hover {
     background: var(--btn-hover);
@@ -1277,32 +1403,30 @@ body {
         padding: 3px 8px;
     }
     .controls-bar {
+        /* Floating panel, top-center of the map — no longer a full-width strip,
+           so the map keeps its edges and the panel reads as a real control deck. */
         position: absolute;
-        /* Containing block is #mapContainer, which already starts just below the
-           header, so top: 0 hugs the header. Previously `top: var(--header-height)`
-           added the header height AGAIN, leaving a one-header-height gap. */
-        top: 0;
-        left: 0;
-        right: 0;
+        top: 10px;
+        left: 50%;
+        right: auto;
         bottom: auto;
-        transform: none;
-        width: 100%;
-        max-width: 100%;
+        transform: translateX(-50%);
+        width: auto;
+        max-width: calc(100% - 32px);
         background: var(--panel-overlay-96);
-        backdrop-filter: none;
-        border-radius: 0;
-        padding: 6px 16px;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
-        border: none;
-        border-bottom: 1px solid var(--border);
+        backdrop-filter: blur(var(--glass-blur-sm));
+        border-radius: var(--radius-md);
+        padding: 8px 14px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-md);
         display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
+        flex-direction: column;
+        flex-wrap: nowrap;
         justify-content: center;
-        align-items: center;
-        gap: 6px 16px;
-        max-height: none;
-        overflow-y: visible;
+        align-items: stretch;
+        gap: 6px;
+        max-height: 60vh;
+        overflow-y: auto;
         /* Resolved: the controls bar sits above the base map via
            var(--z-controls-important) (100) but BELOW the search suggestions
            list (--z-suggestions-list: 150), so typing in the header search box
@@ -1312,9 +1436,54 @@ body {
         z-index: var(--z-controls-important) !important;
         margin: 0;
     }
+    .controls-bar.collapsed {
+        display: none;
+    }
+    /* Layer toggles live in the categorized Layers modal on desktop too — the
+       modal already exists (mobile/tablet reuse it), and the full-width strip of
+       18 equal buttons was the main source of interface clutter. */
+    .controls-bar .layers-row {
+        display: none;
+    }
     .controls-bar .row {
         flex-wrap: wrap;
-        gap: 6px 12px;
+        justify-content: center;
+        gap: 6px 8px;
+    }
+    /* Mode + filter rows read as segmented controls: a recessed track with
+       joined, borderless buttons so the "select one" affordance is obvious. */
+    .controls-bar #modeButtons,
+    .controls-bar #religionButtons {
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 2px;
+        padding: 2px;
+        background: var(--btn-bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+    }
+    .controls-bar #modeButtons .btn,
+    .controls-bar #religionButtons .btn {
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        border-radius: calc(var(--radius-sm) - 3px);
+        min-height: 26px;
+    }
+    .controls-bar #modeButtons .btn:hover,
+    .controls-bar #religionButtons .btn:hover {
+        background: var(--btn-hover);
+        border-color: transparent;
+        transform: none;
+        box-shadow: none;
+    }
+    .controls-bar #modeButtons .btn.active,
+    .controls-bar #religionButtons .btn.active {
+        background: var(--active-bg);
+        border-color: transparent;
+        color: var(--active-fg);
+        box-shadow: none;
     }
     .controls-bar .row-label {
         display: inline-block;
@@ -1406,7 +1575,8 @@ body {
         font-size: 0.9em;
         max-width: 360px;
         padding: 16px 20px;
-        top: 80px;
+        /* Clears the floating controls panel (top-center) so the two never overlap */
+        top: 132px;
     }
     .tooltip {
         font-size: 0.85em;
@@ -1570,26 +1740,25 @@ body {
     z-index: var(--z-top-overlay);
 }
 .btn.active, .mode-btn.active, .toggle-on {
-    /* fixed accent active-state; brand-accent is identical in both themes */
-    background: #1a3a38;
+    background: var(--active-bg);
     border-color: var(--brand-accent);
-    color: #80e0d0;
+    color: var(--active-fg);
 }
 .btn.active {
-    box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.4);
+    box-shadow: 0 0 0 2px var(--active-ring);
     font-weight: 700;
 }
 .mode-btn.active {
-    box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.35);
+    box-shadow: 0 0 0 2px var(--active-ring);
 }
 .toggle-on {
-    box-shadow: 0 0 0 1px rgba(20, 184, 166, 0.3);
+    box-shadow: 0 0 0 1px var(--active-ring);
 }
 .bloc-select {
-    /* hidden legacy dark control; fixed palette, not theme-dependent */
-    background: #1e2a36;
-    color: #c0d0e0;
-    border: 1px solid #3a4a5a;
+    /* shown inside the Layers modal, so it must track the active theme */
+    background: var(--btn-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     padding: 4px 8px;
     font-size: 11px;
@@ -1749,6 +1918,62 @@ body {
     inset: 0;
     background: var(--glass-bg);
     backdrop-filter: blur(var(--glass-blur-lg));
+}
+/* ── Layers panel as a popover (anchored to the trigger, not a modal) ──
+   Keeps the map visible while picking layers; the transparent backdrop only
+   catches outside clicks so the panel closes when clicking anywhere else. */
+.layers-popover {
+    position: fixed;
+    inset: auto;
+    z-index: var(--z-modal);
+    display: none;
+    align-items: stretch;
+    justify-content: flex-start;
+    padding: 0;
+}
+.layers-popover.visible {
+    display: flex;
+}
+.layers-popover .layers-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: transparent;
+    backdrop-filter: none;
+    z-index: -1;
+}
+.layers-popover .layers-modal-content {
+    width: min(24rem, calc(100vw - 24px));
+    max-width: none;
+    max-height: min(70vh, 34rem);
+    margin: 0;
+    padding: 0.875rem 1rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    overflow-y: auto;
+    /* Professional pop-up: grows out from the button's corner with a slight
+       rise and fade; origin is set per-anchor in _positionLayersPopover. */
+    transform-origin: top right;
+    animation: layers-pop-in 0.18s var(--ease) both;
+    will-change: transform, opacity;
+}
+.layers-popover.closing .layers-modal-content {
+    animation: layers-pop-out 0.14s var(--ease) both;
+}
+@keyframes layers-pop-in {
+    from { opacity: 0; transform: scale(0.94) translateY(-6px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes layers-pop-out {
+    from { opacity: 1; transform: scale(1) translateY(0); }
+    to   { opacity: 0; transform: scale(0.94) translateY(-4px); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .layers-popover .layers-modal-content {
+        animation: none !important;
+    }
+}
+.layers-popover .layers-modal-header {
+    margin-bottom: 10px;
 }
 .layers-modal-content {
     position: relative;
@@ -2265,6 +2490,56 @@ body.annotate-active .annotation-toolbar { display: flex; }
     margin: 0 2px;
     border-radius: 1px;
     flex-shrink: 0;
+}
+/* Vertical separator between logical tool groups in the header row */
+.btn-divider {
+    width: 1px;
+    height: 1.125rem;
+    background: var(--border);
+    border-radius: 1px;
+    flex-shrink: 0;
+    margin: 0 2px;
+    opacity: 0.8;
+}
+/* The Division (religion) filter row is always visible — it applies to the
+   religion/sect modes but stays pinned so users can reach it from any mode. */
+/* Collapse-toggle for the controls panel (desktop) */
+#controlsToggleBtn .lucide-icon {
+    transition: transform var(--dur-base) var(--ease);
+}
+#controlsToggleBtn[aria-expanded="true"] .lucide-icon {
+    transform: rotate(180deg);
+}
+@media (max-width: 1023px) {
+    #controlsToggleBtn {
+        display: none;
+    }
+}
+/* Controls panel header: panel identity + primary Layers action */
+.controls-bar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    padding-bottom: 4px;
+    margin-bottom: 2px;
+    border-bottom: 1px solid var(--border);
+}
+.bar-layers-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--accent-btn-bg);
+    border-color: var(--accent-btn-bg);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.7em;
+}
+.bar-layers-btn:hover {
+    background: var(--accent-btn-bg-hover);
+    border-color: var(--accent-btn-bg-hover);
+    color: #fff;
 }
 .lucide-icon {
     stroke: currentColor;

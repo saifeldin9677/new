@@ -371,7 +371,24 @@ export function _a11yRestoreFocus() {
     _a11yDialogTrigger = null;
 }
 
-export function openLayersModal() {
+// The button that opened the layers popover, so we can anchor it and close
+// when that same button is clicked again (toggle behavior).
+var _layersPopoverTrigger = null;
+var _layersCloseTimer = null;
+
+export function openLayersModal(triggerEl) {
+                if (layersModal && layersModal.classList.contains('closing')) {
+                    // The panel is mid-close: cancel the close and keep it open.
+                    clearTimeout(_layersCloseTimer);
+                    layersModal.classList.remove('closing');
+                    return;
+                }
+                if (layersModal && layersModal.classList.contains('visible')) {
+                    // Toggle: pressing the Layers button again closes the popover.
+                    closeLayersModal();
+                    return;
+                }
+                _layersPopoverTrigger = triggerEl || null;
                 var layersRow = document.querySelector('.layers-row');
                 var body = document.getElementById('layersModalBody');
                 if (layersRow && body) {
@@ -383,7 +400,6 @@ export function openLayersModal() {
                     allOffBtn.addEventListener('click', function() {
                         document.querySelectorAll('.layers-row .btn.toggle-on').forEach(function(b) { b.click(); });
                         updateActiveLayerCount();
-                        closeLayersModal();
                     });
                     btnRow.appendChild(allOffBtn);
                     var resetLayersBtn = document.createElement('button');
@@ -410,7 +426,6 @@ export function openLayersModal() {
                             document.getElementById('blocSelect').value = 'all';
                         }
                         updateActiveLayerCount();
-                        closeLayersModal();
                     });
                     btnRow.appendChild(resetLayersBtn);
                     body.appendChild(btnRow);
@@ -456,20 +471,70 @@ export function openLayersModal() {
                     body.appendChild(temp);
                 }
                 layersModal.classList.add('visible');
+                 _positionLayersPopover();
                  _setA11yDialogTrigger(document.activeElement);
-                 setTimeout(function() { _a11yFocusFirstInDialog(layersModal); _a11yHideBackground(layersModal); }, 0);
+                 setTimeout(function() { _a11yFocusFirstInDialog(layersModal); }, 0);
              }
 
+// Position the layers popover BESIDE the button that opened it — horizontally
+// adjacent, vertically centered on the button — never below it. In RTL the
+// panel opens to the button's left (over the map, since the trigger sits on
+// the right side); in LTR it opens to the right. It stays on-screen in both
+// axes, and the transform-origin tracks the side facing the button so the
+// pop animation grows out of the trigger.
+function _positionLayersPopover() {
+                if (!layersModal) return;
+                var modal = layersModal;
+                var trigger = _layersPopoverTrigger;
+                var gap = 8;
+                var left, top;
+                var content = modal.querySelector('.layers-modal-content');
+                var rtl = document.documentElement.getAttribute('dir') === 'rtl';
+                if (trigger && trigger.getBoundingClientRect) {
+                    var r = trigger.getBoundingClientRect();
+                    var pw = modal.offsetWidth || 300;
+                    var ph = modal.offsetHeight || 300;
+                    var vw = window.innerWidth;
+                    var vh = window.innerHeight;
+                    if (rtl) {
+                        left = r.left - pw - gap; // beside: to the button's left
+                    } else {
+                        left = r.right + gap;     // beside: to the button's right
+                    }
+                    // Vertically centered on the trigger, clamped to the viewport.
+                    top = r.top + (r.height - ph) / 2;
+                    if (top < gap) top = gap;
+                    if (top + ph > vh - gap) top = Math.max(gap, vh - ph - gap);
+                    if (left + pw > vw - gap) left = Math.max(gap, vw - pw - gap);
+                    if (left < gap) left = gap;
+                    if (content) content.style.transformOrigin = rtl ? 'right center' : 'left center';
+                } else {
+                    left = window.innerWidth - (modal.offsetWidth || 300) - gap;
+                    top = 60;
+                    if (content) content.style.transformOrigin = rtl ? 'right center' : 'left center';
+                }
+                modal.style.left = left + 'px';
+                modal.style.top = top + 'px';
+            }
+
 export function closeLayersModal() {
-                 var layersRow = document.querySelector('.layers-row');
-                var body = document.getElementById('layersModalBody');
-                if (layersRow && body) {
-                    var all = body.querySelectorAll('.btn, .bloc-select');
-                    Array.prototype.forEach.call(all, function(el) { layersRow.appendChild(el); });
-                 body.innerHTML = '';
-                 }
-                 layersModal.classList.remove('visible');
-                 _a11yRestoreFocus();
+                 if (!layersModal || !layersModal.classList.contains('visible')) return;
+                if (layersModal.classList.contains('closing')) return;
+                layersModal.classList.add('closing');
+                // Delay the teardown so the close animation can play.
+                clearTimeout(_layersCloseTimer);
+                _layersCloseTimer = setTimeout(function() {
+                    var layersRow = document.querySelector('.layers-row');
+                    var body = document.getElementById('layersModalBody');
+                    if (layersRow && body) {
+                        var all = body.querySelectorAll('.btn, .bloc-select');
+                        Array.prototype.forEach.call(all, function(el) { layersRow.appendChild(el); });
+                        body.innerHTML = '';
+                    }
+                    layersModal.classList.remove('visible');
+                    layersModal.classList.remove('closing');
+                    _a11yRestoreFocus();
+                }, 150);
              }
 
 export const aboutModal = document.getElementById('aboutModal');

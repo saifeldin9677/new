@@ -2,7 +2,7 @@ import { borderDisputesData, continentArabic, continentByCountry, continentRussi
 import { allCountryFeatures, colorMode, currentReligionFilter, currentSessionCode, currentStudentName, currentTransform, gAuthoringMarkers, gQuizMarkers, getMapRect, globeModeActive, globeViewBtn, lang, mapContainer, measureActive, projection, quizActive, quizStartTime, religionButtons, setActiveByAttr, setState } from './state.js';
 import { fmtNum, getCleanName, getDisplayName, pluralize, t } from './i18n.js';
 import { LAYER_DEFS, getActiveProjection, getCustomQuestionTargetCoords, getQuestionTargetCoords, rotateGlobeToReveal, setMode, toggleLayerByName } from './layers.js';
-import { escapeHtml, exportResultsCsv, handleCreateSession, handleJoinSession, saveQuizResultsToFirestore, showClassResults, triggerDownload, updateViewResultsBtn } from './map-core.js';
+import { escapeHtml, exportResultsCsv, handleCreateSession, handleJoinSession, invertMapPoint, saveQuizResultsToFirestore, showClassResults, triggerDownload, updateViewResultsBtn } from './map-core.js';
 import { showToast } from './ui.js';
 
 // Module: quiz
@@ -710,7 +710,7 @@ export function initQuiz() {
                     setState('quizActive', false);
                     clearQuizMarkers();
                     if (globeViewBtn) { globeViewBtn.disabled = false; globeViewBtn.classList.remove('quiz-disabled'); }
-                    if (quizBtn) { quizBtn.disabled = false; quizBtn.classList.remove('quiz-disabled'); quizBtn.title = t('quizMode'); }
+                    if (quizBtn) { quizBtn.disabled = false; quizBtn.classList.remove('quiz-disabled'); quizBtn.removeAttribute('title'); }
                     document.body.classList.remove('quiz-active');
                     mapContainer.classList.remove('quiz-active');
                     quizSetupOverlay.style.display = 'none';
@@ -758,7 +758,7 @@ export function initQuiz() {
                     var clickX = e.clientX - rect.left;
                     var clickY = e.clientY - rect.top;
                     var svgPoint = currentTransform.invert([clickX, clickY]);
-                    var coords = getActiveProjection().invert(svgPoint);
+                    var coords = invertMapPoint(svgPoint);
                     if (!coords || isNaN(coords[0]) || isNaN(coords[1])) return;
 
                     var q = quizQuestions[quizCurrentIndex];
@@ -938,7 +938,7 @@ export function initQuiz() {
                     stopTimer();
                     setState('quizActive', false);
                     if (globeViewBtn) { globeViewBtn.disabled = false; globeViewBtn.classList.remove('quiz-disabled'); }
-                    if (quizBtn) { quizBtn.disabled = false; quizBtn.classList.remove('quiz-disabled'); quizBtn.title = t('quizMode'); }
+                    if (quizBtn) { quizBtn.disabled = false; quizBtn.classList.remove('quiz-disabled'); quizBtn.removeAttribute('title'); }
                     clearTimeout(quizFeedbackTimeout);
                     clearTimeout(quizAdvanceTimeout);
                     if (quizClickHandler) {
@@ -1069,7 +1069,7 @@ export function initQuiz() {
 
                 function exitQuizModeClean() {
                     if (globeViewBtn) { globeViewBtn.disabled = false; globeViewBtn.classList.remove('quiz-disabled'); }
-                    if (quizBtn) { quizBtn.disabled = false; quizBtn.classList.remove('quiz-disabled'); quizBtn.title = t('quizMode'); }
+                    if (quizBtn) { quizBtn.disabled = false; quizBtn.classList.remove('quiz-disabled'); quizBtn.removeAttribute('title'); }
                     exitAllQuizOverlays();
                     exitAuthoringMode();
                     exitCustomQuiz();
@@ -1514,7 +1514,7 @@ export function initQuiz() {
                             var clickX = e.clientX - rect.left;
                             var clickY = e.clientY - rect.top;
                             var svgPoint = currentTransform.invert([clickX, clickY]);
-                            var coords = projection.invert(svgPoint);
+                            var coords = invertMapPoint(svgPoint, projection);
                             if (!coords || isNaN(coords[0]) || isNaN(coords[1])) return;
                             authoringLinePoints.push(coords);
                             drawAuthoringMarker(coords, authoringLinePoints.length === 1 ? 'line-start' : 'line-end');
@@ -1535,7 +1535,7 @@ export function initQuiz() {
                             var clickX = e.clientX - rect.left;
                             var clickY = e.clientY - rect.top;
                             var svgPoint = currentTransform.invert([clickX, clickY]);
-                            var coords = projection.invert(svgPoint);
+                            var coords = invertMapPoint(svgPoint, projection);
                             if (!coords || isNaN(coords[0]) || isNaN(coords[1])) return;
                             drawAuthoringMarker(coords, 'point');
                             finalizeAuthoring(coords);
@@ -1871,7 +1871,7 @@ export function initQuiz() {
                     setState('quizActive', false);
                     clearQuizMarkers();
                     if (globeViewBtn) { globeViewBtn.disabled = false; globeViewBtn.classList.remove('quiz-disabled'); }
-                    if (quizBtn) { quizBtn.disabled = false; quizBtn.classList.remove('quiz-disabled'); quizBtn.title = t('quizMode'); }
+                    if (quizBtn) { quizBtn.disabled = false; quizBtn.classList.remove('quiz-disabled'); quizBtn.removeAttribute('title'); }
                     if (customQuizClickHandler) {
                         mapContainer.removeEventListener('click', customQuizClickHandler, true);
                         customQuizClickHandler = null;
@@ -2014,7 +2014,7 @@ export function initQuiz() {
                     stopCustomTimer();
                     setState('quizActive', false);
                     if (globeViewBtn) { globeViewBtn.disabled = false; globeViewBtn.classList.remove('quiz-disabled'); }
-                    if (quizBtn) { quizBtn.disabled = false; quizBtn.classList.remove('quiz-disabled'); quizBtn.title = t('quizMode'); }
+                    if (quizBtn) { quizBtn.disabled = false; quizBtn.classList.remove('quiz-disabled'); quizBtn.removeAttribute('title'); }
                     clearTimeout(customQuizFeedbackTimeout);
                     clearTimeout(customQuizAdvanceTimeout);
                     clearQuizMarkers();

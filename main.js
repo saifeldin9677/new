@@ -311,7 +311,7 @@ if (mobileShareBtn) mobileShareBtn.addEventListener('click', shareMap);
 
 if (mobileModeBtn) mobileModeBtn.addEventListener('click', function() { modeSheet.classList.add('visible'); });
 
-if (mobileLayersBtn) mobileLayersBtn.addEventListener('click', function() { openLayersModal(); });
+if (mobileLayersBtn) mobileLayersBtn.addEventListener('click', function() { openLayersModal(this); });
 
 if (mobileResetBtn2) mobileResetBtn2.addEventListener('click', function() { closeMobileToolsMenu(); resetAll(); });
 
@@ -376,11 +376,26 @@ mobileFilterBtns.forEach(function(b) {
                 });
             });
 
-if (layersToggleBtn) layersToggleBtn.addEventListener('click', openLayersModal);
+if (layersToggleBtn) layersToggleBtn.addEventListener('click', function() { openLayersModal(this); });
 
 if (layersModalClose) layersModalClose.addEventListener('click', closeLayersModal);
 
 if (layersModalBackdrop) layersModalBackdrop.addEventListener('click', closeLayersModal);
+
+// Outside-click close: any click on the map, menus, or other controls closes
+// the layers popover. Clicks on the three layers triggers themselves are
+// handled by their own toggle handlers (openLayersModal closes when visible),
+// so they're excluded here to avoid double-closing.
+document.addEventListener('click', function(e) {
+    if (!layersModal || !layersModal.classList.contains('visible')) return;
+    if (layersModal.contains(e.target)) return;
+    var triggers = [layersToggleBtn, barLayersBtn, mobileLayersBtn];
+    for (var i = 0; i < triggers.length; i++) {
+        var t = triggers[i];
+        if (t && (e.target === t || t.contains(e.target))) return;
+    }
+    closeLayersModal();
+});
 
 document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && layersModal && layersModal.classList.contains('visible')) {
@@ -541,6 +556,62 @@ if (menuToggle) {
                 });
             }
 
+// Desktop controls panel: collapse/expand with persisted preference.
+// The collapse affordance lives in the header tools row (always reachable),
+// and the state is restored on load so the map keeps the user's layout.
+var controlsToggleBtn = document.getElementById('controlsToggleBtn');
+var barLayersBtn = document.getElementById('barLayersBtn');
+if (controlsToggleBtn && controlsBar) {
+    function setControlsCollapsed(collapsed) {
+        controlsBar.classList.toggle('collapsed', collapsed);
+        controlsToggleBtn.setAttribute('aria-expanded', String(!collapsed));
+        var label = t(collapsed ? 'expandControls' : 'collapseControls');
+        controlsToggleBtn.title = label;
+        controlsToggleBtn.setAttribute('aria-label', label);
+        controlsToggleBtn.setAttribute('data-tooltip', label);
+        // Keep data-i18n-title in sync so applyLanguage() re-uses the right label
+        controlsToggleBtn.dataset.i18nTitle = collapsed ? 'expandControls' : 'collapseControls';
+        try { localStorage.setItem('controlsCollapsed', collapsed ? '1' : '0'); } catch(e) {}
+    }
+    var savedCollapsed = '0';
+    try { savedCollapsed = localStorage.getItem('controlsCollapsed') || '0'; } catch(e) {}
+    setControlsCollapsed(savedCollapsed === '1');
+    controlsToggleBtn.addEventListener('click', function() {
+        setControlsCollapsed(!controlsBar.classList.contains('collapsed'));
+    });
+}
+if (barLayersBtn) {
+    barLayersBtn.addEventListener('click', function() { openLayersModal(this); });
+}
+
+// Mode hover description: hovering a mode button shows what the mode does,
+// right under the mode row (desktop only — the hint element is hidden <1024px).
+(function() {
+    var hint = document.getElementById('modeHint');
+    if (!hint) return;
+    var showHint = function(btn) {
+        var mode = btn.dataset.mode;
+        var text = t('mode_' + mode + '_tip') || '';
+        if (!text) return;
+        hint.textContent = text;
+        var panel = document.getElementById('controlsBar');
+        var pr = panel ? panel.getBoundingClientRect() : btn.getBoundingClientRect();
+        hint.style.left = Math.max(10, Math.min(window.innerWidth - 360, pr.left + pr.width / 2 - 170)) + 'px';
+        hint.style.top = Math.max(10, pr.bottom + 10) + 'px';
+        hint.hidden = false;
+        requestAnimationFrame(function() { hint.classList.add('visible'); });
+    };
+    var hideHint = function() {
+        hint.classList.remove('visible');
+        hint.hidden = true;
+    };
+    Array.prototype.forEach.call(document.querySelectorAll('#modeButtons .mode-btn'), function(btn) {
+        btn.addEventListener('mouseenter', function() { showHint(this); });
+        btn.addEventListener('mouseleave', hideHint);
+    });
+    document.getElementById('controlsBar').addEventListener('mouseleave', hideHint);
+})();
+
 (function() {
                 var overlay = document.getElementById('langOverlay');
                 if (!overlay) { init(); maybeShowProjectionExplainer(); return; }
@@ -563,6 +634,15 @@ if (menuToggle) {
                         var code = this.dataset.lang;
                         setState('lang', code);
                         try { localStorage.setItem('mapLang', code); } catch(e) {}
+                        // The user's explicit choice wins: drop any #lang= from a shared
+                        // URL so init()/loadFromHash() can't boot the map back into it.
+                        try {
+                            var hp = new URLSearchParams(window.location.hash.substring(1));
+                            if (hp.has('lang')) {
+                                hp.delete('lang');
+                                window.location.hash = hp.toString() ? '#' + hp.toString() : '';
+                            }
+                        } catch(e) {}
                         overlay.style.cssText = 'display:none !important;visibility:hidden;pointer-events:none;opacity:0;z-index:-1;';
                         overlay.classList.add('hidden');
                         overlay.remove();

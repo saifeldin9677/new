@@ -1,6 +1,6 @@
-const LEPIDOS_CACHE_VERSION = 'lepidos-v9';
-const LEPIDOS_CACHE_PRECACHE = 'lepidos-precache-v9';
-const LEPIDOS_CACHE_RUNTIME = 'lepidos-runtime-v9';
+const LEPIDOS_CACHE_VERSION = 'lepidos-v11';
+const LEPIDOS_CACHE_PRECACHE = 'lepidos-precache-v11';
+const LEPIDOS_CACHE_RUNTIME = 'lepidos-runtime-v11';
 
 const PRECACHE_URLS = [
     './',
@@ -96,11 +96,14 @@ self.addEventListener('fetch', function(event) {
     var isRuntime = RUNTIME_ORIGINS.indexOf(url.origin) !== -1;
     if (!isSameOrigin && !isRuntime) return;
 
-    // Same-origin assets (js, css, geodata) are network-first: the app must always
-    // pick up the newest deployment instead of an old cached copy.
+    // Same-origin assets (js, css, geodata) are network-first with the HTTP
+    // cache bypassed: ES modules must never mix versions across requests, or a
+    // stale layers.js + fresh main.js crashes the whole module graph (e.g. an
+    // import of an export the old file doesn't have) and the app goes dark.
+    // The runtime cache still provides the offline fallback below.
     if (isSameOrigin) {
         event.respondWith(
-            fetch(request).then(function(response) {
+            fetch(request, { cache: 'no-store' }).then(function(response) {
                 if (response && response.ok) {
                     var copy = response.clone();
                     caches.open(LEPIDOS_CACHE_RUNTIME).then(function(cache) {

@@ -54,26 +54,29 @@
                     <i data-lucide="moon" class="lucide-icon theme-icon-dark"></i>
                 </button>
                 <button class="btn" id="colorblindToggleBtn" data-i18n-title="colorblindModeLabel" aria-pressed="false" title="وضع عمى الألوان"><i data-lucide="palette" class="lucide-icon"></i></button>
+                <span class="btn-divider" aria-hidden="true"></span>
                 <button class="btn" id="shareBtn" title="مشاركة الخريطة" data-i18n-title="shareBtn_title"><i data-lucide="share-2" class="lucide-icon"></i></button>
-                <button class="btn" id="shortcutsBtn" title="اختصارات لوحة المفاتيح" data-i18n-title="shortcutsBtn_title"><i data-lucide="keyboard" class="lucide-icon"></i><span class="btn-text">?</span></button>
-                <button class="btn" id="aboutBtn" title="حول التطبيق" data-i18n-title="aboutTitle"><i data-lucide="info" class="lucide-icon"></i><span class="btn-text">ⓘ</span></button>
-                <button class="btn" id="presetsBtn" title="المحفوظات التعليمية" data-i18n-title="presetsTitle"><i data-lucide="bookmark" class="lucide-icon"></i><span class="btn-text">📚</span></button>
                 <button class="btn" id="pdfExportBtn" title="تصدير الخريطة كملف PDF" data-i18n-title="pdfExportBtn_title"><i data-lucide="file-text" class="lucide-icon"></i><span class="btn-text">PDF</span></button>
+                <span class="btn-divider" aria-hidden="true"></span>
+                <button class="btn" id="shortcutsBtn" title="اختصارات لوحة المفاتيح" data-i18n-title="shortcutsBtn_title"><i data-lucide="keyboard" class="lucide-icon"></i></button>
+                <button class="btn" id="onboardBtn" title="شرح الخريطة" aria-label="شرح الخريطة" data-i18n-title="onboardMapGuide"><i data-lucide="book-open" class="lucide-icon"></i></button>
+                <button class="btn" id="aboutBtn" title="حول التطبيق" aria-label="حول التطبيق" data-i18n-title="aboutTitle"><i data-lucide="info" class="lucide-icon"></i></button>
+                <button class="btn" id="presetsBtn" title="المحفوظات التعليمية" data-i18n-title="presetsTitle"><i data-lucide="bookmark" class="lucide-icon"></i></button>
+                <span class="btn-divider" aria-hidden="true"></span>
                 <button class="btn" id="measureToolBtn" data-i18n-title="measureToolLabel">
                     <i data-lucide="ruler" class="lucide-icon"></i>
                     <span class="btn-text" data-i18n="measureToolLabel"></span>
-                </button>
-                <button class="btn" id="annotateBtn" data-i18n-title="annotationToolLabel">
-                    <i data-lucide="sticky-note" class="lucide-icon"></i>
-                    <span class="btn-text" data-i18n="annotationToolLabel"></span>
                 </button>
                 <button class="btn" id="presentationModeBtn" data-i18n-title="presentationModeLabel">
                     <i data-lucide="maximize" class="lucide-icon"></i>
                     <span class="btn-text" data-i18n="presentationModeLabel"></span>
                 </button>
+                <span class="btn-divider" aria-hidden="true"></span>
                 <button class="btn" id="resetBtn" title="إعادة تعيين كل شيء (الوضع، الفلاتر، التكبير)" data-i18n="resetBtn" data-i18n-title="resetBtn_title"><i data-lucide="rotate-ccw" class="lucide-icon"></i><span class="btn-text">إعادة</span></button>
                 <button class="btn" id="dataTableBtn" data-i18n-title="dataTableBtn_title"><i data-lucide="table" class="lucide-icon"></i><span class="btn-text" data-i18n="dataTableBtn"></span></button>
                 <button class="btn" id="coordsToggle" title="إظهار/إخفاء شريط الإحداثيات" data-i18n="coordsToggle" data-i18n-title="coordsToggle_title" aria-pressed="true"><i data-lucide="map-pin" class="lucide-icon"></i><span class="btn-text">إحداثيات</span></button>
+                <span class="btn-divider" aria-hidden="true"></span>
+                <button class="btn" id="controlsToggleBtn" title="إخفاء شريط التحكم" aria-label="إخفاء شريط التحكم" aria-expanded="true" data-i18n-title="collapseControls"><i data-lucide="chevron-down" class="lucide-icon"></i></button>
             </div>
         </div>
     </header>
@@ -93,6 +96,7 @@
         <div class="legend" id="legend" role="region" aria-label="وسيلة الإيضاح" data-i18n-aria-label="legendAriaLabel" tabindex="0"></div>
         <div class="border-disputes-counter" id="borderDisputesCounter" style="display:none"></div>
         <div class="info-overlay" id="infoOverlay"></div>
+        <div class="mode-hint" id="modeHint" role="status" aria-live="polite" hidden></div>
 
         <div class="coordinates-display" id="coordinatesDisplay">
             خط الطول: — &nbsp;|&nbsp; خط العرض: — &nbsp;|&nbsp; تكبير: 1.0x &nbsp;|&nbsp; الوضع: دين &nbsp;|&nbsp; الفلتر: الكل
@@ -109,20 +113,16 @@
 
             <div class="zoom-controls" role="group" aria-label="التحكم بالتكبير">
             <div class="dock" id="dock" role="group" aria-label="الأدوات الرئيسية">
-                <div class="dock-group">
-                    <button class="zoom-btn" id="onboardBtn" title="شرح الخريطة" aria-label="شرح الخريطة" data-i18n-title="onboardMapGuide"><i data-lucide="book-open" class="lucide-icon"></i></button>
-                    <button class="zoom-btn quiz-btn" id="quizBtn" title="الاختبار" aria-label="الاختبار" data-i18n-title="quizMode"><i data-lucide="brain" class="lucide-icon"></i></button>
-                </div>
-                <span class="dock-divider" aria-hidden="true"></span>
-                <div class="dock-group">
-                    <button class="zoom-btn" id="globeViewBtn" title="عرض الكرة الأرضية" aria-label="عرض الكرة الأرضية" data-i18n-title="globeViewBtn_title"><i data-lucide="earth" class="lucide-icon"></i></button>
-                    <button class="zoom-btn" id="compareProjectionsBtn" title="مقارنة الإسقاطات" aria-label="مقارنة الإسقاطات" data-i18n-title="compareProjectionsBtn_title"><i data-lucide="git-compare" class="lucide-icon"></i></button>
-                </div>
+                <button class="zoom-btn" id="annotateBtn" aria-label="وضع التعليقات" data-i18n-aria-label="annotationToolLabel"><i data-lucide="sticky-note" class="lucide-icon"></i><span class="btn-text" data-i18n="annotationToolLabel">Annotation Mode</span></button>
+                <button class="zoom-btn quiz-btn" id="quizBtn" aria-label="الاختبار" data-i18n-aria-label="quizMode"><i data-lucide="brain" class="lucide-icon"></i><span class="btn-text" data-i18n="quizMode">Quiz</span></button>
+                <button class="zoom-btn" id="globeViewBtn" aria-label="عرض الكرة الأرضية" data-i18n-aria-label="globeViewBtn"><i data-lucide="earth" class="lucide-icon"></i><span class="btn-text" data-i18n="globeViewBtn">Globe</span></button>
+                <button class="zoom-btn" id="compareProjectionsBtn" aria-label="مقارنة الإسقاطات" data-i18n-aria-label="compareProjectionsBtn_title"><i data-lucide="git-compare" class="lucide-icon"></i><span class="btn-text" data-i18n="compareProjectionsBtn_title">Compare</span></button>
             </div>
-            <span class="dock-divider" aria-hidden="true"></span>
-            <button class="zoom-btn" id="zoomInBtn" title="تكبير" aria-label="تكبير" data-i18n-title="zoomIn"><i data-lucide="plus" class="lucide-icon"></i></button>
-            <button class="zoom-btn" id="zoomOutBtn" title="تصغير" aria-label="تصغير" data-i18n-title="zoomOut"><i data-lucide="minus" class="lucide-icon"></i></button>
-            <button class="zoom-btn" id="zoomResetBtn" title="إعادة تعيين التكبير" aria-label="إعادة تعيين التكبير" data-i18n-title="zoomReset"><i data-lucide="home" class="lucide-icon"></i></button>
+            <div class="zoom-stack" id="zoomStack">
+                <button class="zoom-btn" id="zoomInBtn" title="تكبير" aria-label="تكبير" data-i18n-title="zoomIn"><i data-lucide="plus" class="lucide-icon"></i></button>
+                <button class="zoom-btn" id="zoomOutBtn" title="تصغير" aria-label="تصغير" data-i18n-title="zoomOut"><i data-lucide="minus" class="lucide-icon"></i></button>
+                <button class="zoom-btn" id="zoomResetBtn" title="إعادة تعيين التكبير" aria-label="إعادة تعيين التكبير" data-i18n-title="zoomReset"><i data-lucide="home" class="lucide-icon"></i></button>
+            </div>
         </div>
 
         <button class="presentation-exit-btn" id="presentationExitBtn" style="display:none" data-i18n-title="presentationExitLabel"><i data-lucide="minimize" class="lucide-icon"></i><span class="btn-text" data-i18n="presentationExitLabel"></span></button>
@@ -172,6 +172,10 @@
         </div>
 
         <div class="controls-bar" id="controlsBar" role="toolbar" aria-label="شريط التحكم">
+            <div class="controls-bar-header">
+                <span class="control-label" id="sectionControlsLabel" data-i18n="controlsPanel"><i data-lucide="settings" class="lucide-icon"></i><span class="btn-text">لوحة التحكم</span></span>
+                <button class="btn bar-layers-btn" id="barLayersBtn" data-i18n-title="layersToggle"><i data-lucide="layers" class="lucide-icon"></i><span class="btn-text" data-i18n="layersModalTitle">الطبقات</span></button>
+            </div>
             <div class="row" id="modeRow">
                 <span class="control-label" id="sectionBaseMapLabel" data-i18n="sectionBaseMap"><i data-lucide="map" class="lucide-icon"></i><span class="btn-text">Base Map</span></span>
                 <div class="control-group" id="modeButtons">
@@ -223,7 +227,7 @@
             </div>
         </div>
 
-        <div class="layers-modal" id="layersModal" role="dialog" aria-modal="true" aria-labelledby="layersModalTitle">
+        <div class="layers-modal layers-popover" id="layersModal" role="dialog" aria-modal="false" aria-labelledby="layersModalTitle">
             <div class="layers-modal-backdrop" id="layersModalBackdrop"></div>
             <div class="layers-modal-content">
                 <div class="layers-modal-header">

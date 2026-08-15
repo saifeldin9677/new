@@ -2866,7 +2866,7 @@ export function toggleGlobeMode() {
                     fullGlobeRedraw();
                 } else {
                     var quizBtnEl2 = document.getElementById('quizBtn');
-                    if (quizBtnEl2) { quizBtnEl2.disabled = false; quizBtnEl2.classList.remove('quiz-disabled'); quizBtnEl2.title = t('quizMode'); }
+                    if (quizBtnEl2) { quizBtnEl2.disabled = false; quizBtnEl2.classList.remove('quiz-disabled'); quizBtnEl2.removeAttribute('title'); }
                     clearMeasurement();
                     var lbl = document.getElementById('headerProjectionLabel');
                     if (lbl) { lbl.setAttribute('data-i18n', 'headerProjectionType'); lbl.textContent = t('headerProjectionType'); }

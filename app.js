@@ -213,6 +213,24 @@
             let measureActive = false;
             let measurePoints = [];
             let gMeasure = null;
+            let annotateActive = false;
+            let annotateKind = 'pin';
+            let annotateColor = '#eab308';
+            let annotateFontSize = 10;
+            let annotatePoints = [];
+            let gAnnotations = null;
+            let annotationsList = [];
+            var ANNOT_FONT_LEVELS = [8, 10, 12, 14, 16, 20, 24];
+            var _annotStrokePoints = null;
+            var _annotStrokeActive = false;
+            var _annotStrokePointerId = null;
+            var _annotStrokeStartScreen = null;
+            var _annotStrokePrevScreen = null;
+            var _annotStrokePathLen = 0;
+            var _annotStrokeAccum = null;
+            var _annotStrokeRAF = null;
+            var _annotPreviewEl = null;
+            var _panSpaceHeld = false;
             let presentationModeActive = false;
             let exportInProgress = false;
             let currentSessionCode = null;
@@ -2469,6 +2487,9 @@
                 drawGeopoliticalBlocs();
                 drawDesertsForests();
                 drawBorderDisputes();
+                if (!(_annotStrokePoints && _annotStrokePoints.length)) {
+                    try { redrawAnnotations(); if (annotateKind === 'region' && annotatePoints && annotatePoints.length > 0) redrawAnnotationDrawing(); } catch (e) {}
+                }
                 updateLegend();
                 if (selectedCountry && countryPanel.style.display === 'block' && !compareCountry) renderCountryPanel(
                     selectedCountry);
@@ -2933,6 +2954,7 @@
                             .on('click', handleCountryActivate);
                     }
                     if (measurePoints.length > 0) { if (!gMeasure) gMeasure = gMap.append('g').attr('class', 'measure-layer'); redrawMeasureLayer(); }
+                    clearAnnotationsView();
                     fullGlobeRedraw();
                 } else {
                     var quizBtnEl2 = document.getElementById('quizBtn');
@@ -2998,6 +3020,7 @@
                     }
                     if (countryLabelSelection) { countryLabelSelection.remove(); countryLabelSelection = null; }
                     drawCountryLabels(allCountryFeatures);
+                    try { redrawAnnotations(); } catch (e) {}
                     updateHashDebounced();
                 }
             }
@@ -3813,6 +3836,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     document.getElementById('measureToolBtn').classList.toggle('toggle-on', measureActive);
                     clearMeasurement();
                     document.body.classList.toggle('measure-active', measureActive);
+                    if (measureActive && annotateActive) toggleAnnotationMode();
                 }
                 function togglePresentationMode() {
                     presentationModeActive = !presentationModeActive;
@@ -3825,6 +3849,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         }
                     } else {
                         if (measureActive) toggleMeasureMode();
+                        if (annotateActive) toggleAnnotationMode();
                     }
                 }
 
@@ -4028,6 +4053,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
 
                 function handleCountryActivate(e, d) {
                     if (measureActive) return;
+                    if (annotateActive) return;
                     if (e.shiftKey && selectedCountry) {
                         compareCountry = d;
                         renderComparePanel(selectedCountry, compareCountry);
@@ -4037,6 +4063,707 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         openCountryPanel(d);
                         highlightSelectedCountry(d);
                     }
+                }
+
+                // ── Annotation Mode (Explanation / Annotate) ──
+                const ANNOTATIONS_KEY = 'lepidosAnnotations';
+
+                function annotateToast(text) {
+                    if (copyNotification) {
+                        copyNotification.textContent = text;
+                        copyNotification.classList.add('show');
+                        setTimeout(function() { copyNotification.classList.remove('show'); }, 2000);
+                    }
+                }
+
+                function loadAnnotations() {
+                    try {
+                        var raw = localStorage.getItem(ANNOTATIONS_KEY);
+                        var arr = raw ? JSON.parse(raw) : [];
+                        return Array.isArray(arr) ? arr : [];
+                    } catch (e) { return []; }
+                }
+
+                function saveAnnotations() {
+                    try { localStorage.setItem(ANNOTATIONS_KEY, JSON.stringify(annotationsList)); } catch (e) {}
+                }
+
+                // The Waterman butterfly projection has a singular vertex at the map center
+                // (the polyhedral net's central seam): `invert` returns null/NaN for the exact
+                // center pixel, silently swallowing clicks/answers there. Nudge a few pixels
+                // and retry so interaction still works everywhere on the map.
+                function invertMapPoint(svgPoint, proj) {
+                    proj = proj || getActiveProjection();
+                    var coords = proj.invert(svgPoint);
+                    if (coords && !isNaN(coords[0]) && !isNaN(coords[1])) return coords;
+                    var offsets = [[2, 0], [-2, 0], [0, 2], [0, -2], [2, 2], [-2, 2], [2, -2], [-2, -2], [4, 0], [0, 4]];
+                    for (var i = 0; i < offsets.length; i++) {
+                        var c = proj.invert([svgPoint[0] + offsets[i][0], svgPoint[1] + offsets[i][1]]);
+                        if (c && !isNaN(c[0]) && !isNaN(c[1])) return c;
+                    }
+                    return coords;
+                }
+
+                function _annotClientToLonLat(clientX, clientY) {
+                    var rect = getMapRect();
+                    var svgPoint = currentTransform.invert([clientX - rect.left, clientY - rect.top]);
+                    var coords = invertMapPoint(svgPoint);
+                    if (!coords || isNaN(coords[0]) || isNaN(coords[1])) return null;
+                    return [coords[0], coords[1]];
+                }
+
+                // Splits a projected line into contiguous pieces across projection
+                // seams (same visual mechanism as the admin boundaries layer).
+                function _projectAnnotationParts(coordsArr, proj) {
+                    var pieces = [];
+                    var cur = [];
+                    coordsArr.forEach(function(c) {
+                        var p = proj(c);
+                        if (!p || isNaN(p[0])) {
+                            if (cur.length >= 2) pieces.push(cur);
+                            cur = [];
+                        } else {
+                            cur.push(p);
+                        }
+                    });
+                    if (cur.length >= 2) pieces.push(cur);
+                    return pieces;
+                }
+
+                function _annotationTypeLabel(a) {
+                    if (a.type === 'pin') return t('annotationPin');
+                    if (a.type === 'region') return t('annotationRegion');
+                    if (a.type === 'arrow') return t('annotationArrow');
+                    return t('annotationDraw');
+                }
+
+                function _annotNormalizeSize(v) {
+                    if (v === 'small') return 8;
+                    if (v === 'large') return 16;
+                    if (v === 'medium' || v === null || v === undefined || v === '') return 10;
+                    var n = parseInt(String(v), 10);
+                    return isNaN(n) ? 10 : n;
+                }
+
+                function redrawAnnotations() {
+                    if (!gAnnotations) gAnnotations = gMap.append('g').attr('class', 'annotation-layer');
+                    gAnnotations.selectAll('*').remove();
+                    var proj = getActiveProjection();
+                    var parts = null;
+                    var zoomStroke = Math.min(4, Math.max(1, currentTransform.k));
+                    function itemScale(a) { return _annotNormalizeSize(a && a.size) / 10; }
+                    annotationsList.forEach(function(a) {
+                        if (a.hidden) return;
+                        var col = a.color || '#eab308';
+                        var scale = itemScale(a);
+                        if (a.type === 'pin') {
+                            var xy = proj(a.coords);
+                            if (!xy || isNaN(xy[0])) return;
+                            gAnnotations.append('circle').attr('class', 'annotation-pin-circle').attr('cx', xy[0]).attr('cy', xy[1]).attr('r', 6 * scale).style('fill', col).style('stroke-width', 1.5 * scale * zoomStroke);
+                            if (a.label) {
+                                gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', xy[0] + 9).attr('y', xy[1] + 4).text(a.label);
+                            }
+                        } else if (a.type === 'region' && Array.isArray(a.coords) && a.coords.length >= 3) {
+                            var pts = a.coords.map(function(c) { return proj(c); });
+                            if (pts.some(function(p) { return !p || isNaN(p[0]); })) return;
+                            var d = 'M' + pts.map(function(p) { return p[0] + ',' + p[1]; }).join('L') + 'Z';
+                            gAnnotations.append('path').attr('class', 'annotation-region-poly').attr('d', d).style('stroke', col).style('fill', col + '26').style('stroke-width', 2 * scale * zoomStroke);
+                            if (a.label) {
+                                var cx = 0, cy = 0;
+                                pts.forEach(function(p) { cx += p[0]; cy += p[1]; });
+                                cx /= pts.length; cy /= pts.length;
+                                gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', cx).attr('y', cy).attr('text-anchor', 'middle').text(a.label);
+                            }
+                        } else if (a.type === 'freehand' && Array.isArray(a.coords) && a.coords.length >= 2) {
+                            parts = _projectAnnotationParts(a.coords, proj);
+                            if (!parts.length) return;
+                            var freeLabelPos = null;
+                            parts.forEach(function(part) {
+                                var pd = 'M' + part.map(function(p) { return p[0] + ',' + p[1]; }).join('L');
+                                gAnnotations.append('path').attr('class', 'annotation-freehand-path').attr('d', pd).style('stroke', col).style('stroke-width', 2.5 * scale * zoomStroke);
+                                if (!freeLabelPos && part.length) freeLabelPos = part[0];
+                            });
+                            if (a.label && freeLabelPos) {
+                                gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', freeLabelPos[0] + 9).attr('y', freeLabelPos[1] + 4).text(a.label);
+                            }
+                        } else if (a.type === 'arrow' && Array.isArray(a.coords) && a.coords.length >= 2) {
+                            parts = _projectAnnotationParts(a.coords, proj);
+                            if (!parts.length) return;
+                            var headCoords = a.coords[a.coords.length - 1];
+                            var arrowLabelPos = null;
+                            parts.forEach(function(part) {
+                                var pd = 'M' + part.map(function(p) { return p[0] + ',' + p[1]; }).join('L');
+                                gAnnotations.append('path').attr('class', 'annotation-arrow-line').attr('d', pd).style('stroke', col).style('stroke-width', 2.5 * scale * zoomStroke);
+                                if (part.length > 1) arrowLabelPos = part[0];
+                            });
+                            var headProj = proj(headCoords);
+                            if (headProj && !isNaN(headProj[0])) {
+                                var hp = null;
+                                var tailOfHead = null;
+                                parts.forEach(function(part) {
+                                    if (part.length < 2) return;
+                                    var last = part[part.length - 1];
+                                    if (Math.abs(last[0] - headProj[0]) < 0.5 && Math.abs(last[1] - headProj[1]) < 0.5) {
+                                        hp = last;
+                                        tailOfHead = part[part.length - 2];
+                                    }
+                                });
+                                if (!hp) { hp = headProj; tailOfHead = parts[parts.length - 1][parts[parts.length - 1].length - 2]; }
+                                var ang = Math.atan2(hp[1] - tailOfHead[1], hp[0] - tailOfHead[0]);
+                                var AL = 13 * scale, AW = 6 * scale;
+                                var ax1 = hp[0], ay1 = hp[1];
+                                var bxp = ax1 - AL * Math.cos(ang), byp = ay1 - AL * Math.sin(ang);
+                                var perpx = -Math.sin(ang), perpy = Math.cos(ang);
+                                gAnnotations.append('path').attr('class', 'annotation-arrow-head').attr('d',
+                                    'M' + ax1 + ',' + ay1 + 'L' + (bxp + AW * perpx) + ',' + (byp + AW * perpy) + 'L' + (bxp - AW * perpx) + ',' + (byp - AW * perpy) + 'Z').style('fill', col);
+                                if (a.label && arrowLabelPos) {
+                                    gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', arrowLabelPos[0] + 9).attr('y', arrowLabelPos[1] + 4).text(a.label);
+                                }
+                            }
+                        }
+                    });
+                }
+
+                function clearAnnotationsView() {
+                    if (gAnnotations) gAnnotations.selectAll('*').remove();
+                }
+
+                function redrawAnnotationDrawing() {
+                    if (!gAnnotations) gAnnotations = gMap.append('g').attr('class', 'annotation-layer');
+                    gAnnotations.selectAll('.annotation-draw-vertex, .annotation-draw-poly').remove();
+                    var proj = getActiveProjection();
+                    var finishBtn = document.getElementById('annotationFinishBtn');
+                    if (finishBtn) finishBtn.style.display = (annotatePoints.length >= 3) ? '' : 'none';
+                    var fontScale = _annotNormalizeSize(annotateFontSize) / 10;
+                    var zoomStroke = Math.min(4, Math.max(1, currentTransform.k));
+                    annotatePoints.forEach(function(c) {
+                        var xy = proj(c);
+                        if (!xy || isNaN(xy[0])) return;
+                        gAnnotations.append('circle').attr('class', 'annotation-region-vertex annotation-draw-vertex').attr('cx', xy[0]).attr('cy', xy[1]).attr('r', 4 * fontScale).style('fill', annotateColor);
+                    });
+                    if (annotatePoints.length >= 2) {
+                        var pts = annotatePoints.map(function(c) { return proj(c); }).filter(function(p) { return p && !isNaN(p[0]); });
+                        if (pts.length >= 2) {
+                            var d = 'M' + pts.map(function(p) { return p[0] + ',' + p[1]; }).join('L');
+                            if (annotatePoints.length >= 3) d += 'Z';
+                            gAnnotations.append('path').attr('class', 'annotation-region-poly annotation-draw-poly').attr('d', d).style('stroke', annotateColor).style('fill', annotateColor + '1f').style('stroke-width', 2 * fontScale * zoomStroke);
+                        }
+                    }
+                }
+
+                function _annotStrokeKilometers(pts) {
+                    var km = 0;
+                    for (var i = 1; i < pts.length; i++) {
+                        var r = d3.geoDistance(pts[i - 1], pts[i]);
+                        if (isNaN(r)) continue;
+                        km += r * 6371;
+                    }
+                    return Math.round(km);
+                }
+
+                function _annotFlushSamples() {
+                    _annotStrokeRAF = null;
+                    if (!_annotStrokeActive || !_annotStrokeAccum) return;
+                    var acc = _annotStrokeAccum;
+                    _annotStrokeAccum = null;
+                    if (!_annotStrokePoints.length) {
+                        _annotStrokePoints.push(_annotClientToLonLat(acc[0], acc[1]));
+                        _annotStrokePrevScreen = acc;
+                        return;
+                    }
+                    var rect = getMapRect();
+                    var dx = acc[0] - _annotStrokePrevScreen[0];
+                    var dy = acc[1] - _annotStrokePrevScreen[1];
+                    var d = Math.sqrt(dx * dx + dy * dy);
+                    _annotStrokePathLen += d;
+                    if (d >= 2) {
+                        var ll = _annotClientToLonLat(acc[0], acc[1]);
+                        if (ll) {
+                            _annotStrokePoints.push(ll);
+                            _annotStrokePrevScreen = acc;
+                            _annotStrokeUpdatePreview();
+                        }
+                    }
+                }
+
+                function _annotStrokeUpdatePreview() {
+                    if (!_annotStrokePoints || !_annotStrokePoints.length) return;
+                    if (!gAnnotations) gAnnotations = gMap.append('g').attr('class', 'annotation-layer');
+                    var proj = getActiveProjection();
+                    var finishBtn = document.getElementById('annotationFinishBtn');
+                    if (!_annotPreviewEl || !_annotPreviewEl.isConnected) {
+                        if (!_annotStrokePoints.length) return;
+                        gAnnotations.selectAll('.annotation-draw-poly').remove();
+                        _annotPreviewEl = gAnnotations.append('path').attr('class', 'annotation-region-poly annotation-draw-poly').node();
+                        _annotPreviewEl.style.stroke = annotateColor;
+                        _annotPreviewEl.style.fill = annotateColor + '1f';
+                        _annotPreviewEl.style.strokeWidth = String((annotateKind === 'region' ? 2 : 2.5) * (_annotNormalizeSize(annotateFontSize) / 10) * Math.min(4, Math.max(1, currentTransform.k)));
+                    }
+                    if (finishBtn) finishBtn.style.display = '';
+                    var d;
+                    if (annotateKind === 'arrow' && _annotStrokePoints.length >= 2) {
+                        var p0 = proj(_annotStrokePoints[0]);
+                        var p1 = proj(_annotStrokePoints[_annotStrokePoints.length - 1]);
+                        if (p0 && p1 && !isNaN(p0[0]) && !isNaN(p1[0])) {
+                            d = 'M' + p0[0] + ',' + p0[1] + 'L' + p1[0] + ',' + p1[1];
+                            if (_annotPreviewEl && !_annotPreviewEl.style.stroke) _annotPreviewEl.style.stroke = annotateColor;
+                        }
+                    } else if (annotateKind === 'freehand' && _annotStrokePoints.length >= 2) {
+                        var parts = _projectAnnotationParts(_annotStrokePoints, proj);
+                        d = parts.map(function(part) { return 'M' + part.map(function(p) { return p[0] + ',' + p[1]; }).join('L'); }).join('');
+                    }
+                    if (d) {
+                        _annotPreviewEl.setAttribute('d', d);
+                        _annotPreviewEl.style.strokeWidth = String((annotateKind === 'region' ? 2 : 2.5) * (_annotNormalizeSize(annotateFontSize) / 10) * Math.min(4, Math.max(1, currentTransform.k)));
+                    }
+                }
+
+                function clearAnnotationDrawing() {
+                    if (_annotStrokeRAF) { cancelAnimationFrame(_annotStrokeRAF); _annotStrokeRAF = null; }
+                    _annotStrokeActive = false;
+                    _annotStrokePointerId = null;
+                    _annotStrokePoints = null;
+                    _annotStrokeStartScreen = null;
+                    _annotStrokePrevScreen = null;
+                    _annotStrokePathLen = 0;
+                    _annotStrokeAccum = null;
+                    _annotPreviewEl = null;
+                    annotatePoints = [];
+                    var finishBtn = document.getElementById('annotationFinishBtn');
+                    if (finishBtn) finishBtn.style.display = 'none';
+                    redrawAnnotations();
+                }
+
+                function cancelAnnotationStroke() {
+                    if (!_annotStrokeActive && (!_annotStrokePoints || !_annotStrokePoints.length)) return false;
+                    clearAnnotationDrawing();
+                    annotateToast(t('annotationStrokeCancelled'));
+                    return true;
+                }
+
+                function setPanSpaceHeld(v) { _panSpaceHeld = v; }
+
+                function _annotFinalizeStroke(silent) {
+                    if (!_annotStrokePoints || !_annotStrokePoints.length) return;
+                    var pts = _annotStrokePoints.filter(function(p) { return p; });
+                    var moving = _annotStrokePathLen >= 10;
+                    var isArrow = annotateKind === 'arrow';
+                    if (!moving) {
+                        clearAnnotationDrawing();
+                        return;
+                    }
+                    if (pts.length < 2) {
+                        clearAnnotationDrawing();
+                        return;
+                    }
+                    _annotStrokeActive = false;
+                    if (_annotStrokeRAF) { cancelAnimationFrame(_annotStrokeRAF); _annotStrokeRAF = null; }
+                    var coords = isArrow ? [pts[0], pts[pts.length - 1]] : pts;
+                    var distanceKm = isArrow ? _annotStrokeKilometers(coords) : _annotStrokeKilometers(pts);
+                    _annotPreviewEl = null;
+                    annotatePoints = [];
+                    clearAnnotationDrawing();
+                    annotationsList.push({
+                        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+                        type: isArrow ? 'arrow' : 'freehand',
+                        coords: coords,
+                        label: '',
+                        color: annotateColor,
+                        size: annotateFontSize,
+                        distanceKm: distanceKm,
+                        createdAt: Date.now()
+                    });
+                    saveAnnotations();
+                    redrawAnnotations();
+                    annotateToast(t('annotationAdded'));
+                    if (silent) return;
+                    annotateToast(t('annotationLengthLabel').replace('{km}', distanceKm.toLocaleString('en')));
+                }
+
+                function finishAnnotationTool() {
+                    if (!annotateActive) return;
+                    if (annotateKind === 'region') { finishAnnotationRegion(); return; }
+                    if (annotateKind === 'freehand' || annotateKind === 'arrow') {
+                        if (_annotStrokeActive || (_annotStrokePoints && _annotStrokePoints.length >= 2)) _annotFinalizeStroke(false);
+                    }
+                }
+
+                function _annotStrokeIsDrawKind() { return annotateActive && (annotateKind === 'freehand' || annotateKind === 'arrow'); }
+
+                function onAnnotationPointerDown(e) {
+                    if (!_annotStrokeIsDrawKind()) return;
+                    if (!e.target || !e.target.closest || !e.target.closest('#mapSvg')) return;
+                    if (_panSpaceHeld || e.button === 2 || e.button === 1) return;
+                    if (_annotStrokeActive) {
+                        _annotStrokeActive = false;
+                        cancelAnnotationStroke();
+                        return;
+                    }
+                    if (e.pointerType === 'touch' && !e.isPrimary) return;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    _annotStrokePointerId = e.pointerId;
+                    _annotStrokeActive = true;
+                    _annotStrokeStartScreen = [e.clientX, e.clientY];
+                    _annotStrokePrevScreen = [e.clientX, e.clientY];
+                    _annotStrokePathLen = 0;
+                    _annotStrokePoints = [];
+                    _annotStrokeAccum = [e.clientX, e.clientY];
+                    _annotFlushSamples();
+                    if (_annotStrokePoints.length) _annotStrokeUpdatePreview();
+                }
+
+                function onAnnotationPointerMove(e) {
+                    if (!_annotStrokeActive || e.pointerId !== _annotStrokePointerId) return;
+                    if (!e.target || !e.target.closest || !e.target.closest('#mapSvg')) { endAnnotationStroke(e); return; }
+                    e.preventDefault();
+                    e.stopPropagation();
+                    _annotStrokeAccum = [e.clientX, e.clientY];
+                    if (!_annotStrokeRAF) _annotStrokeRAF = requestAnimationFrame(_annotFlushSamples);
+                }
+
+                function onAnnotationPointerUp(e) {
+                    if (!_annotStrokeActive || e.pointerId !== _annotStrokePointerId) return;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    endAnnotationStroke(e);
+                }
+
+                function endAnnotationStroke(e) {
+                    if (!_annotStrokeActive) return;
+                    _annotStrokeActive = false;
+                    _annotStrokePointerId = null;
+                    if (_annotStrokeRAF) { cancelAnimationFrame(_annotStrokeRAF); _annotStrokeRAF = null; }
+                    if (_annotStrokeAccum) {
+                        var acc = _annotStrokeAccum;
+                        _annotStrokeAccum = null;
+                        var rect = getMapRect();
+                        var dxAcc = acc[0] - _annotStrokePrevScreen[0];
+                        var dyAcc = acc[1] - _annotStrokePrevScreen[1];
+                        _annotStrokePathLen += Math.sqrt(dxAcc * dxAcc + dyAcc * dyAcc);
+                        var ll = _annotClientToLonLat(acc[0], acc[1]);
+                        if (ll) _annotStrokePoints.push(ll);
+                        _annotStrokeUpdatePreview();
+                    }
+                    _annotFinalizeStroke(false);
+                }
+
+                function finishAnnotationRegion() {
+                    if (annotatePoints.length < 3) return;
+                    var pendingCoords = annotatePoints.slice();
+                    annotatePoints = [];
+                    annotationsList.push({
+                        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+                        type: 'region', coords: pendingCoords, label: '', color: annotateColor, size: annotateFontSize, createdAt: Date.now()
+                    });
+                    saveAnnotations();
+                    redrawAnnotations();
+                    annotateToast(t('annotationAdded'));
+                }
+
+                function handleAnnotationClick(e) {
+                    if (!annotateActive) return;
+                    if (e.target && e.target.closest && !e.target.closest('#mapSvg')) return;
+                    if (e.target && e.target.closest && e.target.closest('.annotation-pin-circle, .annotation-pin-label, .annotation-region-poly')) return;
+                    var rect = getMapRect();
+                    var clickX = e.clientX - rect.left;
+                    var clickY = e.clientY - rect.top;
+                    var svgPoint = currentTransform.invert([clickX, clickY]);
+                    var coords = invertMapPoint(svgPoint);
+                    if (!coords || isNaN(coords[0]) || isNaN(coords[1])) return;
+                    if (annotateKind === 'pin') {
+                        annotationsList.push({
+                            id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+                            type: 'pin', coords: [coords[0], coords[1]],
+                            label: '', color: annotateColor, size: annotateFontSize, createdAt: Date.now()
+                        });
+                        saveAnnotations();
+                        redrawAnnotations();
+                        annotateToast(t('annotationAdded'));
+                    } else if (annotateKind === 'region') {
+                        annotatePoints.push([coords[0], coords[1]]);
+                        redrawAnnotationDrawing();
+                    }
+                }
+
+                function maybeStartAnnotationTutorial() {
+                    try { if (localStorage.getItem('annotateExplained') === '1') return; } catch (e) {}
+                    setTimeout(function() { if (window.startAnnotationTutorial) window.startAnnotationTutorial(); }, 300);
+                }
+
+                function setAnnotationToolbarActive() {
+                    var pinBtn = document.getElementById('annotationKindPin');
+                    var regionBtn = document.getElementById('annotationKindRegion');
+                    var drawBtn = document.getElementById('annotationKindDraw');
+                    var arrowBtn = document.getElementById('annotationKindArrow');
+                    if (pinBtn) pinBtn.classList.toggle('toggle-on', annotateKind === 'pin');
+                    if (regionBtn) regionBtn.classList.toggle('toggle-on', annotateKind === 'region');
+                    if (drawBtn) drawBtn.classList.toggle('toggle-on', annotateKind === 'freehand');
+                    if (arrowBtn) arrowBtn.classList.toggle('toggle-on', annotateKind === 'arrow');
+                    document.querySelectorAll('#annotationToolbar .annotation-color-swatch').forEach(function(s) {
+                        s.classList.toggle('toggle-on', s.getAttribute('data-color') === annotateColor);
+                    });
+                    var cur = _annotNormalizeSize(annotateFontSize);
+                    var pressed = {};
+                    pressed.small = (cur === ANNOT_FONT_LEVELS[0]);
+                    pressed.medium = (cur === 10);
+                    pressed.large = (cur === ANNOT_FONT_LEVELS[ANNOT_FONT_LEVELS.length - 1]);
+                    Object.keys(pressed).forEach(function(size) {
+                        var b = document.getElementById('annotationFont' + size.charAt(0).toUpperCase() + size.slice(1) + 'Btn');
+                        if (b) { b.classList.toggle('toggle-on', pressed[size]); b.setAttribute('aria-pressed', String(pressed[size])); }
+                    });
+                    var fv = document.getElementById('annotationFontValue');
+                    if (fv) fv.textContent = String(cur);
+                    if (annotateKind === 'region' && annotatePoints.length > 0) redrawAnnotationDrawing(); else redrawAnnotations();
+                }
+
+                function toggleAnnotationMode() {
+                    annotateActive = !annotateActive;
+                    var btn = document.getElementById('annotateBtn');
+                    if (btn) {
+                        btn.classList.toggle('toggle-on', annotateActive);
+                        btn.setAttribute('aria-pressed', String(annotateActive));
+                    }
+                    var mbtn = document.getElementById('mobileAnnotateBtn');
+                    if (mbtn) {
+                        mbtn.classList.toggle('toggle-on', annotateActive);
+                        mbtn.setAttribute('aria-pressed', String(annotateActive));
+                    }
+                    document.body.classList.toggle('annotate-active', annotateActive);
+                    var toolbar = document.getElementById('annotationToolbar');
+                    if (toolbar) {
+                        toolbar.style.display = annotateActive ? 'flex' : 'none';
+                        toolbar.setAttribute('aria-hidden', String(!annotateActive));
+                    }
+                    if (annotateActive) {
+                        annotationsList = [];
+                        clearAnnotationDrawing();
+                        clearAnnotationsView();
+                        if (measureActive) toggleMeasureMode();
+                        setAnnotationToolbarActive();
+                        annotateToast(t('annotationModeOn'));
+                        maybeStartAnnotationTutorial();
+                    } else {
+                        saveAnnotations();
+                        annotationsList = [];
+                        clearAnnotationDrawing();
+                        clearAnnotationsView();
+                        annotateToast(t('annotationModeOff'));
+                    }
+                }
+
+                function restorePreviousAnnotations() {
+                    var saved = loadAnnotations();
+                    if (!saved || !saved.length) {
+                        annotateToast(t('annotationNoSavedSession'));
+                        return;
+                    }
+                    annotationsList = saved;
+                    redrawAnnotations();
+                    if (renderAnnotationsModal) renderAnnotationsModal();
+                    annotateToast(t('annotationSessionRestored'));
+                }
+
+                function openAnnotationLabelDialog(title, defaultValue, onSave, allowEmpty) {
+                    var modal = document.getElementById('annotationLabelModal');
+                    var input = document.getElementById('annotationLabelInput');
+                    var saveBtn = document.getElementById('annotationLabelSave');
+                    var cancelBtn = document.getElementById('annotationLabelCancel');
+                    var closeBtn = document.getElementById('annotationLabelClose');
+                    if (!modal || !input) return;
+                    var triggerEl = document.activeElement;
+                    var lbl = document.getElementById('annotationLabelPrompt');
+                    if (lbl) lbl.textContent = title || '';
+                    input.value = (defaultValue !== null && defaultValue !== undefined) ? String(defaultValue) : '';
+                    modal.classList.add('visible');
+                    modal.style.display = 'flex';
+                    if (saveBtn) saveBtn.textContent = t('addLabel');
+                    if (cancelBtn) cancelBtn.textContent = t('quizCancel');
+                    input.focus();
+                    input.select();
+
+                    function cleanup() {
+                        modal.classList.remove('visible');
+                        modal.style.display = 'none';
+                        if (triggerEl && triggerEl.isConnected) triggerEl.focus(); else if (document.getElementById('mapContainer')) document.getElementById('mapContainer').focus();
+                    }
+
+                    function commit() { var v = input.value.trim(); if ((v || allowEmpty) && onSave) onSave(v); cleanup(); }
+                    if (saveBtn) saveBtn.onclick = commit;
+                    if (cancelBtn) cancelBtn.onclick = cleanup;
+                    if (closeBtn) closeBtn.onclick = cleanup;
+                    input.onkeydown = function(e) {
+                        if (e.key === 'Enter') { e.preventDefault(); commit(); }
+                        if (e.key === 'Escape') { cleanup(); }
+                    };
+                    input.onblur = function() { /* do not auto-close on blur */ };
+                    modal.addEventListener('click', function(e) { if (e.target === modal.querySelector('.layers-modal-backdrop') || e.target === modal) cleanup(); }, { once: true });
+                }
+
+                function setAnnotationColor(color) {
+                    if (!/^#[0-9a-f]{6}$/i.test(color)) return;
+                    annotateColor = color;
+                    try { localStorage.setItem('annotateColor', color); } catch (e) {}
+                    setAnnotationToolbarActive();
+                }
+
+                function stepAnnotationFontSize(delta) {
+                    var cur = _annotNormalizeSize(annotateFontSize);
+                    var idx = ANNOT_FONT_LEVELS.indexOf(cur);
+                    if (idx === -1) idx = ANNOT_FONT_LEVELS.indexOf(10);
+                    idx = Math.max(0, Math.min(ANNOT_FONT_LEVELS.length - 1, idx + delta));
+                    setAnnotationFontSize(ANNOT_FONT_LEVELS[idx]);
+                }
+
+                function setAnnotationFontSize(size) {
+                    if (ANNOT_FONT_LEVELS.indexOf(size) === -1) return;
+                    annotateFontSize = size;
+                    try { localStorage.setItem('annotateFontSize', String(size)); } catch (e) {}
+                    setAnnotationToolbarActive();
+                    var scale = size / 10;
+                    if (_annotPreviewEl && _annotStrokeActive) {
+                        _annotPreviewEl.style.strokeWidth = String((annotateKind === 'region' ? 2 : 2.5) * scale * Math.min(4, Math.max(1, currentTransform.k)));
+                    } else if (annotateKind === 'region' && annotatePoints.length > 0) {
+                        redrawAnnotationDrawing();
+                    }
+                }
+
+                function undoLastAnnotation() {
+                    if (!annotationsList.length) { annotateToast(t('annotationModeEmpty')); return; }
+                    annotationsList.pop();
+                    saveAnnotations();
+                    clearAnnotationDrawing();
+                    redrawAnnotations();
+                    renderAnnotationsModal();
+                    annotateToast(t('annotationUndone'));
+                }
+
+                function clearAllAnnotations() {
+                    if (!annotationsList.length) { annotateToast(t('annotationModeEmpty')); return; }
+                    var msg = t('annotationClearConfirm');
+                    if (!window.confirm(msg)) return;
+                    annotationsList = [];
+                    saveAnnotations();
+                    clearAnnotationDrawing();
+                    clearAnnotationsView();
+                    renderAnnotationsModal();
+                    annotateToast(t('annotationCleared'));
+                }
+
+                function toggleAnnotationKind(kind) {
+                    if (['pin', 'region', 'freehand', 'arrow'].indexOf(kind) === -1) return;
+                    annotateKind = kind;
+                    annotatePoints = [];
+                    clearAnnotationDrawing();
+                    setAnnotationToolbarActive();
+                    var kindLabel = kind === 'pin' ? t('annotationPin') : kind === 'region' ? t('annotationRegion') : kind === 'arrow' ? t('annotationArrow') : t('annotationDraw');
+                    annotateToast(t('annotationToolActive').replace('{tool}', kindLabel));
+                }
+
+                function renderAnnotationsModal() {
+                    var body = document.getElementById('annotationsModalBody');
+                    if (!body) return;
+                    if (annotationsList.length === 0) {
+                        var stored = loadAnnotations();
+                        var html = '<p style="color:var(--text-secondary);font-size:0.78em;text-align:center;">' + t('annotationEmpty') + '</p>';
+                        if (stored && stored.length) {
+                            html += '<button class="btn annotation-restore-btn" id="annotationRestoreBtn" data-i18n="annotationRestoreSession">' + t('annotationRestoreSession') + '</button>';
+                        }
+                        body.innerHTML = html;
+                        var restoreBtn = document.getElementById('annotationRestoreBtn');
+                        if (restoreBtn) restoreBtn.addEventListener('click', restorePreviousAnnotations);
+                        return;
+                    }
+                    body.innerHTML = '';
+                    annotationsList.forEach(function(a, idx) {
+                        var label = escapeHtml(a.label || _annotationTypeLabel(a));
+                        var typeLabel = escapeHtml(_annotationTypeLabel(a));
+                        var distBadge = (a.type === 'freehand' || a.type === 'arrow') && a.distanceKm ? ' <span class="annotation-item-dist">' + escapeHtml(a.distanceKm.toLocaleString('en')) + ' km</span>' : '';
+                        var hiddenBadge = a.hidden ? ' <span class="annotation-hidden-label">' + escapeHtml(t('annotationHidden')) + '</span>' : '';
+                        var row = document.createElement('div');
+                        row.className = 'annotation-item';
+                        var typeEl = document.createElement('span');
+                        typeEl.className = 'annotation-item-type';
+                        typeEl.textContent = typeLabel;
+                        var labelEl = document.createElement('span');
+                        labelEl.className = 'annotation-item-label';
+                        labelEl.innerHTML = escapeHtml(label) + distBadge + hiddenBadge;
+                        var actions = document.createElement('div');
+                        actions.className = 'annotation-item-actions';
+                        var labelBtn = document.createElement('button');
+                        labelBtn.className = 'annotation-label-btn';
+                        labelBtn.textContent = t('annotationLabelTitle');
+                        labelBtn.addEventListener('click', function() {
+                            openAnnotationLabelDialog(t('annotationLabelTitle'), a.label || '', function(v) {
+                                annotationsList[idx].label = v;
+                                saveAnnotations();
+                                renderAnnotationsModal();
+                                redrawAnnotations();
+                            }, false);
+                        });
+                        var visBtn = document.createElement('button');
+                        visBtn.className = 'annotation-vis-btn';
+                        visBtn.textContent = t('annotationShow');
+                        visBtn.addEventListener('click', function() {
+                            annotationsList[idx].hidden = !annotationsList[idx].hidden;
+                            saveAnnotations();
+                            renderAnnotationsModal();
+                            redrawAnnotations();
+                        });
+                        var delBtn = document.createElement('button');
+                        delBtn.className = 'annotation-del-btn';
+                        delBtn.textContent = t('annotationDelete');
+                        delBtn.addEventListener('click', function() {
+                            if (!window.confirm(t('annotationDeleteConfirm', { label: a.label || typeLabel }))) return;
+                            annotationsList.splice(idx, 1);
+                            saveAnnotations();
+                            renderAnnotationsModal();
+                            redrawAnnotations();
+                        });
+                        actions.appendChild(labelBtn);
+                        actions.appendChild(visBtn);
+                        actions.appendChild(delBtn);
+                        row.appendChild(typeEl);
+                        row.appendChild(labelEl);
+                        row.appendChild(actions);
+                        body.appendChild(row);
+                    });
+                    var actionsWrap = document.createElement('div');
+                    actionsWrap.style.display = 'flex';
+                    actionsWrap.style.flexWrap = 'wrap';
+                    actionsWrap.style.gap = '8px';
+                    actionsWrap.style.justifyContent = 'center';
+                    actionsWrap.style.marginTop = '12px';
+                    var deleteAllBtn = document.createElement('button');
+                    deleteAllBtn.className = 'btn annotation-del-all-btn';
+                    deleteAllBtn.id = 'annotationDeleteAllBtn';
+                    deleteAllBtn.textContent = t('annotationDeleteAll');
+                    deleteAllBtn.addEventListener('click', clearAllAnnotations);
+                    actionsWrap.appendChild(deleteAllBtn);
+                    body.appendChild(actionsWrap);
+                    var stored = loadAnnotations();
+                    var restoreWrap = document.createElement('div');
+                    restoreWrap.style.textAlign = 'center';
+                    restoreWrap.style.marginTop = '10px';
+                    var restoreBtn = document.createElement('button');
+                    restoreBtn.className = 'btn annotation-restore-btn';
+                    restoreBtn.id = 'annotationRestoreBtn';
+                    restoreBtn.textContent = t('annotationRestoreSession');
+                    restoreBtn.disabled = !(stored && stored.length);
+                    restoreBtn.addEventListener('click', restorePreviousAnnotations);
+                    restoreWrap.appendChild(restoreBtn);
+                    body.appendChild(restoreWrap);
+                }
+
+                function openAnnotationsModal() {
+                    renderAnnotationsModal();
+                    var modal = document.getElementById('annotationsModal');
+                    if (modal) modal.classList.add('visible');
+                }
+
+                function closeAnnotationsModal() {
+                    var modal = document.getElementById('annotationsModal');
+                    if (modal) modal.classList.remove('visible');
                 }
 
             function renderCountries(features) {
@@ -4545,6 +5272,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (quizActive) return;
                     if (layersModal && layersModal.classList.contains('visible')) return;
                     if (divisionPopover && divisionPopover.classList.contains('visible')) return;
+                    if (annotationsModal && annotationsModal.classList.contains('visible')) return;
                     if ((e.ctrlKey || e.metaKey || e.altKey) && !(e.ctrlKey && e.code === 'KeyS')) return;
                     const code = e.code;
                     if (code === 'KeyR') setMode('religion');
@@ -4861,6 +5589,16 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 loadingMsg.remove();
 
                 renderCountries(features);
+                // New session starts with a blank annotation canvas; the
+                // previous session stays stored for explicit restore.
+                annotationsList = [];
+                try {
+                    var savedColor = localStorage.getItem('annotateColor');
+                    if (savedColor && /^#[0-9a-f]{6}$/i.test(savedColor)) annotateColor = savedColor;
+                    var savedFont = localStorage.getItem('annotateFontSize');
+                    if (savedFont && ANNOT_FONT_LEVELS.indexOf(_annotNormalizeSize(savedFont)) !== -1) annotateFontSize = _annotNormalizeSize(savedFont);
+                } catch (e) {}
+                try { redrawAnnotations(); } catch (e) { console.error('annotation draw error:', e); }
                 ensureAdminNameTranslationsLoaded();
                 try { loadFromHash(); } catch(e) {}
                 try { applyLanguage(); } catch(e) { console.error('applyLanguage error:', e); }
@@ -5108,10 +5846,19 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         renderStep();
                     }
 
-                    skipBtn.addEventListener('click', closeTutorial);
-                    nextBtn.addEventListener('click', nextStep);
+                    skipBtn.addEventListener('click', function() {
+                        if (annotationTutorialActive) { closeAnnotationTutorial(); return; }
+                        closeTutorial();
+                    });
+                    nextBtn.addEventListener('click', function() {
+                        if (annotationTutorialActive) { nextAnnotateStep(); return; }
+                        nextStep();
+                    });
                     overlay.addEventListener('click', function(e) {
-                        if (e.target === overlay) closeTutorial();
+                        if (e.target === overlay) {
+                            if (annotationTutorialActive) closeAnnotationTutorial();
+                            closeTutorial();
+                        }
                     });
 
                     // Expose for replay button
@@ -5131,6 +5878,73 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             if (el) { positionGlow(el); positionCard(el); }
                         }
                     });
+
+                    // ── Annotation Tutorial (first time annotation mode is entered) ──
+                    var annotationTutorialActive = false;
+                    var annotateStep = 0;
+                    var annotateSteps = [
+                        { el: function() { return document.getElementById('annotateBtn'); }, textKey: 'annotationTutorialIntro' },
+                        { el: function() { return document.getElementById('annotationKindRegion'); }, textKey: 'annotationTutorialRegion' },
+                        { el: function() { return document.getElementById('annotationKindDraw'); }, textKey: 'annotationTutorialDraw' },
+                        { el: function() { return document.getElementById('annotationManageBtn'); }, textKey: 'annotationTutorialManage' },
+                        { el: function() { return document.getElementById('annotationKindPin'); }, textKey: 'annotationTutorialPin' }
+                    ];
+
+                    function renderAnnotateStep() {
+                        var step = annotateSteps[annotateStep];
+                        cardIcon.textContent = '📝';
+                        cardTitle.textContent = t('annotationTutorialTitle');
+                        cardText.textContent = t(step.textKey);
+                        cardDots.innerHTML = '';
+                        annotateSteps.forEach(function(_, i) {
+                            var dot = document.createElement('span');
+                            dot.className = 'onboard-dot' + (i === annotateStep ? ' active' : '');
+                            cardDots.appendChild(dot);
+                        });
+                        skipBtn.textContent = t('onboardSkip');
+                        nextBtn.textContent = (annotateStep === annotateSteps.length - 1) ? t('onboardFinish') : t('onboardNext');
+                        if (lang === 'ar') {
+                            nextBtn.textContent = nextBtn.textContent.replace('←', '→');
+                        } else {
+                            nextBtn.textContent = nextBtn.textContent.replace('→', '→');
+                        }
+                        var anEl = step.el();
+                        if (anEl) {
+                            positionGlow(anEl);
+                            positionCard(anEl);
+                        }
+                    }
+
+                    function startAnnotationTutorial() {
+                        if (!overlay || !glow || !card) return;
+                        if (annotationTutorialActive) return;
+                        annotationTutorialActive = true;
+                        annotateStep = 0;
+                        renderAnnotateStep();
+                        overlay.classList.add('active');
+                    }
+
+                    function closeAnnotationTutorial() {
+                        if (!annotationTutorialActive) return;
+                        annotationTutorialActive = false;
+                        overlay.classList.remove('active');
+                        glow.style.width = '0';
+                        glow.style.height = '0';
+                        glow.style.opacity = '0';
+                        try { localStorage.setItem('annotateExplained', '1'); } catch(e) {}
+                    }
+
+                    function nextAnnotateStep() {
+                        annotateStep++;
+                        if (annotateStep >= annotateSteps.length) { closeAnnotationTutorial(); return; }
+                        card.style.animation = 'none';
+                        card.offsetHeight;
+                        card.style.animation = 'onboardCardIn 0.35s ease both';
+                        renderAnnotateStep();
+                    }
+
+                    window.startAnnotationTutorial = startAnnotationTutorial;
+                    window.closeAnnotationTutorial = closeAnnotationTutorial;
             })();
 
             // ── Quiz Mode ──
@@ -7969,6 +8783,12 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 if (e.key === 'Escape' && layersModal && layersModal.classList.contains('visible')) {
                     closeLayersModal();
                 }
+                if (e.key === 'Escape' && annotationsModal && annotationsModal.classList.contains('visible')) {
+                    closeAnnotationsModal();
+                }
+                if (e.key === 'Escape' && typeof window.closeAnnotationTutorial === 'function') {
+                    window.closeAnnotationTutorial();
+                }
                 if (e.key === 'Escape' && presentationModeActive) {
                     togglePresentationMode();
                 }
@@ -7976,6 +8796,77 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     document.querySelectorAll('.lang-dropdown-menu.visible').forEach(function(m) { m.classList.remove('visible'); });
                 }
             });
+
+            // ── Annotation controls wiring ──
+            var annotateBtn = document.getElementById('annotateBtn');
+            var mobileAnnotateBtn = document.getElementById('mobileAnnotateBtn');
+            var annotationsModal = document.getElementById('annotationsModal');
+            if (annotateBtn) annotateBtn.addEventListener('click', toggleAnnotationMode);
+            if (mobileAnnotateBtn) mobileAnnotateBtn.addEventListener('click', function() {
+                var mobileMenu = document.getElementById('mobileToolsMenu');
+                if (mobileMenu && mobileMenu.classList.contains('open')) mobileMenu.classList.remove('open');
+                toggleAnnotationMode();
+            });
+            var annotationKindBtns = {
+                pin: document.getElementById('annotationKindPin'),
+                region: document.getElementById('annotationKindRegion'),
+                draw: document.getElementById('annotationKindDraw'),
+                arrow: document.getElementById('annotationKindArrow')
+            };
+            Object.keys(annotationKindBtns).forEach(function(kind) {
+                var b = annotationKindBtns[kind];
+                if (b) b.addEventListener('click', function() { toggleAnnotationKind(kind === 'draw' ? 'freehand' : kind); });
+            });
+            var annotationFinishBtn = document.getElementById('annotationFinishBtn');
+            if (annotationFinishBtn) annotationFinishBtn.addEventListener('click', finishAnnotationTool);
+            var annotationClearBtn = document.getElementById('annotationClearBtn');
+            if (annotationClearBtn) annotationClearBtn.addEventListener('click', cancelAnnotationStroke);
+            var annotationManageBtn = document.getElementById('annotationManageBtn');
+            if (annotationManageBtn) annotationManageBtn.addEventListener('click', openAnnotationsModal);
+            var annotationHelpBtn = document.getElementById('annotationHelpBtn');
+            if (annotationHelpBtn) annotationHelpBtn.addEventListener('click', function() { if (window.startAnnotationTutorial) window.startAnnotationTutorial(); });
+            document.querySelectorAll('#annotationToolbar .annotation-color-swatch').forEach(function(s) {
+                s.addEventListener('click', function() { setAnnotationColor(s.getAttribute('data-color')); });
+            });
+            var fontSmall = document.getElementById('annotationFontSmallBtn');
+            var fontMedium = document.getElementById('annotationFontMediumBtn');
+            var fontLarge = document.getElementById('annotationFontLargeBtn');
+            if (fontSmall) fontSmall.addEventListener('click', function() { setAnnotationFontSize(ANNOT_FONT_LEVELS[0]); });
+            if (fontMedium) fontMedium.addEventListener('click', function() { setAnnotationFontSize(10); });
+            if (fontLarge) fontLarge.addEventListener('click', function() { setAnnotationFontSize(ANNOT_FONT_LEVELS[ANNOT_FONT_LEVELS.length - 1]); });
+            var annotationModalClose = document.getElementById('annotationModalClose');
+            var annotationModalBackdrop = document.getElementById('annotationModalBackdrop');
+            if (annotationModalClose) annotationModalClose.addEventListener('click', closeAnnotationsModal);
+            if (annotationModalBackdrop) annotationModalBackdrop.addEventListener('click', closeAnnotationsModal);
+            var mapSvg = document.getElementById('mapSvg');
+            window.__annotDebug = function() {
+                return {
+                    annotateActive: annotateActive,
+                    annotateKind: annotateKind,
+                    annotateColor: annotateColor,
+                    annotateFontSize: annotateFontSize,
+                    panSpaceHeld: _panSpaceHeld,
+                    strokeActive: _annotStrokeActive,
+                    strokePoints: _annotStrokePoints ? _annotStrokePoints.length : 0,
+                    pathLen: _annotStrokePathLen,
+                    kindPinOn: !!(document.getElementById('annotationKindPin') && document.getElementById('annotationKindPin').classList.contains('toggle-on'))
+                };
+            };
+            if (mapSvg) {
+                mapSvg.addEventListener('pointerdown', onAnnotationPointerDown);
+                mapSvg.addEventListener('pointermove', onAnnotationPointerMove);
+                mapSvg.addEventListener('pointerup', onAnnotationPointerUp);
+                mapSvg.addEventListener('pointercancel', onAnnotationPointerUp);
+            }
+            if (mapContainer) mapContainer.addEventListener('click', handleAnnotationClick, true);
+            // Space-to-pan support (holds current pan state while drawing freehand/arrows)
+            document.addEventListener('keydown', function(e) {
+                if (e.code === 'Space' && !e.repeat && e.target && e.target.tagName !== 'INPUT') setPanSpaceHeld(true);
+            });
+            document.addEventListener('keyup', function(e) {
+                if (e.code === 'Space') setPanSpaceHeld(false);
+            });
+            document.addEventListener('blur', function() { setPanSpaceHeld(false); });
 
             // ── Menu toggle & panel buttons ──
             closePanelBtn.addEventListener('click', () => {

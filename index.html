@@ -111,6 +111,32 @@
         <button class="menu-toggle" id="menuToggle" title="فتح القائمة" aria-label="فتح القائمة"><i data-lucide="menu" class="lucide-icon"></i></button>
         <button class="layers-toggle" id="layersToggleBtn" title="فتح نافذة الطبقات" aria-label="فتح الطبقات" data-i18n-title="layersToggle"><i data-lucide="layers" class="lucide-icon"></i><span class="active-layer-counter" id="layerCounter">0</span></button>
         <div class="measure-result-label" id="measureResultLabel" style="display:none"></div>
+        <div class="measure-toolbar annotation-toolbar" id="annotationToolbar" style="display:none" role="toolbar" aria-label="توضيح" data-i18n-aria-label="annotationToolLabel">
+            <div class="measure-seg">
+                <button class="measure-mode-btn" id="annotationKindPin" data-i18n="annotationPin">نقطة</button>
+                <button class="measure-mode-btn" id="annotationKindRegion" data-i18n="annotationRegion">منطقة</button>
+                <button class="measure-mode-btn" id="annotationKindDraw" data-i18n="annotationDraw">رسم</button>
+                <button class="measure-mode-btn" id="annotationKindArrow" data-i18n="annotationArrow">سهم</button>
+            </div>
+            <div class="measure-seg annotation-color-seg" role="group" aria-label="لون الرسم" data-i18n-aria-label="annotationColorLabel">
+                <button class="annotation-color-swatch" data-color="#eab308" style="background:#eab308" title="أصفر" data-i18n-title="annotationColorYellow" aria-label="أصفر"></button>
+                <button class="annotation-color-swatch" data-color="#ef4444" style="background:#ef4444" title="أحمر" data-i18n-title="annotationColorRed" aria-label="أحمر"></button>
+                <button class="annotation-color-swatch" data-color="#3b82f6" style="background:#3b82f6" title="أزرق" data-i18n-title="annotationColorBlue" aria-label="أزرق"></button>
+                <button class="annotation-color-swatch" data-color="#22c55e" style="background:#22c55e" title="أخضر" data-i18n-title="annotationColorGreen" aria-label="أخضر"></button>
+                <button class="annotation-color-swatch" data-color="#a855f7" style="background:#a855f7" title="بنفسجي" data-i18n-title="annotationColorPurple" aria-label="بنفسجي"></button>
+                <button class="annotation-color-swatch" data-color="#ffffff" style="background:#fff" title="أبيض" data-i18n-title="annotationColorWhite" aria-label="أبيض"></button>
+            </div>
+            <div class="measure-seg" role="group" aria-label="حجم الخط" data-i18n-aria-label="annotationFontLabel">
+                <button class="measure-mode-btn annot-font-btn" id="annotationFontSmallBtn" title="خط صغير" data-i18n-title="annotationFontSmall" aria-pressed="false">A−</button>
+                <output class="annot-font-btn annot-font-value" id="annotationFontValue" aria-live="polite" aria-label="حجم الخط" data-i18n-aria-label="annotationFontLabel">10</output>
+                <button class="measure-mode-btn annot-font-btn" id="annotationFontLargeBtn" title="خط كبير" data-i18n-title="annotationFontLarge" aria-pressed="false">A+</button>
+                <button class="measure-mode-btn annot-font-btn" id="annotationFontMediumBtn" title="خط متوسط" data-i18n-title="annotationFontMedium" aria-pressed="false">A</button>
+            </div>
+            <button class="measure-mode-btn" id="annotationFinishBtn" style="display:none" data-i18n="measureFinish">إنهاء</button>
+            <button class="measure-mode-btn" id="annotationClearBtn" data-i18n="annotationClear">مسح</button>
+            <button class="measure-mode-btn" id="annotationManageBtn" data-i18n="annotationManage">إدارة</button>
+            <button class="measure-mode-btn" id="annotationHelpBtn" title="مساعدة الوضع" data-i18n-title="annotationHelpButton" aria-label="مساعدة">؟</button>
+        </div>
 
         <div class="controls-bar" id="controlsBar" role="toolbar" aria-label="شريط التحكم">
             <div class="controls-bar-header">
@@ -132,6 +158,7 @@
             </div>
 
             <div class="row" id="filterRow">
+                <button class="btn" id="annotateBtn" data-i18n-title="annotationToolLabel"><i data-lucide="sticky-note" class="lucide-icon"></i><span class="btn-text" data-i18n="annotationToolLabel">وضع الشرح</span></button>
                 <button class="btn" id="globeViewBtn" title="عرض الكرة الأرضية" data-i18n-title="globeViewBtn_title"><i data-lucide="earth" class="lucide-icon"></i><span class="btn-text" data-i18n="globeViewBtn">كرة أرضية</span></button>
                 <button class="btn quiz-btn" id="quizBtn" data-i18n-title="quizMode"><i data-lucide="brain" class="lucide-icon"></i><span class="btn-text" data-i18n="quizMode"></span></button>
                 <button class="btn" id="compareProjectionsBtn" data-i18n-title="compareProjectionsBtn_title"><i data-lucide="git-compare" class="lucide-icon"></i><span class="btn-text" data-i18n="compareProjectionsBtn_title">مقارنة</span></button>
@@ -193,6 +220,34 @@
             </div>
         </div>
 
+        <div class="layers-modal about-modal" id="annotationsModal" role="dialog" aria-modal="true" data-i18n-aria-label="annotationTitle">
+            <div class="layers-modal-backdrop" id="annotationsModalBackdrop"></div>
+            <div class="layers-modal-content">
+                <div class="layers-modal-header">
+                    <h3 id="annotationsModalTitle" data-i18n="annotationTitle"><i data-lucide="sticky-note" class="lucide-icon"></i><span class="btn-text">التعليقات</span></h3>
+                    <button class="layers-modal-close" id="annotationsModalClose" aria-label="إغلاق">&times;</button>
+                </div>
+                <div class="layers-modal-body" id="annotationsModalBody"></div>
+            </div>
+        </div>
+
+        <div class="layers-modal" id="annotationLabelModal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="annotationLabelTitle">
+            <div class="layers-modal-backdrop"></div>
+            <div class="layers-modal-content" style="max-width:360px">
+                <div class="layers-modal-header">
+                    <h3 id="annotationLabelTitle" data-i18n="annotationLabelTitle">Add a label</h3>
+                    <button class="layers-modal-close" id="annotationLabelClose" aria-label="إغلاق">&times;</button>
+                </div>
+                <div class="layers-modal-body">
+                    <input id="annotationLabelInput" class="quiz-input" maxlength="80" data-i18n-placeholder="annotationLabelPlaceholder" aria-label="Label" autocomplete="off" autocorrect="off" spellcheck="false">
+                    <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end">
+                        <button class="btn" id="annotationLabelCancel" data-i18n="quizCancel">Cancel</button>
+                        <button class="btn quiz-start-btn" id="annotationLabelSave" data-i18n="addLabel">Add label</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Mobile top bar (hidden on desktop) -->
         <div class="mobile-topbar" id="mobileTopbar">
             <div class="mobile-topbar-inner">
@@ -219,6 +274,7 @@
                         <button class="mobile-tools-item" id="mobileShareBtn" data-i18n-title="shareBtn_title"><i data-lucide="share-2" class="lucide-icon"></i><span class="btn-text" data-i18n="shareBtn">مشاركة</span></button>
                         <button class="mobile-tools-item" id="mobileResetBtn2" data-i18n-title="mobileReset_title"><i data-lucide="rotate-ccw" class="lucide-icon"></i><span class="btn-text" data-i18n="resetBtn">إعادة تعيين</span></button>
                         <button class="mobile-tools-item" id="mobileCoordsBtn" data-i18n-title="coordsToggle_title"><i data-lucide="map-pin" class="lucide-icon"></i><span class="btn-text" data-i18n="coordsToggle">إحداثيات</span></button>
+                        <button class="mobile-tools-item" id="mobileAnnotateBtn" data-i18n-title="annotationToolLabel"><i data-lucide="sticky-note" class="lucide-icon"></i><span class="btn-text" data-i18n="annotationToolLabel">وضع الشرح</span></button>
                     </div>
                 </div>
             </div>

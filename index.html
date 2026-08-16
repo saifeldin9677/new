@@ -3,30 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com; font-src 'self' data:; frame-src https://lepidos-map.firebaseapp.com; form-action 'self';">
-    <!-- All inline scripts removed; scripts load from local files. script-src allows gstatic.com only for the Firebase module imports. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://cdn.jsdelivr.net; connect-src 'self' https://cdn.jsdelivr.net https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://www.google-analytics.com; font-src 'self' data: https://fonts.gstatic.com; frame-src https://lepidos-map.firebaseapp.com; form-action 'self';">
+    <!-- Lucide icons CSP: script-src covers cdn.jsdelivr.net, img-src for inline SVGs is covered by 'self' -->
     <title>أطلس ليبيدوس</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦋</text></svg>">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#14B8A6">
-    <link rel="stylesheet" href="fonts/fonts.css">
-    <script src="vendor/d3.min.js"></script>
-    <script src="vendor/d3-geo-projection.min.js"></script>
-    <script src="vendor/topojson-client.min.js"></script>
-    <script src="icons.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js" integrity="sha384-CjloA8y00+1SDAUkjs099PVfnY2KmDC2BZnws9kh8D/lX1s46w6EPhpXdqMfjK6i" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-geo-projection@4.0.0/dist/d3-geo-projection.min.js" integrity="sha384-4C75ouycBmNQkYM1g57WhODWh671y+Atne6FZrE/ITHAg412SN8Ai3dPCa+itkz2" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js" integrity="sha384-Ukv1p/xTma6P4/2bY5KzWBw+ydSpXmhCMtyciIQVDJ1RmOxtCYNMF1uXT9T63H67" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" integrity="sha384-ZZ1pncU3bQe8y31yfZdMFdSpttDoPmOZg2wguVK9almUodir1PghgT0eY7Mrty8H" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha384-JcnsjUPPylna1s1fvi1u12X5qjY5OL56iySh75FdtrwhO/SWXgMjoVqcKyIIWOLk" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@1.23.0/dist/umd/lucide.min.js" integrity="sha384-ouAVEJVCMsf8Svzn+BwqbaBhxBEA0xgeVBhHnxmWd+Wqyv18yhWCQwGegFD/OHLq" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <a class="skip-link" href="#mapContainer" data-i18n="skipLinkLabel">Skip to map</a>
-    <a class="skip-link" href="#toolsRowMiddle" data-i18n="skipLinkControls">Skip to controls</a>
-    <a class="skip-link" href="#searchInput" data-i18n="skipLinkSearch">Skip to search</a>
-    <header class="header">
+    <div class="header">
         <div class="title-group">
             <span class="logo-icon"><i data-lucide="map" class="lucide-icon"></i></span>
             <div><h1 id="appTitle" data-i18n="appName"></h1><div class="header-line"></div></div>
         </div>
-        <span id="headerProjectionLabel" data-i18n="headerProjectionType"></span>
+        <span id="headerProjectionLabel" data-i18n="headerProjectionType" style="font-size:0.7em;color:var(--text-secondary);"></span>
 
         <div class="row" id="toolsRow">
             <div class="tools-row-start" id="toolsRowStart">
@@ -35,7 +36,19 @@
                     <input type="text" id="searchInput" placeholder="بحث..." autocomplete="off" title="ابحث عن دولة" data-i18n-title="searchInput_title" data-i18n-placeholder="searchPlaceholder">
                     <ul class="suggestions-list" id="suggestionsList"></ul>
                 </div>
-                <div class="lang-dropdown header-lang-dropdown">
+            </div>
+            <div class="tools-row-middle" id="toolsRowMiddle">
+                <span class="control-label" id="sectionToolsLabel" data-i18n="sectionTools"><i data-lucide="settings" class="lucide-icon"></i><span class="btn-text">Tools</span></span>
+                <span class="divider"></span>
+                <button class="btn" id="themeToggleBtn" data-i18n-title="themeToggleLabel">
+                    <i data-lucide="sun" class="lucide-icon theme-icon-light"></i>
+                    <i data-lucide="moon" class="lucide-icon theme-icon-dark"></i>
+                </button>
+                <button class="btn" id="shareBtn" title="مشاركة الخريطة" data-i18n-title="shareBtn_title"><i data-lucide="share-2" class="lucide-icon"></i></button>
+                <button class="btn" id="shortcutsBtn" title="اختصارات لوحة المفاتيح" data-i18n-title="shortcutsBtn_title"><i data-lucide="keyboard" class="lucide-icon"></i><span class="btn-text">?</span></button>
+                <button class="btn" id="onboardBtn" title="شرح الخريطة" data-i18n-title="onboardMapGuide"><i data-lucide="book-open" class="lucide-icon"></i><span class="btn-text">📘</span></button>
+                <button class="btn" id="pdfExportBtn" title="تصدير الخريطة كملف PDF" data-i18n-title="pdfExportBtn_title"><i data-lucide="file-text" class="lucide-icon"></i><span class="btn-text">PDF</span></button>
+                <div class="lang-dropdown">
                     <button class="btn" id="langToggle" title="تبديل اللغة" aria-label="تبديل اللغة" data-i18n-title="langToggle_title"><i data-lucide="globe" class="lucide-icon"></i><span id="langToggleText" data-i18n="langButton">English</span><i data-lucide="chevron-down" class="lucide-icon dropdown-arrow"></i></button>
                     <div class="lang-dropdown-menu" id="langDropdownMenu">
                         <button class="lang-option active" data-lang="ar" type="button">العربية</button>
@@ -45,24 +58,6 @@
                         <button class="lang-option" data-lang="es" type="button">Español</button>
                     </div>
                 </div>
-            </div>
-            <div class="tools-row-middle" id="toolsRowMiddle">
-                <span class="control-label" id="sectionToolsLabel" data-i18n="sectionTools"><i data-lucide="settings" class="lucide-icon"></i><span class="btn-text">Tools</span></span>
-                <span class="divider"></span>
-                <button class="btn" id="themeToggleBtn" data-i18n-title="themeToggleLabel" aria-pressed="false">
-                    <i data-lucide="sun" class="lucide-icon theme-icon-light"></i>
-                    <i data-lucide="moon" class="lucide-icon theme-icon-dark"></i>
-                </button>
-                <button class="btn" id="colorblindToggleBtn" data-i18n-title="colorblindModeLabel" aria-pressed="false" title="وضع عمى الألوان"><i data-lucide="palette" class="lucide-icon"></i></button>
-                <span class="btn-divider" aria-hidden="true"></span>
-                <button class="btn" id="shareBtn" title="مشاركة الخريطة" data-i18n-title="shareBtn_title"><i data-lucide="share-2" class="lucide-icon"></i></button>
-                <button class="btn" id="pdfExportBtn" title="تصدير الخريطة كملف PDF" data-i18n-title="pdfExportBtn_title"><i data-lucide="file-text" class="lucide-icon"></i><span class="btn-text">PDF</span></button>
-                <span class="btn-divider" aria-hidden="true"></span>
-                <button class="btn" id="shortcutsBtn" title="اختصارات لوحة المفاتيح" data-i18n-title="shortcutsBtn_title"><i data-lucide="keyboard" class="lucide-icon"></i></button>
-                <button class="btn" id="onboardBtn" title="شرح الخريطة" aria-label="شرح الخريطة" data-i18n-title="onboardMapGuide"><i data-lucide="book-open" class="lucide-icon"></i></button>
-                <button class="btn" id="aboutBtn" title="حول التطبيق" aria-label="حول التطبيق" data-i18n-title="aboutTitle"><i data-lucide="info" class="lucide-icon"></i></button>
-                <button class="btn" id="presetsBtn" title="المحفوظات التعليمية" data-i18n-title="presetsTitle"><i data-lucide="bookmark" class="lucide-icon"></i></button>
-                <span class="btn-divider" aria-hidden="true"></span>
                 <button class="btn" id="measureToolBtn" data-i18n-title="measureToolLabel">
                     <i data-lucide="ruler" class="lucide-icon"></i>
                     <span class="btn-text" data-i18n="measureToolLabel"></span>
@@ -71,20 +66,15 @@
                     <i data-lucide="maximize" class="lucide-icon"></i>
                     <span class="btn-text" data-i18n="presentationModeLabel"></span>
                 </button>
-                <span class="btn-divider" aria-hidden="true"></span>
                 <button class="btn" id="resetBtn" title="إعادة تعيين كل شيء (الوضع، الفلاتر، التكبير)" data-i18n="resetBtn" data-i18n-title="resetBtn_title"><i data-lucide="rotate-ccw" class="lucide-icon"></i><span class="btn-text">إعادة</span></button>
                 <button class="btn" id="dataTableBtn" data-i18n-title="dataTableBtn_title"><i data-lucide="table" class="lucide-icon"></i><span class="btn-text" data-i18n="dataTableBtn"></span></button>
-                <button class="btn" id="coordsToggle" title="إظهار/إخفاء شريط الإحداثيات" data-i18n="coordsToggle" data-i18n-title="coordsToggle_title" aria-pressed="true"><i data-lucide="map-pin" class="lucide-icon"></i><span class="btn-text">إحداثيات</span></button>
-                <span class="btn-divider" aria-hidden="true"></span>
-                <button class="btn" id="controlsToggleBtn" title="إخفاء شريط التحكم" aria-label="إخفاء شريط التحكم" aria-expanded="true" data-i18n-title="collapseControls"><i data-lucide="chevron-down" class="lucide-icon"></i></button>
+                <button class="btn" id="coordsToggle" title="إظهار/إخفاء شريط الإحداثيات" data-i18n="coordsToggle" data-i18n-title="coordsToggle_title"><i data-lucide="map-pin" class="lucide-icon"></i><span class="btn-text">إحداثيات</span></button>
             </div>
         </div>
-    </header>
+    </div>
 
     <div class="content-row" id="contentRow">
-    <!-- Visually-hidden live region announcing map state changes to screen readers -->
-    <div id="srAnnouncer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
-    <div class="map-container" id="mapContainer" role="main" tabindex="-1" data-i18n-aria-label="mapAriaLabel">
+    <div class="map-container" id="mapContainer" role="application" data-i18n-aria-label="mapAriaLabel">
         <svg id="mapSvg"></svg>
         <canvas id="adminBoundariesCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:4;"></canvas>
         <canvas id="densityCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5;"></canvas>
@@ -93,10 +83,9 @@
             <div class="export-blocking-spinner"></div>
             <span data-i18n="exportingInProgress"></span>
         </div>
-        <div class="legend" id="legend" role="region" aria-label="وسيلة الإيضاح" data-i18n-aria-label="legendAriaLabel" tabindex="0"></div>
+        <div class="legend" id="legend" role="region" aria-label="وسيلة الإيضاح"></div>
         <div class="border-disputes-counter" id="borderDisputesCounter" style="display:none"></div>
         <div class="info-overlay" id="infoOverlay"></div>
-        <div class="mode-hint" id="modeHint" role="status" aria-live="polite" hidden></div>
 
         <div class="coordinates-display" id="coordinatesDisplay">
             خط الطول: — &nbsp;|&nbsp; خط العرض: — &nbsp;|&nbsp; تكبير: 1.0x &nbsp;|&nbsp; الوضع: دين &nbsp;|&nbsp; الفلتر: الكل
@@ -112,17 +101,9 @@
         </div>
 
             <div class="zoom-controls" role="group" aria-label="التحكم بالتكبير">
-            <div class="dock" id="dock" role="group" aria-label="الأدوات الرئيسية">
-                <button class="zoom-btn" id="annotateBtn" aria-label="وضع التعليقات" data-i18n-aria-label="annotationToolLabel"><i data-lucide="sticky-note" class="lucide-icon"></i><span class="btn-text" data-i18n="annotationToolLabel">Annotation Mode</span></button>
-                <button class="zoom-btn quiz-btn" id="quizBtn" aria-label="الاختبار" data-i18n-aria-label="quizMode"><i data-lucide="brain" class="lucide-icon"></i><span class="btn-text" data-i18n="quizMode">Quiz</span></button>
-                <button class="zoom-btn" id="globeViewBtn" aria-label="عرض الكرة الأرضية" data-i18n-aria-label="globeViewBtn"><i data-lucide="earth" class="lucide-icon"></i><span class="btn-text" data-i18n="globeViewBtn">Globe</span></button>
-                <button class="zoom-btn" id="compareProjectionsBtn" aria-label="مقارنة الإسقاطات" data-i18n-aria-label="compareProjectionsBtn_title"><i data-lucide="git-compare" class="lucide-icon"></i><span class="btn-text" data-i18n="compareProjectionsBtn_title">Compare</span></button>
-            </div>
-            <div class="zoom-stack" id="zoomStack">
-                <button class="zoom-btn" id="zoomInBtn" title="تكبير" aria-label="تكبير" data-i18n-title="zoomIn"><i data-lucide="plus" class="lucide-icon"></i></button>
-                <button class="zoom-btn" id="zoomOutBtn" title="تصغير" aria-label="تصغير" data-i18n-title="zoomOut"><i data-lucide="minus" class="lucide-icon"></i></button>
-                <button class="zoom-btn" id="zoomResetBtn" title="إعادة تعيين التكبير" aria-label="إعادة تعيين التكبير" data-i18n-title="zoomReset"><i data-lucide="home" class="lucide-icon"></i></button>
-            </div>
+            <button class="zoom-btn" id="zoomInBtn" title="تكبير" aria-label="تكبير" data-i18n-title="zoomIn"><i data-lucide="plus" class="lucide-icon"></i></button>
+            <button class="zoom-btn" id="zoomOutBtn" title="تصغير" aria-label="تصغير" data-i18n-title="zoomOut"><i data-lucide="minus" class="lucide-icon"></i></button>
+            <button class="zoom-btn" id="zoomResetBtn" title="إعادة تعيين التكبير" aria-label="إعادة تعيين التكبير" data-i18n-title="zoomReset"><i data-lucide="home" class="lucide-icon"></i></button>
         </div>
 
         <button class="presentation-exit-btn" id="presentationExitBtn" style="display:none" data-i18n-title="presentationExitLabel"><i data-lucide="minimize" class="lucide-icon"></i><span class="btn-text" data-i18n="presentationExitLabel"></span></button>
@@ -131,50 +112,10 @@
         <button class="layers-toggle" id="layersToggleBtn" title="فتح نافذة الطبقات" aria-label="فتح الطبقات" data-i18n-title="layersToggle"><i data-lucide="layers" class="lucide-icon"></i><span class="active-layer-counter" id="layerCounter">0</span></button>
         <div class="measure-result-label" id="measureResultLabel" style="display:none"></div>
 
-        <div class="measure-toolbar" id="measureToolbar" style="display:none" role="toolbar" aria-label="Measure">
-            <div class="measure-seg">
-                <button class="measure-mode-btn" id="measureKindDist" data-i18n="measureDist">Distance</button>
-                <button class="measure-mode-btn" id="measureKindArea" data-i18n="measureArea">Area</button>
-            </div>
-            <div class="measure-seg">
-                <button class="measure-mode-btn" id="measureGeodesicBtn" data-i18n="measureGeodesic">Geodesic</button>
-                <button class="measure-mode-btn" id="measurePlanarBtn" data-i18n="measurePlanar">Planar</button>
-            </div>
-            <button class="measure-mode-btn" id="measureFinishBtn" style="display:none" data-i18n="measureFinish">Finish</button>
-            <button class="measure-mode-btn" id="measureClearBtn" data-i18n="measureClear">Clear</button>
-        </div>
-
-        <div class="measure-toolbar annotation-toolbar" id="annotationToolbar" style="display:none" role="toolbar" aria-label="توضيح" data-i18n-aria-label="annotationToolLabel">
-            <div class="measure-seg">
-                <button class="measure-mode-btn" id="annotationKindPin" data-i18n="annotationPin">نقطة</button>
-                <button class="measure-mode-btn" id="annotationKindRegion" data-i18n="annotationRegion">منطقة</button>
-                <button class="measure-mode-btn" id="annotationKindDraw" data-i18n="annotationDraw">رسم</button>
-                <button class="measure-mode-btn" id="annotationKindArrow" data-i18n="annotationArrow">سهم</button>
-            </div>
-            <div class="measure-seg annotation-color-seg" role="group" aria-label="لون الرسم" data-i18n-aria-label="annotationColorLabel">
-                <button class="annotation-color-swatch" data-color="#eab308" style="background:#eab308" title="أصفر" data-i18n-title="annotationColorYellow" aria-label="أصفر"></button>
-                <button class="annotation-color-swatch" data-color="#ef4444" style="background:#ef4444" title="أحمر" data-i18n-title="annotationColorRed" aria-label="أحمر"></button>
-                <button class="annotation-color-swatch" data-color="#3b82f6" style="background:#3b82f6" title="أزرق" data-i18n-title="annotationColorBlue" aria-label="أزرق"></button>
-                <button class="annotation-color-swatch" data-color="#22c55e" style="background:#22c55e" title="أخضر" data-i18n-title="annotationColorGreen" aria-label="أخضر"></button>
-                <button class="annotation-color-swatch" data-color="#a855f7" style="background:#a855f7" title="بنفسجي" data-i18n-title="annotationColorPurple" aria-label="بنفسجي"></button>
-                <button class="annotation-color-swatch" data-color="#ffffff" style="background:#ffffff" title="أبيض" data-i18n-title="annotationColorWhite" aria-label="أبيض"></button>
-            </div>
-            <div class="measure-seg" role="group" aria-label="حجم الخط" data-i18n-aria-label="annotationFontLabel">
-                <button class="measure-mode-btn annot-font-btn" id="annotationFontSmallBtn" title="خط صغير" data-i18n-title="annotationFontSmall" aria-pressed="false">A−</button>
-                <output class="annot-font-btn annot-font-value" id="annotationFontValue" aria-live="polite" aria-label="حجم الخط" data-i18n-aria-label="annotationFontLabel">10</output>
-                <button class="measure-mode-btn annot-font-btn" id="annotationFontLargeBtn" title="خط كبير" data-i18n-title="annotationFontLarge" aria-pressed="false">A+</button>
-                <button class="measure-mode-btn annot-font-btn" id="annotationFontMediumBtn" title="خط متوسط" data-i18n-title="annotationFontMedium" aria-pressed="false">A</button>
-            </div>
-            <button class="measure-mode-btn" id="annotationFinishBtn" style="display:none" data-i18n="measureFinish">إنهاء</button>
-            <button class="measure-mode-btn" id="annotationClearBtn" data-i18n="annotationClear">مسح</button>
-            <button class="measure-mode-btn" id="annotationManageBtn" data-i18n="annotationManage">إدارة</button>
-            <button class="measure-mode-btn" id="annotationHelpBtn" title="مساعدة الوضع" data-i18n-title="annotationHelpButton" aria-label="مساعدة">؟</button>
-        </div>
-
         <div class="controls-bar" id="controlsBar" role="toolbar" aria-label="شريط التحكم">
             <div class="controls-bar-header">
-                <span class="control-label" id="sectionControlsLabel" data-i18n="controlsPanel"><i data-lucide="settings" class="lucide-icon"></i><span class="btn-text">لوحة التحكم</span></span>
-                <button class="btn bar-layers-btn" id="barLayersBtn" data-i18n-title="layersToggle"><i data-lucide="layers" class="lucide-icon"></i><span class="btn-text" data-i18n="layersModalTitle">الطبقات</span></button>
+                <button class="btn bar-layers-btn" id="barLayersBtn" title="فتح نافذة الطبقات" aria-label="فتح الطبقات" data-i18n-title="layersToggle"><i data-lucide="layers" class="lucide-icon"></i><span class="btn-text" data-i18n="layersToggle">الطبقات</span></button>
+                <button class="btn bar-layers-btn" id="barDivisionBtn" data-i18n-title="rowFilterLabel"><i data-lucide="filter" class="lucide-icon"></i><span class="btn-text" data-i18n="rowFilterLabel">التقسيم</span></button>
             </div>
             <div class="row" id="modeRow">
                 <span class="control-label" id="sectionBaseMapLabel" data-i18n="sectionBaseMap"><i data-lucide="map" class="lucide-icon"></i><span class="btn-text">Base Map</span></span>
@@ -191,43 +132,36 @@
             </div>
 
             <div class="row" id="filterRow">
-                <span class="control-label" id="rowFilterLabel" data-i18n="rowFilterLabel"><i data-lucide="filter" class="lucide-icon"></i><span class="btn-text">التقسيم:</span></span>
-                <div class="control-group" id="religionButtons">
-                    <button class="btn religion-btn active" data-religion="all" title="إظهار جميع الديانات">الكل</button>
-                    <button class="btn religion-btn" data-religion="muslim" title="تصفية: مسلم">مسلم</button>
-                    <button class="btn religion-btn" data-religion="christian" title="تصفية: مسيحي">مسيحي</button>
-                    <button class="btn religion-btn" data-religion="hindu" title="تصفية: هندوسي">هندوسي</button>
-                    <button class="btn religion-btn" data-religion="buddhist" title="تصفية: بوذي">بوذي</button>
-                    <button class="btn religion-btn" data-religion="jewish" title="تصفية: يهودي">يهودي</button>
-                    <button class="btn religion-btn" data-religion="other" title="تصفية: أخرى">آخر</button>
-                </div>
+                <button class="btn" id="globeViewBtn" title="عرض الكرة الأرضية" data-i18n-title="globeViewBtn_title"><i data-lucide="earth" class="lucide-icon"></i><span class="btn-text" data-i18n="globeViewBtn">كرة أرضية</span></button>
+                <button class="btn quiz-btn" id="quizBtn" data-i18n-title="quizMode"><i data-lucide="brain" class="lucide-icon"></i><span class="btn-text" data-i18n="quizMode"></span></button>
+                <button class="btn" id="compareProjectionsBtn" data-i18n-title="compareProjectionsBtn_title"><i data-lucide="git-compare" class="lucide-icon"></i><span class="btn-text" data-i18n="compareProjectionsBtn_title">مقارنة</span></button>
             </div>
 
             <div class="row layers-row" id="layersRow">
                 <span class="control-label" id="sectionDataLayersLabel" data-i18n="sectionDataLayers"><i data-lucide="layers" class="lucide-icon"></i><span class="btn-text">Data Layers</span></span>
-                <button class="btn" id="labelsToggle" title="إظهار/إخفاء أسماء الدول" data-i18n="labelsToggle" data-i18n-title="labelsToggle_title" aria-pressed="false"><i data-lucide="tag" class="lucide-icon"></i><span class="btn-text">الأسماء</span></button>
-                <button class="btn" id="sectToggle" title="إظهار/إخفاء الطوائف (بدل الديانات)" data-i18n="sectToggle" data-i18n-title="sectToggle_title" aria-pressed="false"><i data-lucide="git-fork" class="lucide-icon"></i><span class="btn-text">الطوائف</span></button>
-                <button class="btn" id="routesToggle" title="إظهار/إخفاء الطرق (بحرية، برية، جوية، أنابيب وقنوات ومضائق)" data-i18n="corridorsToggle" data-i18n-title="routesToggle_title" aria-pressed="false"><i data-lucide="route" class="lucide-icon"></i><span class="btn-text">طرق</span></button>
-                <button class="btn" id="riversToggle" title="إظهار/إخفاء الأنهار الكبرى (تعمل في جميع الأوضاع)" data-i18n="riversToggle" data-i18n-title="riversToggle_title" aria-pressed="false"><i data-lucide="waves" class="lucide-icon"></i><span class="btn-text">الأنهار</span></button>
-                <button class="btn" id="densitySpotsToggle" title="إظهار/إخفاء بؤر الكثافة السكانية" data-i18n="densitySpotsToggle" data-i18n-title="densitySpotsToggle_title" aria-pressed="false"><i data-lucide="target" class="lucide-icon"></i><span class="btn-text">بؤر</span></button>
-                <button class="btn" id="capitalsToggle" title="إظهار/إخفاء العواصم" data-i18n="capitalsToggle" data-i18n-title="capitalsToggle_title" aria-pressed="false"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text">عواصم</span></button>
-                <button class="btn" id="timezonesToggle" title="إظهار/إخفاء المناطق الزمنية" data-i18n="timezonesToggle" data-i18n-title="timezonesToggle_title" aria-pressed="false"><i data-lucide="clock" class="lucide-icon"></i><span class="btn-text">مناطق</span></button>
-                <button class="btn" id="majorCitiesToggle" title="إظهار/إخفاء المدن الكبرى" data-i18n="majorCitiesToggle" data-i18n-title="majorCitiesToggle_title" aria-pressed="false"><i data-lucide="building" class="lucide-icon"></i><span class="btn-text">مدن</span></button>
-                <button class="btn" id="naturalResourcesToggle" title="إظهار/إخفاء الموارد الطبيعية" data-i18n="naturalResources" data-i18n-title="naturalResourcesToggle_title" aria-pressed="false"><i data-lucide="gem" class="lucide-icon"></i><span class="btn-text">موارد</span></button>
-                <button class="btn" id="ethnicGroupsToggle" title="إظهار/إخفاء المجموعات العرقية" data-i18n="ethnicGroups" data-i18n-title="ethnicGroupsToggle_title" aria-pressed="false"><i data-lucide="users" class="lucide-icon"></i><span class="btn-text">عرقيات</span></button>
-                <button class="btn" id="oceanCurrentsToggle" title="إظهار/إخفاء التيارات المحيطية" data-i18n="oceanCurrents" data-i18n-title="oceanCurrentsToggle_title" aria-pressed="false"><i data-lucide="waves" class="lucide-icon"></i><span class="btn-text">تيارات</span></button>
-                <button class="btn" id="windsToggle" title="إظهار/إخفاء الرياح" data-i18n="winds" data-i18n-title="windsToggle_title" aria-pressed="false"><i data-lucide="wind" class="lucide-icon"></i><span class="btn-text">رياح</span></button>
-                <button class="btn" id="earthquakesToggle" title="إظهار/إخفاء الزلازل" data-i18n="earthquakes" data-i18n-title="earthquakesToggle_title" aria-pressed="false"><i data-lucide="triangle-alert" class="lucide-icon"></i><span class="btn-text">زلازل</span></button>
-                <button class="btn" id="volcanoesToggle" title="إظهار/إخفاء البراكين" data-i18n="volcanoes" data-i18n-title="volcanoesToggle_title" aria-pressed="false"><i data-lucide="flame" class="lucide-icon"></i><span class="btn-text">براكين</span></button>
-                <button class="btn" id="geopoliticalBlocsToggle" title="إظهار/إخفاء التكتلات الجيوسياسية" data-i18n="geopoliticalBlocs" data-i18n-title="geopoliticalBlocsToggle_title" aria-pressed="false"><i data-lucide="flag" class="lucide-icon"></i><span class="btn-text">تكتلات</span></button>
+                <button class="btn" id="labelsToggle" title="إظهار/إخفاء أسماء الدول" data-i18n="labelsToggle" data-i18n-title="labelsToggle_title"><i data-lucide="tag" class="lucide-icon"></i><span class="btn-text">الأسماء</span></button>
+                <button class="btn" id="sectToggle" title="إظهار/إخفاء الطوائف (بدل الديانات)" data-i18n="sectToggle" data-i18n-title="sectToggle_title"><i data-lucide="git-fork" class="lucide-icon"></i><span class="btn-text">الطوائف</span></button>
+                <button class="btn" id="routesToggle" title="إظهار/إخفاء الطرق (بحرية، برية، جوية، أنابيب وقنوات ومضائق)" data-i18n="corridorsToggle" data-i18n-title="routesToggle_title"><i data-lucide="route" class="lucide-icon"></i><span class="btn-text">طرق</span></button>
+                <button class="btn" id="riversToggle" title="إظهار/إخفاء الأنهار الكبرى (تعمل في جميع الأوضاع)" data-i18n="riversToggle" data-i18n-title="riversToggle_title"><i data-lucide="waves" class="lucide-icon"></i><span class="btn-text">الأنهار</span></button>
+                <button class="btn" id="densitySpotsToggle" title="إظهار/إخفاء بؤر الكثافة السكانية" data-i18n="densitySpotsToggle" data-i18n-title="densitySpotsToggle_title"><i data-lucide="target" class="lucide-icon"></i><span class="btn-text">بؤر</span></button>
+                <button class="btn" id="capitalsToggle" title="إظهار/إخفاء العواصم" data-i18n="capitalsToggle" data-i18n-title="capitalsToggle_title"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text">عواصم</span></button>
+                <button class="btn" id="timezonesToggle" title="إظهار/إخفاء المناطق الزمنية" data-i18n="timezonesToggle" data-i18n-title="timezonesToggle_title"><i data-lucide="clock" class="lucide-icon"></i><span class="btn-text">مناطق</span></button>
+                <button class="btn" id="majorCitiesToggle" title="إظهار/إخفاء المدن الكبرى" data-i18n="majorCitiesToggle" data-i18n-title="majorCitiesToggle_title"><i data-lucide="building" class="lucide-icon"></i><span class="btn-text">مدن</span></button>
+                <button class="btn" id="naturalResourcesToggle" title="إظهار/إخفاء الموارد الطبيعية" data-i18n="naturalResources" data-i18n-title="naturalResourcesToggle_title"><i data-lucide="gem" class="lucide-icon"></i><span class="btn-text">موارد</span></button>
+                <button class="btn" id="ethnicGroupsToggle" title="إظهار/إخفاء المجموعات العرقية" data-i18n="ethnicGroups" data-i18n-title="ethnicGroupsToggle_title"><i data-lucide="users" class="lucide-icon"></i><span class="btn-text">عرقيات</span></button>
+                <button class="btn" id="oceanCurrentsToggle" title="إظهار/إخفاء التيارات المحيطية" data-i18n="oceanCurrents" data-i18n-title="oceanCurrentsToggle_title"><i data-lucide="waves" class="lucide-icon"></i><span class="btn-text">تيارات</span></button>
+                <button class="btn" id="windsToggle" title="إظهار/إخفاء الرياح" data-i18n="winds" data-i18n-title="windsToggle_title"><i data-lucide="wind" class="lucide-icon"></i><span class="btn-text">رياح</span></button>
+                <button class="btn" id="earthquakesToggle" title="إظهار/إخفاء الزلازل" data-i18n="earthquakes" data-i18n-title="earthquakesToggle_title"><i data-lucide="triangle-alert" class="lucide-icon"></i><span class="btn-text">زلازل</span></button>
+                <button class="btn" id="volcanoesToggle" title="إظهار/إخفاء البراكين" data-i18n="volcanoes" data-i18n-title="volcanoesToggle_title"><i data-lucide="flame" class="lucide-icon"></i><span class="btn-text">براكين</span></button>
+                <button class="btn" id="geopoliticalBlocsToggle" title="إظهار/إخفاء التكتلات الجيوسياسية" data-i18n="geopoliticalBlocs" data-i18n-title="geopoliticalBlocsToggle_title"><i data-lucide="flag" class="lucide-icon"></i><span class="btn-text">تكتلات</span></button>
                 <select id="blocSelect" class="bloc-select" data-i18n-title="blocSelect_title"><option value="all">جميع التكتلات</option></select>
-                <button class="btn" id="desertsForestsToggle" title="إظهار/إخفاء الصحاري والغابات" data-i18n="desertsForests" data-i18n-title="desertsForestsToggle_title" aria-pressed="false"><i data-lucide="sun" class="lucide-icon"></i><span class="btn-text">صحاري</span></button>
-                <button class="btn" id="borderDisputesToggle" title="إظهار/إخفاء النزاعات الحدودية" data-i18n="borderDisputes" data-i18n-title="borderDisputesToggle_title" aria-pressed="false"><i data-lucide="swords" class="lucide-icon"></i><span class="btn-text">نزاعات</span></button>
-                <button class="btn" id="adminBoundariesToggle" title="إظهار/إخفاء الحدود الإدارية" data-i18n="adminBoundariesToggle" data-i18n-title="adminBoundariesToggle_title" aria-pressed="false"><i data-lucide="map" class="lucide-icon"></i><span class="btn-text">حدود إدارية</span></button>
+                <button class="btn" id="desertsForestsToggle" title="إظهار/إخفاء الصحاري والغابات" data-i18n="desertsForests" data-i18n-title="desertsForestsToggle_title"><i data-lucide="sun" class="lucide-icon"></i><span class="btn-text">صحاري</span></button>
+                <button class="btn" id="borderDisputesToggle" title="إظهار/إخفاء النزاعات الحدودية" data-i18n="borderDisputes" data-i18n-title="borderDisputesToggle_title"><i data-lucide="swords" class="lucide-icon"></i><span class="btn-text">نزاعات</span></button>
+                <button class="btn" id="adminBoundariesToggle" title="إظهار/إخفاء الحدود الإدارية" data-i18n="adminBoundariesToggle" data-i18n-title="adminBoundariesToggle_title"><i data-lucide="map" class="lucide-icon"></i><span class="btn-text">حدود إدارية</span></button>
             </div>
         </div>
 
-        <div class="layers-modal layers-popover" id="layersModal" role="dialog" aria-modal="false" aria-labelledby="layersModalTitle">
+        <div class="layers-modal" id="layersModal" role="dialog" aria-modal="true" aria-labelledby="layersModalTitle">
             <div class="layers-modal-backdrop" id="layersModalBackdrop"></div>
             <div class="layers-modal-content">
                 <div class="layers-modal-header">
@@ -238,52 +172,22 @@
             </div>
         </div>
 
-        <div class="layers-modal about-modal" id="aboutModal" role="dialog" aria-modal="true" data-i18n-aria-label="aboutTitle">
-            <div class="layers-modal-backdrop" id="aboutModalBackdrop"></div>
+        <div class="layers-modal" id="divisionPopover" role="dialog" aria-modal="true" aria-labelledby="divisionPopoverTitle">
+            <div class="layers-modal-backdrop" id="divisionPopoverBackdrop"></div>
             <div class="layers-modal-content">
                 <div class="layers-modal-header">
-                    <h3 id="aboutModalTitle" data-i18n="aboutTitle"><i data-lucide="info" class="lucide-icon"></i><span class="btn-text">حول التطبيق</span></h3>
-                    <button class="layers-modal-close" id="aboutModalClose" aria-label="إغلاق">&times;</button>
+                    <h3 id="divisionPopoverTitle" data-i18n="rowFilterLabel"><i data-lucide="filter" class="lucide-icon"></i><span class="btn-text">التقسيم</span></h3>
+                    <button class="layers-modal-close" id="divisionPopoverClose" aria-label="إغلاق">&times;</button>
                 </div>
-                <div class="layers-modal-body" id="aboutModalBody"></div>
-            </div>
-        </div>
-
-        <div class="layers-modal about-modal" id="presetsModal" role="dialog" aria-modal="true" data-i18n-aria-label="presetsTitle">
-            <div class="layers-modal-backdrop" id="presetsModalBackdrop"></div>
-            <div class="layers-modal-content">
-                <div class="layers-modal-header">
-                    <h3 id="presetsModalTitle" data-i18n="presetsTitle"><i data-lucide="bookmark" class="lucide-icon"></i><span class="btn-text">المحفوظات التعليمية</span></h3>
-                    <button class="layers-modal-close" id="presetsModalClose" aria-label="إغلاق">&times;</button>
-                </div>
-                <div class="layers-modal-body" id="presetsModalBody"></div>
-            </div>
-        </div>
-
-        <div class="layers-modal about-modal" id="annotationsModal" role="dialog" aria-modal="true" data-i18n-aria-label="annotationTitle">
-            <div class="layers-modal-backdrop" id="annotationsModalBackdrop"></div>
-            <div class="layers-modal-content">
-                <div class="layers-modal-header">
-                    <h3 id="annotationsModalTitle" data-i18n="annotationTitle"><i data-lucide="sticky-note" class="lucide-icon"></i><span class="btn-text">التعليقات</span></h3>
-                    <button class="layers-modal-close" id="annotationsModalClose" aria-label="إغلاق">&times;</button>
-                </div>
-                <div class="layers-modal-body" id="annotationsModalBody"></div>
-            </div>
-        </div>
-
-        <!-- Annotation label dialog (accessible, replaces window.prompt) -->
-        <div class="layers-modal" id="annotationLabelModal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="annotationLabelTitle">
-            <div class="layers-modal-backdrop"></div>
-            <div class="layers-modal-content" style="max-width:360px">
-                <div class="layers-modal-header">
-                    <h3 id="annotationLabelTitle" data-i18n="annotationLabelTitle">Add a label</h3>
-                    <button class="layers-modal-close" id="annotationLabelClose" aria-label="إغلاق">&times;</button>
-                </div>
-                <div class="layers-modal-body">
-                    <input type="text" id="annotationLabelInput" class="quiz-input" maxlength="80" data-i18n-placeholder="annotationLabelPlaceholder" aria-label="Label" autocomplete="off" autocorrect="off" spellcheck="false">
-                    <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end">
-                        <button class="btn" id="annotationLabelCancel" data-i18n="quizCancel">Cancel</button>
-                        <button class="btn quiz-start-btn" id="annotationLabelSave" data-i18n="addLabel">Add label</button>
+                <div class="layers-modal-body" id="divisionPopoverBody">
+                    <div class="control-group" id="religionButtons">
+                        <button class="btn religion-btn active" data-religion="all" title="إظهار جميع الديانات">الكل</button>
+                        <button class="btn religion-btn" data-religion="muslim" title="تصفية: مسلم">مسلم</button>
+                        <button class="btn religion-btn" data-religion="christian" title="تصفية: مسيحي">مسيحي</button>
+                        <button class="btn religion-btn" data-religion="hindu" title="تصفية: هندوسي">هندوسي</button>
+                        <button class="btn religion-btn" data-religion="buddhist" title="تصفية: بوذي">بوذي</button>
+                        <button class="btn religion-btn" data-religion="jewish" title="تصفية: يهودي">يهودي</button>
+                        <button class="btn religion-btn" data-religion="other" title="تصفية: أخرى">آخر</button>
                     </div>
                 </div>
             </div>
@@ -312,15 +216,9 @@
                         <button class="mobile-tools-item" id="mobileOnboardBtn" data-i18n-title="onboardMapGuide"><i data-lucide="book-open" class="lucide-icon"></i><span class="btn-text" data-i18n="onboardMapGuide">شرح الخريطة</span></button>
                         <button class="mobile-tools-item" id="mobileShortcutsBtn" data-i18n-title="shortcutsLabel"><i data-lucide="keyboard" class="lucide-icon"></i><span class="btn-text" data-i18n="shortcutsLabel">اختصارات</span></button>
                         <button class="mobile-tools-item" id="mobilePdfBtn" data-i18n-title="pdfExport"><i data-lucide="file-text" class="lucide-icon"></i><span class="btn-text">PDF</span></button>
-                        <button class="mobile-tools-item" id="mobileAboutBtn" data-i18n-title="aboutTitle"><i data-lucide="info" class="lucide-icon"></i><span class="btn-text" data-i18n="aboutTitle">حول التطبيق</span></button>
-                        <button class="mobile-tools-item" id="mobilePresetsBtn" data-i18n-title="presetsTitle"><i data-lucide="bookmark" class="lucide-icon"></i><span class="btn-text" data-i18n="presetsTitle">المحفوظات التعليمية</span></button>
-                        <button class="mobile-tools-item" id="mobileQuizBtn" data-i18n-title="quizMode"><i data-lucide="brain" class="lucide-icon"></i><span class="btn-text" data-i18n="quizMode">الاختبار</span></button>
-                        <button class="mobile-tools-item" id="mobileGlobeBtn" data-i18n-title="globeViewBtn_title"><i data-lucide="earth" class="lucide-icon"></i><span class="btn-text" data-i18n="globeViewBtn">كرة أرضية</span></button>
-                        <button class="mobile-tools-item" id="mobileCompareBtn" data-i18n-title="compareProjectionsBtn_title"><i data-lucide="git-compare" class="lucide-icon"></i><span class="btn-text" data-i18n="compareProjectionsBtn_title">مقارنة</span></button>
                         <button class="mobile-tools-item" id="mobileShareBtn" data-i18n-title="shareBtn_title"><i data-lucide="share-2" class="lucide-icon"></i><span class="btn-text" data-i18n="shareBtn">مشاركة</span></button>
                         <button class="mobile-tools-item" id="mobileResetBtn2" data-i18n-title="mobileReset_title"><i data-lucide="rotate-ccw" class="lucide-icon"></i><span class="btn-text" data-i18n="resetBtn">إعادة تعيين</span></button>
                         <button class="mobile-tools-item" id="mobileCoordsBtn" data-i18n-title="coordsToggle_title"><i data-lucide="map-pin" class="lucide-icon"></i><span class="btn-text" data-i18n="coordsToggle">إحداثيات</span></button>
-                        <button class="mobile-tools-item" id="mobileAnnotateBtn" data-i18n-title="annotationToolLabel"><i data-lucide="sticky-note" class="lucide-icon"></i><span class="btn-text" data-i18n="annotationToolLabel">إضافة تعليقات</span></button>
                     </div>
                 </div>
             </div>
@@ -422,7 +320,7 @@
         <div class="lang-overlay" id="langOverlay">
             <div class="lang-overlay-content">
                 <div class="lang-overlay-icon">🦋</div>
-                <h2 class="lang-overlay-title" data-i18n="appName"></h2>
+                <h2 class="lang-overlay-title">Waterman Butterfly Map</h2>
                 <p class="lang-overlay-subtitle" data-i18n="langOverlaySubtitle"></p>
                 <div class="lang-overlay-buttons">
                     <button class="lang-overlay-btn" data-lang="ar">
@@ -659,11 +557,6 @@
                     <div class="quiz-form-row">
                         <button class="btn quiz-clear-all-btn" id="quizClearAllBtn" style="display:none" data-i18n="quizClearAll"></button>
                     </div>
-                    <div class="quiz-form-row quiz-library-actions">
-                        <button type="button" class="btn quiz-library-btn" id="quizExportBtn" data-i18n="quizExportBank"></button>
-                        <button type="button" class="btn quiz-library-btn" id="quizImportBtn" data-i18n="quizImportBank"></button>
-                        <input type="file" id="quizImportInput" accept=".json,application/json" style="display:none">
-                    </div>
                     <div class="quiz-custom-list-wrap">
                         <div id="quizCustomEmptyMsg" class="quiz-custom-empty" data-i18n="quizNoCustomQuestions"></div>
                         <div class="quiz-custom-list" id="quizCustomList"></div>
@@ -695,10 +588,6 @@
                 <div class="quiz-form-row" id="quizAuthoringFormFields" style="display:none">
                     <label class="quiz-label" id="quizPromptLabel" data-i18n="quizPromptLabel"></label>
                     <input type="text" id="quizPromptInput" class="quiz-input" data-i18n-placeholder="quizPromptPlaceholder" maxlength="200">
-                </div>
-                <div class="quiz-form-row" id="quizAuthoringProvenanceRow" style="display:none">
-                    <label class="quiz-label" id="quizProvenanceLabel" data-i18n="quizProvenanceLabel"></label>
-                    <input type="text" id="quizProvenanceInput" class="quiz-input" data-i18n-placeholder="quizProvenancePlaceholder" maxlength="200">
                 </div>
                 <div class="quiz-form-row" id="quizAuthoringAnswerFormatRow" style="display:none">
                     <label class="quiz-label" id="quizAnswerFormatLabel" data-i18n="quizAnswerFormat"></label>
@@ -736,7 +625,6 @@
                 <div class="quiz-review-progress" id="quizReviewProgress"></div>
                 <div class="quiz-review-card" id="quizReviewCard">
                     <div class="quiz-review-prompt" id="quizReviewPrompt"></div>
-                    <div class="quiz-review-provenance" id="quizReviewProvenance" style="display:none"></div>
                     <div class="quiz-review-click-info" id="quizReviewClickInfo"></div>
                 </div>
                 <div class="quiz-form-actions quiz-review-actions">
@@ -761,7 +649,6 @@
                 </div>
                 <div class="quiz-results-body" id="quizResultsBody"></div>
                 <div class="quiz-form-actions">
-                    <button class="btn quiz-results-export-btn" id="quizResultsExportCsvBtn" data-i18n="quizExportCsv" style="display:none"></button>
                     <button class="btn quiz-start-btn" id="quizResultsCloseBtn" data-i18n="quizResultsClose">إغلاق</button>
                 </div>
             </div>
@@ -788,9 +675,68 @@
 
     </div>  <!-- closing content-row -->
 
-    <script type="module" src="firebase.js"></script>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+      import { getAuth } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+      import { getFirestore, doc, setDoc, addDoc, collection, query, where, getDocs, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
-    <script type="module" src="main.js"></script>
-    <script src="boot.js"></script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyC_o_-C7NFeTQwFb-kZRCI59HnTc2DDTUA",
+        authDomain: "lepidos-map.firebaseapp.com",
+        projectId: "lepidos-map",
+        storageBucket: "lepidos-map.firebasestorage.app",
+        messagingSenderId: "262733147860",
+        appId: "1:262733147860:web:2d6b7f0a7712a56c011541",
+        measurementId: "G-KC56R3GJJJ"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      window.firebaseApp = app;
+      window.firebaseAuth = auth;
+      window.firebaseDb = db;
+
+      window.firebaseCreateSession = async function(sessionCode, config) {
+        try {
+          await setDoc(doc(db, 'quizSessions', sessionCode), {
+            createdAt: serverTimestamp(),
+            active: true,
+            config: config || null
+          });
+          return true;
+        } catch(e) { console.error('Failed to create session:', e); return false; }
+      };
+
+      window.firebaseSaveQuizResult = async function(sessionCode, studentName, score, total, timeTaken, answers) {
+        try {
+          await addDoc(collection(db, 'quizResults'), {
+            sessionCode: sessionCode.toUpperCase(),
+            studentName: studentName,
+            score: score,
+            total: total,
+            timeTaken: timeTaken || null,
+            answers: answers || [],
+            completedAt: serverTimestamp()
+          });
+          return true;
+        } catch(e) { console.error('Failed to save result:', e); return false; }
+      };
+
+      window.firebaseGetResultsForSession = async function(sessionCode) {
+        try {
+          const q = query(collection(db, 'quizResults'), where('sessionCode', '==', sessionCode.toUpperCase()), orderBy('completedAt', 'asc'));
+          const snapshot = await getDocs(q);
+          return snapshot.docs.map(function(d) { return { id: d.id, ...d.data() }; });
+        } catch(e) { console.error('Failed to fetch results:', e); return []; }
+      };
+
+      console.log('Firebase initialized for project:', firebaseConfig.projectId);
+    </script>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+    <script>if ('serviceWorker' in navigator) { window.addEventListener('load', function () { navigator.serviceWorker.register('./sw.js').catch(function () {}); }); }</script>
 </body>
 </html>

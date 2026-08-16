@@ -398,7 +398,10 @@ export function openLayersModal(triggerEl) {
                     allOffBtn.className = 'btn';
                     allOffBtn.textContent = t('allOff');
                     allOffBtn.addEventListener('click', function() {
-                        document.querySelectorAll('.layers-row .btn.toggle-on').forEach(function(b) { b.click(); });
+                        // The toggles live inside the popover body while it is
+                        // open (they were moved here from .layers-row), so query
+                        // the body — not the (now empty) source row.
+                        body.querySelectorAll('.btn.toggle-on').forEach(function(b) { b.click(); });
                         updateActiveLayerCount();
                     });
                     btnRow.appendChild(allOffBtn);
@@ -428,7 +431,6 @@ export function openLayersModal(triggerEl) {
                         updateActiveLayerCount();
                     });
                     btnRow.appendChild(resetLayersBtn);
-                    body.appendChild(btnRow);
                     var categories = [
                         { label: t('catGeneral'), ids: ['labelsToggle','sectToggle','coordsToggle'] },
                         { label: t('catPopulation'), ids: ['capitalsToggle','majorCitiesToggle','timezonesToggle','densitySpotsToggle'] },
@@ -437,7 +439,10 @@ export function openLayersModal(triggerEl) {
                         { label: t('catEnvironment'), ids: ['naturalResourcesToggle','ethnicGroupsToggle','desertsForestsToggle'] },
                         { label: t('catClimate'), ids: ['oceanCurrentsToggle','windsToggle','earthquakesToggle','volcanoesToggle'] },
                     ];
+                    // Wipe the body FIRST, then rebuild so the quick-action row
+                    // (All Off / Reset) is not cleared by the reset below.
                     body.innerHTML = '';
+                    body.appendChild(btnRow);
                     var temp = document.createDocumentFragment();
                     categories.forEach(function(cat) {
                     var catDiv = document.createElement('div');
@@ -460,6 +465,9 @@ export function openLayersModal(triggerEl) {
                     });
                     var remaining = [].slice.call(layersRow.children);
                     remaining.forEach(function(el) {
+                        // Skip the row's section label — only layer toggles/selects
+                        // are shown inside the popover.
+                        if (el.classList && el.classList.contains('control-label')) return;
                         var catDiv = document.createElement('div');
                         catDiv.className = 'layers-category';
                         var itemsDiv = document.createElement('div');
@@ -476,12 +484,12 @@ export function openLayersModal(triggerEl) {
                  setTimeout(function() { _a11yFocusFirstInDialog(layersModal); }, 0);
              }
 
-// Position the layers popover BESIDE the button that opened it — horizontally
-// adjacent, vertically centered on the button — never below it. In RTL the
-// panel opens to the button's left (over the map, since the trigger sits on
-// the right side); in LTR it opens to the right. It stays on-screen in both
-// axes, and the transform-origin tracks the side facing the button so the
-// pop animation grows out of the trigger.
+// Position the layers popover right AT the button that opened it — hung
+// below the trigger when there is room, flipped above it when the trigger
+// sits low on the screen (mobile bottom-nav, floating button), and
+// horizontally centered on the trigger. It is always clamped to the viewport
+// and never floats away from the trigger into the middle of the screen. The
+// transform-origin faces the trigger so the pop animation grows out of it.
 function _positionLayersPopover() {
                 if (!layersModal) return;
                 var modal = layersModal;
@@ -489,33 +497,39 @@ function _positionLayersPopover() {
                 var gap = 8;
                 var left, top;
                 var content = modal.querySelector('.layers-modal-content');
-                var rtl = document.documentElement.getAttribute('dir') === 'rtl';
+                var vw = window.innerWidth;
+                var vh = window.innerHeight;
+                var pw = Math.min(modal.offsetWidth || 320, vw - 2 * gap);
+                var ph = Math.min(modal.offsetHeight || 400, vh - 2 * gap);
                 if (trigger && trigger.getBoundingClientRect) {
                     var r = trigger.getBoundingClientRect();
-                    var pw = modal.offsetWidth || 300;
-                    var ph = modal.offsetHeight || 300;
-                    var vw = window.innerWidth;
-                    var vh = window.innerHeight;
-                    if (rtl) {
-                        left = r.left - pw - gap; // beside: to the button's left
+                    // Horizontal: center the panel on the trigger, then clamp.
+                    left = r.left + (r.width - pw) / 2;
+                    left = Math.max(gap, Math.min(left, vw - pw - gap));
+                    // Vertical: hang below the trigger; flip above when the
+                    // trigger is too low for the panel to fit underneath.
+                    if (r.bottom + gap + ph <= vh) {
+                        top = r.bottom + gap;
+                    } else if (r.top - gap - ph >= 0) {
+                        top = r.top - ph - gap;
                     } else {
-                        left = r.right + gap;     // beside: to the button's right
+                        top = Math.max(gap, Math.min(r.top, vh - ph - gap));
                     }
-                    // Vertically centered on the trigger, clamped to the viewport.
-                    top = r.top + (r.height - ph) / 2;
-                    if (top < gap) top = gap;
-                    if (top + ph > vh - gap) top = Math.max(gap, vh - ph - gap);
-                    if (left + pw > vw - gap) left = Math.max(gap, vw - pw - gap);
-                    if (left < gap) left = gap;
-                    if (content) content.style.transformOrigin = rtl ? 'right center' : 'left center';
+                    if (content) content.style.transformOrigin = top > r.top ? 'top center' : 'bottom center';
                 } else {
-                    left = window.innerWidth - (modal.offsetWidth || 300) - gap;
+                    var rtl = document.documentElement.getAttribute('dir') === 'rtl';
+                    left = rtl ? vw - pw - gap : gap;
                     top = 60;
-                    if (content) content.style.transformOrigin = rtl ? 'right center' : 'left center';
+                    if (content) content.style.transformOrigin = 'top center';
                 }
                 modal.style.left = left + 'px';
                 modal.style.top = top + 'px';
             }
+
+// Keep the popover glued to its trigger if the window is resized while open.
+window.addEventListener('resize', function() {
+                if (layersModal && layersModal.classList.contains('visible')) _positionLayersPopover();
+            });
 
 export function closeLayersModal() {
                  if (!layersModal || !layersModal.classList.contains('visible')) return;

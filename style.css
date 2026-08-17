@@ -1000,9 +1000,6 @@ body {
         padding: 5px 10px;
         padding-inline-start: 28px;
     }
-    .controls-bar .layers-row {
-        display: none;
-    }
     .zoom-btn {
         width: 44px;
         height: 44px;
@@ -1167,11 +1164,6 @@ body {
         min-height: 28px !important;
         border-radius: var(--radius-sm) !important;
     }
-    .controls-bar .layers-row {
-        flex-wrap: wrap !important;
-        justify-content: center;
-        gap: 6px 8px !important;
-    }
     .controls-bar .search-box input {
         width: 160px !important;
         font-size: 0.8em !important;
@@ -1279,9 +1271,6 @@ body {
     .legend {
         font-size: 0.75em;
         padding: 10px 14px;
-    }
-    .controls-bar .layers-row {
-        display: none;
     }
 }
 .legend-gradient-bar {
@@ -3617,11 +3606,28 @@ body.annotate-active .annotation-toolbar {
     color: var(--text);
 }
 
-/* ── Controls bar: primary/secondary row hierarchy ────────────────── */
+/* ── Controls bar: unified Base Map + utilities panel ──────────────── */
+/* #modeRow acts as ONE continuous panel holding two adjacent zones:
+   the wide Base-Map zone (#modeButtons) and the narrow utilities zone
+   (#filterRow), separated by a single vertical divider. */
+.row-unified {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: var(--panel-overlay-96);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-md);
+    padding: 8px 14px;
+}
 #filterRow {
-    border-top: 1px solid var(--border);
-    margin-top: 8px;
-    padding-top: 8px;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    border-inline-start: 1px solid var(--border);
+    padding-inline-start: 10px;
+    margin-inline-start: 2px;
 }
 #filterRow .btn {
     font-size: 0.62em;

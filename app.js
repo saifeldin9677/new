@@ -2513,7 +2513,7 @@
                 var counter = document.getElementById('layerCounter');
                 if (!counter) return;
                 var count = 0;
-                var toggles = document.querySelectorAll('.layers-row .btn.toggle-on');
+                var toggles = document.querySelectorAll('#layersModalBody .btn.toggle-on');
                 if (toggles) count = toggles.length;
                 counter.textContent = count;
             }
@@ -5711,8 +5711,6 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         { getEl: function() {
                             var mb = window.innerWidth <= 768;
                             if (mb) return document.querySelector('#mobileLayersBtn');
-                            var lr = document.querySelector('#layersRow');
-                            if (lr && lr.offsetHeight > 0 && getComputedStyle(lr).display !== 'none') return lr;
                             return document.querySelector('#barLayersBtn') || document.querySelector('#layersToggleBtn');
                         }, icon: '🗂️', titleKey: 'onboardStep6Title', textKey: 'onboardStep6Text' },
                         { getEl: function() {
@@ -8665,48 +8663,15 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             }
 
             function openLayersModal() {
-                var layersRow = document.querySelector('.layers-row');
                 var body = document.getElementById('layersModalBody');
-                if (layersRow && body) {
-                    var btnRow = document.createElement('div');
-                    btnRow.style.cssText = 'display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;';
-                    var allOffBtn = document.createElement('button');
-                    allOffBtn.className = 'btn';
-                    allOffBtn.textContent = t('allOff');
-                    allOffBtn.addEventListener('click', function() {
-                        document.querySelectorAll('.layers-row .btn.toggle-on').forEach(function(b) { b.click(); });
-                        updateActiveLayerCount();
-                        closeLayersModal();
-                    });
-                    btnRow.appendChild(allOffBtn);
-                    var resetLayersBtn = document.createElement('button');
-                    resetLayersBtn.className = 'btn';
-                    resetLayersBtn.textContent = t('resetLayers');
-                    resetLayersBtn.addEventListener('click', function() {
-                        if (corridorsVisible) toggleCorridors();
-                        if (riversVisible) toggleRivers();
-                        if (densitySpotsMode) toggleDensitySpots();
-                        if (capitalsVisible) toggleCapitals();
-                        if (timezonesVisible) toggleTimezones();
-                        if (majorCitiesVisible) toggleMajorCities();
-                        if (naturalResourcesVisible) toggleNaturalResources();
-                        if (ethnicGroupsVisible) toggleEthnicGroups();
-                        if (oceanCurrentsVisible) toggleOceanCurrents();
-                        if (windsVisible) toggleWinds();
-                        if (earthquakesVisible) toggleEarthquakes();
-                        if (volcanoesVisible) toggleVolcanoes();
-                        if (geopoliticalBlocsVisible) toggleGeopoliticalBlocs();
-                        if (desertsForestsVisible) toggleDesertsForests();
-                        if (borderDisputesVisible) toggleBorderDisputes();
-                        if (selectedBloc !== 'all') {
-                            selectedBloc = 'all';
-                            document.getElementById('blocSelect').value = 'all';
-                        }
-                        updateActiveLayerCount();
-                        closeLayersModal();
-                    });
-                    btnRow.appendChild(resetLayersBtn);
-                    body.appendChild(btnRow);
+                if (body) {
+                    // Toggle buttons live permanently inside the modal body now
+                    // (the old always-visible #layersRow was removed); group them
+                    // into categories each time the modal opens. Move the buttons
+                    // out of any leftover category containers first so they are
+                    // never destroyed when the old containers are removed.
+                    body.querySelectorAll('.layers-category .btn, .layers-category .bloc-select').forEach(function(el) { body.appendChild(el); });
+                    body.querySelectorAll('.layers-category').forEach(function(d) { d.remove(); });
                     var categories = [
                         { label: t('catGeneral'), ids: ['labelsToggle','sectToggle','coordsToggle'] },
                         { label: t('catPopulation'), ids: ['capitalsToggle','majorCitiesToggle','timezonesToggle','densitySpotsToggle'] },
@@ -8715,7 +8680,6 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         { label: t('catEnvironment'), ids: ['naturalResourcesToggle','ethnicGroupsToggle','desertsForestsToggle'] },
                         { label: t('catClimate'), ids: ['oceanCurrentsToggle','windsToggle','earthquakesToggle','volcanoesToggle'] },
                     ];
-                    body.innerHTML = '';
                     var temp = document.createDocumentFragment();
                     categories.forEach(function(cat) {
                         var catDiv = document.createElement('div');
@@ -8727,7 +8691,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         itemsDiv.className = 'layers-items';
                         cat.ids.forEach(function(id) {
                             var el = document.getElementById(id);
-                            if (el && layersRow.contains(el)) {
+                            if (el && body.contains(el)) {
                                 itemsDiv.appendChild(el);
                             }
                         });
@@ -8736,7 +8700,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             temp.appendChild(catDiv);
                         }
                     });
-                    var remaining = [].slice.call(layersRow.children);
+                    var remaining = [].slice.call(body.children);
                     remaining.forEach(function(el) {
                         var catDiv = document.createElement('div');
                         catDiv.className = 'layers-category';
@@ -8751,13 +8715,6 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 openPopover(layersModal);
             }
             function closeLayersModal() {
-                var layersRow = document.querySelector('.layers-row');
-                var body = document.getElementById('layersModalBody');
-                if (layersRow && body) {
-                    var all = body.querySelectorAll('.btn, .bloc-select');
-                    Array.prototype.forEach.call(all, function(el) { layersRow.appendChild(el); });
-                    body.innerHTML = '';
-                }
                 closePopover(layersModal);
             }
             function openDivisionPopover() {

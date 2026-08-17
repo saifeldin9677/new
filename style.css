@@ -3617,17 +3617,30 @@ body.annotate-active .annotation-toolbar {
     flex-wrap: wrap;
     gap: 10px;
     background: var(--panel-overlay-96);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1.5px solid var(--brand-accent);
     border-radius: var(--radius-md);
     padding: 8px 14px;
+    box-shadow: var(--shadow-sm);
 }
 #filterRow {
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
-    border-inline-start: 1px solid var(--border);
-    padding-inline-start: 10px;
-    margin-inline-start: 2px;
+    border-inline-start: 2px solid var(--brand-accent);
+    padding-inline-start: 12px;
+    margin-inline-start: 4px;
+}
+/* In the light theme the teal accent sits on white at ~2.5:1 — too faint
+   to read as an outline. Use the established darker teal (#0d9488, already
+   used elsewhere in the UI) so the panel edge and zone divider stay clearly
+   visible in both themes. */
+:root:not([data-theme]) .row-unified,
+[data-theme="light"] .row-unified {
+    border-color: #0d9488;
+}
+:root:not([data-theme]) #filterRow,
+[data-theme="light"] #filterRow {
+    border-inline-start-color: #0d9488;
 }
 #filterRow .btn {
     font-size: 0.62em;

@@ -631,13 +631,21 @@ body {
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 16px;
 }
 .controls-bar-toprow .bar-layers-btn {
     padding: 6px 12px;
     font-size: 0.7em;
     border-radius: var(--radius-sm);
     min-height: 32px;
+}
+/* Layers is a pill/stadium shape (fully rounded), distinct from the
+   rectangular Division button and the mode buttons; Division keeps the
+   standard rounded-rectangle corner. !important needed: the >=1024px
+   media query forces radius-sm / 10px padding on all controls-bar .btn. */
+#barLayersBtn {
+    border-radius: 999px !important;
+    padding-inline: 16px !important;
 }
 .layers-modal-body .control-group {
     display: flex;

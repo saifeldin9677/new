@@ -619,17 +619,21 @@ body {
     margin-inline-end: 4px;
     white-space: nowrap;
 }
-.controls-bar-header {
+/* One horizontal row holding Division, Layers and the unified Base Map
+   panel (#modeRow) side by side; wraps only when the viewport is too
+   narrow. DOM order is [Division][Layers][panel]; flex-direction:
+   row-reverse lays items from the inline-END, so in RTL the panel lands
+   at the inline-START (rightmost, most prominent) and Division at the
+   least-prominent side (leftmost), per the reference sketch. */
+.controls-bar-toprow {
     display: flex;
+    flex-direction: row-reverse;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    width: 100%;
-    padding-bottom: 8px;
-    margin-bottom: 2px;
-    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 10px;
 }
-.controls-bar-header .bar-layers-btn {
+.controls-bar-toprow .bar-layers-btn {
     padding: 6px 12px;
     font-size: 0.7em;
     border-radius: var(--radius-sm);

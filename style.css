@@ -1181,55 +1181,80 @@ body {
     .controls-bar-toprow > * {
         pointer-events: auto;
     }
-    /* Shared floating-dark-island treatment: slate capsule, blur, depth */
-    #controlsBar .row-unified,
-    #controlsBar #filterRow,
-    #controlsBar .floating-capsule {
+    /* ONE unified dock container: both sections (Base Map 52px + 4-buttons
+       38px) share a single slate background, single 1px outline and one
+       drop-shadow that follows the stepped silhouette. The silhouette
+       itself (step + concave fillet at the junction) is an SVG path mask
+       generated in JS from the measured geometry — masks are the only
+       clip mechanism this layout reliably supports for the dynamic
+       junction position, and they must live on the container while the
+       shadow sits on the wrapper above it (a filter on the same element
+       would be clipped by the mask). */
+    #controlsBar .dock-unified-wrap {
+        filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.4)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+        pointer-events: none;
+    }
+    #controlsBar .stepped-dock-group {
+        align-items: flex-start;
         background: rgba(18, 24, 36, 0.92);
         backdrop-filter: blur(8px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 0 0 14px 14px;
+        padding: 0;
+        box-shadow: none;
+        -webkit-mask-size: 100% 100%;
+        mask-size: 100% 100%;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: 0 0;
+        mask-position: 0 0;
+        pointer-events: none;
     }
-    /* Buttons: flex layout + line-height 1 keeps every island height driven
-       by min-height/padding instead of font line boxes (Arabic metrics are
-       taller, which would otherwise stretch the docks inconsistently). */
+    /* Buttons: flex layout + line-height 1 keeps every island height
+       driven by min-height/padding instead of font line boxes (Arabic
+       metrics are taller, which would otherwise stretch the docks
+       inconsistently). */
     #controlsBar .btn {
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
         line-height: 1 !important;
     }
-    /* Stepped dock group: two connected sub-blocks, top-aligned, the
-       Base Map dock taller (52px) than the 4-buttons dock (38px) so the
-       group reads as a stepped/notched shape, not one uniform box.
-       #controlsBar id scope needed: the base card rule at the end of
-       this file has equal specificity, so the reset would lose. */
+    /* The container box includes the masked-out notch; make the box
+       click-transparent and re-enable the two visible sections, so the
+       notch and the strip below it pass clicks through to the map. */
     #controlsBar .stepped-dock-group {
-        align-items: flex-start;
-        border: none;
-        background: none;
-        padding: 0;
-        box-shadow: none;
+        pointer-events: none;
     }
-    /* Base Map dock: primary tall block, square top, rounded bottom */
+    #controlsBar .row-unified,
+    #controlsBar #filterRow {
+        pointer-events: auto;
+    }
+    /* Base Map section: no borders, no background of its own — the shared
+       container paints everything. The taller block is 52px tall. */
     #controlsBar .row-unified {
-        border: 1.5px solid var(--brand-accent);
-        border-radius: 0 0 14px 14px;
+        border: none;
+        border-radius: 0;
+        background: none;
         padding: 8px 14px;
         height: 52px;
     }
-    /* 4-buttons dock: shallower step, top-aligned beside the Base Map
-       dock; its own divider is dropped here because the two docks are
-       already visually distinct blocks. */
+    /* 4-buttons section: shallower step (38px), transparent, borderless,
+       top-aligned beside the taller block. */
     #controlsBar #filterRow {
-        border: 1px solid rgba(255, 255, 255, 0.14);
-        border-radius: 0 0 14px 14px;
-        border-inline-start: none;
+        border: none;
+        border-radius: 0;
+        background: none;
         padding: 4px 8px;
         height: 38px;
         margin-inline-start: 0;
     }
-    /* Capsules: subtle outline, same 38px height as the 4-buttons dock */
+    /* Capsules: slate island with subtle outline, same 38px height as
+       the 4-buttons dock */
     #controlsBar .floating-capsule {
+        background: rgba(18, 24, 36, 0.92);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.25);
         border: 1px solid rgba(255, 255, 255, 0.14);
         height: 38px;
     }

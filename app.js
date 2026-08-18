@@ -5341,6 +5341,57 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             async function init() {
                 isMobile = window.innerWidth < 768;
 
+                // Unified dock silhouette: measure the 4-buttons section and
+                // build an SVG path mask (data URI) so the stepped shape —
+                // with the concave fillet at the junction — is cut out of the
+                // shared container exactly where the two sections meet.
+                function syncDockMask() {
+                    var g = document.querySelector('.stepped-dock-group');
+                    var f = document.getElementById('filterRow');
+                    if (!g || !f) return;
+                    var W = g.offsetWidth;
+                    var H = g.offsetHeight;
+                    if (window.innerWidth < 1024 || W === 0 || H === 0) {
+                        g.style.webkitMaskImage = 'none';
+                        g.style.maskImage = 'none';
+                        return;
+                    }
+                    var gr = g.getBoundingClientRect();
+                    var fr = f.getBoundingClientRect();
+                    var rtl = getComputedStyle(g).direction === 'rtl';
+                    var jx = Math.round((rtl ? fr.right : fr.left) - gr.left);
+                    var R = 14;
+                    var B = 1 + f.offsetHeight;
+                    var p;
+                    if (rtl) {
+                        p = 'M0 0 H' + W + ' V' + H + ' H' + jx + ' V' + (H - 1) +
+                            ' A' + R + ' ' + R + ' 0 0 0 ' + (jx - R) + ' ' + B +
+                            ' H0 V0 Z';
+                    } else {
+                        p = 'M0 0 H' + W + ' V' + B + ' H' + (jx + R) +
+                            ' A' + R + ' ' + R + ' 0 0 0 ' + jx + ' ' + (H - 1) +
+                            ' V' + H + ' H' + R +
+                            ' A' + R + ' ' + R + ' 0 0 0 0 ' + (H - R) +
+                            ' V0 Z';
+                    }
+                    var uri = 'url("data:image/svg+xml;utf8,' + encodeURIComponent(
+                        '<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 ' +
+                        W + ' ' + H + '"><path d="' + p + '" fill="white"/></svg>') + '")';
+                    g.style.webkitMaskImage = uri;
+                    g.style.maskImage = uri;
+                }
+                if (!window.__dockMaskSynced && typeof ResizeObserver !== 'undefined') {
+                    var dockGroupEl = document.querySelector('.stepped-dock-group');
+                    var filterRowEl = document.getElementById('filterRow');
+                    if (dockGroupEl && filterRowEl) {
+                        var dockRO = new ResizeObserver(syncDockMask);
+                        dockRO.observe(dockGroupEl);
+                        dockRO.observe(filterRowEl);
+                        window.__dockMaskSynced = true;
+                        syncDockMask();
+                    }
+                }
+
                 // Patch name_ru onto features from lookup maps
                 if (typeof featureRussian !== 'undefined') {
                     corridorsData.forEach(function(d) { d.name_ru = d.name_ru || featureRussian.corridors[d.name_en]; });

@@ -1133,6 +1133,11 @@ body {
     #toolsRow .btn {
         padding: 3px 8px;
     }
+    /* ── Top navigation bar: floating dark islands over the map ──
+       The wrapper is an invisible, pointer-transparent layer pinned to the
+       top of the map container; all visuals live on the three islands
+       inside .controls-bar-toprow: the Base Map card (rightmost in RTL),
+       the Layers capsule, and the Division card (leftmost in RTL). */
     .controls-bar {
         position: absolute !important;
         top: 0 !important;
@@ -1142,23 +1147,57 @@ body {
         transform: none !important;
         width: 100% !important;
         max-width: 100% !important;
-        background: var(--panel-overlay-96) !important;
+        background: transparent !important;
         backdrop-filter: none !important;
         border-radius: 0 !important;
-        padding: 6px 16px !important;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3) !important;
+        padding: 10px 15px !important;
+        box-shadow: none !important;
         border: none !important;
-        border-bottom: 1px solid var(--border) !important;
         display: flex !important;
         flex-direction: row !important;
         flex-wrap: wrap !important;
-        justify-content: center !important;
-        align-items: center !important;
-        gap: 6px 16px !important;
+        justify-content: space-between !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
         max-height: none !important;
         overflow-y: visible !important;
-        z-index: 20 !important;
+        z-index: 1000 !important;
         margin: 0 !important;
+        pointer-events: none; /* map drag works through the empty space */
+    }
+    /* DOM order is [Division][Layers][panel]; row-reverse + space-between
+       puts the Base Map panel far right in RTL and Division far left,
+       with Layers floating between them. Only the islands themselves are
+       interactive; the 16px gaps between them pass clicks to the map. */
+    .controls-bar-toprow {
+        width: 100%;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        pointer-events: none;
+    }
+    .controls-bar-toprow > * {
+        pointer-events: auto;
+    }
+    /* Shared floating-dark-island treatment: slate capsule, blur, depth */
+    .controls-bar-toprow .row-unified,
+    .controls-bar-toprow .bar-layers-btn {
+        background: rgba(18, 24, 36, 0.92);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.25);
+    }
+    /* Base Map card: tall, prominent, heavily rounded BOTTOM corners.
+       #controlsBar id scope keeps the bright teal outline in BOTH themes
+       (the light-theme #0d9488 override targets a dark-on-white card that
+       no longer exists at this width — the island is slate in both). */
+    #controlsBar .row-unified {
+        border: 1.5px solid var(--brand-accent);
+        border-radius: 10px 10px 20px 20px;
+    }
+    /* Layers capsule: fully rounded oval silhouette */
+    #controlsBar .bar-layers-btn {
+        border: 1px solid rgba(255, 255, 255, 0.14);
     }
     .controls-bar .row {
         flex-wrap: wrap !important;

@@ -5360,16 +5360,16 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     var fr = f.getBoundingClientRect();
                     var rtl = getComputedStyle(g).direction === 'rtl';
                     var jx = Math.round((rtl ? fr.right : fr.left) - gr.left);
-                    var R = 14;
+                    var R = 10;
                     var B = 1 + f.offsetHeight;
                     var p;
                     if (rtl) {
-                        p = 'M0 0 H' + W + ' V' + H + ' H' + jx + ' V' + (H - 1) +
+                        p = 'M0 0 H' + W + ' V' + H + ' H' + jx + ' V' + (B + R) +
                             ' A' + R + ' ' + R + ' 0 0 0 ' + (jx - R) + ' ' + B +
                             ' H0 V0 Z';
                     } else {
                         p = 'M0 0 H' + W + ' V' + B + ' H' + (jx + R) +
-                            ' A' + R + ' ' + R + ' 0 0 0 ' + jx + ' ' + (H - 1) +
+                            ' A' + R + ' ' + R + ' 0 0 0 ' + jx + ' ' + (B + R) +
                             ' V' + H + ' H' + R +
                             ' A' + R + ' ' + R + ' 0 0 0 0 ' + (H - R) +
                             ' V0 Z';

@@ -31,6 +31,7 @@
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-pill: 999px;
+    --dock-radius: 12px;
 
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
@@ -643,7 +644,7 @@ body {
    dock bottom corners + fillet, Division capsule) — no pill shapes in
    the top navigation. */
 #barLayersBtn {
-    border-radius: 10px !important;
+    border-radius: var(--dock-radius) !important;
     padding-inline: 14px !important;
 }
 .layers-modal-body .control-group {
@@ -1207,9 +1208,9 @@ body {
         backdrop-filter: blur(8px);
         border: 1px solid rgba(255, 255, 255, 0.14);
         /* Top corners stay square (the dock is flush against the top
-           edge); the bottom corners use the harmonized 10px radius that
+           edge); the bottom corners use the --dock-radius token that
            also drives the junction fillet and the two capsules. */
-        border-radius: 0 0 10px 10px;
+        border-radius: 0 0 var(--dock-radius) var(--dock-radius);
         padding: 0;
         box-shadow: none;
         -webkit-mask-size: 100% 100%;
@@ -1241,35 +1242,36 @@ body {
         pointer-events: auto;
     }
     /* Base Map section: no borders, no background of its own — the shared
-       container paints everything. The taller block is 52px tall with a
-       roomier 12px 16px padding for better ergonomics. */
+       container paints everything. The taller block is 60px tall with
+       roomier padding for better ergonomics (scaled up ~15%). */
     #controlsBar .row-unified {
         border: none;
         border-radius: 0;
         background: none;
-        padding: 12px 16px;
-        height: 52px;
+        padding: 10px 16px;
+        min-height: 60px;
     }
-    /* 4-buttons section: shallower step (38px), transparent, borderless,
+    /* 4-buttons section: shallower step (44px), transparent, borderless,
        top-aligned beside the taller block. */
     #controlsBar #filterRow {
         border: none;
         border-radius: 0;
         background: none;
         padding: 6px 12px;
-        height: 38px;
+        height: 44px;
         margin-inline-start: 0;
     }
-    /* Capsules: slate island with subtle outline, same 38px height as
-       the 4-buttons dock, harmonized 10px radius, and an 8px breathing
-       gap below the flush top edge (they do NOT stick to the header). */
+/* Capsules: slate island with subtle outline, same 44px height as
+       the 4-buttons dock, harmonized --dock-radius radius, and an 8px
+       breathing gap below the flush top edge (they do NOT stick to the
+       header). */
     #controlsBar .floating-capsule {
         background: rgba(18, 24, 36, 0.92);
         backdrop-filter: blur(8px);
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.25);
         border: 1px solid rgba(255, 255, 255, 0.14);
-        height: 38px;
-        border-radius: 10px !important;
+        height: 44px;
+        border-radius: var(--dock-radius) !important;
         margin-top: 8px;
         padding: 8px 14px !important;
     }
@@ -1278,15 +1280,24 @@ body {
        so its internals stay compact (overriding the tail defense rules)
        to keep the trio on ONE line at 1600px and above. */
     #controlsBar #modeButtons .btn {
-        padding: 4px 10px !important;
-        min-height: 28px !important;
+        padding: 8px 14px !important;
+        min-height: 34px !important;
     }
     #controlsBar #filterRow .btn {
-        padding: 4px 8px !important;
-        min-height: 24px !important;
+        padding: 6px 12px !important;
+        min-height: 30px !important;
     }
     #controlsBar .row-unified {
-        gap: 8px !important;
+        gap: 10px !important;
+    }
+    /* English mode names are wide; at 1600px the full-scale dock would
+       exceed the viewport and force an internal button wrap. A tiny
+       EN-only shave (font 13px, horizontal padding 12px) keeps the
+       stepped dock on ONE line; the internal-wrap min-height fallback
+       covers narrower viewports. */
+    html[lang="en"] #controlsBar #modeButtons .btn {
+        padding: 8px 12px !important;
+        font-size: 13px !important;
     }
     .controls-bar .row {
         flex-wrap: wrap !important;
@@ -1299,10 +1310,14 @@ body {
         margin-inline-end: 4px;
     }
     .controls-bar .btn {
-        font-size: 0.7em !important;
+        font-size: 13.5px !important;
         padding: 4px 10px !important;
         min-height: 28px !important;
         border-radius: var(--radius-sm) !important;
+    }
+    #controlsBar .btn .lucide-icon {
+        width: 18px !important;
+        height: 18px !important;
     }
     .controls-bar .search-box input {
         width: 160px !important;

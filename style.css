@@ -3659,6 +3659,17 @@ body.annotate-active .annotation-toolbar {
     padding: 4px 8px;
     min-height: 26px;
 }
+/* Spec defense: the >=1024px media query compacts every .controls-bar .btn
+   to 4px 10px / 28px and every .controls-bar .row to gap 6px 12px. The
+   wide zone must keep the standard button sizing and the panel its uniform
+   10px internal gap, so the narrow zone stays visibly smaller. */
+.controls-bar-toprow .row-unified {
+    gap: 10px !important;
+}
+#modeButtons .btn {
+    padding: 6px 10px !important;
+    min-height: 32px !important;
+}
 @media (min-width: 1024px) {
     #filterRow .btn {
         font-size: 0.62em !important;

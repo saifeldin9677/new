@@ -619,15 +619,15 @@ body {
     margin-inline-end: 4px;
     white-space: nowrap;
 }
-/* One horizontal row holding Division, Layers and the unified Base Map
-   panel (#modeRow) side by side; wraps only when the viewport is too
-   narrow. DOM order is [Division][Layers][panel]; flex-direction:
-   row-reverse lays items from the inline-END, so in RTL the panel lands
-   at the inline-START (rightmost, most prominent) and Division at the
-   least-prominent side (leftmost), per the reference sketch. */
+/* One horizontal row holding the stepped dock group (Base Map card +
+   utilities), the Layers capsule and the Division card side by side;
+   wraps only when the viewport is too narrow. DOM order is
+   [group][Layers][Division]; with the document's RTL direction the first
+   item lands at the inline-START (rightmost in Arabic): the Base Map
+   block is the most prominent/top-right unit, Division the least
+   prominent/leftmost, matching the reference sketch. */
 .controls-bar-toprow {
     display: flex;
-    flex-direction: row-reverse;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
@@ -1150,13 +1150,13 @@ body {
         background: transparent !important;
         backdrop-filter: none !important;
         border-radius: 0 !important;
-        padding: 10px 15px !important;
+        padding: 10px 20px !important;
         box-shadow: none !important;
         border: none !important;
         display: flex !important;
         flex-direction: row !important;
         flex-wrap: wrap !important;
-        justify-content: space-between !important;
+        justify-content: flex-start !important;
         align-items: flex-start !important;
         gap: 10px !important;
         max-height: none !important;
@@ -1165,39 +1165,86 @@ body {
         margin: 0 !important;
         pointer-events: none; /* map drag works through the empty space */
     }
-    /* DOM order is [Division][Layers][panel]; row-reverse + space-between
-       puts the Base Map panel far right in RTL and Division far left,
-       with Layers floating between them. Only the islands themselves are
-       interactive; the 16px gaps between them pass clicks to the map. */
+    /* DOM order is [stepped group][Layers][Division]; the document's RTL
+       direction flows items right-to-left, so with justify-content:
+       flex-start the whole group hugs the top-right corner: Base Map
+       block rightmost, Division leftmost, separated by clean 14px gaps.
+       Only the floating units are interactive; the gaps pass clicks to
+       the map. */
     .controls-bar-toprow {
         width: 100%;
-        flex-direction: row-reverse;
-        justify-content: space-between;
+        justify-content: flex-start;
         align-items: flex-start;
-        gap: 16px;
+        gap: 14px;
         pointer-events: none;
     }
     .controls-bar-toprow > * {
         pointer-events: auto;
     }
     /* Shared floating-dark-island treatment: slate capsule, blur, depth */
-    .controls-bar-toprow .row-unified,
-    .controls-bar-toprow .bar-layers-btn {
+    #controlsBar .row-unified,
+    #controlsBar #filterRow,
+    #controlsBar .floating-capsule {
         background: rgba(18, 24, 36, 0.92);
         backdrop-filter: blur(8px);
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.25);
     }
-    /* Base Map card: tall, prominent, heavily rounded BOTTOM corners.
-       #controlsBar id scope keeps the bright teal outline in BOTH themes
-       (the light-theme #0d9488 override targets a dark-on-white card that
-       no longer exists at this width — the island is slate in both). */
+    /* Buttons: flex layout + line-height 1 keeps every island height driven
+       by min-height/padding instead of font line boxes (Arabic metrics are
+       taller, which would otherwise stretch the docks inconsistently). */
+    #controlsBar .btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        line-height: 1 !important;
+    }
+    /* Stepped dock group: two connected sub-blocks, top-aligned, the
+       Base Map dock taller (52px) than the 4-buttons dock (38px) so the
+       group reads as a stepped/notched shape, not one uniform box.
+       #controlsBar id scope needed: the base card rule at the end of
+       this file has equal specificity, so the reset would lose. */
+    #controlsBar .stepped-dock-group {
+        align-items: flex-start;
+        border: none;
+        background: none;
+        padding: 0;
+        box-shadow: none;
+    }
+    /* Base Map dock: primary tall block, square top, rounded bottom */
     #controlsBar .row-unified {
         border: 1.5px solid var(--brand-accent);
-        border-radius: 10px 10px 20px 20px;
+        border-radius: 0 0 14px 14px;
+        padding: 8px 14px;
+        height: 52px;
     }
-    /* Layers capsule: fully rounded oval silhouette */
-    #controlsBar .bar-layers-btn {
+    /* 4-buttons dock: shallower step, top-aligned beside the Base Map
+       dock; its own divider is dropped here because the two docks are
+       already visually distinct blocks. */
+    #controlsBar #filterRow {
         border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 0 0 14px 14px;
+        border-inline-start: none;
+        padding: 4px 8px;
+        height: 38px;
+        margin-inline-start: 0;
+    }
+    /* Capsules: subtle outline, same 38px height as the 4-buttons dock */
+    #controlsBar .floating-capsule {
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        height: 38px;
+    }
+    /* At this width the three floating units must sit as one tight trio in
+       the top-right corner; the Base Map dock carries 8 buttons + label,
+       so its internals compact slightly (overriding the base defense
+       rules) to keep the trio on ONE line at 1600px and above. */
+    #controlsBar #modeButtons .btn {
+        padding: 3px 8px !important;
+    }
+    #controlsBar #filterRow .btn {
+        padding: 3px 6px !important;
+    }
+    #controlsBar .row-unified {
+        gap: 6px !important;
     }
     .controls-bar .row {
         flex-wrap: wrap !important;
@@ -3657,21 +3704,26 @@ body.annotate-active .annotation-toolbar {
     color: var(--text);
 }
 
-/* ── Controls bar: unified Base Map + utilities panel ──────────────── */
-/* #modeRow acts as ONE continuous panel holding two adjacent zones:
-   the wide Base-Map zone (#modeButtons) and the narrow utilities zone
-   (#filterRow), separated by a single vertical divider. */
+/* ── Controls bar: Base Map card + utility dock ─────────────────────── */
+/* The stepped-dock-group is the single card containing two adjacent
+   sub-blocks side by side: the wide Base-Map zone (#modeRow) and the
+   narrow utilities zone (#filterRow), separated by a vertical divider.
+   At >=1024px the card restyles into the two connected stepped docks. */
+.stepped-dock-group {
+    display: flex;
+    align-items: center;
+    background: var(--panel-overlay-96);
+    border: 1.5px solid var(--brand-accent);
+    border-radius: var(--radius-md);
+    padding: 8px 14px;
+    box-shadow: var(--shadow-sm);
+}
 .row-unified {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
     gap: 10px;
-    background: var(--panel-overlay-96);
-    border: 1.5px solid var(--brand-accent);
-    border-radius: var(--radius-md);
-    padding: 8px 14px;
-    box-shadow: var(--shadow-sm);
 }
 #filterRow {
     display: flex;
@@ -3683,10 +3735,10 @@ body.annotate-active .annotation-toolbar {
 }
 /* In the light theme the teal accent sits on white at ~2.5:1 — too faint
    to read as an outline. Use the established darker teal (#0d9488, already
-   used elsewhere in the UI) so the panel edge and zone divider stay clearly
+   used elsewhere in the UI) so the card edge and zone divider stay clearly
    visible in both themes. */
-:root:not([data-theme]) .row-unified,
-[data-theme="light"] .row-unified {
+:root:not([data-theme]) .stepped-dock-group,
+[data-theme="light"] .stepped-dock-group {
     border-color: #0d9488;
 }
 :root:not([data-theme]) #filterRow,

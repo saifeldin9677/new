@@ -1291,15 +1291,31 @@ export function redrawAnnotations() {
                                  gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', xy[0] + 9).attr('y', xy[1] + 4).text(a.label);
                              }
                          } else if (a.type === 'region' && Array.isArray(a.coords) && a.coords.length >= 3) {
-                             var pts = a.coords.map(function(c) { return proj(c); });
-                             if (pts.some(function(p) { return !p || isNaN(p[0]); })) return;
-                             var d = 'M' + pts.map(function(p) { return p[0] + ',' + p[1]; }).join('L') + 'Z';
-                             gAnnotations.append('path').attr('class', 'annotation-region-poly').attr('d', d).style('stroke', col).style('fill', col + '26').style('stroke-width', 2 * scale * zoomStroke);
-                             if (a.label) {
-                                 var cx = 0, cy = 0;
-                                 pts.forEach(function(p) { cx += p[0]; cy += p[1]; });
-                                 cx /= pts.length; cy /= pts.length;
-                                 gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', cx).attr('y', cy).attr('text-anchor', 'middle').text(a.label);
+                             var ring = a.coords.slice();
+                             if (ring.length && (ring[0][0] !== ring[ring.length - 1][0] || ring[0][1] !== ring[ring.length - 1][1])) {
+                                 ring.push(ring[0]);
+                             }
+                             var jumpPx = Math.min(getMapRect().width, getMapRect().height) * 0.55;
+                             var geom = { type: 'Polygon', coordinates: [ring] };
+                             var splitResult = _adminSeamSplitGeometries(geom, proj, jumpPx);
+                             var polys = Array.isArray(splitResult) ? splitResult : [geom];
+                             var anyDrawn = false;
+                             polys.forEach(function(g) {
+                                 var ringCoords = (g.type === 'Polygon') ? g.coordinates[0] : g.coordinates;
+                                 var pts = ringCoords.map(function(c) { return proj(c); }).filter(function(p) { return p && !isNaN(p[0]); });
+                                 if (pts.length < 3) return;
+                                 var d = 'M' + pts.map(function(p) { return p[0] + ',' + p[1]; }).join('L') + 'Z';
+                                 gAnnotations.append('path').attr('class', 'annotation-region-poly').attr('d', d).style('stroke', col).style('fill', col + '26').style('stroke-width', 2 * scale * zoomStroke);
+                                 anyDrawn = true;
+                             });
+                             if (anyDrawn && a.label) {
+                                 var labelPts = a.coords.map(function(c) { return proj(c); }).filter(function(p) { return p && !isNaN(p[0]); });
+                                 if (labelPts.length) {
+                                     var cx = 0, cy = 0;
+                                     labelPts.forEach(function(p) { cx += p[0]; cy += p[1]; });
+                                     cx /= labelPts.length; cy /= labelPts.length;
+                                     gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', cx).attr('y', cy).attr('text-anchor', 'middle').text(a.label);
+                                 }
                              }
                          } else if (a.type === 'freehand' && Array.isArray(a.coords) && a.coords.length >= 2) {
                              parts = _projectAnnotationParts(a.coords, proj);

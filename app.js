@@ -4221,6 +4221,103 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     return [coords[0], coords[1]];
                 }
 
+                // Splits projected geometries into visually-contiguous pieces across
+                // the Waterman butterfly seams (same mechanism as the admin
+                // boundaries layer). Returns the original geometry when no piece
+                // jumps more than jumpPx, otherwise an array of LineString pieces.
+                function _adminSeamSplitGeometries(geom, proj, jumpPx) {
+                    var split = function(ring) {
+                        var pieces = [];
+                        var cur = [];
+                        var prevP = null;
+                        var prevGeo = null;
+                        for (var i = 0; i < ring.length; i++) {
+                            var p = proj(ring[i]);
+                            if (!p || isNaN(p[0])) {
+                                if (cur.length >= 2) pieces.push(cur);
+                                cur = [];
+                                prevGeo = null;
+                                prevP = null;
+                                continue;
+                            }
+                            if (prevGeo && Math.sqrt(Math.pow(p[0] - prevP[0], 2) + Math.pow(p[1] - prevP[1], 2)) > jumpPx) {
+                                if (cur.length >= 2) pieces.push(cur);
+                                cur = [ring[i]];
+                            } else {
+                                cur.push(ring[i]);
+                            }
+                            prevGeo = ring[i];
+                            prevP = p;
+                        }
+                        if (cur.length >= 2) pieces.push(cur);
+                        return pieces;
+                    };
+                    var results = [];
+                    var anyJump = false;
+                    var forEachRing = function(rings) {
+                        for (var r = 0; r < rings.length; r++) {
+                            var pieces = split(rings[r]);
+                            if (pieces.length > 1) {
+                                anyJump = true;
+                                for (var q = 0; q < pieces.length; q++) results.push({ type: 'LineString', coordinates: pieces[q] });
+                            } else {
+                                results.push({ type: 'LineString', coordinates: rings[r] });
+                            }
+                        }
+                    };
+                    if (geom.type === 'Polygon') {
+                        forEachRing(geom.coordinates);
+                        return anyJump ? results : geom;
+                    }
+                    if (geom.type === 'MultiPolygon') {
+                        var keepPieces = [];
+                        for (var m = 0; m < geom.coordinates.length; m++) {
+                            var polyRings = geom.coordinates[m];
+                            var localOut = [];
+                            var localJump = false;
+                            for (var rr = 0; rr < polyRings.length; rr++) {
+                                var pieces2 = split(polyRings[rr]);
+                                if (pieces2.length > 1) {
+                                    localJump = true;
+                                    for (var q2 = 0; q2 < pieces2.length; q2++) localOut.push({ type: 'LineString', coordinates: pieces2[q2] });
+                                } else {
+                                    localOut.push({ type: 'LineString', coordinates: polyRings[rr] });
+                                }
+                            }
+                            if (localJump) {
+                                for (var qq = 0; qq < localOut.length; qq++) keepPieces.push(localOut[qq]);
+                            } else {
+                                keepPieces.push({ type: 'MultiPolygon', coordinates: [polyRings] });
+                            }
+                        }
+                        return geom.coordinates.length === keepPieces.length ? (keepPieces.length && keepPieces[0].type === 'MultiPolygon' ? geom : keepPieces) : keepPieces;
+                    }
+                    if (geom.type === 'LineString') {
+                        var linePieces = split(geom.coordinates);
+                        if (linePieces.length > 1) {
+                            var lineResults = [];
+                            for (var lp = 0; lp < linePieces.length; lp++) lineResults.push({ type: 'LineString', coordinates: linePieces[lp] });
+                            return lineResults;
+                        }
+                        return geom;
+                    }
+                    if (geom.type === 'MultiLineString') {
+                        var mlResults = [];
+                        var mlJump = false;
+                        for (var ml = 0; ml < geom.coordinates.length; ml++) {
+                            var mlPieces = split(geom.coordinates[ml]);
+                            if (mlPieces.length > 1) {
+                                mlJump = true;
+                                for (var mq = 0; mq < mlPieces.length; mq++) mlResults.push({ type: 'LineString', coordinates: mlPieces[mq] });
+                            } else {
+                                mlResults.push({ type: 'LineString', coordinates: geom.coordinates[ml] });
+                            }
+                        }
+                        return mlJump ? mlResults : geom;
+                    }
+                    return geom;
+                }
+
                 // Splits a projected line into contiguous pieces across projection
                 // seams (same visual mechanism as the admin boundaries layer).
                 function _projectAnnotationParts(coordsArr, proj) {
@@ -4278,29 +4375,15 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 ring.push(ring[0]);
                             }
                             var jumpPx = Math.min(getMapRect().width, getMapRect().height) * 0.55;
-                            var pieces = [];
-                            var cur = [];
-                            ring.forEach(function(c) {
-                                var p = proj(c);
-                                if (!p || isNaN(p[0])) {
-                                    if (cur.length >= 2) pieces.push(cur);
-                                    cur = [];
-                                    return;
-                                }
-                                if (cur.length) {
-                                    var last = cur[cur.length - 1];
-                                    if (Math.abs(p[0] - last[0]) > jumpPx || Math.abs(p[1] - last[1]) > jumpPx) {
-                                        if (cur.length >= 2) pieces.push(cur);
-                                        cur = [];
-                                    }
-                                }
-                                cur.push(p);
-                            });
-                            if (cur.length >= 2) pieces.push(cur);
+                            var geom = { type: 'Polygon', coordinates: [ring] };
+                            var splitResult = _adminSeamSplitGeometries(geom, proj, jumpPx);
+                            var polys = Array.isArray(splitResult) ? splitResult : [geom];
                             var anyDrawn = false;
-                            pieces.forEach(function(part) {
-                                if (part.length < 3) return;
-                                var d = 'M' + part.map(function(p) { return p[0] + ',' + p[1]; }).join('L') + 'Z';
+                            polys.forEach(function(g) {
+                                var ringCoords = (g.type === 'Polygon') ? g.coordinates[0] : g.coordinates;
+                                var pts = ringCoords.map(function(c) { return proj(c); }).filter(function(p) { return p && !isNaN(p[0]); });
+                                if (pts.length < 3) return;
+                                var d = 'M' + pts.map(function(p) { return p[0] + ',' + p[1]; }).join('L') + 'Z';
                                 gAnnotations.append('path').attr('class', 'annotation-region-poly').attr('d', d).style('stroke', col).style('fill', col + '26').style('stroke-width', 2 * scale * zoomStroke);
                                 anyDrawn = true;
                             });

@@ -4512,12 +4512,17 @@ body,
 }
 
 /* ── Arctic ice cap ──
-   Translucent polar cap above the Arctic Circle (66.56°N) drawn under the
-   country layer, so the Arctic ocean and the upper butterfly-wing
-   intersections read as a distinct ice region at the top of the map. */
+   The polar region above the Arctic Circle (66.56°N) drawn as a solid
+   ice-white region under the country layer, so it reads as a real map
+   feature (like Antarctica) while coastlines stay crisp on top of it.
+   Clickable: opens the Arctic feature panel. */
 .arctic-ice {
-    fill: rgba(255, 255, 255, 0.30);
-    stroke: rgba(255, 255, 255, 0.22);
+    fill: #dceef8;
+    stroke: rgba(255, 255, 255, 0.65);
     stroke-width: 0.7;
-    pointer-events: none;
+    cursor: pointer;
+    transition: fill var(--dur-fast) var(--ease);
+}
+.arctic-ice:hover {
+    fill: #eef7fc;
 }

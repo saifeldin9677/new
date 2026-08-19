@@ -1050,10 +1050,10 @@
             }
 
             // ── Arctic ice cap ──
-            // A translucent polar cap above the Arctic Circle (66.56°N), so
-            // the Arctic ocean and the upper butterfly-wing intersections are
-            // visibly distinct at the top of the map. Drawn under the country
-            // layer so coastlines stay crisp on top of the ice.
+            // The polar region above the Arctic Circle (66.56°N) drawn as a
+            // solid ice region under the country layer, so coastlines stay
+            // crisp on top of it. It is a real, clickable map feature: hover
+            // shows a tooltip, click opens the Arctic feature panel.
             function drawIceCap() {
                 if (!gIceCap) return;
                 gIceCap.selectAll('*').remove();
@@ -1061,7 +1061,59 @@
                 gIceCap.append('path')
                     .datum(cap())
                     .attr('class', 'arctic-ice')
-                    .attr('d', pathGen);
+                    .attr('d', pathGen)
+                    .attr('tabindex', 0)
+                    .attr('role', 'button')
+                    .attr('aria-label', function() { return t('arcticName'); })
+                    .on('mouseenter', function(e) {
+                        if (quizActive || measureActive || annotateActive) return;
+                        tooltip.textContent = '';
+                        const tmpDiv = document.createElement('div');
+                        tmpDiv.innerHTML = '<div><strong>' + t('arcticName') + '</strong></div>';
+                        while (tmpDiv.firstChild) tooltip.appendChild(tmpDiv.firstChild);
+                        _pendingTooltipEvent = e;
+                        _flushTooltipPosition();
+                        tooltip.classList.add('visible');
+                    })
+                    .on('mousemove', function(e) {
+                        if (quizActive || measureActive || annotateActive) return;
+                        _pendingTooltipEvent = e;
+                        if (!_tooltipRAFPending) {
+                            _tooltipRAFPending = true;
+                            requestAnimationFrame(_flushTooltipPosition);
+                        }
+                    })
+                    .on('mouseleave', function() {
+                        tooltip.classList.remove('visible');
+                    })
+                    .on('click', function(e) {
+                        if (quizActive || measureActive || annotateActive) return;
+                        e.stopPropagation();
+                        showArcticDetail();
+                    })
+                    .on('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            showArcticDetail();
+                        }
+                    });
+            }
+
+            function showArcticDetail() {
+                closeFeatureDetail();
+                _lastPanelRenderTime = performance.now();
+                let html = '<h3>🧊 ' + t('arcticName') + '</h3>';
+                html += '<p><strong>' + t('arcticArea') + ':</strong> 14,056,000 ' + t('km2') + '</p>';
+                html += '<p><strong>' + t('arcticAvgDepth') + ':</strong> ~1,205 m</p>';
+                html += '<p><strong>' + t('arcticMaxDepth') + ':</strong> 5,549 m</p>';
+                html += '<p>' + t('arcticDesc') + '</p>';
+                panelContent.innerHTML = html;
+                countryPanel.style.display = 'block';
+                requestAnimationFrame(function() {
+                    requestAnimationFrame(function() {
+                        countryPanel.classList.add('visible');
+                    });
+                });
             }
 
             // ── Routes & corridors ──

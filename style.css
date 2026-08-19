@@ -180,17 +180,42 @@ body {
 .header {
     position: relative !important;
     z-index: 2000 !important;
-    background: var(--brand-primary);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 4px 12px;
-    padding-top: calc(4px + env(safe-area-inset-top, 8px));
-    min-height: var(--header-height);
-    height: auto;
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 8px;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 0 16px !important;
+    background: #111827 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    height: 56px !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    gap: 16px;
     box-shadow: var(--shadow-md);
+}
+.header .title-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+}
+.header-right-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 20px !important;
+    min-width: 0;
+}
+.header-center-group {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 12px;
+    pointer-events: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.header-left-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    flex-shrink: 0;
 }
 
 /* Secondary floating bars must stay below the main header stacking context */
@@ -201,31 +226,13 @@ body {
 .controls-bar {
     z-index: 1000 !important;
 }
-.header .title-group {
-    grid-column: 1;
-    justify-self: start;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    min-width: 0;
-}
 #headerProjectionLabel {
-    grid-column: 3;
-    justify-self: end;
     white-space: nowrap;
     /* The header stays on its dark slate in both themes; this override
        beats the inline var(--text-secondary) (which turns dark in light
        mode and disappears on the navy bar). */
     color: var(--header-subtitle-color) !important;
-}
-#toolsRow {
-    grid-column: 2;
-    justify-self: stretch;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    width: 100%;
+    font-size: 0.7em;
 }
 .tools-row-start {
     display: flex;
@@ -238,18 +245,77 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     gap: 6px;
-    flex: 1;
 }
-#toolsRow .btn {
-    font-size: 0.8em;
-    padding: 4px 8px;
+/* ── Header buttons: uniform utility look (tools / lang / theme) ── */
+.header-btn,
+.header-select,
+.header-icon-btn {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    color: #f3f4f6 !important;
+    border-radius: 8px !important;
+    padding: 6px 12px !important;
+    font-size: 13px !important;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    white-space: nowrap;
 }
-#toolsRow .lucide-icon {
+.header-btn:hover,
+.header-select:hover,
+.header-icon-btn:hover {
+    background: rgba(255, 255, 255, 0.12) !important;
+}
+.header-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px !important;
+}
+.brand-logo {
+    font-weight: 700;
+    color: #ffffff;
+    white-space: nowrap;
+}
+.brand-title {
+    margin: 0;
+    font-size: 1.05em;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.1;
+}
+.header-search-input {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 8px !important;
+    padding: 6px 14px !important;
+    padding-inline-start: 32px;
+    color: #fff !important;
+    width: 220px !important;
+    transition: all 0.2s ease;
+    outline: none;
+    font-family: inherit;
+}
+.header-search-input:focus {
+    outline: none !important;
+    border-color: #3b82f6 !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    width: 260px !important;
+}
+.tools-wrapper,
+.lang-selector-wrapper {
+    position: relative !important;
+}
+.tools-wrapper,
+.lang-selector-wrapper,
+.theme-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+}
+#toolsRowStart .lucide-icon {
     width: 15px;
     height: 15px;
 }
-#toolsRow #langToggle,
-#toolsRow .search-box input {
+#toolsRowStart .search-box input {
     font-size: 0.85em;
 }
 /* ── Header Tools app-grid popover ── */
@@ -1129,6 +1195,21 @@ header,
     width: 100%;
 }
 @media (max-width: 768px) {
+    .header-center-group {
+        display: none !important;
+    }
+    .header-left-group {
+        gap: 6px !important;
+    }
+    .header-btn,
+    .header-select,
+    .header-icon-btn {
+        padding: 5px 9px !important;
+        font-size: 12px !important;
+    }
+    .brand-title {
+        font-size: 0.95em;
+    }
     .mobile-topbar {
         display: flex;
     }
@@ -1250,28 +1331,12 @@ header,
     .layers-toggle {
         display: none !important;
     }
-    #toolsRow {
-        grid-column: 2;
-        justify-self: stretch;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        min-width: 0;
-        width: 100%;
-    }
     .tools-row-start { flex-shrink: 0; }
-    .tools-row-middle {
+    .header-left-group {
         flex-wrap: nowrap;
-        justify-content: center;
-        overflow-x: auto;
-        scrollbar-width: none;
-        flex: 1;
-        min-width: 0;
     }
-    .tools-row-middle::-webkit-scrollbar { display: none; }
     .header {
-        padding: 3px 12px;
-        padding-top: 3px;
+        padding: 0 16px !important;
     }
     .header h1 {
         line-height: 1.1;
@@ -1280,9 +1345,6 @@ header,
     .header .logo-icon {
         line-height: 1;
         font-size: 18px;
-    }
-    #toolsRow .btn {
-        padding: 3px 8px;
     }
     /* ── Top navigation bar: floating dark islands over the map ──
        The wrapper is an invisible, pointer-transparent layer pinned to the
@@ -3138,7 +3200,9 @@ header,
 .quiz-active .controls-bar,
 .quiz-active .legend-container,
 .quiz-active .info-overlay,
-.quiz-active #toolsRow {
+.quiz-active #toolsRowStart,
+.quiz-active #toolsDropdown,
+.quiz-active #langToggle {
     display: none !important;
 }
 .quiz-active #tooltip {

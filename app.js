@@ -8262,17 +8262,18 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 });
                 resizeObserver.observe(mapContainer);
 
-                var toolsRow = document.getElementById('toolsRow');
+                var toolsRow = document.getElementById('toolsRowStart');
                 var headerEl = document.querySelector('.header');
+                var headerRightGroup = document.querySelector('.header-right-group');
                 var controlsBarEl = document.getElementById('controlsBar');
                 function syncToolsRowPosition() {
-                    if (!toolsRow || !headerEl || !controlsBarEl) return;
+                    if (!toolsRow || !headerEl || !headerRightGroup || !controlsBarEl) return;
                     if (window.innerWidth >= 1024) {
-                        if (toolsRow.parentElement !== headerEl) headerEl.appendChild(toolsRow);
+                        if (toolsRow.parentElement !== headerRightGroup) headerRightGroup.appendChild(toolsRow);
                     } else if (window.innerWidth <= 768) {
                         if (toolsRow.parentElement !== controlsBarEl) controlsBarEl.insertBefore(toolsRow, controlsBarEl.firstChild);
                     } else {
-                        if (toolsRow.parentElement !== headerEl) headerEl.appendChild(toolsRow);
+                        if (toolsRow.parentElement !== headerRightGroup) headerRightGroup.appendChild(toolsRow);
                     }
                 }
                 syncToolsRowPosition();

@@ -22,53 +22,56 @@
     <link rel="stylesheet" href="style.css?v=2026-08-19A">
 </head>
 <body>
-    <div class="header">
-        <div class="title-group">
-            <span class="logo-icon"><i data-lucide="map" class="lucide-icon"></i></span>
-            <div><h1 id="appTitle" data-i18n="appName"></h1><div class="header-line"></div></div>
-        </div>
-        <span id="headerProjectionLabel" data-i18n="headerProjectionType" style="font-size:0.7em;color:var(--text-secondary);"></span>
-
-        <div class="row" id="toolsRow">
-            <div class="tools-row-start" id="toolsRowStart">
+    <div class="header top-header">
+        <div class="header-right-group">
+            <div class="title-group brand-logo">
+                <span class="logo-icon"><i data-lucide="map" class="lucide-icon"></i></span>
+                <div><h1 id="appTitle" class="brand-title" data-i18n="appName"></h1><div class="header-line"></div></div>
+            </div>
+            <div class="tools-row-start search-box-wrapper" id="toolsRowStart">
                 <div class="search-box">
                     <i data-lucide="search" class="lucide-icon search-box-icon"></i>
-                    <input type="text" id="searchInput" placeholder="بحث..." autocomplete="off" title="ابحث عن دولة" data-i18n-title="searchInput_title" data-i18n-placeholder="searchPlaceholder">
+                    <input type="text" id="searchInput" class="header-search-input" placeholder="بحث..." autocomplete="off" title="ابحث عن دولة" data-i18n-title="searchInput_title" data-i18n-placeholder="searchPlaceholder">
                     <ul class="suggestions-list" id="suggestionsList"></ul>
                 </div>
             </div>
-            <div class="tools-row-middle" id="toolsRowMiddle">
-                <button class="btn" id="themeToggleBtn" data-i18n-title="themeToggleLabel">
-                    <i data-lucide="sun" class="lucide-icon theme-icon-light"></i>
-                    <i data-lucide="moon" class="lucide-icon theme-icon-dark"></i>
-                </button>
-                <div class="lang-dropdown">
-                    <button class="btn" id="langToggle" title="تبديل اللغة" aria-label="تبديل اللغة" data-i18n-title="langToggle_title" data-i18n-aria-label="langToggle_title"><i data-lucide="globe" class="lucide-icon"></i><span id="langToggleText" data-i18n="langButton">English</span><i data-lucide="chevron-down" class="lucide-icon dropdown-arrow"></i></button>
-                    <div class="lang-dropdown-menu" id="langDropdownMenu">
-                        <button class="lang-option active" data-lang="ar" type="button">العربية</button>
-                        <button class="lang-option" data-lang="en" type="button">English</button>
-                        <button class="lang-option" data-lang="ru" type="button">Русский</button>
-                        <button class="lang-option" data-lang="uz" type="button">O'zbekcha</button>
-                        <button class="lang-option" data-lang="es" type="button">Español</button>
-                    </div>
-                </div>
-                <div class="tools-dropdown" id="toolsDropdown">
-                    <button class="btn" id="toolsBtn" title="أدوات" aria-label="أدوات" data-i18n="sectionTools" data-i18n-title="sectionTools" data-i18n-aria-label="sectionTools" aria-haspopup="true" aria-expanded="false" aria-controls="toolsDropdownMenu"><i data-lucide="settings" class="lucide-icon"></i><span class="btn-text">أدوات</span></button>
-                    <div class="tools-dropdown-menu" id="toolsDropdownMenu" role="menu" aria-label="أدوات" data-i18n-aria-label="sectionTools" hidden>
-                        <div class="tools-grid">
-                            <button class="tool-card" id="measureToolBtn" data-i18n-title="measureToolLabel" role="menuitem"><i data-lucide="ruler" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="measureToolLabel"></span></button>
-                            <button class="tool-card" id="coordsToggle" data-i18n-title="coordsToggle_title" role="menuitem"><i data-lucide="map-pin" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="coordsToggle"></span></button>
-                            <button class="tool-card" id="dataTableBtn" data-i18n-title="dataTableBtn_title" role="menuitem"><i data-lucide="table" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="dataTableBtn"></span></button>
-                            <button class="tool-card" id="pdfExportBtn" data-i18n-title="pdfExportBtn_title" role="menuitem"><i data-lucide="file-text" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="pdfExport"></span></button>
-                            <button class="tool-card" id="shareBtn" data-i18n-title="shareBtn_title" role="menuitem"><i data-lucide="share-2" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="shareBtn"></span></button>
-                            <button class="tool-card" id="presentationModeBtn" data-i18n-title="presentationModeLabel" role="menuitem"><i data-lucide="maximize" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="presentationModeLabel"></span></button>
-                            <button class="tool-card" id="resetBtn" data-i18n-title="resetBtn_title" role="menuitem"><i data-lucide="rotate-ccw" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="resetBtn"></span></button>
-                            <button class="tool-card" id="shortcutsBtn" data-i18n-title="shortcutsBtn_title" role="menuitem"><i data-lucide="keyboard" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="shortcutsLabel"></span></button>
-                            <button class="tool-card" id="onboardBtn" data-i18n-title="onboardMapGuide" role="menuitem"><i data-lucide="book-open" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="onboardMapGuide"></span></button>
-                        </div>
+        </div>
+
+        <div class="header-center-group">
+            <span id="headerProjectionLabel" class="projection-label" data-i18n="headerProjectionType"></span>
+        </div>
+
+        <div class="header-left-group tools-row-middle" id="toolsRowMiddle">
+            <div class="tools-dropdown tools-wrapper" id="toolsDropdown">
+                <button class="btn header-btn" id="toolsBtn" title="أدوات" aria-label="أدوات" data-i18n="sectionTools" data-i18n-title="sectionTools" data-i18n-aria-label="sectionTools" aria-haspopup="true" aria-expanded="false" aria-controls="toolsDropdownMenu"><i data-lucide="settings" class="lucide-icon"></i><span class="btn-text">أدوات</span></button>
+                <div class="tools-dropdown-menu" id="toolsDropdownMenu" role="menu" aria-label="أدوات" data-i18n-aria-label="sectionTools" hidden>
+                    <div class="tools-grid">
+                        <button class="tool-card" id="measureToolBtn" data-i18n-title="measureToolLabel" role="menuitem"><i data-lucide="ruler" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="measureToolLabel"></span></button>
+                        <button class="tool-card" id="coordsToggle" data-i18n-title="coordsToggle_title" role="menuitem"><i data-lucide="map-pin" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="coordsToggle"></span></button>
+                        <button class="tool-card" id="dataTableBtn" data-i18n-title="dataTableBtn_title" role="menuitem"><i data-lucide="table" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="dataTableBtn"></span></button>
+                        <button class="tool-card" id="pdfExportBtn" data-i18n-title="pdfExportBtn_title" role="menuitem"><i data-lucide="file-text" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="pdfExport"></span></button>
+                        <button class="tool-card" id="shareBtn" data-i18n-title="shareBtn_title" role="menuitem"><i data-lucide="share-2" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="shareBtn"></span></button>
+                        <button class="tool-card" id="presentationModeBtn" data-i18n-title="presentationModeLabel" role="menuitem"><i data-lucide="maximize" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="presentationModeLabel"></span></button>
+                        <button class="tool-card" id="resetBtn" data-i18n-title="resetBtn_title" role="menuitem"><i data-lucide="rotate-ccw" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="resetBtn"></span></button>
+                        <button class="tool-card" id="shortcutsBtn" data-i18n-title="shortcutsBtn_title" role="menuitem"><i data-lucide="keyboard" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="shortcutsLabel"></span></button>
+                        <button class="tool-card" id="onboardBtn" data-i18n-title="onboardMapGuide" role="menuitem"><i data-lucide="book-open" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="onboardMapGuide"></span></button>
                     </div>
                 </div>
             </div>
+            <div class="lang-dropdown lang-selector-wrapper">
+                <button class="btn header-btn" id="langToggle" title="تبديل اللغة" aria-label="تبديل اللغة" data-i18n-title="langToggle_title" data-i18n-aria-label="langToggle_title"><i data-lucide="globe" class="lucide-icon"></i><span id="langToggleText" data-i18n="langButton">English</span><i data-lucide="chevron-down" class="lucide-icon dropdown-arrow"></i></button>
+                <div class="lang-dropdown-menu" id="langDropdownMenu">
+                    <button class="lang-option active" data-lang="ar" type="button">العربية</button>
+                    <button class="lang-option" data-lang="en" type="button">English</button>
+                    <button class="lang-option" data-lang="ru" type="button">Русский</button>
+                    <button class="lang-option" data-lang="uz" type="button">O'zbekcha</button>
+                    <button class="lang-option" data-lang="es" type="button">Español</button>
+                </div>
+            </div>
+            <button class="btn header-icon-btn theme-toggle-btn" id="themeToggleBtn" data-i18n-title="themeToggleLabel">
+                <i data-lucide="sun" class="lucide-icon theme-icon-light"></i>
+                <i data-lucide="moon" class="lucide-icon theme-icon-dark"></i>
+            </button>
         </div>
     </div>
 

@@ -5360,7 +5360,10 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     var fr = f.getBoundingClientRect();
                     var rtl = getComputedStyle(g).direction === 'rtl';
                     var jx = Math.round((rtl ? fr.right : fr.left) - gr.left);
-                    var R = 12;
+                    // Resolve the fluid --dock-radius token (clamp()/vw) to
+                    // its computed pixel value via the group's own radius,
+                    // so the mask arcs always match the CSS corners.
+                    var R = parseFloat(getComputedStyle(g).borderBottomLeftRadius) || 12;
                     var B = 1 + f.offsetHeight;
                     var p;
                     if (rtl) {

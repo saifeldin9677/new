@@ -31,7 +31,24 @@
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-pill: 999px;
-    --dock-radius: 12px;
+
+    /* ── Fluid dock tokens: clamp()/vw scaling from 720p to 4K/16K ── */
+    --dock-radius: clamp(8px, 0.65vw, 14px);
+    --dock-font-size: clamp(11.5px, 0.78vw, 18px);
+    --dock-icon-size: clamp(14px, 1vw, 24px);
+    --dock-pad-y-tall: clamp(8px, 0.6vw, 16px);
+    --dock-pad-x-tall: clamp(12px, 0.9vw, 22px);
+    --dock-pad-y-short: clamp(4px, 0.4vw, 10px);
+    --dock-pad-x-short: clamp(8px, 0.7vw, 16px);
+    --dock-gap: clamp(4px, 0.4vw, 10px);
+    --dock-height-tall: clamp(44px, 3.2vw, 96px);
+    --dock-height-short: clamp(32px, 2.35vw, 70px);
+    --dock-cap-margin-top: clamp(6px, 0.5vw, 12px);
+    --dock-outer-gap: clamp(10px, 0.8vw, 18px);
+    --dock-pad-y-btn: clamp(4px, 0.32vw, 9px);
+    --dock-pad-x-btn: clamp(4px, 0.4vw, 10px);
+    --dock-btn-h-tall: clamp(26px, 1.9vw, 52px);
+    --dock-btn-h-short: clamp(20px, 1.5vw, 42px);
 
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
@@ -1141,8 +1158,7 @@ body {
     .controls-bar {
         position: absolute !important;
         top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
+        inset-inline: 0 !important;
         bottom: auto !important;
         transform: none !important;
         width: 100% !important;
@@ -1162,29 +1178,27 @@ body {
         overflow-y: visible !important;
         z-index: 1000 !important;
         margin: 0 !important;
+        margin-top: 0 !important;
+        margin-inline-start: 0 !important;
         /* Zero padding so the unified dock sticks flush to the top edge
-           and the top-right corner of the map container. */
+           and the inline-start corner of the map container (top-right in
+           RTL, top-left in LTR — driven by the CSS logical properties). */
         padding: 0 !important;
         pointer-events: none; /* map drag works through the empty space */
     }
-    /* DOM order is [stepped group][Layers][Division]; the document's RTL
-       direction flows items right-to-left, so with justify-content:
-       flex-start the whole group hugs the top-right corner: Base Map
-       block rightmost, Division leftmost, separated by clean 14px gaps.
-       Only the floating units are interactive; the gaps pass clicks to
-       the map. */
+    /* DOM order is [stepped group][Layers][Division]; with
+       justify-content: flex-start the CSS logical flow anchors the trio
+       to the inline-START edge: top-right in RTL (Arabic), top-left in
+       LTR (English). Only the floating units are interactive; the gaps
+       pass clicks to the map. */
     .controls-bar-toprow {
         width: 100%;
         justify-content: flex-start;
         align-items: flex-start;
-        gap: 14px;
+        flex-wrap: nowrap !important;
+        gap: var(--dock-outer-gap);
+        margin-inline-start: 0;
         pointer-events: none;
-    }
-    /* In English (LTR) the DOM order would flow the trio left-aligned;
-       pin it to the top-right corner so the unified dock hugs the right
-       edge in both languages, mirroring the RTL layout. */
-    [dir="ltr"] .controls-bar-toprow {
-        justify-content: flex-end;
     }
     .controls-bar-toprow > * {
         pointer-events: auto;
@@ -1201,6 +1215,8 @@ body {
     #controlsBar .dock-unified-wrap {
         filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.4)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
         pointer-events: none;
+        margin-inline-start: 0;
+        margin-top: 0;
     }
     #controlsBar .stepped-dock-group {
         align-items: flex-start;
@@ -1242,62 +1258,93 @@ body {
         pointer-events: auto;
     }
     /* Base Map section: no borders, no background of its own — the shared
-       container paints everything. The taller block is 60px tall with
-       roomier padding for better ergonomics (scaled up ~15%). */
+       container paints everything. Height/padding are fluid
+       (--dock-height-tall / --dock-pad-*-tall) and scale from 720p to
+       4K; the bottom-inline-end corner is rounded by the silhouette
+       mask. */
     #controlsBar .row-unified {
         border: none;
-        border-radius: 0;
+        border-radius: 0 0 var(--dock-radius) 0;
         background: none;
-        padding: 10px 16px;
-        min-height: 60px;
+        padding: var(--dock-pad-y-tall) var(--dock-pad-x-tall);
+        min-height: var(--dock-height-tall);
+        flex-wrap: nowrap !important;
     }
-    /* 4-buttons section: shallower step (44px), transparent, borderless,
-       top-aligned beside the taller block. */
+    /* 4-buttons section: shallower step, transparent, borderless,
+       top-aligned beside the taller block; bottom-inline-start corner
+       rounded by the silhouette mask. */
     #controlsBar #filterRow {
         border: none;
-        border-radius: 0;
+        border-radius: 0 0 0 var(--dock-radius);
         background: none;
-        padding: 6px 12px;
-        height: 44px;
+        padding: var(--dock-pad-y-short) var(--dock-pad-x-short);
+        height: var(--dock-height-short);
         margin-inline-start: 0;
     }
-/* Capsules: slate island with subtle outline, same 44px height as
-       the 4-buttons dock, harmonized --dock-radius radius, and an 8px
-       breathing gap below the flush top edge (they do NOT stick to the
-       header). */
+    /* Capsules: slate island with subtle outline, same fluid height as
+       the 4-buttons dock, harmonized --dock-radius radius, and a fluid
+       8px breathing gap below the flush top edge (they do NOT stick to
+       the header). They sit on the SAME single line as the stepped
+       group — never a second row. */
     #controlsBar .floating-capsule {
         background: rgba(18, 24, 36, 0.92);
         backdrop-filter: blur(8px);
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.25);
         border: 1px solid rgba(255, 255, 255, 0.14);
-        height: 44px;
+        height: var(--dock-height-short);
         border-radius: var(--dock-radius) !important;
-        margin-top: 8px;
-        padding: 8px 14px !important;
+        margin-top: var(--dock-cap-margin-top);
+        margin-inline-start: 0;
+        padding: var(--dock-pad-y-short) var(--dock-pad-x-short) !important;
+        flex: 0 0 auto;
+        white-space: nowrap;
     }
-    /* At this width the three floating units must sit as one tight trio in
-       the top-right corner; the Base Map dock carries 8 buttons + label,
-       so its internals stay compact (overriding the tail defense rules)
-       to keep the trio on ONE line at 1600px and above. */
+    #controlsBar #modeButtons {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+    }
+    /* The Base Map dock carries 8 buttons + label, so its internals stay
+       fluid-compact to keep the trio on ONE line at every width. */
     #controlsBar #modeButtons .btn {
-        padding: 8px 14px !important;
-        min-height: 34px !important;
+        padding: var(--dock-pad-y-btn) var(--dock-pad-x-btn) !important;
+        min-height: var(--dock-btn-h-tall) !important;
+        font-size: var(--dock-font-size) !important;
+        gap: var(--dock-gap) !important;
+        border-radius: var(--dock-radius) !important;
+        flex-shrink: 0;
+        white-space: nowrap;
     }
     #controlsBar #filterRow .btn {
-        padding: 6px 12px !important;
-        min-height: 30px !important;
+        padding: var(--dock-pad-y-btn) var(--dock-pad-x-btn) !important;
+        min-height: var(--dock-btn-h-short) !important;
+        font-size: var(--dock-font-size) !important;
+        gap: var(--dock-gap) !important;
+        border-radius: var(--dock-radius) !important;
+        flex-shrink: 0;
+        white-space: nowrap;
     }
     #controlsBar .row-unified {
-        gap: 10px !important;
+        gap: var(--dock-gap) !important;
     }
-    /* English mode names are wide; at 1600px the full-scale dock would
-       exceed the viewport and force an internal button wrap. A tiny
-       EN-only shave (font 13px, horizontal padding 12px) keeps the
-       stepped dock on ONE line; the internal-wrap min-height fallback
-       covers narrower viewports. */
-    html[lang="en"] #controlsBar #modeButtons .btn {
-        padding: 8px 12px !important;
-        font-size: 13px !important;
+/* English mode names are wide ("Explanation Mode", "Compare
+       Projections"…); a consolidated EN-only fluid shave (88% font,
+       ~28% tighter inline padding on the row buttons, slimmer row and
+       capsule inline padding) keeps the trio on ONE line at every
+       width while still scaling with vw. */
+    html[lang="en"] #controlsBar #modeButtons .btn,
+    html[lang="en"] #controlsBar #filterRow .btn {
+        font-size: calc(var(--dock-font-size) * 0.88) !important;
+        padding-inline: calc(var(--dock-pad-x-btn) * 0.72) !important;
+    }
+    html[lang="en"] #controlsBar .row-unified {
+        padding-inline: calc(var(--dock-pad-x-tall) * 0.8) !important;
+    }
+    html[lang="en"] #controlsBar #filterRow {
+        padding-inline: calc(var(--dock-pad-x-short) * 0.85) !important;
+    }
+    html[lang="en"] #controlsBar .floating-capsule {
+        padding-inline: calc(var(--dock-pad-x-short) * 0.8) !important;
     }
     .controls-bar .row {
         flex-wrap: wrap !important;
@@ -1310,14 +1357,15 @@ body {
         margin-inline-end: 4px;
     }
     .controls-bar .btn {
-        font-size: 13.5px !important;
-        padding: 4px 10px !important;
-        min-height: 28px !important;
-        border-radius: var(--radius-sm) !important;
+        font-size: var(--dock-font-size) !important;
+        padding: var(--dock-pad-y-btn) var(--dock-pad-x-btn) !important;
+        min-height: var(--dock-btn-h-short) !important;
+        border-radius: var(--dock-radius) !important;
+        white-space: nowrap;
     }
     #controlsBar .btn .lucide-icon {
-        width: 18px !important;
-        height: 18px !important;
+        width: var(--dock-icon-size) !important;
+        height: var(--dock-icon-size) !important;
     }
     .controls-bar .search-box input {
         width: 160px !important;
@@ -1326,7 +1374,7 @@ body {
         padding-inline-start: 28px !important;
     }
     .controls-bar .control-label {
-        font-size: 0.7em !important;
+        font-size: calc(var(--dock-font-size) * 0.72) !important;
         font-weight: 600;
         color: var(--brand-accent);
         text-transform: uppercase;

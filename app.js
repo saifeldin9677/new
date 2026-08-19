@@ -1,6 +1,15 @@
         (function() {
             const BASE = window.__BASE_PATH || './';
 
+            // Build-version self-heal: if the served HTML belongs to a newer
+            // build than this app.js bundle (stale service-worker or CDN
+            // cache), reload once so the fresh bundle takes over.
+            const BUILD_ID = '2026-08-19A';
+            if (window.APP_BUILD && window.APP_BUILD !== BUILD_ID && sessionStorage.getItem('lepidosBuildChecked') !== '1') {
+                sessionStorage.setItem('lepidosBuildChecked', '1');
+                location.reload();
+            }
+
             // ──────────────────────────────────────────────────────────
             //  TABLE OF CONTENTS — app.js
             //

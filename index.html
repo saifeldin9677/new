@@ -19,7 +19,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha384-JcnsjUPPylna1s1fvi1u12X5qjY5OL56iySh75FdtrwhO/SWXgMjoVqcKyIIWOLk" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/lucide@1.23.0/dist/umd/lucide.min.js" integrity="sha384-ouAVEJVCMsf8Svzn+BwqbaBhxBEA0xgeVBhHnxmWd+Wqyv18yhWCQwGegFD/OHLq" crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2026-08-19A">
 </head>
 <body>
     <div class="header">
@@ -788,9 +788,9 @@
       console.log('Firebase initialized for project:', firebaseConfig.projectId);
     </script>
 
-    <script>window.APP_BUILD='2026-08-19A';</script>
-    <script src="data.js"></script>
-    <script src="app.js"></script>
+    <script>window.APP_BUILD='2026-08-19A';(function(){try{var s=localStorage.getItem('lepidosBuildSeen');if(s!==null&&s!==window.APP_BUILD){localStorage.setItem('lepidosBuildSeen',window.APP_BUILD);location.reload();}else{localStorage.setItem('lepidosBuildSeen',window.APP_BUILD);}}catch(e){}})();</script>
+    <script src="data.js?v=2026-08-19A"></script>
+    <script src="app.js?v=2026-08-19A"></script>
     <script>if ('serviceWorker' in navigator) { window.addEventListener('load', function () { navigator.serviceWorker.register('./sw.js').catch(function () {}); }); }</script>
 </body>
 </html>

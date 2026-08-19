@@ -85,7 +85,9 @@ self.addEventListener('fetch', function(event) {
                 }
                 return response;
             }).catch(function() {
-                return caches.match(request);
+                return caches.match(url.pathname).then(function(m) {
+                    return m || caches.match(request);
+                });
             })
         );
         return;

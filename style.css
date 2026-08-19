@@ -178,8 +178,10 @@ body {
     user-select: none;
 }
 .header {
+    position: relative !important;
+    z-index: 2000 !important;
     background: var(--brand-primary);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     padding: 4px 12px;
     padding-top: calc(4px + env(safe-area-inset-top, 8px));
     min-height: var(--header-height);
@@ -188,8 +190,16 @@ body {
     grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 8px;
-    z-index: 10;
     box-shadow: var(--shadow-md);
+}
+
+/* Secondary floating bars must stay below the main header stacking context */
+.sub-bar,
+.secondary-toolbar,
+.mode-bar,
+.tabs-bar,
+.controls-bar {
+    z-index: 1000 !important;
 }
 .header .title-group {
     grid-column: 1;
@@ -272,7 +282,7 @@ header,
     position: absolute !important;
     top: calc(100% + 8px) !important;
     inset-inline-end: 0 !important;
-    z-index: 99999 !important;
+    z-index: 2001 !important;
     width: 320px;
     max-width: 90vw;
     box-sizing: border-box;

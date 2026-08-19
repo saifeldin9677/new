@@ -8269,8 +8269,10 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (!toolsRow || !headerEl || !controlsBarEl) return;
                     if (window.innerWidth >= 1024) {
                         if (toolsRow.parentElement !== headerEl) headerEl.appendChild(toolsRow);
-                    } else {
+                    } else if (window.innerWidth <= 768) {
                         if (toolsRow.parentElement !== controlsBarEl) controlsBarEl.insertBefore(toolsRow, controlsBarEl.firstChild);
+                    } else {
+                        if (toolsRow.parentElement !== headerEl) headerEl.appendChild(toolsRow);
                     }
                 }
                 syncToolsRowPosition();

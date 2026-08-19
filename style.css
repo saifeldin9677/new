@@ -50,6 +50,12 @@
     --dock-btn-h-tall: clamp(26px, 1.9vw, 52px);
     --dock-btn-h-short: clamp(20px, 1.5vw, 42px);
 
+    /* ── Semantic header text tokens ──
+       The header keeps its dark slate background (--brand-primary) in
+       BOTH themes, so the title/subtitle stay light in both. */
+    --header-title-color: #f8fafc;
+    --header-subtitle-color: #94a3b8;
+
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
@@ -197,6 +203,10 @@ body {
     grid-column: 3;
     justify-self: end;
     white-space: nowrap;
+    /* The header stays on its dark slate in both themes; this override
+       beats the inline var(--text-secondary) (which turns dark in light
+       mode and disappears on the navy bar). */
+    color: var(--header-subtitle-color) !important;
 }
 #toolsRow {
     grid-column: 2;
@@ -247,9 +257,11 @@ body {
 .header h1 {
     font-size: 0.9em;
     font-weight: 700;
-    background: linear-gradient(135deg, var(--text), #b0c4de);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    /* Semantic light-on-dark text: the header keeps its dark slate
+       background in both themes, so the title is never allowed to pick
+       up the theme's dark body text color. */
+    color: var(--header-title-color);
+    -webkit-text-fill-color: var(--header-title-color);
     white-space: nowrap;
 }
 .header .subtitle {
@@ -1218,11 +1230,64 @@ body {
         margin-inline-start: 0;
         margin-top: 0;
     }
+    /* ── Semantic dock tokens (floating dock only) ──
+       Scoped to the ≥1024px floating docks so button text/icons are
+       always bound to the theme surface (dark slate → light text;
+       light surface → dark text). Below 1024 the card keeps the global
+       --btn-bg / --text tokens unchanged. The names follow the shared
+       [data-theme] switch; light overrides live in the theme blocks
+       further down. */
+    #controlsBar .stepped-dock-group,
+    #controlsBar .floating-capsule {
+        --dock-bg: rgba(18, 24, 36, 0.92);
+        --dock-border: rgba(255, 255, 255, 0.14);
+        --btn-bg: rgba(255, 255, 255, 0.06);
+        --btn-bg-hover: rgba(255, 255, 255, 0.12);
+        --btn-text: #f1f5f9;
+        --btn-icon-color: #94a3b8;
+        --accent-color: #14B8A6;
+        --accent-glow: rgba(20, 184, 166, 0.4);
+        --active-bg: #1a3a38;
+        --active-text: #80e0d0;
+    }
+    /* Light mode: docks switch to a light surface with high-contrast
+       dark text (--btn-text #0f172a) so "التقسيم" / "طبقات" and every
+       utility label stays fully visible; the accent deepens to #0d9488
+       so it reads against light surfaces. The header KEEPS its dark
+       slate, so its title tokens stay light. */
+    [data-theme="light"] #controlsBar .stepped-dock-group,
+    [data-theme="light"] #controlsBar .floating-capsule {
+        --dock-bg: #ffffff;
+        --dock-border: rgba(0, 0, 0, 0.12);
+        --btn-bg: #f1f5f9;
+        --btn-bg-hover: #e2e8f0;
+        --btn-text: #0f172a;
+        --btn-icon-color: #475569;
+        --accent-color: #0d9488;
+        --accent-glow: rgba(13, 148, 136, 0.35);
+        --active-bg: #0d9488;
+        --active-text: #ffffff;
+    }
+    @media (prefers-color-scheme: light) {
+        :root:not([data-theme]) #controlsBar .stepped-dock-group,
+        :root:not([data-theme]) #controlsBar .floating-capsule {
+            --dock-bg: #ffffff;
+            --dock-border: rgba(0, 0, 0, 0.12);
+            --btn-bg: #f1f5f9;
+            --btn-bg-hover: #e2e8f0;
+            --btn-text: #0f172a;
+            --btn-icon-color: #475569;
+            --accent-color: #0d9488;
+            --accent-glow: rgba(13, 148, 136, 0.35);
+            --active-bg: #0d9488;
+            --active-text: #ffffff;
+        }
+    }
     #controlsBar .stepped-dock-group {
         align-items: flex-start;
-        background: rgba(18, 24, 36, 0.92);
+        background: var(--dock-bg);
         backdrop-filter: blur(8px);
-        border: 1px solid rgba(255, 255, 255, 0.14);
+        border: 1px solid var(--dock-border);
         /* Top corners stay square (the dock is flush against the top
            edge); the bottom corners use the --dock-radius token that
            also drives the junction fillet and the two capsules. */
@@ -1246,6 +1311,9 @@ body {
         align-items: center !important;
         justify-content: center !important;
         line-height: 1 !important;
+        color: var(--btn-text) !important;
+        background: var(--btn-bg) !important;
+        border-color: var(--dock-border) !important;
     }
     /* The container box includes the masked-out notch; make the box
        click-transparent and re-enable the two visible sections, so the
@@ -1287,10 +1355,10 @@ body {
        the header). They sit on the SAME single line as the stepped
        group — never a second row. */
     #controlsBar .floating-capsule {
-        background: rgba(18, 24, 36, 0.92);
+        background: var(--dock-bg) !important;
         backdrop-filter: blur(8px);
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.25);
-        border: 1px solid rgba(255, 255, 255, 0.14);
+        border: 1px solid var(--dock-border);
         height: var(--dock-height-short);
         border-radius: var(--dock-radius) !important;
         margin-top: var(--dock-cap-margin-top);
@@ -1326,6 +1394,30 @@ body {
     }
     #controlsBar .row-unified {
         gap: var(--dock-gap) !important;
+    }
+    /* Semantic theme bindings for the floating docks: hover, icons and
+       active states all follow the scoped --btn-* / --accent-* tokens,
+       so every state stays legible on both the dark slate and the
+       light surface. */
+    #controlsBar .btn:hover {
+        background: var(--btn-bg-hover) !important;
+        border-color: var(--dock-border) !important;
+        transform: none !important;
+        box-shadow: none !important;
+    }
+    #controlsBar .btn.active,
+    #controlsBar .mode-btn.active,
+    #controlsBar .toggle-on {
+        background: var(--active-bg) !important;
+        border-color: var(--accent-color) !important;
+        color: var(--active-text) !important;
+    }
+    #controlsBar .btn.active {
+        box-shadow: 0 0 0 2px var(--accent-glow) !important;
+        font-weight: 700;
+    }
+    #controlsBar .mode-btn.active {
+        box-shadow: 0 0 0 2px var(--accent-glow) !important;
     }
 /* English mode names are wide ("Explanation Mode", "Compare
        Projections"…); a consolidated EN-only fluid shave (88% font,
@@ -1366,6 +1458,9 @@ body {
     #controlsBar .btn .lucide-icon {
         width: var(--dock-icon-size) !important;
         height: var(--dock-icon-size) !important;
+        color: var(--btn-icon-color) !important;
+        stroke: currentColor !important;
+        fill: none !important;
     }
     .controls-bar .search-box input {
         width: 160px !important;
@@ -1376,7 +1471,7 @@ body {
     .controls-bar .control-label {
         font-size: calc(var(--dock-font-size) * 0.72) !important;
         font-weight: 600;
-        color: var(--brand-accent);
+        color: var(--accent-color);
         text-transform: uppercase;
         letter-spacing: 0.4px;
         white-space: nowrap;

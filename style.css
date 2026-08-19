@@ -1246,6 +1246,7 @@ body {
         --btn-text: #f1f5f9;
         --btn-icon-color: #94a3b8;
         --accent-color: #14B8A6;
+        --accent-color-rgb: 20, 184, 166;
         --accent-glow: rgba(20, 184, 166, 0.4);
         --active-bg: #1a3a38;
         --active-text: #80e0d0;
@@ -1264,6 +1265,7 @@ body {
         --btn-text: #0f172a;
         --btn-icon-color: #475569;
         --accent-color: #0d9488;
+        --accent-color-rgb: 13, 148, 136;
         --accent-glow: rgba(13, 148, 136, 0.35);
         --active-bg: #0d9488;
         --active-text: #ffffff;
@@ -1278,6 +1280,7 @@ body {
             --btn-text: #0f172a;
             --btn-icon-color: #475569;
             --accent-color: #0d9488;
+            --accent-color-rgb: 13, 148, 136;
             --accent-glow: rgba(13, 148, 136, 0.35);
             --active-bg: #0d9488;
             --active-text: #ffffff;
@@ -1906,6 +1909,213 @@ body {
     font-size: 0.7em;
     padding: 6px 8px;
     max-width: 160px;
+}
+
+/* ── Anchored menu popovers: Layers + Divisions ────────────────────────
+   GNOME Shell-style app-grid menus that float directly beneath their
+   toggle buttons. NO modal backdrop: the map stays fully visible and
+   interactive underneath (pointer events are never blocked). The panel
+   is positioned by JS (ui.js _positionPopover) in viewport coordinates
+   and always clamped on screen; the inset defaults below are just the
+   pre-position fallback. */
+.layers-modal.menu-popover {
+    position: fixed;
+    inset: 0 auto auto 0;
+    z-index: 1050;
+    display: none;
+    align-items: stretch;
+    justify-content: stretch;
+}
+.layers-modal.menu-popover.visible {
+    display: block;
+}
+.layers-modal.menu-popover .layers-modal-backdrop {
+    display: none;
+}
+.layers-modal.menu-popover .layers-modal-content {
+    position: relative;
+    width: min(430px, calc(100vw - 16px));
+    max-width: none;
+    max-height: min(calc(100vh - 16px), 68vh);
+    padding: 14px 16px 16px;
+    background: var(--panel-overlay-96);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+    animation: menu-popover-in 0.18s ease;
+}
+@keyframes menu-popover-in {
+    from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+    to { opacity: 1; transform: none; }
+}
+.layers-modal.menu-popover .layers-modal-header {
+    margin-bottom: 10px;
+}
+.layers-modal.menu-popover .layers-modal-header h3 {
+    font-size: 0.85em;
+}
+/* GNOME Shell app-grid tiles: every layer is a uniform cell with the
+   icon above the label; categories are grid sections. */
+.layers-modal.menu-popover .layers-modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.layers-modal.menu-popover .menu-popover-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.layers-modal.menu-popover .menu-popover-actions .btn {
+    padding: 6px 12px;
+    font-size: 0.72em;
+    min-height: 32px;
+    border-radius: var(--radius-pill);
+}
+.layers-modal.menu-popover .layers-category {
+    margin-bottom: 0;
+}
+.layers-modal.menu-popover .layers-category h4 {
+    margin: 0 0 8px 2px;
+    font-size: 0.68em;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+/* GNOME Shell app-grid tiles: every layer is a uniform card with the
+   icon above the label; categories are grid sections. The card uses the
+   dock surface tokens (--btn-bg/--btn-text/--accent-color) so the popover
+   matches the controls dock; the aliases below resolve them to the panel
+   tokens since the popover lives outside the dock scope. */
+.layers-modal.menu-popover {
+    --btn-bg: var(--panel-bg);
+    --btn-bg-hover: var(--btn-hover);
+    --btn-text: var(--text);
+    --accent-color: var(--brand-accent);
+    --accent-color-rgb: 20, 184, 166;
+}
+[data-theme="light"] .layers-modal.menu-popover {
+    --accent-color: #0d9488;
+    --accent-color-rgb: 13, 148, 136;
+}
+@media (prefers-color-scheme: light) {
+    :root:not([data-theme]) .layers-modal.menu-popover {
+        --accent-color: #0d9488;
+        --accent-color-rgb: 13, 148, 136;
+    }
+}
+.layers-modal.menu-popover .layer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+    padding: 8px 0;
+}
+.layers-modal.menu-popover .layer-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 64px;
+    padding: 10px 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--dock-radius, 10px);
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.layers-modal.menu-popover .layer-card:hover {
+    background: var(--btn-bg-hover);
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+}
+.layers-modal.menu-popover .layer-card .lucide-icon,
+.layers-modal.menu-popover .layer-card .icon {
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 20px;
+    margin-bottom: 6px;
+    color: var(--btn-icon-color, var(--text-secondary));
+}
+.layers-modal.menu-popover .layer-card .btn-text,
+.layers-modal.menu-popover .layer-card .label {
+    font-size: 11.5px;
+    line-height: 1.2;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+.layers-modal.menu-popover .layer-card.active,
+.layers-modal.menu-popover .layer-card.toggle-on {
+    background: rgba(var(--accent-color-rgb), 0.15);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    box-shadow: 0 0 0 1px rgba(var(--accent-color-rgb), 0.35);
+}
+.layers-modal.menu-popover .layer-card.active .lucide-icon,
+.layers-modal.menu-popover .layer-card.toggle-on .lucide-icon {
+    color: var(--accent-color);
+}
+.layers-modal.menu-popover .layer-grid .bloc-select {
+    grid-column: 1 / -1;
+    max-width: none;
+    width: 100%;
+    font-size: 0.72em;
+    padding: 8px 10px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--btn-bg);
+    color: var(--btn-text);
+}
+/* Divisions menu: the religion filter buttons become the same app-grid
+   tiles (label-only cells). */
+.layers-modal.menu-popover #religionButtons {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+    gap: 8px;
+    width: 100%;
+}
+.layers-modal.menu-popover #religionButtons .religion-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 56px;
+    padding: 10px 6px;
+    font-size: 0.75em;
+    text-align: center;
+    white-space: normal;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--panel-bg);
+    color: var(--text);
+}
+.layers-modal.menu-popover #religionButtons .religion-btn:hover {
+    background: var(--btn-hover);
+    border-color: var(--brand-accent);
+    transform: translateY(-1px);
+}
+.layers-modal.menu-popover #religionButtons .religion-btn.active {
+    background: rgba(20, 184, 166, 0.14);
+    border-color: var(--brand-accent);
+    color: var(--brand-accent);
+    box-shadow: 0 0 0 1px rgba(20, 184, 166, 0.35);
+}
+/* Slimmer tiles on small screens so the grid never overflows. */
+@media (max-width: 600px) {
+    .layers-modal.menu-popover .layer-grid {
+        grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+    }
+    .layers-modal.menu-popover #religionButtons {
+        grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+    }
 }
 .shortcuts-overlay {
     position: fixed;

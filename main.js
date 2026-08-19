@@ -1,10 +1,10 @@
 import { countryInfo, geopoliticalBlocsData } from './data.js';
-import { a11yDialogWasOpen, a11yLastOutside, adminBoundariesToggle, applyTheme, capitalsToggle, closePanelBtn, controlsBar, coordsToggle, corridorsToggle, countryNamesList, dataTableBtn, dataTableClose, dataTableOverlay, dataTableSearch, dataTableSortAsc, dataTableSortKey, densitySpotsToggle, exportBtn, geopoliticalBlocsVisible, globeViewBtn, labelsToggle, lang, langDropdownMenu, langToggle, layersModal, layersModalBackdrop, layersModalClose, layersToggleBtn, majorCitiesToggle, mapContainer, measureKind, measurePoints, menuToggle, modeButtons, onWindowResize, positionLangDropdown, prefersReducedMotion, presentationModeActive, quizActive, resetBtn, sectToggle, selectedBloc, selectedCountry, setState, shareBtn, shortcutsBtn, shortcutsClose, shortcutsOverlay, svg, timezonesToggle, zoomBehavior, zoomInBtn, zoomOutBtn, zoomResetBtn } from './state.js';
+import { a11yDialogWasOpen, a11yLastOutside, adminBoundariesToggle, applyTheme, capitalsToggle, closePanelBtn, controlsBar, coordsToggle, corridorsToggle, countryNamesList, dataTableBtn, dataTableClose, dataTableOverlay, dataTableSearch, dataTableSortAsc, dataTableSortKey, densitySpotsToggle, divisionPopover, divisionPopoverClose, exportBtn, geopoliticalBlocsVisible, globeViewBtn, labelsToggle, lang, langDropdownMenu, langToggle, layersModal, layersModalClose, layersToggleBtn, majorCitiesToggle, mapContainer, measureKind, measurePoints, menuToggle, modeButtons, onWindowResize, positionLangDropdown, prefersReducedMotion, presentationModeActive, quizActive, resetBtn, sectToggle, selectedBloc, selectedCountry, setState, shareBtn, shortcutsBtn, shortcutsClose, shortcutsOverlay, svg, timezonesToggle, zoomBehavior, zoomInBtn, zoomOutBtn, zoomResetBtn } from './state.js';
 import { getCleanName, getDisplayName, setLanguage, t } from './i18n.js';
 import { drawGeopoliticalBlocs, getDensity, setMode, toggleAdminBoundaries, toggleBorderDisputes, toggleCapitals, toggleColorblindMode, toggleCoords, toggleCorridors, toggleDensitySpots, toggleDesertsForests, toggleEarthquakes, toggleEthnicGroups, toggleGeopoliticalBlocs, toggleGlobeMode, toggleLabels, toggleMajorCities, toggleNaturalResources, toggleOceanCurrents, toggleRivers, toggleSect, toggleTimezones, toggleVolcanoes, toggleWinds, updateLegend } from './layers.js';
 import { cancelAnnotationStroke, clearAllAnnotations, clearAnnotationDrawing, clearMeasurement, closeAnnotationsModal, closeCountryPanel, finishAnnotationTool, flyToCountry, getCountryFlag, handleAnnotationClick, handleMeasureClick, init, onAnnotationPointerDown, onAnnotationPointerMove, onAnnotationPointerUp, openAnnotationsModal, redrawMeasureLayer, resetAll, resetZoom, setAnnotationColor, setAnnotationFontSize, setPanSpaceHeld, shareMap, stepAnnotationFontSize, toggleAnnotationKind, toggleAnnotationMode, toggleMeasureCalcMode, toggleMeasureKind, toggleMeasureMode, togglePresentationMode, undoLastAnnotation, updateHash } from './map-core.js';
 import { exportMapPDF } from './export.js';
-import { A11Y_DIALOG_SELECTOR, A11Y_FOCUSABLE, a11yIsVisible, a11yOpenDialog, a11ySkipLink, aboutBtn, aboutModal, aboutModalBackdrop, aboutModalClose, annotateBtn, annotationClearBtn2, annotationColorSwatches, annotationFinishBtn2, annotationFontLargeBtn, annotationFontMediumBtn, annotationFontSmallBtn, annotationHelpBtn, annotationKindArrowBtn, annotationKindDrawBtn, annotationKindPinBtn, annotationKindRegionBtn, annotationManageBtn2, annotationsModal, annotationsModalBackdrop, annotationsModalClose, blocSelect, closeAboutModal, closeDataTable, closeLayersModal, closeMobileToolsMenu, closePresetsModal, maybeShowProjectionExplainer, measureClearBtn2, measureFinishBtn2, measureGeodesicBtn2, measureKindAreaBtn, measureKindDistBtn, measurePlanarBtn2, mobileAboutBtn, mobileAnnotateBtn, mobileCoordsBtn, mobileCompareBtn, mobileFilterBtns, mobileGlobeBtn, mobileLangBtn, mobileLayersBtn, mobileModeBtn, mobileModeBtns, mobileOnboardBtn, mobilePdfBtn, mobilePresetsBtn, mobileQuizBtn, mobileResetBtn2, mobileSearchInput, mobileShareBtn, mobileShortcutsBtn, mobileToolsBtn, mobileToolsMenu, modeSheet, modeSheetBackdrop, modeSheetClose, onboardBtn, openAboutModal, openDataTable, openLayersModal, openPresetsModal, presetsBtn, presetsModal, presetsModalBackdrop, presetsModalClose, renderDataTable, riversToggle, setupReligionButtons } from './ui.js';
+import { A11Y_DIALOG_SELECTOR, A11Y_FOCUSABLE, a11yIsVisible, a11yOpenDialog, a11ySkipLink, aboutBtn, aboutModal, aboutModalBackdrop, aboutModalClose, annotateBtn, annotationClearBtn2, annotationColorSwatches, annotationFinishBtn2, annotationFontLargeBtn, annotationFontMediumBtn, annotationFontSmallBtn, annotationHelpBtn, annotationKindArrowBtn, annotationKindDrawBtn, annotationKindPinBtn, annotationKindRegionBtn, annotationManageBtn2, annotationsModal, annotationsModalBackdrop, annotationsModalClose, blocSelect, closeAboutModal, closeDataTable, closeDivisionPopover, closeLayersModal, closeMobileToolsMenu, closePresetsModal, maybeShowProjectionExplainer, measureClearBtn2, measureFinishBtn2, measureGeodesicBtn2, measureKindAreaBtn, measureKindDistBtn, measurePlanarBtn2, mobileAboutBtn, mobileAnnotateBtn, mobileCoordsBtn, mobileCompareBtn, mobileFilterBtns, mobileGlobeBtn, mobileLangBtn, mobileLayersBtn, mobileModeBtn, mobileModeBtns, mobileOnboardBtn, mobilePdfBtn, mobilePresetsBtn, mobileQuizBtn, mobileResetBtn2, mobileSearchInput, mobileShareBtn, mobileShortcutsBtn, mobileToolsBtn, mobileToolsMenu, modeSheet, modeSheetBackdrop, modeSheetClose, onboardBtn, openAboutModal, openDataTable, openDivisionPopover, openLayersModal, openPresetsModal, presetsBtn, presetsModal, presetsModalBackdrop, presetsModalClose, renderDataTable, riversToggle, setupReligionButtons } from './ui.js';
 
 // Entry module: owns all top-level wiring / executable statements
 // extracted from the original app.js monolith.
@@ -380,26 +380,37 @@ if (layersToggleBtn) layersToggleBtn.addEventListener('click', function() { open
 
 if (layersModalClose) layersModalClose.addEventListener('click', closeLayersModal);
 
-if (layersModalBackdrop) layersModalBackdrop.addEventListener('click', closeLayersModal);
+if (divisionPopoverClose) divisionPopoverClose.addEventListener('click', closeDivisionPopover);
 
 // Outside-click close: any click on the map, menus, or other controls closes
-// the layers popover. Clicks on the three layers triggers themselves are
-// handled by their own toggle handlers (openLayersModal closes when visible),
-// so they're excluded here to avoid double-closing.
+// the open anchored popovers. Clicks on the popover triggers themselves are
+// handled by their own toggle handlers (open* closes when visible), so they're
+// excluded here to avoid double-closing.
 document.addEventListener('click', function(e) {
-    if (!layersModal || !layersModal.classList.contains('visible')) return;
-    if (layersModal.contains(e.target)) return;
     var triggers = [layersToggleBtn, barLayersBtn, mobileLayersBtn];
-    for (var i = 0; i < triggers.length; i++) {
-        var t = triggers[i];
-        if (t && (e.target === t || t.contains(e.target))) return;
+    if (layersModal && layersModal.classList.contains('visible')) {
+        if (layersModal.contains(e.target)) return;
+        var hitTrigger = false;
+        for (var i = 0; i < triggers.length; i++) {
+            var t = triggers[i];
+            if (t && (e.target === t || t.contains(e.target))) { hitTrigger = true; break; }
+        }
+        if (!hitTrigger) closeLayersModal();
     }
-    closeLayersModal();
+    if (divisionPopover && divisionPopover.classList.contains('visible')) {
+        if (divisionPopover.contains(e.target)) return;
+        var dTrig = document.getElementById('barDivisionBtn');
+        if (dTrig && (e.target === dTrig || dTrig.contains(e.target))) return;
+        closeDivisionPopover();
+    }
 });
 
 document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && layersModal && layersModal.classList.contains('visible')) {
                     closeLayersModal();
+                }
+                if (e.key === 'Escape' && divisionPopover && divisionPopover.classList.contains('visible')) {
+                    closeDivisionPopover();
                 }
                 if (e.key === 'Escape' && aboutModal && aboutModal.classList.contains('visible')) {
                     closeAboutModal();
@@ -582,6 +593,14 @@ if (controlsToggleBtn && controlsBar) {
 }
 if (barLayersBtn) {
     barLayersBtn.addEventListener('click', function() { openLayersModal(this); });
+}
+
+// Divisions menu: anchored popover opened from the dock capsule. Toggling,
+// outside-click close, Escape and resize re-anchoring are handled by the
+// shared popover controller in ui.js.
+var barDivisionBtn = document.getElementById('barDivisionBtn');
+if (barDivisionBtn) {
+    barDivisionBtn.addEventListener('click', function() { openDivisionPopover(this); });
 }
 
 // Mode hover description: hovering a mode button shows what the mode does,

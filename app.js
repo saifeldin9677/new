@@ -135,15 +135,8 @@
             const exportBtn = document.getElementById('exportBtn');
             const menuToggle = document.getElementById('menuToggle');
             const controlsBar = document.getElementById('controlsBar');
-            const layersToggleBtn = document.getElementById('layersToggleBtn');
             const layersModal = document.getElementById('layersModal');
-            const layersModalBackdrop = document.getElementById('layersModalBackdrop');
-            const layersModalClose = document.getElementById('layersModalClose');
-            const barLayersBtn = document.getElementById('barLayersBtn');
-            const barDivisionBtn = document.getElementById('barDivisionBtn');
             const divisionPopover = document.getElementById('divisionPopover');
-            const divisionPopoverBackdrop = document.getElementById('divisionPopoverBackdrop');
-            const divisionPopoverClose = document.getElementById('divisionPopoverClose');
             const shortcutsOverlay = document.getElementById('shortcutsOverlay');
             const shortcutsBtn = document.getElementById('shortcutsBtn');
             const shortcutsClose = document.getElementById('shortcutsClose');
@@ -3793,7 +3786,8 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             _pendingLayers[_li][1]();
                             _li++;
                             requestAnimationFrame(runNextLayer);
-                        })();
+
+        })();
                     }, 200);
                 });
                 svg.call(zoomBehavior);
@@ -8678,7 +8672,6 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             });
             if (mobileShareBtn) mobileShareBtn.addEventListener('click', shareMap);
             if (mobileModeBtn) mobileModeBtn.addEventListener('click', function() { modeSheet.classList.add('visible'); });
-            if (mobileLayersBtn) mobileLayersBtn.addEventListener('click', function() { openLayersModal(); });
             if (mobileResetBtn2) mobileResetBtn2.addEventListener('click', function() { closeMobileToolsMenu(); resetAll(); });
             if (mobileCoordsBtn) mobileCoordsBtn.addEventListener('click', function() { closeMobileToolsMenu(); toggleCoords(); });
             if (mobileToolsBtn) mobileToolsBtn.addEventListener('click', function(e) {
@@ -8713,93 +8706,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 });
             });
 
-            function openPopover(modal) {
-                if (!modal) return;
-                modal.classList.add('visible');
-            }
-            function closePopover(modal) {
-                if (!modal) return;
-                modal.classList.remove('visible');
-            }
-
-            function openLayersModal() {
-                var body = document.getElementById('layersModalBody');
-                if (body) {
-                    // Toggle buttons live permanently inside the modal body now
-                    // (the old always-visible #layersRow was removed); group them
-                    // into categories each time the modal opens. Move the buttons
-                    // out of any leftover category containers first so they are
-                    // never destroyed when the old containers are removed.
-                    body.querySelectorAll('.layers-category .btn, .layers-category .bloc-select').forEach(function(el) { body.appendChild(el); });
-                    body.querySelectorAll('.layers-category').forEach(function(d) { d.remove(); });
-                    var categories = [
-                        { label: t('catGeneral'), ids: ['labelsToggle','sectToggle','coordsToggle'] },
-                        { label: t('catPopulation'), ids: ['capitalsToggle','majorCitiesToggle','timezonesToggle','densitySpotsToggle'] },
-                        { label: t('catTransport'), ids: ['routesToggle','riversToggle'] },
-                        { label: t('catPolitics'), ids: ['geopoliticalBlocsToggle','blocSelect','borderDisputesToggle'] },
-                        { label: t('catEnvironment'), ids: ['naturalResourcesToggle','ethnicGroupsToggle','desertsForestsToggle'] },
-                        { label: t('catClimate'), ids: ['oceanCurrentsToggle','windsToggle','earthquakesToggle','volcanoesToggle'] },
-                    ];
-                    var temp = document.createDocumentFragment();
-                    categories.forEach(function(cat) {
-                        var catDiv = document.createElement('div');
-                        catDiv.className = 'layers-category';
-                        var h4 = document.createElement('h4');
-                        h4.textContent = cat.label;
-                        catDiv.appendChild(h4);
-                        var itemsDiv = document.createElement('div');
-                        itemsDiv.className = 'layers-items';
-                        cat.ids.forEach(function(id) {
-                            var el = document.getElementById(id);
-                            if (el && body.contains(el)) {
-                                itemsDiv.appendChild(el);
-                            }
-                        });
-                        if (itemsDiv.children.length) {
-                            catDiv.appendChild(itemsDiv);
-                            temp.appendChild(catDiv);
-                        }
-                    });
-                    var remaining = [].slice.call(body.children);
-                    remaining.forEach(function(el) {
-                        var catDiv = document.createElement('div');
-                        catDiv.className = 'layers-category';
-                        var itemsDiv = document.createElement('div');
-                        itemsDiv.className = 'layers-items';
-                        itemsDiv.appendChild(el);
-                        catDiv.appendChild(itemsDiv);
-                        temp.appendChild(catDiv);
-                    });
-                    body.appendChild(temp);
-                }
-                openPopover(layersModal);
-            }
-            function closeLayersModal() {
-                closePopover(layersModal);
-            }
-            function openDivisionPopover() {
-                if (layersModal && layersModal.classList.contains('visible')) {
-                    closeLayersModal();
-                }
-                openPopover(divisionPopover);
-            }
-            function closeDivisionPopover() {
-                closePopover(divisionPopover);
-            }
-            if (layersToggleBtn) layersToggleBtn.addEventListener('click', openLayersModal);
-            if (barLayersBtn) barLayersBtn.addEventListener('click', openLayersModal);
-            if (layersModalClose) layersModalClose.addEventListener('click', closeLayersModal);
-            if (layersModalBackdrop) layersModalBackdrop.addEventListener('click', closeLayersModal);
-            if (barDivisionBtn) barDivisionBtn.addEventListener('click', openDivisionPopover);
-            if (divisionPopoverClose) divisionPopoverClose.addEventListener('click', closeDivisionPopover);
-            if (divisionPopoverBackdrop) divisionPopoverBackdrop.addEventListener('click', closeDivisionPopover);
             document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && divisionPopover && divisionPopover.classList.contains('visible')) {
-                    closeDivisionPopover();
-                }
-                if (e.key === 'Escape' && layersModal && layersModal.classList.contains('visible')) {
-                    closeLayersModal();
-                }
                 if (e.key === 'Escape' && annotationsModal && annotationsModal.classList.contains('visible')) {
                     closeAnnotationsModal();
                 }
@@ -8988,5 +8895,204 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         maybeShowProjectionExplainer();
                     });
                 });
-            })();
+
+        })();
+            // ── Anchored Layers / Divisions popovers ──
+            var layersToggleBtn = document.getElementById('layersToggleBtn');
+            var barLayersBtn = document.getElementById('barLayersBtn');
+            var barDivisionBtn = document.getElementById('barDivisionBtn');
+
+            function positionPopover(modal, triggerEl) {
+                if (!modal || !triggerEl) return;
+                var r = triggerEl.getBoundingClientRect();
+                var pw = modal.offsetWidth;
+                var ph = modal.offsetHeight;
+                var vw = window.innerWidth;
+                var vh = window.innerHeight;
+                var margin = 8;
+                var rtl = document.documentElement.dir === 'rtl';
+                var left = rtl ? r.right - pw : r.left;
+                left = Math.max(margin, Math.min(left, vw - pw - margin));
+                var top = r.bottom + margin;
+                var flipped = false;
+                if (top + ph > vh - margin && r.top - ph - margin >= margin) {
+                    top = r.top - ph - margin;
+                    flipped = true;
+                }
+                top = Math.max(margin, Math.min(top, vh - ph - margin));
+                modal.style.left = left + 'px';
+                modal.style.top = top + 'px';
+                modal.style.transformOrigin = (flipped ? 'bottom' : 'top') + ' ' + (rtl ? 'right' : 'left');
+            }
+
+            function buildLayersGrid() {
+                var body = document.getElementById('layersModalBody');
+                if (!body || body.dataset.gridBuilt) return;
+                var btnRow = document.createElement('div');
+                btnRow.className = 'menu-popover-actions';
+                var allOffBtn = document.createElement('button');
+                allOffBtn.className = 'btn';
+                allOffBtn.textContent = t('allOff');
+                allOffBtn.addEventListener('click', function() {
+                    body.querySelectorAll('.btn.toggle-on').forEach(function(b) { b.click(); });
+                    updateActiveLayerCount();
+                });
+                btnRow.appendChild(allOffBtn);
+                var resetLayersBtn = document.createElement('button');
+                resetLayersBtn.className = 'btn';
+                resetLayersBtn.textContent = t('resetLayers');
+                resetLayersBtn.addEventListener('click', function() {
+                    if (corridorsVisible) toggleCorridors();
+                    if (riversVisible) toggleRivers();
+                    if (densitySpotsMode) toggleDensitySpots();
+                    if (capitalsVisible) toggleCapitals();
+                    if (timezonesVisible) toggleTimezones();
+                    if (majorCitiesVisible) toggleMajorCities();
+                    if (naturalResourcesVisible) toggleNaturalResources();
+                    if (ethnicGroupsVisible) toggleEthnicGroups();
+                    if (oceanCurrentsVisible) toggleOceanCurrents();
+                    if (windsVisible) toggleWinds();
+                    if (earthquakesVisible) toggleEarthquakes();
+                    if (volcanoesVisible) toggleVolcanoes();
+                    if (geopoliticalBlocsVisible) toggleGeopoliticalBlocs();
+                    if (desertsForestsVisible) toggleDesertsForests();
+                    if (borderDisputesVisible) toggleBorderDisputes();
+                    if (selectedBloc !== 'all') {
+                        selectedBloc = 'all';
+                        document.getElementById('blocSelect').value = 'all';
+                    }
+                    updateActiveLayerCount();
+                });
+                btnRow.appendChild(resetLayersBtn);
+                var categories = [
+                    { label: t('catGeneral'), ids: ['labelsToggle','sectToggle','coordsToggle'] },
+                    { label: t('catPopulation'), ids: ['capitalsToggle','majorCitiesToggle','timezonesToggle','densitySpotsToggle'] },
+                    { label: t('catTransport'), ids: ['routesToggle','riversToggle'] },
+                    { label: t('catPolitics'), ids: ['geopoliticalBlocsToggle','blocSelect','borderDisputesToggle'] },
+                    { label: t('catEnvironment'), ids: ['naturalResourcesToggle','ethnicGroupsToggle','desertsForestsToggle'] },
+                    { label: t('catClimate'), ids: ['oceanCurrentsToggle','windsToggle','earthquakesToggle','volcanoesToggle'] },
+                ];
+                var controls = [].slice.call(body.children);
+                body.innerHTML = '';
+                body.appendChild(btnRow);
+                var temp = document.createDocumentFragment();
+                var claimed = [];
+                categories.forEach(function(cat) {
+                    var catDiv = document.createElement('div');
+                    catDiv.className = 'layers-category';
+                    var h4 = document.createElement('h4');
+                    h4.textContent = cat.label;
+                    catDiv.appendChild(h4);
+                    var itemsDiv = document.createElement('div');
+                    itemsDiv.className = 'layer-grid';
+                    cat.ids.forEach(function(id) {
+                        var el = null;
+                        for (var i = 0; i < controls.length; i++) {
+                            if (controls[i].id === id) { el = controls[i]; break; }
+                        }
+                        if (el && claimed.indexOf(el) === -1) {
+                            if (el.tagName !== 'SELECT') el.classList.add('layer-card');
+                            itemsDiv.appendChild(el);
+                            claimed.push(el);
+                        }
+                    });
+                    if (itemsDiv.children.length) {
+                        catDiv.appendChild(itemsDiv);
+                        temp.appendChild(catDiv);
+                    }
+                });
+                var remaining = controls.filter(function(el) { return claimed.indexOf(el) === -1; });
+                remaining.forEach(function(el) {
+                    var catDiv = document.createElement('div');
+                    catDiv.className = 'layers-category';
+                    var itemsDiv = document.createElement('div');
+                    itemsDiv.className = 'layer-grid';
+                    el.classList.add('layer-card');
+                    itemsDiv.appendChild(el);
+                    catDiv.appendChild(itemsDiv);
+                    temp.appendChild(catDiv);
+                });
+                body.appendChild(temp);
+                body.dataset.gridBuilt = '1';
+            }
+
+            function setPopoverA11y(triggerEl, open) {
+                if (triggerEl) triggerEl.setAttribute('aria-expanded', open ? 'true' : 'false');
+            }
+
+            function openLayersModal(triggerEl) {
+                if (layersModal.classList.contains('visible')) { closeLayersModal(); return; }
+                buildLayersGrid();
+                closeDivisionPopover();
+                layersModal.classList.add('visible');
+                positionPopover(layersModal, triggerEl || barLayersBtn || layersToggleBtn);
+                setPopoverA11y(triggerEl, true);
+                var first = layersModal.querySelector('.layers-modal-body .btn, .layers-modal-body .bloc-select');
+                if (first) setTimeout(function() { first.focus(); }, 60);
+            }
+
+            function closeLayersModal() {
+                if (!layersModal.classList.contains('visible')) return;
+                layersModal.classList.remove('visible');
+                setPopoverA11y(barLayersBtn, false);
+                setPopoverA11y(layersToggleBtn, false);
+                setPopoverA11y(mobileLayersBtn, false);
+            }
+
+            function openDivisionPopover(triggerEl) {
+                if (divisionPopover.classList.contains('visible')) { closeDivisionPopover(); return; }
+                closeLayersModal();
+                divisionPopover.classList.add('visible');
+                positionPopover(divisionPopover, triggerEl || barDivisionBtn);
+                setPopoverA11y(triggerEl, true);
+                var first = divisionPopover.querySelector('.layers-modal-body .btn');
+                if (first) setTimeout(function() { first.focus(); }, 60);
+            }
+
+            function closeDivisionPopover() {
+                if (!divisionPopover.classList.contains('visible')) return;
+                divisionPopover.classList.remove('visible');
+                setPopoverA11y(barDivisionBtn, false);
+            }
+
+            if (layersToggleBtn) layersToggleBtn.addEventListener('click', function() { openLayersModal(this); });
+            if (barLayersBtn) barLayersBtn.addEventListener('click', function() { openLayersModal(this); });
+            if (mobileLayersBtn) mobileLayersBtn.addEventListener('click', function() { openLayersModal(this); });
+            if (barDivisionBtn) barDivisionBtn.addEventListener('click', function() { openDivisionPopover(this); });
+            var layersModalCloseBtn = document.getElementById('layersModalClose');
+            var divisionPopoverCloseBtn = document.getElementById('divisionPopoverClose');
+            if (layersModalCloseBtn) layersModalCloseBtn.addEventListener('click', closeLayersModal);
+            if (divisionPopoverCloseBtn) divisionPopoverCloseBtn.addEventListener('click', closeDivisionPopover);
+
+            document.addEventListener('click', function(e) {
+                if (layersModal && layersModal.classList.contains('visible')) {
+                    if (layersModal.contains(e.target)) return;
+                    if (e.target === layersToggleBtn || (layersToggleBtn && layersToggleBtn.contains(e.target)) ||
+                        e.target === barLayersBtn || (barLayersBtn && barLayersBtn.contains(e.target)) ||
+                        e.target === mobileLayersBtn || (mobileLayersBtn && mobileLayersBtn.contains(e.target))) return;
+                    closeLayersModal();
+                }
+                if (divisionPopover && divisionPopover.classList.contains('visible')) {
+                    if (divisionPopover.contains(e.target)) return;
+                    if (barDivisionBtn && (e.target === barDivisionBtn || barDivisionBtn.contains(e.target))) return;
+                    closeDivisionPopover();
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key !== 'Escape') return;
+                if (layersModal && layersModal.classList.contains('visible')) closeLayersModal();
+                if (divisionPopover && divisionPopover.classList.contains('visible')) closeDivisionPopover();
+            });
+
+            var popoverResizeTimer = null;
+            window.addEventListener('resize', function() {
+                clearTimeout(popoverResizeTimer);
+                popoverResizeTimer = setTimeout(function() {
+                    if (layersModal.classList.contains('visible')) positionPopover(layersModal, barLayersBtn || layersToggleBtn);
+                    if (divisionPopover.classList.contains('visible')) positionPopover(divisionPopover, barDivisionBtn);
+                }, 80);
+            });
+
+
         })();

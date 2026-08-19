@@ -1,5 +1,5 @@
 import { religionArabic, religionRussian, religionSpanish, religionUzbek } from './data.js';
-import { APP_VERSION, borderDisputesVisible, capitalsVisible, corridorsVisible, countryNamesList, countryPanel, currentReligionFilter, dataTableBody, dataTableOverlay, dataTableSearch, dataTableSortAsc, dataTableSortKey, densitySpotsMode, desertsForestsVisible, earthquakesVisible, ethnicGroupsVisible, geopoliticalBlocsVisible, lang, layersModal, majorCitiesVisible, naturalResourcesVisible, oceanCurrentsVisible, prefersReducedMotion, quizActive, religionButtons, riversVisible, selectedBloc, setActiveByAttr, setState, shortcutsOverlay, svg, timezonesVisible, volcanoesVisible, windsVisible, zoomBehavior } from './state.js';
+import { APP_VERSION, borderDisputesVisible, capitalsVisible, corridorsVisible, countryNamesList, countryPanel, currentReligionFilter, dataTableBody, dataTableOverlay, dataTableSearch, dataTableSortAsc, dataTableSortKey, densitySpotsMode, desertsForestsVisible, divisionPopover, earthquakesVisible, ethnicGroupsVisible, geopoliticalBlocsVisible, lang, layersModal, majorCitiesVisible, naturalResourcesVisible, oceanCurrentsVisible, prefersReducedMotion, quizActive, religionButtons, riversVisible, selectedBloc, setActiveByAttr, setState, shortcutsOverlay, svg, timezonesVisible, volcanoesVisible, windsVisible, zoomBehavior } from './state.js';
 import { fmtDate, fmtNum, getDisplayName, getReligion, htmlEscape, t } from './i18n.js';
 import { LAYER_DEFS, getContinent, getCountryInfo, getDensity, getGDP, getHDI, setMode, toggleBorderDisputes, toggleCapitals, toggleCorridors, toggleDensitySpots, toggleDesertsForests, toggleEarthquakes, toggleEthnicGroups, toggleGeopoliticalBlocs, toggleLabels, toggleMajorCities, toggleNaturalResources, toggleOceanCurrents, toggleRivers, toggleSect, toggleTimezones, toggleVolcanoes, toggleWinds, updateActiveLayerCount, updateAllStyles } from './layers.js';
 import { closeCountryPanel, updateHash } from './map-core.js';
@@ -371,10 +371,15 @@ export function _a11yRestoreFocus() {
     _a11yDialogTrigger = null;
 }
 
-// The button that opened the layers popover, so we can anchor it and close
-// when that same button is clicked again (toggle behavior).
+// ── Anchored menu popovers (Layers + Divisions) ───────────────────────
+// Both menus float directly beneath the button that opened them — no
+// modal backdrop, the map stays fully visible and interactive. The
+// trigger is remembered so the same button toggles the popover closed,
+// and so window resizes keep the popover glued to it.
 var _layersPopoverTrigger = null;
 var _layersCloseTimer = null;
+var _divisionPopoverTrigger = null;
+var _divisionCloseTimer = null;
 
 export function openLayersModal(triggerEl) {
                 if (layersModal && layersModal.classList.contains('closing')) {
@@ -388,19 +393,22 @@ export function openLayersModal(triggerEl) {
                     closeLayersModal();
                     return;
                 }
+                // One menu at a time: opening Layers dismisses Divisions.
+                if (divisionPopover && divisionPopover.classList.contains('visible')) {
+                    closeDivisionPopover();
+                }
                 _layersPopoverTrigger = triggerEl || null;
-                var layersRow = document.querySelector('.layers-row');
                 var body = document.getElementById('layersModalBody');
-                if (layersRow && body) {
+                if (body && !body.dataset.gridBuilt) {
+                    // The layer toggles live permanently inside the popover body;
+                    // group them into category sections the first time the popover
+                    // opens (GNOME-style app-grid).
                     var btnRow = document.createElement('div');
-                    btnRow.style.cssText = 'display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;';
+                    btnRow.className = 'menu-popover-actions';
                     var allOffBtn = document.createElement('button');
                     allOffBtn.className = 'btn';
                     allOffBtn.textContent = t('allOff');
                     allOffBtn.addEventListener('click', function() {
-                        // The toggles live inside the popover body while it is
-                        // open (they were moved here from .layers-row), so query
-                        // the body — not the (now empty) source row.
                         body.querySelectorAll('.btn.toggle-on').forEach(function(b) { b.click(); });
                         updateActiveLayerCount();
                     });
@@ -439,23 +447,30 @@ export function openLayersModal(triggerEl) {
                         { label: t('catEnvironment'), ids: ['naturalResourcesToggle','ethnicGroupsToggle','desertsForestsToggle'] },
                         { label: t('catClimate'), ids: ['oceanCurrentsToggle','windsToggle','earthquakesToggle','volcanoesToggle'] },
                     ];
+                    var controls = [].slice.call(body.children);
                     // Wipe the body FIRST, then rebuild so the quick-action row
                     // (All Off / Reset) is not cleared by the reset below.
                     body.innerHTML = '';
                     body.appendChild(btnRow);
                     var temp = document.createDocumentFragment();
+                    var claimed = [];
                     categories.forEach(function(cat) {
-                    var catDiv = document.createElement('div');
-                    catDiv.className = 'layers-category';
-                    var h4 = document.createElement('h3');
-                    h4.textContent = cat.label;
-                    catDiv.appendChild(h4);
+                        var catDiv = document.createElement('div');
+                        catDiv.className = 'layers-category';
+                        var h4 = document.createElement('h4');
+                        h4.textContent = cat.label;
+                        catDiv.appendChild(h4);
                         var itemsDiv = document.createElement('div');
-                        itemsDiv.className = 'layers-items';
+                        itemsDiv.className = 'layer-grid';
                         cat.ids.forEach(function(id) {
-                            var el = document.getElementById(id);
-                            if (el && layersRow.contains(el)) {
+                            var el = null;
+                            for (var i = 0; i < controls.length; i++) {
+                                if (controls[i].id === id) { el = controls[i]; break; }
+                            }
+                            if (el && claimed.indexOf(el) === -1) {
+                                if (el.tagName !== 'SELECT') el.classList.add('layer-card');
                                 itemsDiv.appendChild(el);
+                                claimed.push(el);
                             }
                         });
                         if (itemsDiv.children.length) {
@@ -463,37 +478,34 @@ export function openLayersModal(triggerEl) {
                             temp.appendChild(catDiv);
                         }
                     });
-                    var remaining = [].slice.call(layersRow.children);
+                    var remaining = controls.filter(function(el) { return claimed.indexOf(el) === -1; });
                     remaining.forEach(function(el) {
-                        // Skip the row's section label — only layer toggles/selects
-                        // are shown inside the popover.
                         if (el.classList && el.classList.contains('control-label')) return;
                         var catDiv = document.createElement('div');
                         catDiv.className = 'layers-category';
                         var itemsDiv = document.createElement('div');
-                        itemsDiv.className = 'layers-items';
+                        itemsDiv.className = 'layer-grid';
+                        el.classList.add('layer-card');
                         itemsDiv.appendChild(el);
                         catDiv.appendChild(itemsDiv);
                         temp.appendChild(catDiv);
                     });
                     body.appendChild(temp);
+                    body.dataset.gridBuilt = '1';
                 }
                 layersModal.classList.add('visible');
-                 _positionLayersPopover();
+                 _positionPopover(layersModal, _layersPopoverTrigger);
                  _setA11yDialogTrigger(document.activeElement);
                  setTimeout(function() { _a11yFocusFirstInDialog(layersModal); }, 0);
              }
 
-// Position the layers popover right AT the button that opened it — hung
-// below the trigger when there is room, flipped above it when the trigger
-// sits low on the screen (mobile bottom-nav, floating button), and
-// horizontally centered on the trigger. It is always clamped to the viewport
-// and never floats away from the trigger into the middle of the screen. The
+// Position an anchored popover right AT the button that opened it — the
+// trigger's inline-start edge (left in LTR, right in RTL, mirroring
+// inset-inline-start: 0) with an 8px gap below, flipped above when the
+// trigger sits low on the screen, always clamped to the viewport. The
 // transform-origin faces the trigger so the pop animation grows out of it.
-function _positionLayersPopover() {
-                if (!layersModal) return;
-                var modal = layersModal;
-                var trigger = _layersPopoverTrigger;
+function _positionPopover(modal, trigger) {
+                if (!modal) return;
                 var gap = 8;
                 var left, top;
                 var content = modal.querySelector('.layers-modal-content');
@@ -503,8 +515,9 @@ function _positionLayersPopover() {
                 var ph = Math.min(modal.offsetHeight || 400, vh - 2 * gap);
                 if (trigger && trigger.getBoundingClientRect) {
                     var r = trigger.getBoundingClientRect();
-                    // Horizontal: center the panel on the trigger, then clamp.
-                    left = r.left + (r.width - pw) / 2;
+                    var rtl = document.documentElement.getAttribute('dir') === 'rtl';
+                    // Inline-start edge: left in LTR, right in RTL.
+                    left = rtl ? r.right - pw : r.left;
                     left = Math.max(gap, Math.min(left, vw - pw - gap));
                     // Vertical: hang below the trigger; flip above when the
                     // trigger is too low for the panel to fit underneath.
@@ -526,9 +539,10 @@ function _positionLayersPopover() {
                 modal.style.top = top + 'px';
             }
 
-// Keep the popover glued to its trigger if the window is resized while open.
+// Keep open popovers glued to their triggers if the window is resized.
 window.addEventListener('resize', function() {
-                if (layersModal && layersModal.classList.contains('visible')) _positionLayersPopover();
+                if (layersModal && layersModal.classList.contains('visible')) _positionPopover(layersModal, _layersPopoverTrigger);
+                if (divisionPopover && divisionPopover.classList.contains('visible')) _positionPopover(divisionPopover, _divisionPopoverTrigger);
             });
 
 export function closeLayersModal() {
@@ -550,6 +564,40 @@ export function closeLayersModal() {
                     _a11yRestoreFocus();
                 }, 150);
              }
+
+export function openDivisionPopover(triggerEl) {
+                if (!divisionPopover) return;
+                if (divisionPopover.classList.contains('closing')) {
+                    clearTimeout(_divisionCloseTimer);
+                    divisionPopover.classList.remove('closing');
+                    return;
+                }
+                if (divisionPopover.classList.contains('visible')) {
+                    closeDivisionPopover();
+                    return;
+                }
+                // One menu at a time: opening Divisions dismisses Layers.
+                if (layersModal && layersModal.classList.contains('visible')) {
+                    closeLayersModal();
+                }
+                _divisionPopoverTrigger = triggerEl || null;
+                divisionPopover.classList.add('visible');
+                _positionPopover(divisionPopover, _divisionPopoverTrigger);
+                _setA11yDialogTrigger(document.activeElement);
+                setTimeout(function() { _a11yFocusFirstInDialog(divisionPopover); }, 0);
+            }
+
+export function closeDivisionPopover() {
+                if (!divisionPopover || !divisionPopover.classList.contains('visible')) return;
+                if (divisionPopover.classList.contains('closing')) return;
+                divisionPopover.classList.add('closing');
+                clearTimeout(_divisionCloseTimer);
+                _divisionCloseTimer = setTimeout(function() {
+                    divisionPopover.classList.remove('visible');
+                    divisionPopover.classList.remove('closing');
+                    _a11yRestoreFocus();
+                }, 150);
+            }
 
 export const aboutModal = document.getElementById('aboutModal');
 

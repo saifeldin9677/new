@@ -199,9 +199,11 @@ export const layersToggleBtn = document.getElementById('layersToggleBtn');
 
 export const layersModal = document.getElementById('layersModal');
 
-export const layersModalBackdrop = document.getElementById('layersModalBackdrop');
-
 export const layersModalClose = document.getElementById('layersModalClose');
+
+export const divisionPopover = document.getElementById('divisionPopover');
+
+export const divisionPopoverClose = document.getElementById('divisionPopoverClose');
 
 export const shortcutsOverlay = document.getElementById('shortcutsOverlay');
 

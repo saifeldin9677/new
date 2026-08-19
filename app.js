@@ -258,7 +258,7 @@
             let selectedFeatureType = null; // 'mountain' | 'river' | null
             let gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gBorderDisputes, gAdminBoundaries, gGeopoliticalBlocs, gDesertsForests;
             let projection, pathGen;
-            let svg, gMap, gCountries, gCountryLabels, gGraticule, gOcean, gCorridors, gPhysical, gTemperature, gAuthoringMarkers, gQuizMarkers;
+            let svg, gMap, gCountries, gCountryLabels, gGraticule, gIceCap, gOcean, gCorridors, gPhysical, gTemperature, gAuthoringMarkers, gQuizMarkers;
             let currentTransform = d3.zoomIdentity;
             let _tooltipSize = { w: 180, h: 60 };
             let lastCanvasTransform = d3.zoomIdentity;
@@ -875,6 +875,7 @@
                     .attr('fill', 'url(#oceanGradient)');
 
                 gGraticule = svg.append('g');
+                gIceCap = svg.append('g');
                 gCountries = svg.append('g');
                 gCountryLabels = svg.append('g');
 
@@ -916,7 +917,7 @@
                 gQuizMarkers = svg.append('g');
 
                 gMap = svg.append('g').attr('class', 'map-transform-group');
-                [gOcean, gGraticule, gCountries, gAdminBoundaries, gCountryLabels, gPhysical, gCorridors, gTemperature, gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gGeopoliticalBlocs, gDesertsForests, gBorderDisputes, gAuthoringMarkers, gQuizMarkers]
+                [gOcean, gGraticule, gIceCap, gCountries, gAdminBoundaries, gCountryLabels, gPhysical, gCorridors, gTemperature, gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gGeopoliticalBlocs, gDesertsForests, gBorderDisputes, gAuthoringMarkers, gQuizMarkers]
                     .forEach(g => gMap.append(() => g.node()));
 
                 projection = setupProjection(width, height);
@@ -1045,6 +1046,21 @@
                     .attr('stroke', MAP_COLORS.graticule.sphere)
                     .attr('stroke-width', 0.6)
                     .attr('opacity', 0.25)
+                    .attr('d', pathGen);
+            }
+
+            // ── Arctic ice cap ──
+            // A translucent polar cap above the Arctic Circle (66.56°N), so
+            // the Arctic ocean and the upper butterfly-wing intersections are
+            // visibly distinct at the top of the map. Drawn under the country
+            // layer so coastlines stay crisp on top of the ice.
+            function drawIceCap() {
+                if (!gIceCap) return;
+                gIceCap.selectAll('*').remove();
+                const cap = d3.geoCircle().center([0, 90]).radius(23.44).precision(1);
+                gIceCap.append('path')
+                    .datum(cap())
+                    .attr('class', 'arctic-ice')
                     .attr('d', pathGen);
             }
 
@@ -2902,6 +2918,7 @@
                     .attr('fill', 'url(#globeShading)');
 
                 drawGraticule();
+                drawIceCap();
                 gCountries.selectAll('path')
                     .attr('d', pathGen)
                     .attr('fill', isDragging ? 'var(--panel-bg, #3a4a5c)' : function(d) { return getCountryFill(d); })
@@ -3012,6 +3029,7 @@
                         .attr('fill', 'url(#oceanGradient)');
                     gGraticule.selectAll('*').remove();
                     drawGraticule();
+                drawIceCap();
                     if (allCountryFeatures && allCountryFeatures.length) {
                         gCountries.selectAll('*').remove();
                         countryPaths = gCountries.selectAll('path')
@@ -5653,6 +5671,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 initDensityCanvas();
                 setupZoom();
                 drawGraticule();
+                drawIceCap();
                 setupSearch();
                 setupKeyboard();
 
@@ -8288,6 +8307,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         } else {
                             gOcean.select('rect').attr('width', width + 1000).attr('height', height + 1000);
                             drawGraticule();
+                drawIceCap();
                             if (allCountryFeatures.length) {
                                 gCountries.selectAll('path').attr('d', pathGen);
                                 if (countryLabelSelection) {

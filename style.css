@@ -4510,3 +4510,14 @@ body,
 ::-webkit-scrollbar {
     background: #121824;
 }
+
+/* ── Arctic ice cap ──
+   Translucent polar cap above the Arctic Circle (66.56°N) drawn under the
+   country layer, so the Arctic ocean and the upper butterfly-wing
+   intersections read as a distinct ice region at the top of the map. */
+.arctic-ice {
+    fill: rgba(255, 255, 255, 0.30);
+    stroke: rgba(255, 255, 255, 0.22);
+    stroke-width: 0.7;
+    pointer-events: none;
+}

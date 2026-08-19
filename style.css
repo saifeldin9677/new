@@ -228,11 +228,15 @@ body {
 }
 #headerProjectionLabel {
     white-space: nowrap;
-    /* The header stays on its dark slate in both themes; this override
+    /* Enlarged, high-visibility typography for the center header label:
+       15px / weight 600 / 0.3px tracking, light-on-dark regardless of
+       theme — the header stays on its dark slate in both themes. This
        beats the inline var(--text-secondary) (which turns dark in light
        mode and disappears on the navy bar). */
-    color: var(--header-subtitle-color) !important;
-    font-size: 0.7em;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+    letter-spacing: 0.3px !important;
 }
 .tools-row-start {
     display: flex;

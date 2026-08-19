@@ -8939,6 +8939,12 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             (function() {
                 var overlay = document.getElementById('langOverlay');
                 if (!overlay) { init(); maybeShowProjectionExplainer(); return; }
+                // The startup/modal title is always the fixed English brand
+                // name, never localized or derived from map state.
+                var modalTitle = document.getElementById('langModalTitle');
+                if (modalTitle) {
+                    modalTitle.textContent = 'Lepidos Atlas';
+                }
                 var savedLang = null;
                 try { savedLang = localStorage.getItem('mapLang'); } catch(e) {}
                 if (savedLang && ['ar','en','ru','uz','es'].includes(savedLang)) {

@@ -244,32 +244,56 @@ body {
 }
 /* ── Header Tools app-grid popover ── */
 .tools-dropdown {
-    position: relative;
+    position: relative !important;
 }
+
+/* Header containers must never clip the dropdown */
+header,
+.header,
+.top-bar,
+.navbar,
+.header-container,
+.tools-wrapper,
+.tools-dropdown,
+.header-tools,
+#toolsRowMiddle {
+    overflow: visible !important;
+}
+
+.tools-wrapper,
+.header-tools-container {
+    position: relative !important;
+}
+
 .tools-dropdown-menu {
     --btn-bg: rgba(255, 255, 255, 0.06);
     --btn-bg-hover: rgba(255, 255, 255, 0.12);
     --btn-text: #f1f5f9;
-    position: absolute;
-    top: calc(100% + 8px);
-    inset-inline-end: 0;
+    position: absolute !important;
+    top: calc(100% + 8px) !important;
+    inset-inline-end: 0 !important;
+    z-index: 99999 !important;
     width: 320px;
-    max-width: calc(100vw - 24px);
+    max-width: 90vw;
     box-sizing: border-box;
-    background: var(--panel-overlay-96);
+    background: var(--dock-bg, var(--panel-overlay-96));
     backdrop-filter: blur(12px);
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 14px;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
-    z-index: 1050;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
     display: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease;
 }
 .tools-dropdown-menu[hidden] {
     display: none !important;
 }
 .tools-dropdown-menu.visible {
-    display: block;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
     animation: menu-popover-in 0.18s ease;
 }
 .tools-grid {

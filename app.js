@@ -8601,36 +8601,45 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             });
 
             // ── Header Tools app-grid popover ──
-            var toolsBtn = document.getElementById('toolsBtn');
-            var toolsDropdownMenu = document.getElementById('toolsDropdownMenu');
-            if (!toolsBtn || !toolsDropdownMenu) {
-                console.warn('Tools button or menu element not found in DOM.');
-            } else if (!toolsBtn.dataset.menuBound) {
+            document.addEventListener('DOMContentLoaded', function() {
+                const toolsBtn = document.getElementById('toolsBtn');
+                const toolsMenu = document.getElementById('toolsDropdownMenu');
+
+                if (!toolsBtn || !toolsMenu) {
+                    console.error('Tools elements not found:', { toolsBtn, toolsMenu });
+                    return;
+                }
+
+                if (toolsBtn.dataset.menuBound) return;
                 toolsBtn.dataset.menuBound = '1';
-                function setToolsMenu(open) {
-                    if (open) {
-                        toolsDropdownMenu.classList.add('visible');
-                        toolsDropdownMenu.removeAttribute('hidden');
-                        toolsBtn.setAttribute('aria-expanded', 'true');
-                    } else {
-                        toolsDropdownMenu.classList.remove('visible');
-                        toolsDropdownMenu.setAttribute('hidden', '');
+
+                function toggleToolsMenu(e) {
+                    e.stopPropagation();
+                    const isVisible = toolsMenu.classList.contains('visible');
+
+                    if (isVisible) {
+                        toolsMenu.classList.remove('visible');
+                        toolsMenu.setAttribute('hidden', '');
                         toolsBtn.setAttribute('aria-expanded', 'false');
+                    } else {
+                        toolsMenu.classList.add('visible');
+                        toolsMenu.removeAttribute('hidden');
+                        toolsBtn.setAttribute('aria-expanded', 'true');
                     }
                 }
-                toolsBtn.addEventListener('click', function(e) {
+
+                toolsBtn.addEventListener('click', toggleToolsMenu);
+
+                toolsMenu.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    setToolsMenu(!toolsDropdownMenu.classList.contains('visible'));
                 });
-                toolsDropdownMenu.addEventListener('click', function(e) {
-                    e.stopPropagation();
+
+                document.addEventListener('click', () => {
+                    toolsMenu.classList.remove('visible');
+                    toolsMenu.setAttribute('hidden', '');
+                    toolsBtn.setAttribute('aria-expanded', 'false');
                 });
-                document.addEventListener('click', function() {
-                    if (toolsDropdownMenu && toolsDropdownMenu.classList.contains('visible')) {
-                        setToolsMenu(false);
-                    }
-                });
-            }
+            });
 
             function setupReligionButtons() {
                 religionButtons = document.querySelectorAll('.religion-btn');

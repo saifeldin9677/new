@@ -242,6 +242,91 @@ body {
 #toolsRow .search-box input {
     font-size: 0.85em;
 }
+/* ── Header Tools app-grid popover ── */
+.tools-dropdown {
+    position: relative;
+}
+.tools-dropdown-menu {
+    --btn-bg: rgba(255, 255, 255, 0.06);
+    --btn-bg-hover: rgba(255, 255, 255, 0.12);
+    --btn-text: #f1f5f9;
+    position: absolute;
+    top: calc(100% + 8px);
+    inset-inline-end: 0;
+    width: 320px;
+    max-width: calc(100vw - 24px);
+    box-sizing: border-box;
+    background: var(--panel-overlay-96);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+    z-index: 1050;
+    display: none;
+}
+.tools-dropdown-menu.visible {
+    display: block;
+    animation: menu-popover-in 0.18s ease;
+}
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+.tool-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-height: 52px;
+    padding: 10px 6px;
+    border-radius: 8px;
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    font-family: inherit;
+    font-size: 11px;
+    line-height: 1.2;
+}
+.tool-card:hover {
+    background: var(--btn-bg-hover);
+    transform: translateY(-2px);
+}
+.tool-card .tool-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+.tool-card .tool-label {
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+.tool-card.toggle-on {
+    background: #1a3a38;
+    border-color: var(--brand-accent);
+    color: #80e0d0;
+    box-shadow: 0 0 0 1px rgba(20, 184, 166, 0.3);
+}
+[data-theme="light"] .tools-dropdown-menu {
+    --btn-bg: #f1f5f9;
+    --btn-bg-hover: #e2e8f0;
+    --btn-text: #0f172a;
+}
+@media (prefers-color-scheme: light) {
+    :root:not([data-theme]) .tools-dropdown-menu {
+        --btn-bg: #f1f5f9;
+        --btn-bg-hover: #e2e8f0;
+        --btn-text: #0f172a;
+    }
+}
 .header .logo-icon {
     font-size: 20px;
     filter: drop-shadow(0 0 6px rgba(20, 184, 166, 0.3));

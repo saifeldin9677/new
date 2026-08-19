@@ -5214,7 +5214,8 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 rows.forEach(function(r) {
                     html += '<tr>';
                     html += '<td>' + htmlEscape(r.name) + '</td>';
-                    html += '<td>' + htmlEscape(r.continent) + '</td>';
+                    const continentLabel = lang === 'ar' ? (continentArabic[r.continent] || r.continent) : lang === 'ru' ? (continentRussian[r.continent] || r.continent) : lang === 'uz' ? (continentUzbek[r.continent] || r.continent) : lang === 'es' ? (continentSpanish[r.continent] || r.continent) : r.continent;
+                    html += '<td>' + htmlEscape(continentLabel) + '</td>';
                     html += '<td>' + (r.population != null ? r.population.toLocaleString('en-US') : t('unknown')) + '</td>';
                     html += '<td>' + (r.area != null ? r.area.toLocaleString('en-US') : t('unknown')) + '</td>';
                     html += '<td>' + (r.density != null ? r.density + ' ' + t('densityUnit') : t('unknown')) + '</td>';
@@ -5739,8 +5740,8 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         { getEl: function() {
                             var mb = window.innerWidth <= 768;
                             if (mb) return document.querySelector('#mobileToolsBtn');
-                            var first = document.querySelector('#shareBtn');
-                            var last = document.querySelector('#coordsToggle');
+                            var first = document.querySelector('#toolsToggleBtn');
+                            var last = document.querySelector('#toolsToggleBtn');
                             if (!first || !last) return null;
                             var r1 = first.getBoundingClientRect();
                             var r2 = last.getBoundingClientRect();
@@ -6940,6 +6941,10 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (quizActive) return;
                     if (globeViewBtn) { globeViewBtn.disabled = true; globeViewBtn.classList.add('quiz-disabled'); }
                     exitAllQuizOverlays();
+                    quizHudPrompt.textContent = '';
+                    quizHudQuestion.textContent = '';
+                    quizHudScore.textContent = '';
+                    quizHudTimer.textContent = '';
                     initI18nQuizChoice();
                     quizModeChoiceOverlay.style.display = '';
                 });
@@ -8584,6 +8589,32 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             });
             document.addEventListener('click', function() {
                 document.querySelectorAll('.lang-dropdown-menu.visible').forEach(function(m) { m.classList.remove('visible'); });
+            });
+
+            // ── Header Tools app-grid popover ──
+            var toolsToggleBtn = document.getElementById('toolsToggleBtn');
+            var toolsDropdownMenu = document.getElementById('toolsDropdownMenu');
+            function openToolsMenu() {
+                if (!toolsDropdownMenu) return;
+                document.querySelectorAll('.lang-dropdown-menu.visible').forEach(function(m) { m.classList.remove('visible'); });
+                toolsDropdownMenu.classList.add('visible');
+                if (toolsToggleBtn) toolsToggleBtn.setAttribute('aria-expanded', 'true');
+            }
+            function closeToolsMenu() {
+                if (!toolsDropdownMenu) return;
+                toolsDropdownMenu.classList.remove('visible');
+                if (toolsToggleBtn) toolsToggleBtn.setAttribute('aria-expanded', 'false');
+            }
+            if (toolsToggleBtn) toolsToggleBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (toolsDropdownMenu && toolsDropdownMenu.classList.contains('visible')) closeToolsMenu();
+                else openToolsMenu();
+            });
+            document.addEventListener('click', function(e) {
+                if (toolsDropdownMenu && toolsDropdownMenu.classList.contains('visible')) {
+                    var toolsWrap = document.getElementById('toolsDropdown');
+                    if (!toolsWrap || !toolsWrap.contains(e.target)) closeToolsMenu();
+                }
             });
 
             function setupReligionButtons() {

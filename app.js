@@ -829,7 +829,7 @@
                     .attr('cx', '50%').attr('cy', '50%').attr('r', '70%')
                     .selectAll('stop')
                     .data(MAP_COLORS.oceanGradient.map(function(c, i) {
-                        return { offset: ['0%','30%','60%','100%'][i], color: c };
+                        return { offset: ['0%','15%','20%','100%'][i], color: c };
                     }))
                     .join('stop')
                     .attr('offset', d => d.offset)
@@ -860,6 +860,25 @@
                 gGraticule = svg.append('g');
                 gCountries = svg.append('g');
                 gCountryLabels = svg.append('g');
+
+                // Ocean ↔ canvas unification: read the terminal stop of the
+                // live ocean gradient and stamp that exact color onto the map
+                // container and the page, so the projection's boundary can
+                // never drift from the surrounding background (the ocean is a
+                // <rect fill="url(#oceanGradient)"> — there is no fill-able
+                // path.sphere here, so we read the SVG gradient instead of a
+                // computed path fill).
+                function syncOceanBackground() {
+                    var grad = document.getElementById('oceanGradient');
+                    var stops = grad ? grad.querySelectorAll('stop') : [];
+                    var last = stops[stops.length - 1];
+                    var color = last ? last.getAttribute('stop-color') : null;
+                    if (!color || color === 'none') return;
+                    var container = document.getElementById('mapContainer');
+                    if (container) container.style.backgroundColor = color;
+                    document.body.style.backgroundColor = color;
+                }
+                window.syncOceanBackground = syncOceanBackground;
                 gPhysical = svg.append('g');
                 gCorridors = svg.append('g');
                 gTemperature = svg.append('g');
@@ -5611,6 +5630,9 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     lucide.createIcons();
                 }
                 createSvg();
+                if (typeof window.syncOceanBackground === 'function') {
+                    window.syncOceanBackground();
+                }
                 initDensityCanvas();
                 setupZoom();
                 drawGraticule();

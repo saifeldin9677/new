@@ -4114,7 +4114,7 @@
                 densitySpots: { high: '#ff5252', medium: '#ff9800', low: '#ffeb3b' },
                 cities: { tourist: '#e91e63', commercial: '#2196f3', industrial: '#ff9800', agricultural: '#4caf50', other: '#ff4081' },
                 corridor: { terrain: '#ffeb3b', density: '#00e5ff', precipitation: '#00e5ff', temperature: '#00ffcc', normal: '#ff1744', other: '#ff9100' },
-                oceanGradient: ['#1a334a','#152b3f','#0f1f30','#091520'],
+                oceanGradient: ['#1a334a','#152b3f','#091520','#091520'],
                 graticule: { line: 'rgba(255,255,255,0.08)', equator: '#ff6f00', tropic: '#ffa726', meridian: '#4fc3f7', polar: '#81d4fa', sphere: 'rgba(255,255,255,0.15)' },
                 physical: { mountainShadow: '#4a2d00', mountainMajor: '#e8c06a', mountainImportant: '#c8983e', mountainMinor: '#a87830', mountainPeakMajor: '#ffe088', mountainPeakImportant: '#d4a84c', mountainPeakMinor: '#b08830', mountainHover: '#fff', riverHalo: '#1a5f7a', riverMajor: '#56d0f0', riverImportant: '#3eaed0', riverMinor: '#2898c0', riverHover: '#fff' },
                 blocDefault: '#2ecc71',

@@ -13,7 +13,8 @@
     --header-height: 60px;
     --mobile-topbar-height: 44px;
     --mobile-nav-height: 56px;
-    --map-bg: #091520;
+    --ocean-color: #091520; /* exact terminal navy of the ocean gradient (see MAP_COLORS.oceanGradient in data.js) */
+    --map-bg: var(--ocean-color);
     --panel-overlay: rgba(20, 24, 32, 0.95);
     --panel-overlay-97: rgba(20, 24, 32, 0.97);
     --panel-overlay-96: rgba(20, 24, 32, 0.96);
@@ -103,7 +104,8 @@ path:focus-visible {
         --btn-hover: #dce0e5;
         --btn-active: #d0d5dd;
         --shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
-        --map-bg: #091520;
+        --ocean-color: #091520;
+        --map-bg: var(--ocean-color);
         --panel-overlay: rgba(255, 255, 255, 0.95);
         --panel-overlay-97: rgba(255, 255, 255, 0.97);
         --panel-overlay-96: rgba(255, 255, 255, 0.96);
@@ -139,7 +141,8 @@ path:focus-visible {
     --btn-hover: #dce0e5;
     --btn-active: #d0d5dd;
     --shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
-    --map-bg: #091520;
+    --ocean-color: #091520;
+    --map-bg: var(--ocean-color);
     --panel-overlay: rgba(255, 255, 255, 0.95);
     --panel-overlay-97: rgba(255, 255, 255, 0.97);
     --panel-overlay-96: rgba(255, 255, 255, 0.96);
@@ -4479,7 +4482,7 @@ html,
 body,
 .content-row,
 #mapContainer {
-    background-color: #091520 !important;
+    background-color: var(--ocean-color) !important;
 }
 
 /* Map canvas bounds: no outline/border chrome on the container. */

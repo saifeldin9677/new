@@ -1932,18 +1932,20 @@ body {
 .layers-modal.menu-popover .layers-modal-backdrop {
     display: none;
 }
-.layers-modal.menu-popover .layers-modal-content {
+.layers-modal.menu-popover .layers-dropdown-container {
     position: relative;
-    width: min(430px, calc(100vw - 16px));
+    width: clamp(320px, 90vw, 420px);
     max-width: none;
-    max-height: min(calc(100vh - 16px), 68vh);
-    padding: 14px 16px 16px;
+    max-height: 80vh;
+    padding: 16px;
+    box-sizing: border-box;
+    overflow-x: hidden !important;
+    overflow-y: auto;
     background: var(--panel-overlay-96);
     backdrop-filter: blur(12px);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.2);
-    overflow-y: auto;
     animation: menu-popover-in 0.18s ease;
 }
 @keyframes menu-popover-in {
@@ -1999,16 +2001,15 @@ body {
 }
 .layers-modal.menu-popover .layers-flat-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    padding: 16px;
-    max-height: 420px;
-    overflow-y: auto;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
     box-sizing: border-box;
+    overflow-x: hidden !important;
 }
-@media (max-width: 768px) {
+@media (min-width: 480px) {
     .layers-modal.menu-popover .layers-flat-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 }
 .layers-modal.menu-popover .layer-card {
@@ -2017,7 +2018,10 @@ body {
     align-items: center;
     justify-content: center;
     width: 100%;
-    padding: 12px 8px;
+    height: auto !important;
+    min-height: 75px;
+    padding: 8px 6px;
+    box-sizing: border-box;
     border: 1px solid transparent;
     border-radius: var(--dock-radius, 10px);
     background: var(--btn-bg);
@@ -2025,6 +2029,7 @@ body {
     cursor: pointer;
     transition: all 0.2s ease-in-out;
     text-align: center;
+    overflow: visible;
 }
 .layers-modal.menu-popover .layer-card:hover {
     background: var(--btn-bg-hover);
@@ -2043,7 +2048,8 @@ body {
     align-items: center;
     justify-content: center;
     font-size: 22px;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
+    flex-shrink: 0;
     color: var(--btn-icon-color, var(--text-secondary));
 }
 .layers-modal.menu-popover .layer-card .layer-icon svg {
@@ -2054,15 +2060,17 @@ body {
 .layers-modal.menu-popover .layer-card.toggle-on .layer-icon {
     color: var(--accent-color);
 }
-.layers-modal.menu-popover .layer-card .layer-title {
-    font-size: 11.5px;
-    font-weight: 500;
-    line-height: 1.2;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.layers-modal.menu-popover .layer-card .layer-title,
+.layers-modal.menu-popover .layer-card label,
+.layers-modal.menu-popover .layer-card span:not(.layer-icon) {
+    font-size: 11.5px !important;
+    line-height: 1.25;
+    color: var(--btn-text, #f1f5f9);
+    white-space: normal !important;
+    word-break: break-word;
     max-width: 100%;
-    text-align: center;
+    overflow: visible;
+    display: block;
 }
 .layers-modal.menu-popover .layers-flat-grid .bloc-select {
     grid-column: 1 / -1;

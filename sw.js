@@ -1,6 +1,6 @@
-const LEPIDOS_CACHE_VERSION = 'lepidos-v1';
-const LEPIDOS_CACHE_PRECACHE = 'lepidos-precache-v1';
-const LEPIDOS_CACHE_RUNTIME = 'lepidos-runtime-v1';
+const LEPIDOS_CACHE_VERSION = 'lepidos-v2';
+const LEPIDOS_CACHE_PRECACHE = 'lepidos-precache-v2';
+const LEPIDOS_CACHE_RUNTIME = 'lepidos-runtime-v2';
 
 const PRECACHE_URLS = [
     './',
@@ -69,6 +69,27 @@ self.addEventListener('fetch', function(event) {
     var isSameOrigin = url.origin === self.location.origin;
     var isRuntime = RUNTIME_ORIGINS.indexOf(url.origin) !== -1;
     if (!isSameOrigin && !isRuntime) return;
+
+    // App shell (own HTML/CSS/JS): network-first so deploys reach users
+    // immediately; the cached copy is the offline fallback. The pre-cache
+    // is refreshed on every successful fetch.
+    var isAppShell = isSameOrigin && /(index\.html|style\.css|app\.js|data\.js|sw\.js)$/.test(url.pathname);
+    if (isAppShell) {
+        event.respondWith(
+            fetch(request).then(function(response) {
+                if (response && response.ok) {
+                    var copy = response.clone();
+                    caches.open(LEPIDOS_CACHE_PRECACHE).then(function(cache) {
+                        cache.put(request, copy);
+                    });
+                }
+                return response;
+            }).catch(function() {
+                return caches.match(request);
+            })
+        );
+        return;
+    }
 
     event.respondWith(
         caches.match(request).then(function(cached) {

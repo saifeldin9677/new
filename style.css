@@ -265,6 +265,9 @@ body {
     z-index: 1050;
     display: none;
 }
+.tools-dropdown-menu[hidden] {
+    display: none !important;
+}
 .tools-dropdown-menu.visible {
     display: block;
     animation: menu-popover-in 0.18s ease;

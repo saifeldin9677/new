@@ -5799,7 +5799,11 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         { getEl: function() {
                             var mb = window.innerWidth <= 768;
                             return document.querySelector(mb ? '#mobileToolsBtn' : '#compareProjectionsBtn');
-                        }, icon: '📐', titleKey: 'onboardStep12Title', textKey: 'onboardStep12Text' }
+                        }, icon: '📐', titleKey: 'onboardStep12Title', textKey: 'onboardStep12Text' },
+                        { getEl: function() {
+                            var mb = window.innerWidth <= 768;
+                            return document.querySelector(mb ? '#mobileToolsBtn' : '#annotateBtn');
+                        }, icon: '✏️', titleKey: 'onboardStep13Title', textKey: 'onboardStep13Text' }
                     ];
                     var currentStep = 0;
                     var isOpen = false;

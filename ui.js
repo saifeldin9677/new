@@ -407,6 +407,8 @@ export function openLayersModal(triggerEl) {
                     btnRow.className = 'menu-popover-actions';
                     var allOffBtn = document.createElement('button');
                     allOffBtn.className = 'btn';
+                    allOffBtn.id = 'btn-turn-off-all';
+                    allOffBtn.setAttribute('data-i18n', 'allOff');
                     allOffBtn.textContent = t('allOff');
                     allOffBtn.addEventListener('click', function() {
                         body.querySelectorAll('.btn.toggle-on').forEach(function(b) { b.click(); });
@@ -415,6 +417,8 @@ export function openLayersModal(triggerEl) {
                     btnRow.appendChild(allOffBtn);
                     var resetLayersBtn = document.createElement('button');
                     resetLayersBtn.className = 'btn';
+                    resetLayersBtn.id = 'btn-reset-layers';
+                    resetLayersBtn.setAttribute('data-i18n', 'resetLayers');
                     resetLayersBtn.textContent = t('resetLayers');
                     resetLayersBtn.addEventListener('click', function() {
                         if (corridorsVisible) toggleCorridors();
@@ -446,8 +450,39 @@ export function openLayersModal(triggerEl) {
                     body.appendChild(btnRow);
                     var grid = document.createElement('div');
                     grid.className = 'layers-flat-grid';
+                    var blocsCompound = null;
                     controls.forEach(function(el) {
-                        if (el.tagName === 'SELECT') { grid.appendChild(el); return; }
+                        if (el.tagName === 'SELECT') {
+                            if (blocsCompound) { blocsCompound.appendChild(el); return; }
+                            grid.appendChild(el);
+                            return;
+                        }
+                        if (el.id === 'geopoliticalBlocsToggle') {
+                            blocsCompound = document.createElement('div');
+                            blocsCompound.className = 'blocs-compound-card';
+                            el.classList.add('blocs-toggle-btn');
+                            var blocsIcon = el.querySelector('.lucide-icon');
+                            if (blocsIcon) {
+                                var blocsIconWrap = document.createElement('span');
+                                blocsIconWrap.className = 'layer-icon';
+                                blocsIcon.replaceWith(blocsIconWrap);
+                                blocsIconWrap.appendChild(blocsIcon);
+                            }
+                            var blocsLabel = el.querySelector('.btn-text');
+                            if (blocsLabel) {
+                                var blocsLabelWrap = document.createElement('span');
+                                blocsLabelWrap.className = 'layer-title';
+                                blocsLabel.replaceWith(blocsLabelWrap);
+                                blocsLabelWrap.appendChild(blocsLabel);
+                            }
+                            blocsCompound.appendChild(el);
+                            grid.appendChild(blocsCompound);
+                            var blocsObserver = new MutationObserver(function() {
+                                blocsCompound.classList.toggle('active', el.classList.contains('toggle-on'));
+                            });
+                            blocsObserver.observe(el, { attributes: true, attributeFilter: ['class'] });
+                            return;
+                        }
                         el.classList.add('layer-card');
                         var icon = el.querySelector('.lucide-icon');
                         if (icon) {

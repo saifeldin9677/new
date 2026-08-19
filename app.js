@@ -4273,15 +4273,45 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', xy[0] + 9).attr('y', xy[1] + 4).text(a.label);
                             }
                         } else if (a.type === 'region' && Array.isArray(a.coords) && a.coords.length >= 3) {
-                            var pts = a.coords.map(function(c) { return proj(c); });
-                            if (pts.some(function(p) { return !p || isNaN(p[0]); })) return;
-                            var d = 'M' + pts.map(function(p) { return p[0] + ',' + p[1]; }).join('L') + 'Z';
-                            gAnnotations.append('path').attr('class', 'annotation-region-poly').attr('d', d).style('stroke', col).style('fill', col + '26').style('stroke-width', 2 * scale * zoomStroke);
-                            if (a.label) {
-                                var cx = 0, cy = 0;
-                                pts.forEach(function(p) { cx += p[0]; cy += p[1]; });
-                                cx /= pts.length; cy /= pts.length;
-                                gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', cx).attr('y', cy).attr('text-anchor', 'middle').text(a.label);
+                            var ring = a.coords.slice();
+                            if (ring.length && (ring[0][0] !== ring[ring.length - 1][0] || ring[0][1] !== ring[ring.length - 1][1])) {
+                                ring.push(ring[0]);
+                            }
+                            var jumpPx = Math.min(getMapRect().width, getMapRect().height) * 0.55;
+                            var pieces = [];
+                            var cur = [];
+                            ring.forEach(function(c) {
+                                var p = proj(c);
+                                if (!p || isNaN(p[0])) {
+                                    if (cur.length >= 2) pieces.push(cur);
+                                    cur = [];
+                                    return;
+                                }
+                                if (cur.length) {
+                                    var last = cur[cur.length - 1];
+                                    if (Math.abs(p[0] - last[0]) > jumpPx || Math.abs(p[1] - last[1]) > jumpPx) {
+                                        if (cur.length >= 2) pieces.push(cur);
+                                        cur = [];
+                                    }
+                                }
+                                cur.push(p);
+                            });
+                            if (cur.length >= 2) pieces.push(cur);
+                            var anyDrawn = false;
+                            pieces.forEach(function(part) {
+                                if (part.length < 3) return;
+                                var d = 'M' + part.map(function(p) { return p[0] + ',' + p[1]; }).join('L') + 'Z';
+                                gAnnotations.append('path').attr('class', 'annotation-region-poly').attr('d', d).style('stroke', col).style('fill', col + '26').style('stroke-width', 2 * scale * zoomStroke);
+                                anyDrawn = true;
+                            });
+                            if (anyDrawn && a.label) {
+                                var labelPts = a.coords.map(function(c) { return proj(c); }).filter(function(p) { return p && !isNaN(p[0]); });
+                                if (labelPts.length) {
+                                    var cx = 0, cy = 0;
+                                    labelPts.forEach(function(p) { cx += p[0]; cy += p[1]; });
+                                    cx /= labelPts.length; cy /= labelPts.length;
+                                    gAnnotations.append('text').attr('class', 'annotation-pin-label').attr('x', cx).attr('y', cy).attr('text-anchor', 'middle').text(a.label);
+                                }
                             }
                         } else if (a.type === 'freehand' && Array.isArray(a.coords) && a.coords.length >= 2) {
                             parts = _projectAnnotationParts(a.coords, proj);

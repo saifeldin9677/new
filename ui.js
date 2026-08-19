@@ -439,58 +439,33 @@ export function openLayersModal(triggerEl) {
                         updateActiveLayerCount();
                     });
                     btnRow.appendChild(resetLayersBtn);
-                    var categories = [
-                        { label: t('catGeneral'), ids: ['labelsToggle','sectToggle','coordsToggle'] },
-                        { label: t('catPopulation'), ids: ['capitalsToggle','majorCitiesToggle','timezonesToggle','densitySpotsToggle'] },
-                        { label: t('catTransport'), ids: ['routesToggle','riversToggle'] },
-                        { label: t('catPolitics'), ids: ['geopoliticalBlocsToggle','blocSelect','borderDisputesToggle'] },
-                        { label: t('catEnvironment'), ids: ['naturalResourcesToggle','ethnicGroupsToggle','desertsForestsToggle'] },
-                        { label: t('catClimate'), ids: ['oceanCurrentsToggle','windsToggle','earthquakesToggle','volcanoesToggle'] },
-                    ];
                     var controls = [].slice.call(body.children);
                     // Wipe the body FIRST, then rebuild so the quick-action row
                     // (All Off / Reset) is not cleared by the reset below.
                     body.innerHTML = '';
                     body.appendChild(btnRow);
-                    var temp = document.createDocumentFragment();
-                    var claimed = [];
-                    categories.forEach(function(cat) {
-                        var catDiv = document.createElement('div');
-                        catDiv.className = 'layers-category';
-                        var h4 = document.createElement('h4');
-                        h4.textContent = cat.label;
-                        catDiv.appendChild(h4);
-                        var itemsDiv = document.createElement('div');
-                        itemsDiv.className = 'layer-grid';
-                        cat.ids.forEach(function(id) {
-                            var el = null;
-                            for (var i = 0; i < controls.length; i++) {
-                                if (controls[i].id === id) { el = controls[i]; break; }
-                            }
-                            if (el && claimed.indexOf(el) === -1) {
-                                if (el.tagName !== 'SELECT') el.classList.add('layer-card');
-                                itemsDiv.appendChild(el);
-                                claimed.push(el);
-                            }
-                        });
-                        if (itemsDiv.children.length) {
-                            catDiv.appendChild(itemsDiv);
-                            temp.appendChild(catDiv);
-                        }
-                    });
-                    var remaining = controls.filter(function(el) { return claimed.indexOf(el) === -1; });
-                    remaining.forEach(function(el) {
-                        if (el.classList && el.classList.contains('control-label')) return;
-                        var catDiv = document.createElement('div');
-                        catDiv.className = 'layers-category';
-                        var itemsDiv = document.createElement('div');
-                        itemsDiv.className = 'layer-grid';
+                    var grid = document.createElement('div');
+                    grid.className = 'layers-flat-grid';
+                    controls.forEach(function(el) {
+                        if (el.tagName === 'SELECT') { grid.appendChild(el); return; }
                         el.classList.add('layer-card');
-                        itemsDiv.appendChild(el);
-                        catDiv.appendChild(itemsDiv);
-                        temp.appendChild(catDiv);
+                        var icon = el.querySelector('.lucide-icon');
+                        if (icon) {
+                            var iconWrap = document.createElement('span');
+                            iconWrap.className = 'layer-icon';
+                            icon.replaceWith(iconWrap);
+                            iconWrap.appendChild(icon);
+                        }
+                        var label = el.querySelector('.btn-text');
+                        if (label) {
+                            var labelWrap = document.createElement('span');
+                            labelWrap.className = 'layer-title';
+                            label.replaceWith(labelWrap);
+                            labelWrap.appendChild(label);
+                        }
+                        grid.appendChild(el);
                     });
-                    body.appendChild(temp);
+                    body.appendChild(grid);
                     body.dataset.gridBuilt = '1';
                 }
                 layersModal.classList.add('visible');

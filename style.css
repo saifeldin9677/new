@@ -1974,22 +1974,12 @@ body {
     min-height: 32px;
     border-radius: var(--radius-pill);
 }
-.layers-modal.menu-popover .layers-category {
-    margin-bottom: 0;
-}
-.layers-modal.menu-popover .layers-category h4 {
-    margin: 0 0 8px 2px;
-    font-size: 0.68em;
-    font-weight: 600;
-    letter-spacing: 0.6px;
-    text-transform: uppercase;
-    color: var(--text-secondary);
-}
 /* GNOME Shell app-grid tiles: every layer is a uniform card with the
-   icon above the label; categories are grid sections. The card uses the
-   dock surface tokens (--btn-bg/--btn-text/--accent-color) so the popover
-   matches the controls dock; the aliases below resolve them to the panel
-   tokens since the popover lives outside the dock scope. */
+   icon above the label, all inside ONE flat grid — no category headers.
+   The card uses the dock surface tokens (--btn-bg/--btn-text/
+   --accent-color) so the popover matches the controls dock; the aliases
+   below resolve them to the panel tokens since the popover lives outside
+   the dock scope. */
 .layers-modal.menu-popover {
     --btn-bg: var(--panel-bg);
     --btn-bg-hover: var(--btn-hover);
@@ -2007,11 +1997,19 @@ body {
         --accent-color-rgb: 13, 148, 136;
     }
 }
-.layers-modal.menu-popover .layer-grid {
+.layers-modal.menu-popover .layers-flat-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 10px;
-    padding: 8px 0;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    padding: 16px;
+    max-height: 420px;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+@media (max-width: 768px) {
+    .layers-modal.menu-popover .layers-flat-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 .layers-modal.menu-popover .layer-card {
     display: flex;
@@ -2019,37 +2017,19 @@ body {
     align-items: center;
     justify-content: center;
     width: 100%;
-    min-height: 64px;
-    padding: 10px 8px;
-    border: 1px solid var(--border);
+    padding: 12px 8px;
+    border: 1px solid transparent;
     border-radius: var(--dock-radius, 10px);
     background: var(--btn-bg);
     color: var(--btn-text);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s ease-in-out;
+    text-align: center;
 }
 .layers-modal.menu-popover .layer-card:hover {
     background: var(--btn-bg-hover);
     border-color: var(--accent-color);
     transform: translateY(-2px);
-}
-.layers-modal.menu-popover .layer-card .lucide-icon,
-.layers-modal.menu-popover .layer-card .icon {
-    width: 20px !important;
-    height: 20px !important;
-    font-size: 20px;
-    margin-bottom: 6px;
-    color: var(--btn-icon-color, var(--text-secondary));
-}
-.layers-modal.menu-popover .layer-card .btn-text,
-.layers-modal.menu-popover .layer-card .label {
-    font-size: 11.5px;
-    line-height: 1.2;
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
 }
 .layers-modal.menu-popover .layer-card.active,
 .layers-modal.menu-popover .layer-card.toggle-on {
@@ -2058,11 +2038,33 @@ body {
     color: var(--accent-color);
     box-shadow: 0 0 0 1px rgba(var(--accent-color-rgb), 0.35);
 }
-.layers-modal.menu-popover .layer-card.active .lucide-icon,
-.layers-modal.menu-popover .layer-card.toggle-on .lucide-icon {
+.layers-modal.menu-popover .layer-card .layer-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 6px;
+    color: var(--btn-icon-color, var(--text-secondary));
+}
+.layers-modal.menu-popover .layer-card .layer-icon svg {
+    width: 22px !important;
+    height: 22px !important;
+}
+.layers-modal.menu-popover .layer-card.active .layer-icon,
+.layers-modal.menu-popover .layer-card.toggle-on .layer-icon {
     color: var(--accent-color);
 }
-.layers-modal.menu-popover .layer-grid .bloc-select {
+.layers-modal.menu-popover .layer-card .layer-title {
+    font-size: 11.5px;
+    font-weight: 500;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    text-align: center;
+}
+.layers-modal.menu-popover .layers-flat-grid .bloc-select {
     grid-column: 1 / -1;
     max-width: none;
     width: 100%;
@@ -2110,9 +2112,6 @@ body {
 }
 /* Slimmer tiles on small screens so the grid never overflows. */
 @media (max-width: 600px) {
-    .layers-modal.menu-popover .layer-grid {
-        grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
-    }
     .layers-modal.menu-popover #religionButtons {
         grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
     }

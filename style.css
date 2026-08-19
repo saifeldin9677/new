@@ -1489,6 +1489,14 @@ header,
         mask-position: 0 0;
         pointer-events: none;
     }
+    /* RTL: the dock anchors flush to the top-right viewport boundary, so
+       the physical bottom-right corner is squared off — no curve against
+       the screen edge; the rounded bottom-left stays for the inner side.
+       The SVG silhouette mask mirrors this in syncDockMask(). */
+    html[dir="rtl"] #controlsBar .stepped-dock-group,
+    html[dir="rtl"] #controlsBar .row-unified {
+        border-bottom-right-radius: 0 !important;
+    }
     /* Buttons: flex layout + line-height 1 keeps every island height
        driven by min-height/padding instead of font line boxes (Arabic
        metrics are taller, which would otherwise stretch the docks

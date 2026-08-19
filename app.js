@@ -5371,8 +5371,11 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     var B = 1 + f.offsetHeight;
                     var p;
                     if (rtl) {
-                        p = 'M0 0 H' + W + ' V' + (H - R) +
-                            ' A' + R + ' ' + R + ' 0 0 0 ' + (W - R) + ' ' + H +
+                        // RTL: the dock anchors flush to the top-right viewport
+                        // boundary — the bottom-start (physical bottom-right)
+                        // corner stays SHARP, no arc, so the silhouette sits
+                        // flush against the screen edge.
+                        p = 'M0 0 H' + W + ' V' + H +
                             ' H' + jx + ' V' + (B + R) +
                             ' A' + R + ' ' + R + ' 0 0 0 ' + (jx - R) + ' ' + B +
                             ' H' + R +

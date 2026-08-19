@@ -2465,16 +2465,17 @@ header,
     z-index: 99999 !important;
     pointer-events: none !important;
 }
-
-/* Fallback: tooltips anchored at the bottom edge */
+/* Native `title` tooltips are browser-rendered and float above the page,
+   so they can never be clipped or trapped inside the dock. The JS keeps
+   `data-tooltip` attributes in sync with `title`, but they must NOT be
+   rendered as pseudo-elements: the dock lives inside .map-container
+   (overflow: hidden), so any in-page tooltip would be clipped inside the
+   button/dock instead of floating outside. */
 .tooltip-bottom::after {
     top: calc(100% + 8px) !important;
     bottom: auto !important;
 }
 
-[data-tooltip]:hover::after {
-    content: attr(data-tooltip);
-}
 @media (min-width: 1024px) {
     .btn[data-tooltip]:hover::after,
     [data-tooltip]::after {

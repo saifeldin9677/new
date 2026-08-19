@@ -2423,25 +2423,63 @@ header,
     font-size: 0.45em;
     font-weight: 500;
 }
-.btn[data-tooltip]:hover::after {
+/* ── Tooltip hardening: toolbar buttons must never clip their tooltips ──
+   Dock buttons use native `title` tooltips (browser-rendered, never
+   clipped); these rules cover custom tooltips ([data-tooltip]::after and
+   .button-tooltip) and guarantee the button itself stays an open
+   positioning context. The dock lives inside .map-container
+   (overflow: hidden) so ABOVE-floating tooltips would be clipped at the
+   map's top edge; tooltips therefore float ABOVE on mobile (dock at the
+   bottom) and BELOW on desktop (dock pinned to the top), which the
+   media query below handles. */
+.map-mode-btn,
+.layer-btn,
+.split-btn,
+.toolbar-btn,
+.dock-btn,
+[data-tooltip],
+.mode-btn,
+.bar-layers-btn,
+.bloc-select,
+.toolbar-controls .btn,
+#controlsBar .btn {
+    position: relative !important;
+    overflow: visible !important;
+}
+
+[data-tooltip]::after,
+.button-tooltip {
+    position: absolute !important;
+    bottom: calc(100% + 8px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    white-space: nowrap !important;
+    background: rgba(18, 24, 36, 0.95) !important;
+    color: #f1f5f9 !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    padding: 4px 8px !important;
+    border-radius: 6px !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    z-index: 99999 !important;
+    pointer-events: none !important;
+}
+
+/* Fallback: tooltips anchored at the bottom edge */
+.tooltip-bottom::after {
+    top: calc(100% + 8px) !important;
+    bottom: auto !important;
+}
+
+[data-tooltip]:hover::after {
     content: attr(data-tooltip);
-    position: absolute;
-    bottom: calc(100% + 6px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.85);
-    color: #fff;
-    padding: 4px 10px;
-    border-radius: var(--radius-sm);
-    font-size: 12px;
-    white-space: nowrap;
-    pointer-events: none;
-    z-index: 9999;
 }
 @media (min-width: 1024px) {
-    .btn[data-tooltip]:hover::after {
-        bottom: auto;
-        top: calc(100% + 6px);
+    .btn[data-tooltip]:hover::after,
+    [data-tooltip]::after {
+        bottom: auto !important;
+        top: calc(100% + 8px) !important;
     }
 }
 

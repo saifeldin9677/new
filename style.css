@@ -13,7 +13,7 @@
     --header-height: 60px;
     --mobile-topbar-height: 44px;
     --mobile-nav-height: 56px;
-    --map-bg: radial-gradient(ellipse at center, #1a2840 0%, #0d1520 100%);
+    --map-bg: #091520;
     --panel-overlay: rgba(20, 24, 32, 0.95);
     --panel-overlay-97: rgba(20, 24, 32, 0.97);
     --panel-overlay-96: rgba(20, 24, 32, 0.96);
@@ -103,7 +103,7 @@ path:focus-visible {
         --btn-hover: #dce0e5;
         --btn-active: #d0d5dd;
         --shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
-        --map-bg: radial-gradient(ellipse at center, #d4e4f0 0%, #e8eef5 100%);
+        --map-bg: #091520;
         --panel-overlay: rgba(255, 255, 255, 0.95);
         --panel-overlay-97: rgba(255, 255, 255, 0.97);
         --panel-overlay-96: rgba(255, 255, 255, 0.96);
@@ -139,7 +139,7 @@ path:focus-visible {
     --btn-hover: #dce0e5;
     --btn-active: #d0d5dd;
     --shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
-    --map-bg: radial-gradient(ellipse at center, #d4e4f0 0%, #e8eef5 100%);
+    --map-bg: #091520;
     --panel-overlay: rgba(255, 255, 255, 0.95);
     --panel-overlay-97: rgba(255, 255, 255, 0.97);
     --panel-overlay-96: rgba(255, 255, 255, 0.96);
@@ -4466,4 +4466,44 @@ body.annotate-active .annotation-toolbar {
         padding: 4px 8px !important;
         min-height: 26px !important;
     }
+}
+
+/* ── Cartographic unification: kill the "cropped image card" seam ──
+   The ocean rect spans the full canvas filled with a radial gradient;
+   its 100% stop (#091520) extends to every canvas edge. Unifying the
+   viewport + map-container backgrounds to that exact stop makes the
+   projection blend seamlessly into the page in BOTH themes (the ocean
+   stays dark navy even in light mode, so the old light --map-bg
+   gradient was the source of the rectangular contrast). */
+html,
+body,
+.content-row,
+#mapContainer {
+    background-color: #091520 !important;
+}
+
+/* Map canvas bounds: no outline/border chrome on the container. */
+.map-container {
+    outline: none !important;
+    border: none !important;
+}
+
+/* Projection depth: this app renders the ocean as a full-bleed D3 SVG
+   rect (no Leaflet panes, no silhouetted layer wrapper), so a
+   drop-shadow has no visible boundary to cast from. A soft inner
+   vignette on the container provides the cartographic depth instead;
+   it sits under every UI island (dock z-index 2000+) and ignores
+   pointer events, so map interaction is unaffected. */
+.map-container::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 58%, rgba(0, 0, 0, 0.28) 100%);
+    z-index: 5;
+}
+
+/* Blend scrollbar gutters with the unified canvas tone. */
+::-webkit-scrollbar {
+    background: #121824;
 }

@@ -811,8 +811,25 @@
 
             function setupProjection(w, h) {
                 const precision = isMobile ? 0.8 : 0.3;
-                return d3.geoPolyhedralWaterman().scale(Math.min(w, h) * 0.38).translate([w / 2, h / 2]).rotate([0, 0])
+                const proj = d3.geoPolyhedralWaterman()
+                    .scale(Math.min(w, h) * 0.38)
+                    .translate([w / 2, h / 2])
+                    .rotate([0, 0])
                     .precision(precision);
+                // Fit the full butterfly silhouette — poles included (the
+                // polyhedral Waterman covers 90°N..90°S; there is no latitude
+                // clip) — inside the viewport, so the Arctic lobe and both
+                // polar vertices are never cut off by the container's
+                // overflow clipping at the default view.
+                try {
+                    const bounds = d3.geoPath(proj).bounds({ type: 'Sphere' });
+                    const bw = bounds[1][0] - bounds[0][0];
+                    const bh = bounds[1][1] - bounds[0][1];
+                    if (bw > 0 && bh > 0) {
+                        proj.scale(proj.scale() * Math.min(w / bw, h / bh) * 0.96);
+                    }
+                } catch (e) {}
+                return proj;
             }
 
             function createSvg() {

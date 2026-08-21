@@ -1,25 +1,43 @@
-const LEPIDOS_CACHE_VERSION = 'lepidos-v2';
-const LEPIDOS_CACHE_PRECACHE = 'lepidos-precache-v2';
-const LEPIDOS_CACHE_RUNTIME = 'lepidos-runtime-v2';
+const LEPIDOS_CACHE_VERSION = 'lepidos-v3';
+const LEPIDOS_CACHE_PRECACHE = 'lepidos-precache-v3';
+const LEPIDOS_CACHE_RUNTIME = 'lepidos-runtime-v3';
 
 const PRECACHE_URLS = [
     './',
     './index.html',
     './style.css',
+    './boot.js',
     './app.js',
     './data.js',
+    './firebase.js',
     './manifest.json',
     './admin-boundaries-data.json',
     './admin-name-translations.json',
+    './countries-110m.json',
     './icon-192.png',
-    './icon-512.png'
+    './icon-512.png',
+    './vendor/d3.min.js',
+    './vendor/d3-geo-projection.min.js',
+    './vendor/topojson-client.min.js',
+    './vendor/lucide.min.js',
+    './vendor/html2canvas.min.js',
+    './vendor/jspdf.umd.min.js',
+    './fonts/fonts.css',
+    './fonts/inter-cyrillic-ext.woff2',
+    './fonts/inter-cyrillic.woff2',
+    './fonts/inter-greek-ext.woff2',
+    './fonts/inter-greek.woff2',
+    './fonts/inter-latin-ext.woff2',
+    './fonts/inter-latin.woff2',
+    './fonts/inter-vietnamese.woff2',
+    './fonts/noto-arabic.woff2',
+    './fonts/noto-latin-ext.woff2',
+    './fonts/noto-latin.woff2',
+    './fonts/noto-math.woff2',
+    './fonts/noto-symbols.woff2'
 ];
 
 const RUNTIME_ORIGINS = [
-    'https://cdn.jsdelivr.net',
-    'https://cdnjs.cloudflare.com',
-    'https://fonts.googleapis.com',
-    'https://fonts.gstatic.com',
     'https://www.gstatic.com'
 ];
 

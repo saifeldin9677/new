@@ -3914,7 +3914,8 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 const controller = new AbortController();
                 const timeout = setTimeout(() => controller.abort(), 15000);
                 try {
-                    const response = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json', { signal: controller.signal });
+                    const basePath = window.location.pathname.replace(/\/[^\/]*$/, '/');
+                    const response = await fetch(basePath + 'countries-110m.json', { signal: controller.signal });
                     if (!response.ok) throw new Error('HTTP ' + response.status);
                     const data = await response.json();
                     return topojson.feature(data, data.objects.countries).features;
@@ -8536,6 +8537,24 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 updateActiveLayerCount();
             }
 
+            var pdfLibsRequested = false;
+            function loadVendorScript(name) {
+                return new Promise(function(resolve, reject) {
+                    var s = document.createElement('script');
+                    var basePath = window.location.pathname.replace(/\/[^\/]*$/, '/');
+                    s.src = basePath + 'vendor/' + name;
+                    s.onload = function() { resolve(); };
+                    s.onerror = function() { reject(new Error('Failed to load ' + name)); };
+                    document.head.appendChild(s);
+                });
+            }
+            function ensurePdfLibs() {
+                var loads = [];
+                if (typeof html2canvas !== 'function') loads.push(loadVendorScript('html2canvas.min.js'));
+                if (!window.jspdf) loads.push(loadVendorScript('jspdf.umd.min.js'));
+                return Promise.all(loads);
+            }
+
             function renderTextBlockToImage(lines, widthPx, heightPx) {
                 var div = document.createElement('div');
                 div.style.cssText = 'position:fixed;left:-9999px;top:0;width:' + widthPx + 'px;height:' + heightPx + 'px;' +
@@ -8559,6 +8578,16 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             // ── Export Map to PDF ──
             function exportMapPDF() {
                 if (exportInProgress) return;
+                if (typeof html2canvas !== 'function' || !window.jspdf) {
+                    if (!pdfLibsRequested) {
+                        pdfLibsRequested = true;
+                        ensurePdfLibs().then(function() { exportMapPDF(); }).catch(function(e) {
+                            pdfLibsRequested = false;
+                            console.error('PDF libraries failed to load:', e);
+                        });
+                    }
+                    return;
+                }
                 exportInProgress = true;
                 const exportOverlay = document.getElementById('exportBlockingOverlay');
                 if (exportOverlay) exportOverlay.style.display = 'flex';

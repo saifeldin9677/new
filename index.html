@@ -3,21 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://cdn.jsdelivr.net; connect-src 'self' https://cdn.jsdelivr.net https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://www.google-analytics.com; font-src 'self' data: https://fonts.gstatic.com; frame-src https://lepidos-map.firebaseapp.com; form-action 'self';">
-    <!-- Lucide icons CSP: script-src covers cdn.jsdelivr.net, img-src for inline SVGs is covered by 'self' -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com; font-src 'self' data:; frame-src https://lepidos-map.firebaseapp.com; form-action 'self';">
     <title>أطلس ليبيدوس</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦋</text></svg>">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#14B8A6">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js" integrity="sha384-CjloA8y00+1SDAUkjs099PVfnY2KmDC2BZnws9kh8D/lX1s46w6EPhpXdqMfjK6i" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3-geo-projection@4.0.0/dist/d3-geo-projection.min.js" integrity="sha384-4C75ouycBmNQkYM1g57WhODWh671y+Atne6FZrE/ITHAg412SN8Ai3dPCa+itkz2" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js" integrity="sha384-Ukv1p/xTma6P4/2bY5KzWBw+ydSpXmhCMtyciIQVDJ1RmOxtCYNMF1uXT9T63H67" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" integrity="sha384-ZZ1pncU3bQe8y31yfZdMFdSpttDoPmOZg2wguVK9almUodir1PghgT0eY7Mrty8H" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha384-JcnsjUPPylna1s1fvi1u12X5qjY5OL56iySh75FdtrwhO/SWXgMjoVqcKyIIWOLk" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lucide@1.23.0/dist/umd/lucide.min.js" integrity="sha384-ouAVEJVCMsf8Svzn+BwqbaBhxBEA0xgeVBhHnxmWd+Wqyv18yhWCQwGegFD/OHLq" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="fonts/fonts.css">
+    <script src="vendor/d3.min.js"></script>
+    <script src="vendor/d3-geo-projection.min.js"></script>
+    <script src="vendor/topojson-client.min.js"></script>
+    <script src="vendor/lucide.min.js"></script>
 
     <link rel="stylesheet" href="style.css?v=2026-08-19A">
 </head>
@@ -731,91 +726,10 @@
 
     </div>  <!-- closing content-row -->
 
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-      import { getAuth } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
-      import { getFirestore, doc, setDoc, addDoc, collection, query, where, getDocs, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+    <script type="module" src="firebase.js"></script>
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyC_o_-C7NFeTQwFb-kZRCI59HnTc2DDTUA",
-        authDomain: "lepidos-map.firebaseapp.com",
-        projectId: "lepidos-map",
-        storageBucket: "lepidos-map.firebasestorage.app",
-        messagingSenderId: "262733147860",
-        appId: "1:262733147860:web:2d6b7f0a7712a56c011541",
-        measurementId: "G-KC56R3GJJJ"
-      };
-
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
-
-      window.firebaseApp = app;
-      window.firebaseAuth = auth;
-      window.firebaseDb = db;
-
-      window.firebaseCreateSession = async function(sessionCode, config) {
-        try {
-          await setDoc(doc(db, 'quizSessions', sessionCode), {
-            createdAt: serverTimestamp(),
-            active: true,
-            config: config || null
-          });
-          return true;
-        } catch(e) { console.error('Failed to create session:', e); return false; }
-      };
-
-      window.firebaseSaveQuizResult = async function(sessionCode, studentName, score, total, timeTaken, answers) {
-        try {
-          await addDoc(collection(db, 'quizResults'), {
-            sessionCode: sessionCode.toUpperCase(),
-            studentName: studentName,
-            score: score,
-            total: total,
-            timeTaken: timeTaken || null,
-            answers: answers || [],
-            completedAt: serverTimestamp()
-          });
-          return true;
-        } catch(e) { console.error('Failed to save result:', e); return false; }
-      };
-
-      window.firebaseGetResultsForSession = async function(sessionCode) {
-        try {
-          const q = query(collection(db, 'quizResults'), where('sessionCode', '==', sessionCode.toUpperCase()), orderBy('completedAt', 'asc'));
-          const snapshot = await getDocs(q);
-          return snapshot.docs.map(function(d) { return { id: d.id, ...d.data() }; });
-        } catch(e) { console.error('Failed to fetch results:', e); return []; }
-      };
-
-      console.log('Firebase initialized for project:', firebaseConfig.projectId);
-    </script>
-
-    <script>window.APP_BUILD='2026-08-19A';(function(){try{var s=localStorage.getItem('lepidosBuildSeen');if(s!==null&&s!==window.APP_BUILD){localStorage.setItem('lepidosBuildSeen',window.APP_BUILD);location.reload();}else{localStorage.setItem('lepidosBuildSeen',window.APP_BUILD);}}catch(e){}})();</script>
+    <script src="boot.js?v=2026-08-19A"></script>
     <script src="data.js?v=2026-08-19A"></script>
     <script src="app.js?v=2026-08-19A"></script>
-    <script>
-      window.addEventListener('DOMContentLoaded', function () {
-        var btn = document.getElementById('toolsBtn');
-        var menu = document.getElementById('toolsDropdownMenu');
-        if (btn && menu && !btn.dataset.menuBound) {
-          btn.dataset.menuBound = '1';
-          btn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            var open = menu.classList.contains('visible');
-            menu.classList.toggle('visible', !open);
-            menu.removeAttribute('hidden');
-            btn.setAttribute('aria-expanded', String(!open));
-          });
-          menu.addEventListener('click', function (e) { e.stopPropagation(); });
-          document.addEventListener('click', function () {
-            menu.classList.remove('visible');
-            menu.setAttribute('hidden', '');
-            btn.setAttribute('aria-expanded', 'false');
-          });
-        }
-      });
-    </script>
-    <script>if ('serviceWorker' in navigator) { window.addEventListener('load', function () { navigator.serviceWorker.register('./sw.js').catch(function () {}); }); }</script>
 </body>
 </html>

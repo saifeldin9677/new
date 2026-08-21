@@ -71,6 +71,35 @@
     --glass-blur-lg: 16px;
     --glass-bg: rgba(17, 24, 32, 0.72);
     --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+
+    /* ── Z-index scale ──
+       Named stacking tiers. Values are the pre-existing numbers,
+       unchanged — this only names them. Lower tiers sit nearer the map,
+       higher tiers cover the whole viewport. */
+    --z-sticky-cell: 1;              /* sticky table headers inside scroll tables */
+    --z-map-surface: 5;              /* decorative overlay directly above map canvases */
+    --z-mobile-chrome: 15;           /* mobile top bar + bottom nav */
+    --z-country-panel: 30;           /* desktop country side panel */
+    --z-search-dropdown: 50;         /* search suggestions list */
+    --z-tooltip: 100;                /* hover tooltip, mobile tools menu */
+    --z-notification: 200;           /* copy notification toast */
+    --z-measure-label: 500;          /* measure distance result label */
+    --z-measure-toolbar: 900;        /* measure mode toolbar */
+    --z-map-widget: 999;             /* legend, disputes counter, zoom controls */
+    --z-controls-bar: 1000;          /* bottom controls bar, coordinates display */
+    --z-bar-toggle: 1001;            /* menu/layers toggle buttons above controls bar */
+    --z-layers-popover: 1050;        /* layers modal as anchored popover */
+    --z-country-panel-mobile: 1100;  /* country panel on mobile widths */
+    --z-onboarding-hint: 1500;       /* onboarding hint bubble */
+    --z-fullscreen-panel: 2000;      /* header dock, mobile mode sheet, shortcuts, data table */
+    --z-tools-dropdown: 2001;        /* header tools dropdown above header */
+    --z-modal: 3000;                 /* layers modal, quiz overlays */
+    --z-modal-alert: 3100;           /* quiz feedback/authoring banner above modal */
+    --z-presentation-exit: 5000;     /* presentation mode exit button */
+    --z-lang-overlay: 9998;          /* first-run language overlay */
+    --z-topmost: 9999;               /* lang dropdown, title tooltips, onboard backdrop, export blocker */
+    --z-topmost-card: 10000;         /* onboard/projection cards above their backdrop */
+    --z-button-tooltip: 99999;       /* button tooltip, always on top */
 }
 
 path:focus-visible {
@@ -181,17 +210,17 @@ body {
     user-select: none;
 }
 .header {
-    position: relative !important;
-    z-index: 2000 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    padding: 0 16px !important;
-    background: #111827 !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-    height: 56px !important;
-    box-sizing: border-box !important;
-    overflow: visible !important;
+    position: relative ;
+    z-index: var(--z-fullscreen-panel) ;
+    display: flex ;
+    align-items: center ;
+    justify-content: space-between  ;
+    padding: 0 16px  ;
+    background: #111827  ;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08)  ;
+    height: 56px  ;
+    box-sizing: border-box ;
+    overflow: visible ;
     gap: 16px;
     box-shadow: var(--shadow-md);
 }
@@ -202,9 +231,9 @@ body {
     min-width: 0;
 }
 .header-right-group {
-    display: flex !important;
-    align-items: center !important;
-    gap: 20px !important;
+    display: flex ;
+    align-items: center ;
+    gap: 20px ;
     min-width: 0;
 }
 .header-center-group {
@@ -215,8 +244,8 @@ body {
     flex-shrink: 0;
 }
 .header-left-group {
-    display: flex !important;
-    align-items: center !important;
+    display: flex ;
+    align-items: center ;
     gap: 10px !important;
     flex-shrink: 0;
 }
@@ -227,7 +256,7 @@ body {
 .mode-bar,
 .tabs-bar,
 .controls-bar {
-    z-index: 1000 !important;
+    z-index: var(--z-controls-bar) ;
 }
 #headerProjectionLabel {
     white-space: nowrap;
@@ -236,9 +265,9 @@ body {
        theme — the header stays on its dark slate in both themes. This
        beats the inline var(--text-secondary) (which turns dark in light
        mode and disappears on the navy bar). */
-    font-size: 15px !important;
-    font-weight: 600 !important;
-    color: rgba(255, 255, 255, 0.85) !important;
+    font-size: 15px ;
+    font-weight: 600 ;
+    color: rgba(255, 255, 255, 0.85) ;
     letter-spacing: 0.3px !important;
 }
 .tools-row-start {
@@ -260,7 +289,7 @@ body {
     background: rgba(255, 255, 255, 0.06) !important;
     border: 1px solid rgba(255, 255, 255, 0.12) !important;
     color: #f3f4f6 !important;
-    border-radius: 8px !important;
+    border-radius: 8px ;
     padding: 6px 12px !important;
     font-size: 13px !important;
     cursor: pointer;
@@ -303,14 +332,14 @@ body {
     font-family: inherit;
 }
 .header-search-input:focus {
-    outline: none !important;
-    border-color: #3b82f6 !important;
-    background: rgba(255, 255, 255, 0.1) !important;
-    width: 260px !important;
+    outline: none ;
+    border-color: #3b82f6 ;
+    background: rgba(255, 255, 255, 0.1) ;
+    width: 260px ;
 }
 .tools-wrapper,
 .lang-selector-wrapper {
-    position: relative !important;
+    position: relative ;
 }
 .tools-wrapper,
 .lang-selector-wrapper,
@@ -327,7 +356,7 @@ body {
 }
 /* ── Header Tools app-grid popover ── */
 .tools-dropdown {
-    position: relative !important;
+    position: relative ;
 }
 
 /* Header containers must never clip the dropdown */
@@ -340,22 +369,22 @@ header,
 .tools-dropdown,
 .header-tools,
 #toolsRowMiddle {
-    overflow: visible !important;
+    overflow: visible ;
 }
 
 .tools-wrapper,
 .header-tools-container {
-    position: relative !important;
+    position: relative ;
 }
 
 .tools-dropdown-menu {
     --btn-bg: rgba(255, 255, 255, 0.06);
     --btn-bg-hover: rgba(255, 255, 255, 0.12);
     --btn-text: #f1f5f9;
-    position: absolute !important;
-    top: calc(100% + 8px) !important;
-    inset-inline-end: 0 !important;
-    z-index: 2001 !important;
+    position: absolute ;
+    top: calc(100% + 8px) ;
+    inset-inline-end: 0 ;
+    z-index: var(--z-tools-dropdown) ;
     width: 320px;
     max-width: 90vw;
     box-sizing: border-box;
@@ -371,12 +400,12 @@ header,
     transition: opacity 0.2s ease;
 }
 .tools-dropdown-menu[hidden] {
-    display: none !important;
+    display: none ;
 }
 .tools-dropdown-menu.visible {
-    display: block !important;
-    opacity: 1 !important;
-    visibility: visible !important;
+    display: block ;
+    opacity: 1 ;
+    visibility: visible ;
     animation: menu-popover-in 0.18s ease;
 }
 .tools-grid {
@@ -488,7 +517,7 @@ header,
     font-size: 0.7em;
     box-shadow: var(--shadow-md);
     backdrop-filter: blur(var(--glass-blur-sm));
-    z-index: 100;
+    z-index: var(--z-tooltip);
     opacity: 0;
     transition: opacity var(--dur-fast) var(--ease);
     will-change: left, top;
@@ -507,7 +536,7 @@ header,
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: 10px 14px;
-    z-index: 999;
+    z-index: var(--z-map-widget);
     font-size: 0.7em;
     display: flex;
     flex-direction: column;
@@ -529,7 +558,7 @@ header,
     font-size: 0.75em;
     font-weight: bold;
     color: rgba(255,255,255,0.7);
-    z-index: 999;
+    z-index: var(--z-map-widget);
     pointer-events: none;
 }
 .legend-color {
@@ -555,7 +584,7 @@ header,
     display: flex;
     flex-direction: column;
     gap: 6px;
-    z-index: 999;
+    z-index: var(--z-map-widget);
     transition: opacity var(--dur-slow) var(--ease);
 }
 .zoom-btn {
@@ -614,7 +643,7 @@ header,
     border-radius: var(--radius-sm);
     max-height: 150px;
     overflow-y: auto;
-    z-index: 50;
+    z-index: var(--z-search-dropdown);
     list-style: none;
     display: none;
     width: 150px;
@@ -644,7 +673,7 @@ header,
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: 10px 14px;
-    z-index: 30;
+    z-index: var(--z-country-panel);
     color: var(--text);
     font-size: 0.7em;
     backdrop-filter: blur(var(--glass-blur-md));
@@ -711,7 +740,7 @@ header,
     border: 1px solid rgba(255, 255, 255, 0.12);
     font-size: 0.6em;
     color: var(--text-secondary);
-    z-index: 1000;
+    z-index: var(--z-controls-bar);
     white-space: nowrap;
     font-family: monospace;
     letter-spacing: 0.3px;
@@ -731,7 +760,7 @@ header,
     padding: 4px 14px;
     border-radius: var(--radius-pill);
     font-size: 0.7em;
-    z-index: 200;
+    z-index: var(--z-notification);
     opacity: 0;
     transition: opacity var(--dur-slow) var(--ease);
     pointer-events: none;
@@ -752,7 +781,7 @@ header,
     font-size: 1.8em;
     font-weight: bold;
     cursor: pointer;
-    z-index: 1001;
+    z-index: var(--z-bar-toggle);
     box-shadow: var(--shadow-sm);
     display: flex;
     align-items: center;
@@ -779,7 +808,7 @@ header,
     color: var(--text);
     font-size: 1.4em;
     cursor: pointer;
-    z-index: 1001;
+    z-index: var(--z-bar-toggle);
     box-shadow: var(--shadow-sm);
     display: flex;
     align-items: center;
@@ -818,7 +847,7 @@ header,
     backdrop-filter: none;
     border-radius: var(--radius-md);
     padding: 12px 16px;
-    z-index: 1000;
+    z-index: var(--z-controls-bar);
     display: none;
     flex-direction: column;
     gap: 6px;
@@ -868,8 +897,8 @@ header,
    dock bottom corners + fillet, Division capsule) — no pill shapes in
    the top navigation. */
 #barLayersBtn {
-    border-radius: var(--dock-radius) !important;
-    padding-inline: 14px !important;
+    border-radius: var(--dock-radius) ;
+    padding-inline: 14px ;
 }
 .layers-modal-body .control-group {
     display: flex;
@@ -964,7 +993,7 @@ header,
     isolation: isolate;
 }
 .map-transform-group text {
-    text-shadow: none !important;
+    text-shadow: none ;
     paint-order: stroke;
     stroke: rgba(0,0,0,0.7);
     stroke-width: 2px;
@@ -1007,7 +1036,7 @@ header,
     background: var(--panel-overlay);
     backdrop-filter: blur(var(--glass-blur-md));
     border-bottom: 1px solid var(--border);
-    z-index: 15;
+    z-index: var(--z-mobile-chrome);
     padding: 0 8px;
     align-items: center;
 }
@@ -1063,7 +1092,7 @@ header,
     border-radius: var(--radius-sm);
     box-shadow: var(--shadow-md);
     min-width: 160px;
-    z-index: 100;
+    z-index: var(--z-tooltip);
     overflow: hidden;
 }
 .mobile-tools-menu.open { display: block; }
@@ -1093,7 +1122,7 @@ header,
     background: var(--panel-overlay);
     backdrop-filter: blur(var(--glass-blur-md));
     border-top: 1px solid var(--border);
-    z-index: 15;
+    z-index: var(--z-mobile-chrome);
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
@@ -1119,7 +1148,7 @@ header,
 .mobile-mode-sheet {
     position: fixed;
     inset: 0;
-    z-index: 2000;
+    z-index: var(--z-fullscreen-panel);
     display: none;
     align-items: flex-end;
     justify-content: center;
@@ -1203,7 +1232,7 @@ header,
 }
 @media (max-width: 768px) {
     .header-center-group {
-        display: none !important;
+        display: none ;
     }
     .header-left-group {
         gap: 6px !important;
@@ -1225,10 +1254,10 @@ header,
     }
     .menu-toggle,
     .layers-toggle {
-        display: none !important;
+        display: none ;
     }
     .controls-bar {
-        display: none !important;
+        display: none ;
     }
     .controls-bar .row {
         flex-wrap: wrap;
@@ -1283,27 +1312,27 @@ header,
         height: 8px;
     }
     .copy-notification {
-        bottom: calc(var(--mobile-nav-height) + 10px) !important;
+        bottom: calc(var(--mobile-nav-height) + 10px) ;
     }
     .country-panel {
-        position: fixed !important;
-        top: auto !important;
-        bottom: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        transform: translateY(20px) !important;
-        max-width: 100% !important;
-        min-width: 0 !important;
-        width: 100% !important;
-        border-radius: 20px 20px 0 0 !important;
-        padding: 8px 18px 28px !important;
-        font-size: 0.65em !important;
+        position: fixed ;
+        top: auto ;
+        bottom: 0 ;
+        left: 0 ;
+        right: 0 ;
+        transform: translateY(20px) ;
+        max-width: 100% ;
+        min-width: 0 ;
+        width: 100% ;
+        border-radius: 20px 20px 0 0 ;
+        padding: 8px 18px 28px ;
+        font-size: 0.65em ;
         max-height: 62vh;
         overflow-y: auto;
-        z-index: 1100 !important;
+        z-index: var(--z-country-panel-mobile) ;
     }
     .country-panel.visible {
-        transform: translateY(0) !important;
+        transform: translateY(0) ;
     }
     .country-panel::before {
         content: '';
@@ -1320,30 +1349,30 @@ header,
         padding: 4px 8px;
     }
     .country-highlight {
-        filter: none !important;
+        filter: none ;
     }
     .highlighted-country {
-        filter: drop-shadow(0 0 4px #ffd700) !important;
-        stroke-width: 1.5 !important;
+        filter: drop-shadow(0 0 4px #ffd700) ;
+        stroke-width: 1.5 ;
     }
     #shortcutsBtn {
-        display: none !important;
+        display: none ;
     }
     .header-line {
-        display: none !important;
+        display: none ;
     }
 }
 @media (min-width: 1024px) {
     .menu-toggle,
     .layers-toggle {
-        display: none !important;
+        display: none ;
     }
     .tools-row-start { flex-shrink: 0; }
     .header-left-group {
         flex-wrap: nowrap;
     }
     .header {
-        padding: 0 16px !important;
+        padding: 0 16px ;
     }
     .header h1 {
         line-height: 1.1;
@@ -1359,34 +1388,34 @@ header,
        inside .controls-bar-toprow: the Base Map card (rightmost in RTL),
        the Layers capsule, and the Division card (leftmost in RTL). */
     .controls-bar {
-        position: absolute !important;
-        top: 0 !important;
-        inset-inline: 0 !important;
-        bottom: auto !important;
-        transform: none !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        background: transparent !important;
-        backdrop-filter: none !important;
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        border: none !important;
-        display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: wrap !important;
-        justify-content: flex-start !important;
-        align-items: flex-start !important;
-        gap: 10px !important;
-        max-height: none !important;
-        overflow-y: visible !important;
-        z-index: 1000 !important;
-        margin: 0 !important;
-        margin-top: 0 !important;
-        margin-inline-start: 0 !important;
+        position: absolute ;
+        top: 0 ;
+        inset-inline: 0 ;
+        bottom: auto ;
+        transform: none ;
+        width: 100% ;
+        max-width: 100% ;
+        background: transparent ;
+        backdrop-filter: none ;
+        border-radius: 0 ;
+        box-shadow: none ;
+        border: none ;
+        display: flex ;
+        flex-direction: row ;
+        flex-wrap: wrap ;
+        justify-content: flex-start ;
+        align-items: flex-start ;
+        gap: 10px ;
+        max-height: none ;
+        overflow-y: visible ;
+        z-index: var(--z-controls-bar) ;
+        margin: 0 ;
+        margin-top: 0 ;
+        margin-inline-start: 0 ;
         /* Zero padding so the unified dock sticks flush to the top edge
            and the inline-start corner of the map container (top-right in
            RTL, top-left in LTR — driven by the CSS logical properties). */
-        padding: 0 !important;
+        padding: 0 ;
         pointer-events: none; /* map drag works through the empty space */
     }
     /* DOM order is [stepped group][Layers][Division]; with
@@ -1398,7 +1427,7 @@ header,
         width: 100%;
         justify-content: flex-start;
         align-items: flex-start;
-        flex-wrap: nowrap !important;
+        flex-wrap: nowrap ;
         gap: var(--dock-outer-gap);
         margin-inline-start: 0;
         pointer-events: none;
@@ -1502,7 +1531,7 @@ header,
        The SVG silhouette mask mirrors this in syncDockMask(). */
     html[dir="rtl"] #controlsBar .stepped-dock-group,
     html[dir="rtl"] #controlsBar .row-unified {
-        border-bottom-right-radius: 0 !important;
+        border-bottom-right-radius: 0 ;
     }
     /* Buttons: flex layout + line-height 1 keeps every island height
        driven by min-height/padding instead of font line boxes (Arabic
@@ -1510,12 +1539,12 @@ header,
        inconsistently). */
     #controlsBar .btn {
         display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        line-height: 1 !important;
+        align-items: center ;
+        justify-content: center ;
+        line-height: 1 ;
         color: var(--btn-text) !important;
-        background: var(--btn-bg) !important;
-        border-color: var(--dock-border) !important;
+        background: var(--btn-bg) ;
+        border-color: var(--dock-border) ;
     }
     /* The container box includes the masked-out notch; make the box
        click-transparent and re-enable the two visible sections, so the
@@ -1538,7 +1567,7 @@ header,
         background: none;
         padding: var(--dock-pad-y-tall) var(--dock-pad-x-tall);
         min-height: var(--dock-height-tall);
-        flex-wrap: nowrap !important;
+        flex-wrap: nowrap ;
     }
     /* 4-buttons section: shallower step, transparent, borderless,
        top-aligned beside the taller block; bottom-inline-start corner
@@ -1562,7 +1591,7 @@ header,
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.25);
         border: 1px solid var(--dock-border);
         height: var(--dock-height-short);
-        border-radius: var(--dock-radius) !important;
+        border-radius: var(--dock-radius) ;
         margin-top: var(--dock-cap-margin-top);
         margin-inline-start: 0;
         padding: var(--dock-pad-y-short) var(--dock-pad-x-short) !important;
@@ -1572,15 +1601,15 @@ header,
     #controlsBar #modeButtons {
         display: flex !important;
         flex-wrap: nowrap !important;
-        align-items: center !important;
+        align-items: center ;
     }
     /* The Base Map dock carries 8 buttons + label, so its internals stay
        fluid-compact to keep the trio on ONE line at every width. */
     #controlsBar #modeButtons .btn {
         padding: var(--dock-pad-y-btn) var(--dock-pad-x-btn) !important;
         min-height: var(--dock-btn-h-tall) !important;
-        font-size: var(--dock-font-size) !important;
-        gap: var(--dock-gap) !important;
+        font-size: var(--dock-font-size) ;
+        gap: var(--dock-gap) ;
         border-radius: var(--dock-radius) !important;
         flex-shrink: 0;
         white-space: nowrap;
@@ -1588,7 +1617,7 @@ header,
     #controlsBar #filterRow .btn {
         padding: var(--dock-pad-y-btn) var(--dock-pad-x-btn) !important;
         min-height: var(--dock-btn-h-short) !important;
-        font-size: var(--dock-font-size) !important;
+        font-size: var(--dock-font-size) ;
         gap: var(--dock-gap) !important;
         border-radius: var(--dock-radius) !important;
         flex-shrink: 0;
@@ -1602,24 +1631,24 @@ header,
        so every state stays legible on both the dark slate and the
        light surface. */
     #controlsBar .btn:hover {
-        background: var(--btn-bg-hover) !important;
-        border-color: var(--dock-border) !important;
-        transform: none !important;
-        box-shadow: none !important;
+        background: var(--btn-bg-hover) ;
+        border-color: var(--dock-border) ;
+        transform: none ;
+        box-shadow: none ;
     }
     #controlsBar .btn.active,
     #controlsBar .mode-btn.active,
     #controlsBar .toggle-on {
-        background: var(--active-bg) !important;
-        border-color: var(--accent-color) !important;
-        color: var(--active-text) !important;
+        background: var(--active-bg) ;
+        border-color: var(--accent-color) ;
+        color: var(--active-text) ;
     }
     #controlsBar .btn.active {
-        box-shadow: 0 0 0 2px var(--accent-glow) !important;
+        box-shadow: 0 0 0 2px var(--accent-glow) ;
         font-weight: 700;
     }
     #controlsBar .mode-btn.active {
-        box-shadow: 0 0 0 2px var(--accent-glow) !important;
+        box-shadow: 0 0 0 2px var(--accent-glow) ;
     }
 /* English mode names are wide ("Explanation Mode", "Compare
        Projections"…); a consolidated EN-only fluid shave (88% font,
@@ -1628,56 +1657,56 @@ header,
        width while still scaling with vw. */
     html[lang="en"] #controlsBar #modeButtons .btn,
     html[lang="en"] #controlsBar #filterRow .btn {
-        font-size: calc(var(--dock-font-size) * 0.88) !important;
+        font-size: calc(var(--dock-font-size) * 0.88) ;
         padding-inline: calc(var(--dock-pad-x-btn) * 0.72) !important;
     }
     html[lang="en"] #controlsBar .row-unified {
         padding-inline: calc(var(--dock-pad-x-tall) * 0.8) !important;
     }
     html[lang="en"] #controlsBar #filterRow {
-        padding-inline: calc(var(--dock-pad-x-short) * 0.85) !important;
+        padding-inline: calc(var(--dock-pad-x-short) * 0.85) ;
     }
     html[lang="en"] #controlsBar .floating-capsule {
         padding-inline: calc(var(--dock-pad-x-short) * 0.8) !important;
     }
     .controls-bar .row {
-        flex-wrap: wrap !important;
-        gap: 6px 12px !important;
+        flex-wrap: wrap ;
+        gap: 6px 12px ;
     }
     .controls-bar .row-label {
-        display: inline-block !important;
-        font-size: 0.7em !important;
-        color: var(--text-secondary) !important;
+        display: inline-block ;
+        font-size: 0.7em ;
+        color: var(--text-secondary) ;
         margin-inline-end: 4px;
     }
     .controls-bar .btn {
-        font-size: var(--dock-font-size) !important;
-        padding: var(--dock-pad-y-btn) var(--dock-pad-x-btn) !important;
-        min-height: var(--dock-btn-h-short) !important;
-        border-radius: var(--dock-radius) !important;
+        font-size: var(--dock-font-size) ;
+        padding: var(--dock-pad-y-btn) var(--dock-pad-x-btn) ;
+        min-height: var(--dock-btn-h-short) ;
+        border-radius: var(--dock-radius) ;
         white-space: nowrap;
     }
     #controlsBar .btn .lucide-icon {
-        width: var(--dock-icon-size) !important;
-        height: var(--dock-icon-size) !important;
-        color: var(--btn-icon-color) !important;
-        stroke: currentColor !important;
-        fill: none !important;
+        width: var(--dock-icon-size) ;
+        height: var(--dock-icon-size) ;
+        color: var(--btn-icon-color) ;
+        stroke: currentColor ;
+        fill: none ;
     }
     .controls-bar .search-box input {
-        width: 160px !important;
-        font-size: 0.8em !important;
-        padding: 5px 10px !important;
-        padding-inline-start: 28px !important;
+        width: 160px ;
+        font-size: 0.8em ;
+        padding: 5px 10px ;
+        padding-inline-start: 28px ;
     }
     .controls-bar .control-label {
-        font-size: calc(var(--dock-font-size) * 0.72) !important;
+        font-size: calc(var(--dock-font-size) * 0.72) ;
         font-weight: 600;
         color: var(--accent-color);
         text-transform: uppercase;
         letter-spacing: 0.4px;
         white-space: nowrap;
-        padding: 0 4px !important;
+        padding: 0 4px ;
     }
     .controls-bar .divider {
         width: 1px;
@@ -1688,78 +1717,78 @@ header,
         display: inline-block;
     }
     .zoom-controls {
-        bottom: 40px !important;
-        right: 30px !important;
-        gap: 10px !important;
+        bottom: 40px ;
+        right: 30px ;
+        gap: 10px ;
     }
     .zoom-btn {
-        width: 44px !important;
-        height: 44px !important;
-        font-size: 1.6em !important;
-        border-radius: var(--radius-sm) !important;
-        background: var(--panel-overlay-96) !important;
-        backdrop-filter: none !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        width: 44px ;
+        height: 44px ;
+        font-size: 1.6em ;
+        border-radius: var(--radius-sm) ;
+        background: var(--panel-overlay-96) ;
+        backdrop-filter: none ;
+        border: 1px solid rgba(255, 255, 255, 0.15) ;
     }
     .zoom-btn:hover {
-        background: rgba(50, 56, 70, 0.95) !important;
-        transform: scale(1.08) !important;
+        background: rgba(50, 56, 70, 0.95) ;
+        transform: scale(1.08) ;
     }
     .legend {
-        bottom: 40px !important;
-        left: 30px !important;
-        font-size: 0.85em !important;
-        padding: 14px 20px !important;
-        border-radius: var(--radius-md) !important;
-        min-width: 160px !important;
-        background: var(--legend-bg) !important;
-        backdrop-filter: none !important;
+        bottom: 40px ;
+        left: 30px ;
+        font-size: 0.85em ;
+        padding: 14px 20px ;
+        border-radius: var(--radius-md) ;
+        min-width: 160px ;
+        background: var(--legend-bg) ;
+        backdrop-filter: none ;
     }
     .legend-color {
-        width: 14px !important;
-        height: 14px !important;
-        border-radius: 4px !important;
+        width: 14px ;
+        height: 14px ;
+        border-radius: 4px ;
     }
     .legend-item {
-        gap: 8px !important;
-        padding: 2px 0 !important;
+        gap: 8px ;
+        padding: 2px 0 ;
     }
     .header {
-        padding: 6px 20px !important;
+        padding: 6px 20px ;
     }
     .header h1 {
-        font-size: 1.1em !important;
+        font-size: 1.1em ;
     }
     .header-line {
-        display: block !important;
+        display: block ;
     }
     .country-panel {
-        font-size: 0.9em !important;
-        max-width: 360px !important;
-        padding: 16px 20px !important;
-        top: 80px !important;
+        font-size: 0.9em ;
+        max-width: 360px ;
+        padding: 16px 20px ;
+        top: 80px ;
     }
     .tooltip {
-        font-size: 0.85em !important;
-        padding: 8px 14px !important;
-        max-width: 260px !important;
+        font-size: 0.85em ;
+        padding: 8px 14px ;
+        max-width: 260px ;
     }
     .coordinates-display {
-        font-size: 0.7em !important;
-        padding: 6px 20px !important;
-        bottom: 16px !important;
+        font-size: 0.7em ;
+        padding: 6px 20px ;
+        bottom: 16px ;
     }
     .quiz-authoring-banner {
-        top: auto !important;
-        bottom: 20px !important;
+        top: auto ;
+        bottom: 20px ;
     }
 }
 @media (min-width: 1024px) and (max-width: 1439px) {
     .controls-bar .btn .btn-text {
-        display: none !important;
+        display: none ;
     }
     .controls-bar {
-        gap: 4px 8px !important;
+        gap: 4px 8px ;
     }
 }
 @media (min-width: 769px) and (max-width: 1023px) {
@@ -1799,7 +1828,7 @@ header,
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     padding: 4px;
-    z-index: 9999;
+    z-index: var(--z-topmost);
     display: none;
 
     box-shadow: var(--shadow-md);
@@ -1876,7 +1905,7 @@ header,
     box-shadow: var(--shadow-sm);
 }
 .btn[title]:hover {
-    z-index: 9999;
+    z-index: var(--z-topmost);
 }
 .btn.active, .mode-btn.active, .toggle-on {
     background: #1a3a38;
@@ -1912,7 +1941,7 @@ header,
 .lang-overlay {
     position: fixed;
     inset: 0;
-    z-index: 9998;
+    z-index: var(--z-lang-overlay);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1925,7 +1954,7 @@ header,
     opacity: 0;
     pointer-events: none;
     visibility: hidden;
-    display: none !important;
+    display: none ;
 }
 .lang-overlay-content {
     text-align: center;
@@ -2025,7 +2054,7 @@ header,
 .layers-modal {
     position: fixed;
     inset: 0;
-    z-index: 3000;
+    z-index: var(--z-modal);
     display: none;
     align-items: center;
     justify-content: center;
@@ -2120,7 +2149,7 @@ header,
 .layers-modal.menu-popover {
     position: fixed;
     inset: 0 auto auto 0;
-    z-index: 1050;
+    z-index: var(--z-layers-popover);
     display: none;
     align-items: stretch;
     justify-content: stretch;
@@ -2138,7 +2167,7 @@ header,
     max-height: 80vh;
     padding: 16px;
     box-sizing: border-box;
-    overflow-x: hidden !important;
+    overflow-x: hidden ;
     overflow-y: auto;
     background: var(--panel-overlay-96);
     backdrop-filter: blur(12px);
@@ -2205,7 +2234,7 @@ header,
     gap: 10px;
     width: 100%;
     box-sizing: border-box;
-    overflow-x: hidden !important;
+    overflow-x: hidden ;
 }
 @media (min-width: 480px) {
     .layers-modal.menu-popover .layers-flat-grid {
@@ -2218,7 +2247,7 @@ header,
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: auto !important;
+    height: auto ;
     min-height: 75px;
     padding: 8px 6px;
     box-sizing: border-box;
@@ -2253,8 +2282,8 @@ header,
     color: var(--btn-icon-color, var(--text-secondary));
 }
 .layers-modal.menu-popover .layer-card .layer-icon svg {
-    width: 22px !important;
-    height: 22px !important;
+    width: 22px ;
+    height: 22px ;
 }
 .layers-modal.menu-popover .layer-card.active .layer-icon,
 .layers-modal.menu-popover .layer-card.toggle-on .layer-icon,
@@ -2267,10 +2296,10 @@ header,
 .layers-modal.menu-popover .blocs-toggle-btn .layer-title,
 .layers-modal.menu-popover .blocs-toggle-btn label,
 .layers-modal.menu-popover .blocs-toggle-btn span:not(.layer-icon) {
-    font-size: 11.5px !important;
+    font-size: 11.5px ;
     line-height: 1.25;
     color: var(--btn-text, #f1f5f9);
-    white-space: normal !important;
+    white-space: normal ;
     word-break: break-word;
     max-width: 100%;
     overflow: visible;
@@ -2313,8 +2342,8 @@ header,
     color: var(--btn-icon-color, var(--text-secondary));
 }
 .layers-modal.menu-popover .blocs-compound-card .blocs-toggle-btn .layer-icon svg {
-    width: 20px !important;
-    height: 20px !important;
+    width: 20px ;
+    height: 20px ;
 }
 .layers-modal.menu-popover .blocs-compound-card select {
     width: 100%;
@@ -2372,7 +2401,7 @@ header,
     position: fixed;
     inset: 0;
     background: var(--glass-bg);
-    z-index: 2000;
+    z-index: var(--z-fullscreen-panel);
     display: none;
     align-items: center;
     justify-content: center;
@@ -2443,7 +2472,7 @@ header,
     padding: 10px 18px;
     color: var(--text);
     font-size: 0.7em;
-    z-index: 1500;
+    z-index: var(--z-onboarding-hint);
     text-align: center;
     pointer-events: none;
     opacity: 1;
@@ -2520,27 +2549,27 @@ header,
 .bloc-select,
 .toolbar-controls .btn,
 #controlsBar .btn {
-    position: relative !important;
-    overflow: visible !important;
+    position: relative ;
+    overflow: visible ;
 }
 
 [data-tooltip]::after,
 .button-tooltip {
-    position: absolute !important;
-    bottom: calc(100% + 8px) !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    white-space: nowrap !important;
-    background: rgba(18, 24, 36, 0.95) !important;
-    color: #f1f5f9 !important;
-    font-size: 11px !important;
-    font-weight: 500 !important;
-    padding: 4px 8px !important;
-    border-radius: 6px !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
-    z-index: 99999 !important;
-    pointer-events: none !important;
+    position: absolute ;
+    bottom: calc(100% + 8px) ;
+    left: 50% ;
+    transform: translateX(-50%) ;
+    white-space: nowrap ;
+    background: rgba(18, 24, 36, 0.95) ;
+    color: #f1f5f9 ;
+    font-size: 11px ;
+    font-weight: 500 ;
+    padding: 4px 8px ;
+    border-radius: 6px ;
+    border: 1px solid rgba(255, 255, 255, 0.15) ;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) ;
+    z-index: var(--z-button-tooltip) ;
+    pointer-events: none ;
 }
 /* Native `title` tooltips are browser-rendered and float above the page,
    so they can never be clipped or trapped inside the dock. The JS keeps
@@ -2549,15 +2578,15 @@ header,
    (overflow: hidden), so any in-page tooltip would be clipped inside the
    button/dock instead of floating outside. */
 .tooltip-bottom::after {
-    top: calc(100% + 8px) !important;
-    bottom: auto !important;
+    top: calc(100% + 8px) ;
+    bottom: auto ;
 }
 
 @media (min-width: 1024px) {
     .btn[data-tooltip]:hover::after,
     [data-tooltip]::after {
-        bottom: auto !important;
-        top: calc(100% + 8px) !important;
+        bottom: auto ;
+        top: calc(100% + 8px) ;
     }
 }
 
@@ -2565,7 +2594,7 @@ header,
 .onboard-overlay {
     position: fixed;
     inset: 0;
-    z-index: 9999;
+    z-index: var(--z-topmost);
     display: none;
     pointer-events: none;
 }
@@ -2579,7 +2608,7 @@ header,
     box-shadow: 0 0 0 9999px rgba(0,0,0,0.7);
     transition: all var(--dur-slow) var(--ease);
     pointer-events: none;
-    z-index: 9999;
+    z-index: var(--z-topmost);
 }
 .onboard-glow::after {
     content: '';
@@ -2595,7 +2624,7 @@ header,
 }
 .onboard-card {
     position: fixed;
-    z-index: 10000;
+    z-index: var(--z-topmost-card);
     background: var(--panel-bg, #1a1d25);
     border: 1px solid rgba(20,184,166,0.4);
     border-radius: var(--radius-md);
@@ -2698,7 +2727,7 @@ header,
 /* ── Projection Explainer Card ── */
 .projection-card {
     position: fixed;
-    z-index: 10000;
+    z-index: var(--z-topmost-card);
     background: var(--panel-bg, #1a1d25);
     border: 1px solid rgba(20,184,166,0.4);
     border-radius: var(--radius-md);
@@ -2756,7 +2785,7 @@ header,
 .quiz-overlay {
     position: fixed;
     inset: 0;
-    z-index: 3000;
+    z-index: var(--z-modal);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3015,7 +3044,7 @@ header,
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 3100;
+    z-index: var(--z-modal-alert);
     padding: 14px 32px;
     border-radius: var(--radius-sm);
     font-size: 1.2em;
@@ -3210,7 +3239,7 @@ header,
 }
 .quiz-active .zooming-active text,
 .quiz-active text {
-    display: none !important;
+    display: none ;
 }
 .quiz-active .controls-bar,
 .quiz-active .legend-container,
@@ -3218,10 +3247,10 @@ header,
 .quiz-active #toolsRowStart,
 .quiz-active #toolsDropdown,
 .quiz-active #langToggle {
-    display: none !important;
+    display: none ;
 }
 .quiz-active #tooltip {
-    display: none !important;
+    display: none ;
 }
 .btn.quiz-disabled {
     opacity: 0.4;
@@ -3232,7 +3261,7 @@ header,
     .quiz-panel { padding: 16px 18px; }
     .quiz-hud-prompt-banner { font-size: 1.2em; padding: 12px 20px; }
     .quiz-hud-meta-row { font-size: 0.65em; gap: 10px; padding: 6px 12px; }
-    .quiz-custom-panels { flex-direction: column !important; gap: 10px; }
+    .quiz-custom-panels { flex-direction: column ; gap: 10px; }
     .quiz-custom-main { width: 92vw; max-width: 92vw; max-height: 50vh; }
     .quiz-custom-sidebar { width: 92vw; max-width: 92vw; max-height: 40vh; }
 }
@@ -3274,7 +3303,7 @@ header,
 .quiz-custom-panels {
     position: fixed;
     inset: 0;
-    z-index: 3000;
+    z-index: var(--z-modal);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3284,7 +3313,7 @@ header,
 }
 .quiz-custom-panels[style*="display: none"],
 .quiz-custom-panels[style*="display:none"] {
-    display: none !important;
+    display: none ;
 }
 [dir="rtl"] .quiz-custom-panels {
     flex-direction: row;
@@ -3573,7 +3602,7 @@ header,
     top: calc(var(--header-height) + 8px);
     left: 50%;
     transform: translateX(-50%);
-    z-index: 3100;
+    z-index: var(--z-modal-alert);
     display: flex;
     align-items: center;
     gap: 12px;
@@ -3598,10 +3627,10 @@ header,
 
 /* ── Authoring Overlay (bottom form) ── */
 .quiz-authoring-overlay {
-    background: none !important;
-    backdrop-filter: none !important;
-    pointer-events: none !important;
-    align-items: flex-end !important;
+    background: none ;
+    backdrop-filter: none ;
+    pointer-events: none ;
+    align-items: flex-end ;
     justify-content: center !important;
     padding-bottom: 80px;
 }
@@ -3803,7 +3832,7 @@ header,
     position: sticky;
     top: 0;
     background: var(--panel-bg);
-    z-index: 1;
+    z-index: var(--z-sticky-cell);
 }
 .quiz-results-table td {
     color: var(--text);
@@ -3878,20 +3907,20 @@ header,
 
 /* ── Quiz Active: hide authoring banner ── */
 .quiz-active .quiz-authoring-banner {
-    display: none !important;
+    display: none ;
 }
 
 /* ── Lucide icon sizing (overrides inline width/height attributes) ── */
 svg[class*="lucide"] { width: 14px !important; height: 14px !important; }
 .zoom-btn svg[class*="lucide"] { width: 16px !important; height: 16px !important; }
 .logo-icon svg[class*="lucide"] { width: 20px !important; height: 20px !important; }
-.menu-toggle svg[class*="lucide"], .layers-toggle svg[class*="lucide"] { width: 20px !important; height: 20px !important; }
+.menu-toggle svg[class*="lucide"], .layers-toggle svg[class*="lucide"] { width: 20px ; height: 20px !important; }
 .mobile-nav-btn svg[class*="lucide"] { width: 18px !important; height: 18px !important; }
-.onboarding-hint svg[class*="lucide"] { width: 14px !important; height: 14px !important; }
+.onboarding-hint svg[class*="lucide"] { width: 14px ; height: 14px ; }
 
 .measure-result-label {
     position: fixed;
-    z-index: 500;
+    z-index: var(--z-measure-label);
     padding: 6px 12px;
     background: var(--glass-bg);
     backdrop-filter: blur(var(--glass-blur-sm));
@@ -3921,7 +3950,7 @@ body.presentation-mode .mobile-bottom-nav,
 body.presentation-mode .onboarding-hint,
 body.presentation-mode .measure-result-label,
 body.presentation-mode .copy-notification {
-    display: none !important;
+    display: none ;
 }
 body.presentation-mode .map-container {
     position: fixed;
@@ -3932,7 +3961,7 @@ body.presentation-mode .map-container {
     position: fixed;
     top: 12px;
     right: 12px;
-    z-index: 5000;
+    z-index: var(--z-presentation-exit);
     display: none;
     align-items: center;
     gap: 4px;
@@ -3966,7 +3995,7 @@ body.presentation-mode .presentation-exit-btn {
 .export-blocking-overlay {
     position: absolute;
     inset: 0;
-    z-index: 9999;
+    z-index: var(--z-topmost);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -3992,7 +4021,7 @@ body.presentation-mode .presentation-exit-btn {
 .data-table-overlay {
     position: fixed;
     inset: 0;
-    z-index: 2000;
+    z-index: var(--z-fullscreen-panel);
     display: none;
     align-items: center;
     justify-content: center;
@@ -4193,7 +4222,7 @@ body.measure-active .measure-toolbar {
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-md);
-    z-index: 900;
+    z-index: var(--z-measure-toolbar);
     flex-wrap: wrap;
     max-width: 92vw;
 }
@@ -4457,17 +4486,17 @@ body.annotate-active .annotation-toolbar {
    wide zone must keep the standard button sizing and the panel its uniform
    10px internal gap, so the narrow zone stays visibly smaller. */
 .controls-bar-toprow .row-unified {
-    gap: 10px !important;
+    gap: 10px ;
 }
 #modeButtons .btn {
-    padding: 6px 10px !important;
-    min-height: 32px !important;
+    padding: 6px 10px ;
+    min-height: 32px ;
 }
 @media (min-width: 1024px) {
     #filterRow .btn {
-        font-size: 0.62em !important;
-        padding: 4px 8px !important;
-        min-height: 26px !important;
+        font-size: 0.62em ;
+        padding: 4px 8px ;
+        min-height: 26px ;
     }
 }
 
@@ -4482,13 +4511,13 @@ html,
 body,
 .content-row,
 #mapContainer {
-    background-color: var(--ocean-color) !important;
+    background-color: var(--ocean-color) ;
 }
 
 /* Map canvas bounds: no outline/border chrome on the container. */
 .map-container {
-    outline: none !important;
-    border: none !important;
+    outline: none ;
+    border: none ;
 }
 
 /* Projection depth: this app renders the ocean as a full-bleed D3 SVG
@@ -4503,7 +4532,7 @@ body,
     inset: 0;
     pointer-events: none;
     background: radial-gradient(ellipse at center, transparent 58%, rgba(0, 0, 0, 0.28) 100%);
-    z-index: 5;
+    z-index: var(--z-map-surface);
 }
 
 /* Blend scrollbar gutters with the unified canvas tone. */

@@ -1,0 +1,22 @@
+{
+  "name": "files",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "build": "node build.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:e2e": "node tests/e2e/regression-sweep.mjs && node tests/e2e/quiz-authoring.mjs",
+    "lint": "node --check app.js && node --check build.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "csso-cli": "^4.0.2",
+    "html-minifier-terser": "^7.2.0",
+    "terser": "^5.49.0",
+    "playwright": "^1.49.0"
+  }
+}

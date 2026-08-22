@@ -188,7 +188,7 @@
             let showLabels = false;
             let sectMode = false;
             let corridorsVisible = false;
-            let riversVisible = false;
+            let riversGlaciersVisible = false;
             let densitySpotsMode = false;
             let capitalsVisible = false;
             let timezonesVisible = false;
@@ -204,7 +204,6 @@
             let desertsForestsVisible = false;
             let borderDisputesVisible = false;
             let adminBoundariesVisible = false;
-            let glaciatedAreasVisible = false;
             let globeModeActive = false;
             let globeProjection = null;
             let globeRotation = [0, -20];
@@ -306,7 +305,7 @@
                 labels:              { getFlag: function(){ return showLabels; },              setFlag: function(v){ showLabels = v; },              btnId: 'labelsToggle',              drawFn: null, hashKey: 'labels', skip: true },
                 sect:                { getFlag: function(){ return sectMode; },                setFlag: function(v){ sectMode = v; },                btnId: 'sectToggle',                drawFn: null, hashKey: 'sect', skip: true },
                 corridors:           { getFlag: function(){ return corridorsVisible; },        setFlag: function(v){ corridorsVisible = v; },        btnId: 'corridorsToggle',           drawFn: null, hashKey: 'corridors', skip: true },
-                rivers:              { getFlag: function(){ return riversVisible; },           setFlag: function(v){ riversVisible = v; },           btnId: 'riversToggle',              drawFn: drawPhysicalFeatures, hashKey: 'rivers' },
+                riversAndGlaciers:   { getFlag: function(){ return riversGlaciersVisible; },  setFlag: function(v){ riversGlaciersVisible = v; },  btnId: 'riversGlaciersToggle',      drawFn: function() { drawPhysicalFeatures(); drawGlaciatedAreas(); }, hashKey: 'riversglaciers', setNorm: true },
                 densitySpots:        { getFlag: function(){ return densitySpotsMode; },        setFlag: function(v){ densitySpotsMode = v; },        btnId: 'densitySpotsToggle',        drawFn: null, hashKey: 'spots', skip: true },
                 capitals:            { getFlag: function(){ return capitalsVisible; },         setFlag: function(v){ capitalsVisible = v; },         btnId: 'capitalsToggle',            drawFn: drawCapitals, postDrawFn: drawPointLayersCanvas, hashKey: 'capitals' },
                 timezones:           { getFlag: function(){ return timezonesVisible; },        setFlag: function(v){ timezonesVisible = v; },        btnId: 'timezonesToggle',           drawFn: drawTimezones, hashKey: 'timezones' },
@@ -322,7 +321,6 @@
                 desertsForests:      { getFlag: function(){ return desertsForestsVisible; },   setFlag: function(v){ desertsForestsVisible = v; },   btnId: 'desertsForestsToggle',      drawFn: drawDesertsForests, hashKey: 'deserts', setNorm: true },
                 borderDisputes:      { getFlag: function(){ return borderDisputesVisible; },   setFlag: function(v){ borderDisputesVisible = v; },   btnId: 'borderDisputesToggle',      drawFn: drawBorderDisputes, hashKey: 'borderdisputes', setNorm: true },
                 adminBoundaries:    { getFlag: function(){ return adminBoundariesVisible; }, setFlag: function(v){ adminBoundariesVisible = v; }, btnId: 'adminBoundariesToggle',    drawFn: drawAdminBoundaries, hashKey: 'adminbounds' },
-                glaciatedAreas:     { getFlag: function(){ return glaciatedAreasVisible; },  setFlag: function(v){ glaciatedAreasVisible = v; },  btnId: 'glaciatedAreasToggle',     drawFn: drawGlaciatedAreas, hashKey: 'glaciers', setNorm: true },
                 coords:              { getFlag: function(){ return coordsVisible; },          setFlag: function(v){ coordsVisible = v; },           btnId: 'coordsToggle',              drawFn: null, hashKey: 'coords', skip: true,
                     on: function(state) { var cd = document.getElementById('coordinatesDisplay'); if (cd) cd.classList.toggle('hidden', !state); } }
             };
@@ -1062,46 +1060,52 @@
             function drawIceCap() {
                 if (!gIceCap) return;
                 gIceCap.selectAll('*').remove();
-                const cap = d3.geoCircle().center([0, 90]).radius(23.44).precision(1);
-                gIceCap.append('path')
-                    .datum(cap())
-                    .attr('class', 'arctic-ice')
-                    .attr('d', pathGen)
-                    .attr('tabindex', 0)
-                    .attr('role', 'button')
-                    .attr('aria-label', function() { return t('arcticName'); })
-                    .on('mouseenter', function(e) {
-                        if (quizActive || measureActive || annotateActive) return;
-                        tooltip.textContent = '';
-                        const tmpDiv = document.createElement('div');
-                        tmpDiv.innerHTML = '<div><strong>' + t('arcticName') + '</strong></div>';
-                        while (tmpDiv.firstChild) tooltip.appendChild(tmpDiv.firstChild);
-                        _pendingTooltipEvent = e;
-                        _flushTooltipPosition();
-                        tooltip.classList.add('visible');
-                    })
-                    .on('mousemove', function(e) {
-                        if (quizActive || measureActive || annotateActive) return;
-                        _pendingTooltipEvent = e;
-                        if (!_tooltipRAFPending) {
-                            _tooltipRAFPending = true;
-                            requestAnimationFrame(_flushTooltipPosition);
-                        }
-                    })
-                    .on('mouseleave', function() {
-                        tooltip.classList.remove('visible');
-                    })
-                    .on('click', function(e) {
-                        if (quizActive || measureActive || annotateActive) return;
-                        e.stopPropagation();
-                        showArcticDetail();
-                    })
-                    .on('keydown', function(e) {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
+                const cap = d3.geoCircle().center([0, 90]).radius(23.44).precision(1)();
+                const proj = getActiveProjection();
+                const jumpPx = Math.min(getMapRect().width, getMapRect().height) * 0.55;
+                const splitResult = _adminSeamSplitGeometries(cap, proj, jumpPx);
+                const pieces = Array.isArray(splitResult) ? splitResult : [cap];
+                pieces.forEach(function(piece, i) {
+                    gIceCap.append('path')
+                        .datum(piece)
+                        .attr('class', 'arctic-ice')
+                        .attr('d', pathGen)
+                        .attr('tabindex', i === 0 ? 0 : -1)
+                        .attr('role', 'button')
+                        .attr('aria-label', function() { return t('arcticName'); })
+                        .on('mouseenter', function(e) {
+                            if (quizActive || measureActive || annotateActive) return;
+                            tooltip.textContent = '';
+                            const tmpDiv = document.createElement('div');
+                            tmpDiv.innerHTML = '<div><strong>' + t('arcticName') + '</strong></div>';
+                            while (tmpDiv.firstChild) tooltip.appendChild(tmpDiv.firstChild);
+                            _pendingTooltipEvent = e;
+                            _flushTooltipPosition();
+                            tooltip.classList.add('visible');
+                        })
+                        .on('mousemove', function(e) {
+                            if (quizActive || measureActive || annotateActive) return;
+                            _pendingTooltipEvent = e;
+                            if (!_tooltipRAFPending) {
+                                _tooltipRAFPending = true;
+                                requestAnimationFrame(_flushTooltipPosition);
+                            }
+                        })
+                        .on('mouseleave', function() {
+                            tooltip.classList.remove('visible');
+                        })
+                        .on('click', function(e) {
+                            if (quizActive || measureActive || annotateActive) return;
+                            e.stopPropagation();
                             showArcticDetail();
-                        }
-                    });
+                        })
+                        .on('keydown', function(e) {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                showArcticDetail();
+                            }
+                        });
+                });
             }
 
             function showArcticDetail() {
@@ -1277,7 +1281,7 @@
                 var proj = getActiveProjection();
 
                 const showMountains = (colorMode === 'terrain');
-                const showRivers   = (colorMode === 'terrain') || riversVisible;
+                const showRivers   = (colorMode === 'terrain') || riversGlaciersVisible;
                 if (!showMountains && !showRivers) return;
 
                 if (showMountains) {
@@ -1826,9 +1830,9 @@
 
             function drawGlaciatedAreas(skipFadeIn) {
                 gGlaciatedAreas.selectAll('*').remove();
-                if (!glaciatedAreasVisible) return;
+                if (!riversGlaciersVisible) return;
                 ensureGlaciatedAreasLoaded().then(function(features) {
-                    if (!features || !features.length || !glaciatedAreasVisible || globeModeActive) return;
+                    if (!features || !features.length || !riversGlaciersVisible || globeModeActive) return;
                     var proj = getActiveProjection();
                     var jumpPx = Math.min(getMapRect().width, getMapRect().height) * 0.55;
                     var strokeW = isMobile ? 1 : 1.4;
@@ -2118,8 +2122,7 @@
             function toggleDesertsForests()   { toggleLayer('desertsForests'); }
             function toggleBorderDisputes()   { toggleLayer('borderDisputes'); }
             function toggleAdminBoundaries() { toggleLayer('adminBoundaries'); }
-            function toggleGlaciatedAreas()  { toggleLayer('glaciatedAreas'); }
-            function toggleRivers()           { toggleLayer('rivers'); }
+            function toggleRiversGlaciers()  { toggleLayer('riversAndGlaciers'); }
 
             function toggleGeopoliticalBlocs() { toggleLayer('geopoliticalBlocs'); }
 
@@ -2745,7 +2748,7 @@
                     });
                 }
                 if (corridorsVisible||additionalWaterwaysVisible) html += `<div>🛣️ ${t('routes')}</div>`;
-                if (riversVisible) html += `<div>${t('riversOn')}</div>`;
+                if (riversGlaciersVisible) html += `<div>${t('riversOn')}</div>`;
                 if (densitySpotsMode && colorMode === 'density') html += `<div>${t('spotsOn')}</div>`;
                 if (capitalsVisible) html += `<div>${t('capitalsOn')}</div>`;
                 if (timezonesVisible) {
@@ -2841,7 +2844,7 @@
                     html += `<div class="legend-item"><span class="legend-color" style="background:${MAP_COLORS.borderDisputes.ceasefire}"></span>${t('ceasefireLabel')}</div>`;
                     html += `<div class="legend-item"><span class="legend-color" style="background:${MAP_COLORS.borderDisputes.maritime}"></span>${t('maritimeDispute')}</div>`;
                 }
-                if (colorMode === 'terrain' || riversVisible) html += `<div style="margin-top:4px;font-size:0.85em;color:var(--text-secondary)">${t('featureClickHint')}</div>`;
+                if (colorMode === 'terrain' || riversGlaciersVisible) html += `<div style="margin-top:4px;font-size:0.85em;color:var(--text-secondary)">${t('featureClickHint')}</div>`;
                 legendEl.innerHTML = html;
             }
 
@@ -3955,7 +3958,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             [corridorsVisible || additionalWaterwaysVisible, function() { drawRoutes(true); }],
                             [borderDisputesVisible, function() { drawBorderDisputes(true); }],
                             [desertsForestsVisible, function() { drawDesertsForests(true); }],
-                            [glaciatedAreasVisible, function() { drawGlaciatedAreas(true); }],
+                            [riversGlaciersVisible, function() { drawPhysicalFeatures(); drawGlaciatedAreas(true); }],
                             [geopoliticalBlocsVisible, function() { drawGeopoliticalBlocs(true); }],
                             [oceanCurrentsVisible, function() { drawOceanCurrents(true); }],
                             [windsVisible, function() { drawWinds(true); }],
@@ -5415,7 +5418,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 if (showLabels) toggleLabels();
                 if (sectMode) toggleSect();
                 if (corridorsVisible) toggleCorridors();
-                if (riversVisible) toggleRivers();
+                if (riversGlaciersVisible) toggleRiversGlaciers();
                 if (densitySpotsMode) toggleDensitySpots();
                 if (capitalsVisible) toggleCapitals();
                 if (timezonesVisible) toggleTimezones();
@@ -5432,7 +5435,6 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     document.getElementById('blocSelect').value = 'all';
                 }
                 if (desertsForestsVisible) toggleDesertsForests();
-                if (glaciatedAreasVisible) toggleGlaciatedAreas();
                 if (borderDisputesVisible) toggleBorderDisputes();
             }
 
@@ -8886,8 +8888,8 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             sectToggle.addEventListener('click', toggleSect);
             corridorsToggle.addEventListener('click', toggleCorridors);
 
-            const riversToggle = document.getElementById('riversToggle');
-            if (riversToggle) riversToggle.addEventListener('click', toggleRivers);
+            const riversGlaciersToggle = document.getElementById('riversGlaciersToggle');
+            if (riversGlaciersToggle) riversGlaciersToggle.addEventListener('click', toggleRiversGlaciers);
             densitySpotsToggle.addEventListener('click', toggleDensitySpots);
             capitalsToggle.addEventListener('click', toggleCapitals);
             timezonesToggle.addEventListener('click', toggleTimezones);
@@ -8903,8 +8905,6 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             document.getElementById('desertsForestsToggle').addEventListener('click', toggleDesertsForests);
             document.getElementById('borderDisputesToggle').addEventListener('click', toggleBorderDisputes);
             if (adminBoundariesToggle) adminBoundariesToggle.addEventListener('click', toggleAdminBoundaries);
-            var glaciatedAreasToggle = document.getElementById('glaciatedAreasToggle');
-            if (glaciatedAreasToggle) glaciatedAreasToggle.addEventListener('click', toggleGlaciatedAreas);
             if (globeViewBtn) globeViewBtn.addEventListener('click', function() {
                 if (quizActive) return;
                 toggleGlobeMode();
@@ -9387,7 +9387,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 resetLayersBtn.textContent = t('resetLayers');
                 resetLayersBtn.addEventListener('click', function() {
                     if (corridorsVisible) toggleCorridors();
-                    if (riversVisible) toggleRivers();
+                    if (riversGlaciersVisible) toggleRiversGlaciers();
                     if (densitySpotsMode) toggleDensitySpots();
                     if (capitalsVisible) toggleCapitals();
                     if (timezonesVisible) toggleTimezones();
@@ -9400,8 +9400,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (volcanoesVisible) toggleVolcanoes();
                     if (geopoliticalBlocsVisible) toggleGeopoliticalBlocs();
                     if (desertsForestsVisible) toggleDesertsForests();
-                    if (glaciatedAreasVisible) toggleGlaciatedAreas();
-                    if (borderDisputesVisible) toggleBorderDisputes();
+                        if (borderDisputesVisible) toggleBorderDisputes();
                     if (selectedBloc !== 'all') {
                         selectedBloc = 'all';
                         document.getElementById('blocSelect').value = 'all';

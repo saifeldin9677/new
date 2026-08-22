@@ -1276,6 +1276,18 @@
             }
 
             // ── Physical features (mountains & rivers) ──
+            function getReligionAtPoint(coord) {
+                if (!coord) return 'unknown';
+                for (let i = 0; i < allCountryFeatures.length; i++) {
+                    try {
+                        if (d3.geoContains(allCountryFeatures[i], coord)) {
+                            return getReligion(allCountryFeatures[i].properties?.name || '');
+                        }
+                    } catch (e) {}
+                }
+                return 'unknown';
+            }
+
             function drawPhysicalFeatures() {
                 gPhysical.selectAll('*').remove();
                 var proj = getActiveProjection();
@@ -1286,6 +1298,9 @@
 
                 if (showMountains) {
                     mountainRanges.forEach(m => {
+                        const featureReligion = getReligionAtPoint(m.coords[Math.floor(m.coords.length / 2)]);
+                        const matchesFilter = (currentReligionFilter === 'all') || (featureReligion === currentReligionFilter);
+                        const targetOpacity = matchesFilter ? 1 : 0.35;
                         const w = m.weight || 1;
                         const grp = gPhysical.append('g')
                             .attr('class', 'terrain-feature')
@@ -1299,7 +1314,7 @@
                             .attr('stroke-linecap', 'round')
                             .attr('stroke-linejoin', 'round')
                             .attr('vector-effect', 'non-scaling-stroke')
-                            .attr('opacity', 0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity', 0.45);
+                            .attr('opacity', 0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity', 0.45 * targetOpacity);
                         const mainPath = grp.append('path')
                             .datum({type:'LineString', coordinates: m.coords})
                             .attr('d', pathGen)
@@ -1311,7 +1326,7 @@
                             .attr('vector-effect', 'non-scaling-stroke')
                             .attr('data-feature', 'mountain')
                             .attr('data-name', m.name)
-                            .attr('opacity', 0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity', 0.95);
+                            .attr('opacity', 0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity', 0.95 * targetOpacity);
                         const step = w === 3 ? 1 : 2;
                         m.coords.forEach((coord, i) => {
                             if (i % step !== 0) return;
@@ -1324,10 +1339,10 @@
                                 .attr('fill', w === 3 ? MAP_COLORS.physical.mountainPeakMajor : w === 2 ? MAP_COLORS.physical.mountainPeakImportant : MAP_COLORS.physical.mountainPeakMinor)
                                 .attr('stroke', MAP_COLORS.physical.mountainShadow)
                                 .attr('stroke-width', 0.3)
-                                .attr('opacity', 0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity', 0.9);
+                                .attr('opacity', 0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity', 0.9 * targetOpacity);
                         });
-                        grp.on('mouseenter', function() { mainPath.attr('stroke', MAP_COLORS.physical.mountainHover).attr('opacity', 1); })
-                            .on('mouseleave', function() { mainPath.attr('stroke', w === 3 ? MAP_COLORS.physical.mountainMajor : w === 2 ? MAP_COLORS.physical.mountainImportant : MAP_COLORS.physical.mountainMinor).attr('opacity', 0.95); })
+                        grp.on('mouseenter', function() { mainPath.attr('stroke', MAP_COLORS.physical.mountainHover).attr('opacity', Math.min(1, targetOpacity)); })
+                            .on('mouseleave', function() { mainPath.attr('stroke', w === 3 ? MAP_COLORS.physical.mountainMajor : w === 2 ? MAP_COLORS.physical.mountainImportant : MAP_COLORS.physical.mountainMinor).attr('opacity', 0.95 * targetOpacity); })
                             .on('click', function(e) { e.stopPropagation(); showFeatureDetail('mountain', m); });
                     });
                 }
@@ -1335,6 +1350,9 @@
                 if (showRivers) {
                     [1, 2, 3].forEach(wLevel => {
                         rivers.filter(r => (r.weight || 1) === wLevel).forEach(r => {
+                            const featureReligion = getReligionAtPoint(r.coords[Math.floor(r.coords.length / 2)]);
+                            const matchesFilter = (currentReligionFilter === 'all') || (featureReligion === currentReligionFilter);
+                            const targetOpacity = matchesFilter ? 1 : 0.35;
                             const w = r.weight || 1;
                             const grp = gPhysical.append('g')
                                 .attr('class', 'terrain-feature')
@@ -1348,7 +1366,7 @@
                                 .attr('stroke-linecap', 'round')
                                 .attr('stroke-linejoin', 'round')
                                 .attr('vector-effect', 'non-scaling-stroke')
-                                .attr('opacity', 0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity', 0.3);
+                                .attr('opacity', 0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity', 0.3 * targetOpacity);
                             const mainPath = grp.append('path')
                                 .datum({type:'LineString', coordinates: r.coords})
                                 .attr('d', pathGen)
@@ -1360,9 +1378,9 @@
                                 .attr('vector-effect', 'non-scaling-stroke')
                                 .attr('data-feature', 'river')
                                 .attr('data-name', r.name)
-                                .attr('opacity', 0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity', 0.88);
-                            grp.on('mouseenter', function() { mainPath.attr('stroke', MAP_COLORS.physical.riverHover).attr('opacity', 1); })
-                                .on('mouseleave', function() { mainPath.attr('stroke', w === 3 ? MAP_COLORS.physical.riverMajor : w === 2 ? MAP_COLORS.physical.riverImportant : MAP_COLORS.physical.riverMinor).attr('opacity', 0.88); })
+                                .attr('opacity', 0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity', 0.88 * targetOpacity);
+                            grp.on('mouseenter', function() { mainPath.attr('stroke', MAP_COLORS.physical.riverHover).attr('opacity', Math.min(1, targetOpacity)); })
+                                .on('mouseleave', function() { mainPath.attr('stroke', w === 3 ? MAP_COLORS.physical.riverMajor : w === 2 ? MAP_COLORS.physical.riverImportant : MAP_COLORS.physical.riverMinor).attr('opacity', 0.88 * targetOpacity); })
                                 .on('click', function(e) { e.stopPropagation(); showFeatureDetail('river', r); });
                         });
                     });

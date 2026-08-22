@@ -107,6 +107,23 @@ path:focus-visible {
     outline-offset: 1px;
 }
 
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 8px;
+    background: var(--brand-accent);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    z-index: var(--z-button-tooltip);
+    text-decoration: none;
+    font-weight: 600;
+    transition: top 0.2s ease;
+}
+.skip-link:focus {
+    top: 8px;
+}
+
 .theme-icon-dark { display: none; }
 [data-theme="light"] .theme-icon-light { display: none; }
 [data-theme="light"] .theme-icon-dark { display: inline; }

@@ -17,6 +17,9 @@
     <link rel="stylesheet" href="style.css?v=2026-08-19A">
 </head>
 <body>
+    <a href="#controlsBar" class="skip-link" data-i18n="skipToControls">Skip to controls</a>
+    <a href="#searchInput" class="skip-link" data-i18n="skipToSearch">Skip to search</a>
+    <a href="#mapContainer" class="skip-link" data-i18n="skipToMap">Skip to map</a>
     <div class="header top-header">
         <div class="header-right-group">
             <div class="title-group brand-logo">
@@ -71,7 +74,7 @@
     </div>
 
     <div class="content-row" id="contentRow">
-    <div class="map-container" id="mapContainer" role="application" data-i18n-aria-label="mapAriaLabel">
+    <div class="map-container" id="mapContainer" role="application" tabindex="-1" data-i18n-aria-label="mapAriaLabel">
         <svg id="mapSvg"></svg>
         <canvas id="adminBoundariesCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:4;"></canvas>
         <canvas id="densityCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5;"></canvas>
@@ -135,21 +138,21 @@
             <button class="measure-mode-btn" id="annotationHelpBtn" title="مساعدة الوضع" data-i18n-title="annotationHelpButton" aria-label="مساعدة" data-i18n-aria-label="annotationHelpButton">؟</button>
         </div>
 
-        <div class="controls-bar" id="controlsBar" role="toolbar" aria-label="شريط التحكم" data-i18n-aria-label="controlsBarLabel">
+        <div class="controls-bar" id="controlsBar" role="toolbar" tabindex="-1" aria-label="شريط التحكم" data-i18n-aria-label="controlsBarLabel">
             <div class="controls-bar-toprow">
                 <div class="dock-unified-wrap">
                     <div class="stepped-dock-group">
                         <div class="row row-unified base-map-dock" id="modeRow">
                         <span class="control-label" id="sectionBaseMapLabel" data-i18n="sectionBaseMap"><i data-lucide="map" class="lucide-icon"></i><span class="btn-text">Base Map</span></span>
                         <div class="control-group" id="modeButtons">
-                            <button class="btn mode-btn" data-mode="religion" title="ألوان حسب الديانة"><i data-lucide="book-open" class="lucide-icon"></i><span class="btn-text">دين</span></button>
-                            <button class="btn mode-btn" data-mode="terrain" title="ألوان حسب التضاريس"><i data-lucide="mountain" class="lucide-icon"></i><span class="btn-text">تضاريس</span></button>
-                            <button class="btn mode-btn" data-mode="density" title="ألوان حسب الكثافة السكانية"><i data-lucide="users" class="lucide-icon"></i><span class="btn-text">كثافة</span></button>
-                            <button class="btn mode-btn" data-mode="precipitation" title="ألوان حسب معدل الأمطار"><i data-lucide="cloud-rain" class="lucide-icon"></i><span class="btn-text">أمطار</span></button>
-                            <button class="btn mode-btn" data-mode="temperature" title="ألوان حسب درجة الحرارة"><i data-lucide="thermometer" class="lucide-icon"></i><span class="btn-text">حرارة</span></button>
-                            <button class="btn mode-btn" data-mode="gdp" title="ألوان حسب الناتج المحلي الإجمالي"><i data-lucide="dollar-sign" class="lucide-icon"></i><span class="btn-text">ناتج</span></button>
-                            <button class="btn mode-btn" data-mode="hdi" title="ألوان حسب مؤشر التنمية البشرية"><i data-lucide="bar-chart-3" class="lucide-icon"></i><span class="btn-text">تنمية</span></button>
-                            <button class="btn mode-btn active" data-mode="normal" title="خريطة عادية"><i data-lucide="globe" class="lucide-icon"></i><span class="btn-text">طبيعي</span></button>
+                            <button class="btn mode-btn" aria-pressed="false" data-mode="religion" title="ألوان حسب الديانة"><i data-lucide="book-open" class="lucide-icon"></i><span class="btn-text">دين</span></button>
+                            <button class="btn mode-btn" aria-pressed="false" data-mode="terrain" title="ألوان حسب التضاريس"><i data-lucide="mountain" class="lucide-icon"></i><span class="btn-text">تضاريس</span></button>
+                            <button class="btn mode-btn" aria-pressed="false" data-mode="density" title="ألوان حسب الكثافة السكانية"><i data-lucide="users" class="lucide-icon"></i><span class="btn-text">كثافة</span></button>
+                            <button class="btn mode-btn" aria-pressed="false" data-mode="precipitation" title="ألوان حسب معدل الأمطار"><i data-lucide="cloud-rain" class="lucide-icon"></i><span class="btn-text">أمطار</span></button>
+                            <button class="btn mode-btn" aria-pressed="false" data-mode="temperature" title="ألوان حسب درجة الحرارة"><i data-lucide="thermometer" class="lucide-icon"></i><span class="btn-text">حرارة</span></button>
+                            <button class="btn mode-btn" aria-pressed="false" data-mode="gdp" title="ألوان حسب الناتج المحلي الإجمالي"><i data-lucide="dollar-sign" class="lucide-icon"></i><span class="btn-text">ناتج</span></button>
+                            <button class="btn mode-btn" aria-pressed="false" data-mode="hdi" title="ألوان حسب مؤشر التنمية البشرية"><i data-lucide="bar-chart-3" class="lucide-icon"></i><span class="btn-text">تنمية</span></button>
+                            <button class="btn mode-btn active" data-mode="normal" aria-pressed="true" title="خريطة عادية"><i data-lucide="globe" class="lucide-icon"></i><span class="btn-text">طبيعي</span></button>
                         </div>
                     </div>
                     <div class="control-group control-group-narrow four-buttons-dock" id="filterRow">
@@ -172,25 +175,25 @@
                     <button class="layers-modal-close" id="layersModalClose" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
                 </div>
                 <div class="layers-modal-body" id="layersModalBody">
-                    <button class="btn" id="labelsToggle" title="إظهار/إخفاء أسماء الدول" data-i18n="labelsToggle" data-i18n-title="labelsToggle_title"><i data-lucide="tag" class="lucide-icon"></i><span class="btn-text">الأسماء</span></button>
-                    <button class="btn" id="sectToggle" title="إظهار/إخفاء الطوائف (بدل الديانات)" data-i18n="sectToggle" data-i18n-title="sectToggle_title"><i data-lucide="git-fork" class="lucide-icon"></i><span class="btn-text">الطوائف</span></button>
-                    <button class="btn" id="routesToggle" title="إظهار/إخفاء الطرق (بحرية، برية، جوية، أنابيب وقنوات ومضائق)" data-i18n="corridorsToggle" data-i18n-title="routesToggle_title"><i data-lucide="route" class="lucide-icon"></i><span class="btn-text">طرق</span></button>
-                    <button class="btn" id="riversGlaciersToggle" title="إظهار/إخفاء الأنهار الكبرى والأنهار الجليدية" data-i18n="riversGlaciersToggle" data-i18n-title="riversGlaciersToggle_title"><i data-lucide="waves" class="lucide-icon"></i><span class="btn-text">الأنهار والأنهار الجليدية</span></button>
-                    <button class="btn" id="densitySpotsToggle" title="إظهار/إخفاء بؤر الكثافة السكانية" data-i18n="densitySpotsToggle" data-i18n-title="densitySpotsToggle_title"><i data-lucide="target" class="lucide-icon"></i><span class="btn-text">بؤر</span></button>
-                    <button class="btn" id="capitalsToggle" title="إظهار/إخفاء العواصم" data-i18n="capitalsToggle" data-i18n-title="capitalsToggle_title"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text">عواصم</span></button>
-                    <button class="btn" id="timezonesToggle" title="إظهار/إخفاء المناطق الزمنية" data-i18n="timezonesToggle" data-i18n-title="timezonesToggle_title"><i data-lucide="clock" class="lucide-icon"></i><span class="btn-text">مناطق</span></button>
-                    <button class="btn" id="majorCitiesToggle" title="إظهار/إخفاء المدن الكبرى" data-i18n="majorCitiesToggle" data-i18n-title="majorCitiesToggle_title"><i data-lucide="building" class="lucide-icon"></i><span class="btn-text">مدن</span></button>
-                    <button class="btn" id="naturalResourcesToggle" title="إظهار/إخفاء الموارد الطبيعية" data-i18n="naturalResources" data-i18n-title="naturalResourcesToggle_title"><i data-lucide="gem" class="lucide-icon"></i><span class="btn-text">موارد</span></button>
-                    <button class="btn" id="ethnicGroupsToggle" title="إظهار/إخفاء المجموعات العرقية" data-i18n="ethnicGroups" data-i18n-title="ethnicGroupsToggle_title"><i data-lucide="users" class="lucide-icon"></i><span class="btn-text">عرقيات</span></button>
-                    <button class="btn" id="oceanCurrentsToggle" title="إظهار/إخفاء التيارات المحيطية" data-i18n="oceanCurrents" data-i18n-title="oceanCurrentsToggle_title"><i data-lucide="waves" class="lucide-icon"></i><span class="btn-text">تيارات</span></button>
-                    <button class="btn" id="windsToggle" title="إظهار/إخفاء الرياح" data-i18n="winds" data-i18n-title="windsToggle_title"><i data-lucide="wind" class="lucide-icon"></i><span class="btn-text">رياح</span></button>
-                    <button class="btn" id="earthquakesToggle" title="إظهار/إخفاء الزلازل" data-i18n="earthquakes" data-i18n-title="earthquakesToggle_title"><i data-lucide="triangle-alert" class="lucide-icon"></i><span class="btn-text">زلازل</span></button>
-                    <button class="btn" id="volcanoesToggle" title="إظهار/إخفاء البراكين" data-i18n="volcanoes" data-i18n-title="volcanoesToggle_title"><i data-lucide="flame" class="lucide-icon"></i><span class="btn-text">براكين</span></button>
-                    <button class="btn" id="geopoliticalBlocsToggle" title="إظهار/إخفاء التكتلات الجيوسياسية" data-i18n="geopoliticalBlocs" data-i18n-title="geopoliticalBlocsToggle_title"><i data-lucide="flag" class="lucide-icon"></i><span class="btn-text">تكتلات</span></button>
+                    <button class="btn" id="labelsToggle" aria-pressed="false" title="إظهار/إخفاء أسماء الدول" data-i18n="labelsToggle" data-i18n-title="labelsToggle_title"><i data-lucide="tag" class="lucide-icon"></i><span class="btn-text">الأسماء</span></button>
+                    <button class="btn" id="sectToggle" aria-pressed="false" title="إظهار/إخفاء الطوائف (بدل الديانات)" data-i18n="sectToggle" data-i18n-title="sectToggle_title"><i data-lucide="git-fork" class="lucide-icon"></i><span class="btn-text">الطوائف</span></button>
+                    <button class="btn" id="routesToggle" aria-pressed="false" title="إظهار/إخفاء الطرق (بحرية، برية، جوية، أنابيب وقنوات ومضائق)" data-i18n="corridorsToggle" data-i18n-title="routesToggle_title"><i data-lucide="route" class="lucide-icon"></i><span class="btn-text">طرق</span></button>
+                    <button class="btn" id="riversGlaciersToggle" aria-pressed="false" title="إظهار/إخفاء الأنهار الكبرى والأنهار الجليدية" data-i18n="riversGlaciersToggle" data-i18n-title="riversGlaciersToggle_title"><i data-lucide="waves" class="lucide-icon"></i><span class="btn-text">الأنهار والأنهار الجليدية</span></button>
+                    <button class="btn" id="densitySpotsToggle" aria-pressed="false" title="إظهار/إخفاء بؤر الكثافة السكانية" data-i18n="densitySpotsToggle" data-i18n-title="densitySpotsToggle_title"><i data-lucide="target" class="lucide-icon"></i><span class="btn-text">بؤر</span></button>
+                    <button class="btn" id="capitalsToggle" aria-pressed="false" title="إظهار/إخفاء العواصم" data-i18n="capitalsToggle" data-i18n-title="capitalsToggle_title"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text">عواصم</span></button>
+                    <button class="btn" id="timezonesToggle" aria-pressed="false" title="إظهار/إخفاء المناطق الزمنية" data-i18n="timezonesToggle" data-i18n-title="timezonesToggle_title"><i data-lucide="clock" class="lucide-icon"></i><span class="btn-text">مناطق</span></button>
+                    <button class="btn" id="majorCitiesToggle" aria-pressed="false" title="إظهار/إخفاء المدن الكبرى" data-i18n="majorCitiesToggle" data-i18n-title="majorCitiesToggle_title"><i data-lucide="building" class="lucide-icon"></i><span class="btn-text">مدن</span></button>
+                    <button class="btn" id="naturalResourcesToggle" aria-pressed="false" title="إظهار/إخفاء الموارد الطبيعية" data-i18n="naturalResources" data-i18n-title="naturalResourcesToggle_title"><i data-lucide="gem" class="lucide-icon"></i><span class="btn-text">موارد</span></button>
+                    <button class="btn" id="ethnicGroupsToggle" aria-pressed="false" title="إظهار/إخفاء المجموعات العرقية" data-i18n="ethnicGroups" data-i18n-title="ethnicGroupsToggle_title"><i data-lucide="users" class="lucide-icon"></i><span class="btn-text">عرقيات</span></button>
+                    <button class="btn" id="oceanCurrentsToggle" aria-pressed="false" title="إظهار/إخفاء التيارات المحيطية" data-i18n="oceanCurrents" data-i18n-title="oceanCurrentsToggle_title"><i data-lucide="waves" class="lucide-icon"></i><span class="btn-text">تيارات</span></button>
+                    <button class="btn" id="windsToggle" aria-pressed="false" title="إظهار/إخفاء الرياح" data-i18n="winds" data-i18n-title="windsToggle_title"><i data-lucide="wind" class="lucide-icon"></i><span class="btn-text">رياح</span></button>
+                    <button class="btn" id="earthquakesToggle" aria-pressed="false" title="إظهار/إخفاء الزلازل" data-i18n="earthquakes" data-i18n-title="earthquakesToggle_title"><i data-lucide="triangle-alert" class="lucide-icon"></i><span class="btn-text">زلازل</span></button>
+                    <button class="btn" id="volcanoesToggle" aria-pressed="false" title="إظهار/إخفاء البراكين" data-i18n="volcanoes" data-i18n-title="volcanoesToggle_title"><i data-lucide="flame" class="lucide-icon"></i><span class="btn-text">براكين</span></button>
+                    <button class="btn" id="geopoliticalBlocsToggle" aria-pressed="false" title="إظهار/إخفاء التكتلات الجيوسياسية" data-i18n="geopoliticalBlocs" data-i18n-title="geopoliticalBlocsToggle_title"><i data-lucide="flag" class="lucide-icon"></i><span class="btn-text">تكتلات</span></button>
                     <select id="blocSelect" class="bloc-select" data-i18n-title="blocSelect_title"><option value="all">جميع التكتلات</option></select>
-                    <button class="btn" id="desertsForestsToggle" title="إظهار/إخفاء الصحاري والغابات" data-i18n="desertsForests" data-i18n-title="desertsForestsToggle_title"><i data-lucide="sun" class="lucide-icon"></i><span class="btn-text">صحاري</span></button>
-                    <button class="btn" id="borderDisputesToggle" title="إظهار/إخفاء النزاعات الحدودية" data-i18n="borderDisputes" data-i18n-title="borderDisputesToggle_title"><i data-lucide="swords" class="lucide-icon"></i><span class="btn-text">نزاعات</span></button>
-                    <button class="btn" id="adminBoundariesToggle" title="إظهار/إخفاء الحدود الإدارية" data-i18n="adminBoundariesToggle" data-i18n-title="adminBoundariesToggle_title"><i data-lucide="map" class="lucide-icon"></i><span class="btn-text">حدود إدارية</span></button>
+                    <button class="btn" id="desertsForestsToggle" aria-pressed="false" title="إظهار/إخفاء الصحاري والغابات" data-i18n="desertsForests" data-i18n-title="desertsForestsToggle_title"><i data-lucide="sun" class="lucide-icon"></i><span class="btn-text">صحاري</span></button>
+                    <button class="btn" id="borderDisputesToggle" aria-pressed="false" title="إظهار/إخفاء النزاعات الحدودية" data-i18n="borderDisputes" data-i18n-title="borderDisputesToggle_title"><i data-lucide="swords" class="lucide-icon"></i><span class="btn-text">نزاعات</span></button>
+                    <button class="btn" id="adminBoundariesToggle" aria-pressed="false" title="إظهار/إخفاء الحدود الإدارية" data-i18n="adminBoundariesToggle" data-i18n-title="adminBoundariesToggle_title"><i data-lucide="map" class="lucide-icon"></i><span class="btn-text">حدود إدارية</span></button>
                 </div>
             </div>
         </div>
@@ -203,13 +206,13 @@
                 </div>
                 <div class="layers-modal-body" id="divisionPopoverBody">
                     <div class="control-group" id="religionButtons">
-                        <button class="btn religion-btn active" data-religion="all" title="إظهار جميع الديانات">الكل</button>
-                        <button class="btn religion-btn" data-religion="muslim" title="تصفية: مسلم">مسلم</button>
-                        <button class="btn religion-btn" data-religion="christian" title="تصفية: مسيحي">مسيحي</button>
-                        <button class="btn religion-btn" data-religion="hindu" title="تصفية: هندوسي">هندوسي</button>
-                        <button class="btn religion-btn" data-religion="buddhist" title="تصفية: بوذي">بوذي</button>
-                        <button class="btn religion-btn" data-religion="jewish" title="تصفية: يهودي">يهودي</button>
-                        <button class="btn religion-btn" data-religion="other" title="تصفية: أخرى">آخر</button>
+                        <button class="btn religion-btn active" data-religion="all" aria-pressed="true" title="إظهار جميع الديانات">الكل</button>
+                        <button class="btn religion-btn" aria-pressed="false" data-religion="muslim" title="تصفية: مسلم">مسلم</button>
+                        <button class="btn religion-btn" aria-pressed="false" data-religion="christian" title="تصفية: مسيحي">مسيحي</button>
+                        <button class="btn religion-btn" aria-pressed="false" data-religion="hindu" title="تصفية: هندوسي">هندوسي</button>
+                        <button class="btn religion-btn" aria-pressed="false" data-religion="buddhist" title="تصفية: بوذي">بوذي</button>
+                        <button class="btn religion-btn" aria-pressed="false" data-religion="jewish" title="تصفية: يهودي">يهودي</button>
+                        <button class="btn religion-btn" aria-pressed="false" data-religion="other" title="تصفية: أخرى">آخر</button>
                     </div>
                 </div>
             </div>
@@ -291,24 +294,24 @@
                 </div>
                 <div class="mobile-mode-sheet-body" id="mobileModeSheetBody">
                     <div class="mobile-mode-group" id="mobileModeButtons">
-                        <button class="btn mode-btn" data-mode="religion"><i data-lucide="book-open" class="lucide-icon"></i><span class="btn-text">دين</span></button>
-                        <button class="btn mode-btn" data-mode="terrain"><i data-lucide="mountain" class="lucide-icon"></i><span class="btn-text">تضاريس</span></button>
-                        <button class="btn mode-btn" data-mode="density"><i data-lucide="users" class="lucide-icon"></i><span class="btn-text">كثافة</span></button>
-                        <button class="btn mode-btn" data-mode="precipitation"><i data-lucide="cloud-rain" class="lucide-icon"></i><span class="btn-text">أمطار</span></button>
-                        <button class="btn mode-btn" data-mode="temperature"><i data-lucide="thermometer" class="lucide-icon"></i><span class="btn-text">حرارة</span></button>
-                        <button class="btn mode-btn" data-mode="gdp"><i data-lucide="dollar-sign" class="lucide-icon"></i><span class="btn-text">ناتج</span></button>
-                        <button class="btn mode-btn" data-mode="hdi"><i data-lucide="bar-chart-3" class="lucide-icon"></i><span class="btn-text">تنمية</span></button>
-                        <button class="btn mode-btn active" data-mode="normal"><i data-lucide="globe" class="lucide-icon"></i><span class="btn-text">طبيعي</span></button>
+                        <button class="btn mode-btn" aria-pressed="false" data-mode="religion"><i data-lucide="book-open" class="lucide-icon"></i><span class="btn-text">دين</span></button>
+                        <button class="btn mode-btn" aria-pressed="false" data-mode="terrain"><i data-lucide="mountain" class="lucide-icon"></i><span class="btn-text">تضاريس</span></button>
+                        <button class="btn mode-btn" aria-pressed="false" data-mode="density"><i data-lucide="users" class="lucide-icon"></i><span class="btn-text">كثافة</span></button>
+                        <button class="btn mode-btn" aria-pressed="false" data-mode="precipitation"><i data-lucide="cloud-rain" class="lucide-icon"></i><span class="btn-text">أمطار</span></button>
+                        <button class="btn mode-btn" aria-pressed="false" data-mode="temperature"><i data-lucide="thermometer" class="lucide-icon"></i><span class="btn-text">حرارة</span></button>
+                        <button class="btn mode-btn" aria-pressed="false" data-mode="gdp"><i data-lucide="dollar-sign" class="lucide-icon"></i><span class="btn-text">ناتج</span></button>
+                        <button class="btn mode-btn" aria-pressed="false" data-mode="hdi"><i data-lucide="bar-chart-3" class="lucide-icon"></i><span class="btn-text">تنمية</span></button>
+                        <button class="btn mode-btn active" data-mode="normal" aria-pressed="true"><i data-lucide="globe" class="lucide-icon"></i><span class="btn-text">طبيعي</span></button>
                     </div>
                     <div class="mobile-filter-group" id="mobileFilterButtons">
                         <span class="mobile-filter-label" id="mobileFilterLabel" data-i18n="rowFilterLabel"><i data-lucide="crosshair" class="lucide-icon"></i><span class="btn-text">التقسيم:</span></span>
-                        <button class="btn religion-btn active" data-religion="all">الكل</button>
-                        <button class="btn religion-btn" data-religion="muslim">مسلم</button>
-                        <button class="btn religion-btn" data-religion="christian">مسيحي</button>
-                        <button class="btn religion-btn" data-religion="hindu">هندوسي</button>
-                        <button class="btn religion-btn" data-religion="buddhist">بوذي</button>
-                        <button class="btn religion-btn" data-religion="jewish">يهودي</button>
-                        <button class="btn religion-btn" data-religion="other">آخر</button>
+                        <button class="btn religion-btn active" data-religion="all" aria-pressed="true">الكل</button>
+                        <button class="btn religion-btn" aria-pressed="false" data-religion="muslim">مسلم</button>
+                        <button class="btn religion-btn" aria-pressed="false" data-religion="christian">مسيحي</button>
+                        <button class="btn religion-btn" aria-pressed="false" data-religion="hindu">هندوسي</button>
+                        <button class="btn religion-btn" aria-pressed="false" data-religion="buddhist">بوذي</button>
+                        <button class="btn religion-btn" aria-pressed="false" data-religion="jewish">يهودي</button>
+                        <button class="btn religion-btn" aria-pressed="false" data-religion="other">آخر</button>
                     </div>
                 </div>
             </div>

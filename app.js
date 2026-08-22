@@ -116,8 +116,14 @@
                 }
             }
             function setActiveByAttr(buttons, selector) {
-                buttons.forEach(function(b) { b.classList.remove('active'); });
-                document.querySelectorAll(selector).forEach(function(b) { b.classList.add('active'); });
+                buttons.forEach(function(b) {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-pressed', 'false');
+                });
+                document.querySelectorAll(selector).forEach(function(b) {
+                    b.classList.add('active');
+                    b.setAttribute('aria-pressed', 'true');
+                });
             }
             const modeButtons = document.querySelectorAll('.mode-btn');
             var religionButtons = [];
@@ -350,7 +356,10 @@
                 var state = !def.getFlag();
                 def.setFlag(state);
                 var btn = document.getElementById(def.btnId);
-                if (btn) btn.classList.toggle('toggle-on', state);
+                if (btn) {
+                    btn.classList.toggle('toggle-on', state);
+                    btn.setAttribute('aria-pressed', state ? 'true' : 'false');
+                }
                 if (state && def.setNorm) setMode('normal');
                 if (def.drawFn) def.drawFn();
                 if (def.postDrawFn) def.postDrawFn();
@@ -2577,6 +2586,7 @@
             function toggleLabels() {
                 showLabels = !showLabels;
                 labelsToggle.classList.toggle('toggle-on', showLabels);
+                labelsToggle.setAttribute('aria-pressed', showLabels ? 'true' : 'false');
                 if (countryLabelSelection) {
                     countryLabelSelection.remove();
                     countryLabelSelection = null;
@@ -2885,6 +2895,7 @@
             function toggleSect() {
                 sectMode = !sectMode;
                 sectToggle.classList.toggle('toggle-on', sectMode);
+                sectToggle.setAttribute('aria-pressed', sectMode ? 'true' : 'false');
                 if (sectMode && colorMode !== 'religion') setMode('religion');
                 else updateAllStyles();
                 updateActiveLayerCount();
@@ -2894,6 +2905,7 @@
                 corridorsVisible = !corridorsVisible;
                 additionalWaterwaysVisible = corridorsVisible;
                 corridorsToggle.classList.toggle('toggle-on', corridorsVisible);
+                corridorsToggle.setAttribute('aria-pressed', corridorsVisible ? 'true' : 'false');
                 drawRoutes();
                 updateLegend();
                 updateActiveLayerCount();
@@ -2904,6 +2916,7 @@
             function toggleDensitySpots() {
                 densitySpotsMode = !densitySpotsMode;
                 densitySpotsToggle.classList.toggle('toggle-on', densitySpotsMode);
+                densitySpotsToggle.setAttribute('aria-pressed', densitySpotsMode ? 'true' : 'false');
                 if (densitySpotsMode && colorMode !== 'density') {
                     setMode('density');
                 } else {
@@ -2919,7 +2932,10 @@
 
             function toggleCoords() {
                 coordsVisible = !coordsVisible;
-                if (coordsToggle) coordsToggle.classList.toggle('toggle-on', coordsVisible);
+                if (coordsToggle) {
+                    coordsToggle.classList.toggle('toggle-on', coordsVisible);
+                    coordsToggle.setAttribute('aria-pressed', coordsVisible ? 'true' : 'false');
+                }
                 var cd = document.getElementById('coordinatesDisplay');
                 if (cd) cd.classList.toggle('hidden', !coordsVisible);
                 updateActiveLayerCount();
@@ -8940,7 +8956,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 if (!geopoliticalBlocsVisible) {
                     geopoliticalBlocsVisible = true;
                     var blocsBtn = document.getElementById('geopoliticalBlocsToggle');
-                    if (blocsBtn) blocsBtn.classList.add('toggle-on');
+                    if (blocsBtn) { blocsBtn.classList.add('toggle-on'); blocsBtn.setAttribute('aria-pressed', 'true'); }
                     drawGeopoliticalBlocs();
                     setMode('normal');
                 } else {

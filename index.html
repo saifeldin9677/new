@@ -91,7 +91,7 @@
             خط الطول: — &nbsp;|&nbsp; خط العرض: — &nbsp;|&nbsp; تكبير: 1.0x &nbsp;|&nbsp; الوضع: دين &nbsp;|&nbsp; الفلتر: الكل
         </div>
 
-        <div class="country-panel" id="countryPanel" role="dialog" aria-label="معلومات الدولة" aria-hidden="true" data-i18n-aria-label="countryPanelLabel">
+        <div class="country-panel" id="countryPanel" role="dialog" aria-modal="false" aria-label="معلومات الدولة" data-i18n-aria-label="countryPanelLabel">
             <div class="country-panel-header">
                 <button class="export-btn" id="exportBtn" title="تحميل معلومات الدولة" aria-label="تصدير" data-i18n-title="exportLabel" data-i18n-aria-label="exportLabel"><i data-lucide="download" class="lucide-icon"></i></button>
                 <div style="flex:1"></div>
@@ -117,6 +117,7 @@
                 <button class="measure-mode-btn" id="annotationKindRegion" data-i18n="annotationRegion">منطقة</button>
                 <button class="measure-mode-btn" id="annotationKindDraw" data-i18n="annotationDraw">رسم</button>
                 <button class="measure-mode-btn" id="annotationKindArrow" data-i18n="annotationArrow">سهم</button>
+                <button class="measure-mode-btn" id="annotationAddByNameBtn" title="إضافة تعليق بمكان مُسمّى (لوحة مفاتيح)" data-i18n-title="annotationAddByName_title" data-i18n="annotationAddByName">+ مكان</button>
             </div>
             <div class="measure-seg annotation-color-seg" role="group" aria-label="لون الرسم" data-i18n-aria-label="annotationColorLabel">
                 <button class="annotation-color-swatch" data-color="#eab308" style="background:#eab308" title="أصفر" data-i18n-title="annotationColorYellow" aria-label="أصفر" data-i18n-aria-label="annotationColorYellow"></button>
@@ -193,6 +194,7 @@
                     <select id="blocSelect" class="bloc-select" data-i18n-title="blocSelect_title"><option value="all">جميع التكتلات</option></select>
                     <button class="btn" id="desertsForestsToggle" aria-pressed="false" title="إظهار/إخفاء الصحاري والغابات" data-i18n="desertsForests" data-i18n-title="desertsForestsToggle_title"><i data-lucide="sun" class="lucide-icon"></i><span class="btn-text">صحاري</span></button>
                     <button class="btn" id="borderDisputesToggle" aria-pressed="false" title="إظهار/إخفاء النزاعات الحدودية" data-i18n="borderDisputes" data-i18n-title="borderDisputesToggle_title"><i data-lucide="swords" class="lucide-icon"></i><span class="btn-text">نزاعات</span></button>
+                    <button class="btn" id="colorblindToggle" aria-pressed="false" title="إضافة نقش شكل لكل فئة لتكون قابلة للتمييز بدون لون" data-i18n="colorblindToggle" data-i18n-title="colorblindToggle_title"><i data-lucide="contrast" class="lucide-icon"></i><span class="btn-text">أنماط عمى الألوان</span></button>
                     <button class="btn" id="adminBoundariesToggle" aria-pressed="false" title="إظهار/إخفاء الحدود الإدارية" data-i18n="adminBoundariesToggle" data-i18n-title="adminBoundariesToggle_title"><i data-lucide="map" class="lucide-icon"></i><span class="btn-text">حدود إدارية</span></button>
                 </div>
             </div>
@@ -218,7 +220,7 @@
             </div>
         </div>
 
-        <div class="layers-modal about-modal" id="annotationsModal" role="dialog" aria-modal="true" data-i18n-aria-label="annotationTitle">
+        <div class="layers-modal about-modal" id="annotationsModal" role="dialog" aria-modal="true" aria-labelledby="annotationsModalTitle">
             <div class="layers-modal-backdrop" id="annotationsModalBackdrop"></div>
             <div class="layers-modal-content">
                 <div class="layers-modal-header">
@@ -241,6 +243,24 @@
                     <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end">
                         <button class="btn" id="annotationLabelCancel" data-i18n="quizCancel">Cancel</button>
                         <button class="btn quiz-start-btn" id="annotationLabelSave" data-i18n="addLabel">Add label</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layers-modal" id="annotationPlaceModal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="annotationPlaceTitle">
+            <div class="layers-modal-backdrop"></div>
+            <div class="layers-modal-content" style="max-width:360px">
+                <div class="layers-modal-header">
+                    <h3 id="annotationPlaceTitle" data-i18n="placeModalTitlePin">Add pin by place</h3>
+                    <button class="layers-modal-close" id="annotationPlaceClose" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
+                </div>
+                <div class="layers-modal-body">
+                    <input id="annotationPlaceInput" class="quiz-input" maxlength="80" data-i18n-placeholder="placeInputHint" aria-label="اسم المكان" data-i18n-aria-label="placeInputHint" autocomplete="off" autocorrect="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="annotationPlaceResults" aria-autocomplete="list">
+                    <ul id="annotationPlaceResults" role="listbox" style="display:none;max-height:220px;overflow-y:auto;margin-top:6px;padding:0;list-style:none"></ul>
+                    <p id="annotationPlaceNoResults" style="display:none;margin:6px 0 0" data-i18n="placeNoResults">No matches</p>
+                    <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end">
+                        <button class="btn" id="annotationPlaceCancel" data-i18n="quizCancel">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -285,7 +305,7 @@
         </div>
 
         <!-- Mobile mode sheet -->
-        <div class="mobile-mode-sheet" id="mobileModeSheet" role="dialog" aria-modal="true" aria-label="وضع الخريطة" data-i18n-aria-label="mobileModeSheetTitle">
+        <div class="mobile-mode-sheet" id="mobileModeSheet" role="dialog" aria-modal="true" aria-labelledby="mobileModeSheetTitle">
             <div class="mobile-mode-sheet-backdrop" id="mobileModeSheetBackdrop"></div>
             <div class="mobile-mode-sheet-content">
                 <div class="mobile-mode-sheet-header">
@@ -343,10 +363,10 @@
         </div>
 
         <!-- Country data table overlay -->
-        <div class="data-table-overlay" id="dataTableOverlay" role="dialog" aria-modal="true" data-i18n-aria-label="dataTableBtn">
+        <div class="data-table-overlay" id="dataTableOverlay" role="dialog" aria-modal="true" aria-labelledby="dataTableOverlayTitle">
             <div class="data-table-box">
                 <div class="data-table-header">
-                    <h3 data-i18n="dataTableBtn"></h3>
+                    <h3 id="dataTableOverlayTitle" data-i18n="dataTableBtn"></h3>
                     <input type="text" id="dataTableSearch" data-i18n-placeholder="dataTableSearchPlaceholder" autocomplete="off">
                     <button class="data-table-close" id="dataTableClose" data-i18n="closeLabel"></button>
                 </div>

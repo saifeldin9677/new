@@ -162,6 +162,99 @@
             const dataTableBody = document.getElementById('dataTableBody');
             const onboardingHint = document.getElementById('onboardingHint');
             const mapContainer = document.getElementById('mapContainer');
+
+            /* ── Focus-trap utility (WCAG 2.2 modal dialogs) ─────────────────── */
+            function trapFocus(dialogEl) {
+                var FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+                function getFocusables() {
+                    return Array.prototype.slice.call(dialogEl.querySelectorAll(FOCUSABLE)).filter(function(el) {
+                        return el.offsetParent !== null;
+                    });
+                }
+                var previouslyFocused = document.activeElement;
+                function handleKeydown(e) {
+                    if (e.key !== 'Tab') return;
+                    var focusables = getFocusables();
+                    if (!focusables.length) return;
+                    var first = focusables[0], last = focusables[focusables.length - 1];
+                    if (e.shiftKey && document.activeElement === first) {
+                        e.preventDefault(); last.focus();
+                    } else if (!e.shiftKey && (document.activeElement === last || !dialogEl.contains(document.activeElement))) {
+                        e.preventDefault(); first.focus();
+                    }
+                }
+                dialogEl.addEventListener('keydown', handleKeydown);
+                if (!dialogEl.contains(document.activeElement)) {
+                    var initial = getFocusables();
+                    if (initial.length) initial[0].focus();
+                }
+                return function release() {
+                    dialogEl.removeEventListener('keydown', handleKeydown);
+                    if (previouslyFocused && typeof previouslyFocused.focus === 'function' && previouslyFocused.isConnected &&
+                        previouslyFocused.offsetParent !== null) {
+                        previouslyFocused.focus();
+                    }
+                };
+            }
+            function watchDialogFocusTrap(dialogEl) {
+                if (!dialogEl) return;
+                var releaseFn = null;
+                new MutationObserver(function() {
+                    var visible = dialogEl.classList.contains('visible');
+                    if (visible && !releaseFn) {
+                        releaseFn = trapFocus(dialogEl);
+                    } else if (!visible && releaseFn) {
+                        releaseFn();
+                        releaseFn = null;
+                    }
+                }).observe(dialogEl, { attributes: true, attributeFilter: ['class', 'style'] });
+            }
+            [
+                'countryPanel', 'layersModal', 'divisionPopover', 'annotationsModal',
+                'annotationLabelModal', 'annotationPlaceModal', 'mobileModeSheet', 'shortcutsOverlay', 'dataTableOverlay'
+            ].forEach(function(id) { watchDialogFocusTrap(document.getElementById(id)); });
+            document.addEventListener('keydown', function(e) {
+                if (e.key !== 'Escape') return;
+                function isVisible(id) {
+                    var el = document.getElementById(id);
+                    return !!(el && el.classList.contains('visible'));
+                }
+                var higherOverlay = isVisible('layersModal') || isVisible('divisionPopover') ||
+                    isVisible('annotationsModal') || isVisible('annotationLabelModal');
+                if (!higherOverlay && isVisible('dataTableOverlay')) {
+                    e.stopImmediatePropagation();
+                    document.getElementById('dataTableOverlay').classList.remove('visible');
+                    return;
+                }
+                if (!higherOverlay && isVisible('shortcutsOverlay')) {
+                    e.stopImmediatePropagation();
+                    document.getElementById('shortcutsOverlay').classList.remove('visible');
+                    return;
+                }
+                if (isVisible('annotationPlaceModal')) {
+                    var placeModal = document.getElementById('annotationPlaceModal');
+                    if (placeModal && typeof placeModal._placeCleanup === 'function') placeModal._placeCleanup();
+                    e.stopImmediatePropagation();
+                    return;
+                }
+                if (isVisible('annotationLabelModal')) {
+                    var lblInput = document.getElementById('annotationLabelInput');
+                    if (lblInput && typeof lblInput.onkeydown === 'function') {
+                        lblInput.onkeydown({ key: 'Escape', preventDefault: function() {} });
+                    }
+                    e.stopImmediatePropagation();
+                    return;
+                }
+                if (!higherOverlay && isVisible('countryPanel')) {
+                    e.stopImmediatePropagation();
+                    closeCountryPanel();
+                    return;
+                }
+                if (!higherOverlay && isVisible('mobileModeSheet')) {
+                    e.stopImmediatePropagation();
+                    document.getElementById('mobileModeSheet').classList.remove('visible');
+                }
+            }, true);
             const densityCanvas = document.getElementById('densityCanvas');
             let densityCtx = null;
             const adminBoundariesCanvas = document.getElementById('adminBoundariesCanvas');
@@ -195,6 +288,7 @@
             let sectMode = false;
             let corridorsVisible = false;
             let riversGlaciersVisible = false;
+            let cbPatternsVisible = false;
             let densitySpotsMode = false;
             let capitalsVisible = false;
             let timezonesVisible = false;
@@ -257,6 +351,7 @@
             let lang = (function() { var s = localStorage.getItem('mapLang'); return s && ['ar','en','ru','uz','es'].includes(s) ? s : 'ar'; })();
             let allCountryFeatures = [];
             let countryPaths = null;
+            let gCBPatterns = null;
             let selectedCountry = null;
             let compareCountry = null;
             let _lastPanelRenderTime = 0;
@@ -714,6 +809,106 @@
                 return (getReligion(d.properties?.name || '') === currentReligionFilter) ? 1 : 0.35;
             }
 
+            /* ── Color-blind-safe pattern overlay (Stage 4) ──────────────────
+               Adds a shape encoding (8 distinct repeating marks, dual-tone so
+               they read on light and dark fills) on top of the choropleth fill,
+               keyed to each mode's category/bucket index. */
+            function ensureColorblindDefs() {
+                var defs = svg.select('defs');
+                if (!defs.empty() && !defs.select('#cbpat-0').empty()) return;
+                var shapes = [
+                    'M0,12 L12,0 M-6,6 L6,-6 M6,18 L18,6',          // 0 diagonal ↘
+                    'M3,3 L3,3.01 M9,9 L9,9.01',                    // 1 dot grid (round caps)
+                    'M0,0 L12,12 M12,0 L0,12',                      // 2 crosshatch
+                    'M0,3 L12,3 M0,9 L12,9',                        // 3 horizontal
+                    'M3,0 L3,12 M9,0 L9,12',                        // 4 vertical
+                    'M0,0 L12,12 M-6,-6 L6,6 M6,18 L18,6',          // 5 diagonal ↗ dense
+                    'M6,2.2 L6,2.21',                               // 6 small ring (circle below)
+                    'M3,9 L6,4 L9,9'                                // 7 chevron
+                ];
+                for (var i = 0; i < shapes.length; i++) {
+                    var p = defs.append('pattern')
+                        .attr('id', 'cbpat-' + i)
+                        .attr('width', 12).attr('height', 12)
+                        .attr('patternUnits', 'userSpaceOnUse');
+                    var inner = '';
+                    if (i === 1) {
+                        inner = '<circle cx="3" cy="3" r="1.7" fill="rgba(255,255,255,0.6)"/><circle cx="9" cy="9" r="1.7" fill="rgba(255,255,255,0.6)"/>' +
+                                '<circle cx="3" cy="3" r="0.9" fill="rgba(0,0,0,0.5)"/><circle cx="9" cy="9" r="0.9" fill="rgba(0,0,0,0.5)"/>';
+                    } else if (i === 6) {
+                        inner = '<g stroke="rgba(255,255,255,0.55)" stroke-width="2.2" fill="none"><circle cx="6" cy="6" r="3"/></g>' +
+                                '<g stroke="rgba(0,0,0,0.45)" stroke-width="1" fill="none"><circle cx="6" cy="6" r="3"/></g>';
+                    } else {
+                        inner = '<g transform="translate(0.8,0.8)" stroke="rgba(255,255,255,0.55)" stroke-width="2.4" fill="none" stroke-linecap="round">' +
+                                '<path d="' + shapes[i] + '"/></g>' +
+                                '<g stroke="rgba(0,0,0,0.45)" stroke-width="1" fill="none" stroke-linecap="round">' +
+                                '<path d="' + shapes[i] + '"/></g>';
+                    }
+                    p.html(inner);
+                }
+            }
+            function getCBBucket(d) {
+                const name = d.properties?.name || '';
+                if (colorMode === 'normal') return -1;
+                if (currentReligionFilter !== 'all' && colorMode !== 'terrain' &&
+                    getReligion(name) !== currentReligionFilter) return -1; // dimmed by filter: no pattern
+                let idx = -1;
+                if (colorMode === 'terrain') {
+                    const elev = getElevation(name);
+                    if (elev == null || isNaN(elev)) return -1;
+                    const c = getTerrainColor(elev);
+                    idx = MAP_COLORS.terrain.indexOf(c);
+                } else if (colorMode === 'density') {
+                    const v = getDensity(name);
+                    idx = (v == null || isNaN(v)) ? -1 : MAP_COLORS.density.indexOf(getDensityColor(v));
+                } else if (colorMode === 'precipitation') {
+                    const v = getPrecipitation(name);
+                    idx = (v == null || isNaN(v)) ? -1 : MAP_COLORS.precipitation.indexOf(getPrecipitationColor(v));
+                } else if (colorMode === 'temperature') {
+                    const v = getTemperature(name, d);
+                    idx = (v == null || isNaN(v)) ? -1 : MAP_COLORS.temperature.indexOf(getTempColor(v));
+                } else if (colorMode === 'gdp') {
+                    const v = getGDP(name);
+                    idx = (v == null || isNaN(v)) ? -1 : MAP_COLORS.gdp.indexOf(getGDPColor(v));
+                } else if (colorMode === 'hdi') {
+                    const v = getHDI(name);
+                    idx = (v == null || isNaN(v)) ? -1 : MAP_COLORS.hdi.indexOf(getHDIColor(v));
+                } else if (sectMode) {
+                    const den = getDenomination(name);
+                    idx = (den && denominationColors[den]) ? Object.keys(denominationColors).indexOf(den) : -1;
+                } else {
+                    const rel = getReligion(name);
+                    idx = (rel && religionColors[rel]) ? Object.keys(religionColors).indexOf(rel) : -1;
+                }
+                return idx;
+            }
+            function drawColorblindOverlay() {
+                if (!gCBPatterns || !countryPaths) return;
+                if (!cbPatternsVisible || colorMode === 'normal') {
+                    gCBPatterns.selectAll('path.cbpat').remove();
+                    return;
+                }
+                ensureColorblindDefs();
+                var data = allCountryFeatures.filter(function(d) { return getCBBucket(d) >= 0; });
+                var sel = gCBPatterns.selectAll('path.cbpat').data(data, function(d) { return d.properties && d.properties.name || ''; });
+                sel.exit().remove();
+                sel.enter().append('path').attr('class', 'cbpat').attr('stroke', 'none').style('pointer-events', 'none');
+                gCBPatterns.selectAll('path.cbpat')
+                    .attr('d', function(d) { return pathGen(d); })
+                    .attr('fill', function(d) { return 'url(#cbpat-' + (((getCBBucket(d) % 8) + 8) % 8) + ')'; });
+            }
+            function toggleColorblind() {
+                cbPatternsVisible = !cbPatternsVisible;
+                try { localStorage.setItem('cbPatterns', cbPatternsVisible ? '1' : '0'); } catch (e) {}
+                var btn = document.getElementById('colorblindToggle');
+                if (btn) {
+                    btn.classList.toggle('toggle-on', cbPatternsVisible);
+                    btn.setAttribute('aria-pressed', cbPatternsVisible ? 'true' : 'false');
+                }
+                drawColorblindOverlay();
+                updateActiveLayerCount();
+            }
+
             function getCorridorColor() {
                 if (colorMode === 'terrain') return MAP_COLORS.corridor.terrain;
                 if (colorMode === 'density') return MAP_COLORS.corridor.density;
@@ -888,6 +1083,7 @@
                 gGraticule = svg.append('g');
                 gIceCap = svg.append('g');
                 gCountries = svg.append('g');
+                gCBPatterns = svg.append('g').attr('id', 'gColorblindPatterns');
                 gCountryLabels = svg.append('g');
 
                 // Ocean ↔ canvas unification: read the terminal stop of the
@@ -929,7 +1125,7 @@
                 gQuizMarkers = svg.append('g');
 
                 gMap = svg.append('g').attr('class', 'map-transform-group');
-                [gOcean, gGraticule, gIceCap, gCountries, gAdminBoundaries, gGlaciatedAreas, gCountryLabels, gPhysical, gCorridors, gTemperature, gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gGeopoliticalBlocs, gDesertsForests, gBorderDisputes, gAuthoringMarkers, gQuizMarkers]
+                [gOcean, gGraticule, gIceCap, gCountries, gCBPatterns, gAdminBoundaries, gGlaciatedAreas, gCountryLabels, gPhysical, gCorridors, gTemperature, gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gGeopoliticalBlocs, gDesertsForests, gBorderDisputes, gAuthoringMarkers, gQuizMarkers]
                     .forEach(g => gMap.append(() => g.node()));
 
                 projection = setupProjection(width, height);
@@ -2676,6 +2872,7 @@
                     countryLabelSelection = null;
                 }
                 drawCountryLabels(allCountryFeatures);
+                drawColorblindOverlay();
                 drawPhysicalFeatures();
                 drawCorridors();
                 drawPointLayersCanvas();
@@ -3232,6 +3429,7 @@
                     }
                     if (countryLabelSelection) { countryLabelSelection.remove(); countryLabelSelection = null; }
                     drawCountryLabels(allCountryFeatures);
+                    drawColorblindOverlay();
                     try { redrawAnnotations(); } catch (e) {}
                     updateHashDebounced();
                 }
@@ -3993,6 +4191,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             [borderDisputesVisible, function() { drawBorderDisputes(true); }],
                             [desertsForestsVisible, function() { drawDesertsForests(true); }],
                             [riversGlaciersVisible, function() { drawPhysicalFeatures(); drawGlaciatedAreas(true); }],
+                            [cbPatternsVisible, function() { drawColorblindOverlay(); }],
                             [geopoliticalBlocsVisible, function() { drawGeopoliticalBlocs(true); }],
                             [oceanCurrentsVisible, function() { drawOceanCurrents(true); }],
                             [windsVisible, function() { drawWinds(true); }],
@@ -4860,12 +5059,14 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     var regionBtn = document.getElementById('annotationKindRegion');
                     var drawBtn = document.getElementById('annotationKindDraw');
                     var arrowBtn = document.getElementById('annotationKindArrow');
-                    if (pinBtn) pinBtn.classList.toggle('toggle-on', annotateKind === 'pin');
-                    if (regionBtn) regionBtn.classList.toggle('toggle-on', annotateKind === 'region');
-                    if (drawBtn) drawBtn.classList.toggle('toggle-on', annotateKind === 'freehand');
-                    if (arrowBtn) arrowBtn.classList.toggle('toggle-on', annotateKind === 'arrow');
+                    if (pinBtn) { pinBtn.classList.toggle('toggle-on', annotateKind === 'pin'); pinBtn.setAttribute('aria-pressed', String(annotateKind === 'pin')); }
+                    if (regionBtn) { regionBtn.classList.toggle('toggle-on', annotateKind === 'region'); regionBtn.setAttribute('aria-pressed', String(annotateKind === 'region')); }
+                    if (drawBtn) { drawBtn.classList.toggle('toggle-on', annotateKind === 'freehand'); drawBtn.setAttribute('aria-pressed', String(annotateKind === 'freehand')); }
+                    if (arrowBtn) { arrowBtn.classList.toggle('toggle-on', annotateKind === 'arrow'); arrowBtn.setAttribute('aria-pressed', String(annotateKind === 'arrow')); }
                     document.querySelectorAll('#annotationToolbar .annotation-color-swatch').forEach(function(s) {
-                        s.classList.toggle('toggle-on', s.getAttribute('data-color') === annotateColor);
+                        var on = s.getAttribute('data-color') === annotateColor;
+                        s.classList.toggle('toggle-on', on);
+                        s.setAttribute('aria-pressed', String(on));
                     });
                     var cur = _annotNormalizeSize(annotateFontSize);
                     var pressed = {};
@@ -4962,6 +5163,128 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     };
                     input.onblur = function() { /* do not auto-close on blur */ };
                     modal.addEventListener('click', function(e) { if (e.target === modal.querySelector('.layers-modal-backdrop') || e.target === modal) cleanup(); }, { once: true });
+                }
+
+                /* ── Stage 5: keyboard alternative for pin/region annotations ──
+                   Reuses the country-search dataset (countryNamesList +
+                   getDisplayName + getCountryFlag). Pin → centroid; region →
+                   bounding-box polygon. */
+                function openAnnotationPlaceDialog(kind) {
+                    var modal = document.getElementById('annotationPlaceModal');
+                    var input = document.getElementById('annotationPlaceInput');
+                    var list = document.getElementById('annotationPlaceResults');
+                    var noRes = document.getElementById('annotationPlaceNoResults');
+                    var cancelBtn = document.getElementById('annotationPlaceCancel');
+                    var closeBtn = document.getElementById('annotationPlaceClose');
+                    var titleEl = document.getElementById('annotationPlaceTitle');
+                    if (!modal || !input || !list) return;
+                    var triggerEl = document.activeElement;
+                    if (titleEl) titleEl.textContent = t(kind === 'region' ? 'placeModalTitleRegion' : 'placeModalTitlePin');
+                    input.value = '';
+                    list.innerHTML = '';
+                    list.style.display = 'none';
+                    if (noRes) noRes.style.display = 'none';
+                    input.setAttribute('aria-expanded', 'false');
+                    modal.classList.add('visible');
+                    modal.style.display = 'flex';
+
+                    function matches(val) {
+                        return countryNamesList.filter(function(n) {
+                            var localized = getDisplayName(n).toLowerCase();
+                            return n.toLowerCase().includes(val) || localized.includes(val);
+                        }).slice(0, 8);
+                    }
+                    function renderResults() {
+                        var val = input.value.trim().toLowerCase();
+                        list.innerHTML = '';
+                        if (!val) { list.style.display = 'none'; if (noRes) noRes.style.display = 'none'; input.setAttribute('aria-expanded', 'false'); return; }
+                        var ms = matches(val);
+                        ms.forEach(function(m, i) {
+                            var li = document.createElement('li');
+                            li.setAttribute('role', 'option');
+                            li.id = 'placeOpt-' + i;
+                            var b = document.createElement('button');
+                            b.type = 'button';
+                            b.className = 'place-result-btn quiz-suggestion';
+                            b.style.cssText = 'display:flex;width:100%;text-align:' + (document.documentElement.dir === 'rtl' ? 'right' : 'left') + ';gap:6px;align-items:center;padding:6px 10px;background:none;border:none;cursor:pointer;color:inherit;font:inherit;';
+                            b.textContent = getCountryFlag(m) + ' ' + getDisplayName(m);
+                            b.addEventListener('click', function() { commit(m); });
+                            li.appendChild(b);
+                            list.appendChild(li);
+                        });
+                        list.style.display = 'block';
+                        input.setAttribute('aria-expanded', 'true');
+                        input.setAttribute('aria-activedescendant', ms.length ? 'placeOpt-0' : '');
+                        if (noRes) noRes.style.display = ms.length ? 'none' : 'block';
+                    }
+                    function cleanup() {
+                        modal.classList.remove('visible');
+                        modal.style.display = 'none';
+                        modal._placeCleanup = null;
+                        if (triggerEl && triggerEl.isConnected && triggerEl.offsetParent !== null) triggerEl.focus();
+                        else if (document.getElementById('annotateBtn')) document.getElementById('annotateBtn').focus();
+                    }
+                    function commit(name) {
+                        var feature = allCountryFeatures.find(function(f) { return f.properties && f.properties.name === name; });
+                        if (feature) {
+                            if (kind === 'pin') {
+                                var c = d3.geoCentroid(feature);
+                                if (c && !isNaN(c[0])) {
+                                    annotationsList.push({
+                                        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+                                        type: 'pin', coords: [c[0], c[1]], label: getDisplayName(name),
+                                        color: annotateColor, size: annotateFontSize, createdAt: Date.now()
+                                    });
+                                }
+                            } else {
+                                var bb = d3.geoBounds(feature);
+                                if (bb && !isNaN(bb[0][0])) {
+                                    var w = bb[0][0], n = bb[0][1], ee = bb[1][0], s = bb[1][1];
+                                    if (w > ee) { var tmp = w; w = ee; ee = tmp; }
+                                    annotationsList.push({
+                                        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+                                        type: 'region',
+                                        coords: [[w, s], [ee, s], [ee, n], [w, n]],
+                                        label: getDisplayName(name),
+                                        color: annotateColor, size: annotateFontSize, createdAt: Date.now()
+                                    });
+                                }
+                            }
+                            saveAnnotations();
+                            redrawAnnotations();
+                            annotateToast(t('annotationAdded'));
+                        }
+                        cleanup();
+                    }
+                    modal._placeCleanup = cleanup;
+                    if (cancelBtn) cancelBtn.onclick = cleanup;
+                    if (closeBtn) closeBtn.onclick = cleanup;
+                    input.onkeydown = function(e) {
+                        if (e.key === 'ArrowDown') {
+                            e.preventDefault();
+                            var first = list.querySelector('button');
+                            if (first) first.focus();
+                        } else if (e.key === 'Enter') {
+                            e.preventDefault();
+                            var bs = list.querySelectorAll('button');
+                            if (bs.length === 1) commit(matches(input.value.trim().toLowerCase())[0]);
+                            else if (bs.length) { e.preventDefault(); bs[0].focus(); }
+                        } else if (e.key === 'Escape') {
+                            e.preventDefault();
+                            cleanup();
+                        }
+                    };
+                    list.addEventListener('keydown', function(e) {
+                        var btns = [...list.querySelectorAll('button')];
+                        var i = btns.indexOf(document.activeElement);
+                        if (e.key === 'ArrowDown') { e.preventDefault(); if (i > -1 && i < btns.length - 1) btns[i + 1].focus(); else if (btns.length) btns[0].focus(); }
+                        else if (e.key === 'ArrowUp') { e.preventDefault(); if (i > 0) btns[i - 1].focus(); else input.focus(); }
+                        else if (e.key === 'Escape') { e.preventDefault(); cleanup(); }
+                    });
+                    modal.addEventListener('click', function(e) { if (e.target === modal.querySelector('.layers-modal-backdrop') || e.target === modal) cleanup(); }, { once: true });
+                    input.addEventListener('input', renderResults);
+                    input.focus();
+                    renderResults();
                 }
 
                 function setAnnotationColor(color) {
@@ -5451,6 +5774,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 setMode('religion');
                 if (showLabels) toggleLabels();
                 if (sectMode) toggleSect();
+                if (cbPatternsVisible) toggleColorblind();
                 if (corridorsVisible) toggleCorridors();
                 if (riversGlaciersVisible) toggleRiversGlaciers();
                 if (densitySpotsMode) toggleDensitySpots();
@@ -8924,6 +9248,11 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
 
             const riversGlaciersToggle = document.getElementById('riversGlaciersToggle');
             if (riversGlaciersToggle) riversGlaciersToggle.addEventListener('click', toggleRiversGlaciers);
+            const colorblindToggle = document.getElementById('colorblindToggle');
+            if (colorblindToggle) colorblindToggle.addEventListener('click', toggleColorblind);
+            try {
+                if (localStorage.getItem('cbPatterns') === '1' && !cbPatternsVisible) toggleColorblind();
+            } catch (e) {}
             densitySpotsToggle.addEventListener('click', toggleDensitySpots);
             capitalsToggle.addEventListener('click', toggleCapitals);
             timezonesToggle.addEventListener('click', toggleTimezones);
@@ -9205,6 +9534,16 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 draw: document.getElementById('annotationKindDraw'),
                 arrow: document.getElementById('annotationKindArrow')
             };
+            var annotationAddByNameBtn = document.getElementById('annotationAddByNameBtn');
+            if (annotationAddByNameBtn) annotationAddByNameBtn.addEventListener('click', function() {
+                if (!annotateActive) return;
+                if (annotateKind !== 'pin' && annotateKind !== 'region') {
+                    annotateToast(t('placeKindToast'));
+                    return;
+                }
+                openAnnotationPlaceDialog(annotateKind);
+            });
+
             Object.keys(annotationKindBtns).forEach(function(kind) {
                 var b = annotationKindBtns[kind];
                 if (b) b.addEventListener('click', function() { toggleAnnotationKind(kind === 'draw' ? 'freehand' : kind); });
@@ -9421,6 +9760,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 resetLayersBtn.textContent = t('resetLayers');
                 resetLayersBtn.addEventListener('click', function() {
                     if (corridorsVisible) toggleCorridors();
+                    if (cbPatternsVisible) toggleColorblind();
                     if (riversGlaciersVisible) toggleRiversGlaciers();
                     if (densitySpotsMode) toggleDensitySpots();
                     if (capitalsVisible) toggleCapitals();

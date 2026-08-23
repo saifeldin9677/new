@@ -1,6 +1,7 @@
 :root {
     --brand-primary: #1B3A5C;
     --brand-accent: #14B8A6;
+    --focus-ring: #14B8A6;
     --bg: #1a1d23;
     --panel-bg: #21252b;
     --text: #e0e0e0;
@@ -103,7 +104,7 @@
 }
 
 path:focus-visible {
-    outline: 2px solid var(--brand-accent, #14B8A6);
+    outline: 2px solid var(--focus-ring);
     outline-offset: 1px;
 }
 
@@ -111,7 +112,7 @@ path:focus-visible {
     position: absolute;
     top: -40px;
     left: 8px;
-    background: var(--brand-accent);
+    background: #115e59;
     color: #fff;
     padding: 8px 16px;
     border-radius: var(--radius-sm);
@@ -141,6 +142,7 @@ path:focus-visible {
     :root:not([data-theme]) {
         --brand-primary: #1B3A5C;
         --brand-accent: #14B8A6;
+        --focus-ring: #0d9488;
         --bg: #f0f2f5;
         --panel-bg: #ffffff;
         --text: #1a1d23;
@@ -178,6 +180,7 @@ path:focus-visible {
 [data-theme="light"] {
     --brand-primary: #1B3A5C;
     --brand-accent: #14B8A6;
+    --focus-ring: #0d9488;
     --bg: #f0f2f5;
     --panel-bg: #ffffff;
     --text: #1a1d23;
@@ -941,7 +944,7 @@ header,
 .controls-bar .control-label {
     font-size: 0.65em;
     font-weight: 600;
-    color: var(--brand-accent);
+    color: var(--ctl-label, var(--brand-accent));
     text-transform: uppercase;
     letter-spacing: 0.4px;
     white-space: nowrap;
@@ -1487,6 +1490,7 @@ header,
         --accent-glow: rgba(20, 184, 166, 0.4);
         --active-bg: #1a3a38;
         --active-text: #80e0d0;
+        --ctl-label: #14B8A6;
     }
     /* Light mode: docks switch to a light surface with high-contrast
        dark text (--btn-text #0f172a) so "التقسيم" / "طبقات" and every
@@ -1504,8 +1508,9 @@ header,
         --accent-color: #0d9488;
         --accent-color-rgb: 13, 148, 136;
         --accent-glow: rgba(13, 148, 136, 0.35);
-        --active-bg: #0d9488;
+        --active-bg: #0f766e;
         --active-text: #ffffff;
+        --ctl-label: #0f766e;
     }
     @media (prefers-color-scheme: light) {
         :root:not([data-theme]) #controlsBar .stepped-dock-group,
@@ -1519,8 +1524,9 @@ header,
             --accent-color: #0d9488;
             --accent-color-rgb: 13, 148, 136;
             --accent-glow: rgba(13, 148, 136, 0.35);
-            --active-bg: #0d9488;
+            --active-bg: #0f766e;
             --active-text: #ffffff;
+            --ctl-label: #0f766e;
         }
     }
     #controlsBar .stepped-dock-group {
@@ -1658,7 +1664,7 @@ header,
     #controlsBar .toggle-on {
         background: var(--active-bg) ;
         border-color: var(--accent-color) ;
-        color: var(--active-text) ;
+        color: var(--active-text) !important;
     }
     #controlsBar .btn.active {
         box-shadow: 0 0 0 2px var(--accent-glow) ;
@@ -1719,7 +1725,7 @@ header,
     .controls-bar .control-label {
         font-size: calc(var(--dock-font-size) * 0.72) ;
         font-weight: 600;
-        color: var(--accent-color);
+        color: var(--ctl-label, var(--accent-color));
         text-transform: uppercase;
         letter-spacing: 0.4px;
         white-space: nowrap;
@@ -2065,7 +2071,7 @@ header,
 .mobile-mode-sheet-close:focus-visible,
 #searchInput:focus-visible,
 #mobileSearchInput:focus-visible {
-    outline: 2px solid var(--brand-accent);
+    outline: 2px solid var(--focus-ring);
     outline-offset: 2px;
 }
 .layers-modal {
@@ -4080,7 +4086,7 @@ body.presentation-mode .presentation-exit-btn {
     font-size: 0.9em;
 }
 #dataTableSearch:focus {
-    outline: 2px solid var(--brand-accent);
+    outline: 2px solid var(--focus-ring);
     border-color: var(--brand-accent);
 }
 .data-table-close {
@@ -4266,8 +4272,8 @@ body.annotate-active .annotation-toolbar {
     color: var(--text);
 }
 .measure-mode-btn.toggle-on {
-    background: var(--brand-accent);
-    border-color: var(--brand-accent);
+    background: #0f766e;
+    border-color: #0f766e;
     color: #fff;
 }
 .annotation-color-seg {

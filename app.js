@@ -9551,7 +9551,11 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             var annotationFinishBtn = document.getElementById('annotationFinishBtn');
             if (annotationFinishBtn) annotationFinishBtn.addEventListener('click', finishAnnotationTool);
             var annotationClearBtn = document.getElementById('annotationClearBtn');
-            if (annotationClearBtn) annotationClearBtn.addEventListener('click', cancelAnnotationStroke);
+            if (annotationClearBtn) annotationClearBtn.addEventListener('click', function() {
+                if (!cancelAnnotationStroke()) {
+                    undoLastAnnotation();
+                }
+            });
             var annotationManageBtn = document.getElementById('annotationManageBtn');
             if (annotationManageBtn) annotationManageBtn.addEventListener('click', openAnnotationsModal);
             var annotationHelpBtn = document.getElementById('annotationHelpBtn');
@@ -9562,13 +9566,13 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             var fontSmall = document.getElementById('annotationFontSmallBtn');
             var fontMedium = document.getElementById('annotationFontMediumBtn');
             var fontLarge = document.getElementById('annotationFontLargeBtn');
-            if (fontSmall) fontSmall.addEventListener('click', function() { setAnnotationFontSize(ANNOT_FONT_LEVELS[0]); });
+            if (fontSmall) fontSmall.addEventListener('click', function() { stepAnnotationFontSize(-1); });
             if (fontMedium) fontMedium.addEventListener('click', function() { setAnnotationFontSize(10); });
-            if (fontLarge) fontLarge.addEventListener('click', function() { setAnnotationFontSize(ANNOT_FONT_LEVELS[ANNOT_FONT_LEVELS.length - 1]); });
-            var annotationModalClose = document.getElementById('annotationModalClose');
-            var annotationModalBackdrop = document.getElementById('annotationModalBackdrop');
-            if (annotationModalClose) annotationModalClose.addEventListener('click', closeAnnotationsModal);
-            if (annotationModalBackdrop) annotationModalBackdrop.addEventListener('click', closeAnnotationsModal);
+            if (fontLarge) fontLarge.addEventListener('click', function() { stepAnnotationFontSize(1); });
+            var annotationsModalClose = document.getElementById('annotationsModalClose');
+            var annotationsModalBackdrop = document.getElementById('annotationsModalBackdrop');
+            if (annotationsModalClose) annotationsModalClose.addEventListener('click', closeAnnotationsModal);
+            if (annotationsModalBackdrop) annotationsModalBackdrop.addEventListener('click', closeAnnotationsModal);
             var mapSvg = document.getElementById('mapSvg');
             window.__annotDebug = function() {
                 return {

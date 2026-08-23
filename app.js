@@ -1271,10 +1271,16 @@
                 const splitResult = _adminSeamSplitGeometries(cap, proj, jumpPx);
                 const pieces = Array.isArray(splitResult) ? splitResult : [cap];
                 pieces.forEach(function(piece, i) {
+                    const ringCoords = (piece.type === 'Polygon') ? piece.coordinates[0] : piece.coordinates;
+                    const sample = ringCoords[Math.floor(ringCoords.length / 2)];
+                    const featureReligion = getReligionAtPoint(sample);
+                    const matchesFilter = (currentReligionFilter === 'all') || (featureReligion === currentReligionFilter);
+                    const targetOpacity = matchesFilter ? 1 : 0.35;
                     gIceCap.append('path')
                         .datum(piece)
                         .attr('class', 'arctic-ice')
                         .attr('d', pathGen)
+                        .style('opacity', targetOpacity)
                         .attr('tabindex', i === 0 ? 0 : -1)
                         .attr('role', 'button')
                         .attr('aria-label', function() { return t('arcticName'); })
@@ -2874,6 +2880,7 @@
                 drawCountryLabels(allCountryFeatures);
                 drawColorblindOverlay();
                 drawPhysicalFeatures();
+                drawIceCap();
                 drawCorridors();
                 drawPointLayersCanvas();
                 drawCapitals();

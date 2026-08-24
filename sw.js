@@ -1,6 +1,6 @@
-const LEPIDOS_CACHE_VERSION = 'lepidos-v4';
-const LEPIDOS_CACHE_PRECACHE = 'lepidos-precache-v4';
-const LEPIDOS_CACHE_RUNTIME = 'lepidos-runtime-v4';
+const LEPIDOS_CACHE_VERSION = 'lepidos-v5';
+const LEPIDOS_CACHE_PRECACHE = 'lepidos-precache-v5';
+const LEPIDOS_CACHE_RUNTIME = 'lepidos-runtime-v5';
 
 const PRECACHE_URLS = [
     './',
@@ -14,6 +14,7 @@ const PRECACHE_URLS = [
     './admin-boundaries-data.json',
     './glaciated-areas-data.json',
     './admin-name-translations.json',
+    './historical-eras-data.json',
     './countries-110m.json',
     './icon-192.png',
     './icon-512.png',

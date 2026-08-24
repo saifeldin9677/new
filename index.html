@@ -140,6 +140,25 @@
             <button class="measure-mode-btn" id="annotationHelpBtn" title="مساعدة الوضع" data-i18n-title="annotationHelpButton" aria-label="مساعدة" data-i18n-aria-label="annotationHelpButton">؟</button>
         </div>
 
+        <div class="history-bar" id="historyBar" style="display:none" role="region" aria-labelledby="historyBarTitle">
+            <div class="history-bar-header">
+                <span class="history-bar-title" id="historyBarTitle" data-i18n="historyBarTitle"></span>
+                <div class="history-bar-actions">
+                    <button class="btn history-sources-toggle" id="histSourcesBtn" data-i18n-title="histSourcesTitle"><i data-lucide="book-marked" class="lucide-icon"></i><span class="btn-text" data-i18n="histSourcesBtn"></span></button>
+                    <button class="close-btn history-close-btn" id="histCloseBtn" title="إنهاء الوضع التاريخي" aria-label="إنهاء الوضع التاريخي" data-i18n-title="histCloseTitle" data-i18n-aria-label="histCloseTitle"><i data-lucide="x" class="lucide-icon"></i></button>
+                </div>
+            </div>
+            <div class="history-war-tabs" id="histWarTabs" role="tablist"></div>
+            <div class="history-scenario-row">
+                <span class="control-label" data-i18n="histScenarioLabel"></span>
+                <div class="history-scenarios" id="histScenarioBtns"></div>
+            </div>
+            <div class="history-timeline" id="histTimeline" style="display:none"></div>
+            <div class="history-legend" id="histLegend"></div>
+            <p class="history-hint" id="histClickHint" data-i18n="histClickHint"></p>
+            <div class="history-sources-panel" id="histSourcesPanel" style="display:none"></div>
+        </div>
+
         <div class="controls-bar" id="controlsBar" role="toolbar" tabindex="-1" aria-label="شريط التحكم" data-i18n-aria-label="controlsBarLabel">
             <div class="controls-bar-toprow">
                 <div class="dock-unified-wrap">
@@ -161,6 +180,7 @@
                         <button class="btn" id="annotateBtn" data-i18n-title="annotationToolLabel"><i data-lucide="sticky-note" class="lucide-icon"></i><span class="btn-text" data-i18n="annotationToolLabel">وضع الشرح</span></button>
                         <button class="btn" id="globeViewBtn" title="عرض الكرة الأرضية" data-i18n-title="globeViewBtn_title"><i data-lucide="earth" class="lucide-icon"></i><span class="btn-text" data-i18n="globeViewBtn">كرة أرضية</span></button>
                         <button class="btn quiz-btn" id="quizBtn" data-i18n-title="quizMode"><i data-lucide="brain" class="lucide-icon"></i><span class="btn-text" data-i18n="quizMode"></span></button>
+                        <button class="btn" id="historyModeBtn" aria-pressed="false" data-i18n-title="historyMode_title"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text" data-i18n="historyMode"></span></button>
                         <button class="btn" id="compareProjectionsBtn" data-i18n-title="compareProjectionsBtn_title"><i data-lucide="git-compare" class="lucide-icon"></i><span class="btn-text" data-i18n="compareProjectionsBtn_title">مقارنة</span></button>
                     </div>
                     </div>
@@ -196,6 +216,7 @@
                     <button class="btn" id="desertsForestsToggle" aria-pressed="false" title="إظهار/إخفاء الصحاري والغابات" data-i18n="desertsForests" data-i18n-title="desertsForestsToggle_title"><i data-lucide="sun" class="lucide-icon"></i><span class="btn-text">صحاري</span></button>
                     <button class="btn" id="borderDisputesToggle" aria-pressed="false" title="إظهار/إخفاء النزاعات الحدودية" data-i18n="borderDisputes" data-i18n-title="borderDisputesToggle_title"><i data-lucide="swords" class="lucide-icon"></i><span class="btn-text">نزاعات</span></button>
                     <button class="btn" id="adminBoundariesToggle" aria-pressed="false" title="إظهار/إخفاء الحدود الإدارية" data-i18n="adminBoundariesToggle" data-i18n-title="adminBoundariesToggle_title"><i data-lucide="map" class="lucide-icon"></i><span class="btn-text">حدود إدارية</span></button>
+                    <button class="btn" id="historicalRoutesToggle" aria-pressed="false" title="إظهار/إخفاء الطرق التاريخية" data-i18n="historicalRoutes" data-i18n-title="historicalRoutesToggle_title"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text">طرق تاريخية</span></button>
                 </div>
             </div>
         </div>

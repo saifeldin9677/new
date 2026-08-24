@@ -300,6 +300,7 @@
             let earthquakesVisible = false;
             let volcanoesVisible = false;
             let additionalWaterwaysVisible = false;
+            let historicalRoutesVisible = false;
             let geopoliticalBlocsVisible = false;
             let desertsForestsVisible = false;
             let borderDisputesVisible = false;
@@ -312,6 +313,14 @@
             let globeDrag = null;
             let globeShadingGroup = null;
             let quizActive = false;
+            let historyActive = false;
+            let historyWarId = null;
+            let historyScenarioId = null;
+            let historySavedState = null;
+            let historicalErasData = null;
+            let historicalErasLoading = null;
+            let historyTab = 'wars';
+            let historyEraId = null;
             let measureActive = false;
             let measurePoints = [];
             let gMeasure = null;
@@ -359,7 +368,7 @@
             let dataTableSortKey = 'name';
             let dataTableSortAsc = true;
             let selectedFeatureType = null; // 'mountain' | 'river' | null
-            let gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gBorderDisputes, gAdminBoundaries, gGlaciatedAreas, gGeopoliticalBlocs, gDesertsForests;
+            let gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gBorderDisputes, gAdminBoundaries, gGlaciatedAreas, gGeopoliticalBlocs, gDesertsForests, gHistoryOverlay, gHistoricalRoutes;
             let projection, pathGen;
             let svg, gMap, gCountries, gCountryLabels, gGraticule, gIceCap, gOcean, gCorridors, gPhysical, gTemperature, gAuthoringMarkers, gQuizMarkers;
             let currentTransform = d3.zoomIdentity;
@@ -406,6 +415,7 @@
                 labels:              { getFlag: function(){ return showLabels; },              setFlag: function(v){ showLabels = v; },              btnId: 'labelsToggle',              drawFn: null, hashKey: 'labels', skip: true },
                 sect:                { getFlag: function(){ return sectMode; },                setFlag: function(v){ sectMode = v; },                btnId: 'sectToggle',                drawFn: null, hashKey: 'sect', skip: true },
                 corridors:           { getFlag: function(){ return corridorsVisible; },        setFlag: function(v){ corridorsVisible = v; },        btnId: 'corridorsToggle',           drawFn: null, hashKey: 'corridors', skip: true },
+                historicalRoutes:    { getFlag: function(){ return historicalRoutesVisible; }, setFlag: function(v){ historicalRoutesVisible = v; }, btnId: 'historicalRoutesToggle',    drawFn: drawHistoricalRoutes, hashKey: 'histroutes', setNorm: true },
                 riversAndGlaciers:   { getFlag: function(){ return riversGlaciersVisible; },  setFlag: function(v){ riversGlaciersVisible = v; },  btnId: 'riversGlaciersToggle',      drawFn: function() { drawPhysicalFeatures(); drawGlaciatedAreas(); }, hashKey: 'riversglaciers', setNorm: true },
                 densitySpots:        { getFlag: function(){ return densitySpotsMode; },        setFlag: function(v){ densitySpotsMode = v; },        btnId: 'densitySpotsToggle',        drawFn: null, hashKey: 'spots', skip: true },
                 capitals:            { getFlag: function(){ return capitalsVisible; },         setFlag: function(v){ capitalsVisible = v; },         btnId: 'capitalsToggle',            drawFn: drawCapitals, postDrawFn: drawPointLayersCanvas, hashKey: 'capitals' },
@@ -471,6 +481,16 @@
                 return s;
             }
 
+            function locField(obj, base) {
+                if (!obj) return '';
+                var v = obj[base + '_' + lang];
+                if (v === undefined || v === null) v = base ? obj[base] : undefined;
+                if (v === undefined || v === null) v = obj[base + '_en'];
+                if (v === undefined || v === null) v = obj[base + '_ar'];
+                if (v === undefined || v === null) v = '';
+                return String(v);
+            }
+
             // ── Name resolution & localization helpers ──
             function htmlEscape(str) {
                 const div = document.createElement('div');
@@ -482,6 +502,40 @@
                 if (!rawName) return '';
                 return rawName.replace(/^(Islamic Republic of|Republic of|State of|Kingdom of|Federal Republic of|Democratic Republic of|Commonwealth of|People's Republic of|United States of America|United Kingdom of Great Britain and Northern Ireland)\s+/i, '')
                     .replace(/\s*\(.*\)\s*/g, '').replace(/^Rep\.\s*/i, '').trim();
+            }
+
+            const NAME_ALIASES = {
+                'czech republic': 'czechia',
+                'dr congo': 'dem. rep. congo',
+                'ivory coast': "côte d'ivoire",
+                'south sudan': 's. sudan',
+                'north macedonia': 'macedonia',
+                'east timor': 'timor-leste',
+                'cape verde': 'cabo verde',
+                'burma': 'myanmar',
+                'holland': 'netherlands',
+                'swaziland': 'eswatini',
+                'united states': 'united states of america',
+                'czechia': 'czechia',
+                'central african republic': 'central african rep.',
+                'equatorial guinea': 'eq. guinea',
+                'dominican republic': 'dominican rep.'
+            };
+            function canonicalName(rawName) {
+                var c = getCleanName(rawName).toLowerCase();
+                return NAME_ALIASES[c] || c;
+            }
+            function boundarySubstring(shorter, longer) {
+                var idx = longer.indexOf(shorter);
+                while (idx !== -1) {
+                    if (idx === 0 || /[\s.\-]/.test(longer.charAt(idx - 1))) return true;
+                    idx = longer.indexOf(shorter, idx + 1);
+                }
+                return false;
+            }
+            function namesMatch(a, b) {
+                if (!a || !b) return false;
+                return canonicalName(a) === canonicalName(b);
             }
 
             function getArabicName(enName) {
@@ -1106,6 +1160,7 @@
                 window.syncOceanBackground = syncOceanBackground;
                 gPhysical = svg.append('g');
                 gCorridors = svg.append('g');
+                gHistoricalRoutes = svg.append('g').attr('id', 'historicalRoutesLayer');
                 gTemperature = svg.append('g');
                 gCapitals = svg.append('g');
                 gTimezones = svg.append('g');
@@ -1117,6 +1172,7 @@
                 gEarthquakes = svg.append('g');
                 gVolcanoes = svg.append('g');
                 gGeopoliticalBlocs = svg.append('g');
+                gHistoryOverlay = svg.append('g').attr('id', 'historyOverlayLayer');
                 gDesertsForests = svg.append('g');
                 gBorderDisputes = svg.append('g');
                 gAdminBoundaries = svg.append('g');
@@ -1125,7 +1181,7 @@
                 gQuizMarkers = svg.append('g');
 
                 gMap = svg.append('g').attr('class', 'map-transform-group');
-                [gOcean, gGraticule, gIceCap, gCountries, gCBPatterns, gAdminBoundaries, gGlaciatedAreas, gCountryLabels, gPhysical, gCorridors, gTemperature, gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gGeopoliticalBlocs, gDesertsForests, gBorderDisputes, gAuthoringMarkers, gQuizMarkers]
+                [gOcean, gGraticule, gIceCap, gCountries, gCBPatterns, gAdminBoundaries, gGlaciatedAreas, gCountryLabels, gPhysical, gCorridors, gHistoricalRoutes, gTemperature, gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gGeopoliticalBlocs, gHistoryOverlay, gDesertsForests, gBorderDisputes, gAuthoringMarkers, gQuizMarkers]
                     .forEach(g => gMap.append(() => g.node()));
 
                 projection = setupProjection(width, height);
@@ -1390,6 +1446,49 @@
             // Legacy draw functions redirect to unified drawRoutes
             function drawCorridors() { drawRoutes(); }
             function drawAdditionalWaterways() { drawRoutes(); }
+
+            function showHistoricalRouteDetail(d) {
+                selectedFeature = d;
+                selectedFeatureType = 'histRoute';
+                var displayName = locField(d, 'name');
+                var html = '<h3>📜 ' + htmlEscape(displayName) + '</h3>';
+                var era = locField(d, 'era');
+                if (era) html += '<p><strong>' + t('histRouteEra') + ':</strong> ' + htmlEscape(era) + '</p>';
+                var desc = locField(d, 'desc');
+                if (desc) html += '<p>' + htmlEscape(desc) + '</p>';
+                if (d.src) html += '<p class="hist-disclaimer-mini"><strong>' + t('histRouteSource') + ':</strong> ' + htmlEscape(d.src) + '</p>';
+                _lastPanelRenderTime = performance.now();
+                panelContent.innerHTML = html;
+                countryPanel.style.display = 'block';
+                requestAnimationFrame(function(){requestAnimationFrame(function(){countryPanel.classList.add('visible');});});
+            }
+            function drawHistoricalRoutes(skipFadeIn) {
+                gHistoricalRoutes.selectAll('*').remove();
+                if (!historicalRoutesVisible) return;
+                var proj = getActiveProjection();
+                var dur = prefersReducedMotion() ? 0 : 300;
+                historicalRoutesData.forEach(function(r) {
+                    var points = r.coords;
+                    var halo = gHistoricalRoutes.append('path').datum({type:'LineString', coordinates:points}).attr('d',pathGen).attr('fill','none').attr('stroke',r.color).attr('stroke-width',isMobile?8:11).attr('stroke-opacity',0.22).attr('vector-effect','non-scaling-stroke').style('cursor','pointer').on('click',function(){showHistoricalRouteDetail(r);});
+                    var line = gHistoricalRoutes.append('path').datum({type:'LineString', coordinates:points}).attr('d',pathGen).attr('fill','none').attr('stroke',r.color).attr('stroke-width',isMobile?2.5:3).attr('stroke-dasharray','10,6').attr('vector-effect','non-scaling-stroke').style('pointer-events','none');
+                    var first = points[0], last = points[points.length-1];
+                    [first,last].forEach(function(p){
+                        var xy = proj(p);
+                        if (!xy||isNaN(xy[0])) return;
+                        gHistoricalRoutes.append('circle').attr('cx',xy[0]).attr('cy',xy[1]).attr('r',isMobile?2.5:3.5).attr('fill',r.color).attr('stroke','#fff').attr('stroke-width',0.6).attr('vector-effect','non-scaling-stroke').style('pointer-events','none');
+                    });
+                    var mid = points[Math.floor(points.length/2)];
+                    var mxy = proj(mid);
+                    if (mxy&&!isNaN(mxy[0])) {
+                        gHistoricalRoutes.append('text').attr('x',mxy[0]).attr('y',mxy[1]-5).text(function(){return locField(r,'name');}).attr('fill',r.color).attr('font-size',isMobile?7:9).attr('font-weight','bold').attr('text-anchor','middle').attr('paint-order','stroke').attr('stroke','rgba(0,0,0,0.7)').attr('stroke-width',2.5).style('pointer-events','none');
+                    }
+                    if (skipFadeIn) { halo.attr('opacity',1); line.attr('opacity',0.95); }
+                    else {
+                        halo.attr('opacity',0).transition().duration(dur).attr('opacity',1);
+                        line.attr('opacity',0).transition().duration(dur).attr('opacity',0.95);
+                    }
+                });
+            }
 
             function drawCapitals() {
                 gCapitals.selectAll('*').remove();
@@ -1861,8 +1960,7 @@
                         var fs = Math.max(3, Math.min(15, (isMobile ? 7 : 10) / k));
                         allCountryFeatures.forEach(function(f){
                             var name = f.properties?.name;
-                            var cleanName = getCleanName(name);
-                            if (bloc.members.some(function(m){return getCleanName(m)===cleanName;})) {
+                            if (bloc.members.some(function(m){return namesMatch(name, m);})) {
                                 var pathData = pathGen(f);
                                 if (pathData) {
                                     var _sel = gGeopoliticalBlocs.append('path').attr('d',pathData).attr('fill',blocColor).attr('stroke',blocColor).attr('stroke-width',1.5).attr('vector-effect','non-scaling-stroke').style('pointer-events','none');
@@ -3528,6 +3626,14 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 if (dataTableOverlay && dataTableOverlay.classList.contains('visible')) {
                     renderDataTable();
                 }
+                // Re-render History Mode UI if active (language changed)
+                if (window.historyIsActive && window.historyIsActive()) {
+                    window.renderHistoryBar();
+                    window.drawHistoryScenario(true);
+                    if (selectedCountry && selectedFeatureType === 'history' && countryPanel.classList.contains('visible')) {
+                        window.openHistoryPanel(selectedCountry);
+                    }
+                }
             }
 
             // ── Info overlay & reset zoom ──
@@ -4475,6 +4581,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 function handleCountryActivate(e, d) {
                     if (measureActive) return;
                     if (annotateActive) return;
+                    if (window.historyIsActive && window.historyIsActive()) { window.openHistoryPanel(d); return; }
                     if (e.shiftKey && selectedCountry) {
                         compareCountry = d;
                         renderComparePanel(selectedCountry, compareCountry);
@@ -5354,6 +5461,85 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     annotateToast(t('annotationToolActive').replace('{tool}', kindLabel));
                 }
 
+                function exportAnnotationsFile() {
+                    if (!annotationsList.length) { annotateToast(t('annotationExportEmpty')); return; }
+                    var payload = { app: 'lepidos-atlas', kind: 'annotations', version: 1, exportedAt: new Date().toISOString(), annotations: annotationsList };
+                    var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+                    var url = URL.createObjectURL(blob);
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'lepidos_annotations_' + new Date().toISOString().slice(0, 10) + '.json';
+                    a.click();
+                    setTimeout(function() { URL.revokeObjectURL(url); }, 500);
+                    annotateToast(t('annotationExport') + ' ✓');
+                }
+                function importAnnotationsFile(file) {
+                    if (!file) return;
+                    var reader = new FileReader();
+                    reader.onload = function() {
+                        try {
+                            var data = JSON.parse(reader.result);
+                            var arr = Array.isArray(data) ? data : (data && Array.isArray(data.annotations) ? data.annotations : null);
+                            if (!arr) throw new Error('bad shape');
+                            var valid = arr.filter(function(a) {
+                                return a && ['pin', 'region', 'freehand', 'arrow'].indexOf(a.type) !== -1 && Array.isArray(a.coords) && a.coords.length;
+                            }).map(function(a) {
+                                return {
+                                    id: a.id || ('ann_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7)),
+                                    type: a.type,
+                                    coords: a.coords,
+                                    label: typeof a.label === 'string' ? a.label : '',
+                                    color: /^#[0-9a-fA-F]{3,8}$/.test(a.color || '') ? a.color : '#eab308',
+                                    size: typeof a.size === 'number' && isFinite(a.size) ? a.size : 10,
+                                    distanceKm: typeof a.distanceKm === 'number' ? a.distanceKm : null,
+                                    hidden: !!a.hidden,
+                                    createdAt: a.createdAt || Date.now()
+                                };
+                            });
+                            if (!valid.length) { annotateToast(t('annotationImportError')); return; }
+                            var existing = new Set(annotationsList.map(function(a) { return a.id; }));
+                            var added = 0;
+                            valid.forEach(function(a) { if (!existing.has(a.id)) { annotationsList.push(a); added++; } });
+                            saveAnnotations();
+                            redrawAnnotations();
+                            renderAnnotationsModal();
+                            annotateToast(t('annotationImported').replace('{n}', added));
+                        } catch (e) {
+                            annotateToast(t('annotationImportError'));
+                        }
+                    };
+                    reader.onerror = function() { annotateToast(t('annotationImportError')); };
+                    reader.readAsText(file);
+                }
+                function appendAnnotationTransferRow(body) {
+                    var wrap = document.createElement('div');
+                    wrap.style.display = 'flex';
+                    wrap.style.flexWrap = 'wrap';
+                    wrap.style.gap = '8px';
+                    wrap.style.justifyContent = 'center';
+                    wrap.style.marginTop = '10px';
+                    var exportBtn = document.createElement('button');
+                    exportBtn.className = 'btn annotation-export-btn';
+                    exportBtn.textContent = t('annotationExport');
+                    exportBtn.addEventListener('click', exportAnnotationsFile);
+                    var importBtn = document.createElement('button');
+                    importBtn.className = 'btn annotation-import-btn';
+                    importBtn.textContent = t('annotationImport');
+                    var fileInput = document.createElement('input');
+                    fileInput.type = 'file';
+                    fileInput.accept = '.json,application/json';
+                    fileInput.style.display = 'none';
+                    fileInput.addEventListener('change', function() {
+                        if (fileInput.files && fileInput.files[0]) importAnnotationsFile(fileInput.files[0]);
+                        fileInput.value = '';
+                    });
+                    importBtn.addEventListener('click', function() { fileInput.click(); });
+                    wrap.appendChild(exportBtn);
+                    wrap.appendChild(importBtn);
+                    wrap.appendChild(fileInput);
+                    body.appendChild(wrap);
+                }
+
                 function renderAnnotationsModal() {
                     var body = document.getElementById('annotationsModalBody');
                     if (!body) return;
@@ -5366,6 +5552,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         body.innerHTML = html;
                         var restoreBtn = document.getElementById('annotationRestoreBtn');
                         if (restoreBtn) restoreBtn.addEventListener('click', restorePreviousAnnotations);
+                        appendAnnotationTransferRow(body);
                         return;
                     }
                     body.innerHTML = '';
@@ -5447,6 +5634,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     restoreBtn.addEventListener('click', restorePreviousAnnotations);
                     restoreWrap.appendChild(restoreBtn);
                     body.appendChild(restoreWrap);
+                    appendAnnotationTransferRow(body);
                 }
 
                 function openAnnotationsModal() {
@@ -7240,12 +7428,547 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     return shuffled.slice(0, Math.min(numQ, shuffled.length));
                 }
 
+                // ── History Mode (WWI & WWII alignment scenarios) ──
+                var histBarEl = document.getElementById('historyBar');
+                var histBtnEl = document.getElementById('historyModeBtn');
+
+                function pickHistNote(o) { return o ? (o[lang] !== undefined && o[lang] !== null ? o[lang] : (o.en !== undefined ? o.en : '')) : ''; }
+                function histRoleKey(role) { return 'histRole' + role.charAt(0).toUpperCase() + role.slice(1); }
+                function histFamily(side) { return (side === 'central' || side === 'axis') ? 'red' : 'blue'; }
+                function histColorFor(p) {
+                    if (!p || p.role === 'neutral') return null;
+                    if (p.role === 'occupied') return histOccupiedColor;
+                    var pal = histRoleColorPalettes[histFamily(p.side)];
+                    return pal[p.role] || '#8d97a5';
+                }
+                function getHistWar() {
+                    return historicalWarsData.find(function(w) { return w.id === historyWarId; }) || historicalWarsData[0];
+                }
+                function getHistScenario(war) {
+                    war = war || getHistWar();
+                    return war.scenarios.find(function(s) { return s.id === historyScenarioId; }) || war.scenarios[0];
+                }
+                function histMatchName(cleanName, candidate) {
+                    var c = getCleanName(candidate);
+                    if (!cleanName || !c) return false;
+                    if (c === cleanName) return true;
+                    var a = cleanName.toLowerCase(), b = c.toLowerCase();
+                    if (Math.min(a.length, b.length) < 4) return false;
+                    function boundaryHit(shorter, longer) {
+                        var idx = longer.indexOf(shorter);
+                        while (idx !== -1) {
+                            if (idx === 0 || /[\s.\-]/.test(longer.charAt(idx - 1))) return true;
+                            idx = longer.indexOf(shorter, idx + 1);
+                        }
+                        return false;
+                    }
+                    return a.length <= b.length ? boundaryHit(a, b) : boundaryHit(b, a);
+                }
+                function findHistParticipant(scenario, cleanName) {
+                    var i, j, emp;
+                    for (i = 0; i < scenario.participants.length; i++) {
+                        if (histMatchName(cleanName, scenario.participants[i].c)) return scenario.participants[i];
+                    }
+                    for (i = 0; i < (scenario.empires || []).length; i++) {
+                        emp = scenario.empires[i];
+                        for (j = 0; j < emp.members.length; j++) {
+                            if (histMatchName(cleanName, emp.members[j])) return { side: emp.side, role: emp.role, n: null, yr: emp.joinYr || null, _empire: emp };
+                        }
+                    }
+                    return null;
+                }
+                function drawHistoryScenario(skipFadeIn) {
+                    if (historyTab === 'eras') { drawEraScene(skipFadeIn); return; }
+                    if (!gHistoryOverlay) return;
+                    gHistoryOverlay.selectAll('*').remove();
+                    if (!historyActive) return;
+                    var sc = getHistScenario();
+                    if (!sc) return;
+                    var k = Math.max(0.4, currentTransform.k);
+                    var fs = Math.max(4, Math.min(16, (isMobile ? 8 : 11) / k));
+                    var dur = prefersReducedMotion() ? 0 : 300;
+
+                    (sc.empires || []).forEach(function(emp) {
+                        var col = histColorFor(emp) || '#7b8794';
+                        var sx = 0, sy = 0, sw = 0, found = false;
+                        emp.members.forEach(function(m) {
+                            var f = allCountryFeatures.find(function(ff) { return histMatchName(getCleanName(ff.properties && ff.properties.name), m); });
+                            if (!f) return;
+                            var pd = pathGen(f);
+                            if (pd) {
+                                var s = gHistoryOverlay.append('path').attr('d', pd).attr('fill', col)
+                                    .attr('stroke', '#ffffff').attr('stroke-width', 1.2).attr('stroke-dasharray', '5,3')
+                                    .attr('vector-effect', 'non-scaling-stroke').style('pointer-events', 'none');
+                                if (skipFadeIn) s.attr('opacity', 0.42); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 0.42);
+                            }
+                            try {
+                                var cen = d3.geoCentroid(f);
+                                var area = Math.max(0.001, d3.geoArea(f));
+                                var xy = getActiveProjection()(cen);
+                                if (xy && !isNaN(xy[0])) { sx += xy[0] * area; sy += xy[1] * area; sw += area; found = true; }
+                            } catch (err) {}
+                        });
+                        if (found) {
+                            var nm = locField(histEmpireNames[emp.id], 'name');
+                            var suffix = emp.joinYr ? ' (' + emp.joinYr + ')' : (emp.endYr ? ' (†' + emp.endYr + ')' : '');
+                            var lbl = gHistoryOverlay.append('text')
+                                .attr('x', sx / sw).attr('y', sy / sw)
+                                .text(nm + suffix)
+                                .attr('fill', '#ffffff').attr('font-size', fs).attr('font-weight', 'bold')
+                                .attr('text-anchor', 'middle').attr('pointer-events', 'none')
+                                .attr('paint-order', 'stroke').attr('stroke', 'rgba(0,0,0,0.75)').attr('stroke-width', 3);
+                            if (skipFadeIn) lbl.attr('opacity', 0.95); else lbl.attr('opacity', 0).transition().duration(dur).attr('opacity', 0.95);
+                        }
+                    });
+
+                    sc.participants.forEach(function(p) {
+                        var col = histColorFor(p);
+                        if (!col) return;
+                        allCountryFeatures.forEach(function(f) {
+                            var cn = getCleanName((f.properties && f.properties.name) || '');
+                            if (!histMatchName(cn, p.c)) return;
+                            var pd = pathGen(f);
+                            if (!pd) return;
+                            var isSoft = (p.role === 'protectorate' || p.role === 'colony' || p.role === 'dominion');
+                            var s = gHistoryOverlay.append('path').attr('d', pd).attr('fill', col)
+                                .attr('stroke', col).attr('stroke-width', isSoft ? 2.2 : 1.2)
+                                .attr('vector-effect', 'non-scaling-stroke').style('pointer-events', 'none');
+                            if (skipFadeIn) s.attr('opacity', 0.45); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 0.45);
+                        });
+                    });
+                }
+                function renderHistoryBar() {
+                    if (!histBarEl) return;
+                    var titleEl = document.getElementById('historyBarTitle');
+                    if (titleEl) titleEl.textContent = t('historyBarTitle');
+                    var war = getHistWar();
+                    var tabs = document.getElementById('histWarTabs');
+                    tabs.innerHTML = '';
+                    historicalWarsData.forEach(function(w) {
+                        var b = document.createElement('button');
+                        b.type = 'button';
+                        b.className = 'btn history-war-tab' + (historyTab === 'wars' && w.id === historyWarId ? ' active' : '');
+                        b.setAttribute('role', 'tab');
+                        b.setAttribute('aria-selected', historyTab === 'wars' && w.id === historyWarId ? 'true' : 'false');
+                        b.textContent = locField(w, 'name') + ' (' + locField(w, 'years') + ')';
+                        b.addEventListener('click', function() {
+                            historyTab = 'wars';
+                            historyWarId = w.id;
+                            historyScenarioId = w.scenarios[0].id;
+                            renderHistoryBar();
+                            drawHistoryScenario();
+                        });
+                        tabs.appendChild(b);
+                    });
+                    var erasTab = document.createElement('button');
+                    erasTab.type = 'button';
+                    erasTab.className = 'btn history-war-tab history-eras-tab' + (historyTab === 'eras' ? ' active' : '');
+                    erasTab.setAttribute('role', 'tab');
+                    erasTab.setAttribute('aria-selected', historyTab === 'eras' ? 'true' : 'false');
+                    erasTab.textContent = t('histTabEras');
+                    erasTab.addEventListener('click', function() { selectHistoryTab('eras'); });
+                    tabs.appendChild(erasTab);
+                    if (historyTab === 'eras') { renderEraTabContent(); return; }
+                    var tlWars = document.getElementById('histTimeline');
+                    if (tlWars) tlWars.style.display = 'none';
+                    var row = document.getElementById('histScenarioBtns');
+                    row.innerHTML = '';
+                    war.scenarios.forEach(function(s) {
+                        var b = document.createElement('button');
+                        b.type = 'button';
+                        b.className = 'btn history-scenario-btn' + (s.id === historyScenarioId ? ' active' : '');
+                        b.textContent = s.year + ' · ' + locField(s, 'title');
+                        b.title = locField(s, 'desc');
+                        b.addEventListener('click', function() {
+                            historyScenarioId = s.id;
+                            renderHistoryBar();
+                            drawHistoryScenario();
+                            if (selectedCountry && countryPanel.classList.contains('visible')) openHistoryPanel(selectedCountry);
+                        });
+                        row.appendChild(b);
+                    });
+                    var seen = {}, chips = [];
+                    war.scenarios.forEach(function(s) {
+                        if (s.id !== historyScenarioId) return;
+                        s.participants.forEach(function(p) {
+                            var key = p.side + '_' + p.role;
+                            if (seen[key]) return;
+                            seen[key] = true;
+                            chips.push({ key: key, side: p.side, role: p.role, color: histColorFor(p) });
+                        });
+                        (s.empires || []).forEach(function(emp) {
+                            var key = emp.side + '_' + emp.role;
+                            if (seen[key]) return;
+                            seen[key] = true;
+                            chips.push({ key: key, side: emp.side, role: emp.role, color: histColorFor(emp), dashed: true });
+                        });
+                    });
+                    var leg = document.getElementById('histLegend');
+                    leg.innerHTML = '<span class="control-label">' + t('histLegendLabel') + '</span>';
+                    chips.forEach(function(ch) {
+                        var chip = document.createElement('span');
+                        chip.className = 'hist-chip';
+                        var hasSide = !!war.sides[ch.side];
+                        var fullSide = hasSide ? t(war.sides[ch.side]) : '';
+                        var shortSide = fullSide ? fullSide.split('—')[0].trim() : '';
+                        chip.title = shortSide ? (shortSide + ' — ' + t(histRoleKey(ch.role))) : t(histRoleKey(ch.role));
+                        var sw = document.createElement('span');
+                        sw.className = 'hist-chip-swatch';
+                        sw.style.background = ch.color || 'transparent';
+                        if (!ch.color) { sw.style.border = '1px solid #9aa5b1'; }
+                        if (ch.dashed) { sw.style.backgroundImage = 'repeating-linear-gradient(45deg, rgba(255,255,255,.85) 0 2px, transparent 2px 5px)'; }
+                        chip.appendChild(sw);
+                        chip.appendChild(document.createTextNode(shortSide ? (t(histRoleKey(ch.role)) + ' · ' + shortSide) : t(histRoleKey(ch.role))));
+                        leg.appendChild(chip);
+                    });
+                    var sp = document.getElementById('histSourcesPanel');
+                    sp.innerHTML = '<h4>' + htmlEscape(t('histSourcesTitle')) + '</h4><ul>' +
+                        war.sources.map(function(s) { return '<li>' + htmlEscape(s) + '</li>'; }).join('') +
+                        '</ul>';
+                }
+                function openHistoryPanel(f) {
+                    if (historyTab === 'eras') { openEraPanelForFeature(f); return; }
+                    var panelContent = document.getElementById('panelContent');
+                    var countryPanel = document.getElementById('countryPanel');
+                    if (!panelContent || !countryPanel) return;
+                    closeFeatureDetail();
+                    selectedCountry = f;
+                    selectedFeatureType = 'history';
+                    var name = (f.properties && f.properties.name) || '';
+                    var cn = getCleanName(name);
+                    var sc = getHistScenario();
+                    var war = getHistWar();
+                    var p = findHistParticipant(sc, cn);
+                    var dispName = getDisplayName(name);
+                    var flag = getCountryFlag(name);
+                    var html = '<h3>' + (flag || '📜') + ' ' + htmlEscape(dispName) + '</h3>';
+                    html += '<p class="hist-panel-context"><strong>' + htmlEscape(locField(war, 'name')) + '</strong> — ' + sc.year + ' · ' + htmlEscape(locField(sc, 'title')) + '</p>';
+                    if (!p) {
+                        html += '<p class="hist-note">' + htmlEscape(t('histNoData')) + '</p>';
+                    } else {
+                        var col = histColorFor(p) || '#9aa5b1';
+                        var roleLbl = t(histRoleKey(p.role));
+                        var sideLbl = p.side !== 'neutral' && war.sides[p.side] ? t(war.sides[p.side]) : '';
+                        html += '<div class="hist-status-block" style="border-inline-start-color:' + col + '">' +
+                            '<div class="hist-status-role"><span class="hist-chip-swatch" style="background:' + col + '"></span> <strong>' + htmlEscape(roleLbl) + '</strong></div>' +
+                            (sideLbl ? '<div class="hist-status-side">' + htmlEscape(sideLbl) + (p.yr ? ' · ' + htmlEscape(p.yr) : '') + '</div>' : '') +
+                            '</div>';
+                        if (p.n && histNotes[p.n]) {
+                            html += '<p class="hist-note">' + htmlEscape(pickHistNote(histNotes[p.n])) + '</p>';
+                        }
+                        if (p._empire) {
+                            var emp = p._empire;
+                            var membersStr = emp.members.map(function(m) { return getDisplayName(m); }).join('، ');
+                            html += '<div class="hist-empire-box">';
+                            html += '<strong>' + htmlEscape(locField(histEmpireNames[emp.id], 'name')) + '</strong>';
+                            html += '<div class="hist-empire-members">' + htmlEscape(t('histCompositionLabel')) + ' ' + htmlEscape(membersStr) + '</div>';
+                            var partial = locField(emp, 'partial');
+                            if (partial) html += '<div class="hist-empire-partial">' + htmlEscape(t('histPartialNoteLabel')) + ' ' + htmlEscape(partial) + '.</div>';
+                            html += '</div>';
+                        }
+                    }
+                    html += '<details class="hist-sources-mini"><summary>' + htmlEscape(t('histSourcesBtn')) + ' (' + htmlEscape(t('histSourcesTitle')) + ')</summary><ul>' +
+                        war.sources.map(function(s) { return '<li>' + htmlEscape(s) + '</li>'; }).join('') + '</ul></details>';
+                    html += '<p class="hist-disclaimer-mini">' + htmlEscape(t('histDisclaimer')) + '</p>';
+                    _lastPanelRenderTime = performance.now();
+                    panelContent.innerHTML = html;
+                    countryPanel.style.display = 'block';
+                    requestAnimationFrame(function() { requestAnimationFrame(function() { countryPanel.classList.add('visible'); }); });
+                }
+                function enterHistoryMode() {
+                    if (quizActive || historyActive) return;
+                    historySavedState = { colorMode: colorMode, currentReligionFilter: currentReligionFilter };
+                    Object.keys(LAYER_DEFS).forEach(function(nm) {
+                        historySavedState[nm] = LAYER_DEFS[nm].getFlag();
+                    });
+                    Object.keys(LAYER_DEFS).forEach(function(nm) {
+                        if (LAYER_DEFS[nm].getFlag()) toggleLayerByName(nm);
+                    });
+                    if (currentReligionFilter !== 'all') {
+                        currentReligionFilter = 'all';
+                        setActiveByAttr(religionButtons, '.religion-btn[data-religion="all"]');
+                    }
+                    if (colorMode !== 'normal') setMode('normal');
+                    if (!historyWarId || !historicalWarsData.some(function(w) { return w.id === historyWarId; })) {
+                        historyWarId = historicalWarsData[0].id;
+                    }
+                    var _cw = getHistWar();
+                    if (!historyScenarioId || !_cw.scenarios.some(function(x) { return x.id === historyScenarioId; })) {
+                        historyScenarioId = _cw.scenarios[0].id;
+                    }
+                    historyActive = true;
+                    if (histBtnEl) { histBtnEl.classList.add('toggle-on'); histBtnEl.setAttribute('aria-pressed', 'true'); }
+                    if (histBarEl) histBarEl.style.display = 'flex';
+                    renderHistoryBar();
+                    drawHistoryScenario();
+                }
+                function exitHistoryMode(restore) {
+                    historyActive = false;
+                    if (gHistoryOverlay) gHistoryOverlay.selectAll('*').remove();
+                    if (histBtnEl) { histBtnEl.classList.remove('toggle-on'); histBtnEl.setAttribute('aria-pressed', 'false'); }
+                    if (histBarEl) histBarEl.style.display = 'none';
+                    if (selectedFeatureType === 'history' && countryPanel.classList.contains('visible')) closeCountryPanel();
+                    if (restore !== false && historySavedState) {
+                        var s = historySavedState;
+                        Object.keys(LAYER_DEFS).forEach(function(nm) {
+                            if (s[nm] && !LAYER_DEFS[nm].getFlag()) toggleLayerByName(nm);
+                        });
+                        if (s.currentReligionFilter !== 'all') {
+                            currentReligionFilter = s.currentReligionFilter;
+                            setActiveByAttr(religionButtons, '.religion-btn[data-religion="' + s.currentReligionFilter + '"]');
+                        }
+                        if (s.colorMode !== colorMode) setMode(s.colorMode);
+                    }
+                    historySavedState = null;
+                }
+                window.enterHistoryMode = enterHistoryMode;
+                window.exitHistoryMode = exitHistoryMode;
+                window.renderHistoryBar = renderHistoryBar;
+                window.drawHistoryScenario = drawHistoryScenario;
+                window.drawEraScene = drawEraScene;
+                window.openHistoryPanel = openHistoryPanel;
+                window.historyIsActive = function() { return historyActive; };
+                window.historyModeIsEras = function() { return historyTab === 'eras'; };
+
+                function fetchHistoricalEras() {
+                    if (historicalErasData) return Promise.resolve(historicalErasData);
+                    if (!historicalErasLoading) {
+                        historicalErasLoading = fetch(BASE + 'historical-eras-data.json')
+                            .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+                            .then(function(d) { historicalErasData = d.eras || []; return historicalErasData; })
+                            .catch(function(e) { historicalErasLoading = null; throw e; });
+                    }
+                    return historicalErasLoading;
+                }
+                function getHistEra() {
+                    if (!historicalErasData || !historicalErasData.length) return null;
+                    return historicalErasData.find(function(e) { return e.id === historyEraId; }) || historicalErasData[0];
+                }
+                function normalizeEraRing(ring) {
+                    while (Array.isArray(ring) && ring.length === 1 && Array.isArray(ring[0])) ring = ring[0];
+                    if (Array.isArray(ring) && typeof ring[0] === 'number') {
+                        var out = [];
+                        for (var i = 0; i + 1 < ring.length; i += 2) out.push([ring[i], ring[i + 1]]);
+                        ring = out;
+                    }
+                    return ring;
+                }
+                function buildEraFeature(p) {
+                    var rings = (p.rings || []).map(function(ring) {
+                        var r = normalizeEraRing(ring);
+                        try {
+                            if (d3.geoArea({ type: 'Polygon', coordinates: [r] }) > Math.PI * 2) r = r.slice().reverse();
+                        } catch (e) {}
+                        return r;
+                    });
+                    return { type: 'MultiPolygon', coordinates: rings.map(function(r) { return [r]; }) };
+                }
+                function drawEraScene(skipFadeIn) {
+                    if (!gHistoryOverlay) return;
+                    gHistoryOverlay.selectAll('*').remove();
+                    if (!historyActive || historyTab !== 'eras') return;
+                    var era = getHistEra();
+                    if (!era) return;
+                    var k = Math.max(0.4, currentTransform.k);
+                    var fs = Math.max(4, Math.min(15, (isMobile ? 8 : 11) / k));
+                    var dur = prefersReducedMotion() ? 0 : 300;
+                    era.polities.forEach(function(p) {
+                        var feature = buildEraFeature(p);
+                        var pd = pathGen(feature);
+                        if (pd) {
+                            var s = gHistoryOverlay.append('path').attr('d', pd).attr('fill', p.color)
+                                .attr('stroke', p.color).attr('stroke-width', 1.8).attr('stroke-dasharray', '7,4')
+                                .attr('vector-effect', 'non-scaling-stroke').style('cursor', 'pointer')
+                                .on('click', function() { showEraPolityPanel(p, era); });
+                            if (skipFadeIn) s.attr('opacity', 0.42); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 0.42);
+                        }
+                    });
+                    era.polities.forEach(function(p) {
+                        var xy = getActiveProjection()(p.label);
+                        if (!xy || isNaN(xy[0])) return;
+                        var lbl = gHistoryOverlay.append('text').attr('x', xy[0]).attr('y', xy[1])
+                            .text(locField(p, 'name')).attr('fill', '#ffffff').attr('font-size', fs)
+                            .attr('font-weight', 'bold').attr('text-anchor', 'middle').attr('pointer-events', 'none')
+                            .attr('paint-order', 'stroke').attr('stroke', 'rgba(0,0,0,0.75)').attr('stroke-width', 3);
+                        if (skipFadeIn) lbl.attr('opacity', 0.95); else lbl.attr('opacity', 0).transition().duration(dur).attr('opacity', 0.95);
+                    });
+                }
+                function showEraPolityPanel(p, era) {
+                    var panelContent = document.getElementById('panelContent');
+                    var countryPanel = document.getElementById('countryPanel');
+                    if (!panelContent || !countryPanel) return;
+                    closeFeatureDetail();
+                    selectedCountry = null;
+                    selectedFeatureType = 'history';
+                    var html = '<h3>🏛️ ' + htmlEscape(locField(p, 'name')) + '</h3>';
+                    html += '<p class="hist-panel-context"><strong>' + htmlEscape(locField(era, 'title')) + '</strong> — ' + htmlEscape(era.yearLabel || '') + '</p>';
+                    var desc = locField(era, 'desc');
+                    if (desc) html += '<p class="hist-note">' + htmlEscape(desc) + '</p>';
+                    html += '<p class="hist-note"><em>' + htmlEscape(t('histEraApprox')) + '</em></p>';
+                    html += '<details class="hist-sources-mini"><summary>' + htmlEscape(t('histSourcesBtn')) + '</summary><ul>' +
+                        (era.sources || []).map(function(s) { return '<li>' + htmlEscape(s) + '</li>'; }).join('') + '</ul></details>';
+                    html += '<p class="hist-disclaimer-mini">' + htmlEscape(t('histEraDisclaimer')) + '</p>';
+                    _lastPanelRenderTime = performance.now();
+                    panelContent.innerHTML = html;
+                    countryPanel.style.display = 'block';
+                    requestAnimationFrame(function(){requestAnimationFrame(function(){countryPanel.classList.add('visible');});});
+                }
+                function openEraPanelForFeature(f) {
+                    var panelContent = document.getElementById('panelContent');
+                    var countryPanel = document.getElementById('countryPanel');
+                    if (!panelContent || !countryPanel) return;
+                    closeFeatureDetail();
+                    selectedCountry = f;
+                    selectedFeatureType = 'history';
+                    var era = getHistEra();
+                    var name = (f.properties && f.properties.name) || '';
+                    var dispName = getDisplayName(name);
+                    var flag = getCountryFlag(name);
+                    var html = '<h3>' + (flag || '📜') + ' ' + htmlEscape(dispName) + '</h3>';
+                        if (era) {
+                            html += '<p class="hist-panel-context"><strong>' + htmlEscape(locField(era, 'title')) + '</strong> — ' + htmlEscape(era.yearLabel || '') + '</p>';
+                            var centroids = [];
+                            try {
+                                if (f.geometry && f.geometry.type === 'MultiPolygon') {
+                                    f.geometry.coordinates.forEach(function(poly) {
+                                        try {
+                                            var c = d3.geoCentroid({ type: 'Polygon', coordinates: poly });
+                                            if (c && !isNaN(c[0])) centroids.push(c);
+                                        } catch (e) {}
+                                    });
+                                } else {
+                                    var c0 = d3.geoCentroid(f);
+                                    if (c0 && !isNaN(c0[0])) centroids.push(c0);
+                                }
+                            } catch (e) {}
+                            if (!centroids.length) { try { var cf = d3.geoCentroid(f); if (cf && !isNaN(cf[0])) centroids.push(cf); } catch (e) {} }
+                            var hit = null;
+                            for (var ci = 0; ci < centroids.length && !hit; ci++) {
+                                var cpt = centroids[ci];
+                                for (var i = 0; i < era.polities.length && !hit; i++) {
+                                    var pol = era.polities[i];
+                                    for (var j = 0; j < (pol.rings || []).length && !hit; j++) {
+                                        try {
+                                            if (d3.geoContains({ type: 'Polygon', coordinates: [normalizeEraRing(pol.rings[j])] }, cpt)) hit = pol;
+                                        } catch (e) {}
+                                    }
+                                }
+                            }
+                            if (hit) {
+                                showEraPolityPanel(hit, era);
+                                return;
+                            }
+                        }
+                    html += '<p class="hist-note">' + htmlEscape(t('histNoData')) + '</p>';
+                    _lastPanelRenderTime = performance.now();
+                    panelContent.innerHTML = html;
+                    countryPanel.style.display = 'block';
+                    requestAnimationFrame(function(){requestAnimationFrame(function(){countryPanel.classList.add('visible');});});
+                }
+                function renderEraTabContent() {
+                    var row = document.getElementById('histScenarioBtns');
+                    var leg = document.getElementById('histLegend');
+                    var sp = document.getElementById('histSourcesPanel');
+                    var tl = document.getElementById('histTimeline');
+                    var era = getHistEra();
+                    row.innerHTML = '';
+                    if (!era) {
+                        row.innerHTML = '<span class="history-loading">' + htmlEscape(t('histEraLoading')) + '</span>';
+                        leg.innerHTML = '';
+                        tl.style.display = 'none';
+                        sp.innerHTML = '';
+                        fetchHistoricalEras().then(function() {
+                            if (historyTab !== 'eras') return;
+                            if (!historyEraId && historicalErasData.length) historyEraId = historicalErasData[0].id;
+                            renderHistoryBar();
+                            drawEraScene();
+                        }).catch(function() {
+                            if (historyTab !== 'eras') return;
+                            var r2 = document.getElementById('histScenarioBtns');
+                            if (r2) r2.innerHTML = '<span class="history-loading">' + htmlEscape(t('histEraLoadError')) + '</span>';
+                        });
+                        return;
+                    }
+                    historicalErasData.forEach(function(e) {
+                        var b = document.createElement('button');
+                        b.type = 'button';
+                        b.className = 'btn history-scenario-btn' + (e.id === historyEraId ? ' active' : '');
+                        b.textContent = (e.yearLabel || '') + ' · ' + locField(e, 'title');
+                        b.title = locField(e, 'desc');
+                        b.addEventListener('click', function() {
+                            historyEraId = e.id;
+                            renderHistoryBar();
+                            drawEraScene();
+                            if (selectedCountry && selectedFeatureType === 'history' && countryPanel.classList.contains('visible')) openHistoryPanel(selectedCountry);
+                        });
+                        row.appendChild(b);
+                    });
+                    var min = -600, max = 1650;
+                    tl.style.display = 'block';
+                    tl.innerHTML = '';
+                    historicalErasData.forEach(function(e) {
+                        var dot = document.createElement('button');
+                        dot.type = 'button';
+                        dot.className = 'history-tl-dot' + (e.id === historyEraId ? ' active' : '');
+                        dot.style.left = Math.max(0, Math.min(100, (e.sort - min) / (max - min) * 100)) + '%';
+                        dot.title = (e.yearLabel || '') + ' · ' + locField(e, 'title');
+                        dot.setAttribute('aria-label', dot.title);
+                        dot.addEventListener('click', function() {
+                            historyEraId = e.id;
+                            renderHistoryBar();
+                            drawEraScene();
+                        });
+                        tl.appendChild(dot);
+                    });
+                    leg.innerHTML = '<span class="control-label">' + t('histLegendLabel') + '</span>';
+                    era.polities.forEach(function(p) {
+                        var chip = document.createElement('span');
+                        chip.className = 'hist-chip';
+                        chip.title = locField(p, 'name');
+                        var sw = document.createElement('span');
+                        sw.className = 'hist-chip-swatch';
+                        sw.style.background = p.color;
+                        chip.appendChild(sw);
+                        chip.appendChild(document.createTextNode(locField(p, 'name')));
+                        leg.appendChild(chip);
+                    });
+                    sp.innerHTML = '<h4>' + htmlEscape(t('histSourcesTitle')) + '</h4><ul>' +
+                        (era.sources || []).map(function(s) { return '<li>' + htmlEscape(s) + '</li>'; }).join('') + '</ul>';
+                }
+                function selectHistoryTab(tab) {
+                    historyTab = tab;
+                    if (tab === 'eras') {
+                        if (!historicalErasData) {
+                            historyEraId = null;
+                            renderHistoryBar();
+                            if (gHistoryOverlay) gHistoryOverlay.selectAll('*').remove();
+                            fetchHistoricalEras().then(function() {
+                                if (historyTab !== 'eras') return;
+                                if (!historyEraId && historicalErasData.length) historyEraId = historicalErasData[0].id;
+                                renderHistoryBar();
+                                drawEraScene();
+                            }).catch(function() {
+                                var row = document.getElementById('histScenarioBtns');
+                                if (row && historyTab === 'eras') row.innerHTML = '<span class="history-loading">' + htmlEscape(t('histEraLoadError')) + '</span>';
+                            });
+                            return;
+                        }
+                        if (!historyEraId && historicalErasData.length) historyEraId = historicalErasData[0].id;
+                        renderHistoryBar();
+                        drawEraScene();
+                        return;
+                    }
+                    renderHistoryBar();
+                    drawHistoryScenario();
+                }
+
                 var quizSavedMapState = null;
 
                 // ── Map state capture/restore for quiz ──
                 function resetMapToNormalForQuiz() {
                     // Save current state from registry
                     quizSavedMapState = { colorMode: colorMode, currentReligionFilter: currentReligionFilter };
+                    if (window.historyIsActive && window.historyIsActive()) exitHistoryMode(true);
                     Object.keys(LAYER_DEFS).forEach(function(name) {
                         quizSavedMapState[name] = LAYER_DEFS[name].getFlag();
                     });
@@ -9274,9 +9997,12 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             document.getElementById('geopoliticalBlocsToggle').addEventListener('click', toggleGeopoliticalBlocs);
             document.getElementById('desertsForestsToggle').addEventListener('click', toggleDesertsForests);
             document.getElementById('borderDisputesToggle').addEventListener('click', toggleBorderDisputes);
+            const historicalRoutesToggleBtn = document.getElementById('historicalRoutesToggle');
+            if (historicalRoutesToggleBtn) historicalRoutesToggleBtn.addEventListener('click', function() { toggleLayerByName('historicalRoutes'); });
             if (adminBoundariesToggle) adminBoundariesToggle.addEventListener('click', toggleAdminBoundaries);
             if (globeViewBtn) globeViewBtn.addEventListener('click', function() {
                 if (quizActive) return;
+                if (window.historyIsActive && window.historyIsActive()) { window.exitHistoryMode(); }
                 toggleGlobeMode();
             });
 
@@ -9303,6 +10029,30 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 updateHash();
                 updateActiveLayerCount();
             });
+
+            var histModeBtnEl = document.getElementById('historyModeBtn');
+            if (histModeBtnEl) {
+                histModeBtnEl.addEventListener('click', function() {
+                    if (quizActive) return;
+                    if (window.historyIsActive && window.historyIsActive()) window.exitHistoryMode();
+                    else window.enterHistoryMode();
+                });
+            }
+            var histCloseBtnEl = document.getElementById('histCloseBtn');
+            if (histCloseBtnEl) {
+                histCloseBtnEl.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (window.historyIsActive && window.historyIsActive()) window.exitHistoryMode();
+                });
+            }
+            var histSourcesBtnEl = document.getElementById('histSourcesBtn');
+            if (histSourcesBtnEl) {
+                histSourcesBtnEl.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var sp = document.getElementById('histSourcesPanel');
+                    if (sp) sp.style.display = sp.style.display === 'none' ? 'block' : 'none';
+                });
+            }
 
             function toggleLangDropdown(btn, menu) {
                 var isVisible = menu.classList.contains('visible');

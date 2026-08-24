@@ -7774,9 +7774,29 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (g) { g.classList.toggle('active', !isHist); g.setAttribute('aria-pressed', !isHist ? 'true' : 'false'); }
                     if (h) { h.classList.toggle('active', isHist); h.setAttribute('aria-pressed', isHist ? 'true' : 'false'); }
                 }
+                var SECTION_GEO_ONLY = ['#modeButtons', '#sectionBaseMapLabel', '#quizBtn', '#compareProjectionsBtn', '#barDivisionBtn'];
+                var SECTION_HIST_ONLY = ['#sectionHistoryLabel', '#historyEraGroup', '#historyContextRow', '#histTerrainBtn', '#histSourcesBtn'];
+                function setSectionVis(el, visible) {
+                    if (!el) return;
+                    if (visible) el.style.setProperty('display', 'flex', 'important');
+                    else el.style.setProperty('display', 'none', 'important');
+                }
+                function setSectionDisplay(section) {
+                    var hist = section === 'history';
+                    SECTION_GEO_ONLY.forEach(function(sel) {
+                        setSectionVis(document.querySelector(sel), !hist);
+                    });
+                    SECTION_HIST_ONLY.forEach(function(sel) {
+                        setSectionVis(document.querySelector(sel), hist);
+                    });
+                    document.querySelectorAll('.geo-layer').forEach(function(el) {
+                        setSectionVis(el, !hist);
+                    });
+                }
                 function applySection(section, persist) {
                     if (section !== 'geo' && section !== 'history') return;
                     if (quizActive && section === 'geo') return;
+                    setSectionDisplay(section);
                     if (section === currentSection) { updateSectionToggleUI(); return; }
                     if (section === 'history') {
                         enterHistoryMode();
@@ -7786,6 +7806,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         currentSection = 'geo';
                         if (historicalRoutesVisible && window.drawHistoricalRoutes) window.drawHistoricalRoutes(true);
                     }
+                    setSectionDisplay(section);
                     if (persist !== false) { try { localStorage.setItem('lepidosSection', section); } catch (e) {} }
                     updateSectionToggleUI();
                     if (window.updateHash) window.updateHash();
@@ -10564,6 +10585,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             function maybeShowSectionPicker() {
                 var chosen = null;
                 try { chosen = localStorage.getItem('lepidosSection'); } catch (e) {}
+                if (chosen !== 'history') applySectionWhenReady('geo');
                 if (chosen === 'geo' || chosen === 'history') {
                     applySectionWhenReady(chosen, maybeShowProjectionExplainer);
                     return;

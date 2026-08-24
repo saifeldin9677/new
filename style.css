@@ -4850,10 +4850,6 @@ html[dir="rtl"] .section-picker-content { text-align: center; }
 }
 
 /* ── Section swap: history dock replaces geography controls ── */
-body.section-history #barDivisionBtn,
-body.section-history #quizBtn,
-body.section-history #compareProjectionsBtn { display: none !important; }
-body.section-history #controlsBar { display: flex !important; }
 
 .history-sources-toggle { border-radius: 999px; padding: 4px 12px; font-size: 0.8rem; }
 .history-sources-panel {
@@ -4872,21 +4868,8 @@ body.section-history #controlsBar { display: flex !important; }
     color: var(--text, #e0e8f0);
 }
 .history-sources-panel h4 { margin: 2px 0 6px; font-size: 0.85rem; color: var(--brand-accent, #14B8A6); }
-body.section-history #controlsBar {
-    width: min(94vw, 780px);
-    position: fixed !important;
-    bottom: 90px !important;
-    top: auto !important;
-    left: 50% !important;
-    right: auto !important;
-    transform: translateX(-50%) !important;
-    z-index: var(--z-controls-bar) !important;
-}
 body.section-history .history-dock .history-scenario-row { flex-wrap: nowrap; }
 body.section-history .history-dock .history-war-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; }
-.hist-only { display: none !important; }
-body.section-history .hist-only { display: inline-flex !important; }
-body.section-history .geo-layer { display: none !important; }
 .history-region-select {
     background: var(--panel-bg, #21252b);
     color: var(--text, #e0e8f0);
@@ -4933,11 +4916,3 @@ body.section-history .geo-layer { display: none !important; }
     font-size: 0.72rem;
 }
 #historyContextRow .history-legend .control-label { display: none; }
-body.section-history #controlsBar #historyEraGroup { display: flex !important; }
-body.section-history #controlsBar #sectionHistoryLabel { display: inline-flex !important; }
-body.section-history #controlsBar #sectionBaseMapLabel { display: none !important; }
-body.section-history #controlsBar #modeButtons { display: none !important; }
-body.section-history #controlsBar #historyContextRow { display: flex !important; }
-body.section-geo #controlsBar #historyEraGroup,
-body.section-geo #controlsBar #sectionHistoryLabel,
-body.section-geo #controlsBar #historyContextRow { display: none !important; }

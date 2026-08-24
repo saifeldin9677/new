@@ -150,6 +150,11 @@
                     <div class="stepped-dock-group">
                         <div class="row row-unified base-map-dock" id="modeRow">
                         <span class="control-label" id="sectionBaseMapLabel" data-i18n="sectionBaseMap"><i data-lucide="map" class="lucide-icon"></i><span class="btn-text">Base Map</span></span>
+                        <span class="control-label" id="sectionHistoryLabel" data-i18n="sectionHistory" style="display:none"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text">History</span></span>
+                        <div class="control-group" id="historyEraGroup" style="display:none">
+                            <div class="history-war-tabs" id="histWarTabs" role="tablist"></div>
+                            <div class="history-scenarios" id="histScenarioBtns"></div>
+                        </div>
                         <div class="control-group" id="modeButtons">
                             <button class="btn mode-btn" aria-pressed="false" data-mode="religion" title="ألوان حسب الديانة"><i data-lucide="book-open" class="lucide-icon"></i><span class="btn-text">دين</span></button>
                             <button class="btn mode-btn" aria-pressed="false" data-mode="terrain" title="ألوان حسب التضاريس"><i data-lucide="mountain" class="lucide-icon"></i><span class="btn-text">تضاريس</span></button>
@@ -166,24 +171,16 @@
                         <button class="btn" id="globeViewBtn" title="عرض الكرة الأرضية" data-i18n-title="globeViewBtn_title"><i data-lucide="earth" class="lucide-icon"></i><span class="btn-text" data-i18n="globeViewBtn">كرة أرضية</span></button>
                         <button class="btn quiz-btn" id="quizBtn" data-i18n-title="quizMode"><i data-lucide="brain" class="lucide-icon"></i><span class="btn-text" data-i18n="quizMode"></span></button>
                         <button class="btn" id="compareProjectionsBtn" data-i18n-title="compareProjectionsBtn_title"><i data-lucide="git-compare" class="lucide-icon"></i><span class="btn-text" data-i18n="compareProjectionsBtn_title">مقارنة</span></button>
+                        <button class="btn hist-only" id="histSourcesBtn" type="button" data-i18n-title="histSourcesTitle"><i data-lucide="book-marked" class="lucide-icon"></i><span class="btn-text" data-i18n="histSourcesBtn"></span></button>
                         <button class="btn hist-only" id="histTerrainBtn" type="button" data-i18n-title="mode_terrain_tip"><i data-lucide="mountain" class="lucide-icon"></i><span class="btn-text" data-i18n="mode_terrain"></span></button>
                     </div>
                     </div>
 
-                        <div class="history-dock" id="historyDock" role="region" aria-label="History">
-                            <div class="history-dock-row history-dock-tabs">
-                                <div class="history-war-tabs" id="histWarTabs" role="tablist"></div>
-                                <div class="history-dock-actions">
-                                    <button class="btn history-sources-toggle" id="histSourcesBtn" data-i18n-title="histSourcesTitle"><i data-lucide="book-marked" class="lucide-icon"></i><span class="btn-text" data-i18n="histSourcesBtn"></span></button>
-                                </div>
-                            </div>
-                            <div class="history-scenario-row">
-                                <div class="history-scenarios" id="histScenarioBtns"></div>
-                            </div>
+                        <div class="history-context-row" id="historyContextRow" style="display:none">
                             <div class="history-timeline" id="histTimeline" style="display:none"></div>
                             <div class="history-legend" id="histLegend"></div>
-                            <div class="history-sources-panel" id="histSourcesPanel" style="display:none"></div>
                         </div>
+                        <div class="history-sources-panel" id="histSourcesPanel" style="display:none"></div>
                 </div>
                 <button class="btn bar-layers-btn floating-capsule" id="barLayersBtn" title="فتح نافذة الطبقات" aria-label="فتح الطبقات" data-i18n-title="layersToggle" data-i18n-aria-label="layersToggle"><i data-lucide="layers" class="lucide-icon"></i><span class="btn-text" data-i18n="layersToggle">الطبقات</span></button>
                 <button class="btn bar-layers-btn floating-capsule" id="barDivisionBtn" data-i18n-title="rowFilterLabel"><i data-lucide="filter" class="lucide-icon"></i><span class="btn-text" data-i18n="rowFilterLabel">التقسيم</span></button>

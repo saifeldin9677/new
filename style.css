@@ -4850,36 +4850,11 @@ html[dir="rtl"] .section-picker-content { text-align: center; }
 }
 
 /* ── Section swap: history dock replaces geography controls ── */
-body.section-history #modeRow,
 body.section-history #barDivisionBtn,
 body.section-history #quizBtn,
 body.section-history #compareProjectionsBtn { display: none !important; }
-body.section-geo #historyDock { display: none !important; }
 body.section-history #controlsBar { display: flex !important; }
 
-.history-dock {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-    width: 100%;
-}
-.history-dock-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.history-dock-tabs { justify-content: space-between; }
-.history-dock-actions { display: flex; gap: 6px; margin-inline-start: auto; }
-.history-dock .history-war-tabs,
-.history-dock .history-scenario-row,
-.history-dock .history-scenarios,
-.history-dock .history-timeline,
-.history-dock .history-legend { min-width: 0; }
-.history-dock .history-scenarios {
-    overflow-x: auto;
-    max-width: 100%;
-    padding-bottom: 2px;
-    scrollbar-width: thin;
-}
-.history-dock .history-scenario-btn { white-space: nowrap; }
-.history-dock .history-legend { font-size: 0.75rem; }
-.history-dock .history-legend .control-label { display: none; }
 .history-sources-toggle { border-radius: 999px; padding: 4px 12px; font-size: 0.8rem; }
 .history-sources-panel {
     position: absolute;
@@ -4921,3 +4896,48 @@ body.section-history .geo-layer { display: none !important; }
     font-size: 0.78rem;
     cursor: pointer;
 }
+
+/* ── In-place section swap: era controls occupy the geography button slots ── */
+#historyEraGroup {
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+}
+#historyEraGroup .history-war-tabs { justify-content: flex-start; }
+#historyEraGroup .history-scenarios {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    padding-bottom: 2px;
+    align-items: center;
+}
+#historyEraGroup .history-scenario-btn { white-space: nowrap; }
+#historyContextRow {
+    display: none;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+}
+#historyContextRow .history-timeline { flex: 1 1 auto; min-width: 160px; }
+#historyContextRow .history-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    justify-content: flex-end;
+    font-size: 0.72rem;
+}
+#historyContextRow .history-legend .control-label { display: none; }
+body.section-history #controlsBar #historyEraGroup { display: flex !important; }
+body.section-history #controlsBar #sectionHistoryLabel { display: inline-flex !important; }
+body.section-history #controlsBar #sectionBaseMapLabel { display: none !important; }
+body.section-history #controlsBar #modeButtons { display: none !important; }
+body.section-history #controlsBar #historyContextRow { display: flex !important; }
+body.section-geo #controlsBar #historyEraGroup,
+body.section-geo #controlsBar #sectionHistoryLabel,
+body.section-geo #controlsBar #historyContextRow { display: none !important; }

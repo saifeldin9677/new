@@ -6672,7 +6672,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     var nextBtn = document.getElementById('onboardNext');
                     if (!overlay || !glow || !card) return;
 
-                    var steps = [
+                    var geoSteps = [
                         { getEl: function() {
                             var mb = window.innerWidth <= 768;
                             return document.querySelector(mb ? '#mobileSearchInput' : '.search-box');
@@ -6740,6 +6740,29 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             return document.querySelector(mb ? '#mobileToolsBtn' : '#annotateBtn');
                         }, icon: '✏️', titleKey: 'onboardStep13Title', textKey: 'onboardStep13Text' }
                     ];
+                    var histSteps = [
+                        { getEl: function() {
+                            return document.querySelector('#historyEraGroup') || document.querySelector('#histWarTabs');
+                        }, icon: '📜', titleKey: 'histOnboard1Title', textKey: 'histOnboard1Text' },
+                        { getEl: function() {
+                            return document.getElementById('histTimeline');
+                        }, icon: '⏳', titleKey: 'histOnboard2Title', textKey: 'histOnboard2Text' },
+                        { getEl: function() {
+                            return document.getElementById('histRegionFilter') || document.querySelector('.history-region-select') || document.getElementById('histScenarioBtns');
+                        }, icon: '🌍', titleKey: 'histOnboard3Title', textKey: 'histOnboard3Text' },
+                        { getEl: function() {
+                            return document.querySelector('#mapSvg');
+                        }, icon: '🖱️', titleKey: 'histOnboard4Title', textKey: 'histOnboard4Text' },
+                        { getEl: function() {
+                            return document.getElementById('legend');
+                        }, icon: '🎨', titleKey: 'histOnboard5Title', textKey: 'histOnboard5Text' },
+                        { getEl: function() {
+                            return document.getElementById('histSourcesBtn');
+                        }, icon: '📚', titleKey: 'histOnboard6Title', textKey: 'histOnboard6Text' }
+                    ];
+                    function activeSteps() {
+                        return (typeof currentSection !== 'undefined' && currentSection === 'history') ? histSteps : geoSteps;
+                    }
                     var currentStep = 0;
                     var isOpen = false;
 
@@ -6781,7 +6804,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     }
 
                     function renderStep() {
-                        var step = steps[currentStep];
+                        var step = activeSteps()[currentStep];
                         var el = step.getEl ? step.getEl() : null;
                         if (el) {
                             glow.style.display = '';
@@ -6797,14 +6820,14 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         cardText.textContent = t(step.textKey);
                         // Dots
                         cardDots.innerHTML = '';
-                        steps.forEach(function(_, i) {
+                        activeSteps().forEach(function(_, i) {
                             var dot = document.createElement('span');
                             dot.className = 'onboard-dot' + (i === currentStep ? ' active' : '');
                             cardDots.appendChild(dot);
                         });
                         // Button labels
                         skipBtn.textContent = t('onboardSkip');
-                        if (currentStep === steps.length - 1) {
+                        if (currentStep === activeSteps().length - 1) {
                             nextBtn.textContent = t('onboardFinish');
                         } else {
                             nextBtn.textContent = t('onboardNext');
@@ -6823,7 +6846,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
 
                     function nextStep() {
                         currentStep++;
-                        if (currentStep >= steps.length) { closeTutorial(); return; }
+                        if (currentStep >= activeSteps().length) { closeTutorial(); return; }
                         card.style.animation = 'none';
                         card.offsetHeight;
                         card.style.animation = 'onboardCardIn 0.35s ease both';
@@ -7546,7 +7569,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 var s = gHistoryOverlay.append('path').attr('d', pd).attr('fill', col)
                                     .attr('stroke', '#ffffff').attr('stroke-width', 1.2).attr('stroke-dasharray', '5,3')
                                     .attr('vector-effect', 'non-scaling-stroke').style('pointer-events', 'none');
-                                if (skipFadeIn) s.attr('opacity', 0.42); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 0.42);
+                                if (skipFadeIn) s.attr('opacity', 0.82); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 0.82);
                             }
                             try {
                                 var cen = d3.geoCentroid(f);
@@ -7580,7 +7603,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             var s = gHistoryOverlay.append('path').attr('d', pd).attr('fill', col)
                                 .attr('stroke', col).attr('stroke-width', isSoft ? 2.2 : 1.2)
                                 .attr('vector-effect', 'non-scaling-stroke').style('pointer-events', 'none');
-                            if (skipFadeIn) s.attr('opacity', 0.45); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 0.45);
+                            if (skipFadeIn) s.attr('opacity', 0.82); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 0.82);
                         });
                     });
                
@@ -7896,7 +7919,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 .attr('stroke', p.color).attr('stroke-width', 1.8).attr('stroke-dasharray', '7,4')
                                 .attr('vector-effect', 'non-scaling-stroke').style('cursor', 'pointer')
                                 .on('click', function() { showEraPolityPanel(p, era); });
-                            if (skipFadeIn) s.attr('opacity', 0.42); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 0.42);
+                            if (skipFadeIn) s.attr('opacity', 0.82); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 0.82);
                         }
                     });
                     era.polities.forEach(function(p) {
@@ -8006,7 +8029,10 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         historyRegionFilter = this.value;
                         renderEraTabContent();
                     });
-                    row.appendChild(regionSel);
+                    regionSel.title = t('regionAll');
+                    var eraGroupEl = document.getElementById('historyEraGroup');
+                    if (eraGroupEl) eraGroupEl.insertBefore(regionSel, eraGroupEl.firstChild);
+                    else row.appendChild(regionSel);
                     if (!era) {
                         row.innerHTML = '<span class="history-loading">' + htmlEscape(t('histEraLoading')) + '</span>';
                         tl.style.display = 'none';
@@ -8026,6 +8052,12 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     var filtered = historicalErasData.filter(function(e) {
                         return historyRegionFilter === 'all' || e.region === historyRegionFilter || e.region === 'world';
                     });
+                    filtered.sort(function(a, b) { return (a.sort || 0) - (b.sort || 0); });
+                    var curIn = filtered.some(function(e) { return e.id === historyEraId; });
+                    if (!curIn && filtered.length) {
+                        historyEraId = filtered[0].id;
+                        era = getHistEra();
+                    }
                     filtered.forEach(function(e) {
                         var b = document.createElement('button');
                         b.type = 'button';

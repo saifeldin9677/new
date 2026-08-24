@@ -4892,13 +4892,10 @@ body.section-history .history-dock .history-war-tabs { flex-wrap: nowrap; overfl
 #historyEraGroup .history-war-tabs { justify-content: flex-start; }
 #historyEraGroup .history-scenarios {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     gap: 6px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scrollbar-width: thin;
-    padding-bottom: 2px;
     align-items: center;
+    width: 100%;
 }
 #historyEraGroup .history-scenario-btn { white-space: nowrap; }
 #historyContextRow {
@@ -4907,4 +4904,9 @@ body.section-history .history-dock .history-war-tabs { flex-wrap: nowrap; overfl
     gap: 14px;
     width: 100%;
 }
+body.section-history #controlsBar { width: min(94vw, 900px); }
+body.section-history .dock-unified-wrap { flex: 1 1 auto; min-width: 0; }
+#historyEraGroup { max-width: 100%; }
+#historyEraGroup .history-war-tabs { flex-wrap: wrap; }
+
 #historyContextRow .history-timeline { flex: 1 1 auto; min-width: 160px; }

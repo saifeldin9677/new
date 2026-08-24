@@ -4908,11 +4908,3 @@ body.section-history .history-dock .history-war-tabs { flex-wrap: nowrap; overfl
     width: 100%;
 }
 #historyContextRow .history-timeline { flex: 1 1 auto; min-width: 160px; }
-#historyContextRow .history-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 8px;
-    justify-content: flex-end;
-    font-size: 0.72rem;
-}
-#historyContextRow .history-legend .control-label { display: none; }

@@ -3042,6 +3042,7 @@
             }
 
             function updateLegend() {
+                if (historyActive) { renderHistoryLegend(); return; }
                 let html = '';
                 if (colorMode === 'terrain') {
                     html += `<div style="font-weight:700;margin-bottom:4px">${t('terrainLegend')}</div>`;
@@ -7648,23 +7649,23 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             chips.push({ key: key, side: emp.side, role: emp.role, color: histColorFor(emp), dashed: true });
                         });
                     });
-                    var leg = document.getElementById('histLegend');
-                    leg.innerHTML = '<span class="control-label">' + t('histLegendLabel') + '</span>';
+                    var leg = document.getElementById('legend');
+                    leg.innerHTML = '<div style="font-weight:700;margin-bottom:4px">' + htmlEscape(t('histLegendLabel')) + '</div>';
                     chips.forEach(function(ch) {
-                        var chip = document.createElement('span');
-                        chip.className = 'hist-chip';
+                        var item = document.createElement('div');
+                        item.className = 'legend-item';
                         var hasSide = !!war.sides[ch.side];
                         var fullSide = hasSide ? t(war.sides[ch.side]) : '';
                         var shortSide = fullSide ? fullSide.split('—')[0].trim() : '';
-                        chip.title = shortSide ? (shortSide + ' — ' + t(histRoleKey(ch.role))) : t(histRoleKey(ch.role));
+                        item.title = shortSide ? (shortSide + ' — ' + t(histRoleKey(ch.role))) : t(histRoleKey(ch.role));
                         var sw = document.createElement('span');
-                        sw.className = 'hist-chip-swatch';
+                        sw.className = 'legend-color';
                         sw.style.background = ch.color || 'transparent';
                         if (!ch.color) { sw.style.border = '1px solid #9aa5b1'; }
                         if (ch.dashed) { sw.style.backgroundImage = 'repeating-linear-gradient(45deg, rgba(255,255,255,.85) 0 2px, transparent 2px 5px)'; }
-                        chip.appendChild(sw);
-                        chip.appendChild(document.createTextNode(shortSide ? (t(histRoleKey(ch.role)) + ' · ' + shortSide) : t(histRoleKey(ch.role))));
-                        leg.appendChild(chip);
+                        item.appendChild(sw);
+                        item.appendChild(document.createTextNode(t(histRoleKey(ch.role)) + (shortSide ? ' · ' + shortSide : '')));
+                        leg.appendChild(item);
                     });
                     var sp = document.getElementById('histSourcesPanel');
                     sp.innerHTML = '<h4>' + htmlEscape(t('histSourcesTitle')) + '</h4><ul>' +
@@ -7809,6 +7810,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     setSectionDisplay(section);
                     if (persist !== false) { try { localStorage.setItem('lepidosSection', section); } catch (e) {} }
                     updateSectionToggleUI();
+                    updateLegend();
                     if (window.updateHash) window.updateHash();
                 }
                 window.applySection = applySection;
@@ -7982,7 +7984,6 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 }
                 function renderEraTabContent() {
                     var row = document.getElementById('histScenarioBtns');
-                    var leg = document.getElementById('histLegend');
                     var sp = document.getElementById('histSourcesPanel');
                     var tl = document.getElementById('histTimeline');
                     var era = getHistEra();
@@ -8008,7 +8009,6 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     row.appendChild(regionSel);
                     if (!era) {
                         row.innerHTML = '<span class="history-loading">' + htmlEscape(t('histEraLoading')) + '</span>';
-                        leg.innerHTML = '';
                         tl.style.display = 'none';
                         sp.innerHTML = '';
                         fetchHistoricalEras().then(function() {
@@ -8057,22 +8057,68 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         });
                         tl.appendChild(dot);
                     });
-                    leg.innerHTML = '<span class="control-label">' + t('histLegendLabel') + '</span>';
+                    var leg = document.getElementById('legend');
+                    leg.innerHTML = '<div style="font-weight:700;margin-bottom:4px">' + htmlEscape(t('histLegendLabel')) + '</div>';
                     era.polities.forEach(function(p) {
-                        var chip = document.createElement('span');
-                        chip.className = 'hist-chip';
-                        chip.title = locField(p, 'name');
+                        var item = document.createElement('div');
+                        item.className = 'legend-item';
+                        item.title = locField(p, 'name');
                         var sw = document.createElement('span');
-                        sw.className = 'hist-chip-swatch';
+                        sw.className = 'legend-color';
                         sw.style.background = p.color;
-                        chip.appendChild(sw);
-                        chip.appendChild(document.createTextNode(locField(p, 'name')));
-                        leg.appendChild(chip);
+                        item.appendChild(sw);
+                        item.appendChild(document.createTextNode(locField(p, 'name')));
+                        leg.appendChild(item);
                     });
                     sp.innerHTML = '<h4>' + htmlEscape(t('histSourcesTitle')) + '</h4><ul>' +
                         (era.sources || []).map(function(s) { return '<li>' + htmlEscape(s) + '</li>'; }).join('') + '</ul>';
                     if (historyActive && window.updateHash) window.updateHash();
                 }
+                function renderHistoryLegend() {
+                    var leg = document.getElementById('legend');
+                    if (!leg) return;
+                    leg.innerHTML = '';
+                    if (historyTab === 'eras') {
+                        var era = getHistEra();
+                        if (!era) return;
+                        leg.innerHTML = '<div style="font-weight:700;margin-bottom:4px">' + htmlEscape(t('histLegendLabel')) + '</div>';
+                        era.polities.forEach(function(p) {
+                            var item = document.createElement('div');
+                            item.className = 'legend-item';
+                            item.title = locField(p, 'name');
+                            var sw = document.createElement('span');
+                            sw.className = 'legend-color';
+                            sw.style.background = p.color;
+                            item.appendChild(sw);
+                            item.appendChild(document.createTextNode(locField(p, 'name')));
+                            leg.appendChild(item);
+                        });
+                        return;
+                    }
+                    var war = getHistWar();
+                    var sc = getHistScenario(war);
+                    if (!sc) return;
+                    leg.innerHTML = '<div style="font-weight:700;margin-bottom:4px">' + htmlEscape(t('histLegendLabel')) + '</div>';
+                    var seen2 = {};
+                    sc.participants.forEach(function(p) {
+                        var key = p.side + '_' + p.role;
+                        if (seen2[key]) return;
+                        seen2[key] = true;
+                        var item = document.createElement('div');
+                        item.className = 'legend-item';
+                        var fullSide = war.sides[p.side] ? t(war.sides[p.side]) : '';
+                        var shortSide = fullSide ? fullSide.split('—')[0].trim() : '';
+                        item.title = shortSide ? (shortSide + ' — ' + t(histRoleKey(p.role))) : t(histRoleKey(p.role));
+                        var sw = document.createElement('span');
+                        sw.className = 'legend-color';
+                        sw.style.background = histColorFor(p) || 'transparent';
+                        if (!histColorFor(p)) { sw.style.border = '1px solid #9aa5b1'; }
+                        item.appendChild(sw);
+                        item.appendChild(document.createTextNode(t(histRoleKey(p.role)) + (shortSide ? ' · ' + shortSide : '')));
+                        leg.appendChild(item);
+                    });
+                }
+                window.renderHistoryLegend = renderHistoryLegend;
                 function selectHistoryTab(tab) {
                     historyTab = tab;
                     if (tab === 'eras') {

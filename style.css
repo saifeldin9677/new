@@ -4747,3 +4747,177 @@ html[dir="rtl"] .hist-status-block { text-align: right; }
     box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.45);
 }
 .history-loading { font-size: 0.82rem; opacity: 0.8; }
+
+/* ── Section system: header toggle + first-run picker ── */
+.section-toggle {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 999px;
+    padding: 2px;
+}
+.section-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: none;
+    background: transparent;
+    color: var(--text, #e0e8f0);
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    opacity: 0.75;
+}
+.section-toggle-btn:hover { opacity: 1; }
+.section-toggle-btn.active {
+    background: var(--brand-accent, #14B8A6);
+    color: #08202c;
+    font-weight: 700;
+    opacity: 1;
+}
+.section-toggle-btn .lucide-icon { width: 15px; height: 15px; }
+
+.section-picker-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal-alert, 5000);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(8, 12, 18, 0.88);
+    backdrop-filter: blur(6px);
+}
+.section-picker-content {
+    background: var(--panel-bg, #21252b);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    padding: 28px 30px;
+    max-width: 560px;
+    width: 92vw;
+    text-align: center;
+    color: var(--text, #e0e8f0);
+    box-shadow: var(--shadow-lg);
+}
+.section-picker-icon { font-size: 2rem; margin-bottom: 6px; }
+.section-picker-title { margin: 0 0 6px; font-size: 1.3rem; color: var(--brand-accent, #14B8A6); }
+.section-picker-subtitle { margin: 0 0 18px; opacity: 0.8; font-size: 0.9rem; }
+.section-picker-cards {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.section-card {
+    flex: 1 1 200px;
+    max-width: 240px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 14px;
+    padding: 20px 16px;
+    cursor: pointer;
+    color: var(--text, #e0e8f0);
+    transition: transform var(--dur-fast, 0.15s) ease, border-color var(--dur-fast, 0.15s) ease;
+}
+.section-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--brand-accent, #14B8A6);
+}
+.section-card .lucide-icon { width: 34px; height: 34px; color: var(--brand-accent, #14B8A6); }
+.section-card strong { font-size: 1.05rem; }
+.section-card span { font-size: 0.8rem; opacity: 0.75; line-height: 1.5; }
+.section-remember {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    opacity: 0.9;
+}
+.section-picker-hint { margin: 12px 0 0; font-size: 0.78rem; opacity: 0.65; }
+html[dir="rtl"] .section-picker-content { text-align: center; }
+@media (max-width: 640px) {
+    .section-toggle-btn .btn-text { display: none; }
+    .section-toggle-btn { padding: 4px 8px; }
+}
+
+/* ── Section swap: history dock replaces geography controls ── */
+body.section-history #modeRow,
+body.section-history #barDivisionBtn,
+body.section-history #quizBtn,
+body.section-history #compareProjectionsBtn { display: none !important; }
+body.section-geo #historyDock { display: none !important; }
+body.section-history #controlsBar { display: flex !important; }
+
+.history-dock {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    width: 100%;
+}
+.history-dock-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.history-dock-tabs { justify-content: space-between; }
+.history-dock-actions { display: flex; gap: 6px; margin-inline-start: auto; }
+.history-dock .history-war-tabs,
+.history-dock .history-scenario-row,
+.history-dock .history-scenarios,
+.history-dock .history-timeline,
+.history-dock .history-legend { min-width: 0; }
+.history-dock .history-scenarios {
+    overflow-x: auto;
+    max-width: 100%;
+    padding-bottom: 2px;
+    scrollbar-width: thin;
+}
+.history-dock .history-scenario-btn { white-space: nowrap; }
+.history-dock .history-legend { font-size: 0.75rem; }
+.history-dock .history-legend .control-label { display: none; }
+.history-sources-toggle { border-radius: 999px; padding: 4px 12px; font-size: 0.8rem; }
+.history-sources-panel {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    inset-inline-end: 0;
+    background: var(--panel-overlay-97, rgba(20,24,32,0.97));
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 12px;
+    padding: 10px 14px;
+    max-width: 420px;
+    max-height: 260px;
+    overflow-y: auto;
+    z-index: 20;
+    box-shadow: var(--shadow-lg);
+    color: var(--text, #e0e8f0);
+}
+.history-sources-panel h4 { margin: 2px 0 6px; font-size: 0.85rem; color: var(--brand-accent, #14B8A6); }
+body.section-history #controlsBar {
+    width: min(94vw, 780px);
+    position: fixed !important;
+    bottom: 90px !important;
+    top: auto !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    z-index: var(--z-controls-bar) !important;
+}
+body.section-history .history-dock .history-scenario-row { flex-wrap: nowrap; }
+body.section-history .history-dock .history-war-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; }
+.hist-only { display: none !important; }
+body.section-history .hist-only { display: inline-flex !important; }
+body.section-history .geo-layer { display: none !important; }
+.history-region-select {
+    background: var(--panel-bg, #21252b);
+    color: var(--text, #e0e8f0);
+    border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-size: 0.78rem;
+    cursor: pointer;
+}

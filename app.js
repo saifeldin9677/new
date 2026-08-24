@@ -321,6 +321,8 @@
             let historicalErasLoading = null;
             let historyTab = 'wars';
             let historyEraId = null;
+            let currentSection = 'geo';
+            let historyRegionFilter = 'all';
             let measureActive = false;
             let measurePoints = [];
             let gMeasure = null;
@@ -1462,12 +1464,27 @@
                 countryPanel.style.display = 'block';
                 requestAnimationFrame(function(){requestAnimationFrame(function(){countryPanel.classList.add('visible');});});
             }
+            window.drawHistoricalRoutes = drawHistoricalRoutes;
             function drawHistoricalRoutes(skipFadeIn) {
                 gHistoricalRoutes.selectAll('*').remove();
                 if (!historicalRoutesVisible) return;
                 var proj = getActiveProjection();
                 var dur = prefersReducedMotion() ? 0 : 300;
+                var histYear = null;
+                if (historyActive) {
+                    if (historyTab === 'eras' && historicalErasData) {
+                        var _he = historicalErasData.find(function(x) { return x.id === historyEraId; }) || historicalErasData[0];
+                        if (_he) histYear = _he.sort;
+                    } else if (historyTab === 'wars') {
+                        var _hw = historicalWarsData.find(function(x) { return x.id === historyWarId; });
+                        if (_hw) {
+                            var _hs = _hw.scenarios.find(function(x) { return x.id === historyScenarioId; }) || _hw.scenarios[0];
+                            if (_hs) { var _hn = parseInt(_hs.year, 10); if (!isNaN(_hn)) histYear = _hn; }
+                        }
+                    }
+                }
                 historicalRoutesData.forEach(function(r) {
+                    if (histYear !== null && ((r.from !== undefined && histYear < r.from) || (r.to !== undefined && r.to !== null && histYear > r.to))) return;
                     var points = r.coords;
                     var halo = gHistoricalRoutes.append('path').datum({type:'LineString', coordinates:points}).attr('d',pathGen).attr('fill','none').attr('stroke',r.color).attr('stroke-width',isMobile?8:11).attr('stroke-opacity',0.22).attr('vector-effect','non-scaling-stroke').style('cursor','pointer').on('click',function(){showHistoricalRouteDetail(r);});
                     var line = gHistoricalRoutes.append('path').datum({type:'LineString', coordinates:points}).attr('d',pathGen).attr('fill','none').attr('stroke',r.color).attr('stroke-width',isMobile?2.5:3).attr('stroke-dasharray','10,6').attr('vector-effect','non-scaling-stroke').style('pointer-events','none');
@@ -5878,6 +5895,15 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     hash.set(def.hashKey, def.getFlag() ? '1' : '0');
                 });
                 if (selectedBloc !== 'all') hash.set('bloc', selectedBloc);
+                if (currentSection === 'history') {
+                    hash.set('sec', 'history');
+                    if (historyTab === 'eras') {
+                        if (historyEraId) hash.set('era', historyEraId);
+                    } else {
+                        if (historyWarId) hash.set('war', historyWarId);
+                        if (historyScenarioId) hash.set('scen', historyScenarioId);
+                    }
+                }
                 hash.set('k', currentTransform.k.toFixed(2));
                 hash.set('x', currentTransform.x.toFixed(0));
                 hash.set('y', currentTransform.y.toFixed(0));
@@ -5885,6 +5911,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             }
             // Debounced version used during zoom to avoid 60 writes/sec
             const updateHashDebounced = debounce(updateHash, 300);
+            window.updateHash = updateHash;
 
             const VALID_MODES = ['religion', 'terrain', 'density', 'precipitation', 'temperature', 'gdp', 'hdi', 'normal'];
             const VALID_FILTERS = ['all', 'muslim', 'christian', 'hindu', 'buddhist', 'jewish', 'other'];
@@ -5921,6 +5948,26 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         if (blocOpt) {
                             selectedBloc = blocVal;
                             blocSelect.value = blocVal;
+                        }
+                    }
+                    if (hash.get('sec') === 'history') {
+                        var eraVal = hash.get('era');
+                        var warVal = hash.get('war');
+                        var scenVal = hash.get('scen');
+                        if (window.applySectionWhenReady) {
+                            window.applySectionWhenReady('history', function() {
+                                if (eraVal) {
+                                    historyTab = 'eras';
+                                    historyEraId = eraVal;
+                                } else if (warVal && historicalWarsData) {
+                                    historyTab = 'wars';
+                                    historyWarId = warVal;
+                                    var w = historicalWarsData.find(function(x) { return x.id === warVal; });
+                                    if (w) historyScenarioId = (scenVal && w.scenarios.some(function(x) { return x.id === scenVal; })) ? scenVal : w.scenarios[0].id;
+                                }
+                                if (window.renderHistoryBar) window.renderHistoryBar();
+                                if (window.drawHistoryScenario) window.drawHistoryScenario(true);
+                            });
                         }
                     }
                     if (hash.has('k') && hash.has('x') && hash.has('y')) {
@@ -7429,8 +7476,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 }
 
                 // ── History Mode (WWI & WWII alignment scenarios) ──
-                var histBarEl = document.getElementById('historyBar');
-                var histBtnEl = document.getElementById('historyModeBtn');
+                var histBtnEl = null;
 
                 function pickHistNote(o) { return o ? (o[lang] !== undefined && o[lang] !== null ? o[lang] : (o.en !== undefined ? o.en : '')) : ''; }
                 function histRoleKey(role) { return 'histRole' + role.charAt(0).toUpperCase() + role.slice(1); }
@@ -7536,11 +7582,10 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             if (skipFadeIn) s.attr('opacity', 0.45); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 0.45);
                         });
                     });
+               
+                    if (historicalRoutesVisible && window.drawHistoricalRoutes) window.drawHistoricalRoutes(true);
                 }
                 function renderHistoryBar() {
-                    if (!histBarEl) return;
-                    var titleEl = document.getElementById('historyBarTitle');
-                    if (titleEl) titleEl.textContent = t('historyBarTitle');
                     var war = getHistWar();
                     var tabs = document.getElementById('histWarTabs');
                     tabs.innerHTML = '';
@@ -7625,6 +7670,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     sp.innerHTML = '<h4>' + htmlEscape(t('histSourcesTitle')) + '</h4><ul>' +
                         war.sources.map(function(s) { return '<li>' + htmlEscape(s) + '</li>'; }).join('') +
                         '</ul>';
+                    if (historyActive && window.updateHash) window.updateHash();
                 }
                 function openHistoryPanel(f) {
                     if (historyTab === 'eras') { openEraPanelForFeature(f); return; }
@@ -7697,16 +7743,14 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         historyScenarioId = _cw.scenarios[0].id;
                     }
                     historyActive = true;
-                    if (histBtnEl) { histBtnEl.classList.add('toggle-on'); histBtnEl.setAttribute('aria-pressed', 'true'); }
-                    if (histBarEl) histBarEl.style.display = 'flex';
                     renderHistoryBar();
                     drawHistoryScenario();
                 }
                 function exitHistoryMode(restore) {
                     historyActive = false;
                     if (gHistoryOverlay) gHistoryOverlay.selectAll('*').remove();
-                    if (histBtnEl) { histBtnEl.classList.remove('toggle-on'); histBtnEl.setAttribute('aria-pressed', 'false'); }
-                    if (histBarEl) histBarEl.style.display = 'none';
+                    var sp2 = document.getElementById('histSourcesPanel');
+                    if (sp2) sp2.style.display = 'none';
                     if (selectedFeatureType === 'history' && countryPanel.classList.contains('visible')) closeCountryPanel();
                     if (restore !== false && historySavedState) {
                         var s = historySavedState;
@@ -7721,6 +7765,40 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     }
                     historySavedState = null;
                 }
+                function updateSectionToggleUI() {
+                    var isHist = currentSection === 'history';
+                    document.body.classList.toggle('section-history', isHist);
+                    document.body.classList.toggle('section-geo', !isHist);
+                    var g = document.getElementById('sectionGeoBtn');
+                    var h = document.getElementById('sectionHistoryBtn');
+                    if (g) { g.classList.toggle('active', !isHist); g.setAttribute('aria-pressed', !isHist ? 'true' : 'false'); }
+                    if (h) { h.classList.toggle('active', isHist); h.setAttribute('aria-pressed', isHist ? 'true' : 'false'); }
+                }
+                function applySection(section, persist) {
+                    if (section !== 'geo' && section !== 'history') return;
+                    if (quizActive && section === 'geo') return;
+                    if (section === currentSection) { updateSectionToggleUI(); return; }
+                    if (section === 'history') {
+                        enterHistoryMode();
+                        currentSection = 'history';
+                    } else {
+                        exitHistoryMode();
+                        currentSection = 'geo';
+                        if (historicalRoutesVisible && window.drawHistoricalRoutes) window.drawHistoricalRoutes(true);
+                    }
+                    if (persist !== false) { try { localStorage.setItem('lepidosSection', section); } catch (e) {} }
+                    updateSectionToggleUI();
+                    if (window.updateHash) window.updateHash();
+                }
+                window.applySection = applySection;
+                window.applySectionWhenReady = function(section, cb) {
+                    var tries = 0;
+                    (function wait() {
+                        if (window.applySection) { window.applySection(section, false); if (cb) cb(); return; }
+                        if (++tries > 150) return;
+                        setTimeout(wait, 60);
+                    })();
+                };
                 window.enterHistoryMode = enterHistoryMode;
                 window.exitHistoryMode = exitHistoryMode;
                 window.renderHistoryBar = renderHistoryBar;
@@ -7728,6 +7806,11 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 window.drawEraScene = drawEraScene;
                 window.openHistoryPanel = openHistoryPanel;
                 window.historyIsActive = function() { return historyActive; };
+                if (typeof zoomBehavior !== 'undefined' && zoomBehavior) {
+                    zoomBehavior.on('end.histzoom', function() {
+                        if (historyActive && window.drawHistoryScenario) window.drawHistoryScenario(true);
+                    });
+                }
                 window.historyModeIsEras = function() { return historyTab === 'eras'; };
 
                 function fetchHistoricalEras() {
@@ -7752,6 +7835,16 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         ring = out;
                     }
                     return ring;
+                }
+                function getCurrentHistoryYear() {
+                    if (historyTab === 'eras') {
+                        var e = getHistEra();
+                        return e ? e.sort : null;
+                    }
+                    var sc = getHistScenario();
+                    if (!sc) return null;
+                    var n = parseInt(sc.year, 10);
+                    return isNaN(n) ? null : n;
                 }
                 function buildEraFeature(p) {
                     var rings = (p.rings || []).map(function(ring) {
@@ -7792,6 +7885,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             .attr('paint-order', 'stroke').attr('stroke', 'rgba(0,0,0,0.75)').attr('stroke-width', 3);
                         if (skipFadeIn) lbl.attr('opacity', 0.95); else lbl.attr('opacity', 0).transition().duration(dur).attr('opacity', 0.95);
                     });
+                    if (historicalRoutesVisible && window.drawHistoricalRoutes) window.drawHistoricalRoutes(true);
                 }
                 function showEraPolityPanel(p, era) {
                     var panelContent = document.getElementById('panelContent');
@@ -7872,6 +7966,25 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     var tl = document.getElementById('histTimeline');
                     var era = getHistEra();
                     row.innerHTML = '';
+                    var regionSel = document.createElement('select');
+                    regionSel.className = 'history-region-select';
+                    regionSel.setAttribute('aria-label', t('regionAll'));
+                    var regionOpts = [{ v: 'all', k: 'regionAll' }, { v: 'me', k: 'regionME' }, { v: 'europe', k: 'regionEU' }, { v: 'asia', k: 'regionAS' }, { v: 'africa', k: 'regionAF' }, { v: 'americas', k: 'regionAM' }];
+                    var present = {};
+                    (historicalErasData || []).forEach(function(e) { present[e.region] = true; });
+                    regionOpts.forEach(function(o) {
+                        if (o.v !== 'all' && !present[o.v]) return;
+                        var op = document.createElement('option');
+                        op.value = o.v;
+                        op.textContent = t(o.k);
+                        if (o.v === historyRegionFilter) op.selected = true;
+                        regionSel.appendChild(op);
+                    });
+                    regionSel.addEventListener('change', function() {
+                        historyRegionFilter = this.value;
+                        renderEraTabContent();
+                    });
+                    row.appendChild(regionSel);
                     if (!era) {
                         row.innerHTML = '<span class="history-loading">' + htmlEscape(t('histEraLoading')) + '</span>';
                         leg.innerHTML = '';
@@ -7889,7 +8002,10 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         });
                         return;
                     }
-                    historicalErasData.forEach(function(e) {
+                    var filtered = historicalErasData.filter(function(e) {
+                        return historyRegionFilter === 'all' || e.region === historyRegionFilter || e.region === 'world';
+                    });
+                    filtered.forEach(function(e) {
                         var b = document.createElement('button');
                         b.type = 'button';
                         b.className = 'btn history-scenario-btn' + (e.id === historyEraId ? ' active' : '');
@@ -7906,7 +8022,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     var min = -600, max = 1650;
                     tl.style.display = 'block';
                     tl.innerHTML = '';
-                    historicalErasData.forEach(function(e) {
+                    filtered.forEach(function(e) {
                         var dot = document.createElement('button');
                         dot.type = 'button';
                         dot.className = 'history-tl-dot' + (e.id === historyEraId ? ' active' : '');
@@ -7934,6 +8050,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     });
                     sp.innerHTML = '<h4>' + htmlEscape(t('histSourcesTitle')) + '</h4><ul>' +
                         (era.sources || []).map(function(s) { return '<li>' + htmlEscape(s) + '</li>'; }).join('') + '</ul>';
+                    if (historyActive && window.updateHash) window.updateHash();
                 }
                 function selectHistoryTab(tab) {
                     historyTab = tab;
@@ -10030,19 +10147,24 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 updateActiveLayerCount();
             });
 
-            var histModeBtnEl = document.getElementById('historyModeBtn');
-            if (histModeBtnEl) {
-                histModeBtnEl.addEventListener('click', function() {
-                    if (quizActive) return;
-                    if (window.historyIsActive && window.historyIsActive()) window.exitHistoryMode();
-                    else window.enterHistoryMode();
+            var sectionGeoBtnEl = document.getElementById('sectionGeoBtn');
+            if (sectionGeoBtnEl) {
+                sectionGeoBtnEl.addEventListener('click', function() {
+                    if (window.applySection) window.applySection('geo');
                 });
             }
-            var histCloseBtnEl = document.getElementById('histCloseBtn');
-            if (histCloseBtnEl) {
-                histCloseBtnEl.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    if (window.historyIsActive && window.historyIsActive()) window.exitHistoryMode();
+            var sectionHistoryBtnEl = document.getElementById('sectionHistoryBtn');
+            if (sectionHistoryBtnEl) {
+                sectionHistoryBtnEl.addEventListener('click', function() {
+                    if (quizActive) return;
+                    if (window.applySection) window.applySection('history');
+                });
+            }
+            var histTerrainBtnEl = document.getElementById('histTerrainBtn');
+            if (histTerrainBtnEl) {
+                histTerrainBtnEl.addEventListener('click', function() {
+                    setMode(colorMode === 'terrain' ? 'normal' : 'terrain');
+                    this.classList.toggle('toggle-on', colorMode === 'terrain');
                 });
             }
             var histSourcesBtnEl = document.getElementById('histSourcesBtn');
@@ -10429,10 +10551,46 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 });
             }
 
+            // ── Section picker (first launch, after language) ──
+            window.applySectionWhenReady = applySectionWhenReady;
+            function applySectionWhenReady(section, cb) {
+                var tries = 0;
+                (function wait() {
+                    if (window.applySection) { window.applySection(section, false); if (cb) cb(); return; }
+                    if (++tries > 150) return;
+                    setTimeout(wait, 60);
+                })();
+            }
+            function maybeShowSectionPicker() {
+                var chosen = null;
+                try { chosen = localStorage.getItem('lepidosSection'); } catch (e) {}
+                if (chosen === 'geo' || chosen === 'history') {
+                    applySectionWhenReady(chosen, maybeShowProjectionExplainer);
+                    return;
+                }
+                var ov = document.getElementById('sectionPickerOverlay');
+                if (!ov) { maybeShowProjectionExplainer(); return; }
+                ov.style.display = 'flex';
+                var done = false;
+                function finish(section) {
+                    if (done) return;
+                    done = true;
+                    var remember = document.getElementById('sectionRemember');
+                    var persist = !remember || remember.checked;
+                    if (persist) { try { localStorage.setItem('lepidosSection', section); } catch (e) {} }
+                    try { localStorage.setItem('lepidosSectionChoice', '1'); } catch (e) {}
+                    ov.style.display = 'none';
+                    applySectionWhenReady(section, maybeShowProjectionExplainer);
+                }
+                ov.querySelectorAll('.section-card').forEach(function(card) {
+                    card.addEventListener('click', function() { finish(this.dataset.section); });
+                });
+            }
+
             // ── Language overlay ──
             (function() {
                 var overlay = document.getElementById('langOverlay');
-                if (!overlay) { init(); maybeShowProjectionExplainer(); return; }
+                if (!overlay) { init(); maybeShowSectionPicker(); return; }
                 // The startup/modal title is always the fixed English brand
                 // name, never localized or derived from map state.
                 var modalTitle = document.getElementById('langModalTitle');
@@ -10444,7 +10602,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 if (savedLang && ['ar','en','ru','uz','es'].includes(savedLang)) {
                     overlay.remove();
                     init();
-                    maybeShowProjectionExplainer();
+                    maybeShowSectionPicker();
                     return;
                 }
                 // Language overlay is showing → fresh start → clear onboard flag
@@ -10466,7 +10624,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         }
 
                         init();
-                        maybeShowProjectionExplainer();
+                        maybeShowSectionPicker();
                     });
                 });
 

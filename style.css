@@ -4903,10 +4903,17 @@ body.section-history .history-dock .history-war-tabs { flex-wrap: nowrap; overfl
     align-items: center;
     gap: 14px;
     width: 100%;
+    pointer-events: auto;
 }
+#historyContextRow .history-timeline { pointer-events: auto; }
 body.section-history #controlsBar { width: min(94vw, 900px); }
 body.section-history .dock-unified-wrap { flex: 1 1 auto; min-width: 0; }
 #historyEraGroup { max-width: 100%; }
 #historyEraGroup .history-war-tabs { flex-wrap: wrap; }
 
 #historyContextRow .history-timeline { flex: 1 1 auto; min-width: 160px; }
+#historyEraGroup .history-scenario-btn {
+    padding: 3px 10px;
+    font-size: 0.78rem;
+}
+#historyContextRow .history-timeline { height: 28px; }

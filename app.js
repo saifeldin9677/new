@@ -6886,7 +6886,18 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     });
 
                     // Expose for replay button
-                    window.startOnboarding = openTutorial;
+                    var baseOpenTutorial = openTutorial;
+                    window.startOnboarding = function() {
+                        if (typeof currentSection !== 'undefined' && currentSection === 'history' && historyTab !== 'eras') {
+                            historyTab = 'eras';
+                            if ((!historyEraId || !historicalErasData.some(function(x) { return x.id === historyEraId; })) && historicalErasData && historicalErasData.length) {
+                                historyEraId = historicalErasData[0].id;
+                            }
+                            renderHistoryBar();
+                            drawEraScene(true);
+                        }
+                        baseOpenTutorial();
+                    };
 
                     // Auto-show on first visit
                     var alreadyDone = false;
@@ -7569,7 +7580,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 var s = gHistoryOverlay.append('path').attr('d', pd).attr('fill', col)
                                     .attr('stroke', '#ffffff').attr('stroke-width', 1.2).attr('stroke-dasharray', '5,3')
                                     .attr('vector-effect', 'non-scaling-stroke').style('pointer-events', 'none');
-                                if (skipFadeIn) s.attr('opacity', 0.82); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 0.82);
+                                if (skipFadeIn) s.attr('opacity', 1); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 1);
                             }
                             try {
                                 var cen = d3.geoCentroid(f);
@@ -7603,7 +7614,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             var s = gHistoryOverlay.append('path').attr('d', pd).attr('fill', col)
                                 .attr('stroke', col).attr('stroke-width', isSoft ? 2.2 : 1.2)
                                 .attr('vector-effect', 'non-scaling-stroke').style('pointer-events', 'none');
-                            if (skipFadeIn) s.attr('opacity', 0.82); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 0.82);
+                            if (skipFadeIn) s.attr('opacity', 1); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 1);
                         });
                     });
                
@@ -7919,7 +7930,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 .attr('stroke', p.color).attr('stroke-width', 1.8).attr('stroke-dasharray', '7,4')
                                 .attr('vector-effect', 'non-scaling-stroke').style('cursor', 'pointer')
                                 .on('click', function() { showEraPolityPanel(p, era); });
-                            if (skipFadeIn) s.attr('opacity', 0.82); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 0.82);
+                            if (skipFadeIn) s.attr('opacity', 1); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 1);
                         }
                     });
                     era.polities.forEach(function(p) {
@@ -8013,6 +8024,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     row.innerHTML = '';
                     var regionSel = document.createElement('select');
                     regionSel.className = 'history-region-select';
+                    regionSel.id = 'histRegionFilter';
                     regionSel.setAttribute('aria-label', t('regionAll'));
                     var regionOpts = [{ v: 'all', k: 'regionAll' }, { v: 'me', k: 'regionME' }, { v: 'europe', k: 'regionEU' }, { v: 'asia', k: 'regionAS' }, { v: 'africa', k: 'regionAF' }, { v: 'americas', k: 'regionAM' }];
                     var present = {};
@@ -8030,6 +8042,8 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         renderEraTabContent();
                     });
                     regionSel.title = t('regionAll');
+                    var oldSel = document.getElementById('histRegionFilter');
+                    if (oldSel) oldSel.remove();
                     var eraGroupEl = document.getElementById('historyEraGroup');
                     if (eraGroupEl) eraGroupEl.insertBefore(regionSel, eraGroupEl.firstChild);
                     else row.appendChild(regionSel);
@@ -8088,6 +8102,38 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             drawEraScene();
                         });
                         tl.appendChild(dot);
+                    });
+                    tl.style.cursor = 'pointer';
+                    tl.style.touchAction = 'none';
+                    var tlDrag = false;
+                    function tlPick(clientX) {
+                        var rect = tl.getBoundingClientRect();
+                        var ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+                        var year = min + ratio * (max - min);
+                        var best = null, bestDist = Infinity;
+                        filtered.forEach(function(e) {
+                            var d2 = Math.abs((e.sort || 0) - year);
+                            if (d2 < bestDist) { bestDist = d2; best = e; }
+                        });
+                        if (best && best.id !== historyEraId) {
+                            historyEraId = best.id;
+                            drawEraScene(true);
+                            tl.querySelectorAll('.history-tl-dot').forEach(function(d2) {
+                                d2.classList.toggle('active', d2.title.indexOf(best.yearLabel) === 0);
+                            });
+                        }
+                    }
+                    tl.addEventListener('pointerdown', function(e) {
+                        tlDrag = true;
+                        try { tl.setPointerCapture(e.pointerId); } catch (err) {}
+                        tlPick(e.clientX);
+                    });
+                    tl.addEventListener('pointermove', function(e) { if (tlDrag) tlPick(e.clientX); });
+                    tl.addEventListener('pointerup', function() {
+                        if (!tlDrag) return;
+                        tlDrag = false;
+                        renderHistoryBar();
+                        if (selectedCountry && selectedFeatureType === 'history' && countryPanel.classList.contains('visible')) openHistoryPanel(selectedCountry);
                     });
                     var leg = document.getElementById('legend');
                     leg.innerHTML = '<div style="font-weight:700;margin-bottom:4px">' + htmlEscape(t('histLegendLabel')) + '</div>';

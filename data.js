@@ -666,6 +666,8 @@
                     histOnboard6Text: 'زر المصادر يعرض المراجع الأكاديمية، وزر التضاريس يظهر الجبال والسهول المؤثرة في تاريخ المنطقة.',
 
                     histTabEras: 'الحقب التاريخية',
+                    histSegWars: 'حروب',
+                    histSegEras: 'الحقب',
                     histEraApprox: 'حدود تقريبية ومبسّطة لأغراض التعليم والمقارنة — كانت الجبهات غالباً مناطق نفوذ لا خطوطاً.',
                     histEraLoading: 'جارٍ تحميل بيانات الحقب…',
                     histEraLoadError: 'تعذر تحميل بيانات الحقب',
@@ -1373,6 +1375,8 @@
                     histOnboard6Text: 'The Sources button lists the academic references; the Terrain button shows the mountains and plains that shaped history.',
 
                     histTabEras: 'Historical Eras',
+                    histSegWars: 'Wars',
+                    histSegEras: 'Eras',
                     histEraApprox: 'Approximate, simplified boundaries for teaching and comparison — frontiers were often zones of influence, not lines.',
                     histEraLoading: 'Loading era data…',
                     histEraLoadError: 'Failed to load era data',
@@ -2055,6 +2059,8 @@
                     histOnboard6Text: 'Кнопка «Источники» показывает академические ссылки; кнопка «Рельеф» — горы и равнины, повлиявшие на историю.',
 
                     histTabEras: 'Исторические эпохи',
+                    histSegWars: 'Войны',
+                    histSegEras: 'Эпохи',
                     histEraApprox: 'Приблизительные, упрощённые границы для обучения — фронтиры были зонами влияния, а не линиями.',
                     histEraLoading: 'Загрузка данных эпох…',
                     histEraLoadError: 'Не удалось загрузить данные эпох',
@@ -2737,6 +2743,8 @@
                     histOnboard6Text: 'Manbalar tugmasi akademik havolalarni, Relyef tugmasi tarixga ta’sir qilgan tog‘ va tekisliklarni ko‘rsatadi.',
 
                     histTabEras: 'Tarixiy davrlar',
+                    histSegWars: 'Urushlar',
+                    histSegEras: 'Davrlar',
                     histEraApprox: 'Ta’lim va qiyos uchun taxminiy, soddalashtirilgan chegaralar — chegara ko‘pincha ta’sir zonasi bo‘lgan.',
                     histEraLoading: 'Davr ma’lumotlari yuklanmoqda…',
                     histEraLoadError: 'Davr ma’lumotlarini yuklab bo‘lmadi',
@@ -3419,6 +3427,8 @@
                     histOnboard6Text: 'El botón de Fuentes muestra las referencias académicas; el de Relieve muestra las montañas y llanuras que moldearon la historia.',
 
                     histTabEras: 'Épocas históricas',
+                    histSegWars: 'Guerras',
+                    histSegEras: 'Épocas',
                     histEraApprox: 'Fronteras aproximadas y simplificadas con fines docentes — las fronteras eran a menudo zonas de influencia, no líneas.',
                     histEraLoading: 'Cargando datos de épocas…',
                     histEraLoadError: 'Error al cargar los datos de épocas',

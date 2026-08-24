@@ -7620,8 +7620,22 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                
                     if (historicalRoutesVisible && window.drawHistoricalRoutes) window.drawHistoricalRoutes(true);
                 }
+                function updateHistSubmodeVis() {
+                    var eras = historyTab === 'eras';
+                    var wt = document.getElementById('histWarTabs');
+                    var sb = document.getElementById('histScenarioBtns');
+                    var eg = document.getElementById('historyEraGroup');
+                    var mw = document.getElementById('histModeWarsBtn');
+                    var me = document.getElementById('histModeErasBtn');
+                    if (wt) wt.style.setProperty('display', eras ? 'none' : 'flex', 'important');
+                    if (sb) sb.style.setProperty('display', eras ? 'none' : 'flex', 'important');
+                    if (eg) eg.style.setProperty('display', eras ? 'flex' : 'none', 'important');
+                    if (mw) { mw.classList.toggle('active', !eras); mw.setAttribute('aria-selected', eras ? 'false' : 'true'); }
+                    if (me) { me.classList.toggle('active', eras); me.setAttribute('aria-selected', eras ? 'true' : 'false'); }
+                }
                 function renderHistoryBar() {
                     var war = getHistWar();
+                    updateHistSubmodeVis();
                     var tabs = document.getElementById('histWarTabs');
                     tabs.innerHTML = '';
                     historicalWarsData.forEach(function(w) {
@@ -7640,17 +7654,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         });
                         tabs.appendChild(b);
                     });
-                    var erasTab = document.createElement('button');
-                    erasTab.type = 'button';
-                    erasTab.className = 'btn history-war-tab history-eras-tab' + (historyTab === 'eras' ? ' active' : '');
-                    erasTab.setAttribute('role', 'tab');
-                    erasTab.setAttribute('aria-selected', historyTab === 'eras' ? 'true' : 'false');
-                    erasTab.textContent = t('histTabEras');
-                    erasTab.addEventListener('click', function() { selectHistoryTab('eras'); });
-                    tabs.appendChild(erasTab);
                     if (historyTab === 'eras') { renderEraTabContent(); return; }
-                    var tlWars = document.getElementById('histTimeline');
-                    if (tlWars) tlWars.style.display = 'none';
                     var row = document.getElementById('histScenarioBtns');
                     row.innerHTML = '';
                     war.scenarios.forEach(function(s) {
@@ -7810,7 +7814,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (h) { h.classList.toggle('active', isHist); h.setAttribute('aria-pressed', isHist ? 'true' : 'false'); }
                 }
                 var SECTION_GEO_ONLY = ['#modeButtons', '#sectionBaseMapLabel', '#quizBtn', '#compareProjectionsBtn', '#barDivisionBtn'];
-                var SECTION_HIST_ONLY = ['#sectionHistoryLabel', '#historyEraGroup', '#historyContextRow', '#histTerrainBtn', '#histSourcesBtn'];
+                var SECTION_HIST_ONLY = ['#sectionHistoryLabel', '#historyModeDock', '#histTerrainBtn', '#histSourcesBtn'];
                 function setSectionVis(el, visible) {
                     if (!el) return;
                     if (visible) el.style.setProperty('display', 'flex', 'important');
@@ -8017,11 +8021,17 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     requestAnimationFrame(function(){requestAnimationFrame(function(){countryPanel.classList.add('visible');});});
                 }
                 function renderEraTabContent() {
-                    var row = document.getElementById('histScenarioBtns');
                     var sp = document.getElementById('histSourcesPanel');
                     var tl = document.getElementById('histTimeline');
+                    var eraGroupEl = document.getElementById('historyEraGroup');
+                    if (!eraGroupEl) return;
+                    Array.prototype.slice.call(eraGroupEl.childNodes).forEach(function(n) {
+                        if (n === tl) return;
+                        eraGroupEl.removeChild(n);
+                    });
+                    var row = document.createElement('div');
+                    row.className = 'history-scenarios';
                     var era = getHistEra();
-                    row.innerHTML = '';
                     var regionSel = document.createElement('select');
                     regionSel.className = 'history-region-select';
                     regionSel.id = 'histRegionFilter';
@@ -8039,16 +8049,14 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     });
                     regionSel.addEventListener('change', function() {
                         historyRegionFilter = this.value;
-                        renderEraTabContent();
+                        renderHistoryBar();
+                        drawEraScene();
                     });
                     regionSel.title = t('regionAll');
-                    var oldSel = document.getElementById('histRegionFilter');
-                    if (oldSel) oldSel.remove();
-                    var eraGroupEl = document.getElementById('historyEraGroup');
-                    if (eraGroupEl) eraGroupEl.insertBefore(regionSel, eraGroupEl.firstChild);
-                    else row.appendChild(regionSel);
+                    eraGroupEl.insertBefore(regionSel, tl);
                     if (!era) {
                         row.innerHTML = '<span class="history-loading">' + htmlEscape(t('histEraLoading')) + '</span>';
+                        eraGroupEl.insertBefore(row, tl);
                         tl.style.display = 'none';
                         sp.innerHTML = '';
                         fetchHistoricalEras().then(function() {
@@ -8058,7 +8066,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             drawEraScene();
                         }).catch(function() {
                             if (historyTab !== 'eras') return;
-                            var r2 = document.getElementById('histScenarioBtns');
+                            var r2 = document.querySelector('#historyEraGroup .history-scenarios') || document.getElementById('historyEraGroup');
                             if (r2) r2.innerHTML = '<span class="history-loading">' + htmlEscape(t('histEraLoadError')) + '</span>';
                         });
                         return;
@@ -8086,6 +8094,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         });
                         row.appendChild(b);
                     });
+                    eraGroupEl.insertBefore(row, tl);
                     var min = -600, max = 1650;
                     tl.style.display = 'block';
                     tl.innerHTML = '';
@@ -8197,6 +8206,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     });
                 }
                 window.renderHistoryLegend = renderHistoryLegend;
+                window.selectHistoryTab = selectHistoryTab;
                 function selectHistoryTab(tab) {
                     historyTab = tab;
                     if (tab === 'eras') {
@@ -8210,7 +8220,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 renderHistoryBar();
                                 drawEraScene();
                             }).catch(function() {
-                                var row = document.getElementById('histScenarioBtns');
+                                var row = document.querySelector('#historyEraGroup .history-scenarios') || document.getElementById('historyEraGroup');
                                 if (row && historyTab === 'eras') row.innerHTML = '<span class="history-loading">' + htmlEscape(t('histEraLoadError')) + '</span>';
                             });
                             return;
@@ -10318,6 +10328,18 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     e.stopPropagation();
                     var sp = document.getElementById('histSourcesPanel');
                     if (sp) sp.style.display = sp.style.display === 'none' ? 'block' : 'none';
+                });
+            }
+            var histModeWarsBtnEl = document.getElementById('histModeWarsBtn');
+            if (histModeWarsBtnEl) {
+                histModeWarsBtnEl.addEventListener('click', function() {
+                    if (window.selectHistoryTab && historyTab !== 'wars') window.selectHistoryTab('wars');
+                });
+            }
+            var histModeErasBtnEl = document.getElementById('histModeErasBtn');
+            if (histModeErasBtnEl) {
+                histModeErasBtnEl.addEventListener('click', function() {
+                    if (window.selectHistoryTab && historyTab !== 'eras') window.selectHistoryTab('eras');
                 });
             }
 

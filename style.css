@@ -4880,16 +4880,65 @@ body.section-history .history-dock .history-war-tabs { flex-wrap: nowrap; overfl
     cursor: pointer;
 }
 
-/* ── In-place section swap: era controls occupy the geography button slots ── */
-#historyEraGroup {
+/* ── In-place section swap: history dock occupies the geography button slots ── */
+#historyModeDock {
     display: none;
     flex-direction: column;
     align-items: stretch;
     gap: 6px;
     flex: 1;
     min-width: 0;
+    max-width: 100%;
 }
-#historyEraGroup .history-war-tabs { justify-content: flex-start; }
+#historyModeDock .history-war-tabs { justify-content: flex-start; }
+#historyModeDock .history-war-tabs { flex-wrap: wrap; }
+
+/* Wars / Eras segmented switch — visually distinct from the chip lists below it */
+.history-mode-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+.history-mode-spacer { flex: 1 1 auto; }
+.history-mode-seg {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 999px;
+    padding: 2px;
+}
+.history-mode-seg-btn {
+    background: transparent;
+    border: none;
+    border-radius: 999px;
+    color: var(--text-secondary, #9aa5b1);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 3px 14px;
+    cursor: pointer;
+    transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.history-mode-seg-btn:hover {
+    color: var(--text, #e0e8f0);
+    background: var(--btn-hover, rgba(255,255,255,0.08));
+}
+.history-mode-seg-btn.active {
+    background: #0f766e;
+    color: #fff;
+}
+
+/* Eras sub-mode content lives entirely inside #historyEraGroup */
+#historyEraGroup {
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    width: 100%;
+    min-width: 0;
+}
 #historyEraGroup .history-scenarios {
     display: flex;
     flex-wrap: wrap;
@@ -4898,22 +4947,13 @@ body.section-history .history-dock .history-war-tabs { flex-wrap: nowrap; overfl
     width: 100%;
 }
 #historyEraGroup .history-scenario-btn { white-space: nowrap; }
-#historyContextRow {
-    display: none;
-    align-items: center;
-    gap: 14px;
-    width: 100%;
-    pointer-events: auto;
-}
-#historyContextRow .history-timeline { pointer-events: auto; }
+#historyEraGroup .history-timeline { pointer-events: auto; }
 body.section-history #controlsBar { width: min(94vw, 900px); }
 body.section-history .dock-unified-wrap { flex: 1 1 auto; min-width: 0; }
-#historyEraGroup { max-width: 100%; }
-#historyEraGroup .history-war-tabs { flex-wrap: wrap; }
 
-#historyContextRow .history-timeline { flex: 1 1 auto; min-width: 160px; }
+#historyEraGroup .history-timeline { flex: 1 1 auto; min-width: 160px; }
 #historyEraGroup .history-scenario-btn {
     padding: 3px 10px;
     font-size: 0.78rem;
 }
-#historyContextRow .history-timeline { height: 28px; }
+#historyEraGroup .history-timeline { height: 28px; }

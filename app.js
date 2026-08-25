@@ -323,6 +323,8 @@
             let historyEraId = null;
             let currentSection = 'geo';
             let historyRegionFilter = 'all';
+            let historyReligionFilter = 'all';
+            let historySearchText = '';
             let measureActive = false;
             let measurePoints = [];
             let gMeasure = null;
@@ -4084,9 +4086,29 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 const tzLabel = timezoneOffsets[name] || timezoneOffsets[cleanName];
                 if (tzLabel) html += `<p><strong>🕐 ${t('timezone')}:</strong> ${tzLabel}</p>`;
 
+                if (!window.historyIsActive || !window.historyIsActive()) {
+                    const relatedWars = window.warsForCountry ? window.warsForCountry(name) : [];
+                    if (relatedWars.length) {
+                        html += `<div class="panel-related-wars"><h4>⚔️ ${t('histRelatedWars')}</h4>`;
+                        relatedWars.forEach(w => {
+                            html += `<button class="btn panel-related-war-btn" data-hist-war-id="${w.id}" type="button">📜 ${t('histSegWars')}: ${w.name} (${w.years})</button>`;
+                        });
+                        html += `</div>`;
+                    }
+                }
+
                 html += `<br><button class="btn" id="compareBtn" title="${t('compareWith')}">📊 ${t('compareTitle')}</button>`;
                 panelContent.innerHTML = html;
                 countryPanel.style.display = 'block';
+
+                panelContent.querySelectorAll('[data-hist-war-id]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const wid = btn.getAttribute('data-hist-war-id');
+                        closeCountryPanel();
+                        if (window.applySection) window.applySection('history');
+                        if (window.focusHistoryWar) window.focusHistoryWar(wid);
+                    });
+                });
 
                 document.getElementById('compareBtn')?.addEventListener('click', () => {
                     const existing = panelContent.querySelector('.compare-search-container');
@@ -7620,6 +7642,102 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                
                     if (historicalRoutesVisible && window.drawHistoricalRoutes) window.drawHistoricalRoutes(true);
                 }
+                function histNormSearch(s) {
+                    return (s || '').toLowerCase()
+                        .replace(/[\u064B-\u0652\u0670\u0640]/g, '')
+                        .replace(/[أإآ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه')
+                        .replace(/\s+/g, ' ').trim();
+                }
+                function histFuzzyMatch(haystack, needle) {
+                    var hay = histNormSearch(haystack), nd = histNormSearch(needle);
+                    if (!nd) return true;
+                    if (!hay) return false;
+                    if (hay.indexOf(nd) !== -1) return true;
+                    var i = 0;
+                    for (var j = 0; j < hay.length && i < nd.length; j++) {
+                        if (hay[j] === nd[i]) i++;
+                    }
+                    return i === nd.length;
+                }
+                function histClassifyRegion(c) {
+                    if (!c || isNaN(c[0]) || isNaN(c[1])) return null;
+                    var lon = c[0], lat = c[1];
+                    if (lon < -25) return 'americas';
+                    if (lon >= 34 && lon <= 63 && lat >= 12 && lat <= 42) return 'me';
+                    if (lat >= 36 && lon <= 45) return 'europe';
+                    if (lat > -40 && lat < 36 && lon >= -20 && lon <= 52) return 'africa';
+                    return 'asia';
+                }
+                function histFeatureCentroid(name) {
+                    var f = null;
+                    for (var i = 0; i < allCountryFeatures.length; i++) {
+                        var nm = allCountryFeatures[i].properties && allCountryFeatures[i].properties.name;
+                        if (nm === name || getCleanName(nm) === name) { f = allCountryFeatures[i]; break; }
+                    }
+                    if (!f) return null;
+                    try { var c = d3.geoCentroid(f); return isNaN(c[0]) ? null : c; } catch (e) { return null; }
+                }
+                var _histWarMetaCache = {};
+                function histWarMeta(w) {
+                    if (_histWarMetaCache[w.id]) return _histWarMetaCache[w.id];
+                    var regions = {}, religions = {};
+                    function note(name) {
+                        if (!name) return;
+                        var rel = getReligion(name);
+                        if (rel && rel !== 'unknown') religions[rel] = true;
+                        var reg = histClassifyRegion(histFeatureCentroid(getCleanName(name)));
+                        if (reg) regions[reg] = true;
+                    }
+                    w.scenarios.forEach(function(sc) {
+                        (sc.participants || []).forEach(function(p) { note(p.c); });
+                        (sc.empires || []).forEach(function(emp) { (emp.members || []).forEach(note); });
+                    });
+                    var regionList = Object.keys(regions);
+                    var meta = {
+                        regions: regionList.length >= 3 ? ['world'] : regionList,
+                        religions: religions
+                    };
+                    _histWarMetaCache[w.id] = meta;
+                    return meta;
+                }
+                var _histEraReligionCache = {};
+                function histEraReligions(e) {
+                    if (_histEraReligionCache[e.id]) return _histEraReligionCache[e.id];
+                    var religions = {};
+                    e.polities.forEach(function(p) {
+                        (p.rings || []).slice(0, 3).forEach(function(ring) {
+                            try {
+                                var c = d3.geoCentroid({ type: 'Polygon', coordinates: [normalizeEraRing(ring)] });
+                                if (!c || isNaN(c[0])) return;
+                                for (var i = 0; i < allCountryFeatures.length; i++) {
+                                    try {
+                                        if (d3.geoContains(allCountryFeatures[i], c)) {
+                                            var nm = allCountryFeatures[i].properties && allCountryFeatures[i].properties.name;
+                                            var rel = getReligion(nm);
+                                            if (rel && rel !== 'unknown') religions[rel] = true;
+                                            break;
+                                        }
+                                    } catch (err) {}
+                                }
+                            } catch (err) {}
+                        });
+                    });
+                    _histEraReligionCache[e.id] = religions;
+                    return religions;
+                }
+                function warPassesFilters(w) {
+                    var meta = histWarMeta(w);
+                    if (historyRegionFilter !== 'all' && meta.regions.indexOf(historyRegionFilter) === -1 && meta.regions.indexOf('world') === -1) return false;
+                    if (historyReligionFilter !== 'all' && !meta.religions[historyReligionFilter]) return false;
+                    if (historySearchText && !histFuzzyMatch(locField(w, 'name') + ' ' + locField(w, 'years'), historySearchText)) return false;
+                    return true;
+                }
+                function eraPassesFilters(e) {
+                    if (historyRegionFilter !== 'all' && e.region !== historyRegionFilter && e.region !== 'world') return false;
+                    if (historyReligionFilter !== 'all' && !histEraReligions(e)[historyReligionFilter]) return false;
+                    if (historySearchText && !histFuzzyMatch((e.yearLabel || '') + ' ' + locField(e, 'title'), historySearchText)) return false;
+                    return true;
+                }
                 function updateHistSubmodeVis() {
                     var eras = historyTab === 'eras';
                     var wt = document.getElementById('histWarTabs');
@@ -7638,7 +7756,27 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     updateHistSubmodeVis();
                     var tabs = document.getElementById('histWarTabs');
                     tabs.innerHTML = '';
-                    historicalWarsData.forEach(function(w) {
+                    var visibleWars = historicalWarsData.filter(warPassesFilters);
+                    if (historyTab === 'wars') {
+                        if (!visibleWars.length) {
+                            tabs.innerHTML = '<span class="history-loading">' + htmlEscape(t('histNoResults')) + '</span>';
+                            var emptyRow = document.getElementById('histScenarioBtns');
+                            if (emptyRow) { emptyRow.innerHTML = ''; emptyRow.style.setProperty('display', 'none', 'important'); }
+                            if (gHistoryOverlay) gHistoryOverlay.selectAll('*').remove();
+                            var legEmptyW = document.getElementById('legend');
+                            if (legEmptyW && historyActive) legEmptyW.innerHTML = '';
+                            if (historyActive && window.updateHash) window.updateHash();
+                            return;
+                        }
+                        if (!visibleWars.some(function(w) { return w.id === historyWarId; })) {
+                            war = visibleWars[0];
+                            historyWarId = war.id;
+                            historyScenarioId = war.scenarios[0].id;
+                        } else {
+                            war = getHistWar();
+                        }
+                    }
+                    visibleWars.forEach(function(w) {
                         var b = document.createElement('button');
                         b.type = 'button';
                         b.className = 'btn history-war-tab' + (historyTab === 'wars' && w.id === historyWarId ? ' active' : '');
@@ -7959,6 +8097,16 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     html += '<p class="hist-panel-context"><strong>' + htmlEscape(locField(era, 'title')) + '</strong> — ' + htmlEscape(era.yearLabel || '') + '</p>';
                     var desc = locField(era, 'desc');
                     if (desc) html += '<p class="hist-note">' + htmlEscape(desc) + '</p>';
+                    var drows = '';
+                    if (p.foundingYear || p.founder) {
+                        var fv = [p.foundingYear, p.founder].filter(Boolean).join(' · ');
+                        drows += '<div class="hist-detail-row"><dt>' + htmlEscape(t(p.foundingYear ? 'histFoundedLabel' : 'histFounderLabel')) + '</dt><dd>' + htmlEscape(fv) + '</dd></div>';
+                    }
+                    if (p.capital) drows += '<div class="hist-detail-row"><dt>' + htmlEscape(t('histCapitalLabel')) + '</dt><dd>' + htmlEscape('' + p.capital) + '</dd></div>';
+                    if (p.religion) drows += '<div class="hist-detail-row"><dt>' + htmlEscape(t('histReligionLabel')) + '</dt><dd>' + htmlEscape('' + p.religion) + '</dd></div>';
+                    if (p.language) drows += '<div class="hist-detail-row"><dt>' + htmlEscape(t('histLanguageLabel')) + '</dt><dd>' + htmlEscape('' + p.language) + '</dd></div>';
+                    if (p.endYear) drows += '<div class="hist-detail-row"><dt>' + htmlEscape(t('histEndedLabel')) + '</dt><dd>' + htmlEscape('' + p.endYear) + '</dd></div>';
+                    if (drows) html += '<dl class="hist-entity-details">' + drows + '</dl>';
                     html += '<p class="hist-note"><em>' + htmlEscape(t('histEraApprox')) + '</em></p>';
                     html += '<details class="hist-sources-mini"><summary>' + htmlEscape(t('histSourcesBtn')) + '</summary><ul>' +
                         (era.sources || []).map(function(s) { return '<li>' + htmlEscape(s) + '</li>'; }).join('') + '</ul></details>';
@@ -8032,28 +8180,6 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     var row = document.createElement('div');
                     row.className = 'history-scenarios';
                     var era = getHistEra();
-                    var regionSel = document.createElement('select');
-                    regionSel.className = 'history-region-select';
-                    regionSel.id = 'histRegionFilter';
-                    regionSel.setAttribute('aria-label', t('regionAll'));
-                    var regionOpts = [{ v: 'all', k: 'regionAll' }, { v: 'me', k: 'regionME' }, { v: 'europe', k: 'regionEU' }, { v: 'asia', k: 'regionAS' }, { v: 'africa', k: 'regionAF' }, { v: 'americas', k: 'regionAM' }];
-                    var present = {};
-                    (historicalErasData || []).forEach(function(e) { present[e.region] = true; });
-                    regionOpts.forEach(function(o) {
-                        if (o.v !== 'all' && !present[o.v]) return;
-                        var op = document.createElement('option');
-                        op.value = o.v;
-                        op.textContent = t(o.k);
-                        if (o.v === historyRegionFilter) op.selected = true;
-                        regionSel.appendChild(op);
-                    });
-                    regionSel.addEventListener('change', function() {
-                        historyRegionFilter = this.value;
-                        renderHistoryBar();
-                        drawEraScene();
-                    });
-                    regionSel.title = t('regionAll');
-                    eraGroupEl.insertBefore(regionSel, tl);
                     if (!era) {
                         row.innerHTML = '<span class="history-loading">' + htmlEscape(t('histEraLoading')) + '</span>';
                         eraGroupEl.insertBefore(row, tl);
@@ -8071,10 +8197,18 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         });
                         return;
                     }
-                    var filtered = historicalErasData.filter(function(e) {
-                        return historyRegionFilter === 'all' || e.region === historyRegionFilter || e.region === 'world';
-                    });
+                    var filtered = historicalErasData.filter(eraPassesFilters);
                     filtered.sort(function(a, b) { return (a.sort || 0) - (b.sort || 0); });
+                    if (!filtered.length) {
+                        row.innerHTML = '<span class="history-loading">' + htmlEscape(t('histNoResults')) + '</span>';
+                        eraGroupEl.insertBefore(row, tl);
+                        tl.style.display = 'none';
+                        sp.innerHTML = '';
+                        if (gHistoryOverlay) gHistoryOverlay.selectAll('*').remove();
+                        var legEmpty = document.getElementById('legend');
+                        if (legEmpty && historyActive) legEmpty.innerHTML = '';
+                        return;
+                    }
                     var curIn = filtered.some(function(e) { return e.id === historyEraId; });
                     if (!curIn && filtered.length) {
                         historyEraId = filtered[0].id;
@@ -8207,6 +8341,28 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 }
                 window.renderHistoryLegend = renderHistoryLegend;
                 window.selectHistoryTab = selectHistoryTab;
+                window.warsForCountry = function(name) {
+                    var cn = getCleanName(name || '');
+                    if (!cn) return [];
+                    return historicalWarsData.filter(function(w) {
+                        return w.scenarios.some(function(sc) { return !!findHistParticipant(sc, cn); });
+                    }).map(function(w) {
+                        return { id: w.id, name: locField(w, 'name'), years: locField(w, 'years') };
+                    });
+                };
+                window.focusHistoryWar = function(warId) {
+                    var w = null;
+                    for (var i = 0; i < historicalWarsData.length; i++) {
+                        if (historicalWarsData[i].id === warId) { w = historicalWarsData[i]; break; }
+                    }
+                    if (!w) return false;
+                    historyTab = 'wars';
+                    historyWarId = w.id;
+                    historyScenarioId = w.scenarios[0].id;
+                    renderHistoryBar();
+                    drawHistoryScenario();
+                    return true;
+                };
                 function selectHistoryTab(tab) {
                     historyTab = tab;
                     if (tab === 'eras') {
@@ -10340,6 +10496,57 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             if (histModeErasBtnEl) {
                 histModeErasBtnEl.addEventListener('click', function() {
                     if (window.selectHistoryTab && historyTab !== 'eras') window.selectHistoryTab('eras');
+                });
+            }
+            function refreshHistoryAfterFilterChange() {
+                if (!historyActive) return;
+                if (window.renderHistoryBar) window.renderHistoryBar();
+                if (historyTab === 'eras') {
+                    if (window.drawEraScene) window.drawEraScene();
+                } else if (window.drawHistoryScenario) {
+                    window.drawHistoryScenario();
+                }
+            }
+            var histFilterRegionSel = document.getElementById('histFilterRegion');
+            if (histFilterRegionSel && !histFilterRegionSel.options.length) {
+                [{ v: 'all', k: 'regionAll' }, { v: 'me', k: 'regionME' }, { v: 'europe', k: 'regionEU' }, { v: 'asia', k: 'regionAS' }, { v: 'africa', k: 'regionAF' }, { v: 'americas', k: 'regionAM' }].forEach(function(o) {
+                    var op = document.createElement('option');
+                    op.value = o.v;
+                    op.textContent = t(o.k);
+                    op.setAttribute('data-i18n', o.k);
+                    if (o.v === historyRegionFilter) op.selected = true;
+                    histFilterRegionSel.appendChild(op);
+                });
+                histFilterRegionSel.addEventListener('change', function() {
+                    historyRegionFilter = this.value;
+                    refreshHistoryAfterFilterChange();
+                });
+            }
+            var histFilterReligionSel = document.getElementById('histFilterReligion');
+            if (histFilterReligionSel && !histFilterReligionSel.options.length) {
+                [{ v: 'all', k: 'religion_all' }, { v: 'muslim', k: 'religion_muslim' }, { v: 'christian', k: 'religion_christian' }, { v: 'hindu', k: 'religion_hindu' }, { v: 'buddhist', k: 'religion_buddhist' }, { v: 'jewish', k: 'religion_jewish' }, { v: 'other', k: 'religion_other' }].forEach(function(o) {
+                    var op = document.createElement('option');
+                    op.value = o.v;
+                    op.textContent = t(o.k);
+                    op.setAttribute('data-i18n', o.k);
+                    if (o.v === historyReligionFilter) op.selected = true;
+                    histFilterReligionSel.appendChild(op);
+                });
+                histFilterReligionSel.addEventListener('change', function() {
+                    historyReligionFilter = this.value;
+                    refreshHistoryAfterFilterChange();
+                });
+            }
+            var histSearchInputEl = document.getElementById('histSearchInput');
+            if (histSearchInputEl) {
+                var histSearchDebounce = null;
+                histSearchInputEl.addEventListener('input', function() {
+                    var v = this.value;
+                    clearTimeout(histSearchDebounce);
+                    histSearchDebounce = setTimeout(function() {
+                        historySearchText = v.trim();
+                        refreshHistoryAfterFilterChange();
+                    }, 200);
                 });
             }
 

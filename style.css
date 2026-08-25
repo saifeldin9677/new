@@ -4904,20 +4904,21 @@ body.section-history .history-dock .history-war-tabs { flex-wrap: nowrap; overfl
 .history-mode-seg {
     display: inline-flex;
     align-items: center;
-    gap: 2px;
+    gap: 3px;
     background: rgba(255,255,255,0.06);
     border: 1px solid rgba(255,255,255,0.16);
     border-radius: 999px;
-    padding: 2px;
+    padding: 3px;
 }
 .history-mode-seg-btn {
     background: transparent;
     border: none;
     border-radius: 999px;
     color: var(--text-secondary, #9aa5b1);
-    font-size: 0.78rem;
-    font-weight: 600;
-    padding: 3px 14px;
+    font-size: 0.82em;
+    font-weight: 700;
+    min-height: 32px;
+    padding: 6px 18px;
     cursor: pointer;
     transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
 }
@@ -4929,6 +4930,65 @@ body.section-history .history-dock .history-war-tabs { flex-wrap: nowrap; overfl
     background: #0f766e;
     color: #fff;
 }
+
+/* Shared Wars/Eras filter row: search + region + religion */
+.history-filter-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+.history-search-input {
+    flex: 1 1 130px;
+    min-width: 110px;
+    background: var(--panel-bg, #21252b);
+    color: var(--text, #e0e8f0);
+    border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 999px;
+    padding: 3px 12px;
+    font-size: 0.78rem;
+    height: 28px;
+}
+.history-search-input:focus {
+    outline: none;
+    border-color: var(--brand-accent, #14B8A6);
+}
+
+/* Related-wars section in the geography country panel */
+.panel-related-wars {
+    margin-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 8px;
+}
+.panel-related-wars h4 {
+    margin: 0 0 6px;
+    font-size: 0.85rem;
+    color: var(--brand-accent, #14B8A6);
+}
+.panel-related-war-btn {
+    display: block;
+    width: 100%;
+    text-align: start;
+    margin-bottom: 5px;
+}
+
+/* Era entity optional detail fields (rendered only when data present) */
+.hist-entity-details {
+    margin: 8px 0;
+    padding: 6px 10px;
+    border-inline-start: 3px solid var(--brand-accent, #14B8A6);
+    background: rgba(255,255,255,0.04);
+    border-radius: 6px;
+}
+.hist-entity-details .hist-detail-row {
+    display: flex;
+    gap: 8px;
+    font-size: 0.86em;
+    padding: 2px 0;
+}
+.hist-entity-details dt { color: var(--text-secondary, #9aa5b1); white-space: nowrap; }
+.hist-entity-details dd { margin: 0; color: var(--text, #e0e8f0); }
 
 /* Eras sub-mode content lives entirely inside #historyEraGroup */
 #historyEraGroup {

@@ -616,9 +616,9 @@
                 if (religionByCountry[name]) return religionByCountry[name];
                 const clean = getCleanName(name);
                 if (religionByCountry[clean]) return religionByCountry[clean];
+                const cn = canonicalName(name);
                 for (let [k, v] of Object.entries(religionByCountry))
-                    if (clean.toLowerCase().includes(k.toLowerCase()) || k.toLowerCase().includes(clean.toLowerCase()))
-                        return v;
+                    if (canonicalName(k) === cn) return v;
                 return 'unknown';
             }
 
@@ -627,9 +627,9 @@
                 if (denominationByCountry[name]) return denominationByCountry[name];
                 const clean = getCleanName(name);
                 if (denominationByCountry[clean]) return denominationByCountry[clean];
+                const cn = canonicalName(name);
                 for (let [k, v] of Object.entries(denominationByCountry))
-                    if (clean.toLowerCase().includes(k.toLowerCase()) || k.toLowerCase().includes(clean.toLowerCase()))
-                        return v;
+                    if (canonicalName(k) === cn) return v;
                 return getReligion(name);
             }
 
@@ -3016,7 +3016,7 @@
                     try { redrawAnnotations(); if (annotateKind === 'region' && annotatePoints && annotatePoints.length > 0) redrawAnnotationDrawing(); } catch (e) {}
                 }
                 updateLegend();
-                if (selectedCountry && countryPanel.style.display === 'block' && !compareCountry) renderCountryPanel(
+                if (selectedCountry && countryPanel.style.display === 'block' && !compareCountry) highlightSelectedCountry(
                     selectedCountry);
                 if (selectedFeature && countryPanel.style.display === 'block' && !selectedCountry && !compareCountry) {
                     showFeatureDetail(selectedFeatureType, selectedFeature);
@@ -3438,6 +3438,7 @@
             }
 
             function toggleGlobeMode() {
+                if (window.historyIsActive && window.historyIsActive()) return;
                 resetLayersAndModes();
                 _adminBakeDirty = true;
                 globeModeActive = !globeModeActive;
@@ -3496,7 +3497,9 @@
                     var lbl = document.getElementById('headerProjectionLabel');
                     if (lbl) { lbl.setAttribute('data-i18n', 'headerProjectionType'); lbl.textContent = t('headerProjectionType'); }
                     svg.on('.drag', null);
-                    if (zoomBehavior) svg.call(zoomBehavior);
+                    if (zoomBehavior) {
+                        svg.call(zoomBehavior);
+                    }
                     var dims = getContainerDimensions();
                     projection = setupProjection(dims.width, dims.height);
                     rebuildPathGen();
@@ -4621,10 +4624,19 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 function handleCountryActivate(e, d) {
                     if (measureActive) return;
                     if (annotateActive) return;
-                    if (window.historyIsActive && window.historyIsActive()) { window.openHistoryPanel(d); return; }
+                    if (window.historyIsActive && window.historyIsActive()) {
+                        if (selectedCountry === d) {
+                            closeCountryPanel();
+                        } else {
+                            window.openHistoryPanel(d);
+                        }
+                        return;
+                    }
                     if (e.shiftKey && selectedCountry) {
                         compareCountry = d;
                         renderComparePanel(selectedCountry, compareCountry);
+                    } else if (selectedCountry === d) {
+                        closeCountryPanel();
                     } else {
                         selectedCountry = d;
                         compareCountry = null;
@@ -7928,7 +7940,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (gHistoryOverlay) gHistoryOverlay.selectAll('*').remove();
                     var sp2 = document.getElementById('histSourcesPanel');
                     if (sp2) sp2.style.display = 'none';
-                    if (selectedFeatureType === 'history' && countryPanel.classList.contains('visible')) closeCountryPanel();
+                    if (selectedFeatureType === 'history' && (countryPanel.classList.contains('visible') || countryPanel.style.display === 'block')) closeCountryPanel();
                     if (restore !== false && historySavedState) {
                         var s = historySavedState;
                         Object.keys(LAYER_DEFS).forEach(function(nm) {
@@ -10430,7 +10442,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             if (adminBoundariesToggle) adminBoundariesToggle.addEventListener('click', toggleAdminBoundaries);
             if (globeViewBtn) globeViewBtn.addEventListener('click', function() {
                 if (quizActive) return;
-                if (window.historyIsActive && window.historyIsActive()) { window.exitHistoryMode(); }
+                if (window.historyIsActive && window.historyIsActive()) return;
                 toggleGlobeMode();
             });
 

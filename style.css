@@ -4747,6 +4747,16 @@ html[dir="rtl"] .hist-status-block { text-align: right; }
     box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.45);
 }
 .history-loading { font-size: 0.82rem; opacity: 0.8; }
+.history-empty-state {
+    margin-top: 10px;
+    padding: 18px 14px;
+    border: 1px dashed var(--border-color, #4a5568);
+    border-radius: 10px;
+    color: var(--text-color, #d1d5db);
+    font-size: 0.9rem;
+    text-align: center;
+    opacity: 0.9;
+}
 
 /* ── Section system: header toggle + first-run picker ── */
 .section-toggle {

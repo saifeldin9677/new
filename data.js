@@ -634,6 +634,8 @@
                     histStatusLabel: 'الحالة',
                     histWarLabel: 'الحرب',
                     histNoData: 'لا تتوفر بيانات عن هذا البلد في المحطة الزمنية المختارة.',
+                    histNoDataForPeriod: 'لا توجد بيانات تاريخية مسجلة عن {country} حول {year} — لا يعني هذا بالضرورة عدم حدوث أي شيء هنا، بل أنه ليس جزءًا من مجموعة البيانات الحالية.',
+                    histSelectToBegin: 'اختر حربًا أو حقبة لبدء العرض',
 
                     sectionGeo: 'الجغرافيا',
                     sectionHistory: 'التاريخ',
@@ -1328,6 +1330,8 @@
                     histStatusLabel: 'Status',
                     histWarLabel: 'War',
                     histNoData: 'No data for this country at the selected time point.',
+                    histNoDataForPeriod: 'No historical data recorded for {country} around {year} — this doesn\'t necessarily mean nothing happened here, just that it isn\'t part of the current dataset.',
+                    histSelectToBegin: 'Select a war or era to begin',
 
                     sectionGeo: 'Geography',
                     sectionHistory: 'History',
@@ -2045,6 +2049,8 @@
                     histStatusLabel: 'Статус',
                     histWarLabel: 'Война',
                     histNoData: 'Нет данных по этой стране для выбранной временной точки.',
+                    histNoDataForPeriod: 'Нет исторических данных о {country} около {year} — это не обязательно означает, что здесь ничего не происходило, просто эти данные отсутствуют в текущем наборе.',
+                    histSelectToBegin: 'Выберите войну или эпоху, чтобы начать',
 
                     sectionGeo: 'География',
                     sectionHistory: 'История',
@@ -2738,6 +2744,8 @@
                     histStatusLabel: 'Maqom',
                     histWarLabel: 'Urush',
                     histNoData: 'Tanlangan vaqt nuqtasi uchun bu mamlakat ma’lumotlari yo‘q.',
+                    histNoDataForPeriod: '{country} haqida {year} atrofida tarixiy ma’lumot yo‘q — bu yerda hech narsa bo‘lmagan degani emas, shunchaki bu joriy to‘plamga kirmaydi.',
+                    histSelectToBegin: 'Boshlash uchun urush yoki davrni tanlang',
 
                     sectionGeo: 'Geografiya',
                     sectionHistory: 'Tarix',
@@ -3431,6 +3439,8 @@
                     histStatusLabel: 'Situación',
                     histWarLabel: 'Guerra',
                     histNoData: 'No hay datos de este país en el punto temporal seleccionado.',
+                    histNoDataForPeriod: 'No hay datos históricos registrados sobre {country} alrededor de {year} — esto no significa necesariamente que no ocurriera nada aquí, solo que no forma parte del conjunto de datos actual.',
+                    histSelectToBegin: 'Selecciona una guerra o una época para comenzar',
 
                     sectionGeo: 'Geografía',
                     sectionHistory: 'Historia',

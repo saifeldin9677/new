@@ -4890,7 +4890,7 @@ body.section-history .history-dock .history-war-tabs { flex-wrap: nowrap; overfl
     cursor: pointer;
 }
 
-/* ── In-place section swap: history dock occupies the geography button slots ── */
+/* In-place section swap: history dock occupies the geography button slots */
 #historyModeDock {
     display: none;
     flex-direction: column;
@@ -4902,6 +4902,19 @@ body.section-history .history-dock .history-war-tabs { flex-wrap: nowrap; overfl
 }
 #historyModeDock .history-war-tabs { justify-content: flex-start; }
 #historyModeDock .history-war-tabs { flex-wrap: wrap; }
+
+/* The History dock section label (#sectionHistoryLabel) is a control-label in
+   the shared #modeRow. With #modeRow centered (justify-content:center +
+   align-items:center) and only this label + the tall dock visible, the label
+   used to float at the far edge, vertically centered against the whole dock —
+   reading as a stray pill. Top-align it so it reads as a section tag aligned
+   with the dock header instead of floating mid-height. */
+body.section-history #modeRow {
+    align-items: flex-start;
+}
+body.section-history #sectionHistoryLabel {
+    padding-top: 8px;
+}
 
 /* Wars / Eras segmented switch — visually distinct from the chip lists below it */
 .history-mode-row {
@@ -4940,6 +4953,63 @@ body.section-history .history-dock .history-war-tabs { flex-wrap: nowrap; overfl
     background: #0f766e;
     color: #fff;
 }
+
+/* Collapse / expand control for the history browsing panel. Styled as a small
+   icon button in the header row; rotates its caret to signal state. */
+.history-collapse-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-secondary, #9aa5b1);
+    cursor: pointer;
+    flex: 0 0 auto;
+    transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+.history-collapse-btn:hover,
+.history-collapse-btn:focus-visible {
+    color: var(--text, #e0e8f0);
+    background: var(--btn-hover, rgba(255,255,255,0.08));
+    outline: none;
+}
+.history-collapse-icon {
+    transition: transform var(--dur-fast) var(--ease);
+}
+/* Collapsed: carets point toward "expand" (down when the panel is closed in
+   a top-rendered bar). */
+.history-collapse-btn[aria-expanded="false"] .history-collapse-icon {
+    transform: rotate(180deg);
+}
+/* Indicator shown only while collapsed (name of the currently selected
+   war/era, if any). */
+.history-collapsed-indicator {
+    display: none;
+    font-size: 0.8em;
+    font-weight: 600;
+    color: var(--text-secondary, #9aa5b1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+/* Collapsed state: keep only the header slider row, which retains the
+   collapse toggle and (optionally) the selected-item indicator. */
+body.section-history #historyModeDock.collapsed .history-mode-row > *:not(.history-collapse-btn):not(.history-collapsed-indicator) { display: none; }
+body.section-history #historyModeDock.collapsed .history-mode-row .history-collapse-btn { display: inline-flex; }
+body.section-history #historyModeDock.collapsed .history-collapsed-indicator { display: inline-flex; }
+body.section-history #historyModeDock.collapsed .history-filter-row,
+body.section-history #historyModeDock.collapsed #histWarTabs,
+body.section-history #historyModeDock.collapsed #histScenarioBtns,
+body.section-history #historyModeDock.collapsed .history-empty-state,
+body.section-history #historyModeDock.collapsed .history-era-group {
+    display: none !important;
+}
+body.section-history #historyModeDock.collapsed { gap: 0; }
 
 /* Shared Wars/Eras filter row: search + region + religion */
 .history-filter-row {

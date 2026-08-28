@@ -7731,40 +7731,6 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     _histWarMetaCache[w.id] = meta;
                     return meta;
                 }
-                var _histEraReligionCache = {};
-                // Classify an era by the religion of its dominant/primary polity
-                // (the first list entry, which is the empire the era is named
-                // after), rather than collecting religions present across every
-                // polity in the era's historical extent. This avoids tagging an
-                // era with peripheral religions from minor polities.
-                function histEraReligions(e) {
-                    if (_histEraReligionCache[e.id]) return _histEraReligionCache[e.id];
-                    var religions = {};
-                    var primary = (e.polities && e.polities[0]) || null;
-                    var candidates = primary ? [primary] : ((e.polities || []));
-                    candidates.forEach(function(p) {
-                        var cnt = 0;
-                        for (var ri = 0; ri < (p.rings || []).length && cnt < 3; ri++) {
-                            try {
-                                var c = d3.geoCentroid({ type: 'Polygon', coordinates: [normalizeEraRing(p.rings[ri])] });
-                                if (!c || isNaN(c[0])) continue;
-                                var got = false;
-                                for (var i = 0; i < allCountryFeatures.length && !got; i++) {
-                                    try {
-                                        if (d3.geoContains(allCountryFeatures[i], c)) {
-                                            var nm = allCountryFeatures[i].properties && allCountryFeatures[i].properties.name;
-                                            var rel = getReligion(nm);
-                                            if (rel && rel !== 'unknown') { religions[rel] = true; got = true; cnt++; }
-                                            break;
-                                        }
-                                    } catch (err) {}
-                                }
-                            } catch (err) {}
-                        }
-                    });
-                    _histEraReligionCache[e.id] = religions;
-                    return religions;
-                }
                 function warPassesFilters(w) {
                     var meta = histWarMeta(w);
                     if (historyRegionFilter !== 'all' && meta.regions.indexOf(historyRegionFilter) === -1 && meta.regions.indexOf('world') === -1) return false;
@@ -7774,7 +7740,13 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 }
                 function eraPassesFilters(e) {
                     if (historyRegionFilter !== 'all' && e.region !== historyRegionFilter && e.region !== 'world') return false;
-                    if (historyReligionFilter !== 'all' && !histEraReligions(e)[historyReligionFilter]) return false;
+                    // NOTE: Religion filtering is intentionally omitted for Eras.
+                    // A naive heuristic would infer an ancient empire's religion from
+                    // whichever MODERN country occupies that territory today (e.g. it
+                    // would tag the 500 BCE Achaemenid Empire as "Muslim" because modern
+                    // Iran is Muslim-majority). That proxy is factually wrong and can't
+                    // be patched, so eras are not religion-filtered until real
+                    // historical `religion` fields exist per polity.
                     if (historySearchText && !histFuzzyMatch((e.yearLabel || '') + ' ' + locField(e, 'title'), historySearchText)) return false;
                     return true;
                 }
@@ -7790,6 +7762,11 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (eg) eg.style.setProperty('display', eras ? 'flex' : 'none', 'important');
                     if (mw) { mw.classList.toggle('active', !eras); mw.setAttribute('aria-selected', eras ? 'false' : 'true'); }
                     if (me) { me.classList.toggle('active', eras); me.setAttribute('aria-selected', eras ? 'true' : 'false'); }
+                    // The religion filter is only meaningful for Wars (it derives
+                    // from real per-participant religion data). Eras have no
+                    // historical religion data yet, so hide the control there.
+                    var rf = document.getElementById('histFilterReligion');
+                    if (rf) rf.style.setProperty('display', eras ? 'none' : '', eras ? 'important' : '');
                 }
                 function renderHistoryBar() {
                     var war = getHistWar();
@@ -7903,6 +7880,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         war.sources.map(function(s) { return '<li>' + htmlEscape(s) + '</li>'; }).join('') +
                         '</ul>';
                     if (historyActive && window.updateHash) window.updateHash();
+                    if (window.historyCollapseApply) window.historyCollapseApply();
                 }
                 function openHistoryPanel(f) {
                     if (historyTab === 'eras') { openEraPanelForFeature(f); return; }
@@ -8024,11 +8002,11 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 }
                 function syncGlobeBtnState() {
                     var gb = document.getElementById('globeViewBtn');
-                    var disabled = historyActive;
+                    var inHist = historyActive;
                     if (gb) {
-                        gb.disabled = disabled;
-                        if (disabled) { gb.classList.add('quiz-disabled'); }
-                        else { gb.classList.remove('quiz-disabled'); }
+                        // In History mode the Globe control is removed from the
+                        // geo-only toolset, so hide it instead of merely disabling.
+                        gb.style.setProperty('display', inHist ? 'none' : '', 'important');
                     }
                 }
                 function updateSectionToggleUI() {
@@ -10632,6 +10610,86 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (window.selectHistoryTab && historyTab !== 'eras') window.selectHistoryTab('eras');
                 });
             }
+            // Collapse / expand the history browsing panel. The collapsed state is
+            // kept for the session (a module-level flag), so switching between the
+            // Wars and Eras tabs does not reset it. It does not need to survive a
+            // page reload.
+            function updateHistoryCollapseUI() {
+                var collapsed = (typeof window.historyHistoryPanelCollapsed !== 'undefined') ? window.historyHistoryPanelCollapsed : false;
+                var eras = historyTab === 'eras';
+                var dockEl2 = document.getElementById('historyModeDock');
+                var btnEl2 = document.getElementById('histCollapseBtn');
+                var indEl = document.getElementById('histCollapsedIndicator');
+                if (dockEl2) dockEl2.classList.toggle('collapsed', collapsed);
+                if (btnEl2) {
+                    btnEl2.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+                    btnEl2.title = t(collapsed ? 'histExpandTitle' : 'histCollapseTitle');
+                    btnEl2.setAttribute('aria-label', btnEl2.title);
+                }
+                // The browsing-panel body is toggled with inline `!important`
+                // styles (a stylesheet cannot override that), so the collapse /
+                // expand state is applied from JS here. Collapsed: hide the whole
+                // body. Expanded: restore the normal per-tab layout.
+                var frEl = document.getElementById('historyFilterRow');
+                var wtEl = document.getElementById('histWarTabs');
+                var sbEl = document.getElementById('histScenarioBtns');
+                var esEl = document.querySelector('.history-empty-state');
+                var egEl = document.getElementById('historyEraGroup');
+                if (collapsed) {
+                    [frEl, wtEl, sbEl, esEl, egEl].forEach(function(el) {
+                        if (el) el.style.setProperty('display', 'none', 'important');
+                    });
+                } else {
+                    if (frEl) frEl.style.setProperty('display', 'flex', 'important');
+                    if (wtEl) wtEl.style.setProperty('display', eras ? 'none' : 'flex', 'important');
+                    if (sbEl) sbEl.style.setProperty('display', eras ? 'none' : 'flex', 'important');
+                    // empty state: restored by its own render logic; no-op here.
+                    if (egEl) egEl.style.setProperty('display', eras ? 'flex' : 'none', 'important');
+                }
+                if (indEl && collapsed) {
+                    var label = '';
+                    if (historyTab === 'eras') {
+                        var _ea = document.querySelector('#historyEraGroup .history-scenario-btn.active');
+                        if (_ea) label = _ea.textContent.trim();
+                    } else {
+                        var _wa = document.querySelector('#histWarTabs .history-war-tab.active');
+                        if (_wa) label = _wa.textContent.trim();
+                    }
+                    indEl.textContent = label;
+                }
+            }
+            function setHistoryPanelCollapsed(v) {
+                window.historyHistoryPanelCollapsed = !!v;
+            }
+            window.historyCollapseApply = function() {
+                updateHistoryCollapseUI();
+            };
+            window.toggleHistoryCollapse = function() {
+                setHistoryPanelCollapsed(!(window.historyHistoryPanelCollapsed));
+                updateHistoryCollapseUI();
+            };
+            window.setHistoryCollapsed = function(v) {
+                setHistoryPanelCollapsed(v);
+                updateHistoryCollapseUI();
+            };
+            var histCollapseBtnEl = document.getElementById('histCollapseBtn');
+            if (histCollapseBtnEl) {
+                histCollapseBtnEl.addEventListener('click', function() {
+                    var next = !(window.historyHistoryPanelCollapsed);
+                    setHistoryPanelCollapsed(next);
+                    if (next) {
+                        updateHistoryCollapseUI();
+                    } else {
+                        // Re-render so every browsing section gets its correct
+                        // per-tab display back. In Eras mode renderHistoryBar
+                        // returns early (renderEraTabContent), so also apply the
+                        // expanded UI state explicitly afterwards.
+                        if (window.renderHistoryBar) window.renderHistoryBar();
+                        window.historyCollapseApply();
+                    }
+                });
+            }
+            updateHistoryCollapseUI();
             function refreshHistoryAfterFilterChange() {
                 if (!historyActive) return;
                 if (window.renderHistoryBar) window.renderHistoryBar();

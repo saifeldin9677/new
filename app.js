@@ -7817,7 +7817,14 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         });
                         tabs.appendChild(b);
                     });
-                    if (historyTab === 'eras') { renderEraTabContent(); return; }
+                    if (historyTab === 'eras') {
+                        renderEraTabContent();
+                        // A re-render while the panel is collapsed must re-apply
+                        // the collapsed state, otherwise the just-rendered era
+                        // group / timeline escapes the hidden panel.
+                        if (window.historyCollapseApply) window.historyCollapseApply();
+                        return;
+                    }
                     var row = document.getElementById('histScenarioBtns');
                     row.innerHTML = '';
                     if (!war) {
@@ -7977,8 +7984,27 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     var msg = document.getElementById('histEmptyState');
                     if (msg) {
                         msg.style.display = 'block';
-                        msg.innerHTML = htmlEscape(t('histSelectToBegin'));
+                        msg.innerHTML =
+                            '<div class="hist-empty-title">' + htmlEscape(t('histSelectToBegin')) + '</div>' +
+                            '<div class="hist-empty-cue">' + htmlEscape(t('histSelectCue')) + '</div>';
                     }
+                    triggerHistoryListPulse();
+                }
+                var historyPulseFired = false;
+                function triggerHistoryListPulse() {
+                    if (historyPulseFired) return;
+                    if (prefersReducedMotion()) { historyPulseFired = true; return; }
+                    historyPulseFired = true;
+                    var targets;
+                    if (historyTab === 'eras') targets = document.getElementById('historyEraGroup');
+                    else targets = document.getElementById('histWarTabs');
+                    if (!targets) return;
+                    targets.classList.remove('hist-pulse');
+                    void targets.offsetWidth;
+                    targets.classList.add('hist-pulse');
+                    setTimeout(function() {
+                        if (targets) targets.classList.remove('hist-pulse');
+                    }, 1800);
                 }
                 function exitHistoryMode(restore) {
                     historyActive = false;
@@ -8020,7 +8046,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     syncGlobeBtnState();
                 }
                 var SECTION_GEO_ONLY = ['#modeButtons', '#sectionBaseMapLabel', '#quizBtn', '#compareProjectionsBtn', '#barDivisionBtn'];
-                var SECTION_HIST_ONLY = ['#sectionHistoryLabel', '#historyModeDock', '#histTerrainBtn', '#histSourcesBtn'];
+                var SECTION_HIST_ONLY = ['#historyModeDock', '#histTerrainBtn', '#histSourcesBtn'];
                 function setSectionVis(el, visible) {
                     if (!el) return;
                     if (visible) el.style.setProperty('display', 'flex', 'important');
@@ -10635,8 +10661,9 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 var sbEl = document.getElementById('histScenarioBtns');
                 var esEl = document.querySelector('.history-empty-state');
                 var egEl = document.getElementById('historyEraGroup');
+                var tlEl = document.getElementById('histTimeline');
                 if (collapsed) {
-                    [frEl, wtEl, sbEl, esEl, egEl].forEach(function(el) {
+                    [frEl, wtEl, sbEl, esEl, egEl, tlEl].forEach(function(el) {
                         if (el) el.style.setProperty('display', 'none', 'important');
                     });
                 } else {
@@ -10645,6 +10672,9 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (sbEl) sbEl.style.setProperty('display', eras ? 'none' : 'flex', 'important');
                     // empty state: restored by its own render logic; no-op here.
                     if (egEl) egEl.style.setProperty('display', eras ? 'flex' : 'none', 'important');
+                    // timeline: its own visibility is driven by renderEraTabContent,
+                    // so on expand simply clear the forced hiding so that logic wins.
+                    if (tlEl) tlEl.style.setProperty('display', '', 'important');
                 }
                 if (indEl && collapsed) {
                     var label = '';

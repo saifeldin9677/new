@@ -8156,6 +8156,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     gHistoryOverlay.selectAll('*').remove();
                     if (!historyActive || historyTab !== 'eras') return;
                     var era = getHistEra();
+                    console.log('[DIAG] drawEraScene called, era:', era ? era.id : 'NULL', 'polity count:', era ? era.polities.length : 0);
                     if (!era) return;
                     var k = Math.max(0.4, currentTransform.k);
                     var fs = Math.max(4, Math.min(15, (isMobile ? 8 : 11) / k));
@@ -8163,6 +8164,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     era.polities.forEach(function(p) {
                         var feature = buildEraFeature(p);
                         var pd = pathGen(feature);
+                        console.log('[DIAG] polity', p.id || p.name, 'path data:', pd ? 'OK (' + pd.length + ' chars)' : 'NULL/EMPTY');
                         if (pd) {
                             var isSel = selectedHistoryPolity === p;
                             var s = gHistoryOverlay.append('path').attr('d', pd).attr('fill', p.color)
@@ -8170,6 +8172,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 .attr('stroke-dasharray', '7,4')
                                 .attr('vector-effect', 'non-scaling-stroke').style('cursor', 'pointer')
                                 .on('click', function() {
+                                    console.log('[DIAG] polity clicked:', p.id || p.name);
                                     if (selectedHistoryPolity === p) {
                                         deselectHistoryPolity();
                                     } else {
@@ -8197,6 +8200,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     drawEraScene(true);
                 }
                 function showEraPolityPanel(p, era) {
+                    console.log('[DIAG] showEraPolityPanel called for', p.id || p.name, 'panelContent found:', !!document.getElementById('panelContent'), 'countryPanel found:', !!document.getElementById('countryPanel'));
                     var panelContent = document.getElementById('panelContent');
                     var countryPanel = document.getElementById('countryPanel');
                     if (!panelContent || !countryPanel) return;
@@ -8225,7 +8229,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     _lastPanelRenderTime = performance.now();
                     panelContent.innerHTML = html;
                     countryPanel.style.display = 'block';
-                    requestAnimationFrame(function(){requestAnimationFrame(function(){countryPanel.classList.add('visible');});});
+                    requestAnimationFrame(function(){requestAnimationFrame(function(){countryPanel.classList.add('visible'); console.log('[DIAG] panel should now be visible. display:', countryPanel.style.display, 'has visible class:', countryPanel.classList.contains('visible'));});});
                 }
                 function openEraPanelForFeature(f) {
                     var panelContent = document.getElementById('panelContent');
@@ -10662,6 +10666,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 var esEl = document.querySelector('.history-empty-state');
                 var egEl = document.getElementById('historyEraGroup');
                 var tlEl = document.getElementById('histTimeline');
+                console.log('[DIAG] collapse toggled, collapsed =', collapsed, 'elements found:', {frEl: !!frEl, wtEl: !!wtEl, sbEl: !!sbEl, esEl: !!esEl, egEl: !!egEl, tlEl: !!tlEl});
                 if (collapsed) {
                     [frEl, wtEl, sbEl, esEl, egEl, tlEl].forEach(function(el) {
                         if (el) el.style.setProperty('display', 'none', 'important');

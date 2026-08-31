@@ -4319,7 +4319,18 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 zoomBehavior = d3.zoom().scaleExtent([0.5, 24]).translateExtent([
                     [-width * 2, -height * 2],
                     [width * 3, height * 3]
-                ]).on('zoom', function(e) {
+                ])
+                // A plain left-button mousedown must NOT start a zoom gesture:
+                // D3-zoom calls preventDefault on that mousedown, which stops the
+                // browser from ever synthesizing the native click on the map paths,
+                // so clicking countries, era polities and other features did nothing.
+                // Rejecting the left-button mousedown here lets those clicks fire,
+                // while wheel-zoom, touch/pinch and ctrl+drag box-zoom still work.
+                .filter(function(event) {
+                    if (event.type !== 'mousedown') return true;
+                    return event.ctrlKey;
+                })
+                .on('zoom', function(e) {
                     if (!_isZooming) {
                         _isZooming = true;
                         gMap.classed('zooming-active', true);
@@ -6888,6 +6899,11 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         glow.style.height = '0';
                         glow.style.opacity = '0';
                         try { localStorage.setItem('onboardDone', '1'); } catch(e) {}
+                        // Persistent completion marker. Unlike `onboardDone` (which is
+                        // also set transiently during language selection), this flag is
+                        // only ever set here when the tutorial is truly finished, so we
+                        // can reliably tell returning users from first-time visitors.
+                        try { localStorage.setItem('onboardCompleted', '1'); } catch(e) {}
                     }
 
                     function openTutorial() {
@@ -8156,7 +8172,6 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     gHistoryOverlay.selectAll('*').remove();
                     if (!historyActive || historyTab !== 'eras') return;
                     var era = getHistEra();
-                    console.log('[DIAG] drawEraScene called, era:', era ? era.id : 'NULL', 'polity count:', era ? era.polities.length : 0);
                     if (!era) return;
                     var k = Math.max(0.4, currentTransform.k);
                     var fs = Math.max(4, Math.min(15, (isMobile ? 8 : 11) / k));
@@ -8164,7 +8179,6 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     era.polities.forEach(function(p) {
                         var feature = buildEraFeature(p);
                         var pd = pathGen(feature);
-                        console.log('[DIAG] polity', p.id || p.name, 'path data:', pd ? 'OK (' + pd.length + ' chars)' : 'NULL/EMPTY');
                         if (pd) {
                             var isSel = selectedHistoryPolity === p;
                             var s = gHistoryOverlay.append('path').attr('d', pd).attr('fill', p.color)
@@ -8172,7 +8186,6 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 .attr('stroke-dasharray', '7,4')
                                 .attr('vector-effect', 'non-scaling-stroke').style('cursor', 'pointer')
                                 .on('click', function() {
-                                    console.log('[DIAG] polity clicked:', p.id || p.name);
                                     if (selectedHistoryPolity === p) {
                                         deselectHistoryPolity();
                                     } else {
@@ -8200,7 +8213,6 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     drawEraScene(true);
                 }
                 function showEraPolityPanel(p, era) {
-                    console.log('[DIAG] showEraPolityPanel called for', p.id || p.name, 'panelContent found:', !!document.getElementById('panelContent'), 'countryPanel found:', !!document.getElementById('countryPanel'));
                     var panelContent = document.getElementById('panelContent');
                     var countryPanel = document.getElementById('countryPanel');
                     if (!panelContent || !countryPanel) return;
@@ -8229,7 +8241,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     _lastPanelRenderTime = performance.now();
                     panelContent.innerHTML = html;
                     countryPanel.style.display = 'block';
-                    requestAnimationFrame(function(){requestAnimationFrame(function(){countryPanel.classList.add('visible'); console.log('[DIAG] panel should now be visible. display:', countryPanel.style.display, 'has visible class:', countryPanel.classList.contains('visible'));});});
+                    requestAnimationFrame(function(){requestAnimationFrame(function(){countryPanel.classList.add('visible');});});
                 }
                 function openEraPanelForFeature(f) {
                     var panelContent = document.getElementById('panelContent');
@@ -10666,7 +10678,6 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 var esEl = document.querySelector('.history-empty-state');
                 var egEl = document.getElementById('historyEraGroup');
                 var tlEl = document.getElementById('histTimeline');
-                console.log('[DIAG] collapse toggled, collapsed =', collapsed, 'elements found:', {frEl: !!frEl, wtEl: !!wtEl, sbEl: !!sbEl, esEl: !!esEl, egEl: !!egEl, tlEl: !!tlEl});
                 if (collapsed) {
                     [frEl, wtEl, sbEl, esEl, egEl, tlEl].forEach(function(el) {
                         if (el) el.style.setProperty('display', 'none', 'important');
@@ -11141,7 +11152,18 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 function closeProjection() {
                     projOverlay.classList.remove('active');
                     try { localStorage.setItem('projectionExplainerDone', '1'); } catch(e) {}
-                    if (typeof window.startOnboarding === 'function') {
+                    // Only chain the onboarding tutorial for a genuine first-time
+                    // visitor who has not already completed it. Re-opening the
+                    // tutorial unconditionally (as before) re-shows the transparent
+                    // full-screen overlay that, while active, swallowed all clicks on
+                    // the map (polities, countries, controls) — even for returning
+                    // users on every session. We gate on the persistent completion
+                    // marker (`onboardCompleted`), which is never set transiently,
+                    // so returning users are never blocked again while first-time
+                    // visitors still get the guided tour after the explainer.
+                    var onboardCompleted = false;
+                    try { onboardCompleted = localStorage.getItem('onboardCompleted') === '1'; } catch(e) {}
+                    if (!onboardCompleted && typeof window.startOnboarding === 'function') {
                         try { localStorage.removeItem('onboardDone'); } catch(e) {}
                         setTimeout(function() { window.startOnboarding(); }, 300);
                     }

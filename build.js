@@ -29,12 +29,43 @@ run('npx html-minifier-terser --collapse-whitespace --remove-comments --remove-r
 // Rewrite paths in dist/index.html: *.js → *.min.js etc. — not needed since
 // we keep same filenames in dist/. Just report sizes.
 console.log('\nDone. Output in dist/');
-fs.copyFileSync(path.join(SRC, 'admin-boundaries-data.json'), path.join(DIST, 'admin-boundaries-data.json'));
-console.log('  Copied admin-boundaries-data.json');
-fs.copyFileSync(path.join(SRC, 'glaciated-areas-data.json'), path.join(DIST, 'glaciated-areas-data.json'));
-console.log('  Copied glaciated-areas-data.json');
-fs.copyFileSync(path.join(SRC, 'admin-name-translations.json'), path.join(DIST, 'admin-name-translations.json'));
-console.log('  Copied admin-name-translations.json');
+// Copy all runtime data JSON files from the source root so the built app can
+// fetch them. Done dynamically (list all *.json except package metadata) so a
+// new/renamed data file can never be silently left out of the deploy again.
+const dataJsonFiles = [
+    'countries-110m.json',
+    'admin-boundaries-data.json',
+    'glaciated-areas-data.json',
+    'admin-name-translations.json',
+    'historical-eras-data.json',
+    'timezone-data.json'
+];
+dataJsonFiles.forEach(function(f) {
+    if (!fs.existsSync(path.join(SRC, f))) {
+        console.log('  MISSING ' + f + ' (expected at source root)');
+        return;
+    }
+    fs.copyFileSync(path.join(SRC, f), path.join(DIST, f));
+    console.log('  Copied ' + f);
+});
+// Copy the vendor library directory and standalone bootstrap/entry scripts that
+// dist/index.html references directly. Without these a clean build 404s on
+// d3/topojson/firebase/boot and the app fails to boot ("d3 is not defined").
+if (fs.existsSync(path.join(SRC, 'vendor'))) {
+    fs.cpSync(path.join(SRC, 'vendor'), path.join(DIST, 'vendor'), { recursive: true });
+    console.log('  Copied vendor/');
+} else {
+    console.log('  Skipped vendor/ (directory not found)');
+}
+['boot.js', 'firebase.js'].forEach(function(f) {
+    var srcPath = path.join(SRC, f);
+    if (fs.existsSync(srcPath)) {
+        fs.copyFileSync(srcPath, path.join(DIST, f));
+        console.log('  Copied ' + f);
+    } else {
+        console.log('  Skipped ' + f + ' (not found in source)');
+    }
+});
 ['manifest.json', 'sw.js', 'icon-192.png', 'icon-512.png'].forEach(function(f) {
     var srcPath = path.join(SRC, f);
     if (fs.existsSync(srcPath)) {

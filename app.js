@@ -211,7 +211,7 @@
             }
             [
                 'countryPanel', 'layersModal', 'divisionPopover', 'annotationsModal',
-                'annotationLabelModal', 'annotationPlaceModal', 'mobileModeSheet', 'shortcutsOverlay', 'dataTableOverlay', 'erasListOverlay'
+                'annotationLabelModal', 'annotationPlaceModal', 'mobileModeSheet', 'shortcutsOverlay', 'dataTableOverlay'
             ].forEach(function(id) { watchDialogFocusTrap(document.getElementById(id)); });
             document.addEventListener('keydown', function(e) {
                 if (e.key !== 'Escape') return;
@@ -224,12 +224,6 @@
                 if (!higherOverlay && isVisible('dataTableOverlay')) {
                     e.stopImmediatePropagation();
                     document.getElementById('dataTableOverlay').classList.remove('visible');
-                    return;
-                }
-                if (!higherOverlay && isVisible('erasListOverlay')) {
-                    e.stopImmediatePropagation();
-                    if (window.setErasListVisible) window.setErasListVisible(false);
-                    else document.getElementById('erasListOverlay').classList.remove('visible');
                     return;
                 }
                 if (!higherOverlay && isVisible('shortcutsOverlay')) {
@@ -6133,34 +6127,6 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             }
             // Independent "Countries" list toggle button. Clicking it shows or
             // hides the country list; clicking anywhere else also hides it.
-            var countriesListBtnEl = document.getElementById('countriesListBtn');
-            function updateCountriesListBtn() {
-                if (!countriesListBtnEl || !dataTableOverlay) return;
-                var on = dataTableOverlay.classList.contains('visible');
-                countriesListBtnEl.classList.toggle('toggle-on', on);
-                countriesListBtnEl.setAttribute('aria-pressed', on ? 'true' : 'false');
-            }
-            if (countriesListBtnEl) {
-                countriesListBtnEl.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    var on = dataTableOverlay && dataTableOverlay.classList.contains('visible');
-                    if (on) closeDataTable();
-                    else openDataTable();
-                    updateCountriesListBtn();
-                });
-                document.addEventListener('click', function(e) {
-                    if (!dataTableOverlay || !dataTableOverlay.classList.contains('visible')) return;
-                    if (dataTableOverlay.contains(e.target)) return;
-                    if (countriesListBtnEl.contains(e.target)) return;
-                    closeDataTable();
-                    updateCountriesListBtn();
-                }, true);
-                window.toggleCountriesList = function() {
-                    var on = dataTableOverlay && dataTableOverlay.classList.contains('visible');
-                    if (on) closeDataTable(); else openDataTable();
-                    updateCountriesListBtn();
-                };
-            }
             if (dataTableSearch) {
                 dataTableSearch.addEventListener('input', function() {
                     renderDataTable();
@@ -7647,6 +7613,12 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     var _row = document.getElementById('histScenarioBtns');
                     if (_row) _row.style.removeProperty('display');
                     if (historyTab === 'eras') { drawEraScene(skipFadeIn); return; }
+                    if (historyTab === 'faiths') {
+                        if (window.religionsStillActive && window.religionsStillActive() && window.drawReligionsSceneNow) {
+                            window.drawReligionsSceneNow(skipFadeIn);
+                        }
+                        return;
+                    }
                     if (!gHistoryOverlay) return;
                     gHistoryOverlay.selectAll('*').remove();
                     if (!historyActive) return;
@@ -7806,22 +7778,29 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     return true;
                 }
                 function updateHistSubmodeVis() {
+                    var mode = historyTab === 'faiths' ? 'faiths' : (historyTab === 'eras' ? 'eras' : 'wars');
                     var eras = historyTab === 'eras';
+                    var faiths = historyTab === 'faiths';
+                    var wars = historyTab === 'wars';
                     var wt = document.getElementById('histWarTabs');
                     var sb = document.getElementById('histScenarioBtns');
                     var eg = document.getElementById('historyEraGroup');
+                    var fg = document.getElementById('historyFaithsGroup');
                     var mw = document.getElementById('histModeWarsBtn');
                     var me = document.getElementById('histModeErasBtn');
-                    if (wt) wt.style.setProperty('display', eras ? 'none' : 'flex', 'important');
-                    if (sb) sb.style.setProperty('display', eras ? 'none' : 'flex', 'important');
+                    var mf = document.getElementById('histModeFaithsBtn');
+                    if (wt) wt.style.setProperty('display', wars ? 'flex' : 'none', 'important');
+                    if (sb) sb.style.setProperty('display', wars ? 'flex' : 'none', 'important');
                     if (eg) eg.style.setProperty('display', eras ? 'flex' : 'none', 'important');
-                    if (mw) { mw.classList.toggle('active', !eras); mw.setAttribute('aria-selected', eras ? 'false' : 'true'); }
+                    if (fg) fg.style.setProperty('display', faiths ? 'flex' : 'none', 'important');
+                    if (mw) { mw.classList.toggle('active', wars); mw.setAttribute('aria-selected', wars ? 'true' : 'false'); }
                     if (me) { me.classList.toggle('active', eras); me.setAttribute('aria-selected', eras ? 'true' : 'false'); }
+                    if (mf) { mf.classList.toggle('active', faiths); mf.setAttribute('aria-selected', faiths ? 'true' : 'false'); }
                     // The religion filter is only meaningful for Wars (it derives
-                    // from real per-participant religion data). Eras have no
-                    // historical religion data yet, so hide the control there.
+                    // from real per-participant religion data). Eras and Faiths
+                    // have their own per-religion controls, so hide it there.
                     var rf = document.getElementById('histFilterReligion');
-                    if (rf) rf.style.setProperty('display', eras ? 'none' : '', eras ? 'important' : '');
+                    if (rf) rf.style.setProperty('display', wars ? '' : 'none', wars ? '' : 'important');
                 }
                 function renderHistoryBar() {
                     var war = getHistWar();
@@ -8732,6 +8711,15 @@ _lastPanelRenderTime = performance.now();
                     if (tab !== 'eras') stopHistPlay();
                     historyTab = tab;
                     selectedHistoryPolity = null;
+                    if (tab === 'faiths') {
+                        if (gHistoryOverlay) gHistoryOverlay.selectAll('*').remove();
+                        renderHistoryBar();
+                        if (window.renderFaithsMode) window.renderFaithsMode();
+                        return;
+                    }
+                    if (window.religionsStillActive && window.religionsStillActive()) {
+                        if (window.deactivateFaithsMode) window.deactivateFaithsMode();
+                    }
                     if (tab === 'eras') {
                         if (!historicalErasData) {
                             historyEraId = null;
@@ -10935,6 +10923,12 @@ _lastPanelRenderTime = performance.now();
                     if (window.selectHistoryTab && historyTab !== 'eras') window.selectHistoryTab('eras');
                 });
             }
+            var histModeFaithsBtnEl = document.getElementById('histModeFaithsBtn');
+            if (histModeFaithsBtnEl) {
+                histModeFaithsBtnEl.addEventListener('click', function() {
+                    if (window.selectHistoryTab && historyTab !== 'faiths') window.selectHistoryTab('faiths');
+                });
+            }
             // Collapse / expand the history browsing panel. The collapsed state is
             // kept for the session (a module-level flag), so switching between the
             // Wars and Eras tabs does not reset it. It does not need to survive a
@@ -10942,6 +10936,8 @@ _lastPanelRenderTime = performance.now();
             function updateHistoryCollapseUI() {
                 var collapsed = (typeof window.historyHistoryPanelCollapsed !== 'undefined') ? window.historyHistoryPanelCollapsed : false;
                 var eras = historyTab === 'eras';
+                var faiths = historyTab === 'faiths';
+                var wars = historyTab === 'wars';
                 var dockEl2 = document.getElementById('historyModeDock');
                 var btnEl2 = document.getElementById('histCollapseBtn');
                 var indEl = document.getElementById('histCollapsedIndicator');
@@ -10960,26 +10956,32 @@ _lastPanelRenderTime = performance.now();
                 var sbEl = document.getElementById('histScenarioBtns');
                 var esEl = document.querySelector('.history-empty-state');
                 var egEl = document.getElementById('historyEraGroup');
+                var fgEl = document.getElementById('historyFaithsGroup');
                 var tlEl = document.getElementById('histTimeline');
+                var rtlEl = document.getElementById('religionsTimeline');
                 if (collapsed) {
-                    [frEl, wtEl, sbEl, esEl, egEl, tlEl].forEach(function(el) {
+                    [frEl, wtEl, sbEl, esEl, egEl, fgEl, tlEl, rtlEl].forEach(function(el) {
                         if (el) el.style.setProperty('display', 'none', 'important');
                     });
                 } else {
                     if (frEl) frEl.style.setProperty('display', 'flex', 'important');
-                    if (wtEl) wtEl.style.setProperty('display', eras ? 'none' : 'flex', 'important');
-                    if (sbEl) sbEl.style.setProperty('display', eras ? 'none' : 'flex', 'important');
+                    if (wtEl) wtEl.style.setProperty('display', wars ? 'flex' : 'none', 'important');
+                    if (sbEl) sbEl.style.setProperty('display', wars ? 'flex' : 'none', 'important');
                     // empty state: restored by its own render logic; no-op here.
                     if (egEl) egEl.style.setProperty('display', eras ? 'flex' : 'none', 'important');
+                    if (fgEl) fgEl.style.setProperty('display', faiths ? 'flex' : 'none', 'important');
                     // timeline: its own visibility is driven by renderEraTabContent,
                     // so on expand simply clear the forced hiding so that logic wins.
                     if (tlEl) tlEl.style.setProperty('display', '', 'important');
+                    if (rtlEl) rtlEl.style.setProperty('display', '', 'important');
                 }
                 if (indEl && collapsed) {
                     var label = '';
                     if (historyTab === 'eras') {
                         var _ea = document.querySelector('#historyEraGroup .history-scenario-btn.active');
                         if (_ea) label = _ea.textContent.trim();
+                    } else if (historyTab === 'faiths') {
+                        label = t('religionsListBtn');
                     } else {
                         var _wa = document.querySelector('#histWarTabs .history-war-tab.active');
                         if (_wa) label = _wa.textContent.trim();
@@ -11017,74 +11019,6 @@ _lastPanelRenderTime = performance.now();
                         window.historyCollapseApply();
                     }
                 });
-            }
-            // Independent "Eras" list toggle button. It opens a floating overlay
-            // listing all historical eras. Clicking an era selects it on the map;
-            // clicking the button again (or anywhere outside) closes the panel.
-            var erasListBtnEl = document.getElementById('erasListBtn');
-            var erasListOverlayEl = document.getElementById('erasListOverlay');
-            var erasListBodyEl = document.getElementById('erasListBody');
-            var erasListCloseEl = document.getElementById('erasListClose');
-            var _erasListOpen = false;
-            var _erasListBuilt = false;
-            function renderErasList() {
-                if (!erasListBodyEl) return;
-                if (!historicalErasData || !historicalErasData.length) {
-                    erasListBodyEl.innerHTML = '';
-                    _erasListBuilt = false;
-                    return;
-                }
-                var sorted = historicalErasData.slice().sort(function(a, b) { return (a.sort || 0) - (b.sort || 0); });
-                var html = sorted.map(function(e) {
-                    var label = ((e.yearLabel || '') + ' · ' + locField(e, 'title'));
-                    return '<button type="button" class="eras-list-item' + (e.id === historyEraId ? ' active' : '') + '" data-era-id="' + e.id + '">' + htmlEscape(label) + '</button>';
-                }).join('');
-                erasListBodyEl.innerHTML = html;
-                erasListBodyEl.querySelectorAll('.eras-list-item').forEach(function(b) {
-                    b.addEventListener('click', function() {
-                        var id = b.getAttribute('data-era-id');
-                        if (!id) return;
-                        if (window.applySection) window.applySection('history');
-                        if (historyTab !== 'eras' && window.selectHistoryTab) window.selectHistoryTab('eras');
-                        historyEraId = id;
-                        if (window.stopHistPlay) window.stopHistPlay();
-                        if (window.renderHistoryBar) window.renderHistoryBar();
-                        if (window.drawEraScene) window.drawEraScene();
-                        setErasListVisible(false);
-                    });
-                });
-                _erasListBuilt = true;
-            }
-            function setErasListVisible(show) {
-                _erasListOpen = !!show;
-                if (erasListOverlayEl) erasListOverlayEl.classList.toggle('visible', show);
-                if (erasListBtnEl) {
-                    erasListBtnEl.classList.toggle('toggle-on', show);
-                    erasListBtnEl.setAttribute('aria-pressed', show ? 'true' : 'false');
-                }
-                if (show) {
-                    if (window.applySection && currentSection !== 'history') window.applySection('history');
-                    if (historyTab !== 'eras' && window.selectHistoryTab) window.selectHistoryTab('eras');
-                    renderErasList();
-                }
-            }
-            if (erasListBtnEl) {
-                erasListBtnEl.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    setErasListVisible(!_erasListOpen);
-                });
-                if (erasListCloseEl) erasListCloseEl.addEventListener('click', function() { setErasListVisible(false); });
-                if (erasListOverlayEl) erasListOverlayEl.addEventListener('click', function(e) {
-                    if (e.target === erasListOverlayEl) setErasListVisible(false);
-                });
-                document.addEventListener('click', function(e) {
-                    if (!_erasListOpen) return;
-                    if (erasListOverlayEl && erasListOverlayEl.contains(e.target)) return;
-                    if (erasListBtnEl.contains(e.target)) return;
-                    setErasListVisible(false);
-                }, true);
-                window.setErasListVisible = setErasListVisible;
-                window.toggleErasList = function() { setErasListVisible(!_erasListOpen); };
             }
             updateHistoryCollapseUI();
             function refreshHistoryAfterFilterChange() {
@@ -11149,14 +11083,12 @@ _lastPanelRenderTime = performance.now();
             var YEAR_MIN = -2200;
             var YEAR_MAX = 2000;
             var gReligionsOverlay = null;
-            var rgPanelEl = document.getElementById('religionsPanel');
+            var rgGroupEl = document.getElementById('historyFaithsGroup');
             var rgYearEl = document.getElementById('religionsYearValue');
             var rgTimelineEl = document.getElementById('religionsTimeline');
             var rgLegendEl = document.getElementById('religionsLegend');
             var rgCaptionEl = document.getElementById('religionsCaption');
-            var rgBtnEl = document.getElementById('religionsListBtn');
             var rgPlayBtnEl = document.getElementById('religionsPlayBtn');
-            var rgCloseBtnEl = document.getElementById('religionsCloseBtn');
             var rgDragging = false;
             var religionsYearLabelFor = function(year) {
                 if (year < 0) return Math.abs(year) + ' BCE';
@@ -11322,11 +11254,12 @@ _lastPanelRenderTime = performance.now();
             }
             function activateReligionsMode() {
                 religionsActive = true;
-                if (rgPanelEl) rgPanelEl.style.display = '';
-                if (rgBtnEl) { rgBtnEl.classList.add('toggle-on'); rgBtnEl.setAttribute('aria-pressed', 'true'); }
+                if (rgGroupEl) rgGroupEl.style.display = '';
                 ensureReligionsOverlay();
                 fetchReligionsData().then(function() {
-                    setReligionsYear(religionsYear || 0);
+                    if (!religionsActive) return;
+                    if (!religionsYear) religionsYear = religionsData.length ? religionsData[0].startYear : 0;
+                    setReligionsYear(religionsYear);
                 }).catch(function(err) {
                     console.error('Religions load error:', err);
                     if (rgCaptionEl) rgCaptionEl.textContent = 'Error loading religions data.';
@@ -11335,22 +11268,8 @@ _lastPanelRenderTime = performance.now();
             function deactivateReligionsMode() {
                 religionsActive = false;
                 stopReligionsPlay();
-                if (rgPanelEl) rgPanelEl.style.display = 'none';
-                if (rgBtnEl) { rgBtnEl.classList.remove('toggle-on'); rgBtnEl.setAttribute('aria-pressed', 'false'); }
+                if (rgGroupEl) rgGroupEl.style.display = 'none';
                 clearReligionsOverlay();
-            }
-            function toggleReligionsMode() {
-                if (religionsActive) deactivateReligionsMode();
-                else activateReligionsMode();
-            }
-            if (rgBtnEl) {
-                rgBtnEl.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    toggleReligionsMode();
-                });
-            }
-            if (rgCloseBtnEl) {
-                rgCloseBtnEl.addEventListener('click', function() { deactivateReligionsMode(); });
             }
             if (rgPlayBtnEl) {
                 rgPlayBtnEl.addEventListener('click', function() { toggleReligionsPlay(); });
@@ -11376,12 +11295,15 @@ _lastPanelRenderTime = performance.now();
                 });
                 document.addEventListener('pointerup', function() { rgTlDrag = false; });
             }
-            window.toggleReligionsMode = toggleReligionsMode;
+            window.renderFaithsMode = activateReligionsMode;
+            window.deactivateFaithsMode = deactivateReligionsMode;
             window.activateReligionsMode = activateReligionsMode;
             window.deactivateReligionsMode = deactivateReligionsMode;
             window.setReligionsYear = setReligionsYear;
             window.toggleReligionsPlay = toggleReligionsPlay;
             window.getActiveReligionsAtYear = getActiveReligionsAtYear;
+            window.religionsStillActive = function() { return religionsActive; };
+            window.drawReligionsSceneNow = function(skipFadeIn) { drawReligionsScene(window.religionsYear, skipFadeIn); };
 
             function toggleLangDropdown(btn, menu) {
                 var isVisible = menu.classList.contains('visible');

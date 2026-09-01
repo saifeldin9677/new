@@ -57,9 +57,6 @@
                     </div>
                 </div>
             </div>
-            <button class="btn header-btn list-toggle-btn" id="countriesListBtn" type="button" aria-pressed="false" data-i18n="countriesListBtn" data-i18n-title="countriesListBtn_title"><i data-lucide="table" class="lucide-icon"></i><span class="btn-text">Countries</span></button>
-            <button class="btn header-btn list-toggle-btn" id="erasListBtn" type="button" aria-pressed="false" data-i18n="erasListBtn" data-i18n-title="erasListBtn_title"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text">Eras</span></button>
-            <button class="btn header-btn list-toggle-btn" id="religionsListBtn" type="button" aria-pressed="false" data-i18n="religionsListBtn" data-i18n-title="religionsListBtn_title"><i data-lucide="church" class="lucide-icon"></i><span class="btn-text">Faiths</span></button>
             <div class="section-toggle" id="sectionToggle" role="group" aria-label="Section">
                 <button class="section-toggle-btn active" id="sectionGeoBtn" data-section="geo" type="button" data-i18n-title="sectionGeo_title"><i data-lucide="globe" class="lucide-icon"></i><span class="btn-text" data-i18n="sectionGeo">Geography</span></button>
                 <button class="section-toggle-btn" id="sectionHistoryBtn" data-section="history" type="button" data-i18n-title="sectionHistory_title"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text" data-i18n="sectionHistory">History</span></button>
@@ -97,22 +94,6 @@
 
         <div class="coordinates-display" id="coordinatesDisplay">
             خط الطول: — &nbsp;|&nbsp; خط العرض: — &nbsp;|&nbsp; تكبير: 1.0x &nbsp;|&nbsp; الوضع: دين &nbsp;|&nbsp; الفلتر: الكل
-        </div>
-
-        <div class="religions-panel" id="religionsPanel" style="display:none" role="region" aria-label="Religions over time">
-            <div class="religions-panel-head">
-                <span class="religions-panel-title" data-i18n="religionsModeTitle">Religions over time</span>
-                <button type="button" class="history-play-btn religions-play" id="religionsPlayBtn" aria-pressed="false" data-i18n-title="histPlayTip"><i data-lucide="play" class="lucide-icon"></i></button>
-                <button type="button" class="eras-list-close" id="religionsCloseBtn" data-i18n="closeLabel"></button>
-            </div>
-            <div class="religions-year-row">
-                <span class="religions-year-label" data-i18n="religionsYear">Year</span>
-                <span class="religions-year-value" id="religionsYearValue">1</span>
-                <span class="religions-active-label" data-i18n="religionsActive" style="display:none">Active traditions</span>
-            </div>
-            <div class="religions-timeline" id="religionsTimeline" role="slider" aria-label="Draggable timeline" aria-valuemin="-2200" aria-valuemax="2000"></div>
-            <div class="religions-legend" id="religionsLegend"></div>
-            <div class="religions-caption" id="religionsCaption"></div>
         </div>
 
         <div class="country-panel" id="countryPanel" role="dialog" aria-modal="false" aria-label="معلومات الدولة" data-i18n-aria-label="countryPanelLabel">
@@ -174,6 +155,7 @@
                                 <div class="history-mode-seg" role="tablist">
                                     <button type="button" class="history-mode-seg-btn active" id="histModeWarsBtn" role="tab" aria-selected="true" data-i18n="histSegWars">حروب</button>
                                     <button type="button" class="history-mode-seg-btn" id="histModeErasBtn" role="tab" aria-selected="false" data-i18n="histSegEras">الحقب</button>
+                                    <button type="button" class="history-mode-seg-btn" id="histModeFaithsBtn" role="tab" aria-selected="false" data-i18n="religionsListBtn">الأديان</button>
                                 </div>
                                 <span class="history-mode-spacer"></span>
                                 <button class="btn hist-only" id="histTerrainBtn" style="display:none" type="button" data-i18n-title="mode_terrain_tip"><i data-lucide="mountain" class="lucide-icon"></i><span class="btn-text" data-i18n="mode_terrain"></span></button>
@@ -194,6 +176,15 @@
                                     <button type="button" class="history-play-btn" id="histPlayBtn" data-i18n-title="histPlayTip" aria-label="Play/Pause" aria-pressed="false"><i data-lucide="play" class="lucide-icon"></i></button>
                                     <div class="history-timeline" id="histTimeline" style="display:none"></div>
                                 </div>
+                            </div>
+                            <div class="history-faiths-group" id="historyFaithsGroup" style="display:none">
+                                <div class="history-timeline-row">
+                                    <button type="button" class="history-play-btn" id="religionsPlayBtn" data-i18n-title="histPlayTip" aria-label="Play/Pause" aria-pressed="false"><i data-lucide="play" class="lucide-icon"></i></button>
+                                    <div class="religions-timeline" id="religionsTimeline" role="slider" aria-label="Religions timeline" aria-valuemin="-2200" aria-valuemax="2000"></div>
+                                </div>
+                                <div class="history-year-label" id="religionsYearValue">1</div>
+                                <div class="religions-legend" id="religionsLegend"></div>
+                                <div class="religions-caption" id="religionsCaption"></div>
                             </div>
                         </div>
                         <div class="control-group" id="modeButtons">
@@ -469,18 +460,6 @@
                         <tbody id="dataTableBody"></tbody>
                     </table>
                 </div>
-            </div>
-        </div>
-
-        <!-- Historical era list overlay -->
-        <div class="eras-list-overlay" id="erasListOverlay" role="dialog" aria-modal="true" aria-labelledby="erasListOverlayTitle">
-            <div class="eras-list-box">
-                <div class="eras-list-header">
-                    <h3 id="erasListOverlayTitle" data-i18n="erasListBtn"></h3>
-                    <button class="eras-list-close" id="erasListClose" data-i18n="closeLabel"></button>
-                </div>
-                <div class="eras-list-scroll" id="erasListBody"></div>
-                <div class="eras-list-empty" id="erasListEmpty" style="display:none"></div>
             </div>
         </div>
 

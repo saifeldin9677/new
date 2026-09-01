@@ -4747,6 +4747,45 @@ html[dir="rtl"] .hist-status-block { text-align: right; }
     box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.45);
 }
 .history-loading { font-size: 0.82rem; opacity: 0.8; }
+.history-empty {
+    font-size: 0.82rem;
+    line-height: 1.4;
+    opacity: 0.9;
+    padding: 2px 4px;
+    max-width: 46ch;
+    display: block;
+}
+.history-timeline-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    margin-top: 4px;
+}
+.history-timeline-row .history-timeline { flex: 1 1 auto; min-width: 160px; }
+.history-timeline-row .history-play-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.18));
+    background: var(--btn-bg, rgba(255, 255, 255, 0.06));
+    color: var(--text, #f1f5f9);
+    cursor: pointer;
+    flex: 0 0 auto;
+    transition: background var(--dur-fast, 0.15s) var(--ease, ease);
+}
+.history-timeline-row .history-play-btn:hover { background: var(--btn-hover, rgba(255, 255, 255, 0.14)); }
+.history-timeline-row .history-play-btn[aria-pressed="true"] {
+    background: var(--brand-accent, #14B8A6);
+    color: #fff;
+    border-color: var(--brand-accent, #14B8A6);
+}
+.history-timeline-row .history-play-btn .lucide-icon { width: 15px; height: 15px; }
+.history-timeline-row:has(.history-timeline[style*="display: none"]) .history-play-btn { display: none; }
 .history-empty-state {
     margin-top: 12px;
     padding: 26px 20px;
@@ -4783,6 +4822,100 @@ html[dir="rtl"] .hist-status-block { text-align: right; }
 .history-war-tabs.hist-pulse {
     animation: hist-list-pulse 1.8s ease-out 2;
     border-radius: 10px;
+}
+
+/* ── Phase 8: era education tools ── */
+.history-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 10px 0 4px;
+}
+.history-action-btn {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.18));
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text, #e0e8f0);
+    cursor: pointer;
+}
+.history-action-btn:hover { background: rgba(255, 255, 255, 0.14); }
+.hist-quiz-q {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.5;
+    margin: 4px 0 12px;
+}
+.hist-quiz-a {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-left: 3px solid var(--brand-accent, #14B8A6);
+    background: rgba(20, 184, 166, 0.08);
+    border-radius: 8px;
+    line-height: 1.5;
+}
+.hist-compare-pick {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+.hist-compare-pick label { min-width: 52px; opacity: 0.85; font-size: 0.85rem; }
+.hist-compare-pick select { flex: 1; }
+.hist-compare-table {
+    display: grid;
+    grid-template-columns: 110px 1fr 1fr;
+    gap: 6px;
+    margin-top: 12px;
+    align-items: start;
+}
+.hist-cmp-head {
+    font-weight: 700;
+    color: var(--brand-accent, #14B8A6);
+    padding: 4px 6px;
+    font-size: 0.8rem;
+}
+.hist-cmp-label {
+    font-size: 0.8rem;
+    opacity: 0.85;
+    padding: 6px 4px;
+    font-weight: 600;
+}
+.hist-cmp-cell {
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    min-height: 120px;
+}
+.hist-cmp-cell strong { display: block; margin-bottom: 4px; }
+.hist-cmp-polities { margin-top: 6px; opacity: 0.9; }
+.study-sheet-print {
+    display: none;
+}
+
+@media print {
+    body > *:not(.study-sheet-print) { display: none !important; }
+    .study-sheet-print {
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 24px;
+        color: #111;
+        font-size: 13px;
+    }
+    .study-sheet-print h1 { font-size: 13px; text-transform: uppercase; color: #555; }
+    .study-sheet-print h2 { font-size: 20px; margin: 2px 0 2px; }
+    .study-sheet-print h3 { font-size: 14px; margin: 14px 0 4px; border-bottom: 1px solid #bbb; padding-bottom: 2px; }
+    .study-sheet-print .ss-meta { color: #666; margin: 0 0 8px; }
+    .study-sheet-print .ss-desc { line-height: 1.5; }
+    .study-sheet-print ul, .study-sheet-print ol { margin: 4px 0 6px 20px; }
+    .study-sheet-print .ss-disclaimer { font-size: 10px; color: #777; margin-top: 18px; border-top: 1px solid #ccc; padding-top: 6px; }
 }
 
 /* ── Section system: header toggle + first-run picker ── */

@@ -171,7 +171,10 @@
                             <div class="history-scenarios" id="histScenarioBtns"></div>
                             <div class="history-empty-state" id="histEmptyState" style="display:none"></div>
                             <div class="history-era-group" id="historyEraGroup" style="display:none">
-                                <div class="history-timeline" id="histTimeline" style="display:none"></div>
+                                <div class="history-timeline-row">
+                                    <button type="button" class="history-play-btn" id="histPlayBtn" data-i18n-title="histPlayTip" aria-label="Play/Pause" aria-pressed="false"><i data-lucide="play" class="lucide-icon"></i></button>
+                                    <div class="history-timeline" id="histTimeline" style="display:none"></div>
+                                </div>
                             </div>
                         </div>
                         <div class="control-group" id="modeButtons">
@@ -295,6 +298,35 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Era comprehension quiz modal -->
+        <div class="layers-modal" id="eraQuizModal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="eraQuizModalTitle">
+            <div class="layers-modal-backdrop" id="eraQuizModalBackdrop"></div>
+            <div class="layers-modal-content" style="max-width:520px">
+                <div class="layers-modal-header">
+                    <h3 id="eraQuizModalTitle" data-i18n="histEraQuizTitle">Check understanding</h3>
+                    <button class="layers-modal-close" id="eraQuizModalClose" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
+                </div>
+                <div class="layers-modal-body" id="eraQuizModalBody"></div>
+            </div>
+        </div>
+
+        <!-- Era comparison modal -->
+        <div class="layers-modal" id="eraCompareModal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="eraCompareModalTitle">
+            <div class="layers-modal-backdrop" id="eraCompareModalBackdrop"></div>
+            <div class="layers-modal-content" style="max-width:640px">
+                <div class="layers-modal-header">
+                    <h3 id="eraCompareModalTitle" data-i18n="histCompareTitle">Compare eras</h3>
+                    <button class="layers-modal-close" id="eraCompareModalClose" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
+                </div>
+                <div class="layers-modal-body" id="eraCompareModalBody"></div>
+            </div>
+        </div>
+
+        <!-- Printable era study sheet (shown only when printing) -->
+        <div class="study-sheet-print" id="studySheetPrint">
+            <div id="studySheetPrintContent"></div>
         </div>
 
         <!-- Mobile top bar (hidden on desktop) -->

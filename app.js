@@ -321,6 +321,9 @@
             let historicalErasLoading = null;
             let historyTab = 'wars';
             let historyEraId = null;
+            let histPlayActive = false;
+            let histPlayTimer = null;
+            let histPlayOrder = [];
             let selectedHistoryPolity = null;
             let currentSection = 'geo';
             let historyRegionFilter = 'all';
@@ -7792,7 +7795,9 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     var visibleWars = historicalWarsData.filter(warPassesFilters);
                     if (historyTab === 'wars') {
                         if (!visibleWars.length) {
-                            tabs.innerHTML = '<span class="history-loading">' + htmlEscape(t('histNoResults')) + '</span>';
+                            var onlyRelig = historyReligionFilter !== 'all' && historyRegionFilter === 'all' && !historySearchText;
+                            var emptyMsg = onlyRelig ? t('histNoResultsReligion') : t('histNoResults');
+                            tabs.innerHTML = '<span class="history-empty">' + htmlEscape(emptyMsg) + '</span>';
                             var emptyRow = document.getElementById('histScenarioBtns');
                             if (emptyRow) { emptyRow.innerHTML = ''; emptyRow.style.setProperty('display', 'none', 'important'); }
                             if (gHistoryOverlay) gHistoryOverlay.selectAll('*').remove();
@@ -7949,11 +7954,163 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     html += '<details class="hist-sources-mini"><summary>' + htmlEscape(t('histSourcesBtn')) + ' (' + htmlEscape(t('histSourcesTitle')) + ')</summary><ul>' +
                         war.sources.map(function(s) { return '<li>' + htmlEscape(s) + '</li>'; }).join('') + '</ul></details>';
                     html += '<p class="hist-disclaimer-mini">' + htmlEscape(t('histDisclaimer')) + '</p>';
-                    _lastPanelRenderTime = performance.now();
+_lastPanelRenderTime = performance.now();
                     panelContent.innerHTML = html;
                     countryPanel.style.display = 'block';
-                    requestAnimationFrame(function() { requestAnimationFrame(function() { countryPanel.classList.add('visible'); }); });
+                    requestAnimationFrame(function(){requestAnimationFrame(function(){countryPanel.classList.add('visible');});});
+                    var _btnStudy = panelContent.querySelector('#eraActStudy');
+                    var _btnQuiz = panelContent.querySelector('#eraActQuiz');
+                    var _btnCmp = panelContent.querySelector('#eraActCompare');
+                    var _btnCopy = panelContent.querySelector('#eraActCopyLink');
+                    if (_btnStudy) _btnStudy.addEventListener('click', function() { eraPrintStudySheet(era); });
+                    if (_btnQuiz) _btnQuiz.addEventListener('click', function() { eraOpenQuiz(era); });
+                    if (_btnCmp) _btnCmp.addEventListener('click', function() { eraOpenCompare(era); });
+                    if (_btnCopy) _btnCopy.addEventListener('click', function() { eraCopyLink(era); });
                 }
+                // ── Phase 8: era education tools ──
+                function histRegionLabelFor(era) {
+                    if (!era || !era.region) return '';
+                    var key = 'region' + String(era.region).toUpperCase();
+                    var known = { ME: 'regionME', EU: 'regionEU', AS: 'regionAS', AF: 'regionAF', AM: 'regionAM', WORLD: 'regionWorld' };
+                    return t(known[String(era.region).toUpperCase()] || key) || era.region;
+                }
+                function eraPolityList(era) {
+                    return (era.polities || []).map(function(p) {
+                        var n = locField(p, 'name');
+                        if (p.foundingYear) n += ' (' + p.foundingYear + ')';
+                        if (p.endYear) n += '–' + p.endYear;
+                        return n;
+                    });
+                }
+                function eraCopyLink(era) {
+                    if (!era) era = getHistEra();
+                    if (!era) return;
+                    var url = window.location.href.split('#')[0] + '#sec=history&era=' + encodeURIComponent(era.id) + '&lang=' + (lang || 'en');
+                    function _done() {
+                        document.getElementById('copyNotification').textContent = t('histCopyLinkCopied');
+                        document.getElementById('copyNotification').classList.add('show');
+                        setTimeout(function() { document.getElementById('copyNotification').classList.remove('show'); }, 2200);
+                    }
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(url).then(_done).catch(function() {
+                            eraCopyLinkFallback(url, _done);
+                        });
+                    } else {
+                        eraCopyLinkFallback(url, _done);
+                    }
+                }
+                function eraCopyLinkFallback(url, done) {
+                    var ta = document.createElement('textarea');
+                    ta.value = url;
+                    ta.style.position = 'fixed';
+                    ta.style.opacity = '0';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    try { document.execCommand('copy'); } catch (e) {}
+                    document.body.removeChild(ta);
+                    done();
+                }
+                function eraOpenQuiz(era) {
+                    if (!era) era = getHistEra();
+                    var modal = document.getElementById('eraQuizModal');
+                    var body = document.getElementById('eraQuizModalBody');
+                    if (!modal || !body) return;
+                    var q = era && era.quiz ? era.quiz : null;
+                    var title = era ? (locField(era, 'title') + ' — ' + (era.yearLabel || '')) : '';
+                    if (!q || !q.q_en) {
+                        body.innerHTML = '<p class="hist-note">' + htmlEscape(t('histEraQuizNone')) + '</p>' +
+                            (era ? '<p class="hist-entity-details"><div class="hist-detail-row"><dt>' + htmlEscape(locField(era, 'title')) + '</dt><dd>' + htmlEscape(era.yearLabel || '') + '</dd></div></p>' : '');
+                        modal.classList.add('visible');
+                        return;
+                    }
+                    function qloc(f) { return f + '_' + (lang || 'en'); }
+                    var question = q[qloc('q')] || q.q_en;
+                    var answer = q[qloc('a')] || q.a_en;
+                    body.innerHTML =
+                        '<p class="hist-panel-context"><strong>' + htmlEscape(title) + '</strong></p>' +
+                        '<p class="hist-quiz-q">' + htmlEscape(question) + '</p>' +
+                        '<button type="button" class="btn history-action-btn" id="eraQuizReveal">' + htmlEscape(t('histEraQuizReveal')) + '</button>' +
+                        '<p class="hist-quiz-a" id="eraQuizAnswer" hidden>' + htmlEscape(answer) + '</p>';
+                    var revealBtn = body.querySelector('#eraQuizReveal');
+                    var ans = body.querySelector('#eraQuizAnswer');
+                    if (revealBtn && ans) revealBtn.addEventListener('click', function() {
+                        var showing = ans.hasAttribute('hidden');
+                        ans.toggleAttribute('hidden');
+                        revealBtn.textContent = showing ? t('histEraQuizHide') : t('histEraQuizReveal');
+                    });
+                    modal.classList.add('visible');
+                }
+                function eraOpenCompare(era) {
+                    if (!era) era = getHistEra();
+                    var modal = document.getElementById('eraCompareModal');
+                    var body = document.getElementById('eraCompareModalBody');
+                    if (!modal || !body || !historicalErasData) return;
+                    var curId = era ? era.id : (historicalErasData[0] && historicalErasData[0].id);
+                    var eras = historicalErasData;
+                    var aId = curId;
+                    var other = eras.filter(function(e) { return e.id !== curId; })[0];
+                    var bId = other ? other.id : curId;
+                    var opts = eras.map(function(e) {
+                        return '<option value="' + htmlEscape(e.id) + '">' + htmlEscape(locField(e, 'title') + ' — ' + (e.yearLabel || '')) + '</option>';
+                    }).join('');
+                    body.innerHTML =
+                        '<div class="hist-compare-pick"><label>' + htmlEscape(t('histCompareEraA')) + '</label>' +
+                        '<select id="cmpA" class="history-region-select">' + opts + '</select></div>' +
+                        '<div class="hist-compare-pick"><label>' + htmlEscape(t('histCompareEraB')) + '</label>' +
+                        '<select id="cmpB" class="history-region-select">' + opts + '</select></div>' +
+                        '<div class="hist-compare-table" id="cmpTable"></div>';
+                    body.querySelector('#cmpA').value = aId;
+                    body.querySelector('#cmpB').value = bId;
+                    function renderCompare() {
+                        var ea = eras.find(function(e) { return e.id === body.querySelector('#cmpA').value; });
+                        var eb = eras.find(function(e) { return e.id === body.querySelector('#cmpB').value; });
+                        if (!ea || !eb) return;
+                        function cell(e2) {
+                            return '<div class="hist-cmp-cell"><strong>' + htmlEscape(locField(e2, 'title')) + '</strong>' +
+                                '<div>' + htmlEscape(e2.yearLabel || '') + '</div>' +
+                                '<div>' + htmlEscape(histRegionLabelFor(e2)) + '</div>' +
+                                '<div>' + htmlEscape((e2.desc && (locField(e2, 'desc') || e2.desc_en)) || '') + '</div>' +
+                                '<div class="hist-cmp-polities">' + eraPolityList(e2).map(htmlEscape).join(' · ') + '</div>' +
+                                '</div>';
+                        }
+                        body.querySelector('#cmpTable').innerHTML =
+                            '<div class="hist-cmp-head">' + htmlEscape(t('histComparePeriod')) + '</div><div class="hist-cmp-head">' + htmlEscape(t('histCompareEraA')) + '</div><div class="hist-cmp-head">' + htmlEscape(t('histCompareEraB')) + '</div>' +
+                            '<div class="hist-cmp-label">' + htmlEscape(t('histCompareRegion')) + '</div>' + cell(ea) + cell(eb);
+                    }
+                    body.querySelector('#cmpA').addEventListener('change', renderCompare);
+                    body.querySelector('#cmpB').addEventListener('change', renderCompare);
+                    renderCompare();
+                    modal.classList.add('visible');
+                }
+                function eraPrintStudySheet(era) {
+                    if (!era) era = getHistEra();
+                    if (!era) return;
+                    var ctn = document.getElementById('studySheetPrintContent');
+                    if (!ctn) { window.print(); return; }
+                    var html =
+                        '<h1>' + htmlEscape(t('histStudyTitle')) + '</h1>' +
+                        '<h2>' + htmlEscape(locField(era, 'title')) + '</h2>' +
+                        '<p class="ss-meta">' + htmlEscape(era.yearLabel || '') + ' · ' + htmlEscape(histRegionLabelFor(era)) + '</p>' +
+                        '<p class="ss-desc">' + htmlEscape(locField(era, 'desc') || era.desc_en || '') + '</p>' +
+                        '<h3>' + htmlEscape(t('histComparePolities')) + '</h3><ul>' +
+                        eraPolityList(era).map(function(n) { return '<li>' + htmlEscape(n) + '</li>'; }).join('') + '</ul>' +
+                        '<h3>' + htmlEscape(t('histSourcesBtn')) + '</h3><ol>' +
+                        (era.sources || []).map(function(s) { return '<li>' + htmlEscape(s) + '</li>'; }).join('') + '</ol>' +
+                        '<p class="ss-disclaimer">' + htmlEscape(t('histEraDisclaimer')) + '</p>';
+                    ctn.innerHTML = html;
+                    window.print();
+                }
+                function closeEraModals() {
+                    ['eraQuizModal', 'eraCompareModal'].forEach(function(id) {
+                        var m = document.getElementById(id);
+                        if (m) m.classList.remove('visible');
+                    });
+                }
+                window.closeEraModals = closeEraModals;
+                window.eraOpenQuiz = eraOpenQuiz;
+                window.eraOpenCompare = eraOpenCompare;
+                window.eraPrintStudySheet = eraPrintStudySheet;
+                window.eraCopyLink = eraCopyLink;
                 function enterHistoryMode() {
                     if (quizActive || historyActive) return;
                     // If already in globe view, switch back to flat view so history
@@ -8023,6 +8180,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     }, 1800);
                 }
                 function exitHistoryMode(restore) {
+                    stopHistPlay();
                     historyActive = false;
                     if (gHistoryOverlay) gHistoryOverlay.selectAll('*').remove();
                     var sp2 = document.getElementById('histSourcesPanel');
@@ -8169,7 +8327,17 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     var _es = document.getElementById('histEmptyState');
                     if (_es) _es.style.display = 'none';
                     if (!gHistoryOverlay) return;
-                    gHistoryOverlay.selectAll('*').remove();
+                    // Cross-fade: instead of removing the previous era's paths
+                    // instantly, fade them out while the new era's paths fade in,
+                    // so boundary changes read as a smooth transition. Only the
+                    // ending elements are removed (never the freshly-drawn ones).
+                    if (!skipFadeIn && prefersReducedMotion() === false) {
+                        gHistoryOverlay.selectAll('path,text').interrupt().transition().duration(220)
+                            .style('opacity', '0')
+                            .on('end', function() { d3.select(this).remove(); });
+                    } else {
+                        gHistoryOverlay.selectAll('*').remove();
+                    }
                     if (!historyActive || historyTab !== 'eras') return;
                     var era = getHistEra();
                     if (!era) return;
@@ -8224,6 +8392,12 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     html += '<p class="hist-panel-context"><strong>' + htmlEscape(locField(era, 'title')) + '</strong> — ' + htmlEscape(era.yearLabel || '') + '</p>';
                     var desc = locField(era, 'desc');
                     if (desc) html += '<p class="hist-note">' + htmlEscape(desc) + '</p>';
+                    html += '<div class="history-actions">' +
+                        '<button type="button" class="btn history-action-btn" id="eraActStudy">' + htmlEscape(t('histEraStudyBtn')) + '</button>' +
+                        '<button type="button" class="btn history-action-btn" id="eraActQuiz">' + htmlEscape(t('histEraQuizBtn')) + '</button>' +
+                        '<button type="button" class="btn history-action-btn" id="eraActCompare">' + htmlEscape(t('histEraCompareBtn')) + '</button>' +
+                        '<button type="button" class="btn history-action-btn" id="eraActCopyLink">' + htmlEscape(t('histEraCopyLink')) + '</button>' +
+                        '</div>';
                     var drows = '';
                     if (p.foundingYear || p.founder) {
                         var fv = [p.foundingYear, p.founder].filter(Boolean).join(' · ');
@@ -8299,10 +8473,11 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 function renderEraTabContent() {
                     var sp = document.getElementById('histSourcesPanel');
                     var tl = document.getElementById('histTimeline');
+                    var tlRow = (function(q) { var e = document.querySelector('#historyEraGroup .history-timeline-row'); return e || tl; })();
                     var eraGroupEl = document.getElementById('historyEraGroup');
                     if (!eraGroupEl) return;
                     Array.prototype.slice.call(eraGroupEl.childNodes).forEach(function(n) {
-                        if (n === tl) return;
+                        if (n === tl || n === tlRow) return;
                         eraGroupEl.removeChild(n);
                     });
                     var row = document.createElement('div');
@@ -8310,7 +8485,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     var era = getHistEra();
                     if (!era) {
                         row.innerHTML = '<span class="history-loading">' + htmlEscape(t('histEraLoading')) + '</span>';
-                        eraGroupEl.insertBefore(row, tl);
+                        eraGroupEl.insertBefore(row, tlRow);
                         tl.style.display = 'none';
                         sp.innerHTML = '';
                         fetchHistoricalEras().then(function() {
@@ -8331,9 +8506,10 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     }
                     var filtered = historicalErasData.filter(eraPassesFilters);
                     filtered.sort(function(a, b) { return (a.sort || 0) - (b.sort || 0); });
+                    histPlayOrder = filtered.slice();
                     if (!filtered.length) {
                         row.innerHTML = '<span class="history-loading">' + htmlEscape(t('histNoResults')) + '</span>';
-                        eraGroupEl.insertBefore(row, tl);
+                        eraGroupEl.insertBefore(row, tlRow);
                         tl.style.display = 'none';
                         sp.innerHTML = '';
                         if (gHistoryOverlay) gHistoryOverlay.selectAll('*').remove();
@@ -8353,6 +8529,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         b.textContent = (e.yearLabel || '') + ' · ' + locField(e, 'title');
                         b.title = locField(e, 'desc');
                         b.addEventListener('click', function() {
+                            stopHistPlay();
                             historyEraId = e.id;
                             selectedHistoryPolity = null;
                             renderHistoryBar();
@@ -8361,14 +8538,22 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         });
                         row.appendChild(b);
                     });
-                    eraGroupEl.insertBefore(row, tl);
+                    eraGroupEl.insertBefore(row, tlRow);
                     if (!historyEraId) {
                         tl.style.display = 'none';
                         clearHistoryOverlay();
                         renderHistoryEmptyState();
                         return;
                     }
-                    var min = -600, max = 1650;
+                    // Timeline range is derived from the actual era data (padded),
+                    // so no era ever renders past the edge and future additions
+                    // don't require editing a hard-coded window.
+                    var histSorts = filtered.map(function(e) { return e.sort || 0; });
+                    var min = (histSorts.length ? Math.min.apply(null, histSorts) : -600) - 0;
+                    var max = (histSorts.length ? Math.max.apply(null, histSorts) : 1650) - 0;
+                    var pad = histSorts.length > 1 ? Math.round((max - min) * 0.08) : 50;
+                    min = min - pad;
+                    max = max + pad;
                     tl.style.display = 'block';
                     tl.innerHTML = '';
                     filtered.forEach(function(e) {
@@ -8379,6 +8564,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         dot.title = (e.yearLabel || '') + ' · ' + locField(e, 'title');
                         dot.setAttribute('aria-label', dot.title);
                         dot.addEventListener('click', function() {
+                            stopHistPlay();
                             historyEraId = e.id;
                             renderHistoryBar();
                             drawEraScene();
@@ -8407,6 +8593,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         }
                     }
                     tl.addEventListener('pointerdown', function(e) {
+                        stopHistPlay();
                         tlDrag = true;
                         try { tl.setPointerCapture(e.pointerId); } catch (err) {}
                         tlPick(e.clientX);
@@ -8504,6 +8691,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     return true;
                 };
                 function selectHistoryTab(tab) {
+                    if (tab !== 'eras') stopHistPlay();
                     historyTab = tab;
                     selectedHistoryPolity = null;
                     if (tab === 'eras') {
@@ -8543,6 +8731,63 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         renderHistoryEmptyState();
                     }
                 }
+
+                // ── History "play" auto-advance ──
+                function stopHistPlay() {
+                    histPlayActive = false;
+                    if (histPlayTimer) {
+                        clearInterval(histPlayTimer);
+                        histPlayTimer = null;
+                    }
+                    var pb = document.getElementById('histPlayBtn');
+                    if (pb) {
+                        pb.setAttribute('aria-pressed', 'false');
+                        var i = pb.querySelector('[data-lucide]');
+                        if (i) { i.setAttribute('data-lucide', 'play'); if (lucide && lucide.createIcons) lucide.createIcons(); }
+                    }
+                }
+                function startHistPlay() {
+                    if (histPlayOrder.length < 2) return;
+                    if (histPlayActive) { stopHistPlay(); return; }
+                    if (!historyEraId || histPlayOrder.every(function(e) { return e.id !== historyEraId; })) {
+                        if (histPlayOrder.length) { historyEraId = histPlayOrder[0].id; renderHistoryBar(); drawEraScene(); }
+                    }
+                    histPlayActive = true;
+                    var pb = document.getElementById('histPlayBtn');
+                    if (pb) {
+                        pb.setAttribute('aria-pressed', 'true');
+                        var i = pb.querySelector('[data-lucide]');
+                        if (i) { i.setAttribute('data-lucide', 'pause'); if (lucide && lucide.createIcons) lucide.createIcons(); }
+                    }
+                    var step = function() {
+                        if (!histPlayActive || !histPlayOrder.length) return;
+                        var idx = -1;
+                        histPlayOrder.forEach(function(e, k) { if (e.id === historyEraId) idx = k; });
+                        var next = histPlayOrder[(idx + 1) % histPlayOrder.length];
+                        if (next && next.id !== historyEraId) {
+                            historyEraId = next.id;
+                            selectedHistoryPolity = null;
+                            renderHistoryBar();
+                            drawEraScene();
+                        }
+                    };
+                    histPlayTimer = setInterval(step, 3600);
+                }
+                function toggleHistPlay() {
+                    if (histPlayActive) { stopHistPlay(); } else { startHistPlay(); }
+                }
+                function histSyncPlayBtn() {
+                    var pb = document.getElementById('histPlayBtn');
+                    if (pb) pb.setAttribute('aria-pressed', histPlayActive ? 'true' : 'false');
+                }
+                var histPlayBtnEl2 = document.getElementById('histPlayBtn');
+                if (histPlayBtnEl2) {
+                    histPlayBtnEl2.addEventListener('click', function() { toggleHistPlay(); });
+                }
+                window.stopHistPlay = stopHistPlay;
+                window.startHistPlay = startHistPlay;
+                window.toggleHistPlay = toggleHistPlay;
+                window.histSyncPlayBtn = histSyncPlayBtn;
 
                 var quizSavedMapState = null;
 
@@ -10998,6 +11243,14 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 if (e.key === 'Escape' && annotationsModal && annotationsModal.classList.contains('visible')) {
                     closeAnnotationsModal();
                 }
+                if (e.key === 'Escape' && typeof window.closeEraModals === 'function') {
+                    var qm = document.getElementById('eraQuizModal');
+                    var cm = document.getElementById('eraCompareModal');
+                    if ((qm && qm.classList.contains('visible')) || (cm && cm.classList.contains('visible'))) {
+                        window.closeEraModals();
+                        return;
+                    }
+                }
                 if (e.key === 'Escape' && typeof window.closeAnnotationTutorial === 'function') {
                     window.closeAnnotationTutorial();
                 }
@@ -11064,6 +11317,14 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             var annotationsModalBackdrop = document.getElementById('annotationsModalBackdrop');
             if (annotationsModalClose) annotationsModalClose.addEventListener('click', closeAnnotationsModal);
             if (annotationsModalBackdrop) annotationsModalBackdrop.addEventListener('click', closeAnnotationsModal);
+            var eraQuizModalClose = document.getElementById('eraQuizModalClose');
+            var eraQuizModalBackdrop = document.getElementById('eraQuizModalBackdrop');
+            var eraCompareModalClose = document.getElementById('eraCompareModalClose');
+            var eraCompareModalBackdrop = document.getElementById('eraCompareModalBackdrop');
+            if (eraQuizModalClose) eraQuizModalClose.addEventListener('click', function() { var m = document.getElementById('eraQuizModal'); if (m) m.classList.remove('visible'); });
+            if (eraQuizModalBackdrop) eraQuizModalBackdrop.addEventListener('click', function() { var m = document.getElementById('eraQuizModal'); if (m) m.classList.remove('visible'); });
+            if (eraCompareModalClose) eraCompareModalClose.addEventListener('click', function() { var m = document.getElementById('eraCompareModal'); if (m) m.classList.remove('visible'); });
+            if (eraCompareModalBackdrop) eraCompareModalBackdrop.addEventListener('click', function() { var m = document.getElementById('eraCompareModal'); if (m) m.classList.remove('visible'); });
             var mapSvg = document.getElementById('mapSvg');
             window.__annotDebug = function() {
                 return {

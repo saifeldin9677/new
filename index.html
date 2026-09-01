@@ -57,6 +57,9 @@
                     </div>
                 </div>
             </div>
+            <button class="btn header-btn list-toggle-btn" id="countriesListBtn" type="button" aria-pressed="false" data-i18n="countriesListBtn" data-i18n-title="countriesListBtn_title"><i data-lucide="table" class="lucide-icon"></i><span class="btn-text">Countries</span></button>
+            <button class="btn header-btn list-toggle-btn" id="erasListBtn" type="button" aria-pressed="false" data-i18n="erasListBtn" data-i18n-title="erasListBtn_title"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text">Eras</span></button>
+            <button class="btn header-btn list-toggle-btn" id="religionsListBtn" type="button" aria-pressed="false" data-i18n="religionsListBtn" data-i18n-title="religionsListBtn_title"><i data-lucide="church" class="lucide-icon"></i><span class="btn-text">Faiths</span></button>
             <div class="section-toggle" id="sectionToggle" role="group" aria-label="Section">
                 <button class="section-toggle-btn active" id="sectionGeoBtn" data-section="geo" type="button" data-i18n-title="sectionGeo_title"><i data-lucide="globe" class="lucide-icon"></i><span class="btn-text" data-i18n="sectionGeo">Geography</span></button>
                 <button class="section-toggle-btn" id="sectionHistoryBtn" data-section="history" type="button" data-i18n-title="sectionHistory_title"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text" data-i18n="sectionHistory">History</span></button>
@@ -94,6 +97,22 @@
 
         <div class="coordinates-display" id="coordinatesDisplay">
             خط الطول: — &nbsp;|&nbsp; خط العرض: — &nbsp;|&nbsp; تكبير: 1.0x &nbsp;|&nbsp; الوضع: دين &nbsp;|&nbsp; الفلتر: الكل
+        </div>
+
+        <div class="religions-panel" id="religionsPanel" style="display:none" role="region" aria-label="Religions over time">
+            <div class="religions-panel-head">
+                <span class="religions-panel-title" data-i18n="religionsModeTitle">Religions over time</span>
+                <button type="button" class="history-play-btn religions-play" id="religionsPlayBtn" aria-pressed="false" data-i18n-title="histPlayTip"><i data-lucide="play" class="lucide-icon"></i></button>
+                <button type="button" class="eras-list-close" id="religionsCloseBtn" data-i18n="closeLabel"></button>
+            </div>
+            <div class="religions-year-row">
+                <span class="religions-year-label" data-i18n="religionsYear">Year</span>
+                <span class="religions-year-value" id="religionsYearValue">1</span>
+                <span class="religions-active-label" data-i18n="religionsActive" style="display:none">Active traditions</span>
+            </div>
+            <div class="religions-timeline" id="religionsTimeline" role="slider" aria-label="Draggable timeline" aria-valuemin="-2200" aria-valuemax="2000"></div>
+            <div class="religions-legend" id="religionsLegend"></div>
+            <div class="religions-caption" id="religionsCaption"></div>
         </div>
 
         <div class="country-panel" id="countryPanel" role="dialog" aria-modal="false" aria-label="معلومات الدولة" data-i18n-aria-label="countryPanelLabel">
@@ -450,6 +469,18 @@
                         <tbody id="dataTableBody"></tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+
+        <!-- Historical era list overlay -->
+        <div class="eras-list-overlay" id="erasListOverlay" role="dialog" aria-modal="true" aria-labelledby="erasListOverlayTitle">
+            <div class="eras-list-box">
+                <div class="eras-list-header">
+                    <h3 id="erasListOverlayTitle" data-i18n="erasListBtn"></h3>
+                    <button class="eras-list-close" id="erasListClose" data-i18n="closeLabel"></button>
+                </div>
+                <div class="eras-list-scroll" id="erasListBody"></div>
+                <div class="eras-list-empty" id="erasListEmpty" style="display:none"></div>
             </div>
         </div>
 

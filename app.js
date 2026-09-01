@@ -211,7 +211,7 @@
             }
             [
                 'countryPanel', 'layersModal', 'divisionPopover', 'annotationsModal',
-                'annotationLabelModal', 'annotationPlaceModal', 'mobileModeSheet', 'shortcutsOverlay', 'dataTableOverlay'
+                'annotationLabelModal', 'annotationPlaceModal', 'mobileModeSheet', 'shortcutsOverlay', 'dataTableOverlay', 'erasListOverlay'
             ].forEach(function(id) { watchDialogFocusTrap(document.getElementById(id)); });
             document.addEventListener('keydown', function(e) {
                 if (e.key !== 'Escape') return;
@@ -224,6 +224,12 @@
                 if (!higherOverlay && isVisible('dataTableOverlay')) {
                     e.stopImmediatePropagation();
                     document.getElementById('dataTableOverlay').classList.remove('visible');
+                    return;
+                }
+                if (!higherOverlay && isVisible('erasListOverlay')) {
+                    e.stopImmediatePropagation();
+                    if (window.setErasListVisible) window.setErasListVisible(false);
+                    else document.getElementById('erasListOverlay').classList.remove('visible');
                     return;
                 }
                 if (!higherOverlay && isVisible('shortcutsOverlay')) {
@@ -6125,6 +6131,36 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (e.target === dataTableOverlay) closeDataTable();
                 });
             }
+            // Independent "Countries" list toggle button. Clicking it shows or
+            // hides the country list; clicking anywhere else also hides it.
+            var countriesListBtnEl = document.getElementById('countriesListBtn');
+            function updateCountriesListBtn() {
+                if (!countriesListBtnEl || !dataTableOverlay) return;
+                var on = dataTableOverlay.classList.contains('visible');
+                countriesListBtnEl.classList.toggle('toggle-on', on);
+                countriesListBtnEl.setAttribute('aria-pressed', on ? 'true' : 'false');
+            }
+            if (countriesListBtnEl) {
+                countriesListBtnEl.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var on = dataTableOverlay && dataTableOverlay.classList.contains('visible');
+                    if (on) closeDataTable();
+                    else openDataTable();
+                    updateCountriesListBtn();
+                });
+                document.addEventListener('click', function(e) {
+                    if (!dataTableOverlay || !dataTableOverlay.classList.contains('visible')) return;
+                    if (dataTableOverlay.contains(e.target)) return;
+                    if (countriesListBtnEl.contains(e.target)) return;
+                    closeDataTable();
+                    updateCountriesListBtn();
+                }, true);
+                window.toggleCountriesList = function() {
+                    var on = dataTableOverlay && dataTableOverlay.classList.contains('visible');
+                    if (on) closeDataTable(); else openDataTable();
+                    updateCountriesListBtn();
+                };
+            }
             if (dataTableSearch) {
                 dataTableSearch.addEventListener('input', function() {
                     renderDataTable();
@@ -8323,6 +8359,8 @@ _lastPanelRenderTime = performance.now();
                     });
                     return { type: 'MultiPolygon', coordinates: rings.map(function(r) { return [r]; }) };
                 }
+                window.__buildEraFeature = buildEraFeature;
+                window.__normalizeEraRing = normalizeEraRing;
                 function drawEraScene(skipFadeIn) {
                     var _es = document.getElementById('histEmptyState');
                     if (_es) _es.style.display = 'none';
@@ -10980,6 +11018,74 @@ _lastPanelRenderTime = performance.now();
                     }
                 });
             }
+            // Independent "Eras" list toggle button. It opens a floating overlay
+            // listing all historical eras. Clicking an era selects it on the map;
+            // clicking the button again (or anywhere outside) closes the panel.
+            var erasListBtnEl = document.getElementById('erasListBtn');
+            var erasListOverlayEl = document.getElementById('erasListOverlay');
+            var erasListBodyEl = document.getElementById('erasListBody');
+            var erasListCloseEl = document.getElementById('erasListClose');
+            var _erasListOpen = false;
+            var _erasListBuilt = false;
+            function renderErasList() {
+                if (!erasListBodyEl) return;
+                if (!historicalErasData || !historicalErasData.length) {
+                    erasListBodyEl.innerHTML = '';
+                    _erasListBuilt = false;
+                    return;
+                }
+                var sorted = historicalErasData.slice().sort(function(a, b) { return (a.sort || 0) - (b.sort || 0); });
+                var html = sorted.map(function(e) {
+                    var label = ((e.yearLabel || '') + ' · ' + locField(e, 'title'));
+                    return '<button type="button" class="eras-list-item' + (e.id === historyEraId ? ' active' : '') + '" data-era-id="' + e.id + '">' + htmlEscape(label) + '</button>';
+                }).join('');
+                erasListBodyEl.innerHTML = html;
+                erasListBodyEl.querySelectorAll('.eras-list-item').forEach(function(b) {
+                    b.addEventListener('click', function() {
+                        var id = b.getAttribute('data-era-id');
+                        if (!id) return;
+                        if (window.applySection) window.applySection('history');
+                        if (historyTab !== 'eras' && window.selectHistoryTab) window.selectHistoryTab('eras');
+                        historyEraId = id;
+                        if (window.stopHistPlay) window.stopHistPlay();
+                        if (window.renderHistoryBar) window.renderHistoryBar();
+                        if (window.drawEraScene) window.drawEraScene();
+                        setErasListVisible(false);
+                    });
+                });
+                _erasListBuilt = true;
+            }
+            function setErasListVisible(show) {
+                _erasListOpen = !!show;
+                if (erasListOverlayEl) erasListOverlayEl.classList.toggle('visible', show);
+                if (erasListBtnEl) {
+                    erasListBtnEl.classList.toggle('toggle-on', show);
+                    erasListBtnEl.setAttribute('aria-pressed', show ? 'true' : 'false');
+                }
+                if (show) {
+                    if (window.applySection && currentSection !== 'history') window.applySection('history');
+                    if (historyTab !== 'eras' && window.selectHistoryTab) window.selectHistoryTab('eras');
+                    renderErasList();
+                }
+            }
+            if (erasListBtnEl) {
+                erasListBtnEl.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    setErasListVisible(!_erasListOpen);
+                });
+                if (erasListCloseEl) erasListCloseEl.addEventListener('click', function() { setErasListVisible(false); });
+                if (erasListOverlayEl) erasListOverlayEl.addEventListener('click', function(e) {
+                    if (e.target === erasListOverlayEl) setErasListVisible(false);
+                });
+                document.addEventListener('click', function(e) {
+                    if (!_erasListOpen) return;
+                    if (erasListOverlayEl && erasListOverlayEl.contains(e.target)) return;
+                    if (erasListBtnEl.contains(e.target)) return;
+                    setErasListVisible(false);
+                }, true);
+                window.setErasListVisible = setErasListVisible;
+                window.toggleErasList = function() { setErasListVisible(!_erasListOpen); };
+            }
             updateHistoryCollapseUI();
             function refreshHistoryAfterFilterChange() {
                 if (!historyActive) return;
@@ -11032,6 +11138,250 @@ _lastPanelRenderTime = performance.now();
                     }, 200);
                 });
             }
+
+            // ── Religions through time ──
+            var religionsData = null;
+            var religionsLoading = null;
+            var religionsActive = false;
+            var religionsYear = 0;
+            var religionsPlayActive = false;
+            var religionsPlayTimer = null;
+            var YEAR_MIN = -2200;
+            var YEAR_MAX = 2000;
+            var gReligionsOverlay = null;
+            var rgPanelEl = document.getElementById('religionsPanel');
+            var rgYearEl = document.getElementById('religionsYearValue');
+            var rgTimelineEl = document.getElementById('religionsTimeline');
+            var rgLegendEl = document.getElementById('religionsLegend');
+            var rgCaptionEl = document.getElementById('religionsCaption');
+            var rgBtnEl = document.getElementById('religionsListBtn');
+            var rgPlayBtnEl = document.getElementById('religionsPlayBtn');
+            var rgCloseBtnEl = document.getElementById('religionsCloseBtn');
+            var rgDragging = false;
+            var religionsYearLabelFor = function(year) {
+                if (year < 0) return Math.abs(year) + ' BCE';
+                if (year === 0) return '1 BCE';
+                return year + ' CE';
+            };
+            function fetchReligionsData() {
+                if (religionsData) return Promise.resolve(religionsData);
+                if (!religionsLoading) {
+                    religionsLoading = fetch(BASE + 'religions-history-data.json')
+                        .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+                        .then(function(d) { religionsData = d.religions || []; return religionsData; })
+                        .catch(function(e) { religionsLoading = null; throw e; });
+                }
+                return religionsLoading;
+            }
+            function ensureReligionsOverlay() {
+                if (gReligionsOverlay) return gReligionsOverlay;
+                var svgEl = document.getElementById('mapSvg');
+                if (!svgEl) return null;
+                gReligionsOverlay = d3.select(svgEl).append('g').attr('id', 'religionsOverlayLayer').attr('class', 'religions-overlay-layer');
+                return gReligionsOverlay;
+            }
+            function clearReligionsOverlay() {
+                if (gReligionsOverlay) gReligionsOverlay.selectAll('*').remove();
+            }
+            function getActiveReligionsAtYear(year) {
+                if (!religionsData) return [];
+                return religionsData.filter(function(r) {
+                    return year >= r.startYear && (r.endYear === null || r.endYear === undefined || year <= r.endYear);
+                });
+            }
+            function getReligionSlice(religion, year) {
+                if (!religion.slices || !religion.slices.length) return null;
+                var best = null;
+                religion.slices.forEach(function(s) {
+                    if (s.year <= year) {
+                        if (!best || s.year > best.year) best = s;
+                    }
+                });
+                return best;
+            }
+            function drawReligionsScene(year, skipFadeIn) {
+                var g = ensureReligionsOverlay();
+                if (!g) return;
+                if (!skipFadeIn && prefersReducedMotion() === false) {
+                    g.selectAll('path,text').interrupt().transition().duration(220)
+                        .style('opacity', '0')
+                        .on('end', function() { d3.select(this).remove(); });
+                } else {
+                    g.selectAll('*').remove();
+                }
+                if (!religionsActive) return;
+                var active = getActiveReligionsAtYear(year);
+                var k = Math.max(0.4, currentTransform.k);
+                var fs = Math.max(3, Math.min(12, (isMobile ? 7 : 10) / k));
+                var dur = prefersReducedMotion() ? 0 : 300;
+                active.forEach(function(rel) {
+                    var slice = getReligionSlice(rel, year);
+                    if (!slice || !slice.rings || !slice.rings.length) return;
+                    rel.rings = rel.rings || [];
+                    var ringsData = slice.rings.map(function(ring) { return window.__normalizeEraRing(ring); });
+                    ringsData.forEach(function(ring) {
+                        var feature;
+                        try {
+                            feature = window.__buildEraFeature({ rings: [ring] });
+                        } catch (e) { return; }
+                        var pd = pathGen(feature);
+                        if (!pd) return;
+                        var s = g.append('path').attr('d', pd)
+                            .attr('fill', rel.color).attr('fill-opacity', 0.35)
+                            .attr('stroke', rel.color).attr('stroke-width', 1.5)
+                            .attr('stroke-dasharray', '6,3')
+                            .attr('vector-effect', 'non-scaling-stage').attr('vector-effect', 'non-scaling-stroke')
+                            .style('cursor', 'default').style('pointer-events', 'none');
+                        if (skipFadeIn) s.attr('opacity', 1);
+                        else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 1);
+                    });
+                });
+                active.forEach(function(rel) {
+                    var xy = getActiveProjection()(rel.origin);
+                    if (!xy || isNaN(xy[0])) return;
+                    g.append('circle')
+                        .attr('cx', xy[0]).attr('cy', xy[1])
+                        .attr('r', Math.max(3, 5 / k)).attr('fill', rel.color)
+                        .attr('stroke', '#fff').attr('stroke-width', 1.5 / k)
+                        .attr('opacity', 0.9)
+                        .style('pointer-events', 'none');
+                    g.append('text').attr('x', xy[0]).attr('y', xy[1] - 6 / k)
+                        .text(locField(rel, 'name')).attr('fill', '#ffffff').attr('font-size', fs)
+                        .attr('font-weight', 'bold').attr('text-anchor', 'middle').attr('pointer-events', 'none')
+                        .attr('paint-order', 'stroke').attr('stroke', 'rgba(0,0,0,0.6)').attr('stroke-width', 3 / k);
+                    if (skipFadeIn) {} else {
+                        g.selectAll('circle:last-of-type,text:last-of-type').attr('opacity', 0)
+                            .transition().duration(dur).attr('opacity', 1);
+                    }
+                });
+                renderReligionsLegend(year, active);
+                renderReligionsCaption(year, active);
+            }
+            function renderReligionsLegend(year, active) {
+                if (!rgLegendEl) return;
+                active = active || getActiveReligionsAtYear(year);
+                if (!active.length) {
+                    rgLegendEl.innerHTML = '<div class="religions-legend-empty">' + htmlEscape(t('religionsInactiveAt')) + '</div>';
+                    return;
+                }
+                rgLegendEl.innerHTML = active.map(function(rel) {
+                    return '<div class="religions-legend-item">' +
+                        '<span class="religions-legend-swatch" style="background:' + rel.color + '"></span>' +
+                        '<span class="religions-legend-name">' + htmlEscape(locField(rel, 'name')) + '</span>' +
+                        '</div>';
+                }).join('');
+            }
+            function renderReligionsCaption(year, active) {
+                if (!rgCaptionEl) return;
+                active = active || getActiveReligionsAtYear(year);
+                var parts = [];
+                if (!religionsData) { rgCaptionEl.textContent = ''; return; }
+                religionsData.forEach(function(rel) {
+                    if (year === rel.startYear) {
+                        parts.push(htmlEscape(locField(rel, 'name')) + ' ' + htmlEscape(t('religionsEmerged')));
+                    }
+                    if (rel.endYear !== null && rel.endYear !== undefined && year === rel.endYear) {
+                        parts.push(htmlEscape(locField(rel, 'name')) + ' ' + htmlEscape(t('religionsDisappeared')));
+                    }
+                });
+                rgCaptionEl.innerHTML = parts.join(' &nbsp;·&nbsp; ');
+            }
+            function setReligionsYear(year) {
+                year = Math.max(YEAR_MIN, Math.min(YEAR_MAX, Math.round(year)));
+                religionsYear = year;
+                if (rgYearEl) rgYearEl.textContent = religionsYearLabelFor(year);
+                if (rgTimelineEl) {
+                    var pct = (year - YEAR_MIN) / (YEAR_MAX - YEAR_MIN) * 100;
+                    rgTimelineEl.style.setProperty('--religions-pct', pct + '%');
+                }
+                drawReligionsScene(year, true);
+            }
+            function stopReligionsPlay() {
+                religionsPlayActive = false;
+                if (religionsPlayTimer) { clearInterval(religionsPlayTimer); religionsPlayTimer = null; }
+                if (rgPlayBtnEl) {
+                    rgPlayBtnEl.setAttribute('aria-pressed', 'false');
+                    var i = rgPlayBtnEl.querySelector('[data-lucide]');
+                    if (i) { i.setAttribute('data-lucide', 'play'); if (lucide && lucide.createIcons) lucide.createIcons(); }
+                }
+            }
+            function toggleReligionsPlay() {
+                if (religionsPlayActive) { stopReligionsPlay(); return; }
+                religionsPlayActive = true;
+                if (rgPlayBtnEl) {
+                    rgPlayBtnEl.setAttribute('aria-pressed', 'true');
+                    var i = rgPlayBtnEl.querySelector('[data-lucide]');
+                    if (i) { i.setAttribute('data-lucide', 'pause'); if (lucide && lucide.createIcons) lucide.createIcons(); }
+                }
+                var tick = 200;
+                religionsPlayTimer = setInterval(function() {
+                    var next = religionsYear + 20;
+                    if (next > YEAR_MAX) { stopReligionsPlay(); return; }
+                    setReligionsYear(next);
+                }, tick);
+            }
+            function activateReligionsMode() {
+                religionsActive = true;
+                if (rgPanelEl) rgPanelEl.style.display = '';
+                if (rgBtnEl) { rgBtnEl.classList.add('toggle-on'); rgBtnEl.setAttribute('aria-pressed', 'true'); }
+                ensureReligionsOverlay();
+                fetchReligionsData().then(function() {
+                    setReligionsYear(religionsYear || 0);
+                }).catch(function(err) {
+                    console.error('Religions load error:', err);
+                    if (rgCaptionEl) rgCaptionEl.textContent = 'Error loading religions data.';
+                });
+            }
+            function deactivateReligionsMode() {
+                religionsActive = false;
+                stopReligionsPlay();
+                if (rgPanelEl) rgPanelEl.style.display = 'none';
+                if (rgBtnEl) { rgBtnEl.classList.remove('toggle-on'); rgBtnEl.setAttribute('aria-pressed', 'false'); }
+                clearReligionsOverlay();
+            }
+            function toggleReligionsMode() {
+                if (religionsActive) deactivateReligionsMode();
+                else activateReligionsMode();
+            }
+            if (rgBtnEl) {
+                rgBtnEl.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleReligionsMode();
+                });
+            }
+            if (rgCloseBtnEl) {
+                rgCloseBtnEl.addEventListener('click', function() { deactivateReligionsMode(); });
+            }
+            if (rgPlayBtnEl) {
+                rgPlayBtnEl.addEventListener('click', function() { toggleReligionsPlay(); });
+            }
+            // Timeline drag
+            if (rgTimelineEl) {
+                var rgTlDrag = false;
+                function rgTlPick(clientX) {
+                    var rect = rgTimelineEl.getBoundingClientRect();
+                    if (!rect.width) return;
+                    var ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+                    var year = Math.round(YEAR_MIN + ratio * (YEAR_MAX - YEAR_MIN));
+                    setReligionsYear(year);
+                }
+                rgTimelineEl.addEventListener('pointerdown', function(e) {
+                    rgTlDrag = true;
+                    rgTlPick(e.clientX);
+                    e.preventDefault();
+                });
+                document.addEventListener('pointermove', function(e) {
+                    if (!rgTlDrag) return;
+                    rgTlPick(e.clientX);
+                });
+                document.addEventListener('pointerup', function() { rgTlDrag = false; });
+            }
+            window.toggleReligionsMode = toggleReligionsMode;
+            window.activateReligionsMode = activateReligionsMode;
+            window.deactivateReligionsMode = deactivateReligionsMode;
+            window.setReligionsYear = setReligionsYear;
+            window.toggleReligionsPlay = toggleReligionsPlay;
+            window.getActiveReligionsAtYear = getActiveReligionsAtYear;
 
             function toggleLangDropdown(btn, menu) {
                 var isVisible = menu.classList.contains('visible');

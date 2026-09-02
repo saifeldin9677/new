@@ -11262,7 +11262,7 @@ _lastPanelRenderTime = performance.now();
                     setReligionsYear(religionsYear);
                 }).catch(function(err) {
                     console.error('Religions load error:', err);
-                    if (rgCaptionEl) rgCaptionEl.textContent = 'Error loading religions data.';
+                    if (rgCaptionEl) rgCaptionEl.textContent = t('religionsLoadError');
                 });
             }
             function deactivateReligionsMode() {

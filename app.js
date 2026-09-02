@@ -8328,16 +8328,19 @@ _lastPanelRenderTime = performance.now();
                     var n = parseInt(sc.year, 10);
                     return isNaN(n) ? null : n;
                 }
-                function buildEraFeature(p) {
-                    var rings = (p.rings || []).map(function(ring) {
-                        var r = normalizeEraRing(ring);
-                        try {
-                            if (d3.geoArea({ type: 'Polygon', coordinates: [r] }) > Math.PI * 2) r = r.slice().reverse();
-                        } catch (e) {}
-                        return r;
-                    });
-                    return { type: 'MultiPolygon', coordinates: rings.map(function(r) { return [r]; }) };
-                }
+function buildEraFeature(p) {
+                     var rings = (p.rings || []).map(function(ring) {
+                         var r = normalizeEraRing(ring);
+                         if (r.length && (r[0][0] !== r[r.length - 1][0] || r[0][1] !== r[r.length - 1][1])) {
+                             r = r.concat([r[0].slice()]);
+                         }
+                         try {
+                             if (d3.geoArea({ type: 'Polygon', coordinates: [r] }) > Math.PI * 2) r = r.slice().reverse();
+                         } catch (e) {}
+                         return r;
+                     });
+                     return { type: 'MultiPolygon', coordinates: rings.map(function(r) { return [r]; }) };
+                 }
                 window.__buildEraFeature = buildEraFeature;
                 window.__normalizeEraRing = normalizeEraRing;
                 function drawEraScene(skipFadeIn) {
@@ -11105,13 +11108,15 @@ _lastPanelRenderTime = performance.now();
                 }
                 return religionsLoading;
             }
-            function ensureReligionsOverlay() {
-                if (gReligionsOverlay) return gReligionsOverlay;
-                var svgEl = document.getElementById('mapSvg');
-                if (!svgEl) return null;
-                gReligionsOverlay = d3.select(svgEl).append('g').attr('id', 'religionsOverlayLayer').attr('class', 'religions-overlay-layer');
-                return gReligionsOverlay;
-            }
+function ensureReligionsOverlay() {
+                 if (gReligionsOverlay && gReligionsOverlay.node() && gReligionsOverlay.node().isConnected) return gReligionsOverlay;
+                 var svgEl = document.getElementById('mapSvg');
+                 if (!svgEl) return null;
+                 if (gReligionsOverlay) gReligionsOverlay.selectAll('*').remove();
+                 var parent = gMap || d3.select(svgEl);
+                 gReligionsOverlay = parent.append('g').attr('id', 'religionsOverlayLayer').attr('class', 'religions-overlay-layer');
+                 return gReligionsOverlay;
+             }
             function clearReligionsOverlay() {
                 if (gReligionsOverlay) gReligionsOverlay.selectAll('*').remove();
             }
@@ -11121,16 +11126,17 @@ _lastPanelRenderTime = performance.now();
                     return year >= r.startYear && (r.endYear === null || r.endYear === undefined || year <= r.endYear);
                 });
             }
-            function getReligionSlice(religion, year) {
-                if (!religion.slices || !religion.slices.length) return null;
-                var best = null;
-                religion.slices.forEach(function(s) {
-                    if (s.year <= year) {
-                        if (!best || s.year > best.year) best = s;
-                    }
-                });
-                return best;
-            }
+function getReligionSlice(religion, year) {
+                 if (!religion.slices || !religion.slices.length) return null;
+                 var best = null;
+                 religion.slices.forEach(function(s) {
+                     if (s.year <= year) {
+                         if (!best || s.year > best.year) best = s;
+                     }
+                 });
+                 if (!best) return religion.slices[0];
+                 return best;
+             }
             function drawReligionsScene(year, skipFadeIn) {
                 var g = ensureReligionsOverlay();
                 if (!g) return;
@@ -11303,7 +11309,7 @@ _lastPanelRenderTime = performance.now();
             window.toggleReligionsPlay = toggleReligionsPlay;
             window.getActiveReligionsAtYear = getActiveReligionsAtYear;
             window.religionsStillActive = function() { return religionsActive; };
-            window.drawReligionsSceneNow = function(skipFadeIn) { drawReligionsScene(window.religionsYear, skipFadeIn); };
+            window.drawReligionsSceneNow = function(skipFadeIn) { drawReligionsScene(religionsYear, skipFadeIn); };
 
             function toggleLangDropdown(btn, menu) {
                 var isVisible = menu.classList.contains('visible');

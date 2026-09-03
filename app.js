@@ -4324,16 +4324,13 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     [-width * 2, -height * 2],
                     [width * 3, height * 3]
                 ])
-                // A plain left-button mousedown must NOT start a zoom gesture:
-                // D3-zoom calls preventDefault on that mousedown, which stops the
-                // browser from ever synthesizing the native click on the map paths,
-                // so clicking countries, era polities and other features did nothing.
-                // Rejecting the left-button mousedown here lets those clicks fire,
-                // while wheel-zoom, touch/pinch and ctrl+drag box-zoom still work.
-                .filter(function(event) {
-                    if (event.type !== 'mousedown') return true;
-                    return event.ctrlKey;
-                })
+                // Default D3-zoom behavior: left-mouse drag freely pans the map.
+                // D3 suppresses the native click automatically after a real drag
+                // (movement exceeds the click-distance threshold), while a click
+                // without movement still fires so feature (country/polity) clicks
+                // keep working. The corresponding click handlers check
+                // !event.defaultPrevented to ignore click events d3 marks as
+                // consumed after a drag gesture.
                 .on('zoom', function(e) {
                     if (!_isZooming) {
                         _isZooming = true;
@@ -4635,6 +4632,9 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 }
 
                 function handleCountryActivate(e, d) {
+                    // After a real drag gesture D3-zoom marks the trailing click as
+                    // defaultPrevented; ignore it so panning never opens a panel.
+                    if (e && e.defaultPrevented) return;
                     if (measureActive) return;
                     if (annotateActive) return;
                     if (window.historyIsActive && window.historyIsActive()) { window.openHistoryPanel(d); return; }
@@ -6708,6 +6708,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 // same click bubble phase), skip the contains check — the target may have been
                 // a child element detached by innerHTML replacement mid-propagation.
                 mapContainer.addEventListener('click', function(e) {
+                    if (e && e.defaultPrevented) return;
                     if (countryPanel.style.display === 'block' &&
                         !countryPanel.contains(e.target) &&
                         (performance.now() - _lastPanelRenderTime) > 50) {
@@ -6715,6 +6716,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     }
                 });
                 mapContainer.addEventListener('click', function(e) {
+                    if (e && e.defaultPrevented) return;
                     if (!majorCitiesVisible) return;
                     const rect = getMapRect();
                     const clickX = e.clientX - rect.left;
@@ -7888,9 +7890,9 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     var wt = document.getElementById('histWarTabs');
                     var sb = document.getElementById('histScenarioBtns');
                     var eg = document.getElementById('historyEraGroup');
-                    var mw = document.getElementById('histModeWarsBtn');
-                    var me = document.getElementById('histModeErasBtn');
-                    var mf = document.getElementById('histModeFaithsBtn');
+                    var mw = document.getElementById('histWarsPopoverBtn');
+                    var me = document.getElementById('histErasPopoverBtn');
+                    var mf = document.getElementById('histFaithsPopoverBtn');
                     // The timeline slider / play control lives in the dedicated
                     // floating bottom bar, which only appears for Eras and Faiths.
                     var bb = document.getElementById('historyBottomBar');
@@ -7968,10 +7970,6 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     });
                     if (historyTab === 'eras') {
                         renderEraTabContent();
-                        // A re-render while the panel is collapsed must re-apply
-                        // the collapsed state, otherwise the just-rendered era
-                        // group / timeline escapes the hidden panel.
-                        if (window.historyCollapseApply) window.historyCollapseApply();
                         return;
                     }
                     var row = document.getElementById('histScenarioBtns');
@@ -8037,7 +8035,6 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         '</ul>';
                     refreshLucideIcons();
                     if (historyActive && window.updateHash) window.updateHash();
-                    if (window.historyCollapseApply) window.historyCollapseApply();
                 }
                 function openHistoryPanel(f) {
                     if (historyTab === 'eras') { openEraPanelForFeature(f); return; }
@@ -8615,6 +8612,7 @@ _lastPanelRenderTime = performance.now();
                 window.enterHistoryMode = enterHistoryMode;
                 window.exitHistoryMode = exitHistoryMode;
                 window.renderHistoryBar = renderHistoryBar;
+                window.renderEraTabContent = renderEraTabContent;
                 window.drawHistoryScenario = drawHistoryScenario;
                 window.drawEraScene = drawEraScene;
                 window.openHistoryPanel = openHistoryPanel;
@@ -8709,7 +8707,8 @@ function buildEraFeature(p) {
                                 .attr('stroke', isSel ? '#ffffff' : p.color).attr('stroke-width', isSel ? 3 : 1.8)
                                 .attr('stroke-dasharray', '7,4')
                                 .attr('vector-effect', 'non-scaling-stroke').style('cursor', 'pointer')
-                                .on('click', function() {
+                                .on('click', function(ev) {
+                                    if (ev && ev.defaultPrevented) return;
                                     if (selectedHistoryPolity === p) {
                                         deselectHistoryPolity();
                                     } else {
@@ -11302,108 +11301,51 @@ function buildEraFeature(p) {
                     if (sp) sp.style.display = sp.style.display === 'none' ? 'block' : 'none';
                 });
             }
-            var histModeWarsBtnEl = document.getElementById('histModeWarsBtn');
-            if (histModeWarsBtnEl) {
-                histModeWarsBtnEl.addEventListener('click', function() {
-                    if (window.selectHistoryTab && historyTab !== 'wars') window.selectHistoryTab('wars');
+            // ── History sub-mode popovers (Wars / Eras / Faiths) ──
+            // Each history sub-mode is a header popover dropdown anchored beneath
+            // its trigger button, mirroring #toolsBtn / #barLayersBtn behavior.
+            var histPopoverDefs = [
+                { btnId: 'histWarsPopoverBtn', menuId: 'histWarsPopoverMenu', tab: 'wars' },
+                { btnId: 'histErasPopoverBtn', menuId: 'histErasPopoverMenu', tab: 'eras' },
+                { btnId: 'histFaithsPopoverBtn', menuId: 'histFaithsPopoverMenu', tab: 'faiths' }
+            ];
+            function closeAllHistPopovers() {
+                histPopoverDefs.forEach(function(d) {
+                    var btn = document.getElementById(d.btnId);
+                    var menu = document.getElementById(d.menuId);
+                    if (btn) btn.setAttribute('aria-expanded', 'false');
+                    if (menu) { menu.classList.remove('visible'); menu.setAttribute('hidden', ''); }
                 });
             }
-            var histModeErasBtnEl = document.getElementById('histModeErasBtn');
-            if (histModeErasBtnEl) {
-                histModeErasBtnEl.addEventListener('click', function() {
-                    if (window.selectHistoryTab && historyTab !== 'eras') window.selectHistoryTab('eras');
-                });
-            }
-            var histModeFaithsBtnEl = document.getElementById('histModeFaithsBtn');
-            if (histModeFaithsBtnEl) {
-                histModeFaithsBtnEl.addEventListener('click', function() {
-                    if (window.selectHistoryTab && historyTab !== 'faiths') window.selectHistoryTab('faiths');
-                });
-            }
-            // Collapse / expand the history browsing panel. The collapsed state is
-            // kept for the session (a module-level flag), so switching between the
-            // Wars and Eras tabs does not reset it. It does not need to survive a
-            // page reload.
-            function updateHistoryCollapseUI() {
-                var collapsed = (typeof window.historyHistoryPanelCollapsed !== 'undefined') ? window.historyHistoryPanelCollapsed : false;
-                var eras = historyTab === 'eras';
-                var faiths = historyTab === 'faiths';
-                var wars = historyTab === 'wars';
-                var dockEl2 = document.getElementById('historyModeDock');
-                var btnEl2 = document.getElementById('histCollapseBtn');
-                var indEl = document.getElementById('histCollapsedIndicator');
-                if (dockEl2) dockEl2.classList.toggle('collapsed', collapsed);
-                if (btnEl2) {
-                    btnEl2.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
-                    btnEl2.title = t(collapsed ? 'histExpandTitle' : 'histCollapseTitle');
-                    btnEl2.setAttribute('aria-label', btnEl2.title);
-                }
-                // The browsing-panel body is toggled with inline `!important`
-                // styles (a stylesheet cannot override that), so the collapse /
-                // expand state is applied from JS here. Collapsed: hide the whole
-                // body. Expanded: restore the normal per-tab layout.
-                var frEl = document.getElementById('historyFilterRow');
-                var wtEl = document.getElementById('histWarTabs');
-                var sbEl = document.getElementById('histScenarioBtns');
-                var esEl = document.querySelector('.history-empty-state');
-                var egEl = document.getElementById('historyEraGroup');
-                if (collapsed) {
-                    [frEl, wtEl, sbEl, esEl, egEl].forEach(function(el) {
-                        if (el) el.style.setProperty('display', 'none', 'important');
-                    });
-                } else {
-                    if (frEl) frEl.style.setProperty('display', 'flex', 'important');
-                    if (wtEl) wtEl.style.setProperty('display', wars ? 'flex' : 'none', 'important');
-                    if (sbEl) sbEl.style.setProperty('display', wars ? 'flex' : 'none', 'important');
-                    // empty state: restored by its own render logic; no-op here.
-                    if (egEl) egEl.style.setProperty('display', eras ? 'flex' : 'none', 'important');
-                }
-                if (indEl && collapsed) {
-                    var label = '';
-                    if (historyTab === 'eras') {
-                        var _ea = document.querySelector('#historyEraGroup .history-scenario-btn.active');
-                        if (_ea) label = _ea.textContent.trim();
-                    } else if (historyTab === 'faiths') {
-                        label = t('religionsListBtn');
-                    } else {
-                        var _wa = document.querySelector('#histWarTabs .history-war-tab.active');
-                        if (_wa) label = _wa.textContent.trim();
+            window.closeAllHistPopovers = closeAllHistPopovers;
+            histPopoverDefs.forEach(function(d) {
+                var btn = document.getElementById(d.btnId);
+                var menu = document.getElementById(d.menuId);
+                if (!btn || !menu) return;
+                if (btn.dataset.menuBound) return;
+                btn.dataset.menuBound = '1';
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var isOpen = menu.classList.contains('visible');
+                    closeAllHistPopovers();
+                    if (isOpen) return;
+                    // Ensure the active sub-mode matches this popover so its
+                    // content renders into the right menu.
+                    if (historyTab !== d.tab && window.selectHistoryTab) {
+                        window.selectHistoryTab(d.tab);
                     }
-                    indEl.textContent = label;
-                }
-            }
-            function setHistoryPanelCollapsed(v) {
-                window.historyHistoryPanelCollapsed = !!v;
-            }
-            window.historyCollapseApply = function() {
-                updateHistoryCollapseUI();
-            };
-            window.toggleHistoryCollapse = function() {
-                setHistoryPanelCollapsed(!(window.historyHistoryPanelCollapsed));
-                updateHistoryCollapseUI();
-            };
-            window.setHistoryCollapsed = function(v) {
-                setHistoryPanelCollapsed(v);
-                updateHistoryCollapseUI();
-            };
-            var histCollapseBtnEl = document.getElementById('histCollapseBtn');
-            if (histCollapseBtnEl) {
-                histCollapseBtnEl.addEventListener('click', function() {
-                    var next = !(window.historyHistoryPanelCollapsed);
-                    setHistoryPanelCollapsed(next);
-                    if (next) {
-                        updateHistoryCollapseUI();
-                    } else {
-                        // Re-render so every browsing section gets its correct
-                        // per-tab display back. In Eras mode renderHistoryBar
-                        // returns early (renderEraTabContent), so also apply the
-                        // expanded UI state explicitly afterwards.
-                        if (window.renderHistoryBar) window.renderHistoryBar();
-                        window.historyCollapseApply();
-                    }
+                    menu.classList.add('visible');
+                    menu.removeAttribute('hidden');
+                    btn.setAttribute('aria-expanded', 'true');
+                    // Refresh the popover content.
+                    if (d.tab === 'wars') { if (window.renderHistoryBar) renderHistoryBar(); }
+                    else if (d.tab === 'eras') { if (window.renderEraTabContent) renderEraTabContent(); }
+                    else if (d.tab === 'faiths') { if (window.renderFaithsPopoverList) renderFaithsPopoverList(); }
+                    positionPopover(menu, btn);
                 });
-            }
-            updateHistoryCollapseUI();
+                menu.addEventListener('click', function(e) { e.stopPropagation(); });
+            });
+            document.addEventListener('click', closeAllHistPopovers);
             function refreshHistoryAfterFilterChange() {
                 if (!historyActive) return;
                 if (window.renderHistoryBar) window.renderHistoryBar();
@@ -11455,6 +11397,39 @@ function buildEraFeature(p) {
                     }, 200);
                 });
             }
+            // Eras popover has its own search + region filter that share the same
+            // module-level filter state as the Wars popover so both stay in sync.
+            var histErasRegionSel = document.getElementById('histErasFilterRegion');
+            if (histErasRegionSel && !histErasRegionSel.options.length) {
+                [{ v: 'all', k: 'regionAll' }, { v: 'me', k: 'regionME' }, { v: 'europe', k: 'regionEU' }, { v: 'asia', k: 'regionAS' }, { v: 'africa', k: 'regionAF' }, { v: 'americas', k: 'regionAM' }].forEach(function(o) {
+                    var op = document.createElement('option');
+                    op.value = o.v;
+                    op.textContent = t(o.k);
+                    op.setAttribute('data-i18n', o.k);
+                    if (o.v === historyRegionFilter) op.selected = true;
+                    histErasRegionSel.appendChild(op);
+                });
+                histErasRegionSel.addEventListener('change', function() {
+                    historyRegionFilter = this.value;
+                    var warsSel = document.getElementById('histFilterRegion');
+                    if (warsSel && warsSel.value !== this.value) warsSel.value = this.value;
+                    refreshHistoryAfterFilterChange();
+                });
+            }
+            var histErasSearchInputEl = document.getElementById('histErasSearchInput');
+            if (histErasSearchInputEl) {
+                var histErasSearchDebounce = null;
+                histErasSearchInputEl.addEventListener('input', function() {
+                    var v = this.value;
+                    clearTimeout(histErasSearchDebounce);
+                    histErasSearchDebounce = setTimeout(function() {
+                        historySearchText = v.trim();
+                        var warsInp = document.getElementById('histSearchInput');
+                        if (warsInp && warsInp.value !== v) warsInp.value = v;
+                        refreshHistoryAfterFilterChange();
+                    }, 200);
+                });
+            }
 
             // ── Religions through time ──
             var religionsData = null;
@@ -11469,7 +11444,7 @@ function buildEraFeature(p) {
             var rgGroupEl = document.getElementById('historyFaithsTimelineWrap');
             var rgYearEl = document.getElementById('religionsYearValue');
             var rgTimelineEl = document.getElementById('religionsTimeline');
-            var rgLegendEl = document.getElementById('religionsLegend');
+            var rgLegendEl = document.getElementById('legend');
             var rgCaptionEl = document.getElementById('religionsCaption');
             var rgPlayBtnEl = document.getElementById('religionsPlayBtn');
             var rgDragging = false;
@@ -11582,18 +11557,26 @@ function getReligionSlice(religion, year) {
                 renderReligionsCaption(year, active);
             }
             function renderReligionsLegend(year, active) {
-                if (!rgLegendEl) return;
+                var leg = document.getElementById('legend');
+                if (!leg) return;
+                if (historyTab !== 'faiths') return;
                 active = active || getActiveReligionsAtYear(year);
+                var html;
                 if (!active.length) {
-                    rgLegendEl.innerHTML = '<div class="religions-legend-empty">' + htmlEscape(t('religionsInactiveAt')) + '</div>';
-                    return;
-                }
-                rgLegendEl.innerHTML = active.map(function(rel) {
-                    return '<div class="religions-legend-item">' +
-                        '<span class="religions-legend-swatch" style="background:' + rel.color + '"></span>' +
-                        '<span class="religions-legend-name">' + htmlEscape(locField(rel, 'name')) + '</span>' +
+                    html = '<div class="legend-title">' + htmlEscape(t('religionsListBtn')) + '</div>' +
+                        '<div class="religions-legend-empty">' + htmlEscape(t('religionsInactiveAt')) + '</div>';
+                } else {
+                    html = '<div class="legend-title">' + htmlEscape(t('religionsListBtn')) + '</div>' +
+                        '<div class="religions-legend">' +
+                        active.map(function(rel) {
+                            return '<div class="religions-legend-item">' +
+                                '<span class="religions-legend-swatch" style="background:' + rel.color + '"></span>' +
+                                '<span class="religions-legend-name">' + htmlEscape(locField(rel, 'name')) + '</span>' +
+                                '</div>';
+                        }).join('') +
                         '</div>';
-                }).join('');
+                }
+                leg.innerHTML = html;
             }
             function renderReligionsCaption(year, active) {
                 if (!rgCaptionEl) return;
@@ -11667,6 +11650,41 @@ function getReligionSlice(religion, year) {
                 if (rgGroupEl) rgGroupEl.style.display = 'none';
                 clearReligionsOverlay();
             }
+            window.renderFaithsPopoverList = function() {
+                var list = document.getElementById('histFaithsList');
+                if (!list) return;
+                if (!religionsData) {
+                    list.innerHTML = '<div class="history-loading">' + htmlEscape(t('religionsLoading')) + '</div>';
+                    fetchReligionsData().then(function() {
+                        if (!list.isConnected) return;
+                        window.renderFaithsPopoverList();
+                    }).catch(function() {
+                        if (list.isConnected) list.innerHTML = '<div class="history-loading">' + htmlEscape(t('religionsLoadError')) + '</div>';
+                    });
+                    return;
+                }
+                var active = getActiveReligionsAtYear(religionsYear);
+                var names = {};
+                (active || []).forEach(function(a) { names[a.id] = true; });
+                list.innerHTML = religionsData.map(function(rel) {
+                    var on = !!names[rel.id];
+                    return '<button type="button" class="faiths-popover-item' + (on ? ' active' : '') + '" data-faith-id="' + rel.id + '">' +
+                        '<span class="religions-legend-swatch" style="background:' + rel.color + '"></span>' +
+                        '<span class="faiths-popover-name">' + htmlEscape(locField(rel, 'name')) + '</span>' +
+                        '<span class="faiths-popover-range">' + rel.startYear + '→' + (rel.endYear === null || rel.endYear === undefined ? t('faithsPresent') : rel.endYear) + '</span>' +
+                        '</button>';
+                }).join('');
+                list.querySelectorAll('.faiths-popover-item').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        var id = this.getAttribute('data-faith-id');
+                        var rel = (religionsData || []).find(function(r) { return r.id === id; });
+                        if (rel && window.setReligionsYear) {
+                            setReligionsYear(rel.startYear);
+                            if (historyTab !== 'faiths' && window.selectHistoryTab) selectHistoryTab('faiths');
+                        }
+                    });
+                });
+            };
             if (rgPlayBtnEl) {
                 rgPlayBtnEl.addEventListener('click', function() { toggleReligionsPlay(); });
             }

@@ -111,7 +111,6 @@
                     </button>
                     <div class="religions-timeline" id="religionsTimeline" role="slider" aria-label="Religions timeline" aria-valuemin="-2200" aria-valuemax="2000"></div>
                     <span class="history-year-badge" id="religionsYearValue"></span>
-                    <div class="religions-legend" id="religionsLegend"></div>
                     <div class="religions-caption" id="religionsCaption"></div>
                 </div>
             </div>
@@ -179,28 +178,41 @@
                         <span class="control-label" id="sectionBaseMapLabel" data-i18n="sectionBaseMap"><i data-lucide="map" class="lucide-icon"></i><span class="btn-text">Base Map</span></span>
                         <div class="control-group history-mode-dock" id="historyModeDock" style="display:none">
                             <div class="history-mode-row">
-                                <div class="history-mode-seg" role="tablist">
-                                    <button type="button" class="history-mode-seg-btn active" id="histModeWarsBtn" role="tab" aria-selected="true" data-i18n="histSegWars">حروب</button>
-                                    <button type="button" class="history-mode-seg-btn" id="histModeErasBtn" role="tab" aria-selected="false" data-i18n="histSegEras">الحقب</button>
-                                    <button type="button" class="history-mode-seg-btn" id="histModeFaithsBtn" role="tab" aria-selected="false" data-i18n="religionsListBtn">الأديان</button>
-                                </div>
+                                <button type="button" class="btn header-btn hist-popover-btn" id="histWarsPopoverBtn" aria-haspopup="true" aria-expanded="false" aria-controls="histWarsPopoverMenu"><i data-lucide="swords" class="lucide-icon"></i><span class="btn-text" data-i18n="histSegWars">Wars</span><i data-lucide="chevron-down" class="dropdown-arrow lucide-icon"></i></button>
+                                <button type="button" class="btn header-btn hist-popover-btn" id="histErasPopoverBtn" aria-haspopup="true" aria-expanded="false" aria-controls="histErasPopoverMenu"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text" data-i18n="histSegEras">Eras</span><i data-lucide="chevron-down" class="dropdown-arrow lucide-icon"></i></button>
+                                <button type="button" class="btn header-btn hist-popover-btn" id="histFaithsPopoverBtn" aria-haspopup="true" aria-expanded="false" aria-controls="histFaithsPopoverMenu"><i data-lucide="book-open" class="lucide-icon"></i><span class="btn-text" data-i18n="religionsListBtn">Religions</span><i data-lucide="chevron-down" class="dropdown-arrow lucide-icon"></i></button>
                                 <span class="history-mode-spacer"></span>
                                 <button class="btn hist-only" id="histTerrainBtn" style="display:none" type="button" data-i18n-title="mode_terrain_tip"><i data-lucide="mountain" class="lucide-icon"></i><span class="btn-text" data-i18n="mode_terrain"></span></button>
                                 <button class="btn hist-only" id="histSourcesBtn" style="display:none" type="button" data-i18n-title="histSourcesTitle"><i data-lucide="book-marked" class="lucide-icon"></i><span class="btn-text" data-i18n="histSourcesBtn"></span></button>
-                                <span class="history-collapsed-indicator" id="histCollapsedIndicator" aria-hidden="true"></span>
-                                <button type="button" class="history-collapse-btn" id="histCollapseBtn" aria-expanded="true" aria-controls="historyModeDock" data-i18n-title="histCollapseTitle" title="Collapse panel"><i data-lucide="chevron-down" class="lucide-icon hist-collapse-icon"></i></button>
                             </div>
-                            <div class="history-filter-row" id="historyFilterRow">
-                                <input type="text" class="history-search-input" id="histSearchInput" data-i18n-placeholder="histSearchPlaceholder" autocomplete="off" />
-                                <select class="history-region-select" id="histFilterRegion"></select>
-                                <select class="history-region-select" id="histFilterReligion"></select>
+                        </div>
+                        <!-- History sub-mode popovers (Wars / Eras / Faiths) -->
+                        <div class="hist-popover-menu" id="histWarsPopoverMenu" role="menu" hidden>
+                            <div class="hist-popover-body">
+                                <div class="history-filter-row" id="historyFilterRow">
+                                    <input type="text" class="history-search-input" id="histSearchInput" data-i18n-placeholder="histSearchPlaceholder" autocomplete="off" />
+                                    <select class="history-region-select" id="histFilterRegion"></select>
+                                    <select class="history-region-select" id="histFilterReligion"></select>
+                                </div>
+                                <div class="history-war-tabs" id="histWarTabs" role="tablist"></div>
+                                <div class="history-scenarios" id="histScenarioBtns"></div>
+                                <div class="history-empty-state" id="histEmptyState" style="display:none"></div>
                             </div>
-                            <div class="history-war-tabs" id="histWarTabs" role="tablist"></div>
-                            <div class="history-scenarios" id="histScenarioBtns"></div>
-                            <div class="history-empty-state" id="histEmptyState" style="display:none"></div>
-                            <div class="history-era-group" id="historyEraGroup" style="display:none">
-                                <!-- Era browsing chips (selection) live in the top dock;
-                                     the timeline slider is in the bottom timeline bar. -->
+                        </div>
+                        <div class="hist-popover-menu" id="histErasPopoverMenu" role="menu" hidden>
+                            <div class="hist-popover-body">
+                                <div class="history-era-pop-filter-row" id="histErasFilterRow">
+                                    <input type="text" class="history-search-input" id="histErasSearchInput" data-i18n-placeholder="histSearchPlaceholder" autocomplete="off" />
+                                    <select class="history-region-select" id="histErasFilterRegion"></select>
+                                </div>
+                                <div class="history-era-group" id="historyEraGroup" style="display:none">
+                                    <!-- Era browsing chips (selection) live in the popover; the timeline slider is in the bottom timeline bar. -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hist-popover-menu" id="histFaithsPopoverMenu" role="menu" hidden>
+                            <div class="hist-popover-body">
+                                <div class="history-faiths-list" id="histFaithsList"></div>
                             </div>
                         </div>
                         <div class="control-group" id="modeButtons">

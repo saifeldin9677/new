@@ -186,35 +186,6 @@
                                 <button class="btn hist-only" id="histSourcesBtn" style="display:none" type="button" data-i18n-title="histSourcesTitle"><i data-lucide="book-marked" class="lucide-icon"></i><span class="btn-text" data-i18n="histSourcesBtn"></span></button>
                             </div>
                         </div>
-                        <!-- History sub-mode popovers (Wars / Eras / Faiths) -->
-                        <div class="hist-popover-menu" id="histWarsPopoverMenu" role="menu" hidden>
-                            <div class="hist-popover-body">
-                                <div class="history-filter-row" id="historyFilterRow">
-                                    <input type="text" class="history-search-input" id="histSearchInput" data-i18n-placeholder="histSearchPlaceholder" autocomplete="off" />
-                                    <select class="history-region-select" id="histFilterRegion"></select>
-                                    <select class="history-region-select" id="histFilterReligion"></select>
-                                </div>
-                                <div class="history-war-tabs" id="histWarTabs" role="tablist"></div>
-                                <div class="history-scenarios" id="histScenarioBtns"></div>
-                                <div class="history-empty-state" id="histEmptyState" style="display:none"></div>
-                            </div>
-                        </div>
-                        <div class="hist-popover-menu" id="histErasPopoverMenu" role="menu" hidden>
-                            <div class="hist-popover-body">
-                                <div class="history-era-pop-filter-row" id="histErasFilterRow">
-                                    <input type="text" class="history-search-input" id="histErasSearchInput" data-i18n-placeholder="histSearchPlaceholder" autocomplete="off" />
-                                    <select class="history-region-select" id="histErasFilterRegion"></select>
-                                </div>
-                                <div class="history-era-group" id="historyEraGroup" style="display:none">
-                                    <!-- Era browsing chips (selection) live in the popover; the timeline slider is in the bottom timeline bar. -->
-                                </div>
-                            </div>
-                        </div>
-                        <div class="hist-popover-menu" id="histFaithsPopoverMenu" role="menu" hidden>
-                            <div class="hist-popover-body">
-                                <div class="history-faiths-list" id="histFaithsList"></div>
-                            </div>
-                        </div>
                         <div class="control-group" id="modeButtons">
                             <button class="btn mode-btn" aria-pressed="false" data-mode="religion" title="ألوان حسب الديانة"><i data-lucide="book-open" class="lucide-icon"></i><span class="btn-text">دين</span></button>
                             <button class="btn mode-btn" aria-pressed="false" data-mode="terrain" title="ألوان حسب التضاريس"><i data-lucide="mountain" class="lucide-icon"></i><span class="btn-text">تضاريس</span></button>
@@ -238,6 +209,39 @@
                 </div>
                 <button class="btn bar-layers-btn floating-capsule" id="barLayersBtn" title="فتح نافذة الطبقات" aria-label="فتح الطبقات" data-i18n-title="layersToggle" data-i18n-aria-label="layersToggle"><i data-lucide="layers" class="lucide-icon"></i><span class="btn-text" data-i18n="layersToggle">الطبقات</span></button>
                 <button class="btn bar-layers-btn floating-capsule" id="barDivisionBtn" data-i18n-title="rowFilterLabel"><i data-lucide="filter" class="lucide-icon"></i><span class="btn-text" data-i18n="rowFilterLabel">التقسيم</span></button>
+            </div>
+        </div>
+
+        <!-- History sub-mode popovers (Wars / Eras / Faiths). Reasonably moved
+             to body level so they escape the dock-unified-wrap ancestor whose
+             drop-shadow filter would otherwise become the containing block for
+             our position:fixed menus (shifting them off-screen in RTL). -->
+        <div class="hist-popover-menu" id="histWarsPopoverMenu" role="menu" hidden>
+            <div class="hist-popover-body">
+                <div class="history-filter-row" id="historyFilterRow">
+                    <input type="text" class="history-search-input" id="histSearchInput" data-i18n-placeholder="histSearchPlaceholder" autocomplete="off" />
+                    <select class="history-region-select" id="histFilterRegion"></select>
+                    <select class="history-region-select" id="histFilterReligion"></select>
+                </div>
+                <div class="history-war-tabs" id="histWarTabs" role="tablist"></div>
+                <div class="history-scenarios" id="histScenarioBtns"></div>
+                <div class="history-empty-state" id="histEmptyState" style="display:none"></div>
+            </div>
+        </div>
+        <div class="hist-popover-menu" id="histErasPopoverMenu" role="menu" hidden>
+            <div class="hist-popover-body">
+                <div class="history-era-pop-filter-row" id="histErasFilterRow">
+                    <input type="text" class="history-search-input" id="histErasSearchInput" data-i18n-placeholder="histSearchPlaceholder" autocomplete="off" />
+                    <select class="history-region-select" id="histErasFilterRegion"></select>
+                </div>
+                <div class="history-era-group" id="historyEraGroup" style="display:none">
+                    <!-- Era browsing chips (selection) live in the popover; the timeline slider is in the bottom timeline bar. -->
+                </div>
+            </div>
+        </div>
+        <div class="hist-popover-menu" id="histFaithsPopoverMenu" role="menu" hidden>
+            <div class="hist-popover-body">
+                <div class="history-faiths-list" id="histFaithsList"></div>
             </div>
         </div>
 

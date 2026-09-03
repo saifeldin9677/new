@@ -5445,6 +5445,9 @@ body.section-history #modeRow {
     visibility: visible;
     animation: menu-popover-in 0.18s ease;
 }
+.hist-popover-btn {
+    border-radius: var(--dock-radius, clamp(8px, 0.65vw, 14px));
+}
 .hist-popover-btn.active {
     background: #0f766e;
     color: #fff;

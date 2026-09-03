@@ -329,6 +329,8 @@
             let historyRegionFilter = 'all';
             let historyReligionFilter = 'all';
             let historySearchText = '';
+            let historyLayerOpacity = 0.55;
+            var _timelineInteractedTime = 0; // لمنع إغلاق القوائم عند التفاعل مع الشريط
             let measureActive = false;
             let measurePoints = [];
             let gMeasure = null;
@@ -7693,9 +7695,10 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             var pd = pathGen(f);
                             if (pd) {
                                 var s = gHistoryOverlay.append('path').attr('d', pd).attr('fill', col)
+                                    .attr('fill-opacity', historyLayerOpacity)
                                     .attr('stroke', '#ffffff').attr('stroke-width', 1.2).attr('stroke-dasharray', '5,3')
                                     .attr('vector-effect', 'non-scaling-stroke').style('pointer-events', 'none');
-                                if (skipFadeIn) s.attr('opacity', 1); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 1);
+                            if (skipFadeIn) s.attr('opacity', historyLayerOpacity); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 1);
                             }
                             try {
                                 var cen = d3.geoCentroid(f);
@@ -8563,7 +8566,7 @@ _lastPanelRenderTime = performance.now();
                     syncGlobeBtnState();
                 }
                 var SECTION_GEO_ONLY = ['#modeButtons', '#sectionBaseMapLabel', '#quizBtn', '#compareProjectionsBtn', '#barDivisionBtn'];
-                var SECTION_HIST_ONLY = ['#historyModeDock', '#histTerrainBtn', '#histSourcesBtn'];
+                var SECTION_HIST_ONLY = ['#historyModeDock', '#histTerrainBtn', '#histSourcesBtn', '#histOpacityControl'];
                 function setSectionVis(el, visible) {
                     if (!el) return;
                     if (visible) el.style.setProperty('display', 'flex', 'important');
@@ -8704,6 +8707,7 @@ function buildEraFeature(p) {
                         if (pd) {
                             var isSel = selectedHistoryPolity === p;
                             var s = gHistoryOverlay.append('path').attr('d', pd).attr('fill', p.color)
+                                .attr('fill-opacity', historyLayerOpacity)
                                 .attr('stroke', isSel ? '#ffffff' : p.color).attr('stroke-width', isSel ? 3 : 1.8)
                                 .attr('stroke-dasharray', '7,4')
                                 .attr('vector-effect', 'non-scaling-stroke').style('cursor', 'pointer')
@@ -8715,7 +8719,7 @@ function buildEraFeature(p) {
                                         showEraPolityPanel(p, era);
                                     }
                                 });
-                            if (skipFadeIn) s.attr('opacity', 1); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 1);
+                            if (skipFadeIn) s.attr('opacity', historyLayerOpacity); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', historyLayerOpacity);
                         }
                     });
                     era.polities.forEach(function(p) {
@@ -8996,13 +9000,20 @@ function buildEraFeature(p) {
                             }
                         }
                         tl.addEventListener('pointerdown', function(e) {
+                            _timelineInteractedTime = Date.now();
                             stopHistPlay();
                             tlDrag = true;
                             try { tl.setPointerCapture(e.pointerId); } catch (err) {}
                             tlPick(e.clientX);
                         });
-                        tl.addEventListener('pointermove', function(e) { if (tlDrag) tlPick(e.clientX); });
+                        tl.addEventListener('pointermove', function(e) {
+                            if (tlDrag) {
+                                _timelineInteractedTime = Date.now();
+                                tlPick(e.clientX);
+                            }
+                        });
                         tl.addEventListener('pointerup', function() {
+                            _timelineInteractedTime = Date.now();
                             if (!tlDrag) return;
                             tlDrag = false;
                             renderHistoryBar();
@@ -11301,6 +11312,23 @@ function buildEraFeature(p) {
                     if (sp) sp.style.display = sp.style.display === 'none' ? 'block' : 'none';
                 });
             }
+            // History boundary opacity control. Live-updates the opacity of the
+            // historical boundary polygons (era polities / war regions) drawn in
+            // the history overlay layer, and persists the value for future redraws.
+            var histOpacitySlider = document.getElementById('histOpacitySlider');
+            if (histOpacitySlider) {
+                histOpacitySlider.value = historyLayerOpacity;
+                var valEl = document.getElementById('histOpacityVal');
+                if (valEl) valEl.textContent = Math.round(historyLayerOpacity * 100) + '%';
+                histOpacitySlider.addEventListener('input', function() {
+                    historyLayerOpacity = parseFloat(this.value);
+                    var pct = Math.round(historyLayerOpacity * 100) + '%';
+                    if (valEl) valEl.textContent = pct;
+                    if (gHistoryOverlay) {
+                        gHistoryOverlay.selectAll('path').attr('fill-opacity', historyLayerOpacity);
+                    }
+                });
+            }
             // ── History sub-mode popovers (Wars / Eras / Faiths) ──
             // Each history sub-mode is a header popover dropdown anchored beneath
             // its trigger button, mirroring #toolsBtn / #barLayersBtn behavior.
@@ -11345,7 +11373,39 @@ function buildEraFeature(p) {
                 });
                 menu.addEventListener('click', function(e) { e.stopPropagation(); });
             });
-            document.addEventListener('click', closeAllHistPopovers);
+            // إغلاق القوائم عند النقر في الخارج مع استثناء شريط الزمن والتفاعل معه
+            document.addEventListener('click', function(e) {
+                if (Date.now() - _timelineInteractedTime < 350) return;
+                if (e.target.closest('#historyBottomBar') ||
+                    e.target.closest('.hist-popover-menu') ||
+                    e.target.closest('.hist-popover-btn')) {
+                    return;
+                }
+                closeAllHistPopovers();
+            });
+            // إعادة تموضع القوائم عند تغيير حجم الشاشة
+            window.addEventListener('resize', function() {
+                histPopoverDefs.forEach(function(d) {
+                    var rmenu = document.getElementById(d.menuId);
+                    var rbtn = document.getElementById(d.btnId);
+                    if (rmenu && rmenu.classList.contains('visible') && rbtn) {
+                        positionPopover(rmenu, rbtn);
+                    }
+                });
+            });
+            // إغلاق القوائم عند الضغط على Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeAllHistPopovers();
+                }
+            });
+            // سجّل وقت أي تفاعل مع شريط الزمن حتى لا تُغلق القوائم المفتوحة أثناء
+            // استخدام الشريط (يستثنيه معالج النقر الخارجي عبر _timelineInteractedTime).
+            document.addEventListener('pointerdown', function(e) {
+                if (e.target && e.target.closest && e.target.closest('#historyBottomBar')) {
+                    _timelineInteractedTime = Date.now();
+                }
+            }, true);
             function refreshHistoryAfterFilterChange() {
                 if (!historyActive) return;
                 if (window.renderHistoryBar) window.renderHistoryBar();
@@ -11699,6 +11759,7 @@ function getReligionSlice(religion, year) {
                     setReligionsYear(year);
                 }
                 rgTimelineEl.addEventListener('pointerdown', function(e) {
+                    _timelineInteractedTime = Date.now();
                     rgTlDrag = true;
                     rgTlPick(e.clientX);
                     e.preventDefault();

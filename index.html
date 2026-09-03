@@ -182,6 +182,14 @@
                                 <button type="button" class="btn header-btn hist-popover-btn" id="histErasPopoverBtn" aria-haspopup="true" aria-expanded="false" aria-controls="histErasPopoverMenu"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text" data-i18n="histSegEras">Eras</span><i data-lucide="chevron-down" class="dropdown-arrow lucide-icon"></i></button>
                                 <button type="button" class="btn header-btn hist-popover-btn" id="histFaithsPopoverBtn" aria-haspopup="true" aria-expanded="false" aria-controls="histFaithsPopoverMenu"><i data-lucide="book-open" class="lucide-icon"></i><span class="btn-text" data-i18n="religionsListBtn">Religions</span><i data-lucide="chevron-down" class="dropdown-arrow lucide-icon"></i></button>
                                 <span class="history-mode-spacer"></span>
+                                <div class="hist-opacity-control hist-only" id="histOpacityControl" style="display:none">
+                                    <label for="histOpacitySlider" class="hist-opacity-label" data-i18n-title="histOpacityTip" title="شفافية الحدود التاريخية">
+                                        <i data-lucide="layers" class="lucide-icon"></i>
+                                        <span class="btn-text" data-i18n="histOpacity">الشفافية</span>
+                                    </label>
+                                    <input type="range" id="histOpacitySlider" min="0.1" max="1" step="0.05" value="0.55" class="hist-opacity-slider">
+                                    <span class="hist-opacity-val" id="histOpacityVal">55%</span>
+                                </div>
                                 <button class="btn hist-only" id="histTerrainBtn" style="display:none" type="button" data-i18n-title="mode_terrain_tip"><i data-lucide="mountain" class="lucide-icon"></i><span class="btn-text" data-i18n="mode_terrain"></span></button>
                                 <button class="btn hist-only" id="histSourcesBtn" style="display:none" type="button" data-i18n-title="histSourcesTitle"><i data-lucide="book-marked" class="lucide-icon"></i><span class="btn-text" data-i18n="histSourcesBtn"></span></button>
                             </div>

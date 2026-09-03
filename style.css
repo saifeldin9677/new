@@ -5592,3 +5592,100 @@ body.section-history .dock-unified-wrap { flex: 1 1 auto; min-width: 0; }
     font-size: 0.78rem;
 }
 #historyEraGroup .history-timeline { height: 28px; }
+
+/* ── إلغاء الأشكال البيضاوية وتوحيد الزوايا على 8px ── */
+.section-toggle {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: var(--radius-sm, 8px) !important;
+    padding: 2px;
+}
+.section-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: none;
+    background: transparent;
+    color: var(--text, #e0e8f0);
+    border-radius: calc(var(--radius-sm, 8px) - 2px) !important;
+    padding: 5px 12px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    opacity: 0.75;
+}
+.section-toggle-btn.active {
+    background: var(--brand-accent, #14B8A6);
+    color: #08202c;
+    font-weight: 700;
+    opacity: 1;
+    border-radius: calc(var(--radius-sm, 8px) - 2px) !important;
+}
+
+/* أزرار وحقول التاريخ */
+.history-war-tab,
+.history-scenario-btn,
+.hist-popover-btn,
+.history-mode-seg-btn,
+.history-mode-seg,
+.hist-chip,
+.faiths-popover-item,
+.history-action-btn {
+    border-radius: var(--radius-sm, 8px) !important;
+}
+
+.history-search-input,
+.history-region-select {
+    border-radius: var(--radius-sm, 8px) !important;
+    height: 30px;
+    padding: 4px 10px;
+    background: var(--panel-bg, #21252b);
+    color: var(--text, #e0e8f0);
+    border: 1px solid rgba(255,255,255,0.16);
+    font-size: 0.78rem;
+}
+
+.history-year-badge {
+    border-radius: var(--radius-sm, 8px) !important;
+}
+
+.hist-compare-floating-banner {
+    border-radius: var(--radius-md, 12px) !important;
+}
+
+/* ── شريط شفافية الحدود التاريخية (Opacity Control) ── */
+.hist-opacity-control {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: var(--radius-sm, 8px);
+    padding: 2px 10px;
+    height: 32px;
+    box-sizing: border-box;
+}
+.hist-opacity-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.78rem;
+    color: var(--text-secondary, #9aa5b1);
+    cursor: pointer;
+    white-space: nowrap;
+}
+.hist-opacity-slider {
+    width: 65px;
+    height: 4px;
+    accent-color: var(--brand-accent, #14B8A6);
+    cursor: pointer;
+}
+.hist-opacity-val {
+    font-size: 0.75rem;
+    color: var(--brand-accent, #14B8A6);
+    font-weight: 700;
+    min-width: 32px;
+    text-align: center;
+}

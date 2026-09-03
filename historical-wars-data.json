@@ -1,0 +1,2667 @@
+{
+  "version": 1,
+  "note_en": "Major historical conflicts across world history with participants, shifting alignments, and academic sources. Displayed on modern boundaries for pedagogical comparison.",
+  "note_ar": "أهم النزاعات الكبرى عبر التاريخ مع أطرافها ومحطاتها الزمنية ومراجعها الأكاديمية.",
+  "wars": [
+    {
+      "id": "american-civil-1861",
+      "epoch": "nineteenth",
+      "region": "americas",
+      "name_ar": "الحرب الأهلية الأمريكية",
+      "name_en": "American Civil War",
+      "name_ru": "Гражданская война в США",
+      "name_uz": "AQSH fuqarolar urushi",
+      "name_es": "Guerra Civil Estadounidense",
+      "years_ar": "1861–1865 م",
+      "years_en": "1861–1865 CE",
+      "sides": {
+        "union": "الاتحاد (الولايات الشمالية)",
+        "confederacy": "الكونفدرالية (الولايات الجنوبية)"
+      },
+      "sources": [
+        "J.M. McPherson, \"Battle Cry of Freedom: The Civil War Era\" (Oxford University Press, 1988)."
+      ],
+      "scenarios": [
+        {
+          "id": "gettysburg-1863",
+          "year": "1863 CE",
+          "title_ar": "معركة غيتيسبرغ ونقطة التحول",
+          "title_en": "Gettysburg & Turning Point",
+          "desc_ar": "انكسار قوات الجنرال لي في غيتيسبرغ وإعلان لنكولن تحرير العبيد.",
+          "desc_en": "Confederate high water mark shattered at Gettysburg, paving way for Union victory.",
+          "participants": [
+            {
+              "c": "United States",
+              "side": "union",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "constantinople-1453",
+      "epoch": "early-modern",
+      "region": "me",
+      "name_ar": "فتح القسطنطينية",
+      "name_en": "Fall of Constantinople",
+      "name_ru": "Падение Константинополя",
+      "name_uz": "Konstantinopolning fath etilishi",
+      "name_es": "Caída de Constantinopla",
+      "years_ar": "1453 م",
+      "years_en": "1453 CE",
+      "sides": {
+        "ottoman": "الدولة العثمانية",
+        "byzantine": "الإمبراطورية البيزنطية وحلفاؤها"
+      },
+      "sources": [
+        "S. Runciman, \"The Fall of Constantinople 1453\" (Cambridge University Press, 1965).",
+        "F. Babinger, \"Mehmed the Conqueror and His Time\" (Princeton, 1978)."
+      ],
+      "scenarios": [
+        {
+          "id": "siege-1453",
+          "year": "1453 CE",
+          "title_ar": "حصار الأسوار وسقوط المدينة",
+          "title_en": "The Final Siege",
+          "desc_ar": "محمد الفاتح يدك أسوار ثيودوسيوس بالمدافع الضخمة، منهياً العصور الوسطى والإمبراطورية الرومانية الشرقية.",
+          "desc_en": "Mehmed II uses super-sized cannons to breach the Theodosian Walls, ending the Byzantine Empire.",
+          "participants": [
+            {
+              "c": "Turkey",
+              "side": "ottoman",
+              "role": "major"
+            },
+            {
+              "c": "Greece",
+              "side": "byzantine",
+              "role": "major"
+            },
+            {
+              "c": "Italy",
+              "side": "byzantine",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "crusade3-1189",
+      "epoch": "medieval",
+      "region": "me",
+      "name_ar": "الحملة الصليبية الثالثة وصلاح الدين",
+      "name_en": "Third Crusade (Saladin & Richard)",
+      "name_ru": "Третий крестовый поход (Саладин)",
+      "name_uz": "Uchinchi salib yurishi (Salohiddin)",
+      "name_es": "Tercera Cruzada (Saladino y Ricardo)",
+      "years_ar": "1189–1192 م",
+      "years_en": "1189–1192 CE",
+      "sides": {
+        "muslim": "الدولة الأيوبية",
+        "crusaders": "التحالف الصليبي الأوروبي"
+      },
+      "sources": [
+        "S. Runciman, \"A History of the Crusades, Vol. III\" (Cambridge University Press, 1954).",
+        "M.C. Lyons & D.E.P. Jackson, \"Saladin: The Politics of the Holy War\" (Cambridge, 1982)."
+      ],
+      "scenarios": [
+        {
+          "id": "crusade3-clash",
+          "year": "1191 CE",
+          "title_ar": "حصار عكا ومعركة أرسوف",
+          "title_en": "Siege of Acre & Battle of Arsuf",
+          "desc_ar": "صلاح الدين الأيوبي يواجه ريتشارد قلب الأسد وفيليب أغسطس بعد استعادة القدس في حطين.",
+          "desc_en": "Saladin confronts Richard the Lionheart and Philip Augustus in the Levant.",
+          "participants": [
+            {
+              "c": "Egypt",
+              "side": "muslim",
+              "role": "major"
+            },
+            {
+              "c": "Syria",
+              "side": "muslim",
+              "role": "major"
+            },
+            {
+              "c": "Iraq",
+              "side": "muslim",
+              "role": "ally"
+            },
+            {
+              "c": "United Kingdom",
+              "side": "crusaders",
+              "role": "major"
+            },
+            {
+              "c": "France",
+              "side": "crusaders",
+              "role": "major"
+            },
+            {
+              "c": "Germany",
+              "side": "crusaders",
+              "role": "major"
+            },
+            {
+              "c": "Palestine",
+              "side": "muslim",
+              "role": "occupied"
+            },
+            {
+              "c": "Israel",
+              "side": "muslim",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "hundred-years-1337",
+      "epoch": "medieval",
+      "region": "europe",
+      "name_ar": "حرب المائة عام",
+      "name_en": "Hundred Years' War",
+      "name_ru": "Столетняя война",
+      "name_uz": "Yuz yillik urush",
+      "name_es": "Guerra de los Cien Años",
+      "years_ar": "1337–1453 م",
+      "years_en": "1337–1453 CE",
+      "sides": {
+        "england": "إنجلترا وحلفاؤها",
+        "france": "فرنسا وحلفاؤها"
+      },
+      "sources": [
+        "J. Sumption, \"The Hundred Years War\" (5 vols, University of Pennsylvania Press, 1990–2023).",
+        "C. Allmand, \"The Hundred Years War: England and France at War\" (Cambridge, 1988)."
+      ],
+      "scenarios": [
+        {
+          "id": "agincourt-1415",
+          "year": "1415 CE",
+          "title_ar": "معركة أجينكور وظهور جان دارك",
+          "title_en": "Agincourt to Joan of Arc",
+          "desc_ar": "انتصار هنري الخامس الساحق بالأقواس الطويلة، ثم تحول الموازين بقيادة جان دارك.",
+          "desc_en": "Henry V's archers triumph at Agincourt before French revival led by Joan of Arc.",
+          "participants": [
+            {
+              "c": "United Kingdom",
+              "side": "england",
+              "role": "major"
+            },
+            {
+              "c": "France",
+              "side": "france",
+              "role": "major"
+            },
+            {
+              "c": "Belgium",
+              "side": "england",
+              "role": "ally"
+            },
+            {
+              "c": "Scotland",
+              "side": "france",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "kadesh-1274",
+      "epoch": "ancient",
+      "region": "me",
+      "name_ar": "معركة قادش والحروب المصرية الحثية",
+      "name_en": "Battle of Kadesh (Egyptian-Hittite War)",
+      "name_ru": "Битва при Кадеше (Египетско-хеттская война)",
+      "name_uz": "Qadesh jangi (Misr-Xet urushi)",
+      "name_es": "Batalla de Qadesh (Guerra egipcio-hitita)",
+      "years_ar": "1274 ق.م",
+      "years_en": "1274 BCE",
+      "sides": {
+        "egypt": "التحالف المصري",
+        "hittite": "التحالف الحثي"
+      },
+      "sources": [
+        "K.A. Kitchen, \"Pharaoh Triumphant: The Life and Times of Ramesses II\" (Aris & Phillips, 1982).",
+        "T. Bryce, \"The Kingdom of the Hittites\" (Oxford University Press, 2005)."
+      ],
+      "scenarios": [
+        {
+          "id": "kadesh-main",
+          "year": "1274 BCE",
+          "title_ar": "المواجهة الكبرى في قادش",
+          "title_en": "Clash at the Orontes",
+          "desc_ar": "أكبر معركة عربات حربية في التاريخ القديم بين رمسيس الثاني ومواتالي الثاني، انتهت بأول معاهدة سلام موثقة.",
+          "desc_en": "The largest chariot battle in antiquity between Ramesses II and Muwatalli II, culminating in the first recorded peace treaty.",
+          "participants": [
+            {
+              "c": "Egypt",
+              "side": "egypt",
+              "role": "major"
+            },
+            {
+              "c": "Sudan",
+              "side": "egypt",
+              "role": "ally"
+            },
+            {
+              "c": "Turkey",
+              "side": "hittite",
+              "role": "major"
+            },
+            {
+              "c": "Syria",
+              "side": "hittite",
+              "role": "ally"
+            },
+            {
+              "c": "Lebanon",
+              "side": "egypt",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "mongol-1258",
+      "epoch": "medieval",
+      "region": "asia",
+      "name_ar": "الغزو المغولي وسقوط بغداد",
+      "name_en": "Mongol Invasion of the Near East",
+      "name_ru": "Монгольское завоевание Ближнего Востока",
+      "name_uz": "Mo‘g‘ullarning Yaqin Sharqqa yurishi",
+      "name_es": "Invasión mongola del Oriente Próximo",
+      "years_ar": "1256–1260 م",
+      "years_en": "1256–1260 CE",
+      "sides": {
+        "mongol": "الإمبراطورية المغولية",
+        "islamic": "الخلافة العباسية والمماليك"
+      },
+      "sources": [
+        "D. Morgan, \"The Mongols\" (Blackwell, 2007).",
+        "R. Amitai-Preiss, \"Mongols and Mamluks: The Mamluk-Ilkhanid War\" (Cambridge, 1995)."
+      ],
+      "scenarios": [
+        {
+          "id": "ain-jalut-1260",
+          "year": "1260 CE",
+          "title_ar": "سقوط بغداد ومعركة عين جالوت",
+          "title_en": "Fall of Baghdad & Ain Jalut",
+          "desc_ar": "هولاكو ينهي الخلافة العباسية في بغداد، ثم ينكسر الجيش المغولي في عين جالوت على يد قطز وبيبرس.",
+          "desc_en": "Hulagu destroys Baghdad; the Mamluk victory at Ain Jalut halts further western Mongol expansion.",
+          "participants": [
+            {
+              "c": "Mongolia",
+              "side": "mongol",
+              "role": "major"
+            },
+            {
+              "c": "China",
+              "side": "mongol",
+              "role": "ally"
+            },
+            {
+              "c": "Georgia",
+              "side": "mongol",
+              "role": "ally"
+            },
+            {
+              "c": "Armenia",
+              "side": "mongol",
+              "role": "ally"
+            },
+            {
+              "c": "Egypt",
+              "side": "islamic",
+              "role": "major"
+            },
+            {
+              "c": "Syria",
+              "side": "islamic",
+              "role": "occupied"
+            },
+            {
+              "c": "Iraq",
+              "side": "islamic",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "napoleonic-1803",
+      "epoch": "nineteenth",
+      "region": "europe",
+      "name_ar": "الحروب النابليونية",
+      "name_en": "Napoleonic Wars",
+      "name_ru": "Наполеоновские войны",
+      "name_uz": "Napoleon urushlari",
+      "name_es": "Guerras Napoleónicas",
+      "years_ar": "1803–1815 م",
+      "years_en": "1803–1815 CE",
+      "sides": {
+        "france": "الإمبراطورية الفرنسية الأولى وحلفاؤها",
+        "coalition": "التحالف الأوروبي المناهض"
+      },
+      "sources": [
+        "D. Chandler, \"The Campaigns of Napoleon\" (Macmillan, 1966).",
+        "C. Esdaile, \"Napoleon's Wars: An International History\" (Penguin, 2007)."
+      ],
+      "scenarios": [
+        {
+          "id": "austerlitz-1805",
+          "year": "1805 CE",
+          "title_ar": "معركة أوسترليتز (معركة الأباطرة الثلاثة)",
+          "title_en": "Austerlitz & The Peak of Empire",
+          "desc_ar": "نابليون يسحق الجيشين الروسي والنمساوي ويحل الإمبراطورية الرومانية المقدسة.",
+          "desc_en": "Napoleon shatters the Austro-Russian armies at Austerlitz, dismantling the Holy Roman Empire.",
+          "participants": [
+            {
+              "c": "France",
+              "side": "france",
+              "role": "major"
+            },
+            {
+              "c": "Spain",
+              "side": "france",
+              "role": "ally"
+            },
+            {
+              "c": "Italy",
+              "side": "france",
+              "role": "ally"
+            },
+            {
+              "c": "United Kingdom",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Russia",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Austria",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Germany",
+              "side": "coalition",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        },
+        {
+          "id": "waterloo-1815",
+          "year": "1815 CE",
+          "title_ar": "معركة واترلو والنهاية",
+          "title_en": "Battle of Waterloo",
+          "desc_ar": "هزيمة نابليون الأخيرة أمام ولينغتون وبلوشر ونفيه إلى سانت هيلينا.",
+          "desc_en": "Napoleon's final defeat at Waterloo against Wellington and Blücher.",
+          "participants": [
+            {
+              "c": "France",
+              "side": "france",
+              "role": "major"
+            },
+            {
+              "c": "United Kingdom",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Germany",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Netherlands",
+              "side": "coalition",
+              "role": "ally"
+            },
+            {
+              "c": "Belgium",
+              "side": "coalition",
+              "role": "occupied"
+            },
+            {
+              "c": "Russia",
+              "side": "coalition",
+              "role": "ally"
+            },
+            {
+              "c": "Austria",
+              "side": "coalition",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "october-1973",
+      "epoch": "modern",
+      "region": "me",
+      "name_ar": "حرب أكتوبر / العاشر من رمضان",
+      "name_en": "October War (Yom Kippur War)",
+      "name_ru": "Война Судного дня (Октябрьская война)",
+      "name_uz": "Oktyabr urushi",
+      "name_es": "Guerra de Octubre (Yom Kipur)",
+      "years_ar": "1973 م",
+      "years_en": "1973 CE",
+      "sides": {
+        "arab": "التحالف العربي (مصر وسوريا)",
+        "israel": "إسرائيل"
+      },
+      "sources": [
+        "A. Shazly, \"The Crossing of the Suez\" (American Mideast Research, 1980).",
+        "H.A. Kissinger, \"Years of Upheaval\" (Little, Brown, 1982)."
+      ],
+      "scenarios": [
+        {
+          "id": "crossing-1973",
+          "year": "1973 CE",
+          "title_ar": "معركة العبور واقتحام خط بارليف",
+          "title_en": "Operation Badr & Golan Front",
+          "desc_ar": "القوات المصرية تقتحم قناة السويس وتحطم خط بارليف بالتزامن مع هجوم الجيش السوري في الجولان.",
+          "desc_en": "Egyptian amphibious crossing of the Suez Canal breaching Bar Lev line alongside Syrian offensive in Golan.",
+          "participants": [
+            {
+              "c": "Egypt",
+              "side": "arab",
+              "role": "major"
+            },
+            {
+              "c": "Syria",
+              "side": "arab",
+              "role": "major"
+            },
+            {
+              "c": "Iraq",
+              "side": "arab",
+              "role": "ally"
+            },
+            {
+              "c": "Jordan",
+              "side": "arab",
+              "role": "ally"
+            },
+            {
+              "c": "Saudi Arabia",
+              "side": "arab",
+              "role": "ally"
+            },
+            {
+              "c": "Algeria",
+              "side": "arab",
+              "role": "ally"
+            },
+            {
+              "c": "Israel",
+              "side": "israel",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "peloponnesian-431",
+      "epoch": "ancient",
+      "region": "europe",
+      "name_ar": "الحرب البيلوبونيسية",
+      "name_en": "Peloponnesian War",
+      "name_ru": "Пелопоннесская война",
+      "name_uz": "Peloponnes urushi",
+      "name_es": "Guerra del Peloponeso",
+      "years_ar": "431–404 ق.م",
+      "years_en": "431–404 BCE",
+      "sides": {
+        "delian": "الحلف الديلي (أثينا)",
+        "peloponnesian": "الحلف البيلوبونيسي (إسبرطة)"
+      },
+      "sources": [
+        "Thucydides, \"History of the Peloponnesian War\" (trans. R. Warner, Penguin Classics).",
+        "D. Kagan, \"The Peloponnesian War\" (Viking, 2003)."
+      ],
+      "scenarios": [
+        {
+          "id": "pelo-outbreak",
+          "year": "431 BCE",
+          "title_ar": "اندلاع الصراع اليوناني",
+          "title_en": "War of the Greek Hegemony",
+          "desc_ar": "صراع الهيمنة بين الديمقراطية الأثينية البحرية والنزعة العسكرية الإسبرطية البرية.",
+          "desc_en": "The struggle for Greek hegemony between maritime Athenian democracy and Spartan militarism.",
+          "participants": [
+            {
+              "c": "Greece",
+              "side": "delian",
+              "role": "major"
+            },
+            {
+              "c": "Turkey",
+              "side": "delian",
+              "role": "ally"
+            },
+            {
+              "c": "Italy",
+              "side": "peloponnesian",
+              "role": "ally"
+            },
+            {
+              "c": "Iran",
+              "side": "peloponnesian",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "punic2-218",
+      "epoch": "ancient",
+      "region": "me",
+      "name_ar": "الحرب البونيقية الثانية (حملة حنبعل)",
+      "name_en": "Second Punic War (Hannibal)",
+      "name_ru": "Вторая Пуническая война (Ганнибал)",
+      "name_uz": "Ikkinchi Punik urushi (Gannibal)",
+      "name_es": "Segunda Guerra Púnica (Aníbal)",
+      "years_ar": "218–201 ق.م",
+      "years_en": "218–201 BCE",
+      "sides": {
+        "carthage": "قرطاج وحلفاؤها",
+        "rome": "الجمهورية الرومانية"
+      },
+      "sources": [
+        "Polybius, \"The Histories\" (Loeb Classical Library).",
+        "A. Goldsworthy, \"The Fall of Carthage\" (Cassell, 2000)."
+      ],
+      "scenarios": [
+        {
+          "id": "punic-cannae",
+          "year": "216 BCE",
+          "title_ar": "كارثة كاناي وغزو إيطاليا",
+          "title_en": "Battle of Cannae & Italian Campaign",
+          "desc_ar": "حنبعل يعبر الألب ويسحق الجيوش الرومانية في كاناي بأعظم تكتيك تطويق مزدوج.",
+          "desc_en": "Hannibal crosses the Alps and shatters the Roman legions at Cannae using double envelopment.",
+          "participants": [
+            {
+              "c": "Tunisia",
+              "side": "carthage",
+              "role": "major"
+            },
+            {
+              "c": "Spain",
+              "side": "carthage",
+              "role": "ally"
+            },
+            {
+              "c": "Algeria",
+              "side": "carthage",
+              "role": "ally"
+            },
+            {
+              "c": "Italy",
+              "side": "rome",
+              "role": "major"
+            },
+            {
+              "c": "Greece",
+              "side": "carthage",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "thirty-years-1618",
+      "epoch": "early-modern",
+      "region": "europe",
+      "name_ar": "حرب الثلاثين عاماً",
+      "name_en": "Thirty Years' War",
+      "name_ru": "Тридцатилетняя война",
+      "name_uz": "O‘ttiz yillik urush",
+      "name_es": "Guerra de los Treinta Años",
+      "years_ar": "1618–1648 م",
+      "years_en": "1618–1648 CE",
+      "sides": {
+        "habsburg": "حلف الهابسبورغ الكاثوليكي",
+        "anti-habsburg": "التحالف البروتستانتي والفرنسي"
+      },
+      "sources": [
+        "P.H. Wilson, \"The Thirty Years War: Europe's Tragedy\" (Harvard University Press, 2009).",
+        "C.V. Wedgwood, \"The Thirty Years War\" (Jonathan Cape, 1938)."
+      ],
+      "scenarios": [
+        {
+          "id": "thirty-peak",
+          "year": "1635 CE",
+          "title_ar": "التدخل الفرنسي والسويدي",
+          "title_en": "French & Swedish Intervention",
+          "desc_ar": "أعنف حرب دينية وسياسية في أوروبا الوسطى تنتهي بصلح وستفاليا وميلاد نظام الدول الحديثة.",
+          "desc_en": "Devastating European conflict reshaping power and resulting in the Peace of Westphalia.",
+          "participants": [
+            {
+              "c": "Germany",
+              "side": "habsburg",
+              "role": "major"
+            },
+            {
+              "c": "Austria",
+              "side": "habsburg",
+              "role": "major"
+            },
+            {
+              "c": "Spain",
+              "side": "habsburg",
+              "role": "major"
+            },
+            {
+              "c": "France",
+              "side": "anti-habsburg",
+              "role": "major"
+            },
+            {
+              "c": "Sweden",
+              "side": "anti-habsburg",
+              "role": "major"
+            },
+            {
+              "c": "Netherlands",
+              "side": "anti-habsburg",
+              "role": "ally"
+            },
+            {
+              "c": "Czechia",
+              "side": "anti-habsburg",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "wwi",
+      "name_ar": "الحرب العالمية الأولى",
+      "name_en": "World War I",
+      "name_ru": "Первая мировая война",
+      "name_uz": "Birinchi jahon urushi",
+      "name_es": "Primera Guerra Mundial",
+      "years_ar": "1914–1918",
+      "years_en": "1914–1918",
+      "sides": {
+        "entente": "histSideEntente",
+        "central": "histSideCentral"
+      },
+      "sources": [
+        "Tucker, Spencer C. (ed.), \"World War I: The Definitive Encyclopedia and Document Collection\", ABC-CLIO, 2014.",
+        "Strachan, Hew, \"The First World War\", Simon & Schuster, 2003.",
+        "\"Encyclopædia Britannica\", 13th edition (1926) — contemporary public-domain accounts.",
+        "Modern country boundaries: Natural Earth (public domain)."
+      ],
+      "scenarios": [
+        {
+          "id": "wwi-1914",
+          "year": "1914",
+          "title_ar": "اندلاع الحرب",
+          "title_en": "Outbreak of War",
+          "title_ru": "Начало войны",
+          "title_uz": "Urush boshlanishi",
+          "title_es": "Estallido de la guerra",
+          "desc_ar": "أغسطس 1914: التحالفات تنزلق بالقارات إلى الحرب.",
+          "desc_en": "August 1914: alliances drag the continent into war.",
+          "participants": [
+            {
+              "c": "United Kingdom",
+              "side": "entente",
+              "role": "major"
+            },
+            {
+              "c": "France",
+              "side": "entente",
+              "role": "major"
+            },
+            {
+              "c": "Russia",
+              "side": "entente",
+              "role": "major"
+            },
+            {
+              "c": "Belgium",
+              "side": "entente",
+              "role": "ally",
+              "n": "germanInvasion1914"
+            },
+            {
+              "c": "Serbia",
+              "side": "entente",
+              "role": "ally",
+              "n": "ahInvasion1914"
+            },
+            {
+              "c": "Montenegro",
+              "side": "entente",
+              "role": "ally",
+              "n": "ahInvasion1914"
+            },
+            {
+              "c": "Japan",
+              "side": "entente",
+              "role": "ally",
+              "n": "japanQingdao1914",
+              "yr": "VIII/1914"
+            },
+            {
+              "c": "Canada",
+              "side": "entente",
+              "role": "dominion",
+              "n": "dominionAuto"
+            },
+            {
+              "c": "Australia",
+              "side": "entente",
+              "role": "dominion",
+              "n": "dominionAuto"
+            },
+            {
+              "c": "New Zealand",
+              "side": "entente",
+              "role": "dominion",
+              "n": "dominionAuto"
+            },
+            {
+              "c": "South Africa",
+              "side": "entente",
+              "role": "dominion",
+              "n": "dominionAuto"
+            },
+            {
+              "c": "India",
+              "side": "entente",
+              "role": "colony",
+              "n": "britishRaj"
+            },
+            {
+              "c": "Sudan",
+              "side": "entente",
+              "role": "colony",
+              "n": "angloEgyptianSudan"
+            },
+            {
+              "c": "Egypt",
+              "side": "entente",
+              "role": "protectorate",
+              "n": "egyptProtectorate"
+            },
+            {
+              "c": "Algeria",
+              "side": "entente",
+              "role": "colony",
+              "n": "frenchAlgeria"
+            },
+            {
+              "c": "Dem. Rep. Congo",
+              "side": "entente",
+              "role": "colony",
+              "n": "belgianCongo"
+            },
+            {
+              "c": "Germany",
+              "side": "central",
+              "role": "major"
+            },
+            {
+              "c": "Spain",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Switzerland",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Netherlands",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Norway",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Sweden",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Denmark",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Italy",
+              "side": "neutral",
+              "role": "neutral",
+              "n": "italyNeutral1914"
+            },
+            {
+              "c": "Portugal",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Romania",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Bulgaria",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Greece",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Albania",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "United States",
+              "side": "neutral",
+              "role": "neutral",
+              "n": "usaNeutral1914"
+            },
+            {
+              "c": "China",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Iran",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Afghanistan",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Ethiopia",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Brazil",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Argentina",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Mexico",
+              "side": "neutral",
+              "role": "neutral"
+            }
+          ],
+          "empires": [
+            {
+              "id": "ah",
+              "side": "central",
+              "role": "major",
+              "members": [
+                "Austria",
+                "Hungary",
+                "Czechia",
+                "Slovakia",
+                "Croatia",
+                "Slovenia",
+                "Bosnia"
+              ],
+              "partial_ar": "بولندا وأوكرانيا ورومانيا وإيطاليا",
+              "partial_en": "Poland, Ukraine, Romania and Italy"
+            },
+            {
+              "id": "ottoman",
+              "side": "central",
+              "role": "major",
+              "joinYr": "XI/1914",
+              "members": [
+                "Turkey",
+                "Iraq",
+                "Syria",
+                "Lebanon",
+                "Israel",
+                "Palestine",
+                "Jordan",
+                "Yemen"
+              ],
+              "partial_ar": "السعودية (الحجاز)",
+              "partial_en": "Saudi Arabia (Hejaz)"
+            }
+          ]
+        },
+        {
+          "id": "wwi-1917",
+          "year": "1917",
+          "title_ar": "اتساع الحرب",
+          "title_en": "The War Widens",
+          "title_ru": "Расширение войны",
+          "title_uz": "Urush kengayishi",
+          "title_es": "La guerra se amplía",
+          "desc_ar": "أبريل 1917: أمريكا تدخل، وروسيا تقترب من الانسحاب.",
+          "desc_en": "April 1917: America enters as Russia nears collapse.",
+          "participants": [
+            {
+              "c": "United Kingdom",
+              "side": "entente",
+              "role": "major"
+            },
+            {
+              "c": "France",
+              "side": "entente",
+              "role": "major"
+            },
+            {
+              "c": "Russia",
+              "side": "entente",
+              "role": "major"
+            },
+            {
+              "c": "Italy",
+              "side": "entente",
+              "role": "major",
+              "n": "italyJoins1915",
+              "yr": "V/1915"
+            },
+            {
+              "c": "United States",
+              "side": "entente",
+              "role": "major",
+              "n": "usaNeutral1914",
+              "yr": "IV/1917"
+            },
+            {
+              "c": "Belgium",
+              "side": "entente",
+              "role": "ally",
+              "n": "germanInvasion1914"
+            },
+            {
+              "c": "Serbia",
+              "side": "entente",
+              "role": "ally",
+              "n": "ahInvasion1914"
+            },
+            {
+              "c": "Montenegro",
+              "side": "entente",
+              "role": "ally",
+              "n": "ahInvasion1914"
+            },
+            {
+              "c": "Japan",
+              "side": "entente",
+              "role": "ally",
+              "n": "japanQingdao1914"
+            },
+            {
+              "c": "Greece",
+              "side": "entente",
+              "role": "ally",
+              "n": "greece1917",
+              "yr": "VI/1917"
+            },
+            {
+              "c": "China",
+              "side": "entente",
+              "role": "ally",
+              "n": "china1917",
+              "yr": "VIII/1917"
+            },
+            {
+              "c": "Portugal",
+              "side": "entente",
+              "role": "ally",
+              "n": "portugal1916",
+              "yr": "III/1916"
+            },
+            {
+              "c": "Brazil",
+              "side": "entente",
+              "role": "ally",
+              "n": "brazil1917",
+              "yr": "X/1917"
+            },
+            {
+              "c": "Romania",
+              "side": "entente",
+              "role": "occupied",
+              "n": "romania1916",
+              "yr": "XII/1916"
+            },
+            {
+              "c": "Canada",
+              "side": "entente",
+              "role": "dominion",
+              "n": "dominionAuto"
+            },
+            {
+              "c": "Australia",
+              "side": "entente",
+              "role": "dominion",
+              "n": "dominionAuto"
+            },
+            {
+              "c": "New Zealand",
+              "side": "entente",
+              "role": "dominion",
+              "n": "dominionAuto"
+            },
+            {
+              "c": "South Africa",
+              "side": "entente",
+              "role": "dominion",
+              "n": "dominionAuto"
+            },
+            {
+              "c": "India",
+              "side": "entente",
+              "role": "colony",
+              "n": "britishRaj"
+            },
+            {
+              "c": "Sudan",
+              "side": "entente",
+              "role": "colony",
+              "n": "angloEgyptianSudan"
+            },
+            {
+              "c": "Egypt",
+              "side": "entente",
+              "role": "protectorate",
+              "n": "egyptProtectorate"
+            },
+            {
+              "c": "Algeria",
+              "side": "entente",
+              "role": "colony",
+              "n": "frenchAlgeria"
+            },
+            {
+              "c": "Dem. Rep. Congo",
+              "side": "entente",
+              "role": "colony",
+              "n": "belgianCongo"
+            },
+            {
+              "c": "Germany",
+              "side": "central",
+              "role": "major"
+            },
+            {
+              "c": "Bulgaria",
+              "side": "central",
+              "role": "ally",
+              "n": "bulgaria1915",
+              "yr": "X/1915"
+            },
+            {
+              "c": "Spain",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Switzerland",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Netherlands",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Norway",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Sweden",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Denmark",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Thailand",
+              "side": "neutral",
+              "role": "neutral",
+              "yr": "VII/1917"
+            },
+            {
+              "c": "Iran",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Afghanistan",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Ethiopia",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Argentina",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Mexico",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Chile",
+              "side": "neutral",
+              "role": "neutral"
+            }
+          ],
+          "empires": [
+            {
+              "id": "ah",
+              "side": "central",
+              "role": "major",
+              "members": [
+                "Austria",
+                "Hungary",
+                "Czechia",
+                "Slovakia",
+                "Croatia",
+                "Slovenia",
+                "Bosnia"
+              ],
+              "partial_ar": "بولندا وأوكرانيا ورومانيا وإيطاليا",
+              "partial_en": "Poland, Ukraine, Romania and Italy"
+            },
+            {
+              "id": "ottoman",
+              "side": "central",
+              "role": "major",
+              "members": [
+                "Turkey",
+                "Iraq",
+                "Syria",
+                "Lebanon",
+                "Israel",
+                "Palestine",
+                "Jordan",
+                "Yemen"
+              ],
+              "partial_ar": "السعودية (الحجاز)",
+              "partial_en": "Saudi Arabia (Hejaz)"
+            }
+          ]
+        },
+        {
+          "id": "wwi-1918",
+          "year": "1918",
+          "title_ar": "انهيار الإمبراطوريات",
+          "title_en": "Collapse of Empires",
+          "title_ru": "Крах империй",
+          "title_uz": "Imperialiyalarning qulashi",
+          "title_es": "Colapso de los imperios",
+          "desc_ar": "نوفمبر 1918: أربع إمبراطوريات تسقط ويولد عالم جديد.",
+          "desc_en": "November 1918: four empires fall and a new world is born.",
+          "participants": [
+            {
+              "c": "United Kingdom",
+              "side": "entente",
+              "role": "major"
+            },
+            {
+              "c": "France",
+              "side": "entente",
+              "role": "major"
+            },
+            {
+              "c": "Italy",
+              "side": "entente",
+              "role": "major",
+              "n": "italyJoins1915"
+            },
+            {
+              "c": "United States",
+              "side": "entente",
+              "role": "major",
+              "yr": "IV/1917"
+            },
+            {
+              "c": "Japan",
+              "side": "entente",
+              "role": "ally",
+              "n": "japanSiberia1918"
+            },
+            {
+              "c": "Belgium",
+              "side": "entente",
+              "role": "ally",
+              "n": "germanInvasion1914"
+            },
+            {
+              "c": "Serbia",
+              "side": "entente",
+              "role": "ally",
+              "n": "serbiaLiberated1918"
+            },
+            {
+              "c": "Montenegro",
+              "side": "entente",
+              "role": "ally"
+            },
+            {
+              "c": "Greece",
+              "side": "entente",
+              "role": "ally",
+              "n": "greece1917"
+            },
+            {
+              "c": "China",
+              "side": "entente",
+              "role": "ally",
+              "n": "china1917"
+            },
+            {
+              "c": "Portugal",
+              "side": "entente",
+              "role": "ally",
+              "n": "portugal1916"
+            },
+            {
+              "c": "Brazil",
+              "side": "entente",
+              "role": "ally",
+              "n": "brazil1917"
+            },
+            {
+              "c": "Thailand",
+              "side": "entente",
+              "role": "ally",
+              "n": "siam1917",
+              "yr": "VII/1917"
+            },
+            {
+              "c": "Romania",
+              "side": "entente",
+              "role": "ally",
+              "n": "romaniaRenewed1918",
+              "yr": "XI/1918"
+            },
+            {
+              "c": "Poland",
+              "side": "entente",
+              "role": "ally",
+              "n": "polandRestored1918",
+              "yr": "XI/1918"
+            },
+            {
+              "c": "Czechia",
+              "side": "entente",
+              "role": "ally",
+              "n": "czechoslovakia1918",
+              "yr": "X/1918"
+            },
+            {
+              "c": "Slovakia",
+              "side": "entente",
+              "role": "ally",
+              "n": "czechoslovakia1918",
+              "yr": "X/1918"
+            },
+            {
+              "c": "Croatia",
+              "side": "entente",
+              "role": "ally",
+              "n": "yugoslavia1918",
+              "yr": "XII/1918"
+            },
+            {
+              "c": "Slovenia",
+              "side": "entente",
+              "role": "ally",
+              "n": "yugoslavia1918",
+              "yr": "XII/1918"
+            },
+            {
+              "c": "Bosnia",
+              "side": "entente",
+              "role": "ally",
+              "n": "yugoslavia1918",
+              "yr": "XII/1918"
+            },
+            {
+              "c": "Canada",
+              "side": "entente",
+              "role": "dominion",
+              "n": "dominionAuto"
+            },
+            {
+              "c": "Australia",
+              "side": "entente",
+              "role": "dominion",
+              "n": "dominionAuto"
+            },
+            {
+              "c": "New Zealand",
+              "side": "entente",
+              "role": "dominion",
+              "n": "dominionAuto"
+            },
+            {
+              "c": "South Africa",
+              "side": "entente",
+              "role": "dominion",
+              "n": "dominionAuto"
+            },
+            {
+              "c": "India",
+              "side": "entente",
+              "role": "colony",
+              "n": "britishRaj"
+            },
+            {
+              "c": "Sudan",
+              "side": "entente",
+              "role": "colony",
+              "n": "angloEgyptianSudan"
+            },
+            {
+              "c": "Egypt",
+              "side": "entente",
+              "role": "protectorate",
+              "n": "egyptProtectorate"
+            },
+            {
+              "c": "Algeria",
+              "side": "entente",
+              "role": "colony",
+              "n": "frenchAlgeria"
+            },
+            {
+              "c": "Dem. Rep. Congo",
+              "side": "entente",
+              "role": "colony",
+              "n": "belgianCongo"
+            },
+            {
+              "c": "Russia",
+              "side": "neutral",
+              "role": "neutral",
+              "n": "russiaExit1918",
+              "yr": "III/1918"
+            },
+            {
+              "c": "Germany",
+              "side": "central",
+              "role": "major",
+              "n": "germanyArmistice1918",
+              "yr": "XI/1918"
+            },
+            {
+              "c": "Bulgaria",
+              "side": "central",
+              "role": "ally",
+              "n": "bulgaria1915",
+              "yr": "IX/1918"
+            },
+            {
+              "c": "Spain",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Switzerland",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Netherlands",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Norway",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Sweden",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Denmark",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Iran",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Afghanistan",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Argentina",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Mexico",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Chile",
+              "side": "neutral",
+              "role": "neutral"
+            }
+          ],
+          "empires": [
+            {
+              "id": "ah",
+              "side": "central",
+              "role": "major",
+              "endYr": "XI/1918",
+              "members": [
+                "Austria",
+                "Hungary",
+                "Czechia",
+                "Slovakia",
+                "Croatia",
+                "Slovenia",
+                "Bosnia"
+              ],
+              "partial_ar": "بولندا وأوكرانيا ورومانيا وإيطاليا",
+              "partial_en": "Poland, Ukraine, Romania and Italy"
+            },
+            {
+              "id": "ottoman",
+              "side": "central",
+              "role": "major",
+              "endYr": "X/1918",
+              "members": [
+                "Turkey",
+                "Iraq",
+                "Syria",
+                "Lebanon",
+                "Israel",
+                "Palestine",
+                "Jordan",
+                "Yemen"
+              ],
+              "partial_ar": "السعودية (الحجاز)",
+              "partial_en": "Saudi Arabia (Hejaz)"
+            }
+          ]
+        }
+      ],
+      "epoch": "modern",
+      "region": "world"
+    },
+    {
+      "id": "wwii",
+      "name_ar": "الحرب العالمية الثانية",
+      "name_en": "World War II",
+      "name_ru": "Вторая мировая война",
+      "name_uz": "Ikkinchi jahon urushi",
+      "name_es": "Segunda Guerra Mundial",
+      "years_ar": "1939–1945",
+      "years_en": "1939–1945",
+      "sides": {
+        "allies": "histSideAllies",
+        "axis": "histSideAxis"
+      },
+      "sources": [
+        "Dear, I.C.B. & Foot, M.R.D. (eds.), \"The Oxford Companion to World War II\", Oxford University Press, 2005.",
+        "Weinberg, Gerhard L., \"A World at Arms: A Global History of World War II\", Cambridge University Press, 1994.",
+        "Overmans, Rüdiger & other casualty studies cited per-country where figures differ.",
+        "Modern country boundaries: Natural Earth (public domain)."
+      ],
+      "scenarios": [
+        {
+          "id": "wwii-1939",
+          "year": "1939",
+          "title_ar": "اندلاع الحرب",
+          "title_en": "Outbreak of War",
+          "title_ru": "Начало войны",
+          "title_uz": "Urush boshlanishi",
+          "title_es": "Estallido de la guerra",
+          "desc_ar": "سبتمبر 1939: غزو بولندا وإعلان بريطانيا وفرنسا الحرب.",
+          "desc_en": "September 1939: Poland invaded; Britain and France declare war.",
+          "participants": [
+            {
+              "c": "United Kingdom",
+              "side": "allies",
+              "role": "major",
+              "yr": "IX/1939"
+            },
+            {
+              "c": "France",
+              "side": "allies",
+              "role": "major",
+              "yr": "IX/1939"
+            },
+            {
+              "c": "Australia",
+              "side": "allies",
+              "role": "dominion",
+              "n": "dominionAuto"
+            },
+            {
+              "c": "New Zealand",
+              "side": "allies",
+              "role": "dominion",
+              "n": "dominionAuto"
+            },
+            {
+              "c": "Canada",
+              "side": "allies",
+              "role": "dominion",
+              "n": "canadaDelay1939",
+              "yr": "IX/1939"
+            },
+            {
+              "c": "South Africa",
+              "side": "allies",
+              "role": "dominion",
+              "n": "safricaNarrow1939",
+              "yr": "IX/1939"
+            },
+            {
+              "c": "India",
+              "side": "allies",
+              "role": "colony",
+              "n": "britishRaj"
+            },
+            {
+              "c": "Palestine",
+              "side": "allies",
+              "role": "colony",
+              "n": "britishMandateME"
+            },
+            {
+              "c": "Jordan",
+              "side": "allies",
+              "role": "colony",
+              "n": "britishMandateME"
+            },
+            {
+              "c": "China",
+              "side": "allies",
+              "role": "ally",
+              "n": "chinaWar1937"
+            },
+            {
+              "c": "Poland",
+              "side": "allies",
+              "role": "occupied",
+              "n": "poland1939",
+              "yr": "IX/1939"
+            },
+            {
+              "c": "Germany",
+              "side": "axis",
+              "role": "major"
+            },
+            {
+              "c": "Japan",
+              "side": "axis",
+              "role": "major",
+              "n": "chinaWar1937"
+            },
+            {
+              "c": "Slovakia",
+              "side": "axis",
+              "role": "ally",
+              "n": "slovakClient1939"
+            },
+            {
+              "c": "Russia",
+              "side": "neutral",
+              "role": "neutral",
+              "n": "molotovPact1939"
+            },
+            {
+              "c": "Italy",
+              "side": "neutral",
+              "role": "neutral",
+              "n": "italyNonBelligerent1939"
+            },
+            {
+              "c": "Finland",
+              "side": "neutral",
+              "role": "neutral",
+              "n": "winterWar1939",
+              "yr": "XI/1939"
+            },
+            {
+              "c": "United States",
+              "side": "neutral",
+              "role": "neutral",
+              "n": "usaNeutrality1939"
+            },
+            {
+              "c": "Spain",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Switzerland",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Sweden",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Norway",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Denmark",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Netherlands",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Belgium",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Luxembourg",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Ireland",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Portugal",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Turkey",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Greece",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Serbia",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Bosnia",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Croatia",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Slovenia",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Macedonia",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Montenegro",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Kosovo",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Hungary",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Romania",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Bulgaria",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Iran",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Afghanistan",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Saudi Arabia",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Thailand",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Brazil",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Argentina",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Mexico",
+              "side": "neutral",
+              "role": "neutral"
+            }
+          ],
+          "empires": []
+        },
+        {
+          "id": "wwii-1942",
+          "year": "1942",
+          "title_ar": "أقصى اتساع للمحور",
+          "title_en": "Axis High Tide",
+          "title_ru": "Пик держав оси",
+          "title_uz": "Osi qudrati cho‘qqisi",
+          "title_es": "Marea alta del Eje",
+          "desc_ar": "نوفمبر 1942: المحور عند أقصى اتساعه من فرنسا إلى بورما.",
+          "desc_en": "November 1942: Axis power peaks from France to Burma.",
+          "participants": [
+            {
+              "c": "United Kingdom",
+              "side": "allies",
+              "role": "major"
+            },
+            {
+              "c": "France",
+              "side": "allies",
+              "role": "occupied",
+              "n": "franceFall1940",
+              "yr": "XI/1942"
+            },
+            {
+              "c": "Russia",
+              "side": "allies",
+              "role": "major",
+              "n": "barbarossa1941",
+              "yr": "VI/1941"
+            },
+            {
+              "c": "United States",
+              "side": "allies",
+              "role": "major",
+              "n": "pearlHarbor1941",
+              "yr": "XII/1941"
+            },
+            {
+              "c": "China",
+              "side": "allies",
+              "role": "major",
+              "n": "chinaWar1937"
+            },
+            {
+              "c": "Canada",
+              "side": "allies",
+              "role": "dominion",
+              "n": "dominionAuto"
+            },
+            {
+              "c": "Australia",
+              "side": "allies",
+              "role": "dominion",
+              "n": "dominionAuto"
+            },
+            {
+              "c": "New Zealand",
+              "side": "allies",
+              "role": "dominion",
+              "n": "dominionAuto"
+            },
+            {
+              "c": "South Africa",
+              "side": "allies",
+              "role": "dominion",
+              "n": "safricaNarrow1939"
+            },
+            {
+              "c": "India",
+              "side": "allies",
+              "role": "colony",
+              "n": "britishRaj"
+            },
+            {
+              "c": "Jordan",
+              "side": "allies",
+              "role": "colony",
+              "n": "britishMandateME"
+            },
+            {
+              "c": "Palestine",
+              "side": "allies",
+              "role": "colony",
+              "n": "britishMandateME"
+            },
+            {
+              "c": "Iraq",
+              "side": "allies",
+              "role": "ally",
+              "n": "iraqBritain1942"
+            },
+            {
+              "c": "Egypt",
+              "side": "allies",
+              "role": "ally",
+              "n": "egyptWWII"
+            },
+            {
+              "c": "Ethiopia",
+              "side": "allies",
+              "role": "ally",
+              "n": "ethiopiaOccupied1936"
+            },
+            {
+              "c": "Syria",
+              "side": "allies",
+              "role": "ally",
+              "n": "freeFrenchLevant"
+            },
+            {
+              "c": "Lebanon",
+              "side": "allies",
+              "role": "ally",
+              "n": "freeFrenchLevant"
+            },
+            {
+              "c": "Iran",
+              "side": "allies",
+              "role": "occupied",
+              "n": "iranAngloSoviet1941",
+              "yr": "VIII/1941"
+            },
+            {
+              "c": "Brazil",
+              "side": "allies",
+              "role": "ally",
+              "n": "brazil1942",
+              "yr": "VIII/1942"
+            },
+            {
+              "c": "Mexico",
+              "side": "allies",
+              "role": "ally",
+              "n": "mexico1942",
+              "yr": "V/1942"
+            },
+            {
+              "c": "Germany",
+              "side": "axis",
+              "role": "major"
+            },
+            {
+              "c": "Italy",
+              "side": "axis",
+              "role": "major"
+            },
+            {
+              "c": "Japan",
+              "side": "axis",
+              "role": "major"
+            },
+            {
+              "c": "Hungary",
+              "side": "axis",
+              "role": "ally",
+              "n": "hungaryRevisionist"
+            },
+            {
+              "c": "Romania",
+              "side": "axis",
+              "role": "ally"
+            },
+            {
+              "c": "Bulgaria",
+              "side": "axis",
+              "role": "ally"
+            },
+            {
+              "c": "Croatia",
+              "side": "axis",
+              "role": "ally",
+              "n": "croatiaNDH"
+            },
+            {
+              "c": "Slovakia",
+              "side": "axis",
+              "role": "ally",
+              "n": "slovakClient1939"
+            },
+            {
+              "c": "Finland",
+              "side": "axis",
+              "role": "ally",
+              "n": "continuationWar"
+            },
+            {
+              "c": "Thailand",
+              "side": "axis",
+              "role": "ally",
+              "n": "thaiAlliance1941",
+              "yr": "XII/1941"
+            },
+            {
+              "c": "Libya",
+              "side": "axis",
+              "role": "colony",
+              "n": "italianLibya"
+            },
+            {
+              "c": "Korea",
+              "side": "axis",
+              "role": "colony",
+              "n": "koreaAnnexed1910"
+            },
+            {
+              "c": "Poland",
+              "side": "allies",
+              "role": "occupied",
+              "n": "poland1939"
+            },
+            {
+              "c": "Denmark",
+              "side": "allies",
+              "role": "occupied",
+              "yr": "IV/1940"
+            },
+            {
+              "c": "Norway",
+              "side": "allies",
+              "role": "occupied",
+              "yr": "VI/1940"
+            },
+            {
+              "c": "Netherlands",
+              "side": "allies",
+              "role": "occupied",
+              "yr": "V/1940"
+            },
+            {
+              "c": "Belgium",
+              "side": "allies",
+              "role": "occupied",
+              "yr": "V/1940"
+            },
+            {
+              "c": "Luxembourg",
+              "side": "allies",
+              "role": "occupied",
+              "yr": "V/1940"
+            },
+            {
+              "c": "Serbia",
+              "side": "allies",
+              "role": "occupied",
+              "yr": "IV/1941"
+            },
+            {
+              "c": "Bosnia",
+              "side": "allies",
+              "role": "occupied",
+              "yr": "IV/1941"
+            },
+            {
+              "c": "Slovenia",
+              "side": "allies",
+              "role": "occupied",
+              "yr": "IV/1941"
+            },
+            {
+              "c": "Macedonia",
+              "side": "allies",
+              "role": "occupied",
+              "yr": "IV/1941"
+            },
+            {
+              "c": "Montenegro",
+              "side": "allies",
+              "role": "occupied",
+              "yr": "IV/1941"
+            },
+            {
+              "c": "Kosovo",
+              "side": "allies",
+              "role": "occupied",
+              "yr": "IV/1941"
+            },
+            {
+              "c": "Greece",
+              "side": "allies",
+              "role": "occupied",
+              "yr": "VI/1941"
+            },
+            {
+              "c": "Albania",
+              "side": "allies",
+              "role": "occupied",
+              "yr": "IV/1939"
+            },
+            {
+              "c": "Estonia",
+              "side": "allies",
+              "role": "occupied",
+              "n": "molotovPact1939",
+              "yr": "IX/1941"
+            },
+            {
+              "c": "Latvia",
+              "side": "allies",
+              "role": "occupied",
+              "n": "molotovPact1939",
+              "yr": "IX/1941"
+            },
+            {
+              "c": "Lithuania",
+              "side": "allies",
+              "role": "occupied",
+              "n": "molotovPact1939",
+              "yr": "IX/1941"
+            },
+            {
+              "c": "Ukraine",
+              "side": "allies",
+              "role": "occupied",
+              "yr": "IX/1941"
+            },
+            {
+              "c": "Belarus",
+              "side": "allies",
+              "role": "occupied",
+              "yr": "IX/1941"
+            },
+            {
+              "c": "Moldova",
+              "side": "allies",
+              "role": "occupied",
+              "yr": "VII/1941"
+            },
+            {
+              "c": "Philippines",
+              "side": "allies",
+              "role": "occupied",
+              "n": "philippineCommonwealth",
+              "yr": "V/1942"
+            },
+            {
+              "c": "Myanmar",
+              "side": "allies",
+              "role": "occupied",
+              "yr": "V/1942"
+            },
+            {
+              "c": "Malaysia",
+              "side": "allies",
+              "role": "occupied",
+              "yr": "II/1942"
+            },
+            {
+              "c": "Indonesia",
+              "side": "allies",
+              "role": "occupied",
+              "yr": "III/1942"
+            },
+            {
+              "c": "Vietnam",
+              "side": "allies",
+              "role": "occupied",
+              "yr": "VII/1941"
+            },
+            {
+              "c": "Cambodia",
+              "side": "allies",
+              "role": "occupied",
+              "yr": "VII/1941"
+            },
+            {
+              "c": "Laos",
+              "side": "allies",
+              "role": "occupied",
+              "yr": "VII/1941"
+            },
+            {
+              "c": "Spain",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Portugal",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Sweden",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Switzerland",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Ireland",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Turkey",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Afghanistan",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Saudi Arabia",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Yemen",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Argentina",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Chile",
+              "side": "neutral",
+              "role": "neutral"
+            }
+          ],
+          "empires": []
+        },
+        {
+          "id": "wwii-1945",
+          "year": "1945",
+          "title_ar": "النصر وإعادة رسم العالم",
+          "title_en": "Victory & a New World",
+          "title_ru": "Победа и новый мир",
+          "title_uz": "G‘alaba va yangi dunyo",
+          "title_es": "Victoria y un mundo nuevo",
+          "desc_ar": "سبتمبر 1945: استسلام المحور وميلاد نظام عالمي جديد.",
+          "desc_en": "September 1945: the Axis surrenders; a new world order begins.",
+          "participants": [
+            {
+              "c": "United Kingdom",
+              "side": "allies",
+              "role": "major"
+            },
+            {
+              "c": "France",
+              "side": "allies",
+              "role": "major",
+              "yr": "IX/1944"
+            },
+            {
+              "c": "Russia",
+              "side": "allies",
+              "role": "major"
+            },
+            {
+              "c": "United States",
+              "side": "allies",
+              "role": "major"
+            },
+            {
+              "c": "China",
+              "side": "allies",
+              "role": "major"
+            },
+            {
+              "c": "Canada",
+              "side": "allies",
+              "role": "dominion",
+              "n": "dominionAuto"
+            },
+            {
+              "c": "Australia",
+              "side": "allies",
+              "role": "dominion",
+              "n": "dominionAuto"
+            },
+            {
+              "c": "New Zealand",
+              "side": "allies",
+              "role": "dominion",
+              "n": "dominionAuto"
+            },
+            {
+              "c": "South Africa",
+              "side": "allies",
+              "role": "dominion",
+              "n": "safricaNarrow1939"
+            },
+            {
+              "c": "India",
+              "side": "allies",
+              "role": "colony",
+              "n": "britishRaj"
+            },
+            {
+              "c": "Brazil",
+              "side": "allies",
+              "role": "ally",
+              "n": "brazil1942"
+            },
+            {
+              "c": "Mexico",
+              "side": "allies",
+              "role": "ally",
+              "n": "mexico1942"
+            },
+            {
+              "c": "Italy",
+              "side": "allies",
+              "role": "ally",
+              "n": "italyCobelligerent43",
+              "yr": "X/1943"
+            },
+            {
+              "c": "Romania",
+              "side": "allies",
+              "role": "ally",
+              "n": "romaniaSwitch44",
+              "yr": "VIII/1944"
+            },
+            {
+              "c": "Bulgaria",
+              "side": "allies",
+              "role": "ally",
+              "n": "bulgariaSwitch44",
+              "yr": "IX/1944"
+            },
+            {
+              "c": "Finland",
+              "side": "allies",
+              "role": "ally",
+              "n": "finlandSwitch44",
+              "yr": "IX/1944"
+            },
+            {
+              "c": "Poland",
+              "side": "allies",
+              "role": "ally",
+              "n": "poland1945"
+            },
+            {
+              "c": "Serbia",
+              "side": "allies",
+              "role": "ally",
+              "n": "yugoslaviaPartisans"
+            },
+            {
+              "c": "Bosnia",
+              "side": "allies",
+              "role": "ally",
+              "n": "yugoslaviaPartisans"
+            },
+            {
+              "c": "Croatia",
+              "side": "allies",
+              "role": "ally",
+              "n": "yugoslaviaPartisans",
+              "yr": "X/1943"
+            },
+            {
+              "c": "Slovenia",
+              "side": "allies",
+              "role": "ally",
+              "n": "yugoslaviaPartisans"
+            },
+            {
+              "c": "Macedonia",
+              "side": "allies",
+              "role": "ally",
+              "n": "yugoslaviaPartisans"
+            },
+            {
+              "c": "Montenegro",
+              "side": "allies",
+              "role": "ally",
+              "n": "yugoslaviaPartisans"
+            },
+            {
+              "c": "Kosovo",
+              "side": "allies",
+              "role": "ally",
+              "n": "yugoslaviaPartisans"
+            },
+            {
+              "c": "Syria",
+              "side": "allies",
+              "role": "ally",
+              "n": "syriaLebanon1945"
+            },
+            {
+              "c": "Lebanon",
+              "side": "allies",
+              "role": "ally",
+              "n": "syriaLebanon1945"
+            },
+            {
+              "c": "Saudi Arabia",
+              "side": "allies",
+              "role": "ally",
+              "n": "saudiMar1945",
+              "yr": "III/1945"
+            },
+            {
+              "c": "Turkey",
+              "side": "allies",
+              "role": "ally",
+              "n": "turkeyFeb1945",
+              "yr": "II/1945"
+            },
+            {
+              "c": "Egypt",
+              "side": "allies",
+              "role": "ally",
+              "n": "egyptWWII"
+            },
+            {
+              "c": "Ethiopia",
+              "side": "allies",
+              "role": "ally",
+              "n": "ethiopiaOccupied1936"
+            },
+            {
+              "c": "Philippines",
+              "side": "allies",
+              "role": "ally",
+              "n": "philippineCommonwealth",
+              "yr": "VII/1945"
+            },
+            {
+              "c": "Vietnam",
+              "side": "allies",
+              "role": "ally",
+              "n": "vietnamAug1945",
+              "yr": "IX/1945"
+            },
+            {
+              "c": "Indonesia",
+              "side": "allies",
+              "role": "ally",
+              "n": "indonesiaAug1945",
+              "yr": "VIII/1945"
+            },
+            {
+              "c": "Argentina",
+              "side": "allies",
+              "role": "ally",
+              "n": "argentinaMar1945",
+              "yr": "III/1945"
+            },
+            {
+              "c": "Chile",
+              "side": "allies",
+              "role": "ally",
+              "n": "chileApr1945",
+              "yr": "IV/1945"
+            },
+            {
+              "c": "Iraq",
+              "side": "allies",
+              "role": "ally",
+              "n": "iraqBritain1942"
+            },
+            {
+              "c": "Jordan",
+              "side": "allies",
+              "role": "colony",
+              "n": "britishMandateME"
+            },
+            {
+              "c": "Palestine",
+              "side": "allies",
+              "role": "colony",
+              "n": "britishMandateME"
+            },
+            {
+              "c": "Germany",
+              "side": "allies",
+              "role": "occupied",
+              "n": "germanyMay1945",
+              "yr": "V/1945"
+            },
+            {
+              "c": "Austria",
+              "side": "allies",
+              "role": "occupied",
+              "n": "austria1945",
+              "yr": "V/1945"
+            },
+            {
+              "c": "Japan",
+              "side": "allies",
+              "role": "occupied",
+              "n": "japanSept1945",
+              "yr": "IX/1945"
+            },
+            {
+              "c": "Korea",
+              "side": "allies",
+              "role": "occupied",
+              "n": "koreaAnnexed1910",
+              "yr": "VIII/1945"
+            },
+            {
+              "c": "Hungary",
+              "side": "allies",
+              "role": "occupied",
+              "n": "hungary1945",
+              "yr": "II/1945"
+            },
+            {
+              "c": "Thailand",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Spain",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Portugal",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Sweden",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Switzerland",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Ireland",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Afghanistan",
+              "side": "neutral",
+              "role": "neutral"
+            },
+            {
+              "c": "Yemen",
+              "side": "neutral",
+              "role": "neutral"
+            }
+          ],
+          "empires": []
+        }
+      ],
+      "epoch": "modern",
+      "region": "world"
+    },
+    {
+      "id": "yarmouk-636",
+      "epoch": "medieval",
+      "region": "me",
+      "name_ar": "الفتوحات الإسلامية المبكرة (اليرموك والقادسية)",
+      "name_en": "Early Islamic Conquests (Yarmouk & Qadisiyyah)",
+      "name_ru": "Ранние мусульманские завоевания",
+      "name_uz": "Ilk islom fathlari (Yarmuk va Qodisiya)",
+      "name_es": "Primeras conquistas islámicas",
+      "years_ar": "632–651 م",
+      "years_en": "632–651 CE",
+      "sides": {
+        "rashidun": "الخلافة الراشدة",
+        "empires": "البيزنطيون والساسانيون"
+      },
+      "sources": [
+        "H. Kennedy, \"The Great Arab Conquests\" (Weidenfeld & Nicolson, 2007).",
+        "F.M. Donner, \"The Early Islamic Conquests\" (Princeton University Press, 1981)."
+      ],
+      "scenarios": [
+        {
+          "id": "conquest-636",
+          "year": "636 CE",
+          "title_ar": "معركتا اليرموك والقادسية",
+          "title_en": "Decisive Dual Fronts",
+          "desc_ar": "خالد بن الوليد وسعد بن أبي وقاص يهزمان الإمبراطوريتين البيزنطية والساسانية في نفس العام.",
+          "desc_en": "Decisive battles of Yarmouk and al-Qadisiyyah shatter Byzantine and Sasanian field armies.",
+          "participants": [
+            {
+              "c": "Saudi Arabia",
+              "side": "rashidun",
+              "role": "major"
+            },
+            {
+              "c": "Yemen",
+              "side": "rashidun",
+              "role": "ally"
+            },
+            {
+              "c": "Jordan",
+              "side": "rashidun",
+              "role": "occupied"
+            },
+            {
+              "c": "Syria",
+              "side": "empires",
+              "role": "occupied"
+            },
+            {
+              "c": "Iraq",
+              "side": "empires",
+              "role": "occupied"
+            },
+            {
+              "c": "Iran",
+              "side": "empires",
+              "role": "major"
+            },
+            {
+              "c": "Turkey",
+              "side": "empires",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    }
+  ]
+}

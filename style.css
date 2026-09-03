@@ -5689,3 +5689,39 @@ body.section-history .dock-unified-wrap { flex: 1 1 auto; min-width: 0; }
     min-width: 32px;
     text-align: center;
 }
+/* ── تبويبات عصور الحروب داخل الـ Popover ── */
+.history-epoch-tabs {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-bottom: 8px;
+    padding-bottom: 2px;
+}
+.history-epoch-tabs::-webkit-scrollbar {
+    display: none;
+}
+.war-epoch-tab {
+    flex: 0 0 auto;
+    font-size: 0.76rem !important;
+    padding: 4px 10px !important;
+    border-radius: var(--radius-sm, 8px) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    color: var(--text-secondary, #9aa5b1) !important;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+}
+.war-epoch-tab:hover {
+    color: #fff !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+}
+.war-epoch-tab.active {
+    background: var(--brand-accent, #14B8A6) !important;
+    color: #08202c !important;
+    font-weight: 700 !important;
+    border-color: var(--brand-accent, #14B8A6) !important;
+}

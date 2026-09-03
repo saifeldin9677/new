@@ -331,6 +331,11 @@
             let historySearchText = '';
             let historyLayerOpacity = 0.55;
             var _timelineInteractedTime = 0; // لمنع إغلاق القوائم عند التفاعل مع الشريط
+            // Wars dataset: falls back to the embedded array in data.js, but is
+            // upgraded to the richer external JSON (historical-wars-data.json) once
+            // it loads asynchronously. The epoch filter reads from this source.
+            let historyWarData = (typeof historicalWarsData !== 'undefined') ? historicalWarsData : [];
+            let historyWarEpochFilter = 'all';
             let measureActive = false;
             let measurePoints = [];
             let gMeasure = null;
@@ -1485,7 +1490,7 @@
                         var _he = historicalErasData.find(function(x) { return x.id === historyEraId; }) || historicalErasData[0];
                         if (_he) histYear = _he.sort;
                     } else if (historyTab === 'wars') {
-                        var _hw = historicalWarsData.find(function(x) { return x.id === historyWarId; });
+                        var _hw = historyWarData.find(function(x) { return x.id === historyWarId; });
                         if (_hw) {
                             var _hs = _hw.scenarios.find(function(x) { return x.id === historyScenarioId; }) || _hw.scenarios[0];
                             if (_hs) { var _hn = parseInt(_hs.year, 10); if (!isNaN(_hn)) histYear = _hn; }
@@ -6042,10 +6047,10 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                     } else if (eraVal) {
                                         historyTab = 'eras';
                                         historyEraId = eraVal;
-                                    } else if (warVal && historicalWarsData) {
+                                    } else if (warVal && historyWarData.length) {
                                         historyTab = 'wars';
                                         historyWarId = warVal;
-                                        var w = historicalWarsData.find(function(x) { return x.id === warVal; });
+                                        var w = historyWarData.find(function(x) { return x.id === warVal; });
                                         if (w) historyScenarioId = (scenVal && w.scenarios.some(function(x) { return x.id === scenVal; })) ? scenVal : w.scenarios[0].id;
                                     } else if (tabVal === 'eras') {
                                         historyTab = 'eras';
@@ -7630,7 +7635,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     return pal[p.role] || '#8d97a5';
                 }
                 function getHistWar() {
-                    return historicalWarsData.find(function(w) { return w.id === historyWarId; }) || historicalWarsData[0];
+                    return historyWarData.find(function(w) { return w.id === historyWarId; }) || historyWarData[0];
                 }
                 function getHistScenario(war) {
                     war = war || getHistWar();
@@ -7866,7 +7871,36 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     _histWarMetaCache[w.id] = meta;
                     return meta;
                 }
+                // Loads the wars dataset from the external JSON, falling back to
+                // the embedded array in data.js if the fetch fails. Once loaded it
+                // replaces `historyWarData` (merging by id so any rich embedded
+                // entries are kept when the JSON omits them).
+                function fetchHistoricalWars() {
+                    if (window.__histWarsLoaded) return Promise.resolve(historyWarData);
+                    if (window.__histWarsLoading) return window.__histWarsLoading;
+                    var fallback = function() { window.__histWarsLoaded = true; return Promise.resolve(historyWarData); };
+                    window.__histWarsLoading = fetch(BASE + 'historical-wars-data.json', { cache: 'reload' })
+                        .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+                        .then(function(d) {
+                            var list = (d && d.wars) || [];
+                            var byId = {};
+                            historyWarData.forEach(function(w) { byId[w.id] = w; });
+                            list.forEach(function(w) { byId[w.id] = w; });
+                            historyWarData = Object.keys(byId).map(function(k) { return byId[k]; });
+                            window.__histWarsLoaded = true;
+                            window.__histWarsLoading = null;
+                            return historyWarData;
+                        })
+                        .catch(function(e) {
+                            window.__histWarsLoading = null;
+                            if (typeof console !== 'undefined') console.error('Failed to load wars:', e);
+                            return fallback();
+                        });
+                    return window.__histWarsLoading;
+                }
+                window.fetchHistoricalWars = fetchHistoricalWars;
                 function warPassesFilters(w) {
+                    if (historyWarEpochFilter !== 'all' && w.epoch !== historyWarEpochFilter) return false;
                     var meta = histWarMeta(w);
                     if (historyRegionFilter !== 'all' && meta.regions.indexOf(historyRegionFilter) === -1 && meta.regions.indexOf('world') === -1) return false;
                     if (historyReligionFilter !== 'all' && !meta.religions[historyReligionFilter]) return false;
@@ -7921,11 +7955,20 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (!wars) historyReligionFilter = 'all';
                 }
                 function renderHistoryBar() {
+                    // Ensure the richer external JSON dataset is loaded before
+                    // rendering. Until it resolves the embedded fallback shows.
+                    if (!window.__histWarsLoaded && !window.__histWarsLoading) {
+                        fetchHistoricalWars().then(function() {
+                            renderHistoryBar();
+                            if (historyTab === 'wars') drawHistoryScenario();
+                        }).catch(function(e) { if (typeof console !== 'undefined') console.error('Failed to load wars:', e); });
+                        return;
+                    }
                     var war = getHistWar();
                     updateHistSubmodeVis();
                     var tabs = document.getElementById('histWarTabs');
                     tabs.innerHTML = '';
-                    var visibleWars = historicalWarsData.filter(warPassesFilters);
+                    var visibleWars = historyWarData.filter(warPassesFilters);
                     if (historyTab === 'wars') {
                         if (!visibleWars.length) {
                             var onlyRelig = historyReligionFilter !== 'all' && historyRegionFilter === 'all' && !historySearchText;
@@ -8442,7 +8485,7 @@ _lastPanelRenderTime = performance.now();
                 }
                 function historyWarSelectedFn() {
                     if (!historyWarId) return false;
-                    return historicalWarsData.some(function(w) { return w.id === historyWarId; });
+                    return historyWarData.some(function(w) { return w.id === historyWarId; });
                 }
                 window.historyWarSelected = historyWarSelectedFn;
                 function clearHistoryOverlay() {
@@ -9087,7 +9130,7 @@ function buildEraFeature(p) {
                 window.warsForCountry = function(name) {
                     var cn = getCleanName(name || '');
                     if (!cn) return [];
-                    return historicalWarsData.filter(function(w) {
+                    return historyWarData.filter(function(w) {
                         return w.scenarios.some(function(sc) { return !!findHistParticipant(sc, cn); });
                     }).map(function(w) {
                         return { id: w.id, name: locField(w, 'name'), years: locField(w, 'years') };
@@ -9095,8 +9138,8 @@ function buildEraFeature(p) {
                 };
                 window.focusHistoryWar = function(warId) {
                     var w = null;
-                    for (var i = 0; i < historicalWarsData.length; i++) {
-                        if (historicalWarsData[i].id === warId) { w = historicalWarsData[i]; break; }
+                    for (var i = 0; i < historyWarData.length; i++) {
+                        if (historyWarData[i].id === warId) { w = historyWarData[i]; break; }
                     }
                     if (!w) return false;
                     historyTab = 'wars';
@@ -11406,6 +11449,15 @@ function buildEraFeature(p) {
                     _timelineInteractedTime = Date.now();
                 }
             }, true);
+            // تصنيف عصور الحروب: تفعيل أزرار التبويب الخمسة داخل قائمة الحروب.
+            document.querySelectorAll('#histWarEpochTabs .war-epoch-tab').forEach(function(tabBtn) {
+                tabBtn.addEventListener('click', function() {
+                    document.querySelectorAll('#histWarEpochTabs .war-epoch-tab').forEach(function(b) { b.classList.remove('active'); });
+                    this.classList.add('active');
+                    historyWarEpochFilter = this.getAttribute('data-epoch') || 'all';
+                    refreshHistoryAfterFilterChange();
+                });
+            });
             function refreshHistoryAfterFilterChange() {
                 if (!historyActive) return;
                 if (window.renderHistoryBar) window.renderHistoryBar();

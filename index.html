@@ -226,6 +226,15 @@
              our position:fixed menus (shifting them off-screen in RTL). -->
         <div class="hist-popover-menu" id="histWarsPopoverMenu" role="menu" hidden>
             <div class="hist-popover-body">
+                <!-- شريط تصنيف عصور الحروب الخمسة -->
+                <div class="history-epoch-tabs" id="histWarEpochTabs" role="tablist">
+                    <button type="button" class="btn war-epoch-tab active" data-epoch="all" data-i18n="warEpochAll">الكل</button>
+                    <button type="button" class="btn war-epoch-tab" data-epoch="ancient" data-i18n="warEpochAncient">القديم</button>
+                    <button type="button" class="btn war-epoch-tab" data-epoch="medieval" data-i18n="warEpochMedieval">الوسيط</button>
+                    <button type="button" class="btn war-epoch-tab" data-epoch="early-modern" data-i18n="warEpochEarlyModern">الحديث المبكر</button>
+                    <button type="button" class="btn war-epoch-tab" data-epoch="nineteenth" data-i18n="warEpoch19th">القرن 19</button>
+                    <button type="button" class="btn war-epoch-tab" data-epoch="modern" data-i18n="warEpochModern">المعاصر</button>
+                </div>
                 <div class="history-filter-row" id="historyFilterRow">
                     <input type="text" class="history-search-input" id="histSearchInput" data-i18n-placeholder="histSearchPlaceholder" autocomplete="off" />
                     <select class="history-region-select" id="histFilterRegion"></select>

@@ -7627,12 +7627,34 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
 
                 function pickHistNote(o) { return o ? (o[lang] !== undefined && o[lang] !== null ? o[lang] : (o.en !== undefined ? o.en : '')) : ''; }
                 function histRoleKey(role) { return 'histRole' + role.charAt(0).toUpperCase() + role.slice(1); }
-                function histFamily(side) { return (side === 'central' || side === 'axis') ? 'red' : 'blue'; }
-                function histColorFor(p) {
+                // تحديد الباليتة اللونية المناسبة للطرف مع ضمان التناقض التام بين الأعداء
+                function histFamily(side, war) {
+                    if (!side) return 'blue';
+                    var cleanSide = String(side).toLowerCase();
+                    if (semanticSidePalettes[cleanSide]) {
+                        return semanticSidePalettes[cleanSide];
+                    }
+                    war = war || (typeof getHistWar === 'function' ? getHistWar() : null);
+                    if (war && war.sides) {
+                        var sideKeys = Object.keys(war.sides);
+                        var idx = sideKeys.indexOf(side);
+                        var fallbackOrder = ['green', 'purple', 'gold', 'red', 'blue', 'teal'];
+                        if (idx >= 0) {
+                            return fallbackOrder[idx % fallbackOrder.length];
+                        }
+                    }
+                    return 'blue';
+                }
+                // دالة جلب لون العنصر أو الدولة
+                function histColorFor(p, war) {
                     if (!p || p.role === 'neutral') return null;
-                    if (p.role === 'occupied') return histOccupiedColor;
-                    var pal = histRoleColorPalettes[histFamily(p.side)];
-                    return pal[p.role] || '#8d97a5';
+                    war = war || (typeof getHistWar === 'function' ? getHistWar() : null);
+                    var family = histFamily(p.side, war);
+                    var pal = histRoleColorPalettes[family] || histRoleColorPalettes.blue;
+                    if (p.role === 'occupied') {
+                        return pal.occupied || pal.major;
+                    }
+                    return pal[p.role] || pal.major || '#8d97a5';
                 }
                 function getHistWar() {
                     return historyWarData.find(function(w) { return w.id === historyWarId; }) || historyWarData[0];

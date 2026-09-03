@@ -6496,11 +6496,40 @@
                 vietnamAug1945: { en: 'Japanese coup ended French rule (March 1945); Viet Minh declared independence 2 September 1945.', ar: 'أنهى الانقلاب الياباني الحكم الفرنسي (مارس 1945)؛ وأعلن الفيت مين الاستقلال في 2 سبتمبر 1945.' },
                 indonesiaAug1945: { en: 'Independence proclaimed 17 August 1945, two days after the Japanese surrender; Dutch recognition came in 1949.', ar: 'أُعلن الاستقلال في 17 أغسطس 1945 بعد يومين من استسلام اليابان؛ واعترفت هولندا به عام 1949.' }
             };
+            // ── منظومة باليتات الألوان التاريخية المتكاملة ──
             const histRoleColorPalettes = {
-                blue: { major: '#1a5276', ally: '#2e86c1', dominion: '#117a65', colony: '#48b39a', protectorate: '#82ccb2' },
-                red:  { major: '#922b21', ally: '#d9553f', dominion: '#b03a2e', colony: '#cd7f74', protectorate: '#e0a79c' }
+                green: {
+                    major: '#15803d', ally: '#22c55e', dominion: '#166534', colony: '#4ade80', protectorate: '#86efac', occupied: '#14532d'
+                },
+                purple: {
+                    major: '#7c3aed', ally: '#a855f7', dominion: '#6d28d9', colony: '#c084fc', protectorate: '#ddd6fe', occupied: '#4c1d95'
+                },
+                red: {
+                    major: '#b91c1c', ally: '#ef4444', dominion: '#991b1b', colony: '#f87171', protectorate: '#fca5a5', occupied: '#7f1d1d'
+                },
+                blue: {
+                    major: '#1d4ed8', ally: '#3b82f6', dominion: '#1e40af', colony: '#60a5fa', protectorate: '#93c5fd', occupied: '#1e3a8a'
+                },
+                gold: {
+                    major: '#d97706', ally: '#f59e0b', dominion: '#b45309', colony: '#fbbf24', protectorate: '#fde68a', occupied: '#78350f'
+                },
+                teal: {
+                    major: '#0f766e', ally: '#14b8a6', dominion: '#115e59', colony: '#2dd4bf', protectorate: '#99f6e4', occupied: '#134e4a'
+                }
             };
-            const histOccupiedColor = '#7b8794';
+            // قاموس الربط التاريخي الدلالي للأطراف
+            const semanticSidePalettes = {
+                rashidun: 'green', arab: 'green', muslim: 'green', islamic: 'green', ayyubid: 'green', mamluk: 'green',
+                ottoman: 'teal',
+                empires: 'purple', byzantine: 'purple', sasanian: 'purple', carthage: 'purple',
+                persia: 'gold',
+                rome: 'red', peloponnesian: 'red', sparta: 'red',
+                delian: 'blue', athens: 'blue',
+                egypt: 'gold', hittite: 'teal', mongol: 'gold',
+                entente: 'blue', allies: 'blue', union: 'blue',
+                central: 'red', axis: 'red', confederacy: 'red', coalition: 'red',
+                france: 'blue', israel: 'blue'
+            };
             const histEmpireNames = {
                 ah: { name_ar: 'النمسا-المجر', name_en: 'Austria-Hungary', name_ru: 'Австро-Венгрия', name_uz: 'Avstriya-Vengriya', name_es: 'Austria-Hungría' },
                 ottoman: { name_ar: 'الدولة العثمانية', name_en: 'Ottoman Empire', name_ru: 'Османская империя', name_uz: 'Usmonli imperiyasi', name_es: 'Imperio otomano' }

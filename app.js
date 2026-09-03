@@ -376,7 +376,7 @@
             let dataTableSortKey = 'name';
             let dataTableSortAsc = true;
             let selectedFeatureType = null; // 'mountain' | 'river' | null
-            let gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gBorderDisputes, gAdminBoundaries, gGlaciatedAreas, gGeopoliticalBlocs, gDesertsForests, gHistoryOverlay, gHistoricalRoutes;
+            let gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gBorderDisputes, gAdminBoundaries, gGlaciatedAreas, gGeopoliticalBlocs, gDesertsForests, gHistoryOverlay, gHistoryCompareOverlay, gHistoricalRoutes;
             let projection, pathGen;
             let svg, gMap, gCountries, gCountryLabels, gGraticule, gIceCap, gOcean, gCorridors, gPhysical, gTemperature, gAuthoringMarkers, gQuizMarkers;
             let currentTransform = d3.zoomIdentity;
@@ -1181,6 +1181,7 @@
                 gVolcanoes = svg.append('g');
                 gGeopoliticalBlocs = svg.append('g');
                 gHistoryOverlay = svg.append('g').attr('id', 'historyOverlayLayer');
+                gHistoryCompareOverlay = svg.append('g').attr('id', 'historyCompareOverlayLayer').style('pointer-events', 'none');
                 gDesertsForests = svg.append('g');
                 gBorderDisputes = svg.append('g');
                 gAdminBoundaries = svg.append('g');
@@ -1189,7 +1190,7 @@
                 gQuizMarkers = svg.append('g');
 
                 gMap = svg.append('g').attr('class', 'map-transform-group');
-                [gOcean, gGraticule, gIceCap, gCountries, gCBPatterns, gAdminBoundaries, gGlaciatedAreas, gCountryLabels, gPhysical, gCorridors, gHistoricalRoutes, gTemperature, gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gGeopoliticalBlocs, gHistoryOverlay, gDesertsForests, gBorderDisputes, gAuthoringMarkers, gQuizMarkers]
+                [gOcean, gGraticule, gIceCap, gCountries, gCBPatterns, gAdminBoundaries, gGlaciatedAreas, gCountryLabels, gPhysical, gCorridors, gHistoricalRoutes, gTemperature, gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gGeopoliticalBlocs, gHistoryOverlay, gHistoryCompareOverlay, gDesertsForests, gBorderDisputes, gAuthoringMarkers, gQuizMarkers]
                     .forEach(g => gMap.append(() => g.node()));
 
                 projection = setupProjection(width, height);
@@ -5935,11 +5936,19 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 if (selectedBloc !== 'all') hash.set('bloc', selectedBloc);
                 if (currentSection === 'history') {
                     hash.set('sec', 'history');
+                    hash.set('tab', historyTab);
                     if (historyTab === 'eras') {
                         if (historyEraId) hash.set('era', historyEraId);
+                        hash.set('reg', historyRegionFilter);
+                        hash.set('q', encodeURIComponent(historySearchText));
+                    } else if (historyTab === 'faiths') {
+                        hash.set('yr', religionsYear);
                     } else {
                         if (historyWarId) hash.set('war', historyWarId);
                         if (historyScenarioId) hash.set('scen', historyScenarioId);
+                        hash.set('reg', historyRegionFilter);
+                        hash.set('rel', historyReligionFilter);
+                        hash.set('q', encodeURIComponent(historySearchText));
                     }
                 }
                 hash.set('k', currentTransform.k.toFixed(2));
@@ -5992,24 +6001,69 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         var eraVal = hash.get('era');
                         var warVal = hash.get('war');
                         var scenVal = hash.get('scen');
+                        var tabVal = hash.get('tab');
+                        var regVal = hash.get('reg');
+                        var relVal = hash.get('rel');
+                        var qVal = hash.get('q');
+                        var yrVal = hash.get('yr');
+                        // Restore the shared history filter inputs before rendering so
+                        // the visible list reflects the shared/refreshed state.
+                        if (regVal) {
+                            historyRegionFilter = regVal;
+                            var regSel = document.getElementById('histFilterRegion');
+                            if (regSel) regSel.value = regVal;
+                        }
+                        if (relVal) {
+                            historyReligionFilter = relVal;
+                            var relSel = document.getElementById('histFilterReligion');
+                            if (relSel) relSel.value = relVal;
+                        }
+                        if (qVal !== null) {
+                            historySearchText = decodeURIComponent(qVal);
+                            var sInp = document.getElementById('histSearchInput');
+                            if (sInp) sInp.value = historySearchText;
+                        }
                         if (window.applySectionWhenReady) {
                             window.applySectionWhenReady('history', function() {
-                                if (eraVal) {
-                                    historyTab = 'eras';
-                                    historyEraId = eraVal;
-                                } else if (warVal && historicalWarsData) {
-                                    historyTab = 'wars';
-                                    historyWarId = warVal;
-                                    var w = historicalWarsData.find(function(x) { return x.id === warVal; });
-                                    if (w) historyScenarioId = (scenVal && w.scenarios.some(function(x) { return x.id === scenVal; })) ? scenVal : w.scenarios[0].id;
+                                // Make sure the data the requested state depends on is
+                                // loaded before committing era/war ids.
+                                var ready = Promise.resolve();
+                                if (tabVal === 'faiths' || yrVal) {
+                                    ready = ready.then(function() { return (typeof fetchReligionsData === 'function' && !religionsData) ? fetchReligionsData() : null; });
+                                } else if (eraVal) {
+                                    ready = ready.then(function() { return (typeof fetchHistoricalEras === 'function' && !historicalErasData) ? fetchHistoricalEras() : null; });
                                 }
-                                if (window.renderHistoryBar) window.renderHistoryBar();
-                                if (eraVal || warVal) {
-                                    if (window.drawHistoryScenario) window.drawHistoryScenario(true);
-                                } else {
-                                    if (window.clearHistoryOverlay) window.clearHistoryOverlay();
-                                    if (window.renderHistoryEmptyState) window.renderHistoryEmptyState();
-                                }
+                                // Wars data is synchronous (bundled), so no fetch is needed.
+                                ready.then(function() {
+                                    if (tabVal === 'faiths') {
+                                        historyTab = 'faiths';
+                                    } else if (eraVal) {
+                                        historyTab = 'eras';
+                                        historyEraId = eraVal;
+                                    } else if (warVal && historicalWarsData) {
+                                        historyTab = 'wars';
+                                        historyWarId = warVal;
+                                        var w = historicalWarsData.find(function(x) { return x.id === warVal; });
+                                        if (w) historyScenarioId = (scenVal && w.scenarios.some(function(x) { return x.id === scenVal; })) ? scenVal : w.scenarios[0].id;
+                                    } else if (tabVal === 'eras') {
+                                        historyTab = 'eras';
+                                    } else if (tabVal === 'wars') {
+                                        historyTab = 'wars';
+                                    }
+                                    if (tabVal === 'faiths' && yrVal) {
+                                        var y = parseInt(yrVal, 10);
+                                        if (!isNaN(y) && window.setReligionsYear) window.setReligionsYear(y);
+                                    }
+                                    if (window.renderHistoryBar) window.renderHistoryBar();
+                                    if (eraVal || warVal) {
+                                        if (window.drawHistoryScenario) window.drawHistoryScenario(true);
+                                    } else if (tabVal === 'faiths') {
+                                        if (window.renderFaithsMode) window.renderFaithsMode();
+                                    } else {
+                                        if (window.clearHistoryOverlay) window.clearHistoryOverlay();
+                                        if (window.renderHistoryEmptyState) window.renderHistoryEmptyState();
+                                    }
+                                });
                             });
                         }
                     }
@@ -7679,22 +7733,71 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                
                     if (historicalRoutesVisible && window.drawHistoricalRoutes) window.drawHistoricalRoutes(true);
                 }
+                // Normalize a search string for robust multilingual matching:
+                // lowercase, strip Arabic diacritics/tashkeel/tatweel, collapse
+                // the many Arabic letter variants onto a single base form, then
+                // drop punctuation and collapse repeated whitespace.
                 function histNormSearch(s) {
                     return (s || '').toLowerCase()
                         .replace(/[\u064B-\u0652\u0670\u0640]/g, '')
-                        .replace(/[أإآ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه')
-                        .replace(/\s+/g, ' ').trim();
+                        .replace(/[أإآ]/g, 'ا')
+                        .replace(/ة/g, 'ه')
+                        .replace(/ى/g, 'ي')
+                        .replace(/ؤ/g, 'و')
+                        .replace(/ئ/g, 'ي')
+                        .replace(/[.,;:!?()\[\]{}\-_'"‘’“”،؛؟()/\\|]/g, ' ')
+                        .replace(/\s+/g, ' ')
+                        .trim();
                 }
+                // Match a normalized needle against a normalized haystack. Returns
+                // true when every whitespace-separated term in the needle is found
+                // (as a substring OR as an ordered subsequence to tolerate typos/word
+                // order). Substring wins; fuzzy subsequence is the fallback.
                 function histFuzzyMatch(haystack, needle) {
-                    var hay = histNormSearch(haystack), nd = histNormSearch(needle);
+                    var hay = histNormSearch(haystack),
+                        nd = histNormSearch(needle);
                     if (!nd) return true;
                     if (!hay) return false;
-                    if (hay.indexOf(nd) !== -1) return true;
-                    var i = 0;
-                    for (var j = 0; j < hay.length && i < nd.length; j++) {
-                        if (hay[j] === nd[i]) i++;
+                    var terms = nd.split(' ');
+                    for (var ti = 0; ti < terms.length; ti++) {
+                        var term = terms[ti];
+                        if (!term) continue;
+                        if (hay.indexOf(term) !== -1) continue;
+                        var i = 0;
+                        for (var j = 0; j < hay.length && i < term.length; j++) {
+                            if (hay[j] === term[i]) i++;
+                        }
+                        if (i < term.length) return false;
                     }
-                    return i === nd.length;
+                    return true;
+                }
+                // Build a compact textual search blob for an era that also includes
+                // every internal polity so searching "Carthage" surfaces the era that
+                // contains Carthage.
+                function eraSearchBlob(e) {
+                    var parts = [(e.yearLabel || ''), String(e.sort !== undefined && e.sort !== null ? e.sort : ''), locField(e, 'title'), locField(e, 'desc')];
+                    (e.polities || []).forEach(function(p) {
+                        parts.push(locField(p, 'name'));
+                        if (p.founder) parts.push(p.founder);
+                        if (p.capital) parts.push(p.capital);
+                        if (p.religion) parts.push(p.religion);
+                    });
+                    return parts.join(' ');
+                }
+                // Search blob for a war: its own fields plus scenario titles,
+                // participant names, and empire members.
+                function warSearchBlob(w) {
+                    var parts = [locField(w, 'name'), locField(w, 'years')];
+                    (w.scenarios || []).forEach(function(sc) {
+                        parts.push(locField(sc, 'title'));
+                        if (sc.year !== undefined && sc.year !== null) parts.push(String(sc.year));
+                        (sc.participants || []).forEach(function(p) { if (p && p.c) parts.push(p.c); });
+                        (sc.empires || []).forEach(function(emp) {
+                            if (emp.name) parts.push(emp.name);
+                            (emp.members || []).forEach(function(m) { parts.push(m); });
+                        });
+                    });
+                    return parts.join(' ');
                 }
                 function histClassifyRegion(c) {
                     if (!c || isNaN(c[0]) || isNaN(c[1])) return null;
@@ -7762,7 +7865,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     var meta = histWarMeta(w);
                     if (historyRegionFilter !== 'all' && meta.regions.indexOf(historyRegionFilter) === -1 && meta.regions.indexOf('world') === -1) return false;
                     if (historyReligionFilter !== 'all' && !meta.religions[historyReligionFilter]) return false;
-                    if (historySearchText && !histFuzzyMatch(locField(w, 'name') + ' ' + locField(w, 'years'), historySearchText)) return false;
+                    if (historySearchText && !histFuzzyMatch(warSearchBlob(w), historySearchText)) return false;
                     return true;
                 }
                 function eraPassesFilters(e) {
@@ -7774,7 +7877,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     // Iran is Muslim-majority). That proxy is factually wrong and can't
                     // be patched, so eras are not religion-filtered until real
                     // historical `religion` fields exist per polity.
-                    if (historySearchText && !histFuzzyMatch((e.yearLabel || '') + ' ' + locField(e, 'title'), historySearchText)) return false;
+                    if (historySearchText && !histFuzzyMatch(eraSearchBlob(e), historySearchText)) return false;
                     return true;
                 }
                 function updateHistSubmodeVis() {
@@ -7785,22 +7888,32 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     var wt = document.getElementById('histWarTabs');
                     var sb = document.getElementById('histScenarioBtns');
                     var eg = document.getElementById('historyEraGroup');
-                    var fg = document.getElementById('historyFaithsGroup');
                     var mw = document.getElementById('histModeWarsBtn');
                     var me = document.getElementById('histModeErasBtn');
                     var mf = document.getElementById('histModeFaithsBtn');
+                    // The timeline slider / play control lives in the dedicated
+                    // floating bottom bar, which only appears for Eras and Faiths.
+                    var bb = document.getElementById('historyBottomBar');
+                    var etw = document.getElementById('historyEraTimelineWrap');
+                    var ftw = document.getElementById('historyFaithsTimelineWrap');
                     if (wt) wt.style.setProperty('display', wars ? 'flex' : 'none', 'important');
                     if (sb) sb.style.setProperty('display', wars ? 'flex' : 'none', 'important');
                     if (eg) eg.style.setProperty('display', eras ? 'flex' : 'none', 'important');
-                    if (fg) fg.style.setProperty('display', faiths ? 'flex' : 'none', 'important');
+                    if (bb) bb.style.display = (eras || faiths) ? 'flex' : 'none';
+                    if (etw) etw.style.display = eras ? 'flex' : 'none';
+                    if (ftw) ftw.style.display = faiths ? 'flex' : 'none';
                     if (mw) { mw.classList.toggle('active', wars); mw.setAttribute('aria-selected', wars ? 'true' : 'false'); }
                     if (me) { me.classList.toggle('active', eras); me.setAttribute('aria-selected', eras ? 'true' : 'false'); }
                     if (mf) { mf.classList.toggle('active', faiths); mf.setAttribute('aria-selected', faiths ? 'true' : 'false'); }
                     // The religion filter is only meaningful for Wars (it derives
                     // from real per-participant religion data). Eras and Faiths
-                    // have their own per-religion controls, so hide it there.
+                    // have their own per-religion controls, so hide it there and
+                    // reset the in-memory value so a leftover religion filter can
+                    // never hide eras. The dropdown itself is left untouched so its
+                    // visual state is preserved for when the user returns to Wars.
                     var rf = document.getElementById('histFilterReligion');
                     if (rf) rf.style.setProperty('display', wars ? '' : 'none', wars ? '' : 'important');
+                    if (!wars) historyReligionFilter = 'all';
                 }
                 function renderHistoryBar() {
                     var war = getHistWar();
@@ -7812,7 +7925,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         if (!visibleWars.length) {
                             var onlyRelig = historyReligionFilter !== 'all' && historyRegionFilter === 'all' && !historySearchText;
                             var emptyMsg = onlyRelig ? t('histNoResultsReligion') : t('histNoResults');
-                            tabs.innerHTML = '<span class="history-empty">' + htmlEscape(emptyMsg) + '</span>';
+                            renderHistoryResetBox(tabs, emptyMsg);
                             var emptyRow = document.getElementById('histScenarioBtns');
                             if (emptyRow) { emptyRow.innerHTML = ''; emptyRow.style.setProperty('display', 'none', 'important'); }
                             if (gHistoryOverlay) gHistoryOverlay.selectAll('*').remove();
@@ -7920,8 +8033,9 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     });
                     var sp = document.getElementById('histSourcesPanel');
                     sp.innerHTML = '<h4>' + htmlEscape(t('histSourcesTitle')) + '</h4><ul>' +
-                        war.sources.map(function(s) { return '<li>' + htmlEscape(s) + '</li>'; }).join('') +
+                        formatAcademicSourcesList(war.sources) +
                         '</ul>';
+                    refreshLucideIcons();
                     if (historyActive && window.updateHash) window.updateHash();
                     if (window.historyCollapseApply) window.historyCollapseApply();
                 }
@@ -7967,20 +8081,13 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         }
                     }
                     html += '<details class="hist-sources-mini"><summary>' + htmlEscape(t('histSourcesBtn')) + ' (' + htmlEscape(t('histSourcesTitle')) + ')</summary><ul>' +
-                        war.sources.map(function(s) { return '<li>' + htmlEscape(s) + '</li>'; }).join('') + '</ul></details>';
+                        formatAcademicSourcesList(war.sources) + '</ul></details>';
                     html += '<p class="hist-disclaimer-mini">' + htmlEscape(t('histDisclaimer')) + '</p>';
 _lastPanelRenderTime = performance.now();
                     panelContent.innerHTML = html;
                     countryPanel.style.display = 'block';
                     requestAnimationFrame(function(){requestAnimationFrame(function(){countryPanel.classList.add('visible');});});
-                    var _btnStudy = panelContent.querySelector('#eraActStudy');
-                    var _btnQuiz = panelContent.querySelector('#eraActQuiz');
-                    var _btnCmp = panelContent.querySelector('#eraActCompare');
-                    var _btnCopy = panelContent.querySelector('#eraActCopyLink');
-                    if (_btnStudy) _btnStudy.addEventListener('click', function() { eraPrintStudySheet(era); });
-                    if (_btnQuiz) _btnQuiz.addEventListener('click', function() { eraOpenQuiz(era); });
-                    if (_btnCmp) _btnCmp.addEventListener('click', function() { eraOpenCompare(era); });
-                    if (_btnCopy) _btnCopy.addEventListener('click', function() { eraCopyLink(era); });
+                    refreshLucideIcons();
                 }
                 // ── Phase 8: era education tools ──
                 function histRegionLabelFor(era) {
@@ -8073,7 +8180,10 @@ _lastPanelRenderTime = performance.now();
                         '<select id="cmpA" class="history-region-select">' + opts + '</select></div>' +
                         '<div class="hist-compare-pick"><label>' + htmlEscape(t('histCompareEraB')) + '</label>' +
                         '<select id="cmpB" class="history-region-select">' + opts + '</select></div>' +
-                        '<div class="hist-compare-table" id="cmpTable"></div>';
+                        '<div class="hist-compare-table" id="cmpTable"></div>' +
+                        '<div class="hist-compare-overlay-row">' +
+                        '<button type="button" class="btn history-action-btn" id="btnOverlayCompareOnMap">' + htmlEscape(t('histCompareOverlayBtn')) + '</button>' +
+                        '</div>';
                     body.querySelector('#cmpA').value = aId;
                     body.querySelector('#cmpB').value = bId;
                     function renderCompare() {
@@ -8094,6 +8204,14 @@ _lastPanelRenderTime = performance.now();
                     }
                     body.querySelector('#cmpA').addEventListener('change', renderCompare);
                     body.querySelector('#cmpB').addEventListener('change', renderCompare);
+                    var ovBtn = body.querySelector('#btnOverlayCompareOnMap');
+                    if (ovBtn) ovBtn.addEventListener('click', function() {
+                        var ea = eras.find(function(e) { return e.id === body.querySelector('#cmpA').value; });
+                        var eb = eras.find(function(e) { return e.id === body.querySelector('#cmpB').value; });
+                        if (!ea || !eb) return;
+                        closeEraModals();
+                        renderMapComparisonOverlay(ea.id, eb.id);
+                    });
                     renderCompare();
                     modal.classList.add('visible');
                 }
@@ -8110,10 +8228,177 @@ _lastPanelRenderTime = performance.now();
                         '<h3>' + htmlEscape(t('histComparePolities')) + '</h3><ul>' +
                         eraPolityList(era).map(function(n) { return '<li>' + htmlEscape(n) + '</li>'; }).join('') + '</ul>' +
                         '<h3>' + htmlEscape(t('histSourcesBtn')) + '</h3><ol>' +
-                        (era.sources || []).map(function(s) { return '<li>' + htmlEscape(s) + '</li>'; }).join('') + '</ol>' +
+                        formatAcademicSourcesList(era.sources) + '</ol>' +
                         '<p class="ss-disclaimer">' + htmlEscape(t('histEraDisclaimer')) + '</p>';
                     ctn.innerHTML = html;
                     window.print();
+                }
+                // Converts a plain-text academic reference into clickable HTML:
+                //  - DOIs (10.xxxx/...) link straight to https://doi.org/<doi>
+                //  - URLs (http/https) link straight to the page
+                //  - Anything else is linkified to a Google Scholar search for it
+                function formatAcademicSource(sourceStr) {
+                    var s = String(sourceStr == null ? '' : sourceStr).trim();
+                    if (!s) return '';
+                    var href = null, label = s;
+                    var doiMatch = s.match(/(10\.\d{4,9}\/[^\s"'"()<>]+)/i);
+                    var hasUrl = /https?:\/\/\S+/i.test(s);
+                    if (doiMatch && !hasUrl) {
+                        href = 'https://doi.org/' + doiMatch[1].replace(/[.,;]$/, '');
+                    } else if (hasUrl) {
+                        var urlMatch = s.match(/https?:\/\/[^\s"'"()<>]+/i);
+                        href = urlMatch ? urlMatch[0] : null;
+                        if (urlMatch) label = s.replace(urlMatch[0], '').trim() || urlMatch[0];
+                    } else {
+                        href = 'https://scholar.google.com/scholar?q=' + encodeURIComponent(s);
+                    }
+                    return '<a href="' + htmlEscape(href) + '" target="_blank" rel="noopener noreferrer" class="hist-source-link">' +
+                        htmlEscape(label) + ' <i data-lucide="external-link"></i></a>';
+                }
+                function formatAcademicSourcesList(sources) {
+                    return (sources || []).map(function(s) {
+                        return '<li>' + formatAcademicSource(s) + '</li>';
+                    }).join('');
+                }
+                // Builds an RFC 7946 GeoJSON FeatureCollection from an era's polities
+                // and triggers a browser download of the result as a .geojson file.
+                function exportEraGeoJSON(era) {
+                    if (!era) era = getHistEra();
+                    if (!era || !era.polities || !era.polities.length) return;
+                    var features = era.polities.map(function(p) {
+                        var geometry;
+                        if (p.geoJSON && p.geoJSON.type) {
+                            geometry = p.geoJSON;
+                        } else {
+                            var coords = (p.rings || []).map(function(ring) {
+                                return buildEraFeature({ rings: [ring] }).coordinates[0];
+                            });
+                            geometry = { type: 'MultiPolygon', coordinates: coords };
+                        }
+                        var props = {
+                            polityId: p.id,
+                            name_ar: p.name_ar,
+                            name_en: p.name_en
+                        };
+                        if (p.color) props.color = p.color;
+                        if (p.capital) props.capital = p.capital;
+                        if (p.founder) props.founder = p.founder;
+                        if (p.religion) props.religion = p.religion;
+                        if (p.foundingYear) props.foundingYear = p.foundingYear;
+                        if (p.endYear) props.endYear = p.endYear;
+                        return {
+                            type: 'Feature',
+                            properties: props,
+                            geometry: geometry
+                        };
+                    });
+                    var fc = {
+                        type: 'FeatureCollection',
+                        metadata: {
+                            source: 'Lepidos Atlas',
+                            eraId: era.id,
+                            title: locField(era, 'title'),
+                            year: era.sort,
+                            yearLabel: era.yearLabel || '',
+                            sources: era.sources || []
+                        },
+                        features: features
+                    };
+                    var json = JSON.stringify(fc, null, 2);
+                    var safeId = String(era.id).replace(/[^a-z0-9_-]/gi, '_');
+                    var slug = (era.yearLabel || String(era.sort || '')).replace(/[^a-z0-9]/gi, '_');
+                    var fname = safeId + '_' + slug + '.geojson';
+                    var blob = new Blob([json], { type: 'application/geo+json' });
+                    var url = URL.createObjectURL(blob);
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = fname;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+                    if (copyNotification) {
+                        copyNotification.textContent = t('exportGeoJSONSuccess');
+                        copyNotification.classList.add('show');
+                        setTimeout(function() { copyNotification.classList.remove('show'); }, 2000);
+                    }
+                }
+                // Renders two eras simultaneously: the primary era draws normally in
+                // gHistoryOverlay; the secondary era draws as a translucent, dashed
+                // overlay in gHistoryCompareOverlay with a floating comparison banner.
+                function renderMapComparisonOverlay(primaryEraId, secondaryEraId) {
+                    if (!gHistoryOverlay || !gHistoryCompareOverlay) return;
+                    if (!historyActive || historyTab !== 'eras') return;
+                    var primaryEra = historicalErasData.find(function(e) { return e.id === primaryEraId; });
+                    var secondaryEra = historicalErasData.find(function(e) { return e.id === secondaryEraId; });
+                    if (!primaryEra || !secondaryEra) return;
+                    // Switch the current active era to the primary so the main overlay
+                    // and all related UI (labels, timeline, badge) reflect it.
+                    historyEraId = primaryEra.id;
+                    if (selectedFeatureType === 'history' && countryPanel.classList.contains('visible') && selectedCountry) {
+                        openHistoryPanel(selectedCountry);
+                    }
+                    drawEraScene(true);
+                    // Secondary era: semi-transparent fill + heavy dashed outline.
+                    if (gHistoryCompareOverlay) gHistoryCompareOverlay.selectAll('*').remove();
+                    secondaryEra.polities.forEach(function(p) {
+                        var f = buildEraFeature(p);
+                        var pd = pathGen(f);
+                        if (!pd) return;
+                        gHistoryCompareOverlay.append('path')
+                            .attr('d', pd)
+                            .attr('fill', '#f59e0b')
+                            .attr('fill-opacity', 0.25)
+                            .attr('stroke', '#f59e0b')
+                            .attr('stroke-width', 2.5)
+                            .attr('stroke-opacity', 0.9)
+                            .attr('stroke-dasharray', '4,4')
+                            .attr('vector-effect', 'non-scaling-stroke');
+                    });
+                    showHistoryComparisonBanner(primaryEra, secondaryEra);
+                    if (window.updateHash) window.updateHash();
+                }
+                function clearMapComparisonOverlay() {
+                    if (gHistoryCompareOverlay) gHistoryCompareOverlay.selectAll('*').remove();
+                    hideHistoryComparisonBanner();
+                }
+                function showHistoryComparisonBanner(primaryEra, secondaryEra) {
+                    hideHistoryComparisonBanner();
+                    var banner = document.createElement('div');
+                    banner.className = 'hist-compare-floating-banner';
+                    banner.id = 'histCompareFloatingBanner';
+                    var body = document.createElement('div');
+                    body.textContent = t('histCompareOverlayTitle')
+                        .replace('{a}', locField(primaryEra, 'title') + ' (' + (primaryEra.yearLabel || '') + ')')
+                        .replace('{b}', locField(secondaryEra, 'title') + ' (' + (secondaryEra.yearLabel || '') + ')');
+                    var close = document.createElement('button');
+                    close.type = 'button';
+                    close.className = 'hist-compare-close-btn';
+                    close.setAttribute('aria-label', t('histCompareOverlayClose'));
+                    close.innerHTML = '&times;';
+                    close.addEventListener('click', function() {
+                        clearMapComparisonOverlay();
+                        // Removing the banner also restores a clean drawn primary era.
+                        var p = historicalErasData.find(function(e) { return e.id === historyEraId; });
+                        if (p) drawEraScene(true);
+                    });
+                    banner.appendChild(body);
+                    banner.appendChild(close);
+                    document.body.appendChild(banner);
+                    window.__histCompareBanner = banner;
+                }
+                function hideHistoryComparisonBanner() {
+                    var existing = document.getElementById('histCompareFloatingBanner');
+                    if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
+                }
+                window.exportEraGeoJSON = exportEraGeoJSON;
+                window.renderMapComparisonOverlay = renderMapComparisonOverlay;
+                window.clearMapComparisonOverlay = clearMapComparisonOverlay;
+                window.formatAcademicSource = formatAcademicSource;
+                function refreshLucideIcons() {
+                    if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                        try { lucide.createIcons(); } catch (e) {}
+                    }
                 }
                 function closeEraModals() {
                     ['eraQuizModal', 'eraCompareModal'].forEach(function(id) {
@@ -8165,6 +8450,17 @@ _lastPanelRenderTime = performance.now();
                     var leg = document.getElementById('legend');
                     if (leg && historyActive) leg.innerHTML = '';
                 }
+                function clearAllHistoryVisuals() {
+                    stopHistPlay();
+                    stopReligionsPlay();
+                    if (gHistoryOverlay) gHistoryOverlay.selectAll('*').interrupt().remove();
+                    if (gHistoryCompareOverlay) gHistoryCompareOverlay.selectAll('*').interrupt().remove();
+                    if (gReligionsOverlay) gReligionsOverlay.selectAll('*').interrupt().remove();
+                    hideHistoryComparisonBanner();
+                    selectedHistoryPolity = null;
+                    var leg = document.getElementById('legend');
+                    if (leg && historyActive) leg.innerHTML = '';
+                }
                 function renderHistoryEmptyState() {
                     var sp = document.getElementById('histSourcesPanel');
                     if (sp) sp.innerHTML = '';
@@ -8177,6 +8473,29 @@ _lastPanelRenderTime = performance.now();
                             '<div class="hist-empty-cue">' + htmlEscape(t('histSelectCue')) + '</div>';
                     }
                     triggerHistoryListPulse();
+                }
+                // Render a zero-results state with a one-click "Reset Filters" action.
+                // `container` is the element to fill (era chips area or war tabs area).
+                function renderHistoryResetBox(container, message) {
+                    if (!container) return;
+                    container.innerHTML =
+                        '<div class="history-empty-state-box">' +
+                        '<p class="history-empty-msg">' + htmlEscape(message || t('histNoResults')) + '</p>' +
+                        '<button type="button" class="btn btn-reset-hist-filters" id="resetHistFiltersBtn">' + htmlEscape(t('resetBtn')) + '</button>' +
+                        '</div>';
+                    var resetBtnEl = container.querySelector('#resetHistFiltersBtn');
+                    if (resetBtnEl) resetBtnEl.addEventListener('click', function() {
+                        historySearchText = '';
+                        var sInp = document.getElementById('histSearchInput');
+                        if (sInp) sInp.value = '';
+                        historyRegionFilter = 'all';
+                        var rSel = document.getElementById('histFilterRegion');
+                        if (rSel) rSel.value = 'all';
+                        historyReligionFilter = 'all';
+                        var relSel = document.getElementById('histFilterReligion');
+                        if (relSel) relSel.value = 'all';
+                        refreshHistoryAfterFilterChange();
+                    });
                 }
                 var historyPulseFired = false;
                 function triggerHistoryListPulse() {
@@ -8195,11 +8514,23 @@ _lastPanelRenderTime = performance.now();
                     }, 1800);
                 }
                 function exitHistoryMode(restore) {
-                    stopHistPlay();
+                    clearAllHistoryVisuals();
                     historyActive = false;
-                    if (gHistoryOverlay) gHistoryOverlay.selectAll('*').remove();
                     var sp2 = document.getElementById('histSourcesPanel');
                     if (sp2) sp2.style.display = 'none';
+                    // Hide all sub-mode UI so no orphaned panel remains visible.
+                    var hwt = document.getElementById('histWarTabs');
+                    if (hwt) hwt.style.setProperty('display', 'none', 'important');
+                    var hsb = document.getElementById('histScenarioBtns');
+                    if (hsb) hsb.style.setProperty('display', 'none', 'important');
+                    var heg = document.getElementById('historyEraGroup');
+                    if (heg) heg.style.setProperty('display', 'none', 'important');
+                    var hbar = document.getElementById('historyBottomBar');
+                    if (hbar) hbar.style.display = 'none';
+                    var hftw = document.getElementById('historyFaithsTimelineWrap');
+                    if (hftw) hftw.style.display = 'none';
+                    var hetw = document.getElementById('historyEraTimelineWrap');
+                    if (hetw) hetw.style.display = 'none';
                     if (selectedFeatureType === 'history' && countryPanel.classList.contains('visible')) closeCountryPanel();
                     syncGlobeBtnState();
                     if (restore !== false && historySavedState) {
@@ -8347,13 +8678,12 @@ function buildEraFeature(p) {
                     var _es = document.getElementById('histEmptyState');
                     if (_es) _es.style.display = 'none';
                     if (!gHistoryOverlay) return;
-                    // Cross-fade: instead of removing the previous era's paths
-                    // instantly, fade them out while the new era's paths fade in,
-                    // so boundary changes read as a smooth transition. Only the
-                    // ending elements are removed (never the freshly-drawn ones).
+                    // Immediately interrupt any running transitions so fast
+                    // clicks never leave orphaned polygons or stale cross-fades.
+                    gHistoryOverlay.selectAll('*').interrupt();
                     if (!skipFadeIn && prefersReducedMotion() === false) {
-                        gHistoryOverlay.selectAll('path,text').interrupt().transition().duration(220)
-                            .style('opacity', '0')
+                        gHistoryOverlay.selectAll('path,text')
+                            .transition().duration(220).style('opacity', '0')
                             .on('end', function() { d3.select(this).remove(); });
                     } else {
                         gHistoryOverlay.selectAll('*').remove();
@@ -8416,6 +8746,7 @@ function buildEraFeature(p) {
                         '<button type="button" class="btn history-action-btn" id="eraActStudy">' + htmlEscape(t('histEraStudyBtn')) + '</button>' +
                         '<button type="button" class="btn history-action-btn" id="eraActQuiz">' + htmlEscape(t('histEraQuizBtn')) + '</button>' +
                         '<button type="button" class="btn history-action-btn" id="eraActCompare">' + htmlEscape(t('histEraCompareBtn')) + '</button>' +
+                        '<button type="button" class="btn history-action-btn" id="eraActExportGeoJSON">' + htmlEscape(t('exportGeoJSONBtn')) + '</button>' +
                         '<button type="button" class="btn history-action-btn" id="eraActCopyLink">' + htmlEscape(t('histEraCopyLink')) + '</button>' +
                         '</div>';
                     var drows = '';
@@ -8430,12 +8761,29 @@ function buildEraFeature(p) {
                     if (drows) html += '<dl class="hist-entity-details">' + drows + '</dl>';
                     html += '<p class="hist-note"><em>' + htmlEscape(t('histEraApprox')) + '</em></p>';
                     html += '<details class="hist-sources-mini"><summary>' + htmlEscape(t('histSourcesBtn')) + '</summary><ul>' +
-                        (era.sources || []).map(function(s) { return '<li>' + htmlEscape(s) + '</li>'; }).join('') + '</ul></details>';
+                        formatAcademicSourcesList(era.sources) + '</ul></details>';
                     html += '<p class="hist-disclaimer-mini">' + htmlEscape(t('histEraDisclaimer')) + '</p>';
                     _lastPanelRenderTime = performance.now();
                     panelContent.innerHTML = html;
                     countryPanel.style.display = 'block';
                     requestAnimationFrame(function(){requestAnimationFrame(function(){countryPanel.classList.add('visible');});});
+                    bindEraActionButtons(era);
+                    refreshLucideIcons();
+                }
+                function bindEraActionButtons(era) {
+                    if (!era) return;
+                    var panelContent = document.getElementById('panelContent');
+                    if (!panelContent) return;
+                    var btnStudy = panelContent.querySelector('#eraActStudy');
+                    var btnQuiz = panelContent.querySelector('#eraActQuiz');
+                    var btnCmp  = panelContent.querySelector('#eraActCompare');
+                    var btnCopy = panelContent.querySelector('#eraActCopyLink');
+                    var btnGeo  = panelContent.querySelector('#eraActExportGeoJSON');
+                    if (btnStudy) btnStudy.onclick = function() { eraPrintStudySheet(era); };
+                    if (btnQuiz)  btnQuiz.onclick  = function() { eraOpenQuiz(era); };
+                    if (btnCmp)   btnCmp.onclick   = function() { eraOpenCompare(era); };
+                    if (btnCopy)  btnCopy.onclick   = function() { eraCopyLink(era); };
+                    if (btnGeo)   btnGeo.onclick    = function() { exportEraGeoJSON(era); };
                 }
                 function openEraPanelForFeature(f) {
                     var panelContent = document.getElementById('panelContent');
@@ -8490,23 +8838,32 @@ function buildEraFeature(p) {
                     countryPanel.style.display = 'block';
                     requestAnimationFrame(function(){requestAnimationFrame(function(){countryPanel.classList.add('visible');});});
                 }
+                // Update the bottom timeline bar's year badge and caption for the
+                // currently active era. Falls back gracefully when the bar is absent.
+                function updateEraBottomBadge(era) {
+                    var badge = document.getElementById('histCurrentYearBadge');
+                    var cap = document.getElementById('histTimelineCaption');
+                    if (era) {
+                        if (badge) badge.textContent = era.yearLabel || '';
+                        if (cap) cap.textContent = locField(era, 'desc') || locField(era, 'title') || '';
+                    } else {
+                        if (badge) badge.textContent = '';
+                        if (cap) cap.textContent = '';
+                    }
+                }
                 function renderEraTabContent() {
                     var sp = document.getElementById('histSourcesPanel');
                     var tl = document.getElementById('histTimeline');
-                    var tlRow = (function(q) { var e = document.querySelector('#historyEraGroup .history-timeline-row'); return e || tl; })();
                     var eraGroupEl = document.getElementById('historyEraGroup');
                     if (!eraGroupEl) return;
-                    Array.prototype.slice.call(eraGroupEl.childNodes).forEach(function(n) {
-                        if (n === tl || n === tlRow) return;
-                        eraGroupEl.removeChild(n);
-                    });
+                    eraGroupEl.innerHTML = '';
                     var row = document.createElement('div');
                     row.className = 'history-scenarios';
                     var era = getHistEra();
                     if (!era) {
                         row.innerHTML = '<span class="history-loading">' + htmlEscape(t('histEraLoading')) + '</span>';
-                        eraGroupEl.insertBefore(row, tlRow);
-                        tl.style.display = 'none';
+                        eraGroupEl.appendChild(row);
+                        if (tl) tl.style.display = 'none';
                         sp.innerHTML = '';
                         fetchHistoricalEras().then(function() {
                             if (historyTab !== 'eras') return;
@@ -8528,9 +8885,9 @@ function buildEraFeature(p) {
                     filtered.sort(function(a, b) { return (a.sort || 0) - (b.sort || 0); });
                     histPlayOrder = filtered.slice();
                     if (!filtered.length) {
-                        row.innerHTML = '<span class="history-loading">' + htmlEscape(t('histNoResults')) + '</span>';
-                        eraGroupEl.insertBefore(row, tlRow);
-                        tl.style.display = 'none';
+                        renderHistoryResetBox(row, t('histNoResults'));
+                        eraGroupEl.appendChild(row);
+                        if (tl) tl.style.display = 'none';
                         sp.innerHTML = '';
                         if (gHistoryOverlay) gHistoryOverlay.selectAll('*').remove();
                         var legEmpty = document.getElementById('legend');
@@ -8542,6 +8899,7 @@ function buildEraFeature(p) {
                         historyEraId = filtered[0].id;
                         era = getHistEra();
                     }
+                    updateEraBottomBadge(era);
                     filtered.forEach(function(e) {
                         var b = document.createElement('button');
                         b.type = 'button';
@@ -8558,9 +8916,9 @@ function buildEraFeature(p) {
                         });
                         row.appendChild(b);
                     });
-                    eraGroupEl.insertBefore(row, tlRow);
+                    eraGroupEl.appendChild(row);
                     if (!historyEraId) {
-                        tl.style.display = 'none';
+                        if (tl) tl.style.display = 'none';
                         clearHistoryOverlay();
                         renderHistoryEmptyState();
                         return;
@@ -8574,8 +8932,10 @@ function buildEraFeature(p) {
                     var pad = histSorts.length > 1 ? Math.round((max - min) * 0.08) : 50;
                     min = min - pad;
                     max = max + pad;
-                    tl.style.display = 'block';
-                    tl.innerHTML = '';
+                    if (tl) {
+                        tl.style.display = 'block';
+                        tl.innerHTML = '';
+                    }
                     filtered.forEach(function(e) {
                         var dot = document.createElement('button');
                         dot.type = 'button';
@@ -8586,11 +8946,13 @@ function buildEraFeature(p) {
                         dot.addEventListener('click', function() {
                             stopHistPlay();
                             historyEraId = e.id;
+                            updateEraBottomBadge(e);
                             renderHistoryBar();
                             drawEraScene();
                         });
-                        tl.appendChild(dot);
+                        if (tl) tl.appendChild(dot);
                     });
+                    if (!tl) return;
                     tl.style.cursor = 'pointer';
                     tl.style.touchAction = 'none';
                     var tlDrag = false;
@@ -8606,6 +8968,7 @@ function buildEraFeature(p) {
                         if (best && best.id !== historyEraId) {
                             historyEraId = best.id;
                             selectedHistoryPolity = null;
+                            updateEraBottomBadge(best);
                             drawEraScene(true);
                             tl.querySelectorAll('.history-tl-dot').forEach(function(d2) {
                                 d2.classList.toggle('active', d2.title.indexOf(best.yearLabel) === 0);
@@ -8639,7 +9002,8 @@ function buildEraFeature(p) {
                         leg.appendChild(item);
                     });
                     sp.innerHTML = '<h4>' + htmlEscape(t('histSourcesTitle')) + '</h4><ul>' +
-                        (era.sources || []).map(function(s) { return '<li>' + htmlEscape(s) + '</li>'; }).join('') + '</ul>';
+                        formatAcademicSourcesList(era.sources) + '</ul>';
+                    refreshLucideIcons();
                     if (historyActive && window.updateHash) window.updateHash();
                 }
                 function renderHistoryLegend() {
@@ -8711,23 +9075,25 @@ function buildEraFeature(p) {
                     return true;
                 };
                 function selectHistoryTab(tab) {
-                    if (tab !== 'eras') stopHistPlay();
+                    stopHistPlay();
                     historyTab = tab;
                     selectedHistoryPolity = null;
+                    // Clean teardown of the previous sub-mode before activating the new one.
+                    if (tab !== 'eras' && window.religionsStillActive && window.religionsStillActive()) {
+                        if (window.deactivateFaithsMode) window.deactivateFaithsMode();
+                    }
+                    if (tab !== 'faiths' && gHistoryOverlay) {
+                        gHistoryOverlay.selectAll('*').interrupt().remove();
+                    }
                     if (tab === 'faiths') {
-                        if (gHistoryOverlay) gHistoryOverlay.selectAll('*').remove();
                         renderHistoryBar();
                         if (window.renderFaithsMode) window.renderFaithsMode();
                         return;
-                    }
-                    if (window.religionsStillActive && window.religionsStillActive()) {
-                        if (window.deactivateFaithsMode) window.deactivateFaithsMode();
                     }
                     if (tab === 'eras') {
                         if (!historicalErasData) {
                             historyEraId = null;
                             renderHistoryBar();
-                            if (gHistoryOverlay) gHistoryOverlay.selectAll('*').remove();
                             fetchHistoricalEras().then(function() {
                                 if (historyTab !== 'eras') return;
                                 renderHistoryBar();
@@ -10959,11 +11325,8 @@ function buildEraFeature(p) {
                 var sbEl = document.getElementById('histScenarioBtns');
                 var esEl = document.querySelector('.history-empty-state');
                 var egEl = document.getElementById('historyEraGroup');
-                var fgEl = document.getElementById('historyFaithsGroup');
-                var tlEl = document.getElementById('histTimeline');
-                var rtlEl = document.getElementById('religionsTimeline');
                 if (collapsed) {
-                    [frEl, wtEl, sbEl, esEl, egEl, fgEl, tlEl, rtlEl].forEach(function(el) {
+                    [frEl, wtEl, sbEl, esEl, egEl].forEach(function(el) {
                         if (el) el.style.setProperty('display', 'none', 'important');
                     });
                 } else {
@@ -10972,11 +11335,6 @@ function buildEraFeature(p) {
                     if (sbEl) sbEl.style.setProperty('display', wars ? 'flex' : 'none', 'important');
                     // empty state: restored by its own render logic; no-op here.
                     if (egEl) egEl.style.setProperty('display', eras ? 'flex' : 'none', 'important');
-                    if (fgEl) fgEl.style.setProperty('display', faiths ? 'flex' : 'none', 'important');
-                    // timeline: its own visibility is driven by renderEraTabContent,
-                    // so on expand simply clear the forced hiding so that logic wins.
-                    if (tlEl) tlEl.style.setProperty('display', '', 'important');
-                    if (rtlEl) rtlEl.style.setProperty('display', '', 'important');
                 }
                 if (indEl && collapsed) {
                     var label = '';
@@ -11086,7 +11444,7 @@ function buildEraFeature(p) {
             var YEAR_MIN = -2200;
             var YEAR_MAX = 2000;
             var gReligionsOverlay = null;
-            var rgGroupEl = document.getElementById('historyFaithsGroup');
+            var rgGroupEl = document.getElementById('historyFaithsTimelineWrap');
             var rgYearEl = document.getElementById('religionsYearValue');
             var rgTimelineEl = document.getElementById('religionsTimeline');
             var rgLegendEl = document.getElementById('religionsLegend');
@@ -11140,9 +11498,15 @@ function getReligionSlice(religion, year) {
             function drawReligionsScene(year, skipFadeIn) {
                 var g = ensureReligionsOverlay();
                 if (!g) return;
+                // Keep the bottom-bar year badge in sync on every redraw.
+                var yrVal = document.getElementById('religionsYearValue');
+                if (yrVal) yrVal.textContent = religionsYearLabelFor(year);
+                // Immediately interrupt any running transitions so rapid
+                // redraws never leave orphaned polygons or stale fades.
+                g.selectAll('*').interrupt();
                 if (!skipFadeIn && prefersReducedMotion() === false) {
-                    g.selectAll('path,text').interrupt().transition().duration(220)
-                        .style('opacity', '0')
+                    g.selectAll('path,text')
+                        .transition().duration(220).style('opacity', '0')
                         .on('end', function() { d3.select(this).remove(); });
                 } else {
                     g.selectAll('*').remove();
@@ -11260,7 +11624,11 @@ function getReligionSlice(religion, year) {
             }
             function activateReligionsMode() {
                 religionsActive = true;
-                if (rgGroupEl) rgGroupEl.style.display = '';
+                if (rgGroupEl) rgGroupEl.style.display = 'flex';
+                var bb = document.getElementById('historyBottomBar');
+                if (bb) bb.style.display = 'flex';
+                var etw = document.getElementById('historyEraTimelineWrap');
+                if (etw) etw.style.display = 'none';
                 ensureReligionsOverlay();
                 fetchReligionsData().then(function() {
                     if (!religionsActive) return;

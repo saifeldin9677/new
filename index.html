@@ -92,6 +92,33 @@
         <div class="border-disputes-counter" id="borderDisputesCounter" style="display:none"></div>
         <div class="info-overlay" id="infoOverlay"></div>
 
+        <!-- Dedicated Floating Bottom Timeline Bar for History Mode -->
+        <div class="history-bottom-bar" id="historyBottomBar" style="display:none" role="region" aria-label="Timeline Controls">
+            <div class="history-bottom-inner">
+                <!-- Era Timeline Content -->
+                <div class="history-era-timeline-wrap" id="historyEraTimelineWrap" style="display:none">
+                    <button type="button" class="history-play-btn" id="histPlayBtn" data-i18n-title="histPlayTip" aria-label="Play/Pause" aria-pressed="false">
+                        <i data-lucide="play" class="lucide-icon"></i>
+                    </button>
+                    <div class="history-timeline" id="histTimeline" style="display:none"></div>
+                    <span class="history-year-badge" id="histCurrentYearBadge"></span>
+                </div>
+
+                <!-- Religions/Faiths Timeline Content -->
+                <div class="history-faiths-timeline-wrap" id="historyFaithsTimelineWrap" style="display:none">
+                    <button type="button" class="history-play-btn" id="religionsPlayBtn" data-i18n-title="histPlayTip" aria-label="Play/Pause" aria-pressed="false">
+                        <i data-lucide="play" class="lucide-icon"></i>
+                    </button>
+                    <div class="religions-timeline" id="religionsTimeline" role="slider" aria-label="Religions timeline" aria-valuemin="-2200" aria-valuemax="2000"></div>
+                    <span class="history-year-badge" id="religionsYearValue"></span>
+                    <div class="religions-legend" id="religionsLegend"></div>
+                    <div class="religions-caption" id="religionsCaption"></div>
+                </div>
+            </div>
+            <!-- Active Caption / Context Line -->
+            <div class="history-timeline-caption" id="histTimelineCaption"></div>
+        </div>
+
         <div class="coordinates-display" id="coordinatesDisplay">
             خط الطول: — &nbsp;|&nbsp; خط العرض: — &nbsp;|&nbsp; تكبير: 1.0x &nbsp;|&nbsp; الوضع: دين &nbsp;|&nbsp; الفلتر: الكل
         </div>
@@ -172,19 +199,8 @@
                             <div class="history-scenarios" id="histScenarioBtns"></div>
                             <div class="history-empty-state" id="histEmptyState" style="display:none"></div>
                             <div class="history-era-group" id="historyEraGroup" style="display:none">
-                                <div class="history-timeline-row">
-                                    <button type="button" class="history-play-btn" id="histPlayBtn" data-i18n-title="histPlayTip" aria-label="Play/Pause" aria-pressed="false"><i data-lucide="play" class="lucide-icon"></i></button>
-                                    <div class="history-timeline" id="histTimeline" style="display:none"></div>
-                                </div>
-                            </div>
-                            <div class="history-faiths-group" id="historyFaithsGroup" style="display:none">
-                                <div class="history-timeline-row">
-                                    <button type="button" class="history-play-btn" id="religionsPlayBtn" data-i18n-title="histPlayTip" aria-label="Play/Pause" aria-pressed="false"><i data-lucide="play" class="lucide-icon"></i></button>
-                                    <div class="religions-timeline" id="religionsTimeline" role="slider" aria-label="Religions timeline" aria-valuemin="-2200" aria-valuemax="2000"></div>
-                                </div>
-                                <div class="history-year-label" id="religionsYearValue">1</div>
-                                <div class="religions-legend" id="religionsLegend"></div>
-                                <div class="religions-caption" id="religionsCaption"></div>
+                                <!-- Era browsing chips (selection) live in the top dock;
+                                     the timeline slider is in the bottom timeline bar. -->
                             </div>
                         </div>
                         <div class="control-group" id="modeButtons">

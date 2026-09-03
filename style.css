@@ -4755,6 +4755,27 @@ html[dir="rtl"] .hist-status-block { text-align: right; }
     max-width: 46ch;
     display: block;
 }
+.history-empty-state-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 16px;
+    border: 1px dashed var(--border, rgba(255, 255, 255, 0.2));
+    border-radius: var(--radius-md, 12px);
+    background: rgba(255, 255, 255, 0.035);
+    text-align: center;
+    max-width: 100%;
+}
+.history-empty-msg {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    opacity: 0.9;
+    margin: 0;
+}
+.btn-reset-hist-filters {
+    flex: 0 0 auto;
+}
 .history-timeline-row {
     display: flex;
     align-items: center;
@@ -4891,6 +4912,129 @@ html[dir="rtl"] .hist-status-block { text-align: right; }
     font-size: 0.78rem;
     min-height: 1em;
 }
+
+/* ── Phase 2: Dedicated Floating Bottom Timeline ── */
+.history-bottom-bar {
+    position: fixed;
+    bottom: 38px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(720px, 92vw);
+    background: var(--panel-overlay-96);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md, 12px);
+    padding: 8px 16px;
+    z-index: var(--z-controls-bar);
+    box-shadow: var(--shadow-lg, 0 8px 32px rgba(0, 0, 0, 0.45));
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: opacity var(--dur-base, 0.2s) ease, transform var(--dur-base, 0.2s) ease;
+    contain: layout style;
+}
+
+.history-bottom-inner {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 12px;
+}
+
+.history-era-timeline-wrap,
+.history-faiths-timeline-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.history-faiths-timeline-wrap {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.history-year-badge {
+    font-size: 0.9em;
+    font-weight: 700;
+    color: var(--brand-accent, #14B8A6);
+    background: rgba(255, 255, 255, 0.08);
+    padding: 3px 10px;
+    border-radius: var(--radius-pill, 999px);
+    white-space: nowrap;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    min-width: 72px;
+    text-align: center;
+}
+
+.history-timeline-caption {
+    font-size: 0.78em;
+    color: var(--text-secondary, #a0a0a0);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Bottom-bar play buttons adopt the slim circular style */
+.history-bottom-bar .history-play-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.18));
+    background: var(--btn-bg, rgba(255, 255, 255, 0.06));
+    color: var(--text, #f1f5f9);
+    cursor: pointer;
+    flex: 0 0 auto;
+    transition: background var(--dur-fast, 0.15s) var(--ease, ease);
+}
+.history-bottom-bar .history-play-btn[aria-pressed="true"] {
+    background: var(--brand-accent, #14B8A6);
+    color: #fff;
+    border-color: var(--brand-accent, #14B8A6);
+}
+.history-bottom-bar .history-play-btn .lucide-icon { width: 15px; height: 15px; }
+
+/* The religions legend/caption in the bottom bar wraps onto its own row */
+.history-bottom-bar .religions-legend {
+    width: 100%;
+    margin-top: 0;
+    justify-content: center;
+}
+.history-bottom-bar .religions-caption {
+    width: 100%;
+    text-align: center;
+}
+
+/* Keep the top dock slim and single-tiered */
+#historyModeDock {
+    max-height: none;
+    overflow: visible;
+}
+
+#historyModeDock .history-filter-row {
+    flex-wrap: nowrap;
+}
+
+@media (max-width: 768px) {
+    .history-bottom-bar {
+        bottom: calc(var(--mobile-nav-height, 56px) + 12px);
+        width: 95vw;
+        padding: 6px 10px;
+    }
+    .history-year-badge {
+        font-size: 0.78em;
+        padding: 2px 6px;
+        min-width: 58px;
+    }
+}
+
+
 .religions-overlay-layer { pointer-events: none; }
 .history-empty-state {
     margin-top: 12px;
@@ -4999,6 +5143,56 @@ html[dir="rtl"] .hist-status-block { text-align: right; }
 }
 .hist-cmp-cell strong { display: block; margin-bottom: 4px; }
 .hist-cmp-polities { margin-top: 6px; opacity: 0.9; }
+
+/* Academic source links */
+.hist-compare-overlay-row {
+    margin-top: 14px;
+    display: flex;
+    gap: 8px;
+}
+.hist-source-link {
+    color: var(--brand-accent, #14B8A6);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.hist-source-link:hover {
+    color: #fff;
+}
+
+/* Floating Comparison Banner */
+.hist-compare-floating-banner {
+    position: fixed;
+    top: 64px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--panel-overlay-96);
+    border: 1px solid var(--brand-accent, #14B8A6);
+    border-radius: var(--radius-pill, 999px);
+    padding: 6px 18px;
+    z-index: var(--z-modal-alert, 3100);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--shadow-lg);
+    font-size: 0.85em;
+    font-weight: 600;
+}
+.hist-compare-close-btn {
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid #ef4444;
+    color: #ef4444;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
 .study-sheet-print {
     display: none;
 }

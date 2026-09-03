@@ -6525,10 +6525,24 @@
                 persia: 'gold',
                 rome: 'red', peloponnesian: 'red', sparta: 'red',
                 delian: 'blue', athens: 'blue',
-                egypt: 'gold', hittite: 'teal', mongol: 'gold',
-                entente: 'blue', allies: 'blue', union: 'blue',
-                central: 'red', axis: 'red', confederacy: 'red', coalition: 'red',
-                france: 'blue', israel: 'blue'
+                egypt: 'gold', hittite: 'teal', mongol: 'gold', tang: 'gold', qing: 'gold', kalinga: 'gold',
+                entente: 'blue', allies: 'blue', union: 'blue', 'anglo-saxon': 'blue', norman: 'blue', aztec: 'blue',
+                central: 'red', axis: 'red', confederacy: 'red', coalition: 'red', crusaders: 'red', castile: 'blue',
+                france: 'blue', israel: 'blue',
+                assyria: 'green', seleucid: 'gold', antigonid: 'red', maurya: 'green', mauryan: 'green',
+                rebels: 'gold', tokugawa: 'red', toyotomi: 'gold', habsburg: 'blue',
+                sasanid: 'purple', safavid: 'purple', qajar: 'purple',
+                communist: 'red', 'un-south': 'blue',
+                qin: 'red', han: 'red', xiongnu: 'teal', six_states: 'teal', 'six-states': 'teal',
+                wei: 'purple', seljuk: 'teal', japan: 'teal', 'korea-ming': 'red', rus: 'purple',
+                england: 'red', scotland: 'green', hussite: 'gold', lancaster: 'red', york: 'blue',
+                inca: 'gold', mughal: 'purple', delhi: 'red', 'anti-habsburg': 'green',
+                norse: 'teal', russia: 'gold', sweden: 'blue', patriots: 'green', royalists: 'red', mexico: 'gold',
+                visigoth: 'blue', 'anglo-prussian': 'blue',
+                huns: 'teal', muslim_maghreb: 'green', eastern: 'gold', ghaznavid: 'purple', 'hindu': 'gold',
+                almohad: 'green', almoravid: 'teal', suri: 'gold', ming: 'red', maratha: 'teal',
+                boers: 'gold', paraguay: 'teal', prussia: 'red', republicans: 'blue', nationalists: 'red',
+                morocco: 'green', fln: 'green', taiping: 'purple'
             };
             const histEmpireNames = {
                 ah: { name_ar: 'النمسا-المجر', name_en: 'Austria-Hungary', name_ru: 'Австро-Венгрия', name_uz: 'Avstriya-Vengriya', name_es: 'Austria-Hungría' },

@@ -4,6 +4,175 @@
   "note_ar": "أهم النزاعات الكبرى عبر التاريخ مع أطرافها ومحطاتها الزمنية ومراجعها الأكاديمية.",
   "wars": [
     {
+      "id": "alexander-334",
+      "epoch": "ancient",
+      "region": "me",
+      "name_ar": "فتوحات الإسكندر الأكبر",
+      "name_en": "Conquests of Alexander the Great",
+      "name_ru": "Походы Александра Македонского",
+      "name_uz": "Iskandar Zulqarnayn yurishlari",
+      "name_es": "Conquistas de Alejandro Magno",
+      "years_ar": "334–323 ق.م",
+      "years_en": "334–323 BCE",
+      "sides": {
+        "delian": "المملكة المقدونية وحلفاؤها",
+        "persia": "الإمبراطورية الفارسية (داريوس الثالث)"
+      },
+      "sources": [
+        "Arrian, \"Anabasis of Alexander\" (Loeb Classical Library).",
+        "A.B. Bosworth, \"Conquest and Empire: The Reign of Alexander the Great\" (Cambridge, 1988)."
+      ],
+      "scenarios": [
+        {
+          "id": "gaugamela-331",
+          "year": "331 BCE",
+          "title_ar": "معركة غوغميلا وسقوط فارس",
+          "title_en": "Battle of Gaugamela & Fall of Persia",
+          "desc_ar": "الإسكندر يهزم داريوس الثالث في غوغميلا بالعراق ويستولي على بابل وبرسيبوليس ويتجه نحو الهند.",
+          "desc_en": "Alexander shatters Darius III at Gaugamela, taking Babylon, Susa, and Persepolis.",
+          "participants": [
+            {
+              "c": "Greece",
+              "side": "delian",
+              "role": "major"
+            },
+            {
+              "c": "North Macedonia",
+              "side": "delian",
+              "role": "major"
+            },
+            {
+              "c": "Iran",
+              "side": "persia",
+              "role": "major"
+            },
+            {
+              "c": "Iraq",
+              "side": "delian",
+              "role": "occupied"
+            },
+            {
+              "c": "Egypt",
+              "side": "delian",
+              "role": "occupied"
+            },
+            {
+              "c": "Syria",
+              "side": "delian",
+              "role": "occupied"
+            },
+            {
+              "c": "Afghanistan",
+              "side": "persia",
+              "role": "occupied"
+            },
+            {
+              "c": "Pakistan",
+              "side": "delian",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "algerian-rev-1954",
+      "epoch": "modern",
+      "region": "africa",
+      "name_ar": "ثورة التحرير الجزائرية (بلد المليون ونصف المليون شهيد)",
+      "name_en": "Algerian War of Independence",
+      "name_ru": "Война за независимость Алжира",
+      "name_uz": "Jazoir mustaqillik urushi",
+      "name_es": "Guerra de Independencia de Argelia",
+      "years_ar": "1954–1962 م",
+      "years_en": "1954–1962 CE",
+      "sides": {
+        "fln": "جبهة التحرير الوطني وجيش التحرير الجزائري",
+        "france": "الجمهورية الفرنسية والمستوطنون"
+      },
+      "sources": [
+        "A. Horne, \"A Savage War of Peace: Algeria 1954–1962\" (NYRB Classics, 2006).",
+        "M. Evans, \"Algeria: France's Undeclared War\" (Oxford University Press, 2012)."
+      ],
+      "scenarios": [
+        {
+          "id": "evian-1962",
+          "year": "1962",
+          "title_ar": "معركة الجزائر واتفاقيات إيفيان والاستقلال",
+          "title_en": "Battle of Algiers & Evian Accords",
+          "desc_ar": "كفاح شعبي وعسكري عارم استمر 8 سنوات ضد الاستعمار الاستيطاني الفرنسي، أسفر عن استقلال الجزائر وسقوط الجمهورية الفرنسية الرابعة.",
+          "desc_en": "Eight years of urban and mountain guerrilla resistance culminates in the Evian Accords and Algeria's sovereign independence.",
+          "participants": [
+            {
+              "c": "Algeria",
+              "side": "fln",
+              "role": "major"
+            },
+            {
+              "c": "France",
+              "side": "france",
+              "role": "major"
+            },
+            {
+              "c": "Egypt",
+              "side": "fln",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "almohad-marrakesh-1147",
+      "epoch": "medieval",
+      "region": "africa",
+      "name_ar": "صعود الموحدين وسقوط دولة المرابطين",
+      "name_en": "Almohad Conquest of the Almoravid Empire",
+      "name_ru": "Альмохадское завоевание Государства Альморавидов",
+      "name_uz": "Muvahhidlarning Murobitlar ustidan g‘alabasi",
+      "name_es": "Conquista almohade del Imperio almorávide",
+      "years_ar": "1145–1147 م",
+      "years_en": "1145–1147 CE",
+      "sides": {
+        "almohad": "حركة الموحدين (عبد المؤمن بن علي)",
+        "almoravid": "دولة المرابطين (إسحاق بن علي)"
+      },
+      "sources": [
+        "A. Huici Miranda, \"Historia política del imperio almohade\" (Tetuan, 1956).",
+        "H. Kennedy, \"Muslim Spain and Portugal\" (Longman, 1996)."
+      ],
+      "scenarios": [
+        {
+          "id": "marrakesh-fall-1147",
+          "year": "1147 CE",
+          "title_ar": "اقتحام مراكش وتوحيد المغرب والأندلس",
+          "title_en": "Fall of Marrakesh & Empire Proclamation",
+          "desc_ar": "جيوش الموحدين تنزل من جبال الأطلس وتقتحم مراكش بعد حصار طويل، مؤسسة أكبر إمبراطورية مغاربية وحدت بلاد المغرب والأندلس.",
+          "desc_en": "Abd al-Mu'min takes Marrakesh, establishing the Almohad Caliphate across North Africa and Muslim Iberia.",
+          "participants": [
+            {
+              "c": "Morocco",
+              "side": "almohad",
+              "role": "major"
+            },
+            {
+              "c": "Algeria",
+              "side": "almohad",
+              "role": "occupied"
+            },
+            {
+              "c": "Spain",
+              "side": "almohad",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
       "id": "american-civil-1861",
       "epoch": "nineteenth",
       "region": "americas",
@@ -33,6 +202,697 @@
             {
               "c": "United States",
               "side": "union",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "american-rev-1775",
+      "epoch": "nineteenth",
+      "region": "americas",
+      "name_ar": "حرب الاستقلال الأمريكية",
+      "name_en": "American Revolutionary War",
+      "name_ru": "Война за независимость США",
+      "name_uz": "AQSH mustaqillik urushi",
+      "name_es": "Guerra de Independencia de los Estados Unidos",
+      "years_ar": "1775–1783 م",
+      "years_en": "1775–1783 CE",
+      "sides": {
+        "union": "الولايات المتحدة وحلفاؤها الفرنسيون والإسبان",
+        "england": "الإمبراطورية البريطانية"
+      },
+      "sources": [
+        "D. McCullough, \"1776\" (Simon & Schuster, 2005).",
+        "R. Middlekauff, \"The Glorious Cause: The American Revolution, 1763–1789\" (Oxford, 2005)."
+      ],
+      "scenarios": [
+        {
+          "id": "yorktown-1781",
+          "year": "1781 CE",
+          "title_ar": "حصار يوركتاون واستسلام كورنواليس",
+          "title_en": "Siege of Yorktown",
+          "desc_ar": "جورج واشنطن مع الجيش والأسطول الفرنسي يطوقون الجيش البريطاني في يوركتاون مجبرين لندن على الاعتراف باستقلال أمريكا.",
+          "desc_en": "Combined Franco-American forces compel Cornwallis to surrender at Yorktown, securing American independence.",
+          "participants": [
+            {
+              "c": "United States",
+              "side": "union",
+              "role": "major"
+            },
+            {
+              "c": "France",
+              "side": "union",
+              "role": "major"
+            },
+            {
+              "c": "Spain",
+              "side": "union",
+              "role": "ally"
+            },
+            {
+              "c": "Netherlands",
+              "side": "union",
+              "role": "ally"
+            },
+            {
+              "c": "United Kingdom",
+              "side": "england",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "an-lushan-755",
+      "epoch": "medieval",
+      "region": "asia",
+      "name_ar": "تمرد آن لوشان في الصين",
+      "name_en": "An Lushan Rebellion",
+      "name_ru": "Мятеж Ань Лушаня",
+      "name_uz": "An Lushan qo‘zg‘oloni",
+      "name_es": "Rebelión de An Lushan",
+      "years_ar": "755–763 م",
+      "years_en": "755–763 CE",
+      "sides": {
+        "tang": "سلالة تانغ الصينية وحلفاؤها الأويغور",
+        "rebels": "جيش يان المتمرد (آن لوشان)"
+      },
+      "sources": [
+        "E.G. Pulleyblank, \"The Background of the Rebellion of An Lu-Shan\" (Oxford, 1955).",
+        "D. Graff, \"Medieval Chinese Warfare 300–900\" (Routledge, 2002)."
+      ],
+      "scenarios": [
+        {
+          "id": "changan-fall-756",
+          "year": "756 CE",
+          "title_ar": "سقوط العاصمة تشانغآن والدمار الديموغرافي",
+          "title_en": "Fall of Luoyang and Chang'an",
+          "desc_ar": "الجنرال آن لوشان يتمرد على الإمبراطور شوانزونغ؛ الحرب تسفر عن مقتل وتشريد الملايين وكسر هيبة سلالة تانغ للأبد.",
+          "desc_en": "Devastating rebellion leading to the sack of both capitals and a massive demographic and economic contraction in Tang China.",
+          "participants": [
+            {
+              "c": "China",
+              "side": "tang",
+              "role": "major"
+            },
+            {
+              "c": "Mongolia",
+              "side": "tang",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "andalus-conquest-711",
+      "epoch": "medieval",
+      "region": "europe",
+      "name_ar": "فتح الأندلس وبلاد الغال",
+      "name_en": "Umayyad Conquest of Hispania",
+      "name_ru": "Арабское завоевание Пиренейского полуострова",
+      "name_uz": "Andalusiyaning fath etilishi",
+      "name_es": "Conquista omeya de Hispania",
+      "years_ar": "711–732 م",
+      "years_en": "711–732 CE",
+      "sides": {
+        "muslim": "الدولة الأموية (طارق وموسى)",
+        "visigoth": "مملكة القوط الغربيين والفرنجة"
+      },
+      "sources": [
+        "H. Kennedy, \"Muslim Spain and Portugal: A Political History\" (Longman, 1996).",
+        "R. Collins, \"The Arab Conquest of Spain, 710–797\" (Blackwell, 1989)."
+      ],
+      "scenarios": [
+        {
+          "id": "guadalete-711",
+          "year": "711 CE",
+          "title_ar": "معركة وادي لكة وفتح أيبيريا",
+          "title_en": "Battle of Guadalete",
+          "desc_ar": "طارق بن زياد يعبر المضيق ويهزم الملك لذريق، فاتحاً قرطبة وطليطلة في حملة خاطفة.",
+          "desc_en": "Tariq ibn Ziyad crosses the straits and defeats King Roderic, collapsing the Visigothic kingdom.",
+          "participants": [
+            {
+              "c": "Morocco",
+              "side": "muslim",
+              "role": "major"
+            },
+            {
+              "c": "Syria",
+              "side": "muslim",
+              "role": "major"
+            },
+            {
+              "c": "Spain",
+              "side": "muslim",
+              "role": "occupied"
+            },
+            {
+              "c": "Portugal",
+              "side": "muslim",
+              "role": "occupied"
+            },
+            {
+              "c": "France",
+              "side": "visigoth",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "arab-israeli-1948",
+      "epoch": "modern",
+      "region": "me",
+      "name_ar": "حرب فلسطين 1948 (النكبة)",
+      "name_en": "1948 Arab–Israeli War",
+      "name_ru": "Арабо-израильская война (1947—1949)",
+      "name_uz": "Arab-Isroil urushi (1948)",
+      "name_es": "Guerra árabe-israelí de 1948",
+      "years_ar": "1948–1949 م",
+      "years_en": "1948–1949 CE",
+      "sides": {
+        "arab": "الجيوش العربية (مصر، الأردن، سوريا، العراق، لبنان)",
+        "israel": "القوات الإسرائيلية (الهاغاناه والجيش)"
+      },
+      "sources": [
+        "A. Shlaim, \"The Iron Wall: Israel and the Arab World\" (W.W. Norton, 2001).",
+        "E. Rogan, \"The Arabs: A History\" (Basic Books, 2009)."
+      ],
+      "scenarios": [
+        {
+          "id": "nakba-1948",
+          "year": "1948",
+          "title_ar": "إعلان الهدنة ورسم خطوط الهدنة الخضراء",
+          "title_en": "Armistice Lines & The Palestinian Nakba",
+          "desc_ar": "انتهاء الانتداب البريطاني واندلاع الحرب؛ تهجير أكثر من 700 ألف فلسطيني من ديارهم وتثبيت خطوط الهدنة لعام 1949 (الخط الأخضر).",
+          "desc_en": "End of the British Mandate leads to war, the displacement of over 700,000 Palestinians, and the establishment of the 1949 armistice green lines.",
+          "participants": [
+            {
+              "c": "Palestine",
+              "side": "arab",
+              "role": "occupied"
+            },
+            {
+              "c": "Israel",
+              "side": "israel",
+              "role": "major"
+            },
+            {
+              "c": "Egypt",
+              "side": "arab",
+              "role": "major"
+            },
+            {
+              "c": "Jordan",
+              "side": "arab",
+              "role": "major"
+            },
+            {
+              "c": "Syria",
+              "side": "arab",
+              "role": "major"
+            },
+            {
+              "c": "Iraq",
+              "side": "arab",
+              "role": "ally"
+            },
+            {
+              "c": "Lebanon",
+              "side": "arab",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "attila-hun-451",
+      "epoch": "ancient",
+      "region": "europe",
+      "name_ar": "غزوات أتيلا الهوني (معركة السهول الكاتالونية)",
+      "name_en": "Hunnish Invasions (Battle of the Catalaunian Plains)",
+      "name_ru": "Битва на Каталаунских полях (Нашествие Аттилы)",
+      "name_uz": "Katalaun maydonlaridagi jang (Attila yurishi)",
+      "name_es": "Batalla de los Campos Cataláunicos (Invasión de Atila)",
+      "years_ar": "451–452 م",
+      "years_en": "451–452 CE",
+      "sides": {
+        "huns": "إمبراطورية الهون وحلفاؤها (أتيلا)",
+        "rome": "التحالف الروماني والقوطي الغربي (أيتيوس)"
+      },
+      "sources": [
+        "Jordanes, \"Getica\" (trans. C.C. Mierow).",
+        "P. Heather, \"The Fall of the Roman Empire: A New History\" (Oxford University Press, 2006)."
+      ],
+      "scenarios": [
+        {
+          "id": "catalaunian-451",
+          "year": "451 CE",
+          "title_ar": "صدام السهول ووقف اجتياح الهون لبلاد الغال",
+          "title_en": "Battle of the Catalaunian Plains",
+          "desc_ar": "الجنرال الروماني فلافوس أيتيوس يتحالف مع ملوك القوط لصد زحف أتيلا الهوني في معركة مروعة بفرنسا، منقذاً غرب أوروبا من الحكم الهوني.",
+          "desc_en": "Flavius Aetius leads a Roman-Visigothic alliance to halt Attila the Hun in Gaul, checking Hunnish expansion into Western Europe.",
+          "participants": [
+            {
+              "c": "Italy",
+              "side": "rome",
+              "role": "major"
+            },
+            {
+              "c": "France",
+              "side": "rome",
+              "role": "major"
+            },
+            {
+              "c": "Germany",
+              "side": "huns",
+              "role": "ally"
+            },
+            {
+              "c": "Hungary",
+              "side": "huns",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "balkan-wars-1912",
+      "epoch": "modern",
+      "region": "europe",
+      "name_ar": "حروب البلقان (تمهيد الحرب العالمية)",
+      "name_en": "Balkan Wars",
+      "name_ru": "Балканские войны",
+      "name_uz": "Bolqon urushlari",
+      "name_es": "Guerras de los Balcanes",
+      "years_ar": "1912–1913 م",
+      "years_en": "1912–1913 CE",
+      "sides": {
+        "coalition": "رابطة البلقان (صربيا واليونان وبلغاريا والجبل الأسود)",
+        "ottoman": "الدولة العثمانية"
+      },
+      "sources": [
+        "R.C. Hall, \"The Balkan Wars 1912–1913: Prelude to the First World War\" (Routledge, 2000).",
+        "E.J. Erickson, \"Defeat in Detail: The Ottoman Army in the Balkans, 1912–1913\" (Praeger, 2003)."
+      ],
+      "scenarios": [
+        {
+          "id": "kumanovo-1912",
+          "year": "1912",
+          "title_ar": "طرد العثمانيين من مقدونيا وتراقيا",
+          "title_en": "Collapse of Ottoman Europe",
+          "desc_ar": "جيوش دول البلقان تجتاح مقدونيا وتصل إلى مشارف إسطنبول؛ العثمانيون يفقدون أكثر من 80% من أراضيهم في القارة الأوروبية.",
+          "desc_en": "The Balkan League expels the Ottomans from almost all remaining European territories, setting the stage for WWI.",
+          "participants": [
+            {
+              "c": "Serbia",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Greece",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Bulgaria",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Montenegro",
+              "side": "coalition",
+              "role": "ally"
+            },
+            {
+              "c": "Turkey",
+              "side": "ottoman",
+              "role": "major"
+            },
+            {
+              "c": "Albania",
+              "side": "coalition",
+              "role": "occupied"
+            },
+            {
+              "c": "North Macedonia",
+              "side": "coalition",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "boer-war2-1899",
+      "epoch": "nineteenth",
+      "region": "africa",
+      "name_ar": "حرب البوير الثانية في جنوب أفريقيا",
+      "name_en": "Second Boer War",
+      "name_ru": "Англо-бурская война (1899—1902)",
+      "name_uz": "Ikkinchi ingliz-bur urushi",
+      "name_es": "Segunda Guerra Bóer",
+      "years_ar": "1899–1902 م",
+      "years_en": "1899–1902 CE",
+      "sides": {
+        "england": "الإمبراطورية البريطانية والدومينيونات",
+        "boers": "جمهوريات البوير (ترانسفال ودولة أورنج الحرة)"
+      },
+      "sources": [
+        "T. Pakenham, \"The Boer War\" (Random House, 1979).",
+        "B. Nasson, \"The South African War 1899–1902\" (Arnold, 1999)."
+      ],
+      "scenarios": [
+        {
+          "id": "spion-kop-1900",
+          "year": "1900 CE",
+          "title_ar": "حرب العصابات ومعسكرات الاعتقال",
+          "title_en": "Guerrilla Phase & Scorched Earth",
+          "desc_ar": "مقاومة باسلة للكوماندوز البوير تجبر بريطانيا على حشد نصف مليون جندي وتطبيق سياسة الأرض المحروقة ومعسكرات الاعتقال لفرض السيادة.",
+          "desc_en": "British forces deploy scorched-earth tactics and concentration camps to suppress stubborn Boer commando resistance.",
+          "participants": [
+            {
+              "c": "United Kingdom",
+              "side": "england",
+              "role": "major"
+            },
+            {
+              "c": "South Africa",
+              "side": "boers",
+              "role": "occupied"
+            },
+            {
+              "c": "Australia",
+              "side": "england",
+              "role": "dominion"
+            },
+            {
+              "c": "Canada",
+              "side": "england",
+              "role": "dominion"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "byz-bulgar-968",
+      "epoch": "medieval",
+      "region": "europe",
+      "name_ar": "الحروب البيزنطية البلغارية (باسيل الثاني)",
+      "name_en": "Byzantine–Bulgarian Wars (Basil II)",
+      "name_ru": "Византийско-болгарские войны (Василий II)",
+      "name_uz": "Vizantiya-Bolgariya urushlari",
+      "name_es": "Guerras bizantino-búlgaras (Basilio II)",
+      "years_ar": "968–1018 م",
+      "years_en": "968–1018 CE",
+      "sides": {
+        "byzantine": "الإمبراطورية البيزنطية (باسيل الثاني)",
+        "coalition": "الإمبراطورية البلغارية الأولى (صامويل)"
+      },
+      "sources": [
+        "P. Stephenson, \"The Legend of Basil the Bulgar-Slayer\" (Cambridge, 2003).",
+        "M. Whittow, \"The Making of Orthodox Byzantium, 600–1025\" (Macmillan, 1996)."
+      ],
+      "scenarios": [
+        {
+          "id": "kleidion-1014",
+          "year": "1014 CE",
+          "title_ar": "معركة كليديون وضم البلقان",
+          "title_en": "Battle of Kleidion & Byzantine Hegemony",
+          "desc_ar": "باسيل الثاني يوقع هزيمة ساحقة بالجيش البلغاري في ممر كليديون، ويدمج البلقان بالكامل تحت الحكم البيزنطي لقرنين.",
+          "desc_en": "Emperor Basil II decisively defeats Tsar Samuel at Kleidion, completely re-establishing Byzantine authority over the Balkans.",
+          "participants": [
+            {
+              "c": "Greece",
+              "side": "byzantine",
+              "role": "major"
+            },
+            {
+              "c": "Turkey",
+              "side": "byzantine",
+              "role": "major"
+            },
+            {
+              "c": "Bulgaria",
+              "side": "coalition",
+              "role": "occupied"
+            },
+            {
+              "c": "North Macedonia",
+              "side": "coalition",
+              "role": "occupied"
+            },
+            {
+              "c": "Serbia",
+              "side": "byzantine",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "byz-sasanian-602",
+      "epoch": "medieval",
+      "region": "me",
+      "name_ar": "الحرب البيزنطية الساسانية الكبرى الأخيرة",
+      "name_en": "Byzantine–Sasanian War of 602–628",
+      "name_ru": "Ирано-византийская война (602—628)",
+      "name_uz": "Vizantiya-Sosoniylar urushi (602–628)",
+      "name_es": "Guerra bizantino-sasánida (602-628)",
+      "years_ar": "602–628 م",
+      "years_en": "602–628 CE",
+      "sides": {
+        "byzantine": "الإمبراطورية البيزنطية (هرقل)",
+        "sasanian": "الإمبراطورية الساسانية (خسرو الثاني)"
+      },
+      "sources": [
+        "J. Howard-Johnston, \"The Last Great War of Antiquity\" (Oxford University Press, 2021).",
+        "W. Kaegi, \"Heraclius: Emperor of Byzantium\" (Cambridge, 2003)."
+      ],
+      "scenarios": [
+        {
+          "id": "nineveh-627",
+          "year": "627 CE",
+          "title_ar": "حصار القسطنطينية ومعركة نينوى",
+          "title_en": "Battle of Nineveh & Sasanian Collapse",
+          "desc_ar": "بعد أن احتل الساسانيون القدس ومصر، هرقل يقود هجوماً مضاداً جريئاً في قلب العراق ويدمر الجيش الساساني.",
+          "desc_en": "After losing the Levant and Egypt, Heraclius launches a deep counter-offensive into Mesopotamia, crushing Persian power at Nineveh.",
+          "participants": [
+            {
+              "c": "Turkey",
+              "side": "byzantine",
+              "role": "major"
+            },
+            {
+              "c": "Greece",
+              "side": "byzantine",
+              "role": "major"
+            },
+            {
+              "c": "Iran",
+              "side": "sasanian",
+              "role": "major"
+            },
+            {
+              "c": "Iraq",
+              "side": "sasanian",
+              "role": "occupied"
+            },
+            {
+              "c": "Egypt",
+              "side": "sasanian",
+              "role": "occupied"
+            },
+            {
+              "c": "Syria",
+              "side": "sasanian",
+              "role": "occupied"
+            },
+            {
+              "c": "Georgia",
+              "side": "byzantine",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "chaldiran-1514",
+      "epoch": "early-modern",
+      "region": "me",
+      "name_ar": "الحروب العثمانية الصفوية (جالديران)",
+      "name_en": "Ottoman–Safavid Wars (Battle of Chaldiran)",
+      "name_ru": "Чалдыранская битва",
+      "name_uz": "Choldiron jangi",
+      "name_es": "Guerra otomano-safávida (Chaldirán)",
+      "years_ar": "1514–1555 م",
+      "years_en": "1514–1555 CE",
+      "sides": {
+        "ottoman": "الدولة العثمانية (سليم الأول)",
+        "safavid": "الدولة الصفوية (إسماعيل الأول)"
+      },
+      "sources": [
+        "C. Finkel, \"Osman's Dream: The History of the Ottoman Empire\" (Basic Books, 2005).",
+        "R. Savory, \"Iran Under the Safavids\" (Cambridge University Press, 1980)."
+      ],
+      "scenarios": [
+        {
+          "id": "chaldiran-clash",
+          "year": "1514 CE",
+          "title_ar": "معركة جالديران وتفوق المدفعية",
+          "title_en": "Battle of Chaldiran & Gunpowder Superiority",
+          "desc_ar": "السلطان سليم الأول يهزم الشاه إسماعيل الصفوي بفضل تنظيم نيران البنادق والمدافع، ويضم تبريز وشمال العراق وكردستان.",
+          "desc_en": "Selim I uses firepower and field artillery to defeat Ismail I, securing eastern Anatolia and northern Iraq.",
+          "participants": [
+            {
+              "c": "Turkey",
+              "side": "ottoman",
+              "role": "major"
+            },
+            {
+              "c": "Iran",
+              "side": "safavid",
+              "role": "major"
+            },
+            {
+              "c": "Iraq",
+              "side": "ottoman",
+              "role": "occupied"
+            },
+            {
+              "c": "Azerbaijan",
+              "side": "safavid",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "charlemagne-saxons-772",
+      "epoch": "medieval",
+      "region": "europe",
+      "name_ar": "حروب شارلمان والساكسون",
+      "name_en": "Saxon Wars of Charlemagne",
+      "name_ru": "Саксонские войны Карла Великого",
+      "name_uz": "Buyuk Karlning sakslar bilan urushi",
+      "name_es": "Guerras sajonas de Carlomagno",
+      "years_ar": "772–804 م",
+      "years_en": "772–804 CE",
+      "sides": {
+        "allies": "مملكة الفرنجة والإمبراطورية الكارولنجية",
+        "rebels": "قبائل الساكسون الوثنية (فيدوكيند)"
+      },
+      "sources": [
+        "Einhard, \"Life of Charlemagne\" (trans. P. Dutton, Broadview Press).",
+        "R. Collins, \"Charlemagne\" (University of Toronto Press, 1998)."
+      ],
+      "scenarios": [
+        {
+          "id": "verden-782",
+          "year": "782 CE",
+          "title_ar": "إخضاع ساكسونيا وتوسيع الإمبراطورية",
+          "title_en": "Subjugation of Saxony",
+          "desc_ar": "حملات عسكرية ضارية استمرت 30 عاماً دمجت ألمانيا الشمالية في العالم المسيحي الغربي ومهدت لتتويج شارلمان إمبراطوراً.",
+          "desc_en": "Charlemagne's 30-year campaigns incorporate northern Germany into the Frankish realm and Western Christendom.",
+          "participants": [
+            {
+              "c": "France",
+              "side": "allies",
+              "role": "major"
+            },
+            {
+              "c": "Germany",
+              "side": "rebels",
+              "role": "occupied"
+            },
+            {
+              "c": "Italy",
+              "side": "allies",
+              "role": "ally"
+            },
+            {
+              "c": "Netherlands",
+              "side": "allies",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "conquest-maghreb-647",
+      "epoch": "medieval",
+      "region": "africa",
+      "name_ar": "فتح المغرب العربي وحروب عقبة بن نافع",
+      "name_en": "Early Muslim Conquest of the Maghreb",
+      "name_ru": "Арабское завоевание Северной Африки",
+      "name_uz": "Mag‘ribning musulmonlar tomonidan fath etilishi",
+      "name_es": "Conquista musulmana del Magreb",
+      "years_ar": "647–709 م",
+      "years_en": "647–709 CE",
+      "sides": {
+        "muslim": "جيوش الفتح الإسلامي (عقبة وحسان وموسى)",
+        "byzantine": "الإمبراطورية البيزنطية والقبائل المحلية"
+      },
+      "sources": [
+        "Ibn Abd al-Hakam, \"Futuh Misr wa'l-Maghrib\".",
+        "H. Kennedy, \"The Great Arab Conquests\" (Weidenfeld & Nicolson, 2007)."
+      ],
+      "scenarios": [
+        {
+          "id": "kairouan-670",
+          "year": "670 CE",
+          "title_ar": "تأسيس القيروان والوصول إلى الأطلسي",
+          "title_en": "Founding of Kairouan & Western Advance",
+          "desc_ar": "عقبة بن نافع يؤسس القيروان كقاعدة عسكرية وانطلاق الجيوش حتى سواحل المحيط الأطلسي بالمغرب، دمجاً لشمال أفريقيا في العالم الإسلامي.",
+          "desc_en": "Uqba ibn Nafi founds Kairouan as the forward command hub, driving the frontier across North Africa to the Atlantic coast.",
+          "participants": [
+            {
+              "c": "Egypt",
+              "side": "muslim",
+              "role": "major"
+            },
+            {
+              "c": "Tunisia",
+              "side": "muslim",
+              "role": "occupied"
+            },
+            {
+              "c": "Algeria",
+              "side": "muslim",
+              "role": "occupied"
+            },
+            {
+              "c": "Morocco",
+              "side": "muslim",
+              "role": "occupied"
+            },
+            {
+              "c": "Greece",
+              "side": "byzantine",
               "role": "major"
             }
           ],
@@ -82,6 +942,200 @@
               "c": "Italy",
               "side": "byzantine",
               "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "crimean-1853",
+      "epoch": "nineteenth",
+      "region": "europe",
+      "name_ar": "حرب القرم",
+      "name_en": "Crimean War",
+      "name_ru": "Крымская война",
+      "name_uz": "Qrim urushi",
+      "name_es": "Guerra de Crimea",
+      "years_ar": "1853–1856 م",
+      "years_en": "1853–1856 CE",
+      "sides": {
+        "allies": "التحالف العثماني والبريطاني والفرنسي",
+        "russia": "الإمبراطورية الروسية"
+      },
+      "sources": [
+        "O. Figes, \"The Crimean War: A History\" (Metropolitan Books, 2010).",
+        "T. Royle, \"Crimea: The Great Crimean War, 1854–1856\" (St. Martin's Press, 2000)."
+      ],
+      "scenarios": [
+        {
+          "id": "sevastopol-1855",
+          "year": "1855 CE",
+          "title_ar": "حصار سيفاستوبول وهزيمة روسيا",
+          "title_en": "Siege of Sevastopol",
+          "desc_ar": "بريطانيا وفرنسا تتدخلان عسكرياً في البحر الأسود دفاعاً عن الدولة العثمانية وتهزمان روسيا القيصرية لأول مرة بتقنيات تلغراف وبوارج حديثة.",
+          "desc_en": "Allied coalition besieges and captures Sevastopol, curbing Russian naval expansion in the Black Sea.",
+          "participants": [
+            {
+              "c": "United Kingdom",
+              "side": "allies",
+              "role": "major"
+            },
+            {
+              "c": "France",
+              "side": "allies",
+              "role": "major"
+            },
+            {
+              "c": "Turkey",
+              "side": "allies",
+              "role": "major"
+            },
+            {
+              "c": "Italy",
+              "side": "allies",
+              "role": "ally"
+            },
+            {
+              "c": "Russia",
+              "side": "russia",
+              "role": "major"
+            },
+            {
+              "c": "Ukraine",
+              "side": "russia",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "crusade1-1096",
+      "epoch": "medieval",
+      "region": "me",
+      "name_ar": "الحملة الصليبية الأولى وسقوط القدس",
+      "name_en": "First Crusade",
+      "name_ru": "Первый крестовый поход",
+      "name_uz": "Birinchi salib yurishi",
+      "name_es": "Primera Cruzada",
+      "years_ar": "1096–1099 م",
+      "years_en": "1096–1099 CE",
+      "sides": {
+        "crusaders": "جيوش الصليبيين اللاتينية",
+        "muslim": "السلاجقة والفاطميون"
+      },
+      "sources": [
+        "T. Asbridge, \"The First Crusade: A New History\" (Oxford University Press, 2004).",
+        "J. Riley-Smith, \"The First Crusade and the Idea of Crusading\" (Continuum, 2003)."
+      ],
+      "scenarios": [
+        {
+          "id": "jerusalem-1099",
+          "year": "1099 CE",
+          "title_ar": "اجتياح بيت المقدس وتأسيس الممالك اللاتينية",
+          "title_en": "Siege of Jerusalem & Latin States",
+          "desc_ar": "الصليبيون يستولون على أنطاكية ثم يقتحمون القدس عام 1099، مؤسسين مملكة بيت المقدس وإمارات الرها وطرابلس.",
+          "desc_en": "Crusader forces take Antioch and storm Jerusalem in 1099, establishing four Latin Crusader states in the Levant.",
+          "participants": [
+            {
+              "c": "France",
+              "side": "crusaders",
+              "role": "major"
+            },
+            {
+              "c": "Italy",
+              "side": "crusaders",
+              "role": "major"
+            },
+            {
+              "c": "Germany",
+              "side": "crusaders",
+              "role": "ally"
+            },
+            {
+              "c": "Egypt",
+              "side": "muslim",
+              "role": "major"
+            },
+            {
+              "c": "Syria",
+              "side": "muslim",
+              "role": "major"
+            },
+            {
+              "c": "Palestine",
+              "side": "crusaders",
+              "role": "occupied"
+            },
+            {
+              "c": "Israel",
+              "side": "crusaders",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "crusade2-1147",
+      "epoch": "medieval",
+      "region": "me",
+      "name_ar": "الحملة الصليبية الثانية وحصار دمشق",
+      "name_en": "Second Crusade",
+      "name_ru": "Второй крестовый поход",
+      "name_uz": "Ikkinchi salib yurishi",
+      "name_es": "Segunda Cruzada",
+      "years_ar": "1147–1149 م",
+      "years_en": "1147–1149 CE",
+      "sides": {
+        "crusaders": "جيوش الملوك الصليبيين (كونراد الثالث ولويس السابع)",
+        "muslim": "الدولة الزنكية والأتابكة (نور الدين زنكي)"
+      },
+      "sources": [
+        "J. Phillips, \"The Second Crusade: Extending the Frontiers of Christendom\" (Yale, 2007).",
+        "C. Tyerman, \"God's War: A New History of the Crusades\" (Penguin, 2006)."
+      ],
+      "scenarios": [
+        {
+          "id": "damascus-siege-1148",
+          "year": "1148 CE",
+          "title_ar": "فشل حصار دمشق وصمود أسوارها",
+          "title_en": "Siege of Damascus & Crusader Retreat",
+          "desc_ar": "جيوش ملوك أوروبا تفشل في اقتحام بساتين دمشق مع اقتراب قوات نور الدين زنكي، منهية الحملة بفشل صليبي ذريع.",
+          "desc_en": "Combined forces of Louis VII and Conrad III fail to breach Damascus, leading to a catastrophic collapse of the expedition.",
+          "participants": [
+            {
+              "c": "France",
+              "side": "crusaders",
+              "role": "major"
+            },
+            {
+              "c": "Germany",
+              "side": "crusaders",
+              "role": "major"
+            },
+            {
+              "c": "Syria",
+              "side": "muslim",
+              "role": "major"
+            },
+            {
+              "c": "Iraq",
+              "side": "muslim",
+              "role": "ally"
+            },
+            {
+              "c": "Palestine",
+              "side": "crusaders",
+              "role": "occupied"
+            },
+            {
+              "c": "Israel",
+              "side": "crusaders",
+              "role": "occupied"
             }
           ],
           "empires": []
@@ -162,6 +1216,869 @@
       ]
     },
     {
+      "id": "crusade4-1202",
+      "epoch": "medieval",
+      "region": "europe",
+      "name_ar": "الحملة الصليبية الرابعة وسقوط القسطنطينية",
+      "name_en": "Fourth Crusade",
+      "name_ru": "Четвёртый крестовый поход",
+      "name_uz": "To‘rtinchi salib yurishi",
+      "name_es": "Cuarta Cruzada",
+      "years_ar": "1202–1204 م",
+      "years_en": "1202–1204 CE",
+      "sides": {
+        "crusaders": "الصليبيون اللاتين وجمهورية البندقية",
+        "byzantine": "الإمبراطورية البيزنطية"
+      },
+      "sources": [
+        "D.E. Queller & T.F. Madden, \"The Fourth Crusade: The Conquest of Constantinople\" (Penn Press, 1997).",
+        "J. Phillips, \"The Fourth Crusade and the Sack of Constantinople\" (Viking, 2004)."
+      ],
+      "scenarios": [
+        {
+          "id": "sack-constantinople-1204",
+          "year": "1204 CE",
+          "title_ar": "اقتحام ونهب القسطنطينية وتأسيس الإمبراطورية اللاتينية",
+          "title_en": "The Sack of Constantinople",
+          "desc_ar": "الصليبيون يحولون وجهتهم عن القدس ويقتحمون كبرى عواصم المسيحية الشرقية، ناهبين كنوزها وممزقين بيزنطة إلى دويلات صغيرة.",
+          "desc_en": "Crusaders divert to storm Constantinople, establishing the short-lived Latin Empire and fragmenting Byzantium.",
+          "participants": [
+            {
+              "c": "France",
+              "side": "crusaders",
+              "role": "major"
+            },
+            {
+              "c": "Italy",
+              "side": "crusaders",
+              "role": "major"
+            },
+            {
+              "c": "Greece",
+              "side": "byzantine",
+              "role": "occupied"
+            },
+            {
+              "c": "Turkey",
+              "side": "byzantine",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "diadochi-322",
+      "epoch": "ancient",
+      "region": "me",
+      "name_ar": "حروب خلفاء الإسكندر (ملوك الطوائف)",
+      "name_en": "Wars of the Diadochi",
+      "name_ru": "Войны диадохов",
+      "name_uz": "Diadoxlar urushlari (Iskandar merosxo‘rlari)",
+      "name_es": "Guerras de los Diádocos",
+      "years_ar": "322–275 ق.م",
+      "years_en": "322–275 BCE",
+      "sides": {
+        "seleucid": "السلوقيون والبطالمة (الشرق ومصر)",
+        "antigonid": "أنتيجونوس وبيرديكاس (مقدونيا واليونان)"
+      },
+      "sources": [
+        "R. Waterfield, \"Dividing the Spoils: The War for Alexander the Great’s Empire\" (Oxford, 2011).",
+        "A.B. Bosworth, \"The Legacy of Alexander\" (Oxford University Press, 2002)."
+      ],
+      "scenarios": [
+        {
+          "id": "ipsus-301",
+          "year": "301 BCE",
+          "title_ar": "معركة إبسوس وتقسيم العالم الهلنستي",
+          "title_en": "Battle of Ipsus & The Hellenistic Partition",
+          "desc_ar": "أكبر معركة فيلة حربية في تاريخ البحر المتوسط؛ تسفر عن تمزيق إمبراطورية الإسكندر إلى ممالك مستقلة (البطالمة، السلوقيون، ومقدونيا).",
+          "desc_en": "Massive coalition defeat of Antigonus at Ipsus firmly partitions Alexander's empire into the Ptolemaic and Seleucid realms.",
+          "participants": [
+            {
+              "c": "Egypt",
+              "side": "seleucid",
+              "role": "major"
+            },
+            {
+              "c": "Syria",
+              "side": "seleucid",
+              "role": "major"
+            },
+            {
+              "c": "Iraq",
+              "side": "seleucid",
+              "role": "major"
+            },
+            {
+              "c": "Iran",
+              "side": "seleucid",
+              "role": "major"
+            },
+            {
+              "c": "Turkey",
+              "side": "antigonid",
+              "role": "major"
+            },
+            {
+              "c": "Greece",
+              "side": "antigonid",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "dutch-revolt-1568",
+      "epoch": "early-modern",
+      "region": "europe",
+      "name_ar": "حرب الثمانين عاماً (الثورة الهولندية)",
+      "name_en": "Eighty Years' War (Dutch Revolt)",
+      "name_ru": "Восьмидесятилетняя война (Нидерландская революция)",
+      "name_uz": "Sakson yillik urush (Niderlandiya inqilobi)",
+      "name_es": "Guerra de los Ochenta Años (Guerra de Flandes)",
+      "years_ar": "1568–1648 م",
+      "years_en": "1568–1648 CE",
+      "sides": {
+        "anti-habsburg": "المقاطعات الهولندية المتحدة وحلفاؤها",
+        "habsburg": "الإمبراطورية الإسبانية (الهابسبورغ)"
+      },
+      "sources": [
+        "J.I. Israel, \"The Dutch Republic: Its Rise, Greatness, and Fall 1477–1806\" (Oxford, 1995).",
+        "G. Parker, \"The Dutch Revolt\" (Penguin, 1985)."
+      ],
+      "scenarios": [
+        {
+          "id": "armada-1588",
+          "year": "1588 CE",
+          "title_ar": "تحطيم الأرمادا الإسبانية واستقلال هولندا الفعلي",
+          "title_en": "Defeat of the Spanish Armada",
+          "desc_ar": "تحالف الأسطول الإنجليزي والهولندي يحطم الأسطول الإسباني العظيم، مكرساً صعود هولندا كقوة تجارية وبحرية كبرى.",
+          "desc_en": "The catastrophic failure of Philip II's Armada consolidates the northern Protestant Dutch state and checks Spanish power.",
+          "participants": [
+            {
+              "c": "Netherlands",
+              "side": "anti-habsburg",
+              "role": "major"
+            },
+            {
+              "c": "United Kingdom",
+              "side": "anti-habsburg",
+              "role": "ally"
+            },
+            {
+              "c": "Spain",
+              "side": "habsburg",
+              "role": "major"
+            },
+            {
+              "c": "Belgium",
+              "side": "habsburg",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "egypt-ottoman-1831",
+      "epoch": "nineteenth",
+      "region": "me",
+      "name_ar": "الحرب المصرية العثمانية الأولى (فتوحات إبراهيم باشا)",
+      "name_en": "First Turco-Egyptian War (Ibrahim Pasha)",
+      "name_ru": "Первая турецко-египетская война",
+      "name_uz": "Birinchi turk-misr urushi (Ibrohim posho)",
+      "name_es": "Primera Guerra Turco-Egipcia",
+      "years_ar": "1831–1833 م",
+      "years_en": "1831–1833 CE",
+      "sides": {
+        "arab": "الجيش المصري الحديث (محمد علي وإبراهيم باشا)",
+        "ottoman": "الدولة العثمانية وحلفاؤها الأوروبيون"
+      },
+      "sources": [
+        "K. Fahmy, \"All the Pasha's Men: Mehmed Ali, His Army and the Making of Modern Egypt\" (Cambridge, 1997).",
+        "A. Marsot, \"Egypt in the Reign of Muhammad Ali\" (Cambridge, 1984)."
+      ],
+      "scenarios": [
+        {
+          "id": "konya-1832",
+          "year": "1832 CE",
+          "title_ar": "معركة قونية والاقتراب من إسطنبول",
+          "title_en": "Battle of Konya & Threat to Constantinople",
+          "desc_ar": "إبراهيم باشا يكتسح بلاد الشام ويحطم الجيش العثماني في قونية بقلب الأناضول، مهدداً العاصمة إسطنبول قبل التدخل الروسي والأوروبي.",
+          "desc_en": "Ibrahim Pasha sweeps through Syria and routs the Grand Vizier at Konya, prompting Great Power intervention to save the Ottoman throne.",
+          "participants": [
+            {
+              "c": "Egypt",
+              "side": "arab",
+              "role": "major"
+            },
+            {
+              "c": "Sudan",
+              "side": "arab",
+              "role": "ally"
+            },
+            {
+              "c": "Syria",
+              "side": "arab",
+              "role": "occupied"
+            },
+            {
+              "c": "Lebanon",
+              "side": "arab",
+              "role": "occupied"
+            },
+            {
+              "c": "Turkey",
+              "side": "ottoman",
+              "role": "major"
+            },
+            {
+              "c": "Russia",
+              "side": "ottoman",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "english-civil-1642",
+      "epoch": "early-modern",
+      "region": "europe",
+      "name_ar": "الحرب الأهلية الإنجليزية (ثورة كرومويل)",
+      "name_en": "English Civil War",
+      "name_ru": "Английская революция",
+      "name_uz": "Angliya fuqarolar urushi",
+      "name_es": "Guerra civil inglesa",
+      "years_ar": "1642–1651 م",
+      "years_en": "1642–1651 CE",
+      "sides": {
+        "union": "البرلمانيون والجيش النموذجي الجديد (كرومويل)",
+        "coalition": "الملكيون الفرسان (الملك تشارلز الأول)"
+      },
+      "sources": [
+        "C. Hill, \"The World Turned Upside Down\" (Penguin, 1972).",
+        "M. Kishlansky, \"A Monarchy Transformed: Britain 1603–1714\" (Penguin, 1996)."
+      ],
+      "scenarios": [
+        {
+          "id": "naseby-1645",
+          "year": "1645 CE",
+          "title_ar": "معركة نيزبي وإعدام الملك",
+          "title_en": "Battle of Naseby & The Commonwealth",
+          "desc_ar": "الجيش النموذجي الجديد بقيادة كرومويل يسحق القوات الملكية، ممهداً لمحاكمة وإعدام تشارلز الأول وإعلان الكومنولث.",
+          "desc_en": "Cromwell's New Model Army breaks the Royalists at Naseby, leading to Charles I's execution and parliamentary supremacy.",
+          "participants": [
+            {
+              "c": "United Kingdom",
+              "side": "union",
+              "role": "major"
+            },
+            {
+              "c": "Ireland",
+              "side": "coalition",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "franco-prussian-1870",
+      "epoch": "nineteenth",
+      "region": "europe",
+      "name_ar": "الحرب الفرنسية البروسية وتوحيد ألمانيا",
+      "name_en": "Franco-Prussian War",
+      "name_ru": "Франко-прусская война",
+      "name_uz": "Fransiya-Prussiya urushi",
+      "name_es": "Guerra franco-prusiana",
+      "years_ar": "1870–1871 م",
+      "years_en": "1870–1871 CE",
+      "sides": {
+        "prussia": "الاتحاد الألماني الشمالي وبروسيا (بسمارك)",
+        "france": "الإمبراطورية الفرنسية الثانية (نابليون الثالث)"
+      },
+      "sources": [
+        "M. Howard, \"The Franco-Prussian War\" (Routledge, 2001).",
+        "G. Wawro, \"The Franco-Prussian War: The German Conquest of France in 1870–1871\" (Cambridge, 2003)."
+      ],
+      "scenarios": [
+        {
+          "id": "sedan-1870",
+          "year": "1870 CE",
+          "title_ar": "كارثة سيدان وإعلان القيصرية في فرساي",
+          "title_en": "Battle of Sedan & Proclamation of the German Empire",
+          "desc_ar": "أسر الإمبراطور نابليون الثالث في سيدان وحصار باريس؛ بسمارك يعلن ولادة الإمبراطورية الألمانية الموحدة في قصر فرساي ويضم الألزاس واللورين.",
+          "desc_en": "Prussian forces capture Napoleon III at Sedan and lay siege to Paris, culminating in the proclamation of the German Empire in Versailles.",
+          "participants": [
+            {
+              "c": "Germany",
+              "side": "prussia",
+              "role": "major"
+            },
+            {
+              "c": "France",
+              "side": "france",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "french-egypt-1798",
+      "epoch": "nineteenth",
+      "region": "me",
+      "name_ar": "الحملة الفرنسية على مصر والشام (نابليون)",
+      "name_en": "French Campaign in Egypt and Syria",
+      "name_ru": "Египетский поход Наполеона",
+      "name_uz": "Napoleonning Misr va Suriyaga yurishi",
+      "name_es": "Campaña francesa en Egipto y Siria",
+      "years_ar": "1798–1801 م",
+      "years_en": "1798–1801 CE",
+      "sides": {
+        "france": "الجمهورية الفرنسية (نابليون بونابرت)",
+        "coalition": "الدولة العثمانية وبريطانيا والمماليك"
+      },
+      "sources": [
+        "J. Cole, \"Napoleon's Egypt: Invading the Middle East\" (Palgrave Macmillan, 2007).",
+        "A. Mikaberidze, \"The Napoleonic Wars: A Global History\" (Oxford, 2020)."
+      ],
+      "scenarios": [
+        {
+          "id": "pyramids-1798",
+          "year": "1798 CE",
+          "title_ar": "معركة الأهرام وحصار عكا",
+          "title_en": "Battle of the Pyramids & Siege of Acre",
+          "desc_ar": "نابليون يهزم مراد بك وإبراهيم بك قرب الجيزة ويدخل القاهرة، قبل أن تتحطم خططه البحرية في أبي قير وتصمد عكا أمام حصاره.",
+          "desc_en": "Bonaparte crushes Mamluk cavalry at the Pyramids, but Nelson destroys his fleet at the Nile and Acre resists his advance.",
+          "participants": [
+            {
+              "c": "France",
+              "side": "france",
+              "role": "major"
+            },
+            {
+              "c": "Egypt",
+              "side": "coalition",
+              "role": "occupied"
+            },
+            {
+              "c": "Turkey",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "United Kingdom",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Syria",
+              "side": "coalition",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "gallic-58",
+      "epoch": "ancient",
+      "region": "europe",
+      "name_ar": "حروب الغال (يوليوس قيصر)",
+      "name_en": "Gallic Wars (Julius Caesar)",
+      "name_ru": "Галльская война",
+      "name_uz": "Galliya urushi",
+      "name_es": "Guerra de las Galias",
+      "years_ar": "58–50 ق.م",
+      "years_en": "58–50 BCE",
+      "sides": {
+        "rome": "الجمهورية الرومانية",
+        "coalition": "القبائل الغالية (فرسينجيتوريكس)"
+      },
+      "sources": [
+        "Julius Caesar, \"Commentarii de Bello Gallico\".",
+        "A. Goldsworthy, \"Caesar: Life of a Colossus\" (Yale University Press, 2006)."
+      ],
+      "scenarios": [
+        {
+          "id": "alesia-52",
+          "year": "52 BCE",
+          "title_ar": "حصار أليسيا واستسلام فرسينجيتوريكس",
+          "title_en": "Siege of Alesia",
+          "desc_ar": "قيصر يشيد حصنين متداخلين حول أليسيا ويهزم جيش الإغاثة الغالي، مدمجاً فرنسا الحالية في العالم الروماني.",
+          "desc_en": "Caesar's dual ring of circumvallation traps Vercingetorix at Alesia, cementing Roman dominion over Gaul.",
+          "participants": [
+            {
+              "c": "Italy",
+              "side": "rome",
+              "role": "major"
+            },
+            {
+              "c": "France",
+              "side": "coalition",
+              "role": "occupied"
+            },
+            {
+              "c": "Belgium",
+              "side": "coalition",
+              "role": "ally"
+            },
+            {
+              "c": "Germany",
+              "side": "coalition",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "ghaznavid-india-1001",
+      "epoch": "medieval",
+      "region": "asia",
+      "name_ar": "حملات محمود الغزنوي على شمال الهند",
+      "name_en": "Ghaznavid Campaigns in Northwestern India",
+      "name_ru": "Индийские походы Махмуда Газневи",
+      "name_uz": "Mahmud G‘aznaviyning Hindistonga yurishlari",
+      "name_es": "Campañas indias de Mahmud de Gazni",
+      "years_ar": "1001–1026 م",
+      "years_en": "1001–1026 CE",
+      "sides": {
+        "ghaznavid": "الدولة الغزنوية (محمود الغزنوي)",
+        "hindu": "تحالف الراجات وممالك الشاهية"
+      },
+      "sources": [
+        "C.E. Bosworth, \"The Ghaznavids: Their Empire in Afghanistan and Eastern Iran\" (Edinburgh, 1963).",
+        "R. Thapar, \"Somanatha: The Many Voices of a History\" (Penguin, 2004)."
+      ],
+      "scenarios": [
+        {
+          "id": "somnath-1026",
+          "year": "1026 CE",
+          "title_ar": "حملة سومنات وضم البنجاب",
+          "title_en": "Somnath Expedition & Punjab Annexation",
+          "desc_ar": "السلطان محمود الغزنوي يشن سبع عشرة حملة عسكرية إلى شمال الهند ويسقط عواصم الشاهية ويضم البنجاب نهائياً لدولته.",
+          "desc_en": "Mahmud of Ghazni conducts seventeen major expeditions into northern India, permanently incorporating Punjab as an Islamic province.",
+          "participants": [
+            {
+              "c": "Afghanistan",
+              "side": "ghaznavid",
+              "role": "major"
+            },
+            {
+              "c": "Pakistan",
+              "side": "ghaznavid",
+              "role": "occupied"
+            },
+            {
+              "c": "India",
+              "side": "hindu",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "granada-1482",
+      "epoch": "early-modern",
+      "region": "europe",
+      "name_ar": "حرب غرناطة وسقوط الأندلس",
+      "name_en": "Granada War",
+      "name_ru": "Гранадская война",
+      "name_uz": "Garnada urushi (Andalusiya qulashi)",
+      "name_es": "Guerra de Granada",
+      "years_ar": "1482–1492 م",
+      "years_en": "1482–1492 CE",
+      "sides": {
+        "coalition": "التاج الإسباني الموحد (فرناندو وإيزابيلا)",
+        "muslim": "مملكة غرناطة النصرية (أبو عبد الله الصغير)"
+      },
+      "sources": [
+        "M.A. Ladero Quesada, \"La Guerra de Granada\" (Diputación de Granada, 2001).",
+        "H. Kamen, \"Empire: How Spain Became a World Power\" (HarperCollins, 2003)."
+      ],
+      "scenarios": [
+        {
+          "id": "granada-surrender",
+          "year": "1492 CE",
+          "title_ar": "تسليم الحمراء ونهاية الوجود الإسلامي بالأندلس",
+          "title_en": "Surrender of the Alhambra",
+          "desc_ar": "حصار خانق ينتهي بتسليم قصر الحمراء في 2 يناير 1492، منهياً نحو ثمانية قرون من الحضارة الإسلامية في إيبيريا.",
+          "desc_en": "The Catholic Monarchs enter the Alhambra following a ten-year campaign, ending 781 years of Muslim presence in Iberia.",
+          "participants": [
+            {
+              "c": "Spain",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Morocco",
+              "side": "muslim",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "great-northern-1700",
+      "epoch": "nineteenth",
+      "region": "europe",
+      "name_ar": "حرب الشمال العظمى وصعود روسيا",
+      "name_en": "Great Northern War",
+      "name_ru": "Северная война",
+      "name_uz": "Shimoliy urush (Pyotr I va Karl XII)",
+      "name_es": "Gran Guerra del Norte",
+      "years_ar": "1700–1721 م",
+      "years_en": "1700–1721 CE",
+      "sides": {
+        "russia": "روسيا القيصرية وحلفاؤها (بطرس الأكبر)",
+        "sweden": "الإمبراطورية السويدية (كارل الثاني عشر)"
+      },
+      "sources": [
+        "R.K. Massie, \"Peter the Great: His Life and World\" (Knopf, 1980).",
+        "R.I. Frost, \"The Northern Wars 1558–1721\" (Longman, 2000)."
+      ],
+      "scenarios": [
+        {
+          "id": "poltava-1709",
+          "year": "1709 CE",
+          "title_ar": "معركة بولتافا وسقوط الهيمنة السويدية",
+          "title_en": "Battle of Poltava & Rise of the Russian Empire",
+          "desc_ar": "بطرس الأكبر يسحق جيش كارل الثاني عشر في أوكرانيا، منتزعاً سواحل البلطيق ومؤسساً سانت بطرسبرغ كإمبراطورية عظمى.",
+          "desc_en": "Peter the Great crushes the Swedish invasion force at Poltava, replacing Sweden as the dominant power in northern Europe.",
+          "participants": [
+            {
+              "c": "Russia",
+              "side": "russia",
+              "role": "major"
+            },
+            {
+              "c": "Ukraine",
+              "side": "russia",
+              "role": "occupied"
+            },
+            {
+              "c": "Denmark",
+              "side": "russia",
+              "role": "ally"
+            },
+            {
+              "c": "Poland",
+              "side": "russia",
+              "role": "ally"
+            },
+            {
+              "c": "Sweden",
+              "side": "sweden",
+              "role": "major"
+            },
+            {
+              "c": "Finland",
+              "side": "sweden",
+              "role": "occupied"
+            },
+            {
+              "c": "Turkey",
+              "side": "sweden",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "greco-persian-499",
+      "epoch": "ancient",
+      "region": "me",
+      "name_ar": "الحروب الفارسية اليونانية",
+      "name_en": "Greco-Persian Wars",
+      "name_ru": "Греко-персидские войны",
+      "name_uz": "Yunon-fors urushlari",
+      "name_es": "Guerras médicas",
+      "years_ar": "499–449 ق.م",
+      "years_en": "499–449 BCE",
+      "sides": {
+        "delian": "التحالف اليوناني (أثينا وإسبرطة)",
+        "persia": "الإمبراطورية الأخمينية الفارسية"
+      },
+      "sources": [
+        "Herodotus, \"The Histories\" (trans. A. de Sélincourt, Penguin Classics).",
+        "P. Green, \"The Greco-Persian Wars\" (University of California Press, 1996)."
+      ],
+      "scenarios": [
+        {
+          "id": "salamis-480",
+          "year": "480 BCE",
+          "title_ar": "غزو خشايارشا ومعركة سالاميس",
+          "title_en": "Xerxes' Invasion & Salamis",
+          "desc_ar": "الملك الفارسي خشايارشا يجتاح اليونان بعد معركة ثرموبيل، لكن الأسطول الأثيني يسحق البحرية الفارسية في سالاميس.",
+          "desc_en": "Xerxes invades Greece after Thermopylae, but the allied Greek fleet decisively defeats the Persian navy at Salamis.",
+          "participants": [
+            {
+              "c": "Greece",
+              "side": "delian",
+              "role": "major"
+            },
+            {
+              "c": "Iran",
+              "side": "persia",
+              "role": "major"
+            },
+            {
+              "c": "Turkey",
+              "side": "persia",
+              "role": "occupied"
+            },
+            {
+              "c": "Egypt",
+              "side": "persia",
+              "role": "colony"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "greek-indep-1821",
+      "epoch": "nineteenth",
+      "region": "europe",
+      "name_ar": "حرب الاستقلال اليونانية ومعركة نافارين",
+      "name_en": "Greek War of Independence",
+      "name_ru": "Греческая национально-освободительная война",
+      "name_uz": "Gretsiya mustaqillik urushi",
+      "name_es": "Guerra de independencia de Grecia",
+      "years_ar": "1821–1829 م",
+      "years_en": "1821–1829 CE",
+      "sides": {
+        "allies": "الثوار اليونانيون وحلفاؤهم (بريطانيا وفرنسا وروسيا)",
+        "ottoman": "الدولة العثمانية والجيش المصري (إبراهيم باشا)"
+      },
+      "sources": [
+        "D. Brewer, \"The Greek War of Independence\" (Overlook Press, 2001).",
+        "M. Mazower, \"The Greek Revolution: 1821 and the Making of Modern Europe\" (Penguin, 2021)."
+      ],
+      "scenarios": [
+        {
+          "id": "navarino-1827",
+          "year": "1827 CE",
+          "title_ar": "معركة نافارين البحرية وتدمير الأسطول",
+          "title_en": "Battle of Navarino & Birth of Modern Greece",
+          "desc_ar": "الأسطول الثلاثي المشترك يدمر الأسطول العثماني المصري في خليج نافارين بآخر معركة بحرية كبرى بالسفن الشراعية، حاسماً استقلال اليونان.",
+          "desc_en": "Allied naval task force annihilates the Ottoman-Egyptian fleet at Navarino in the last major all-wooden fleet engagement.",
+          "participants": [
+            {
+              "c": "Greece",
+              "side": "allies",
+              "role": "major"
+            },
+            {
+              "c": "United Kingdom",
+              "side": "allies",
+              "role": "major"
+            },
+            {
+              "c": "France",
+              "side": "allies",
+              "role": "major"
+            },
+            {
+              "c": "Russia",
+              "side": "allies",
+              "role": "major"
+            },
+            {
+              "c": "Turkey",
+              "side": "ottoman",
+              "role": "major"
+            },
+            {
+              "c": "Egypt",
+              "side": "ottoman",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "haitian-rev-1791",
+      "epoch": "nineteenth",
+      "region": "americas",
+      "name_ar": "الثورة الهايتية (ثورة العبيد الكبرى)",
+      "name_en": "Haitian Revolution",
+      "name_ru": "Гаитянская революция",
+      "name_uz": "Gaiti inqilobi",
+      "name_es": "Revolución haitiana",
+      "years_ar": "1791–1804 م",
+      "years_en": "1791–1804 CE",
+      "sides": {
+        "rebels": "جيش الثوار الهايتيين (توسان لوفرتير وديسالين)",
+        "france": "الإمبراطورية الاستعمارية الفرنسية وبريطانيا"
+      },
+      "sources": [
+        "C.L.R. James, \"The Black Jacobins: Toussaint L'Ouverture and the San Domingo Revolution\" (Vintage, 1989).",
+        "L. Dubois, \"Avengers of the New World: The Story of the Haitian Revolution\" (Harvard, 2004)."
+      ],
+      "scenarios": [
+        {
+          "id": "vertieres-1803",
+          "year": "1803 CE",
+          "title_ar": "معركة فيرتيير وإعلان أول جمهورية سوداء مستقلة",
+          "title_en": "Battle of Vertières & Independence",
+          "desc_ar": "جيش المتمردين يهزم حملة نابليون العسكرية في فيرتيير، معلناً استقلال هايتي كأول دولة في العالم يقودها العبيد المحررون.",
+          "desc_en": "Indigenous revolutionary forces crush Rochambeau's French expeditionary army, inaugurating the independent Republic of Haiti.",
+          "participants": [
+            {
+              "c": "Haiti",
+              "side": "rebels",
+              "role": "major"
+            },
+            {
+              "c": "France",
+              "side": "france",
+              "role": "major"
+            },
+            {
+              "c": "United Kingdom",
+              "side": "france",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "han-xiongnu-133",
+      "epoch": "ancient",
+      "region": "asia",
+      "name_ar": "حرب هان-شيونغنو والسيطرة على طريق الحرير",
+      "name_en": "Han–Xiongnu War",
+      "name_ru": "Хунно-китайские войны",
+      "name_uz": "Xun-Xan urushlari",
+      "name_es": "Guerra Han-Xiongnu",
+      "years_ar": "133 ق.م – 89 م",
+      "years_en": "133 BCE – 89 CE",
+      "sides": {
+        "han": "إمبراطورية هان الصينية",
+        "xiongnu": "اتحاد شيونغنو البدوي (السهوب الشمالية)"
+      },
+      "sources": [
+        "N. Di Cosmo, \"Ancient China and Its Enemies: The Rise of Nomadic Power\" (Cambridge, 2002).",
+        "Ban Gu, \"Book of Han\" (Hanshu)."
+      ],
+      "scenarios": [
+        {
+          "id": "mobei-119",
+          "year": "119 BCE",
+          "title_ar": "معركة موبي والتوغل الصيني في صحراء غوبي",
+          "title_en": "Battle of Mobei",
+          "desc_ar": "الإمبراطور وو يرسل جيوش الفرسان في عمق صحراء غوبي لكسر شوكة البدو وتأمين واحات ممر قانسو وطريق الحرير نحو آسيا الوسطى.",
+          "desc_en": "Han cavalry legions push deep across the Gobi Desert, securing the Hexi Corridor and the eastern Silk Road.",
+          "participants": [
+            {
+              "c": "China",
+              "side": "han",
+              "role": "major"
+            },
+            {
+              "c": "Mongolia",
+              "side": "xiongnu",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "hattin-1187",
+      "epoch": "medieval",
+      "region": "me",
+      "name_ar": "معركة حطين واستعادة القدس",
+      "name_en": "Battle of Hattin & Fall of Jerusalem",
+      "name_ru": "Битва при Хаттине",
+      "name_uz": "Hittin jangi (Quddus ozod etilishi)",
+      "name_es": "Batalla de Hattin y toma de Jerusalén",
+      "years_ar": "1187 م",
+      "years_en": "1187 CE",
+      "sides": {
+        "ayyubid": "الجيش الأيوبي الموحد (صلاح الدين)",
+        "crusaders": "مملكة بيت المقدس والفرسان الصليبيون"
+      },
+      "sources": [
+        "M.C. Lyons & D.E.P. Jackson, \"Saladin: The Politics of the Holy War\" (Cambridge, 1982).",
+        "P. Frankopan, \"The First Crusade: The Call from the East\" (Bodley Head, 2012)."
+      ],
+      "scenarios": [
+        {
+          "id": "hattin-conquest",
+          "year": "1187 CE",
+          "title_ar": "قرون حطين ودخول بيت المقدس",
+          "title_en": "The Horns of Hattin & Liberation of Jerusalem",
+          "desc_ar": "صلاح الدين يقطع المياه عن جيش الصليبيين ويسحقهم تحت حر الصيف، ثم يسترد القدس صلحاً بعد 88 عاماً من الاحتلال الصليبي.",
+          "desc_en": "Saladin annihilates the Crusader army at the Horns of Hattin and recaptures Jerusalem after nearly a century.",
+          "participants": [
+            {
+              "c": "Egypt",
+              "side": "ayyubid",
+              "role": "major"
+            },
+            {
+              "c": "Syria",
+              "side": "ayyubid",
+              "role": "major"
+            },
+            {
+              "c": "Iraq",
+              "side": "ayyubid",
+              "role": "ally"
+            },
+            {
+              "c": "Palestine",
+              "side": "ayyubid",
+              "role": "occupied"
+            },
+            {
+              "c": "Israel",
+              "side": "ayyubid",
+              "role": "occupied"
+            },
+            {
+              "c": "France",
+              "side": "crusaders",
+              "role": "major"
+            },
+            {
+              "c": "United Kingdom",
+              "side": "crusaders",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
       "id": "hundred-years-1337",
       "epoch": "medieval",
       "region": "europe",
@@ -208,6 +2125,276 @@
               "c": "Scotland",
               "side": "france",
               "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "hussite-1419",
+      "epoch": "early-modern",
+      "region": "europe",
+      "name_ar": "حروب الهوسيين (تكتيكات العربات الحربية)",
+      "name_en": "Hussite Wars",
+      "name_ru": "Гуситские войны",
+      "name_uz": "Guschilar urushlari",
+      "name_es": "Guerras husitas",
+      "years_ar": "1419–1434 م",
+      "years_en": "1419–1434 CE",
+      "sides": {
+        "hussite": "الهوسيون البوهيميون (يان زيزكا)",
+        "coalition": "التحالف البابوي والإمبراطورية الرومانية المقدسة"
+      },
+      "sources": [
+        "T.A. Fudge, \"The Crusade against Heretics in Bohemia, 1418–1437\" (Ashgate, 2002).",
+        "F. Seibt, \"Hussitica: Zur Struktur einer Revolution\" (Oldenbourg, 1965)."
+      ],
+      "scenarios": [
+        {
+          "id": "wagon-fort-1420",
+          "year": "1420 CE",
+          "title_ar": "تكتيك الحصون المتحركة (Wagenburg)",
+          "title_en": "Defense of Vítkov Hill & Wagenburg Tactics",
+          "desc_ar": "المتمردون التشيكيون يبتكرون حصون العربات الحربية والأسلحة النارية اليدوية لهزيمة 5 حملات صليبية أوروبية متتالية.",
+          "desc_en": "Jan Žižka's pioneering use of armored war wagons and early firearms repulses five imperial crusades.",
+          "participants": [
+            {
+              "c": "Czechia",
+              "side": "hussite",
+              "role": "major"
+            },
+            {
+              "c": "Germany",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Austria",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Hungary",
+              "side": "coalition",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "imjin-1592",
+      "epoch": "early-modern",
+      "region": "asia",
+      "name_ar": "حرب إمجين (الغزو الياباني لكوريا)",
+      "name_en": "Imjin War (Japanese Invasions of Korea)",
+      "name_ru": "Имджинская война",
+      "name_uz": "Imjin urushi",
+      "name_es": "Guerra Imjin",
+      "years_ar": "1592–1598 م",
+      "years_en": "1592–1598 CE",
+      "sides": {
+        "korea-ming": "مملكة جوسون الكورية وإمبراطورية مينغ",
+        "japan": "اليابان (تويوتومي هيديوشي)"
+      },
+      "sources": [
+        "S. Turnbull, \"The Samurai Invasion of Korea 1592–98\" (Osprey, 2008).",
+        "K. Swope, \"A Dragon's Head and a Serpent's Tail: Ming China and the First Great East Asian War\" (University of Oklahoma Press, 2009)."
+      ],
+      "scenarios": [
+        {
+          "id": "turtle-ship-1597",
+          "year": "1597 CE",
+          "title_ar": "صمود الأسطول الكوري وسفن السلحفاة",
+          "title_en": "Admiral Yi & The Turtle Ships",
+          "desc_ar": "الأدميرال الكوري يي سون-سين يقطع خطوط إمداد الجيش الياباني بسفنه المدرعة الشهيرة، مجبراً الغزاة على الانسحاب بدعم صيني.",
+          "desc_en": "Admiral Yi Sun-sin's armored Turtle Ships sever Japanese naval supply lines, driving Toyotomi's forces out of Korea with Ming assistance.",
+          "participants": [
+            {
+              "c": "South Korea",
+              "side": "korea-ming",
+              "role": "major"
+            },
+            {
+              "c": "North Korea",
+              "side": "korea-ming",
+              "role": "major"
+            },
+            {
+              "c": "China",
+              "side": "korea-ming",
+              "role": "major"
+            },
+            {
+              "c": "Japan",
+              "side": "japan",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "indian-rebellion-1857",
+      "epoch": "nineteenth",
+      "region": "asia",
+      "name_ar": "ثورة الهند الكبرى (ثورة السيبوي)",
+      "name_en": "Indian Rebellion of 1857 (Sepoy Mutiny)",
+      "name_ru": "Восстание сипаев",
+      "name_uz": "Sipohilar qo‘zg‘oloni (Buyuk Hindiston qo‘zg‘oloni)",
+      "name_es": "Rebelión de la India de 1857",
+      "years_ar": "1857–1858 م",
+      "years_en": "1857–1858 CE",
+      "sides": {
+        "rebels": "الثوار والجنود الهنود (بهادر شاه الثاني)",
+        "england": "شركة الهند الشرقية والتاج البريطاني"
+      },
+      "sources": [
+        "W. Dalrymple, \"The Last Mughal: The Fall of a Dynasty, Delhi, 1857\" (Bloomsbury, 2006).",
+        "C.A. Bayly, \"Indian Society and the Making of the British Empire\" (Cambridge, 1988)."
+      ],
+      "scenarios": [
+        {
+          "id": "delhi-siege-1857",
+          "year": "1857 CE",
+          "title_ar": "حصار دلهي ونهاية سلطنة المغول",
+          "title_en": "Siege of Delhi & Direct British Rule",
+          "desc_ar": "انتفاضة عارمة تجتاح شمال الهند وتعلن بهادر شاه إمبراطوراً؛ القوات البريطانية تستعيد دلهي وتنهي حكم أسرة المغول وشركة الهند لتبدأ حقبة الراج.",
+          "desc_en": "Widespread uprising against the East India Company culminates in the capture of Delhi and imposition of direct British Crown rule.",
+          "participants": [
+            {
+              "c": "India",
+              "side": "rebels",
+              "role": "major"
+            },
+            {
+              "c": "Pakistan",
+              "side": "rebels",
+              "role": "major"
+            },
+            {
+              "c": "United Kingdom",
+              "side": "england",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "italian-wars-1494",
+      "epoch": "early-modern",
+      "region": "europe",
+      "name_ar": "الحروب الإيطالية الكبرى",
+      "name_en": "Italian Wars (Renaissance Wars)",
+      "name_ru": "Итальянские войны",
+      "name_uz": "Italiya urushlari",
+      "name_es": "Guerras italianas",
+      "years_ar": "1494–1559 م",
+      "years_en": "1494–1559 CE",
+      "sides": {
+        "france": "مملكة فرنسا وحلفاؤها",
+        "habsburg": "الإمبراطورية الإسبانية والهابسبورغ"
+      },
+      "sources": [
+        "M. Mallett & C. Shaw, \"The Italian Wars 1494–1559\" (Pearson, 2012).",
+        "F. Guicciardini, \"The History of Italy\" (trans. S. Alexander, Princeton)."
+      ],
+      "scenarios": [
+        {
+          "id": "pavia-1525",
+          "year": "1525 CE",
+          "title_ar": "معركة بافيا وأسر الملك فرانسوا الأول",
+          "title_en": "Battle of Pavia & Spanish Hegemony",
+          "desc_ar": "بنادق الأركبوز الإسبانية تسحق الفرسان الفرنسيين وتأسر ملك فرنسا، مثبتة الهيمنة الإسبانية على إيطاليا لقرن ونصف.",
+          "desc_en": "Imperial-Spanish arquebusiers defeat French heavy cavalry at Pavia and capture King Francis I.",
+          "participants": [
+            {
+              "c": "Spain",
+              "side": "habsburg",
+              "role": "major"
+            },
+            {
+              "c": "Germany",
+              "side": "habsburg",
+              "role": "major"
+            },
+            {
+              "c": "Italy",
+              "side": "habsburg",
+              "role": "occupied"
+            },
+            {
+              "c": "France",
+              "side": "france",
+              "role": "major"
+            },
+            {
+              "c": "Switzerland",
+              "side": "france",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "jewish-roman-66",
+      "epoch": "ancient",
+      "region": "me",
+      "name_ar": "الحرب اليهودية الرومانية الأولى وحصار القدس",
+      "name_en": "First Jewish–Roman War",
+      "name_ru": "Первая Иудейская война",
+      "name_uz": "Birinchi Yahudiy-Rim urushi",
+      "name_es": "Primera Guerra Judeo-Romana",
+      "years_ar": "66–73 م",
+      "years_en": "66–73 CE",
+      "sides": {
+        "rome": "الإمبراطورية الرومانية (تيتوس)",
+        "rebels": "المتمردون اليهود والغيورون"
+      },
+      "sources": [
+        "Flavius Josephus, \"The Jewish War\" (trans. G.A. Williamson, Penguin).",
+        "M. Goodman, \"Rome and Jerusalem: The Clash of Ancient Civilizations\" (Vintage, 2008)."
+      ],
+      "scenarios": [
+        {
+          "id": "jerusalem-siege-70",
+          "year": "70 CE",
+          "title_ar": "حصار واقتحام القدس وهدم الهيكل",
+          "title_en": "Siege of Jerusalem & Destruction of the Temple",
+          "desc_ar": "الفيلق الروماني بقيادة تيتوس يحاصر القدس ويدمر أسوارها ويحرق الهيكل الثاني، منهياً التمرد في مسعدة.",
+          "desc_en": "Titus's legions breach Jerusalem, destroying the Second Temple and initiating the major Jewish diaspora.",
+          "participants": [
+            {
+              "c": "Italy",
+              "side": "rome",
+              "role": "major"
+            },
+            {
+              "c": "Syria",
+              "side": "rome",
+              "role": "ally"
+            },
+            {
+              "c": "Egypt",
+              "side": "rome",
+              "role": "ally"
+            },
+            {
+              "c": "Palestine",
+              "side": "rebels",
+              "role": "occupied"
+            },
+            {
+              "c": "Israel",
+              "side": "rebels",
+              "role": "occupied"
             }
           ],
           "empires": []
@@ -265,6 +2452,700 @@
             {
               "c": "Lebanon",
               "side": "egypt",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "kalinga-261",
+      "epoch": "ancient",
+      "region": "asia",
+      "name_ar": "حرب كالينغا وتحول الإمبراطور أشوكا",
+      "name_en": "Kalinga War",
+      "name_ru": "Завоевание Калинги Ашокой",
+      "name_uz": "Kalinga urushi (Ashoka yurishi)",
+      "name_es": "Guerra de Kalinga",
+      "years_ar": "261 ق.م",
+      "years_en": "261 BCE",
+      "sides": {
+        "maurya": "إمبراطورية موريا (أشوكا)",
+        "kalinga": "جمهورية كالينغا المستقلة"
+      },
+      "sources": [
+        "R. Thapar, \"Aśoka and the Decline of the Mauryas\" (Oxford University Press, 1997).",
+        "Edicts of Ashoka (Rock Inscription XIII)."
+      ],
+      "scenarios": [
+        {
+          "id": "kalinga-clash",
+          "year": "261 BCE",
+          "title_ar": "محرقة كالينغا وميلاد السلام البوذي",
+          "title_en": "The Destruction & The Conversion",
+          "desc_ar": "حملة دموية أسفرت عن مقتل مئات الآلاف؛ دفعت الإمبراطور أشوكا للندم الشديد واعتناق البوذية ونبذ العنف ونشر التعاليم الإنسانية.",
+          "desc_en": "Devastating conquest of Kalinga causing massive casualties, prompting Emperor Ashoka to renounce violence and embrace Buddhism.",
+          "participants": [
+            {
+              "c": "India",
+              "side": "maurya",
+              "role": "major"
+            },
+            {
+              "c": "Pakistan",
+              "side": "maurya",
+              "role": "ally"
+            },
+            {
+              "c": "Bangladesh",
+              "side": "maurya",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "khazar-arab-652",
+      "epoch": "medieval",
+      "region": "me",
+      "name_ar": "حروب الخزر والمسلمين في القوقاز",
+      "name_en": "Khazar–Arab Wars",
+      "name_ru": "Арабо-хазарские войны",
+      "name_uz": "Xazar-arab urushlari",
+      "name_es": "Guerras árabo-jázaras",
+      "years_ar": "652–737 م",
+      "years_en": "652–737 CE",
+      "sides": {
+        "muslim": "الدولة الأموية والخلافة الراشدة",
+        "coalition": "خاقانية الخزر وحلفاؤها"
+      },
+      "sources": [
+        "D.M. Dunlop, \"The History of the Jewish Khazars\" (Princeton, 1954).",
+        "P.B. Golden, \"Khazar Studies\" (Akadémiai Kiadó, 1980)."
+      ],
+      "scenarios": [
+        {
+          "id": "marwan-737",
+          "year": "737 CE",
+          "title_ar": "حملة مروان بن محمد الكبرى إلى نهر الفولغا",
+          "title_en": "Marwan's Northern Expedition",
+          "desc_ar": "مروان بن محمد يقود جيشاً كبيراً عبر باب الأبواب (دربند) ويصل إلى أعماق أراضي الخزر على نهر الفولغا مثبتاً الحدود الشمالية.",
+          "desc_en": "Umayyad general Marwan crosses the Caucasus gates, subduing the Khagan and stabilizing the northern frontier.",
+          "participants": [
+            {
+              "c": "Syria",
+              "side": "muslim",
+              "role": "major"
+            },
+            {
+              "c": "Saudi Arabia",
+              "side": "muslim",
+              "role": "major"
+            },
+            {
+              "c": "Azerbaijan",
+              "side": "muslim",
+              "role": "occupied"
+            },
+            {
+              "c": "Russia",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Georgia",
+              "side": "coalition",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "korean-war-1950",
+      "epoch": "modern",
+      "region": "asia",
+      "name_ar": "الحرب الكورية",
+      "name_en": "Korean War",
+      "name_ru": "Корейская война",
+      "name_uz": "Koreya urushi",
+      "name_es": "Guerra de Corea",
+      "years_ar": "1950–1953 م",
+      "years_en": "1950–1953 CE",
+      "sides": {
+        "un-south": "الأمم المتحدة وكوريا الجنوبية والولايات المتحدة",
+        "communist": "كوريا الشمالية والصين والاتحاد السوفيتي"
+      },
+      "sources": [
+        "B. Cumings, \"The Korean War: A History\" (Modern Library, 2010).",
+        "M. Hastings, \"The Korean War\" (Simon & Schuster, 1987)."
+      ],
+      "scenarios": [
+        {
+          "id": "inchon-1950",
+          "year": "1950 CE",
+          "title_ar": "إنزال إنتشون والتدخل الصيني",
+          "title_en": "Incheon Landing & Chinese Counter-Attack",
+          "desc_ar": "الجنرال ماك آرثر يقلب الهزيمة إلى نصر بإنزال إنتشون خلف خطوط الشمال، فتدخل الصين بمئات آلاف المتطوعين وتعيد القتال لخط عرض 38.",
+          "desc_en": "MacArthur's amphibious surprise at Incheon turns the tide before massive Chinese intervention fixes the front along the 38th parallel.",
+          "participants": [
+            {
+              "c": "South Korea",
+              "side": "un-south",
+              "role": "major"
+            },
+            {
+              "c": "United States",
+              "side": "un-south",
+              "role": "major"
+            },
+            {
+              "c": "United Kingdom",
+              "side": "un-south",
+              "role": "ally"
+            },
+            {
+              "c": "Turkey",
+              "side": "un-south",
+              "role": "ally"
+            },
+            {
+              "c": "North Korea",
+              "side": "communist",
+              "role": "major"
+            },
+            {
+              "c": "China",
+              "side": "communist",
+              "role": "major"
+            },
+            {
+              "c": "Russia",
+              "side": "communist",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "las-navas-1212",
+      "epoch": "medieval",
+      "region": "europe",
+      "name_ar": "معركة العقاب (لاس نافاس دي تولوسا)",
+      "name_en": "Battle of Las Navas de Tolosa",
+      "name_ru": "Битва при Лас-Навас-де-Толоса",
+      "name_uz": "Uqob jangi (Las-Navas-de-Tolosa)",
+      "name_es": "Batalla de Las Navas de Tolosa",
+      "years_ar": "1212 م",
+      "years_en": "1212 CE",
+      "sides": {
+        "coalition": "التحالف المسيحي الإيبيري (قشتالة وأراغون ونافارا)",
+        "muslim": "دولة الموحدين (الناصر لدين الله)"
+      },
+      "sources": [
+        "J.F. O'Callaghan, \"Reconquest and Crusade in Medieval Spain\" (University of Pennsylvania, 2003).",
+        "M.J. Viguera Molins, \"Los reinos de taifas y las invasiones magrebíes\" (Mapfre, 1992)."
+      ],
+      "scenarios": [
+        {
+          "id": "navas-clash",
+          "year": "1212 CE",
+          "title_ar": "نكسة الموحدين وفتح وادي الوادي الكبير",
+          "title_en": "Turning Point of the Reconquista",
+          "desc_ar": "تحالف الممالك الإيبيرية بدعم بابوي يهزم جيش الموحدين، مما أدى لسقوط قرطبة وإشبيلية وانحسار المسلمين في غرناطة.",
+          "desc_en": "A unified Christian coalition shatters the Almohad army, accelerating the southern advance into Andalusia.",
+          "participants": [
+            {
+              "c": "Spain",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Portugal",
+              "side": "coalition",
+              "role": "ally"
+            },
+            {
+              "c": "Morocco",
+              "side": "muslim",
+              "role": "major"
+            },
+            {
+              "c": "Algeria",
+              "side": "muslim",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "latin-indep-1808",
+      "epoch": "nineteenth",
+      "region": "americas",
+      "name_ar": "حروب استقلال أمريكا اللاتينية (بوليفار وسان مارتين)",
+      "name_en": "Spanish American Wars of Independence",
+      "name_ru": "Война за независимость испанских колоний в Америке",
+      "name_uz": "Lotin Amerikasi mustaqillik urushlari",
+      "name_es": "Guerras de independencia hispanoamericanas",
+      "years_ar": "1808–1826 م",
+      "years_en": "1808–1826 CE",
+      "sides": {
+        "patriots": "الجيوش التحريرية (سيمون بوليفار وسان مارتين)",
+        "royalists": "الملكية الإسبانية والجيش الاستعماري"
+      },
+      "sources": [
+        "J. Lynch, \"The Spanish American Revolutions 1808–1826\" (W.W. Norton, 1986).",
+        "M. Arana, \"Bolivar: American Liberator\" (Simon & Schuster, 2013)."
+      ],
+      "scenarios": [
+        {
+          "id": "ayacucho-1824",
+          "year": "1824 CE",
+          "title_ar": "معركة أياكوتشو واستقلال القارة الجنوبية",
+          "title_en": "Battle of Ayacucho & The End of Empire",
+          "desc_ar": "الجنرال سوكري يحسم استقلال أمريكا الجنوبية في مرتفعات بيرو، منهياً ثلاثة قرون من الهيمنة الاستعمارية الإسبانية.",
+          "desc_en": "Antonio José de Sucre defeats the last viceregal army in Peru, ending Spanish imperial dominion in South America.",
+          "participants": [
+            {
+              "c": "Venezuela",
+              "side": "patriots",
+              "role": "major"
+            },
+            {
+              "c": "Colombia",
+              "side": "patriots",
+              "role": "major"
+            },
+            {
+              "c": "Argentina",
+              "side": "patriots",
+              "role": "major"
+            },
+            {
+              "c": "Chile",
+              "side": "patriots",
+              "role": "major"
+            },
+            {
+              "c": "Peru",
+              "side": "patriots",
+              "role": "major"
+            },
+            {
+              "c": "Bolivia",
+              "side": "patriots",
+              "role": "major"
+            },
+            {
+              "c": "Spain",
+              "side": "royalists",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "lepanto-1571",
+      "epoch": "early-modern",
+      "region": "me",
+      "name_ar": "معركة ليبانتو البحرية",
+      "name_en": "Battle of Lepanto",
+      "name_ru": "Битва при Лепанто",
+      "name_uz": "Lepanto jangi",
+      "name_es": "Batalla de Lepanto",
+      "years_ar": "1571 م",
+      "years_en": "1571 CE",
+      "sides": {
+        "coalition": "التحالف المسيحي المقدس (إسبانيا والبندقية والبابوية)",
+        "ottoman": "الأسطول العثماني الإمبراطوري"
+      },
+      "sources": [
+        "N. Capponi, \"Victory of the West: The Great Christian-Muslim Clash at the Battle of Lepanto\" (Da Capo, 2007).",
+        "C. Finkel, \"Osman's Dream\" (Basic Books, 2005)."
+      ],
+      "scenarios": [
+        {
+          "id": "lepanto-gulf",
+          "year": "1571 CE",
+          "title_ar": "أعظم صدام للسفن الشراعية والمجاديف بالمتوسط",
+          "title_en": "Clash of Galleys in the Gulf of Patras",
+          "desc_ar": "أكثر من 400 سفينة حربية تصطدم قبالة خليج كورنث في اليونان؛ التحالف الأوروبي يوقف الهيمنة البحرية العثمانية المطلقة على غرب المتوسط.",
+          "desc_en": "Holy League fleet checks Ottoman westward naval expansion in the largest galley engagement in Western history.",
+          "participants": [
+            {
+              "c": "Spain",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Italy",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Turkey",
+              "side": "ottoman",
+              "role": "major"
+            },
+            {
+              "c": "Greece",
+              "side": "ottoman",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "mahdiyya-sudan-1881",
+      "epoch": "nineteenth",
+      "region": "africa",
+      "name_ar": "الثورة المهدية في السودان",
+      "name_en": "Mahdist War in Sudan",
+      "name_ru": "Восстание махдистов в Судане",
+      "name_uz": "Sudandagi Mahdiylar qo‘zg‘oloni",
+      "name_es": "Guerra mahdista",
+      "years_ar": "1881–1899 م",
+      "years_en": "1881–1899 CE",
+      "sides": {
+        "muslim": "الدولة المهدية السودانية (محمد أحمد المهدي)",
+        "england": "الإمبراطورية البريطانية ومصر الخديوية"
+      },
+      "sources": [
+        "P.M. Holt, \"The Mahdist State in the Sudan: 1881–1898\" (Oxford, 1970).",
+        "W.S. Churchill, \"The River War: An Account of the Reconquest of the Soudan\" (Longmans, 1899)."
+      ],
+      "scenarios": [
+        {
+          "id": "omdurman-1898",
+          "year": "1898 CE",
+          "title_ar": "سقوط الخرطوم ومعركة كرري (أم درمان)",
+          "title_en": "Fall of Khartoum & Battle of Omdurman",
+          "desc_ar": "قوات المهدي تقتحم الخرطوم وتقتل الجنرال غوردون، قبل أن يشن كتشنر حملة استرداد كبرى تستخدم مدافع مكسيم في معركة كرري.",
+          "desc_en": "Mahdist warriors take Khartoum in 1885 before Kitchener's modern firepower re-establishes Anglo-Egyptian control at Omdurman.",
+          "participants": [
+            {
+              "c": "Sudan",
+              "side": "muslim",
+              "role": "major"
+            },
+            {
+              "c": "United Kingdom",
+              "side": "england",
+              "role": "major"
+            },
+            {
+              "c": "Egypt",
+              "side": "england",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "mamluk-ottoman-1516",
+      "epoch": "early-modern",
+      "region": "me",
+      "name_ar": "الحرب العثمانية المملوكية (مرج دابق والريدانية)",
+      "name_en": "Ottoman–Mamluk War of 1516–1517",
+      "name_ru": "Османо-мамлюкская война (1516—1517)",
+      "name_uz": "Usmonli-Mamluk urushi (1516–1517)",
+      "name_es": "Guerra otomano-mameluca (1516-1517)",
+      "years_ar": "1516–1517 م",
+      "years_en": "1516–1517 CE",
+      "sides": {
+        "ottoman": "الدولة العثمانية (سليم الأول)",
+        "mamluk": "سلطنة المماليك (قنصوه الغوري وطومان باي)"
+      },
+      "sources": [
+        "P.M. Holt, \"The Age of the Crusades: The Near East from the Eleventh Century to 1517\" (Longman, 1986).",
+        "C. Finkel, \"Osman's Dream\" (Basic Books, 2005)."
+      ],
+      "scenarios": [
+        {
+          "id": "ridaniya-1517",
+          "year": "1517 CE",
+          "title_ar": "سقوط القاهرة وانتقال الخلافة للعثمانيين",
+          "title_en": "Fall of Cairo & Imperial Annexation",
+          "desc_ar": "السلطان سليم الأول يهزم المماليك في مرج دابق بسوريا ثم الريدانية بمصر، لتصبح مصر والشام والحجاز ولايات عثمانية.",
+          "desc_en": "Selim I crushes the Mamluks at Marj Dabiq and al-Raydaniyya, absorbing Egypt, the Levant, and the holy cities into the empire.",
+          "participants": [
+            {
+              "c": "Turkey",
+              "side": "ottoman",
+              "role": "major"
+            },
+            {
+              "c": "Egypt",
+              "side": "mamluk",
+              "role": "occupied"
+            },
+            {
+              "c": "Syria",
+              "side": "mamluk",
+              "role": "occupied"
+            },
+            {
+              "c": "Saudi Arabia",
+              "side": "ottoman",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "manchu-conquest-1618",
+      "epoch": "early-modern",
+      "region": "asia",
+      "name_ar": "الغزو المانشوي وتأسيس سلالة تشينغ بالصين",
+      "name_en": "Manchu Conquest of China (Ming–Qing Transition)",
+      "name_ru": "Маньчжурское завоевание Китая",
+      "name_uz": "Manjurlarning Xitoyni zabt etishi (Sin sulolasi)",
+      "name_es": "Transición de Ming a Qing",
+      "years_ar": "1618–1683 م",
+      "years_en": "1618–1683 CE",
+      "sides": {
+        "qing": "قبائل المانشو ودولة تشينغ",
+        "ming": "سلالة مينغ الصينية والمقاومون"
+      },
+      "sources": [
+        "F. Wakeman Jr., \"The Great Enterprise: The Manchu Reconstruction of Imperial Order in Seventeenth-Century China\" (UC Press, 1985).",
+        "L.A. Struve, \"The Southern Ming, 1644–1662\" (Yale, 1984)."
+      ],
+      "scenarios": [
+        {
+          "id": "shanhaiguan-1644",
+          "year": "1644 CE",
+          "title_ar": "فتح ممر شانهاي ودخول بكين",
+          "title_en": "Breaching the Great Wall at Shanhai Pass",
+          "desc_ar": "الجنرال الصيني وو سانغوي يفتح أبواب السور العظيم لجيوش المانشو، لتسقط بكين وتبدأ سلالة تشينغ حكمها الإمبراطوري لثلاثة قرون.",
+          "desc_en": "General Wu Sangui defects and opens the Shanhai Pass to Qing Banner armies, leading to the capture of Beijing.",
+          "participants": [
+            {
+              "c": "China",
+              "side": "qing",
+              "role": "major"
+            },
+            {
+              "c": "Mongolia",
+              "side": "qing",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "manzikert-1071",
+      "epoch": "medieval",
+      "region": "me",
+      "name_ar": "معركة ملاذكرد والتوسع السلجوقي",
+      "name_en": "Battle of Manzikert (Byzantine-Seljuk)",
+      "name_ru": "Битва при Манцикерте",
+      "name_uz": "Malazgirt jangi",
+      "name_es": "Batalla de Manzikert",
+      "years_ar": "1071 م",
+      "years_en": "1071 CE",
+      "sides": {
+        "seljuk": "الدولة السلجوقية (ألب أرسلان)",
+        "byzantine": "الإمبراطورية البيزنطية (رومانوس الرابع)"
+      },
+      "sources": [
+        "C. Hillenbrand, \"Turkish Myth and Muslim Symbol: The Battle of Manzikert\" (Edinburgh, 2007).",
+        "A.C.S. Peacock, \"The Great Seljuk Empire\" (Edinburgh University Press, 2015)."
+      ],
+      "scenarios": [
+        {
+          "id": "manzikert-main",
+          "year": "1071 CE",
+          "title_ar": "أسر الإمبراطور وفتح الأناضول",
+          "title_en": "Alp Arslan's Victory & Anatolian Opening",
+          "desc_ar": "السلطان ألب أرسلان يسحق الجيش البيزنطي ويأسر الإمبراطور رومانوس ديوجينيس، فاتحاً أبواب الأناضول للاستقرار التركي.",
+          "desc_en": "Sultan Alp Arslan decisively defeats and captures Emperor Romanos IV, opening Anatolia to permanent Turkish settlement.",
+          "participants": [
+            {
+              "c": "Iran",
+              "side": "seljuk",
+              "role": "major"
+            },
+            {
+              "c": "Turkey",
+              "side": "seljuk",
+              "role": "occupied"
+            },
+            {
+              "c": "Greece",
+              "side": "byzantine",
+              "role": "major"
+            },
+            {
+              "c": "Armenia",
+              "side": "byzantine",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "maratha-mughal-1680",
+      "epoch": "early-modern",
+      "region": "asia",
+      "name_ar": "حروب المغول والمراثا في الهند (أورنغزيب وشيفاجي)",
+      "name_en": "Mughal–Maratha Wars (27 Years' War)",
+      "name_ru": "Моголо-маратхские войны",
+      "name_uz": "Mog‘ul-Maratxa urushlari",
+      "name_es": "Guerras mogol-maratha",
+      "years_ar": "1680–1707 م",
+      "years_en": "1680–1707 CE",
+      "sides": {
+        "mughal": "إمبراطورية المغول (أورنغزيب عالمكير)",
+        "maratha": "إمبراطورية المراثا الكونفدرالية (شيفاجي)"
+      },
+      "sources": [
+        "J. Sarkar, \"History of Aurangzib\" (5 vols, M.C. Sarkar & Sons).",
+        "S. Gordon, \"The Marathas 1600–1818\" (Cambridge University Press, 1993)."
+      ],
+      "scenarios": [
+        {
+          "id": "deccan-wars-1700",
+          "year": "1700 CE",
+          "title_ar": "حرب الاستنزاف في الدكن وتراجع المغول",
+          "title_en": "Deccan Campaigns & War of Attrition",
+          "desc_ar": "أورنغزيب يقضي ربع قرن في حصار قلاع الدكن؛ حرب استنزاف كبرى أنهكت خزانة وجيش المغول ومكنت المراثا من السيطرة على وسط الهند.",
+          "desc_en": "Emperor Aurangzeb's long southern campaigns bog down against resilient Maratha guerrilla warfare, precipitating Mughal decline.",
+          "participants": [
+            {
+              "c": "India",
+              "side": "mughal",
+              "role": "major"
+            },
+            {
+              "c": "Pakistan",
+              "side": "mughal",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "marcomannic-166",
+      "epoch": "ancient",
+      "region": "europe",
+      "name_ar": "الحروب الماركومانية (ماركوس أوريليوس)",
+      "name_en": "Marcomannic Wars",
+      "name_ru": "Маркоманская война",
+      "name_uz": "Markoman urushi",
+      "name_es": "Guerras marcomanas",
+      "years_ar": "166–180 م",
+      "years_en": "166–180 CE",
+      "sides": {
+        "rome": "الإمبراطورية الرومانية",
+        "coalition": "التحالف الجرماني والسارماتي (الماركوماني)"
+      },
+      "sources": [
+        "Cassius Dio, \"Roman History\" (Loeb Classical Library).",
+        "A. Birley, \"Marcus Aurelius: A Biography\" (Routledge, 1987)."
+      ],
+      "scenarios": [
+        {
+          "id": "danube-front-175",
+          "year": "175 CE",
+          "title_ar": "حملات الدانوب وتأمين الحدود الإمبراطورية",
+          "title_en": "Campaigns on the Northern Limes",
+          "desc_ar": "الإمبراطور الفيلسوف ماركوس أوريليوس يقود الفيالق الرومانية على جبهة الدانوب لصد الاجتياح الجرماني الضخم للحدود الشمالية.",
+          "desc_en": "Marcus Aurelius defends the Danubian limes against massive Germanic incursions, authoring his Meditations on campaign.",
+          "participants": [
+            {
+              "c": "Italy",
+              "side": "rome",
+              "role": "major"
+            },
+            {
+              "c": "Austria",
+              "side": "rome",
+              "role": "major"
+            },
+            {
+              "c": "Germany",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Czechia",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Slovakia",
+              "side": "coalition",
+              "role": "ally"
+            },
+            {
+              "c": "Hungary",
+              "side": "coalition",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "mexican-american-1846",
+      "epoch": "nineteenth",
+      "region": "americas",
+      "name_ar": "الحرب المكسيكية الأمريكية",
+      "name_en": "Mexican–American War",
+      "name_ru": "Американо-мексиканская война",
+      "name_uz": "Amerika-Meksika urushi",
+      "name_es": "Intervención estadounidense en México",
+      "years_ar": "1846–1848 م",
+      "years_en": "1846–1848 CE",
+      "sides": {
+        "union": "الولايات المتحدة الأمريكية",
+        "mexico": "الجمهورية المكسيكية"
+      },
+      "sources": [
+        "P. Guardino, \"The Dead March: A History of the Mexican-American War\" (Harvard, 2017).",
+        "K.J. Bauer, \"The Mexican War 1846–1848\" (Macmillan, 1974)."
+      ],
+      "scenarios": [
+        {
+          "id": "chapultepec-1847",
+          "year": "1847 CE",
+          "title_ar": "سقوط العاصمة مكسيكو والتنازل المكسيكي",
+          "title_en": "Fall of Mexico City & The Mexican Cession",
+          "desc_ar": "الجنرال وينفيلد سكوت يقتحم قلعة تشابولتيبيك ويدخل مكسيكو سيتي؛ تنتهي الحرب بمعاهدة غوادالوبي هيدالغو وتنازل المكسيك عن كاليفورنيا ونيومكسيكو وتكساس.",
+          "desc_en": "US forces take Mexico City, leading to the Treaty of Guadalupe Hidalgo which transfers 55% of Mexican territory to the United States.",
+          "participants": [
+            {
+              "c": "United States",
+              "side": "union",
+              "role": "major"
+            },
+            {
+              "c": "Mexico",
+              "side": "mexico",
               "role": "occupied"
             }
           ],
@@ -333,6 +3214,64 @@
             {
               "c": "Iraq",
               "side": "islamic",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "mongol-rus-1237",
+      "epoch": "medieval",
+      "region": "europe",
+      "name_ar": "الغزو المغولي لروسيا وأوروبا الشرقية",
+      "name_en": "Mongol Invasion of Kievan Rus'",
+      "name_ru": "Монгольское нашествие на Русь",
+      "name_uz": "Mo‘g‘ullarning Rusga bosqini",
+      "name_es": "Invasión mongola de la Rus de Kiev",
+      "years_ar": "1237–1242 م",
+      "years_en": "1237–1242 CE",
+      "sides": {
+        "mongol": "إمبراطورية المغول والقبيلة الذهبية (باتو خان)",
+        "rus": "إمارات روس الكييفية وممالك أوروبا الشرقية"
+      },
+      "sources": [
+        "C.J. Halperin, \"Russia and the Golden Horde\" (Indiana University Press, 1985).",
+        "J. Chambers, \"The Devil's Horsemen: The Mongol Invasion of Europe\" (Atheneum, 1979)."
+      ],
+      "scenarios": [
+        {
+          "id": "kiev-fall-1240",
+          "year": "1240 CE",
+          "title_ar": "سقوط كييف واجتياح بولندا والمجر",
+          "title_en": "Fall of Kyiv & Invasion of Central Europe",
+          "desc_ar": "خيالة باتو خان وسوبوتاي يسقطون كييف ويدمرون الجيوش المشتركة في ليغنيتسا وموهي، فارضين حكم التتار لنحو قرنين ونصف.",
+          "desc_en": "Batu Khan razes Kyiv and coordinates devastating deep strikes into Poland and Hungary, cementing the Tatar yoke.",
+          "participants": [
+            {
+              "c": "Mongolia",
+              "side": "mongol",
+              "role": "major"
+            },
+            {
+              "c": "Russia",
+              "side": "rus",
+              "role": "occupied"
+            },
+            {
+              "c": "Ukraine",
+              "side": "rus",
+              "role": "occupied"
+            },
+            {
+              "c": "Poland",
+              "side": "rus",
+              "role": "occupied"
+            },
+            {
+              "c": "Hungary",
+              "side": "rus",
               "role": "occupied"
             }
           ],
@@ -455,6 +3394,107 @@
       ]
     },
     {
+      "id": "nineveh-612",
+      "epoch": "ancient",
+      "region": "me",
+      "name_ar": "سقوط نينوى وانهيار الإمبراطورية الآشورية",
+      "name_en": "Fall of Nineveh (Medo-Babylonian War)",
+      "name_ru": "Падение Ниневии (Падение Ассирии)",
+      "name_uz": "Nineviyaning qulashi (Ossuriya inqirozi)",
+      "name_es": "Caída de Nínive (Guerra medo-babilónica)",
+      "years_ar": "614–609 ق.م",
+      "years_en": "614–609 BCE",
+      "sides": {
+        "coalition": "التحالف البابلي والميدي والكلداني",
+        "assyria": "الإمبراطورية الآشورية الحديثة وحلفاؤها"
+      },
+      "sources": [
+        "A. Kuhrt, \"The Ancient Near East c. 3000–330 BC\" (Routledge, 1995).",
+        "M. Liverani, \"The Ancient Near East: History, Society and Economy\" (Routledge, 2013)."
+      ],
+      "scenarios": [
+        {
+          "id": "nineveh-siege",
+          "year": "612 BCE",
+          "title_ar": "سقوط العاصمة نينوى",
+          "title_en": "The Sack of Nineveh",
+          "desc_ar": "جيوش نبوبولاسر البابلي وسياخريس الميدي تطوق نينوى وتسقط الإمبراطورية العسكرية الآشورية بعد قرون من الهيمنة.",
+          "desc_en": "Combined Babylonian and Mede armies besiege and destroy Nineveh, ending centuries of Assyrian military supremacy.",
+          "participants": [
+            {
+              "c": "Iraq",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Iran",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Syria",
+              "side": "assyria",
+              "role": "occupied"
+            },
+            {
+              "c": "Egypt",
+              "side": "assyria",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "norman-1066",
+      "epoch": "medieval",
+      "region": "europe",
+      "name_ar": "الفتح النورماندي لإنجلترا (معركة هاستنجز)",
+      "name_en": "Norman Conquest of England",
+      "name_ru": "Нормандское завоевание Англии",
+      "name_uz": "Angliyaning normannlar tomonidan bosib olinishi",
+      "name_es": "Conquista normanda de Inglaterra",
+      "years_ar": "1066 م",
+      "years_en": "1066 CE",
+      "sides": {
+        "norman": "دوقية نورماندي (وليام الفاتح)",
+        "anglo-saxon": "المملكة الأنجلوسكسونية (هارولد غودوينسون)"
+      },
+      "sources": [
+        "D. Bates, \"William the Conqueror\" (Yale University Press, 2016).",
+        "M. Chibnall, \"The Normans\" (Blackwell, 2000)."
+      ],
+      "scenarios": [
+        {
+          "id": "hastings-1066",
+          "year": "1066 CE",
+          "title_ar": "معركة هاستنجز وتتويج وليام في وستمنستر",
+          "title_en": "Battle of Hastings",
+          "desc_ar": "وليام الفاتح يعبر المانش ويهزم الملك هارولد، مغيراً سلالة الحكم ولغة البلاط وتاريخ بريطانيا للأبد.",
+          "desc_en": "William the Conqueror defeats Harold Godwinson at Hastings, replacing the Anglo-Saxon elite with an Anglo-Norman aristocracy.",
+          "participants": [
+            {
+              "c": "France",
+              "side": "norman",
+              "role": "major"
+            },
+            {
+              "c": "United Kingdom",
+              "side": "anglo-saxon",
+              "role": "occupied"
+            },
+            {
+              "c": "Norway",
+              "side": "anglo-saxon",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
       "id": "october-1973",
       "epoch": "modern",
       "region": "me",
@@ -523,6 +3563,203 @@
       ]
     },
     {
+      "id": "opium-war-1839",
+      "epoch": "nineteenth",
+      "region": "asia",
+      "name_ar": "حرب الأفيون الأولى",
+      "name_en": "First Opium War",
+      "name_ru": "Первая опиумная война",
+      "name_uz": "Birinchi afyun urushi",
+      "name_es": "Primera Guerra del Opio",
+      "years_ar": "1839–1842 م",
+      "years_en": "1839–1842 CE",
+      "sides": {
+        "england": "الإمبراطورية البريطانية",
+        "qing": "سلالة تشينغ الصينية"
+      },
+      "sources": [
+        "P. Lovell, \"The Opium War: Drugs, Dreams and the Making of China\" (Picador, 2011).",
+        "S.R. Platt, \"Imperial Twilight: The Opium War and the End of China’s Last Golden Age\" (Vintage, 2018)."
+      ],
+      "scenarios": [
+        {
+          "id": "nanking-1842",
+          "year": "1842 CE",
+          "title_ar": "معاهدة نانجينغ وبداية قرن الإذلال",
+          "title_en": "Treaty of Nanking & Cession of Hong Kong",
+          "desc_ar": "الزوارق البخارية البريطانية تجبر بكين على فتح الموانئ وتسليم جزيرة هونغ كونغ، مدشنة عصر المعاهدات غير المتكافئة.",
+          "desc_en": "British gunboat diplomacy forces the Daoguang Emperor to sign the Treaty of Nanking, ceding Hong Kong.",
+          "participants": [
+            {
+              "c": "United Kingdom",
+              "side": "england",
+              "role": "major"
+            },
+            {
+              "c": "India",
+              "side": "england",
+              "role": "colony"
+            },
+            {
+              "c": "China",
+              "side": "qing",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "panipat1-1526",
+      "epoch": "early-modern",
+      "region": "asia",
+      "name_ar": "معركة بانيبات الأولى وتأسيس دولة المغول بالهند",
+      "name_en": "First Battle of Panipat",
+      "name_ru": "Битва при Панипате (1526)",
+      "name_uz": "Birinchi Panipat jangi (Bobur yurishi)",
+      "name_es": "Primera batalla de Panipat",
+      "years_ar": "1526 م",
+      "years_en": "1526 CE",
+      "sides": {
+        "mughal": "جيش ظهير الدين بابر (مغول الهند)",
+        "delhi": "سلطنة دلهي (إبراهيم لودي)"
+      },
+      "sources": [
+        "Babur, \"The Baburnama: Memoirs of Babur, Prince and Emperor\" (trans. W.M. Thackston).",
+        "J.F. Richards, \"The Mughal Empire\" (Cambridge University Press, 1993)."
+      ],
+      "scenarios": [
+        {
+          "id": "panipat-field-1526",
+          "year": "1526 CE",
+          "title_ar": "حسم دلهي وبداية الإمبراطورية المغولية",
+          "title_en": "Babur's Field Artillery Breakthrough",
+          "desc_ar": "بابر يوظف المدافع والبنادق والتكتيك التركي لكسر جيش لودي الضخم وفيلته، مؤسساً إمبراطورية المغول العظمى في شبه القارة.",
+          "desc_en": "Babur's innovative tactical use of matchlocks and field guns defeats the massive army of Ibrahim Lodi, establishing the Mughal Empire.",
+          "participants": [
+            {
+              "c": "Uzbekistan",
+              "side": "mughal",
+              "role": "major"
+            },
+            {
+              "c": "Afghanistan",
+              "side": "mughal",
+              "role": "major"
+            },
+            {
+              "c": "India",
+              "side": "delhi",
+              "role": "occupied"
+            },
+            {
+              "c": "Pakistan",
+              "side": "mughal",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "panipat2-1556",
+      "epoch": "early-modern",
+      "region": "asia",
+      "name_ar": "معركة بانيبات الثانية وصعود جلال الدين أكبر",
+      "name_en": "Second Battle of Panipat",
+      "name_ru": "Вторая битва при Панипате",
+      "name_uz": "Ikkinchi Panipat jangi (Akbarshoh)",
+      "name_es": "Segunda batalla de Panipat",
+      "years_ar": "1556 م",
+      "years_en": "1556 CE",
+      "sides": {
+        "mughal": "إمبراطورية المغول (بيرم خان وجلال الدين أكبر)",
+        "suri": "جيش هيمو البقال والسوريون"
+      },
+      "sources": [
+        "Abu'l-Fazl, \"Akbarnama\" (trans. H. Beveridge).",
+        "J.F. Richards, \"The Mughal Empire\" (Cambridge University Press, 1993)."
+      ],
+      "scenarios": [
+        {
+          "id": "panipat2-field",
+          "year": "1556 CE",
+          "title_ar": "استعادة دلهي وترسيخ الحكم المغولي",
+          "title_en": "Mughal Restoration at Delhi",
+          "desc_ar": "سهم طائش يصيب هيمو قائد جيش دلهي؛ جيش أكبر يستغل الفوضى لتحقيق نصر حاسم يرسخ عرش المغول بالهند لـ 300 عام.",
+          "desc_en": "Young Akbar and regent Bairam Khan defeat Hemu at Panipat, firmly cementing Mughal dynastic rule over northern India.",
+          "participants": [
+            {
+              "c": "India",
+              "side": "mughal",
+              "role": "major"
+            },
+            {
+              "c": "Pakistan",
+              "side": "mughal",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "paraguayan-war-1864",
+      "epoch": "nineteenth",
+      "region": "americas",
+      "name_ar": "حرب الباراغواي (حرب التحالف الثلاثي)",
+      "name_en": "Paraguayan War (War of the Triple Alliance)",
+      "name_ru": "Парагвайская война (Война Тройственного альянса)",
+      "name_uz": "Paragvay urushi (Uchlar ittifoqi urushi)",
+      "name_es": "Guerra de la Triple Alianza (Guerra del Paraguay)",
+      "years_ar": "1864–1870 م",
+      "years_en": "1864–1870 CE",
+      "sides": {
+        "paraguay": "جمهورية الباراغواي (فرانسيسكو سولانو لوبيز)",
+        "coalition": "التحالف الثلاثي (البرازيل والأرجنتين والأوروغواي)"
+      },
+      "sources": [
+        "T.L. Whigham, \"The Paraguayan War: Causes and Early Conduct\" (University of Nebraska, 2002).",
+        "C. Leuchars, \"To the Bitter End: Paraguay and the War of the Triple Alliance\" (Greenwood, 2002)."
+      ],
+      "scenarios": [
+        {
+          "id": "asuncion-fall-1869",
+          "year": "1869 CE",
+          "title_ar": "سقوط أسونسيون والمحرقة الديموغرافية",
+          "title_en": "Fall of Asunción & Total Warfare",
+          "desc_ar": "أدمى حرب في تاريخ أمريكا الجنوبية؛ صمدت الباراغواي حتى النهاية وخسرت قرابة 70% من رجالها وأجزاء واسعة من أراضيها لصالح التحالف.",
+          "desc_en": "The deadliest interstate conflict in South American history, destroying up to 60% of Paraguay's total population.",
+          "participants": [
+            {
+              "c": "Paraguay",
+              "side": "paraguay",
+              "role": "major"
+            },
+            {
+              "c": "Brazil",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Argentina",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Uruguay",
+              "side": "coalition",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
       "id": "peloponnesian-431",
       "epoch": "ancient",
       "region": "europe",
@@ -568,6 +3805,54 @@
             {
               "c": "Iran",
               "side": "peloponnesian",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "punic1-264",
+      "epoch": "ancient",
+      "region": "me",
+      "name_ar": "الحرب البونيقية الأولى",
+      "name_en": "First Punic War",
+      "name_ru": "Первая Пуническая война",
+      "name_uz": "Birinchi Punik urushi",
+      "name_es": "Primera Guerra Púnica",
+      "years_ar": "264–241 ق.م",
+      "years_en": "264–241 BCE",
+      "sides": {
+        "carthage": "الإمبراطورية القرطاجية",
+        "rome": "الجمهورية الرومانية"
+      },
+      "sources": [
+        "J.F. Lazenby, \"The First Punic War\" (Stanford University Press, 1996).",
+        "Polybius, \"The Histories\" (Book I)."
+      ],
+      "scenarios": [
+        {
+          "id": "punic1-sicily",
+          "year": "241 BCE",
+          "title_ar": "الصراع على صقلية ومعركة جزر إيغادي",
+          "title_en": "Battle of the Aegates Islands",
+          "desc_ar": "أطول حرب بحرية مستمرة في العالم القديم؛ تنتهي بانتصار روما وانتزاع صقلية من قرطاج.",
+          "desc_en": "Rome defeats the Carthaginian fleet at the Aegates Islands, ending 23 years of war for Sicily.",
+          "participants": [
+            {
+              "c": "Italy",
+              "side": "rome",
+              "role": "major"
+            },
+            {
+              "c": "Tunisia",
+              "side": "carthage",
+              "role": "major"
+            },
+            {
+              "c": "Spain",
+              "side": "carthage",
               "role": "ally"
             }
           ],
@@ -626,6 +3911,1157 @@
             {
               "c": "Greece",
               "side": "carthage",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "punic3-149",
+      "epoch": "ancient",
+      "region": "me",
+      "name_ar": "الحرب البونيقية الثالثة وسقوط قرطاج",
+      "name_en": "Third Punic War",
+      "name_ru": "Третья Пуническая война (Падение Карфагена)",
+      "name_uz": "Uchinchi Punik urushi (Karfagen qulashi)",
+      "name_es": "Tercera Guerra Púnica",
+      "years_ar": "149–146 ق.م",
+      "years_en": "149–146 BCE",
+      "sides": {
+        "rome": "الجمهورية الرومانية وحلفاؤها",
+        "carthage": "مدينة قرطاج"
+      },
+      "sources": [
+        "Appian, \"Punic Wars\" (Loeb Classical Library).",
+        "A. Goldsworthy, \"The Fall of Carthage\" (Cassell, 2000)."
+      ],
+      "scenarios": [
+        {
+          "id": "carthage-destruction",
+          "year": "146 BCE",
+          "title_ar": "الحصار العظيم وتدمير قرطاج",
+          "title_en": "The Destruction of Carthage",
+          "desc_ar": "سكيبيو إيميليانوس يقتحم أسوار قرطاج بعد حصار استمر 3 سنوات، ويحرق المدينة بالكامل ويستعبد الناجين ليصبح المتوسط بحيرة رومانية.",
+          "desc_en": "Scipio Aemilianus storms and razes Carthage, absorbing North Africa as a core Roman province.",
+          "participants": [
+            {
+              "c": "Italy",
+              "side": "rome",
+              "role": "major"
+            },
+            {
+              "c": "Algeria",
+              "side": "rome",
+              "role": "ally"
+            },
+            {
+              "c": "Tunisia",
+              "side": "carthage",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "qin-unification-230",
+      "epoch": "ancient",
+      "region": "asia",
+      "name_ar": "حروب توحيد الصين (سلالة تشين)",
+      "name_en": "Wars of Qin's Unification",
+      "name_ru": "Войны за объединение Китая (Цинь)",
+      "name_uz": "Tsin birlashtirish urushlari",
+      "name_es": "Guerras de unificación de Qin",
+      "years_ar": "230–221 ق.م",
+      "years_en": "230–221 BCE",
+      "sides": {
+        "qin": "دولة تشين (تشين شي هوانغ)",
+        "six-states": "تحالف الممالك الست المتنافسة"
+      },
+      "sources": [
+        "Sima Qian, \"Records of the Grand Historian\" (Shiji).",
+        "M.E. Lewis, \"The Early Chinese Empires: Qin and Han\" (Belknap, 2007)."
+      ],
+      "scenarios": [
+        {
+          "id": "qin-conquest-221",
+          "year": "221 BCE",
+          "title_ar": "سقوط مملكة تشي وميلاد الإمبراطور الأول",
+          "title_en": "Fall of Qi & The First Imperial Dynasty",
+          "desc_ar": "تشين شي هوانغ يسحق آخر الممالك المستقلة، مؤسساً أول إمبراطورية صينية مركزية ويبدأ بناء السور العظيم وتوحيد الكتابة والمكاييل.",
+          "desc_en": "King Zheng of Qin annexes the last rival state of Qi, proclaiming himself the First Emperor of a unified China.",
+          "participants": [
+            {
+              "c": "China",
+              "side": "qin",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "ridda-632",
+      "epoch": "medieval",
+      "region": "me",
+      "name_ar": "حروب الردة وتثبيت الدولة الإسلامية",
+      "name_en": "Ridda Wars",
+      "name_ru": "Войны с вероотступниками",
+      "name_uz": "Riddah urushlari",
+      "name_es": "Guerras Ridda",
+      "years_ar": "632–633 م",
+      "years_en": "632–633 CE",
+      "sides": {
+        "rashidun": "الخلافة الراشدة في المدينة (أبو بكر الصديق)",
+        "rebels": "القبائل المرتدة والمتنبئون"
+      },
+      "sources": [
+        "al-Tabari, \"The History of al-Tabari, Vol. X: The Conquest of Arabia\" (SUNY Press, 1993).",
+        "F.M. Donner, \"The Early Islamic Conquests\" (Princeton, 1981)."
+      ],
+      "scenarios": [
+        {
+          "id": "yamama-632",
+          "year": "632 CE",
+          "title_ar": "معركة اليمامة وتوحيد الجزيرة",
+          "title_en": "Battle of Yamama & Arabian Unification",
+          "desc_ar": "خالد بن الوليد وعكرمة يقودان الجيوش النبوية لإخماد حركات التمرد وتوحيد كامل شبه الجزيرة العربية تحت راية المدينة.",
+          "desc_en": "Khalid ibn al-Walid secures central and eastern Arabia at Yamama, unifying the peninsula prior to external expansions.",
+          "participants": [
+            {
+              "c": "Saudi Arabia",
+              "side": "rashidun",
+              "role": "major"
+            },
+            {
+              "c": "Yemen",
+              "side": "rashidun",
+              "role": "occupied"
+            },
+            {
+              "c": "Oman",
+              "side": "rashidun",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "rif-war-1921",
+      "epoch": "modern",
+      "region": "africa",
+      "name_ar": "حرب الريف التحررية في المغرب (أنوال)",
+      "name_en": "Rif War (Abdelkrim)",
+      "name_ru": "Рифская война",
+      "name_uz": "Rif urushi (Abdulkarim al-Xattobiy)",
+      "name_es": "Guerra del Rif",
+      "years_ar": "1921–1926 م",
+      "years_en": "1921–1926 CE",
+      "sides": {
+        "morocco": "جمهورية الريف (محمد بن عبد الكريم الخطابي)",
+        "coalition": "التحالف الاستعماري الإسباني والفرنسي"
+      },
+      "sources": [
+        "D.S. Woolman, \"Rebels in the Rif: Abd el Krim and the Rif Rebellion\" (Stanford, 1968).",
+        "S. Balfour, \"Deadly Embrace: Morocco and the Road to the Spanish Civil War\" (Oxford, 2002)."
+      ],
+      "scenarios": [
+        {
+          "id": "annual-1921",
+          "year": "1921",
+          "title_ar": "معركة أنوال الخالدة وتأسيس جمهورية الريف",
+          "title_en": "Battle of Annual & Anti-Colonial Guerrilla",
+          "desc_ar": "عبد الكريم الخطابي يسحق الجيش الإسباني في أنوال مبتكراً أساليب حرب العصابات الحديثة، قبل أن يتحالف نصف مليون جندي فرنسي وإسباني بالغازات السامة ضده.",
+          "desc_en": "Abdelkrim destroys a Spanish army at Annual, pioneering modern guerrilla doctrine before joint French-Spanish chemical bombardment forces surrender.",
+          "participants": [
+            {
+              "c": "Morocco",
+              "side": "morocco",
+              "role": "major"
+            },
+            {
+              "c": "Spain",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "France",
+              "side": "coalition",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "rome-civil-49",
+      "epoch": "ancient",
+      "region": "europe",
+      "name_ar": "الحرب الأهلية الرومانية الكبرى (قيصر ضد بومبي)",
+      "name_en": "Caesar's Civil War",
+      "name_ru": "Гражданская война Цезаря",
+      "name_uz": "Tsezarning fuqarolar urushi",
+      "name_es": "Segunda Guerra Civil de la República Romana",
+      "years_ar": "49–45 ق.م",
+      "years_en": "49–45 BCE",
+      "sides": {
+        "union": "فصائل يوليوس قيصر الشعبية",
+        "coalition": "مجلس الشيوخ وبومبي الكبير"
+      },
+      "sources": [
+        "Julius Caesar, \"Commentarii de Bello Civili\".",
+        "Tom Holland, \"Rubicon: The Last Years of the Roman Republic\" (Anchor, 2003)."
+      ],
+      "scenarios": [
+        {
+          "id": "pharsalus-48",
+          "year": "48 BCE",
+          "title_ar": "معركة فرسالوس وسقوط بومبي",
+          "title_en": "Battle of Pharsalus & Egyptian Flight",
+          "desc_ar": "يوليوس قيصر يعبر نهر الروبيكون ويهزم بومبي في فرسالوس باليونان، ثم يلحق به إلى الإسكندرية ويبسط حكمه الفردي.",
+          "desc_en": "Caesar crosses the Rubicon and crushes Pompey's senatorial forces at Pharsalus, signaling the death of the Roman Republic.",
+          "participants": [
+            {
+              "c": "Italy",
+              "side": "union",
+              "role": "major"
+            },
+            {
+              "c": "France",
+              "side": "union",
+              "role": "ally"
+            },
+            {
+              "c": "Greece",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Spain",
+              "side": "coalition",
+              "role": "occupied"
+            },
+            {
+              "c": "Egypt",
+              "side": "union",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "russo-japanese-1904",
+      "epoch": "modern",
+      "region": "asia",
+      "name_ar": "الحرب الروسية اليابانية (معركة تسوشيما)",
+      "name_en": "Russo-Japanese War",
+      "name_ru": "Русско-японская война",
+      "name_uz": "Rossiya-Yaponiya urushi",
+      "name_es": "Guerra ruso-japonesa",
+      "years_ar": "1904–1905 م",
+      "years_en": "1904–1905 CE",
+      "sides": {
+        "japan": "إمبراطورية اليابان",
+        "russia": "الإمبراطورية الروسية القيصرية"
+      },
+      "sources": [
+        "R.M. Connaughton, \"The War of the Rising Sun and Tumbling Bear\" (Routledge, 1988).",
+        "J.N. Westwood, \"Russia against Japan, 1904–1905\" (SUNY Press, 1986)."
+      ],
+      "scenarios": [
+        {
+          "id": "tsushima-1905",
+          "year": "1905 CE",
+          "title_ar": "معركة تسوشيما البحرية وسقوط بورت آرثر",
+          "title_en": "Battle of Tsushima & Treaty of Portsmouth",
+          "desc_ar": "الأدميرال توغو يدمر أسطول البلطيق الروسي بالكامل في مضيق تسوشيما؛ أول انتصار لقوة آسيوية حديثة على إمبراطورية أوروبية عظمى.",
+          "desc_en": "Admiral Togo annihilates the Russian Baltic Fleet at Tsushima, the first modern military victory of an Asian power over a European empire.",
+          "participants": [
+            {
+              "c": "Japan",
+              "side": "japan",
+              "role": "major"
+            },
+            {
+              "c": "Russia",
+              "side": "russia",
+              "role": "major"
+            },
+            {
+              "c": "China",
+              "side": "japan",
+              "role": "occupied"
+            },
+            {
+              "c": "South Korea",
+              "side": "japan",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "russo-turkish-1877",
+      "epoch": "nineteenth",
+      "region": "europe",
+      "name_ar": "الحرب الروسية العثمانية الكبرى ومؤتمر برلين",
+      "name_en": "Russo-Turkish War of 1877–1878",
+      "name_ru": "Русско-турецкая война (1877—1878)",
+      "name_uz": "Rossiya-Turkiya urushi (1877–1878)",
+      "name_es": "Guerra ruso-turca (1877-1878)",
+      "years_ar": "1877–1878 م",
+      "years_en": "1877–1878 CE",
+      "sides": {
+        "russia": "الإمبراطورية الروسية ودول البلقان",
+        "ottoman": "الدولة العثمانية"
+      },
+      "sources": [
+        "I. Drury, \"The Russo-Turkish War 1877\" (Osprey, 1994).",
+        "B. Jelavich, \"History of the Balkans\" (Cambridge University Press, 1983)."
+      ],
+      "scenarios": [
+        {
+          "id": "pleven-1877",
+          "year": "1877 CE",
+          "title_ar": "حصار بلفن ووصول الروس إلى أبواب إسطنبول",
+          "title_en": "Siege of Plevna & Treaty of San Stefano",
+          "desc_ar": "صمود عثمان باشا الأسطوري في بلفن ينتهي باختراق الروس وصولاً إلى سان ستيفانو، مما أدى لاستقلال بلغاريا ورومانيا وصربيا في مؤتمر برلين.",
+          "desc_en": "Russian breakthrough at Plevna brings tsarist armies to Istanbul's outskirts, securing Bulgarian autonomy and reshaping the Balkans.",
+          "participants": [
+            {
+              "c": "Russia",
+              "side": "russia",
+              "role": "major"
+            },
+            {
+              "c": "Romania",
+              "side": "russia",
+              "role": "ally"
+            },
+            {
+              "c": "Bulgaria",
+              "side": "russia",
+              "role": "ally"
+            },
+            {
+              "c": "Serbia",
+              "side": "russia",
+              "role": "ally"
+            },
+            {
+              "c": "Turkey",
+              "side": "ottoman",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "sasanian-rome-240",
+      "epoch": "ancient",
+      "region": "me",
+      "name_ar": "الحروب الرومانية الساسانية الأولى (شابور الأول)",
+      "name_en": "Roman–Sasanian Wars (Shapur I)",
+      "name_ru": "Войны Шапура I с Римом",
+      "name_uz": "Shopur I ning Rim bilan urushlari",
+      "name_es": "Guerras de Sapor I contra Roma",
+      "years_ar": "240–260 م",
+      "years_en": "240–260 CE",
+      "sides": {
+        "sasanian": "الإمبراطورية الساسانية (شابور الأول)",
+        "rome": "الإمبراطورية الرومانية (فاليريان وغورديان)"
+      },
+      "sources": [
+        "Res Gestae Divi Saporis (Inscription at Ka'ba-ye Zartosht).",
+        "T. Daryaee, \"Sasanian Persia: The Rise and Fall of an Empire\" (I.B. Tauris, 2009)."
+      ],
+      "scenarios": [
+        {
+          "id": "edessa-260",
+          "year": "260 CE",
+          "title_ar": "معركة الرها وأسر الإمبراطور الروماني فاليريان",
+          "title_en": "Battle of Edessa & Capture of Valerian",
+          "desc_ar": "شابور الأول يلحق بالرومان أكبر إهانة عسكرية بأسر الإمبراطور فاليريان حياً مع جيشه في الرها، واجتياح أنطاكية وسوريا.",
+          "desc_en": "Shapur I captures Emperor Valerian alive along with his legions at Edessa, engraving the triumph into the cliffs of Naqsh-e Rostam.",
+          "participants": [
+            {
+              "c": "Iran",
+              "side": "sasanian",
+              "role": "major"
+            },
+            {
+              "c": "Iraq",
+              "side": "sasanian",
+              "role": "major"
+            },
+            {
+              "c": "Italy",
+              "side": "rome",
+              "role": "major"
+            },
+            {
+              "c": "Syria",
+              "side": "sasanian",
+              "role": "occupied"
+            },
+            {
+              "c": "Turkey",
+              "side": "rome",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "scottish-indep-1296",
+      "epoch": "medieval",
+      "region": "europe",
+      "name_ar": "حروب الاستقلال الاسكتلندية (ويليام والاس وروبرت بروس)",
+      "name_en": "Wars of Scottish Independence",
+      "name_ru": "Войны за независимость Шотландии",
+      "name_uz": "Shotlandiya mustaqillik urushi",
+      "name_es": "Guerras de independencia de Escocia",
+      "years_ar": "1296–1328 م",
+      "years_en": "1296–1328 CE",
+      "sides": {
+        "scotland": "مملكة اسكتلندا وحلفاؤها الفرنسيون",
+        "england": "مملكة إنجلترا (إدوارد الأول وإدوارد الثاني)"
+      },
+      "sources": [
+        "G.W.S. Barrow, \"Robert Bruce and the Community of the Realm of Scotland\" (Edinburgh, 2005).",
+        "M. Prestwich, \"Edward I\" (Yale University Press, 1997)."
+      ],
+      "scenarios": [
+        {
+          "id": "bannockburn-1314",
+          "year": "1314 CE",
+          "title_ar": "معركة بانوكبرن واستقلال العرش الاسكتلندي",
+          "title_en": "Battle of Bannockburn",
+          "desc_ar": "روبرت بروس يسحق الجيش الإنجليزي المتفوق عددياً في مستنقعات بانوكبرن، مؤكداً استقلال اسكتلندا بمرسوم أربورث.",
+          "desc_en": "Robert the Bruce achieves a historic victory over Edward II at Bannockburn, preserving Scottish sovereignty.",
+          "participants": [
+            {
+              "c": "United Kingdom",
+              "side": "england",
+              "role": "major"
+            },
+            {
+              "c": "France",
+              "side": "scotland",
+              "role": "ally"
+            },
+            {
+              "c": "Ireland",
+              "side": "scotland",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "sengoku-sekigahara-1600",
+      "epoch": "early-modern",
+      "region": "asia",
+      "name_ar": "معركة سيكيغاهارا وتوحيد اليابان",
+      "name_en": "Battle of Sekigahara",
+      "name_ru": "Битва при Сэкигахаре",
+      "name_uz": "Sekigaxara jangi (Yaponiya birlashishi)",
+      "name_es": "Batalla de Sekigahara",
+      "years_ar": "1600 م",
+      "years_en": "1600 CE",
+      "sides": {
+        "tokugawa": "الجيش الشرقي (توكوغاوا إياسو)",
+        "toyotomi": "الجيش الغربي (إيشيدا ميتسوناري)"
+      },
+      "sources": [
+        "A.L. Sadler, \"The Maker of Modern Japan: The Life of Tokugawa Ieyasu\" (Routledge, 2009).",
+        "S. Turnbull, \"Nagashino 1575 / Sekigahara 1600\" (Osprey, 2000)."
+      ],
+      "scenarios": [
+        {
+          "id": "sekigahara-clash",
+          "year": "1600 CE",
+          "title_ar": "يوم حسم مصير اليابان وتأسيس الشوغونية",
+          "title_en": "The Day That Decided Japan",
+          "desc_ar": "أكبر صدام للساموراي في التاريخ بمشاركة 160 ألف مقاتل، ينتهي بنصر توكوغاوا وتأسيس شوغونية إيدو واستقرار اليابان لـ 250 عاماً.",
+          "desc_en": "Over 160,000 samurai clash in the fog at Sekigahara; Ieyasu's victory unifies Japan and ushers in the Edo period.",
+          "participants": [
+            {
+              "c": "Japan",
+              "side": "tokugawa",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "seven-years-1756",
+      "epoch": "nineteenth",
+      "region": "world",
+      "name_ar": "حرب السنوات السبع (أول حرب كروية)",
+      "name_en": "Seven Years' War",
+      "name_ru": "Семилетняя война",
+      "name_uz": "Yetti yillik urush",
+      "name_es": "Guerra de los Siete Años",
+      "years_ar": "1756–1763 م",
+      "years_en": "1756–1763 CE",
+      "sides": {
+        "anglo-prussian": "بريطانيا وبروسيا والبرتغال",
+        "coalition": "فرنسا والنمسا وروسيا وإسبانيا"
+      },
+      "sources": [
+        "F. Anderson, \"Crucible of War: The Seven Years' War and the Fate of Empire in British North America\" (Vintage, 2001).",
+        "D. Baugh, \"The Global Seven Years War 1754–1763\" (Routledge, 2011)."
+      ],
+      "scenarios": [
+        {
+          "id": "seven-years-global",
+          "year": "1759 CE",
+          "title_ar": "عام الانتصارات البريطانية (Annus Mirabilis)",
+          "title_en": "Year of Victories Across Three Continents",
+          "desc_ar": "اشتباكات متزامنة في ألمانيا وأمريكا الشمالية والهند والفلبين؛ بريطانيا تنتزع كندا والهند من فرنسا وتؤسس إمبراطوريتها العالمية.",
+          "desc_en": "Simultaneous global warfare in Europe, North America, and India; Britain gains Canada and dominance over India.",
+          "participants": [
+            {
+              "c": "United Kingdom",
+              "side": "anglo-prussian",
+              "role": "major"
+            },
+            {
+              "c": "Germany",
+              "side": "anglo-prussian",
+              "role": "major"
+            },
+            {
+              "c": "Portugal",
+              "side": "anglo-prussian",
+              "role": "ally"
+            },
+            {
+              "c": "France",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Austria",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Russia",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Spain",
+              "side": "coalition",
+              "role": "ally"
+            },
+            {
+              "c": "India",
+              "side": "coalition",
+              "role": "occupied"
+            },
+            {
+              "c": "Canada",
+              "side": "anglo-prussian",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "sindh-transoxiana-705",
+      "epoch": "medieval",
+      "region": "asia",
+      "name_ar": "فتوحات بلاد ما وراء النهر والسند",
+      "name_en": "Conquests of Transoxiana and Sindh",
+      "name_ru": "Завоевание Мавераннахра и Синда",
+      "name_uz": "Movarounnahr va Sindning fath etilishi",
+      "name_es": "Conquistas omeyas de Transoxiana y el Sind",
+      "years_ar": "705–715 م",
+      "years_en": "705–715 CE",
+      "sides": {
+        "muslim": "الدولة الأموية (قتيبة بن مسلم ومحمد بن القاسم)",
+        "eastern": "الممالك السغدية وراجات الهند"
+      },
+      "sources": [
+        "H.A.R. Gibb, \"The Arab Conquests in Central Asia\" (Royal Asiatic Society, 1923).",
+        "D.N. Maclean, \"Religion and Society in Arab Sind\" (Brill, 1989)."
+      ],
+      "scenarios": [
+        {
+          "id": "bukhara-multan-712",
+          "year": "712 CE",
+          "title_ar": "فتح بخارى وسمرقند ودخول وادي السند",
+          "title_en": "Conquest of Samarkand and Multan",
+          "desc_ar": "قتيبة بن مسلم يفتح مدن آسيا الوسطى الحصينة، بينما يتقدم محمد بن القاسم عبر السند حتى ملتان في الهند الغربية.",
+          "desc_en": "Qutayba ibn Muslim incorporates Samarkand and Bukhara, while Muhammad ibn al-Qasim pushes to the Indus valley.",
+          "participants": [
+            {
+              "c": "Uzbekistan",
+              "side": "muslim",
+              "role": "occupied"
+            },
+            {
+              "c": "Pakistan",
+              "side": "muslim",
+              "role": "occupied"
+            },
+            {
+              "c": "Iran",
+              "side": "muslim",
+              "role": "major"
+            },
+            {
+              "c": "India",
+              "side": "eastern",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "sino-japanese1-1894",
+      "epoch": "nineteenth",
+      "region": "asia",
+      "name_ar": "الحرب الصينية اليابانية الأولى",
+      "name_en": "First Sino-Japanese War",
+      "name_ru": "Японо-китайская война (1894—1895)",
+      "name_uz": "Birinchi Xitoy-Yaponiya urushi",
+      "name_es": "Primera Guerra Sino-Japonesa",
+      "years_ar": "1894–1895 م",
+      "years_en": "1894–1895 CE",
+      "sides": {
+        "japan": "إمبراطورية اليابان الحديثة (عصر ميجي)",
+        "qing": "سلالة تشينغ الصينية"
+      },
+      "sources": [
+        "S.C.M. Paine, \"The Sino-Japanese War of 1894–1895: Perceptions, Power, and Primacy\" (Cambridge, 2003).",
+        "D. Keene, \"Emperor of Japan: Meiji and His World\" (Columbia University Press, 2002)."
+      ],
+      "scenarios": [
+        {
+          "id": "shimonoseki-1895",
+          "year": "1895 CE",
+          "title_ar": "معركة نهر يالو ومعاهدة شيمونوسيكي",
+          "title_en": "Battle of the Yalu River & Treaty of Shimonoseki",
+          "desc_ar": "الأسطول والجيش الياباني الحديث يسحقان قوات تشينغ في كوريا والبحر الأصفر؛ الصين تتنازل عن تايوان وتتخلى عن نفوذها في كوريا.",
+          "desc_en": "Japan's modernized military decisively defeats Qing forces in Korea and naval battles, ceding Taiwan and shifting East Asian hegemony.",
+          "participants": [
+            {
+              "c": "Japan",
+              "side": "japan",
+              "role": "major"
+            },
+            {
+              "c": "China",
+              "side": "qing",
+              "role": "major"
+            },
+            {
+              "c": "South Korea",
+              "side": "japan",
+              "role": "occupied"
+            },
+            {
+              "c": "Taiwan",
+              "side": "japan",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "spanish-american-1898",
+      "epoch": "nineteenth",
+      "region": "americas",
+      "name_ar": "الحرب الإسبانية الأمريكية",
+      "name_en": "Spanish–American War",
+      "name_ru": "Испано-американская война",
+      "name_uz": "Ispaniya-Amerika urushi",
+      "name_es": "Guerra hispano-estadounidense",
+      "years_ar": "1898 م",
+      "years_en": "1898 CE",
+      "sides": {
+        "union": "الولايات المتحدة والثوار الكوبيون والفلبينيون",
+        "royalists": "مملكة إسبانيا الاستعمارية"
+      },
+      "sources": [
+        "I. Musicant, \"Empire by Default: The Spanish-American War and the Dawn of the American Century\" (Henry Holt, 1998).",
+        "H.W. Brands, \"Bound to Empire: The United States and the Philippines\" (Oxford, 1992)."
+      ],
+      "scenarios": [
+        {
+          "id": "manila-santiago-1898",
+          "year": "1898 CE",
+          "title_ar": "معركتا خليج مانيلا وسانتياغو دي كوبا",
+          "title_en": "Dewey at Manila Bay & Santiago de Cuba",
+          "desc_ar": "البحرية الأمريكية تدمر الأسطول الإسباني في المحيطين الأطلسي والهادئ؛ إسبانيا تتنازل عن كوبا وبورتوريكو وغوام والفلبين.",
+          "desc_en": "Decisive US naval victories topple the remnants of the Spanish Empire, making the United States a global Pacific power.",
+          "participants": [
+            {
+              "c": "United States",
+              "side": "union",
+              "role": "major"
+            },
+            {
+              "c": "Spain",
+              "side": "royalists",
+              "role": "major"
+            },
+            {
+              "c": "Cuba",
+              "side": "union",
+              "role": "occupied"
+            },
+            {
+              "c": "Philippines",
+              "side": "union",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "spanish-aztec-1519",
+      "epoch": "early-modern",
+      "region": "americas",
+      "name_ar": "الغزو الإسباني لإمبراطورية الأزتيك",
+      "name_en": "Spanish Conquest of the Aztec Empire",
+      "name_ru": "Завоевание Мексики",
+      "name_uz": "Astek imperiyasining ispanlar tomonidan bosib olinishi",
+      "name_es": "Conquista de México",
+      "years_ar": "1519–1521 م",
+      "years_en": "1519–1521 CE",
+      "sides": {
+        "coalition": "الكونكيستادور الإسبان وتحالف تلاكسكالا",
+        "aztec": "إمبراطورية الأزتيك (كواوتيموك ومونتيزوما)"
+      },
+      "sources": [
+        "B. Díaz del Castillo, \"The Conquest of New Spain\" (Penguin Classics).",
+        "M. Restall, \"Seven Myths of the Spanish Conquest\" (Oxford, 2003)."
+      ],
+      "scenarios": [
+        {
+          "id": "tenochtitlan-fall-1521",
+          "year": "1521 CE",
+          "title_ar": "حصار وسقوط تينوتشتيتلان",
+          "title_en": "Fall of Tenochtitlan",
+          "desc_ar": "إرنان كورتيس يستغل انتشار الجدري والتحالف مع أعداء الأزتيك لاقتحام العاصمة في البحيرة وتأسيس إسبانيا الجديدة.",
+          "desc_en": "Hernán Cortés allies with indigenous rivals and besieges Tenochtitlan, laying the foundations of colonial New Spain.",
+          "participants": [
+            {
+              "c": "Spain",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Mexico",
+              "side": "aztec",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "spanish-civil-1936",
+      "epoch": "modern",
+      "region": "europe",
+      "name_ar": "الحرب الأهلية الإسبانية (بروفة الحرب العالمية)",
+      "name_en": "Spanish Civil War",
+      "name_ru": "Гражданская война в Испании",
+      "name_uz": "Ispaniya fuqarolar urushi",
+      "name_es": "Guerra civil española",
+      "years_ar": "1936–1939 م",
+      "years_en": "1936–1939 CE",
+      "sides": {
+        "republicans": "الجمهورية الإسبانية والألوية الدولية والاتحاد السوفيتي",
+        "nationalists": "القوميون الفاشيون (فرانكو ودعم هتلر وموسوليني)"
+      },
+      "sources": [
+        "H. Thomas, \"The Spanish Civil War\" (Modern Library, 2001).",
+        "P. Preston, \"The Spanish Civil War: Reaction, Revolution, and Revenge\" (W.W. Norton, 2007)."
+      ],
+      "scenarios": [
+        {
+          "id": "guernica-1937",
+          "year": "1937",
+          "title_ar": "قصف غيرنيكا وحصار مدريد",
+          "title_en": "Bombing of Guernica & Siege of Madrid",
+          "desc_ar": "طائرات الكوندور الألمانية تجرب القصف التدميري في غيرنيكا؛ صراع أيديولوجي دامٍ بين الفاشية والديمقراطية والشيوعية ينتهي بانتصار فرانكو.",
+          "desc_en": "Nazi and Fascist intervention tests total-war tactics at Guernica, leading to Franco's dictatorship.",
+          "participants": [
+            {
+              "c": "Spain",
+              "side": "nationalists",
+              "role": "major"
+            },
+            {
+              "c": "Germany",
+              "side": "nationalists",
+              "role": "ally"
+            },
+            {
+              "c": "Italy",
+              "side": "nationalists",
+              "role": "ally"
+            },
+            {
+              "c": "Russia",
+              "side": "republicans",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "spanish-inca-1532",
+      "epoch": "early-modern",
+      "region": "americas",
+      "name_ar": "الغزو الإسباني لإمبراطورية الإنكا",
+      "name_en": "Spanish Conquest of the Inca Empire",
+      "name_ru": "Завоевание Перу",
+      "name_uz": "Inka imperiyasining ispanlar tomonidan bosib olinishi",
+      "name_es": "Conquista del Imperio incaico",
+      "years_ar": "1532–1572 م",
+      "years_en": "1532–1572 CE",
+      "sides": {
+        "coalition": "الكونكيستادور الإسبان (بيزارو)",
+        "inca": "إمبراطورية الإنكا (أتاوالبا ومانكو إنكا)"
+      },
+      "sources": [
+        "J. Hemming, \"The Conquest of the Incas\" (Harcourt, 1970).",
+        "K. MacQuarrie, \"The Last Days of the Incas\" (Simon & Schuster, 2007)."
+      ],
+      "scenarios": [
+        {
+          "id": "cajamarca-1532",
+          "year": "1532 CE",
+          "title_ar": "كمين كاخاماركا وأسر أتاوالبا",
+          "title_en": "Ambush at Cajamarca",
+          "desc_ar": "بيزارو يباغت الإمبراطور أتاوالبا ويأسره وسط الآلاف من حرسه، ثم يستولي على عاصمة جبال الأنديز كوسكو ومناجم الفضة.",
+          "desc_en": "Francisco Pizarro's small contingent captures Sapa Inca Atahualpa, toppling the Andean empire.",
+          "participants": [
+            {
+              "c": "Spain",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Peru",
+              "side": "inca",
+              "role": "occupied"
+            },
+            {
+              "c": "Ecuador",
+              "side": "inca",
+              "role": "occupied"
+            },
+            {
+              "c": "Bolivia",
+              "side": "inca",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "spanish-succ-1701",
+      "epoch": "nineteenth",
+      "region": "europe",
+      "name_ar": "حرب الخلافة الإسبانية",
+      "name_en": "War of the Spanish Succession",
+      "name_ru": "Война за испанское наследство",
+      "name_uz": "Ispaniya merosi uchun urush",
+      "name_es": "Guerra de Sucesión Española",
+      "years_ar": "1701–1714 م",
+      "years_en": "1701–1714 CE",
+      "sides": {
+        "france": "فرنسا وإسبانيا (لويس الرابع عشر وفليب الخامس)",
+        "allies": "التحالف الكبير (بريطانيا والنمسا وهولندا)"
+      },
+      "sources": [
+        "J.B. Wolf, \"The Emergence of the Great Powers 1685–1715\" (Harper, 1951).",
+        "J. Falkner, \"The War of the Spanish Succession 1701–1714\" (Pen & Sword, 2015)."
+      ],
+      "scenarios": [
+        {
+          "id": "blenheim-1704",
+          "year": "1704 CE",
+          "title_ar": "معركة بلينهايم وتوازن القوى الأوروبي",
+          "title_en": "Battle of Blenheim & Treaty of Utrecht",
+          "desc_ar": "دوق مارلبورو والأمير يوجين يهزمان الجيش الفرنسي في بافاريا؛ الحرب تنتهي بمعاهدة أوترخت واستيلاء بريطانيا على جبل طارق.",
+          "desc_en": "Marlborough and Eugene break French invincibility at Blenheim, concluding with the balance-of-power Treaty of Utrecht.",
+          "participants": [
+            {
+              "c": "France",
+              "side": "france",
+              "role": "major"
+            },
+            {
+              "c": "Spain",
+              "side": "france",
+              "role": "major"
+            },
+            {
+              "c": "United Kingdom",
+              "side": "allies",
+              "role": "major"
+            },
+            {
+              "c": "Austria",
+              "side": "allies",
+              "role": "major"
+            },
+            {
+              "c": "Netherlands",
+              "side": "allies",
+              "role": "major"
+            },
+            {
+              "c": "Germany",
+              "side": "allies",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "suez-crisis-1956",
+      "epoch": "modern",
+      "region": "me",
+      "name_ar": "العدوان الثلاثي على مصر (أزمة السويس)",
+      "name_en": "Suez Crisis (Tripartite Aggression)",
+      "name_ru": "Суэцкий кризис",
+      "name_uz": "Suvaysh inqirozi (Uch tomonlama bosqin)",
+      "name_es": "Guerra del Sinaí (Crisis de Suez)",
+      "years_ar": "1956 م",
+      "years_en": "1956 CE",
+      "sides": {
+        "egypt": "جمهورية مصر (جمال عبد الناصر)",
+        "coalition": "التحالف الثلاثي (بريطانيا وفرنسا وإسرائيل)"
+      },
+      "sources": [
+        "K. Kyle, \"Suez: Britain's End of Empire in the Middle East\" (I.B. Tauris, 2011).",
+        "W.R. Louis, \"Ends of British Imperialism: The Scramble for Empire, Suez and Decolonization\" (I.B. Tauris, 2006)."
+      ],
+      "scenarios": [
+        {
+          "id": "port-said-1956",
+          "year": "1956",
+          "title_ar": "تأميم القناة والمقاومة الشعبية في بورسعيد",
+          "title_en": "Nationalization of Suez & Allied Withdrawal",
+          "desc_ar": "تأميم مصر لقناة السويس يقابل بهجوم ثلاثي احتلالي لسيناء وبورسعيد؛ صمود شعبي مصري وإنذار سوفيتي أمريكي يجبر المعتدين على الانسحاب مسجلاً نهاية الإمبراطوريات الأوروبية القديمة.",
+          "desc_en": "Nasser nationalizes the canal; Anglo-French-Israeli airborne attack is forced to withdraw under diplomatic pressure from Eisenhower and Khrushchev.",
+          "participants": [
+            {
+              "c": "Egypt",
+              "side": "egypt",
+              "role": "major"
+            },
+            {
+              "c": "United Kingdom",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "France",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Israel",
+              "side": "coalition",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "taiping-1850",
+      "epoch": "nineteenth",
+      "region": "asia",
+      "name_ar": "تمرد تايبينغ (أدمى حرب أهلية في التاريخ)",
+      "name_en": "Taiping Rebellion",
+      "name_ru": "Восстание тайпинов",
+      "name_uz": "Taypin qo‘zg‘oloni",
+      "name_es": "Rebelión Taiping",
+      "years_ar": "1850–1864 م",
+      "years_en": "1850–1864 CE",
+      "sides": {
+        "qing": "سلالة تشينغ الصينية والقوى الغربية",
+        "taiping": "مملكة تايبينغ السماوية (هونغ شيوكوان)"
+      },
+      "sources": [
+        "J.D. Spence, \"God's Chinese Son: The Taiping Heavenly Kingdom of Hong Xiuquan\" (W.W. Norton, 1996).",
+        "S.R. Platt, \"Autumn in the Heavenly Kingdom: China, the West, and the Epic Story of the Taiping Civil War\" (Knopf, 2012)."
+      ],
+      "scenarios": [
+        {
+          "id": "nanjing-taiping",
+          "year": "1853 CE",
+          "title_ar": "سقوط نانجينغ وعاصمة السماء",
+          "title_en": "Establishment of the Heavenly Capital",
+          "desc_ar": "تمرد مسيحي صيني ألفي يسيطر على جنوب وادي اليانغتسي؛ صراع طاحن حصد أرواح ما بين 20 إلى 30 مليون إنسان.",
+          "desc_en": "Radical millennialist movement establishes its capital at Nanjing, resulting in one of the deadliest conflicts in human history.",
+          "participants": [
+            {
+              "c": "China",
+              "side": "qing",
+              "role": "major"
+            },
+            {
+              "c": "United Kingdom",
+              "side": "qing",
+              "role": "ally"
+            },
+            {
+              "c": "France",
+              "side": "qing",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "talas-751",
+      "epoch": "medieval",
+      "region": "asia",
+      "name_ar": "معركة طلاس (المواجهة العباسية الصينية)",
+      "name_en": "Battle of Talas (Abbasid–Tang)",
+      "name_ru": "Таласская битва",
+      "name_uz": "Talas jangi",
+      "name_es": "Batalla de Talas",
+      "years_ar": "751 م",
+      "years_en": "751 CE",
+      "sides": {
+        "islamic": "الخلافة العباسية وحلفاؤها",
+        "tang": "إمبراطورية تانغ الصينية"
+      },
+      "sources": [
+        "C.I. Beckwith, \"The Tibetan Empire in Central Asia\" (Princeton University Press, 1987).",
+        "H. Kennedy, \"The Early Abbasid Caliphate\" (Croom Helm, 1981)."
+      ],
+      "scenarios": [
+        {
+          "id": "talas-river",
+          "year": "751 CE",
+          "title_ar": "الصدام على نهر طلاس وانتقال صناعة الورق",
+          "title_en": "Battle of the Talas River",
+          "desc_ar": "الجيش العباسي بقيادة زياد بن صالح يهزم جيش تانغ في كازاخستان، مما رسخ إسلامية آسيا الوسطى ونقل سر صناعة الورق للعالم الإسلامي.",
+          "desc_en": "Abbasid forces defeat Tang armies in modern Kazakhstan, deciding Central Asia's cultural sphere and transmitting papermaking westward.",
+          "participants": [
+            {
+              "c": "Iraq",
+              "side": "islamic",
+              "role": "major"
+            },
+            {
+              "c": "Kazakhstan",
+              "side": "islamic",
+              "role": "ally"
+            },
+            {
+              "c": "Kyrgyzstan",
+              "side": "islamic",
+              "role": "ally"
+            },
+            {
+              "c": "China",
+              "side": "tang",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "tamerlane-ankara-1402",
+      "epoch": "early-modern",
+      "region": "me",
+      "name_ar": "معركة أنقرة وفتوحات تيمورلنك",
+      "name_en": "Battle of Ankara (Timur vs Bayezid)",
+      "name_ru": "Ангорская битва",
+      "name_uz": "Anqara jangi (Amir Temur va Boyazid)",
+      "name_es": "Batalla de Angora",
+      "years_ar": "1402 م",
+      "years_en": "1402 CE",
+      "sides": {
+        "mongol": "الإمبراطورية التيمورية (تيمورلنك)",
+        "ottoman": "الدولة العثمانية وحلفاؤها الصرب (بايزيد الأول)"
+      },
+      "sources": [
+        "B.F. Manz, \"The Rise and Rule of Tamerlane\" (Cambridge, 1989).",
+        "C. Finkel, \"Osman's Dream: The History of the Ottoman Empire\" (Basic Books, 2005)."
+      ],
+      "scenarios": [
+        {
+          "id": "ankara-clash",
+          "year": "1402 CE",
+          "title_ar": "صدام العمالقة وأسر الصاعقة",
+          "title_en": "Clash of Giants & Ottoman Interregnum",
+          "desc_ar": "أمير تيمور يستخدم الفيلة التكتيكية وينتصر في سهل أنقرة ويأسر السلطان بايزيد الصاعقة، مجمداً التوسع العثماني لعقود.",
+          "desc_en": "Timur's war elephants and flanking maneuvers crush Bayezid I at Ankara, triggering the decade-long Ottoman Interregnum.",
+          "participants": [
+            {
+              "c": "Uzbekistan",
+              "side": "mongol",
+              "role": "major"
+            },
+            {
+              "c": "Iran",
+              "side": "mongol",
+              "role": "major"
+            },
+            {
+              "c": "Turkey",
+              "side": "ottoman",
+              "role": "occupied"
+            },
+            {
+              "c": "Serbia",
+              "side": "ottoman",
               "role": "ally"
             }
           ],
@@ -695,6 +5131,324 @@
               "c": "Czechia",
               "side": "anti-habsburg",
               "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "three-kingdoms-220",
+      "epoch": "ancient",
+      "region": "asia",
+      "name_ar": "حروب الممالك الثلاث في الصين",
+      "name_en": "Wars of the Three Kingdoms (China)",
+      "name_ru": "Эпоха Троецарствия",
+      "name_uz": "Uch shohlik davri urushlari",
+      "name_es": "Guerras de los Tres Reinos",
+      "years_ar": "220–280 م",
+      "years_en": "220–280 CE",
+      "sides": {
+        "wei": "مملكة وي (تساو تساو)",
+        "allies": "تحالف شو وو (ليو باي وسون تشوان)"
+      },
+      "sources": [
+        "Chen Shou, \"Records of the Three Kingdoms\" (Sanguozhi).",
+        "R. de Crespigny, \"Imperial Warlord: A Biography of Cao Cao\" (Brill, 2010)."
+      ],
+      "scenarios": [
+        {
+          "id": "red-cliffs-208",
+          "year": "220 CE",
+          "title_ar": "انقسام الصين بعد معركة الصخور الحمراء",
+          "title_en": "Partition of the Han Empire",
+          "desc_ar": "تفكك سلالة هان وصراع الدول الثلاث (وي في الشمال، شو في الغرب، وو في الجنوب) على حكم الصين.",
+          "desc_en": "The fracturing of Han China into three rival dynasties competing for the Mandate of Heaven.",
+          "participants": [
+            {
+              "c": "China",
+              "side": "wei",
+              "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "vienna-1683",
+      "epoch": "early-modern",
+      "region": "europe",
+      "name_ar": "معركة فيينا والحرب التركية العظمى",
+      "name_en": "Battle of Vienna (Great Turkish War)",
+      "name_ru": "Венская битва (Великая Турецкая война)",
+      "name_uz": "Vena jangi (Buyuk Turk urushi)",
+      "name_es": "Batalla de Viena (Gran Guerra Turca)",
+      "years_ar": "1683–1699 م",
+      "years_en": "1683–1699 CE",
+      "sides": {
+        "ottoman": "الدولة العثمانية وحلفاؤها",
+        "coalition": "الرابطة المقدسة (بولندا والنمسا وألمانيا)"
+      },
+      "sources": [
+        "J. Stoye, \"The Siege of Vienna\" (Birlinn, 2006).",
+        "R. Wheatcroft, \"The Enemy at the Gate: Habsburgs, Ottomans and the Battle for Europe\" (Basic Books, 2009)."
+      ],
+      "scenarios": [
+        {
+          "id": "sobieski-charge-1683",
+          "year": "1683 CE",
+          "title_ar": "هجوم فرسان الهوسار المجنحين وكسر الحصار",
+          "title_en": "Relief of Vienna by King Sobieski",
+          "desc_ar": "الملك البولندي يان سوبيسكي يقود أكبر هجوم فرسان في التاريخ لإنقاذ فيينا، مما بدأ التراجع العثماني المستمر في البلقان.",
+          "desc_en": "King Jan Sobieski leads a massive cavalry charge breaking Kara Mustafa's siege, marking the permanent end of Ottoman expansion into Europe.",
+          "participants": [
+            {
+              "c": "Turkey",
+              "side": "ottoman",
+              "role": "major"
+            },
+            {
+              "c": "Hungary",
+              "side": "ottoman",
+              "role": "occupied"
+            },
+            {
+              "c": "Austria",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Poland",
+              "side": "coalition",
+              "role": "major"
+            },
+            {
+              "c": "Germany",
+              "side": "coalition",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "vienna-siege-1529",
+      "epoch": "early-modern",
+      "region": "europe",
+      "name_ar": "حصار فيينا الأول والحروب العثمانية الهابسبورغية",
+      "name_en": "Siege of Vienna (1529)",
+      "name_ru": "Осада Вены (1529)",
+      "name_uz": "Venaning birinchi qamali (1529)",
+      "name_es": "Sitio de Viena (1529)",
+      "years_ar": "1526–1529 م",
+      "years_en": "1526–1529 CE",
+      "sides": {
+        "ottoman": "الدولة العثمانية (سليمان القانوني)",
+        "habsburg": "ملكية هابسبورغ والإمبراطورية الرومانية المقدسة"
+      },
+      "sources": [
+        "K. Barker, \"The Siege of Vienna 1529\" (Osprey, 2011).",
+        "S. Faroqhi, \"The Ottoman Empire and the World Around It\" (I.B. Tauris, 2004)."
+      ],
+      "scenarios": [
+        {
+          "id": "vienna-gates",
+          "year": "1529 CE",
+          "title_ar": "وصول سليمان القانوني إلى أسوار فيينا",
+          "title_en": "Ottomans at the Gates of Vienna",
+          "desc_ar": "بعد اكتساح المجر في موهاكس، يصل السلطان سليمان القانوني إلى أبواب فيينا في ذروة التمدد الإسلامي داخل أوروبا الوسطى.",
+          "desc_en": "Suleiman the Magnificent marches to the walls of Vienna after Mohács, testing the limits of Ottoman power in Central Europe.",
+          "participants": [
+            {
+              "c": "Turkey",
+              "side": "ottoman",
+              "role": "major"
+            },
+            {
+              "c": "Hungary",
+              "side": "ottoman",
+              "role": "occupied"
+            },
+            {
+              "c": "Austria",
+              "side": "habsburg",
+              "role": "major"
+            },
+            {
+              "c": "Germany",
+              "side": "habsburg",
+              "role": "ally"
+            },
+            {
+              "c": "Spain",
+              "side": "habsburg",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "vietnam-1955",
+      "epoch": "modern",
+      "region": "asia",
+      "name_ar": "حرب فيتنام (حرب الهند الصينية الثانية)",
+      "name_en": "Vietnam War",
+      "name_ru": "Война во Вьетнаме",
+      "name_uz": "Vetnam urushi",
+      "name_es": "Guerra de Vietnam",
+      "years_ar": "1955–1975 م",
+      "years_en": "1955–1975 CE",
+      "sides": {
+        "un-south": "الولايات المتحدة وفيتنام الجنوبية وحلفاؤهما",
+        "communist": "فيتنام الشمالية وجبهة الفيتكونغ والاتحاد السوفيتي والصين"
+      },
+      "sources": [
+        "M. Hastings, \"Vietnam: An Epic Tragedy, 1945–1975\" (Harper, 2018).",
+        "S. Karnow, \"Vietnam: A History\" (Viking, 1983)."
+      ],
+      "scenarios": [
+        {
+          "id": "tet-1968",
+          "year": "1968 CE",
+          "title_ar": "هجوم تيت وسقوط سايغون",
+          "title_en": "Tet Offensive & The Turning Point",
+          "desc_ar": "هجوم تيت المفاجئ في مطلع 1968 يكسر الإرادة السياسية الأمريكية للتدخل، منهياً الحرب بانسحاب واشنطن وسقوط سايغون وتوحيد فيتنام عام 1975.",
+          "desc_en": "Massive coordinated Tet Offensive marks the turning point of the war, culminating in the 1975 fall of Saigon and unification.",
+          "participants": [
+            {
+              "c": "Vietnam",
+              "side": "communist",
+              "role": "major"
+            },
+            {
+              "c": "United States",
+              "side": "un-south",
+              "role": "major"
+            },
+            {
+              "c": "Russia",
+              "side": "communist",
+              "role": "ally"
+            },
+            {
+              "c": "China",
+              "side": "communist",
+              "role": "ally"
+            },
+            {
+              "c": "Australia",
+              "side": "un-south",
+              "role": "ally"
+            },
+            {
+              "c": "South Korea",
+              "side": "un-south",
+              "role": "ally"
+            },
+            {
+              "c": "Laos",
+              "side": "communist",
+              "role": "occupied"
+            },
+            {
+              "c": "Cambodia",
+              "side": "communist",
+              "role": "occupied"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "viking-england-865",
+      "epoch": "medieval",
+      "region": "europe",
+      "name_ar": "غزوات الفايكنغ الكبرى وحروب ألفريد العظيم",
+      "name_en": "Viking Invasions of Britain (Great Heathen Army)",
+      "name_ru": "Вторжение Великой языческой армии",
+      "name_uz": "Vikinglarning Buyuk Britaniyaga bosqini",
+      "name_es": "Invasión vikinga de Inglaterra",
+      "years_ar": "865–878 م",
+      "years_en": "865–878 CE",
+      "sides": {
+        "norse": "الجيش الوثني العظيم (الفايكنغ)",
+        "anglo-saxon": "الممالك الأنجلوسكسونية (ألفريد العظيم)"
+      },
+      "sources": [
+        "Anglo-Saxon Chronicle (trans. M. Swanton, Phoenix Press).",
+        "N.A.M. Rodger, \"The Safeguard of the Sea: A Naval History of Britain\" (Penguin, 1997)."
+      ],
+      "scenarios": [
+        {
+          "id": "edington-878",
+          "year": "878 CE",
+          "title_ar": "معركة إدينغتون وتقسيم إنجلترا (الدانيلاو)",
+          "title_en": "Battle of Edington & The Danelaw",
+          "desc_ar": "الملك ألفريد ينقذ ويسيكس ويهزم غوثروم الدنماركي، مؤسساً حدود الدانيلاو وبادئاً توحيد إنجلترا كأمة واحدة.",
+          "desc_en": "Alfred the Great defeats the Norse army at Edington, establishing the Danelaw partition boundary across England.",
+          "participants": [
+            {
+              "c": "United Kingdom",
+              "side": "anglo-saxon",
+              "role": "major"
+            },
+            {
+              "c": "Denmark",
+              "side": "norse",
+              "role": "major"
+            },
+            {
+              "c": "Norway",
+              "side": "norse",
+              "role": "ally"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "wars-of-roses-1455",
+      "epoch": "early-modern",
+      "region": "europe",
+      "name_ar": "حرب الوردتين في إنجلترا",
+      "name_en": "Wars of the Roses",
+      "name_ru": "Война Алой и Белой розы",
+      "name_uz": "Qizil va Oq atirgul urushi",
+      "name_es": "Guerra de las Dos Rosas",
+      "years_ar": "1455–1487 م",
+      "years_en": "1455–1487 CE",
+      "sides": {
+        "lancaster": "أسرة لانكستر (الوردة الحمراء)",
+        "york": "أسرة يورك (الوردة البيضاء)"
+      },
+      "sources": [
+        "M. Hicks, \"The Wars of the Roses\" (Yale University Press, 2010).",
+        "A. Weir, \"The Wars of the Roses\" (Ballantine Books, 1995)."
+      ],
+      "scenarios": [
+        {
+          "id": "bosworth-1485",
+          "year": "1485 CE",
+          "title_ar": "معركة بوسورث وصعود أسرة تيودور",
+          "title_en": "Battle of Bosworth Field",
+          "desc_ar": "مقتل ريتشارد الثالث وانتصار هنري تيودور (هنري السابع)، منهياً عقوداً من الصراع الأسري ومؤسساً العصر الحديث لإنجلترا.",
+          "desc_en": "Henry Tudor defeats Richard III at Bosworth Field, ending Plantagenet rule and establishing the Tudor dynasty.",
+          "participants": [
+            {
+              "c": "United Kingdom",
+              "side": "lancaster",
+              "role": "major"
+            },
+            {
+              "c": "France",
+              "side": "lancaster",
+              "role": "ally"
             }
           ],
           "empires": []
@@ -2657,6 +7411,54 @@
               "c": "Turkey",
               "side": "empires",
               "role": "major"
+            }
+          ],
+          "empires": []
+        }
+      ]
+    },
+    {
+      "id": "zallaqa-1086",
+      "epoch": "medieval",
+      "region": "europe",
+      "name_ar": "معركة الزلاقة وحروب المرابطين في الأندلس",
+      "name_en": "Battle of Sagrajas (al-Zallaqah)",
+      "name_ru": "Битва при Заллаке",
+      "name_uz": "Zalloqa jangi (Murobitlar yurishi)",
+      "name_es": "Batalla de Sagrajas (al-Zallaqa)",
+      "years_ar": "1086 م",
+      "years_en": "1086 CE",
+      "sides": {
+        "muslim": "دولة المرابطين وملوك الطوائف (ابن تاشفين والمعتمد)",
+        "castile": "مملكة قشتالة وحلفاؤها (ألفونسو السادس)"
+      },
+      "sources": [
+        "H. Kennedy, \"Muslim Spain and Portugal\" (Longman, 1996).",
+        "B.F. Reilly, \"The Contest of Christian and Muslim Spain: 1031–1157\" (Blackwell, 1992)."
+      ],
+      "scenarios": [
+        {
+          "id": "zallaqa-clash",
+          "year": "1086 CE",
+          "title_ar": "عبور المرابطين وإنقاذ الأندلس",
+          "title_en": "Almoravid Relief of al-Andalus",
+          "desc_ar": "يوسف بن تاشفين يعبر من مراكش ويسحق جيش ألفونسو السادس، مؤخراً سقوط الأندلس لأكثر من ثلاثة قرون.",
+          "desc_en": "Yusuf ibn Tashfin crosses from Morocco to decisively repel Castilian advance, unifying Muslim Iberia under the Almoravids.",
+          "participants": [
+            {
+              "c": "Morocco",
+              "side": "muslim",
+              "role": "major"
+            },
+            {
+              "c": "Spain",
+              "side": "castile",
+              "role": "major"
+            },
+            {
+              "c": "Portugal",
+              "side": "castile",
+              "role": "ally"
             }
           ],
           "empires": []

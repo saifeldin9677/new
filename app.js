@@ -8678,6 +8678,12 @@ function buildEraFeature(p) {
                     var _es = document.getElementById('histEmptyState');
                     if (_es) _es.style.display = 'none';
                     if (!gHistoryOverlay) return;
+                    // Clear comparison overlay if active to prevent stale dual-views
+                    // when switching to a new era (normal redraw). The dual-comparison
+                    // render path calls drawEraScene(true) so it keeps its own overlay.
+                    if (!skipFadeIn) {
+                        clearMapComparisonOverlay();
+                    }
                     // Immediately interrupt any running transitions so fast
                     // clicks never leave orphaned polygons or stale cross-fades.
                     gHistoryOverlay.selectAll('*').interrupt();
@@ -8742,12 +8748,17 @@ function buildEraFeature(p) {
                     html += '<p class="hist-panel-context"><strong>' + htmlEscape(locField(era, 'title')) + '</strong> — ' + htmlEscape(era.yearLabel || '') + '</p>';
                     var desc = locField(era, 'desc');
                     if (desc) html += '<p class="hist-note">' + htmlEscape(desc) + '</p>';
+                    var btnGeoText = (t('exportGeoJSONBtn') !== 'exportGeoJSONBtn') ? t('exportGeoJSONBtn') : (lang === 'ar' ? 'تصدير GeoJSON' : 'Export GeoJSON');
+                    var btnStudyText = (t('histEraStudyBtn') !== 'histEraStudyBtn') ? t('histEraStudyBtn') : (lang === 'ar' ? 'ورقة دراسية' : 'Study Sheet');
+                    var btnQuizText = (t('histEraQuizBtn') !== 'histEraQuizBtn') ? t('histEraQuizBtn') : (lang === 'ar' ? 'اختبر فهمك' : 'Quiz');
+                    var btnCmpText = (t('histEraCompareBtn') !== 'histEraCompareBtn') ? t('histEraCompareBtn') : (lang === 'ar' ? 'مقارنة' : 'Compare');
+                    var btnCopyText = (t('histEraCopyLink') !== 'histEraCopyLink') ? t('histEraCopyLink') : (lang === 'ar' ? 'نسخ الرابط' : 'Copy Link');
                     html += '<div class="history-actions">' +
-                        '<button type="button" class="btn history-action-btn" id="eraActStudy">' + htmlEscape(t('histEraStudyBtn')) + '</button>' +
-                        '<button type="button" class="btn history-action-btn" id="eraActQuiz">' + htmlEscape(t('histEraQuizBtn')) + '</button>' +
-                        '<button type="button" class="btn history-action-btn" id="eraActCompare">' + htmlEscape(t('histEraCompareBtn')) + '</button>' +
-                        '<button type="button" class="btn history-action-btn" id="eraActExportGeoJSON">' + htmlEscape(t('exportGeoJSONBtn')) + '</button>' +
-                        '<button type="button" class="btn history-action-btn" id="eraActCopyLink">' + htmlEscape(t('histEraCopyLink')) + '</button>' +
+                        '<button type="button" class="btn history-action-btn" id="eraActStudy">' + htmlEscape(btnStudyText) + '</button>' +
+                        '<button type="button" class="btn history-action-btn" id="eraActQuiz">' + htmlEscape(btnQuizText) + '</button>' +
+                        '<button type="button" class="btn history-action-btn" id="eraActCompare">' + htmlEscape(btnCmpText) + '</button>' +
+                        '<button type="button" class="btn history-action-btn" id="eraActExportGeoJSON">' + htmlEscape(btnGeoText) + '</button>' +
+                        '<button type="button" class="btn history-action-btn" id="eraActCopyLink">' + htmlEscape(btnCopyText) + '</button>' +
                         '</div>';
                     var drows = '';
                     if (p.foundingYear || p.founder) {
@@ -8952,42 +8963,53 @@ function buildEraFeature(p) {
                         });
                         if (tl) tl.appendChild(dot);
                     });
-                    if (!tl) return;
-                    tl.style.cursor = 'pointer';
-                    tl.style.touchAction = 'none';
-                    var tlDrag = false;
-                    function tlPick(clientX) {
-                        var rect = tl.getBoundingClientRect();
-                        var ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-                        var year = min + ratio * (max - min);
-                        var best = null, bestDist = Infinity;
-                        filtered.forEach(function(e) {
-                            var d2 = Math.abs((e.sort || 0) - year);
-                            if (d2 < bestDist) { bestDist = d2; best = e; }
-                        });
-                        if (best && best.id !== historyEraId) {
-                            historyEraId = best.id;
-                            selectedHistoryPolity = null;
-                            updateEraBottomBadge(best);
-                            drawEraScene(true);
-                            tl.querySelectorAll('.history-tl-dot').forEach(function(d2) {
-                                d2.classList.toggle('active', d2.title.indexOf(best.yearLabel) === 0);
+                    // Ensure pointer events are bound ONLY ONCE to avoid listener
+                    // stacking when renderEraTabContent runs again (tab switches,
+                    // filters, timeline scrubbing).
+                    if (tl && !tl._eventsBound) {
+                        tl._eventsBound = true;
+                        tl.style.cursor = 'pointer';
+                        tl.style.touchAction = 'none';
+                        var tlDrag = false;
+                        function tlPick(clientX) {
+                            var rect = tl.getBoundingClientRect();
+                            if (!rect.width) return;
+                            var ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+                            var filtered = (histPlayOrder && histPlayOrder.length) ? histPlayOrder : (historicalErasData || []);
+                            if (!filtered || !filtered.length) return;
+                            var histSorts = filtered.map(function(e) { return e.sort || 0; });
+                            var min = Math.min.apply(null, histSorts) - 50;
+                            var max = Math.max.apply(null, histSorts) + 50;
+                            var year = min + ratio * (max - min);
+                            var best = null, bestDist = Infinity;
+                            filtered.forEach(function(e) {
+                                var d2 = Math.abs((e.sort || 0) - year);
+                                if (d2 < bestDist) { bestDist = d2; best = e; }
                             });
+                            if (best && best.id !== historyEraId) {
+                                historyEraId = best.id;
+                                selectedHistoryPolity = null;
+                                updateEraBottomBadge(best);
+                                drawEraScene(true);
+                                tl.querySelectorAll('.history-tl-dot').forEach(function(d2) {
+                                    d2.classList.toggle('active', d2.title.indexOf(best.yearLabel) === 0);
+                                });
+                            }
                         }
+                        tl.addEventListener('pointerdown', function(e) {
+                            stopHistPlay();
+                            tlDrag = true;
+                            try { tl.setPointerCapture(e.pointerId); } catch (err) {}
+                            tlPick(e.clientX);
+                        });
+                        tl.addEventListener('pointermove', function(e) { if (tlDrag) tlPick(e.clientX); });
+                        tl.addEventListener('pointerup', function() {
+                            if (!tlDrag) return;
+                            tlDrag = false;
+                            renderHistoryBar();
+                            if (selectedCountry && selectedFeatureType === 'history' && countryPanel.classList.contains('visible')) openHistoryPanel(selectedCountry);
+                        });
                     }
-                    tl.addEventListener('pointerdown', function(e) {
-                        stopHistPlay();
-                        tlDrag = true;
-                        try { tl.setPointerCapture(e.pointerId); } catch (err) {}
-                        tlPick(e.clientX);
-                    });
-                    tl.addEventListener('pointermove', function(e) { if (tlDrag) tlPick(e.clientX); });
-                    tl.addEventListener('pointerup', function() {
-                        if (!tlDrag) return;
-                        tlDrag = false;
-                        renderHistoryBar();
-                        if (selectedCountry && selectedFeatureType === 'history' && countryPanel.classList.contains('visible')) openHistoryPanel(selectedCountry);
-                    });
                     var leg = document.getElementById('legend');
                     leg.innerHTML = '<div style="font-weight:700;margin-bottom:4px">' + htmlEscape(t('histLegendLabel')) + '</div>';
                     era.polities.forEach(function(p) {

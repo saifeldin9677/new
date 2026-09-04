@@ -330,6 +330,10 @@
             let historyReligionFilter = 'all';
             let historySearchText = '';
             let historyLayerOpacity = 0.55;
+            let historyWarPhase = 'start';
+            let historyEraPhase = 'start';
+            let setHistWarPhase = null;
+            let setHistEraPhase = null;
             var _timelineInteractedTime = 0; // لمنع إغلاق القوائم عند التفاعل مع الشريط
             // Wars dataset: falls back to the embedded array in data.js, but is
             // upgraded to the richer external JSON (historical-wars-data.json) once
@@ -7744,9 +7748,10 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             if (pd) {
                                 var s = gHistoryOverlay.append('path').attr('d', pd).attr('fill', col)
                                     .attr('fill-opacity', historyLayerOpacity)
+                                    .style('fill-opacity', historyLayerOpacity)
                                     .attr('stroke', '#ffffff').attr('stroke-width', 1.2).attr('stroke-dasharray', '5,3')
                                     .attr('vector-effect', 'non-scaling-stroke').style('pointer-events', 'none');
-                            if (skipFadeIn) s.attr('opacity', historyLayerOpacity); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 1);
+                                if (skipFadeIn) s.attr('opacity', 1).style('opacity', 1); else s.attr('opacity', 0).style('opacity', 0).transition().duration(dur).attr('opacity', 1).style('opacity', 1);
                             }
                             try {
                                 var cen = d3.geoCentroid(f);
@@ -7778,9 +7783,11 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             if (!pd) return;
                             var isSoft = (p.role === 'protectorate' || p.role === 'colony' || p.role === 'dominion');
                             var s = gHistoryOverlay.append('path').attr('d', pd).attr('fill', col)
+                                .attr('fill-opacity', historyLayerOpacity)
+                                .style('fill-opacity', historyLayerOpacity)
                                 .attr('stroke', col).attr('stroke-width', isSoft ? 2.2 : 1.2)
                                 .attr('vector-effect', 'non-scaling-stroke').style('pointer-events', 'none');
-                            if (skipFadeIn) s.attr('opacity', 1); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 1);
+                            if (skipFadeIn) s.attr('opacity', 1).style('opacity', 1); else s.attr('opacity', 0).style('opacity', 0).transition().duration(dur).attr('opacity', 1).style('opacity', 1);
                         });
                     });
                
@@ -8122,6 +8129,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (warCardEpochEl) warCardEpochEl.textContent = epMatch ? t(epMatch.key) : war.epoch;
                     var curSc = war.scenarios.find(function(s) { return s.id === historyScenarioId; }) || war.scenarios[0];
                     if (warCardDescEl) warCardDescEl.textContent = (curSc && locField(curSc, 'desc')) || locField(war, 'desc') || locField(war, 'name');
+                    syncHistWarPhaseUI(war, curSc);
 
                     war.scenarios.forEach(function(s) {
                         var b = document.createElement('button');
@@ -8178,6 +8186,59 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     refreshLucideIcons();
                     if (historyActive && window.updateHash) window.updateHash();
                 }
+
+                function syncHistWarPhaseUI(war, curSc) {
+                    var group = document.getElementById('histWarPhaseGroup');
+                    if (!group || !war || !war.scenarios || !war.scenarios.length) return;
+                    var idx = 0;
+                    if (curSc) {
+                        idx = war.scenarios.findIndex(function(s) { return s.id === curSc.id; });
+                        if (idx === -1) idx = 0;
+                    }
+                    var phase = 'start';
+                    if (war.scenarios.length >= 3) {
+                        if (idx === 0) phase = 'start';
+                        else if (idx === war.scenarios.length - 1) phase = 'end';
+                        else phase = 'peak';
+                    } else if (war.scenarios.length === 2) {
+                        phase = (idx === 0) ? 'start' : 'end';
+                    } else {
+                        phase = historyWarPhase || 'start';
+                    }
+                    historyWarPhase = phase;
+                    group.querySelectorAll('.hist-phase-btn').forEach(function(b) {
+                        b.classList.toggle('active', b.getAttribute('data-phase') === phase);
+                    });
+                }
+
+                setHistWarPhase = function(phase) {
+                    historyWarPhase = phase;
+                    var war = getHistWar();
+                    if (!war || !war.scenarios || !war.scenarios.length) return;
+                    var targetSc = war.scenarios[0];
+                    if (war.scenarios.length >= 3) {
+                        if (phase === 'start') targetSc = war.scenarios[0];
+                        else if (phase === 'peak') targetSc = war.scenarios[Math.floor(war.scenarios.length / 2)];
+                        else if (phase === 'end') targetSc = war.scenarios[war.scenarios.length - 1];
+                    } else if (war.scenarios.length === 2) {
+                        if (phase === 'start') targetSc = war.scenarios[0];
+                        else targetSc = war.scenarios[1];
+                    } else {
+                        targetSc = war.scenarios[0];
+                    }
+                    historyScenarioId = targetSc.id;
+                    var group = document.getElementById('histWarPhaseGroup');
+                    if (group) {
+                        group.querySelectorAll('.hist-phase-btn').forEach(function(b) {
+                            b.classList.toggle('active', b.getAttribute('data-phase') === phase);
+                        });
+                    }
+                    renderHistoryBar();
+                    drawHistoryScenario();
+                    if (selectedCountry && countryPanel.classList.contains('visible')) openHistoryPanel(selectedCountry);
+                };
+                window.setHistWarPhase = setHistWarPhase;
+
                 function openHistoryPanel(f) {
                     if (historyTab === 'eras') { openEraPanelForFeature(f); return; }
                     var panelContent = document.getElementById('panelContent');
@@ -8193,15 +8254,31 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     var p = findHistParticipant(sc, cn);
                     var dispName = getDisplayName(name);
                     var flag = getCountryFlag(name);
-                    var html = '<h3>' + (flag || '📜') + ' ' + htmlEscape(dispName) + '</h3>';
-                    html += '<p class="hist-panel-context"><strong>' + htmlEscape(locField(war, 'name')) + '</strong> — ' + sc.year + ' · ' + htmlEscape(locField(sc, 'title')) + '</p>';
-                    if (!p) {
-                        html += '<p class="hist-note">' + htmlEscape(t('histNoData')) + '</p>';
-                    } else {
+
+                    // البحث عن الملف التعريفي التاريخي الشامل
+                    var profile = null;
+                    if (typeof getHistoricalPolityProfile === 'function') {
+                        if (p && p._empire) profile = getHistoricalPolityProfile(p._empire.id);
+                        if (!profile && p && p.c) profile = getHistoricalPolityProfile(p.c);
+                        if (!profile) profile = getHistoricalPolityProfile(cn);
+                        if (!profile) profile = getHistoricalPolityProfile(dispName);
+                        if (!profile) profile = getHistoricalPolityProfile(name);
+                    }
+
+                    var html = '<div class="hist-profile-card">';
+                    html += '<div class="hist-profile-header">';
+                    html += '<h3 class="hist-profile-title">' + (flag || '📜') + ' ' + htmlEscape((profile && profile.name_ar) || dispName) + '</h3>';
+                    if (war) {
+                        html += '<p class="hist-profile-subtitle"><strong>' + htmlEscape(locField(war, 'name')) + '</strong> — ' + (sc ? sc.year + ' · ' + htmlEscape(locField(sc, 'title')) : '') + '</p>';
+                    }
+                    html += '</div>';
+
+                    // كتلة دور الدولة في الحرب
+                    if (p) {
                         var col = histColorFor(p) || '#9aa5b1';
                         var roleLbl = t(histRoleKey(p.role));
-                        var sideLbl = p.side !== 'neutral' && war.sides[p.side] ? t(war.sides[p.side]) : '';
-                        html += '<div class="hist-status-block" style="border-inline-start-color:' + col + '">' +
+                        var sideLbl = p.side !== 'neutral' && war && war.sides && war.sides[p.side] ? t(war.sides[p.side]) : '';
+                        html += '<div class="hist-status-block" style="border-inline-start-color:' + col + '; margin-bottom: 8px;">' +
                             '<div class="hist-status-role"><span class="hist-chip-swatch" style="background:' + col + '"></span> <strong>' + htmlEscape(roleLbl) + '</strong></div>' +
                             (sideLbl ? '<div class="hist-status-side">' + htmlEscape(sideLbl) + (p.yr ? ' · ' + htmlEscape(p.yr) : '') + '</div>' : '') +
                             '</div>';
@@ -8211,18 +8288,67 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         if (p._empire) {
                             var emp = p._empire;
                             var membersStr = emp.members.map(function(m) { return getDisplayName(m); }).join('، ');
-                            html += '<div class="hist-empire-box">';
+                            html += '<div class="hist-empire-box" style="margin-bottom: 8px;">';
                             html += '<strong>' + htmlEscape(locField(histEmpireNames[emp.id], 'name')) + '</strong>';
                             html += '<div class="hist-empire-members">' + htmlEscape(t('histCompositionLabel')) + ' ' + htmlEscape(membersStr) + '</div>';
                             var partial = locField(emp, 'partial');
                             if (partial) html += '<div class="hist-empire-partial">' + htmlEscape(t('histPartialNoteLabel')) + ' ' + htmlEscape(partial) + '.</div>';
                             html += '</div>';
                         }
+                    } else if (!profile) {
+                        html += '<p class="hist-note">' + htmlEscape(t('histNoData')) + '</p>';
                     }
-                    html += '<details class="hist-sources-mini"><summary>' + htmlEscape(t('histSourcesBtn')) + ' (' + htmlEscape(t('histSourcesTitle')) + ')</summary><ul>' +
-                        formatAcademicSourcesList(war.sources) + '</ul></details>';
-                    html += '<p class="hist-disclaimer-mini">' + htmlEscape(t('histDisclaimer')) + '</p>';
-_lastPanelRenderTime = performance.now();
+
+                    // البطاقة التعريفية التاريخية المتكاملة
+                    if (profile) {
+                        var founderVal = profile.founder_ar || '';
+                        var capVal = profile.capital_ar || '';
+                        var religionVal = profile.religion_ar || '';
+                        var langVal = profile.language_ar || '';
+                        var ethVal = profile.ethnicity_ar || '';
+                        var originVal = profile.origin_ar || '';
+                        var fallVal = profile.fall_ar || '';
+
+                        html += '<div class="hist-profile-grid">';
+                        if (founderVal) {
+                            html += '<div class="hist-profile-item"><div class="hist-profile-item-label">👑 اسم المؤسس</div><div class="hist-profile-item-val">' + htmlEscape(founderVal) + '</div></div>';
+                        }
+                        if (capVal) {
+                            html += '<div class="hist-profile-item"><div class="hist-profile-item-label">🏛️ العاصمة</div><div class="hist-profile-item-val">' + htmlEscape(capVal) + '</div></div>';
+                        }
+                        if (religionVal) {
+                            html += '<div class="hist-profile-item full-width"><div class="hist-profile-item-label">🕊️ الديانة والتحولات الدينية</div><div class="hist-profile-item-val">' + htmlEscape(religionVal) + '</div></div>';
+                        }
+                        if (langVal) {
+                            html += '<div class="hist-profile-item"><div class="hist-profile-item-label">🗣️ اللغة الرسمية</div><div class="hist-profile-item-val">' + htmlEscape(langVal) + '</div></div>';
+                        }
+                        if (ethVal) {
+                            html += '<div class="hist-profile-item"><div class="hist-profile-item-label">🌍 العرق والهوية الثقافية</div><div class="hist-profile-item-val">' + htmlEscape(ethVal) + '</div></div>';
+                        }
+                        html += '</div>';
+
+                        if (originVal) {
+                            html += '<div class="hist-narrative-box origin-box">' +
+                                '<div class="hist-narrative-title">🌱 كيف وأين بدأت؟</div>' +
+                                '<p class="hist-narrative-text">' + htmlEscape(originVal) + '</p>' +
+                                '</div>';
+                        }
+
+                        if (fallVal) {
+                            html += '<div class="hist-narrative-box fall-box">' +
+                                '<div class="hist-narrative-title">⚔️ كيف ومتى ولماذا انتهت؟</div>' +
+                                '<p class="hist-narrative-text">' + htmlEscape(fallVal) + '</p>' +
+                                '</div>';
+                        }
+                    }
+
+                    if (war && war.sources) {
+                        html += '<details class="hist-sources-mini"><summary>' + htmlEscape(t('histSourcesBtn')) + ' (' + htmlEscape(t('histSourcesTitle')) + ')</summary><ul>' +
+                            formatAcademicSourcesList(war.sources) + '</ul></details>';
+                    }
+                    html += '<p class="hist-disclaimer-mini">' + htmlEscape(t('histDisclaimer')) + '</p></div>';
+
+                    _lastPanelRenderTime = performance.now();
                     panelContent.innerHTML = html;
                     countryPanel.style.display = 'block';
                     requestAnimationFrame(function(){requestAnimationFrame(function(){countryPanel.classList.add('visible');});});
@@ -8861,6 +8987,7 @@ function buildEraFeature(p) {
                             var isSel = selectedHistoryPolity === p;
                             var s = gHistoryOverlay.append('path').attr('d', pd).attr('fill', p.color)
                                 .attr('fill-opacity', historyLayerOpacity)
+                                .style('fill-opacity', historyLayerOpacity)
                                 .attr('stroke', isSel ? '#ffffff' : p.color).attr('stroke-width', isSel ? 3 : 1.8)
                                 .attr('stroke-dasharray', '7,4')
                                 .attr('vector-effect', 'non-scaling-stroke').style('cursor', 'pointer')
@@ -8872,7 +8999,7 @@ function buildEraFeature(p) {
                                         showEraPolityPanel(p, era);
                                     }
                                 });
-                            if (skipFadeIn) s.attr('opacity', historyLayerOpacity); else s.attr('opacity', 0).transition().duration(dur).attr('opacity', historyLayerOpacity);
+                            if (skipFadeIn) s.attr('opacity', 1).style('opacity', 1); else s.attr('opacity', 0).style('opacity', 0).transition().duration(dur).attr('opacity', 1).style('opacity', 1);
                         }
                     });
                     era.polities.forEach(function(p) {
@@ -8900,10 +9027,59 @@ function buildEraFeature(p) {
                     closeFeatureDetail();
                     selectedCountry = null;
                     selectedFeatureType = 'history';
-                    var html = '<h3>🏛️ ' + htmlEscape(locField(p, 'name')) + '</h3>';
-                    html += '<p class="hist-panel-context"><strong>' + htmlEscape(locField(era, 'title')) + '</strong> — ' + htmlEscape(era.yearLabel || '') + '</p>';
+                    var profile = (typeof getHistoricalPolityProfile === 'function') ? getHistoricalPolityProfile(p.id || locField(p, 'name') || (era && era.id)) : null;
+                    var founderVal = (profile && profile.founder_ar) || p.founder || p.foundingYear || '';
+                    var religionVal = (profile && profile.religion_ar) || p.religion || '';
+                    var langVal = (profile && profile.language_ar) || p.language || '';
+                    var ethVal = (profile && profile.ethnicity_ar) || p.ethnicity || '';
+                    var capVal = (profile && profile.capital_ar) || p.capital || '';
+                    var originVal = (profile && profile.origin_ar) || '';
+                    var fallVal = (profile && profile.fall_ar) || p.endYear || '';
+
+                    var html = '<div class="hist-profile-card">' +
+                        '<div class="hist-profile-header">' +
+                        '<h3 class="hist-profile-title">🏛️ ' + htmlEscape((profile && profile.name_ar) || locField(p, 'name')) + '</h3>' +
+                        '<p class="hist-profile-subtitle"><strong>' + htmlEscape(locField(era, 'title')) + '</strong> — ' + htmlEscape(era.yearLabel || '') + '</p>' +
+                        '</div>';
+
+                    // Grid of key metadata
+                    html += '<div class="hist-profile-grid">';
+                    if (founderVal) {
+                        html += '<div class="hist-profile-item"><div class="hist-profile-item-label">👑 اسم المؤسس</div><div class="hist-profile-item-val">' + htmlEscape(founderVal) + '</div></div>';
+                    }
+                    if (capVal) {
+                        html += '<div class="hist-profile-item"><div class="hist-profile-item-label">🏛️ العاصمة</div><div class="hist-profile-item-val">' + htmlEscape(capVal) + '</div></div>';
+                    }
+                    if (religionVal) {
+                        html += '<div class="hist-profile-item full-width"><div class="hist-profile-item-label">🕊️ الديانة والتحولات الدينية</div><div class="hist-profile-item-val">' + htmlEscape(religionVal) + '</div></div>';
+                    }
+                    if (langVal) {
+                        html += '<div class="hist-profile-item"><div class="hist-profile-item-label">🗣️ اللغة الرسمية</div><div class="hist-profile-item-val">' + htmlEscape(langVal) + '</div></div>';
+                    }
+                    if (ethVal) {
+                        html += '<div class="hist-profile-item"><div class="hist-profile-item-label">🌍 العرق والهوية الثقافية</div><div class="hist-profile-item-val">' + htmlEscape(ethVal) + '</div></div>';
+                    }
+                    html += '</div>';
+
+                    // How and where it started
+                    if (originVal) {
+                        html += '<div class="hist-narrative-box origin-box">' +
+                            '<div class="hist-narrative-title">🌱 كيف وأين بدأت؟</div>' +
+                            '<p class="hist-narrative-text">' + htmlEscape(originVal) + '</p>' +
+                            '</div>';
+                    }
+
+                    // How and why it ended
+                    if (fallVal) {
+                        html += '<div class="hist-narrative-box fall-box">' +
+                            '<div class="hist-narrative-title">⚔️ كيف ومتى ولماذا انتهت؟</div>' +
+                            '<p class="hist-narrative-text">' + htmlEscape(fallVal) + '</p>' +
+                            '</div>';
+                    }
+
                     var desc = locField(era, 'desc');
-                    if (desc) html += '<p class="hist-note">' + htmlEscape(desc) + '</p>';
+                    if (desc && !originVal) html += '<p class="hist-note">' + htmlEscape(desc) + '</p>';
+
                     var btnGeoText = (t('exportGeoJSONBtn') !== 'exportGeoJSONBtn') ? t('exportGeoJSONBtn') : (lang === 'ar' ? 'تصدير GeoJSON' : 'Export GeoJSON');
                     var btnStudyText = (t('histEraStudyBtn') !== 'histEraStudyBtn') ? t('histEraStudyBtn') : (lang === 'ar' ? 'ورقة دراسية' : 'Study Sheet');
                     var btnQuizText = (t('histEraQuizBtn') !== 'histEraQuizBtn') ? t('histEraQuizBtn') : (lang === 'ar' ? 'اختبر فهمك' : 'Quiz');
@@ -8916,20 +9092,10 @@ function buildEraFeature(p) {
                         '<button type="button" class="btn history-action-btn" id="eraActExportGeoJSON">' + htmlEscape(btnGeoText) + '</button>' +
                         '<button type="button" class="btn history-action-btn" id="eraActCopyLink">' + htmlEscape(btnCopyText) + '</button>' +
                         '</div>';
-                    var drows = '';
-                    if (p.foundingYear || p.founder) {
-                        var fv = [p.foundingYear, p.founder].filter(Boolean).join(' · ');
-                        drows += '<div class="hist-detail-row"><dt>' + htmlEscape(t(p.foundingYear ? 'histFoundedLabel' : 'histFounderLabel')) + '</dt><dd>' + htmlEscape(fv) + '</dd></div>';
-                    }
-                    if (p.capital) drows += '<div class="hist-detail-row"><dt>' + htmlEscape(t('histCapitalLabel')) + '</dt><dd>' + htmlEscape('' + p.capital) + '</dd></div>';
-                    if (p.religion) drows += '<div class="hist-detail-row"><dt>' + htmlEscape(t('histReligionLabel')) + '</dt><dd>' + htmlEscape('' + p.religion) + '</dd></div>';
-                    if (p.language) drows += '<div class="hist-detail-row"><dt>' + htmlEscape(t('histLanguageLabel')) + '</dt><dd>' + htmlEscape('' + p.language) + '</dd></div>';
-                    if (p.endYear) drows += '<div class="hist-detail-row"><dt>' + htmlEscape(t('histEndedLabel')) + '</dt><dd>' + htmlEscape('' + p.endYear) + '</dd></div>';
-                    if (drows) html += '<dl class="hist-entity-details">' + drows + '</dl>';
-                    html += '<p class="hist-note"><em>' + htmlEscape(t('histEraApprox')) + '</em></p>';
+
                     html += '<details class="hist-sources-mini"><summary>' + htmlEscape(t('histSourcesBtn')) + '</summary><ul>' +
                         formatAcademicSourcesList(era.sources) + '</ul></details>';
-                    html += '<p class="hist-disclaimer-mini">' + htmlEscape(t('histEraDisclaimer')) + '</p>';
+                    html += '<p class="hist-disclaimer-mini">' + htmlEscape(t('histEraDisclaimer')) + '</p></div>';
                     _lastPanelRenderTime = performance.now();
                     panelContent.innerHTML = html;
                     countryPanel.style.display = 'block';
@@ -8997,6 +9163,24 @@ function buildEraFeature(p) {
                                 showEraPolityPanel(hit, era);
                                 return;
                             }
+                            // فحص تطابق بالاسم مع كيانات الحقبة الحالية
+                            var cleanCountryName = getCleanName(name);
+                            if (era.polities && era.polities.length) {
+                                hit = era.polities.find(function(p) {
+                                    var pn = getCleanName(p.id || locField(p, 'name'));
+                                    return histMatchName(cleanCountryName, pn) || cleanCountryName === pn;
+                                });
+                            }
+                            if (hit) {
+                                showEraPolityPanel(hit, era);
+                                return;
+                            }
+                            // فحص وجود ملف تعريفي حضاري وتاريخي شامل للدولة
+                            var fallbackProfile = (typeof getHistoricalPolityProfile === 'function') ? (getHistoricalPolityProfile(cleanCountryName) || getHistoricalPolityProfile(dispName) || getHistoricalPolityProfile(name)) : null;
+                            if (fallbackProfile) {
+                                showEraPolityPanel({ id: fallbackProfile.id, name: fallbackProfile.name_ar, color: '#38bdf8' }, era);
+                                return;
+                            }
                             neutralYearLabel = era.yearLabel || locField(era, 'title');
                         }
                     html += '<p class="hist-note">' + htmlEscape(t('histNoDataForPeriod', { country: dispName, year: neutralYearLabel })) + '</p>';
@@ -9026,6 +9210,53 @@ function buildEraFeature(p) {
                     }
                 }
 
+                function syncHistEraPhaseUI(era) {
+                    var group = document.getElementById('histEraPhaseGroup');
+                    if (!group || !era) return;
+                    group.querySelectorAll('.hist-phase-btn').forEach(function(b) {
+                        b.classList.toggle('active', b.getAttribute('data-phase') === historyEraPhase);
+                    });
+                }
+
+                setHistEraPhase = function(phase) {
+                    historyEraPhase = phase;
+                    var era = getHistEra();
+                    if (!era) return;
+                    var group = document.getElementById('histEraPhaseGroup');
+                    if (group) {
+                        group.querySelectorAll('.hist-phase-btn').forEach(function(b) {
+                            b.classList.toggle('active', b.getAttribute('data-phase') === phase);
+                        });
+                    }
+                    var profile = null;
+                    if (typeof getHistoricalPolityProfile === 'function') {
+                        profile = getHistoricalPolityProfile(era.id) || (era.polities && era.polities[0] && getHistoricalPolityProfile(era.polities[0].id || locField(era.polities[0], 'name')));
+                    }
+                    var eraCardYearsEl = document.getElementById('histEraCardYears');
+                    var eraCardDescEl = document.getElementById('histEraCardDesc');
+                    var badge = document.getElementById('histCurrentYearBadge');
+                    var cap = document.getElementById('histTimelineCaption');
+
+                    if (profile && profile.phases && profile.phases[phase]) {
+                        var ph = profile.phases[phase];
+                        if (eraCardYearsEl) eraCardYearsEl.textContent = ph.year;
+                        if (eraCardDescEl) eraCardDescEl.textContent = ph.desc_ar;
+                        if (badge) badge.textContent = ph.year;
+                        if (cap) cap.textContent = (ph.title_ar ? ph.title_ar + ' — ' : '') + ph.desc_ar;
+                    } else {
+                        var fallbackTitles = {
+                            start: 'المرحلة الأولى: البداية والتأسيس',
+                            peak: 'المرحلة الثانية: أوج الاتساع والازدهار',
+                            end: 'المرحلة الثالثة: الانحدار والسقوط'
+                        };
+                        var origDesc = locField(era, 'desc') || locField(era, 'title') || '';
+                        if (eraCardDescEl) eraCardDescEl.textContent = fallbackTitles[phase] + ' — ' + origDesc;
+                        if (cap) cap.textContent = fallbackTitles[phase] + ' — ' + origDesc;
+                    }
+                    drawEraScene(true);
+                };
+                window.setHistEraPhase = setHistEraPhase;
+
                 function updateEraTopCard(era) {
                     var eraEmptyEl = document.getElementById('histEraEmptyState');
                     var eraCardDetEl = document.getElementById('histEraCardDetails');
@@ -9043,11 +9274,25 @@ function buildEraFeature(p) {
                     if (eraEmptyEl) eraEmptyEl.style.display = 'none';
                     if (eraCardDetEl) eraCardDetEl.style.display = 'block';
                     if (eraCardTitleEl) eraCardTitleEl.textContent = (era.yearLabel ? era.yearLabel + ' · ' : '') + locField(era, 'title');
-                    if (eraCardYearsEl) eraCardYearsEl.textContent = era.yearLabel || '';
                     var eraEp = getEraEpoch(era);
                     var eraEpObj = HIST_EPOCHS.find(function(x) { return x.id === eraEp; });
                     if (eraCardEpochEl) eraCardEpochEl.textContent = eraEpObj ? t(eraEpObj.key) : eraEp;
-                    if (eraCardDescEl) eraCardDescEl.textContent = locField(era, 'desc') || locField(era, 'title') || '';
+
+                    syncHistEraPhaseUI(era);
+
+                    var profile = null;
+                    if (typeof getHistoricalPolityProfile === 'function') {
+                        profile = getHistoricalPolityProfile(era.id) || (era.polities && era.polities[0] && getHistoricalPolityProfile(era.polities[0].id || locField(era.polities[0], 'name')));
+                    }
+                    if (profile && profile.phases && profile.phases[historyEraPhase]) {
+                        var ph = profile.phases[historyEraPhase];
+                        if (eraCardYearsEl) eraCardYearsEl.textContent = ph.year || era.yearLabel || '';
+                        if (eraCardDescEl) eraCardDescEl.textContent = ph.desc_ar || locField(era, 'desc') || locField(era, 'title') || '';
+                    } else {
+                        if (eraCardYearsEl) eraCardYearsEl.textContent = era.yearLabel || '';
+                        if (eraCardDescEl) eraCardDescEl.textContent = locField(era, 'desc') || locField(era, 'title') || '';
+                    }
+
                     if (eraCardPolitiesEl) {
                         eraCardPolitiesEl.innerHTML = (era.polities || []).map(function(p) {
                             return '<span class="hist-card-polity-chip"><span class="hist-card-polity-swatch" style="background:' + p.color + '"></span> ' + htmlEscape(locField(p, 'name')) + '</span>';
@@ -11556,8 +11801,32 @@ function buildEraFeature(p) {
                     var pct = Math.round(historyLayerOpacity * 100) + '%';
                     if (valEl) valEl.textContent = pct;
                     if (gHistoryOverlay) {
-                        gHistoryOverlay.selectAll('path').attr('fill-opacity', historyLayerOpacity);
+                        gHistoryOverlay.selectAll('path')
+                            .attr('fill-opacity', historyLayerOpacity)
+                            .style('fill-opacity', historyLayerOpacity)
+                            .attr('opacity', 1)
+                            .style('opacity', 1);
                     }
+                });
+            }
+
+            // Phase buttons event handlers for Wars and Eras (المراحل الثلاث)
+            var warPhaseGroup = document.getElementById('histWarPhaseGroup');
+            if (warPhaseGroup) {
+                warPhaseGroup.addEventListener('click', function(e) {
+                    var btn = e.target.closest('.hist-phase-btn');
+                    if (!btn) return;
+                    var ph = btn.getAttribute('data-phase');
+                    if (ph) setHistWarPhase(ph);
+                });
+            }
+            var eraPhaseGroup = document.getElementById('histEraPhaseGroup');
+            if (eraPhaseGroup) {
+                eraPhaseGroup.addEventListener('click', function(e) {
+                    var btn = e.target.closest('.hist-phase-btn');
+                    if (!btn) return;
+                    var ph = btn.getAttribute('data-phase');
+                    if (ph) setHistEraPhase(ph);
                 });
             }
             // ── History sub-mode popovers (Wars / Eras / Faiths) ──

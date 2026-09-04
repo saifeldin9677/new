@@ -20,6 +20,9 @@ run('npx terser app.js -o dist/app.js -c -m --comments "/^!|^[\\^]/"');
 console.log('Minifying data.js ...');
 run('npx terser data.js -o dist/data.js -c -m --comments "/^!|^[\\^]/"');
 
+console.log('Minifying historical-polities-data.js ...');
+run('npx terser historical-polities-data.js -o dist/historical-polities-data.js -c -m --comments "/^!|^[\\^]/"');
+
 console.log('Minifying style.css ...');
 run('npx csso style.css -o dist/style.css');
 
@@ -77,7 +80,7 @@ if (fs.existsSync(path.join(SRC, 'vendor'))) {
         console.log('  Skipped ' + f + ' (not found in source)');
     }
 });
-const files = ['app.js', 'data.js', 'style.css', 'index.html'];
+const files = ['app.js', 'data.js', 'historical-polities-data.js', 'style.css', 'index.html'];
 const origTotal = files.reduce((s, f) => s + fs.statSync(path.join(SRC, f)).size, 0);
 const distTotal = files.reduce((s, f) => s + fs.statSync(path.join(DIST, f)).size, 0);
 files.forEach(f => {

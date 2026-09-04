@@ -14,7 +14,7 @@
     <script src="vendor/topojson-client.min.js"></script>
     <script src="vendor/lucide.min.js"></script>
 
-    <link rel="stylesheet" href="style.css?v=2026-08-19A">
+    <link rel="stylesheet" href="style.css?v=2026-09-04C">
 </head>
 <body>
     <a href="#controlsBar" class="skip-link" data-i18n="skipToControls">Skip to controls</a>
@@ -243,6 +243,14 @@
                             </div>
                         </div>
                         <p class="hist-card-desc" id="histWarCardDesc"></p>
+                        <div class="hist-phase-selector" id="histWarPhaseWrap">
+                            <span class="hist-card-label">المراحل الثلاث للحرب:</span>
+                            <div class="hist-phase-group" id="histWarPhaseGroup" role="tablist">
+                                <button type="button" class="btn hist-phase-btn active" data-phase="start"><span class="hist-phase-dot dot-start"></span> بدايتها</button>
+                                <button type="button" class="btn hist-phase-btn" data-phase="peak"><span class="hist-phase-dot dot-peak"></span> أكبر اتساع لها</button>
+                                <button type="button" class="btn hist-phase-btn" data-phase="end"><span class="hist-phase-dot dot-end"></span> نهايتها</button>
+                            </div>
+                        </div>
                         <div class="hist-card-scenarios-wrap">
                             <span class="hist-card-label" data-i18n="histWarScenariosLabel">مراحل وسيناريوهات الحرب:</span>
                             <div class="history-scenarios" id="histScenarioBtns"></div>
@@ -285,6 +293,14 @@
                             </div>
                         </div>
                         <p class="hist-card-desc" id="histEraCardDesc"></p>
+                        <div class="hist-phase-selector" id="histEraPhaseWrap">
+                            <span class="hist-card-label">المراحل التاريخية الثلاث:</span>
+                            <div class="hist-phase-group" id="histEraPhaseGroup" role="tablist">
+                                <button type="button" class="btn hist-phase-btn active" data-phase="start"><span class="hist-phase-dot dot-start"></span> بدايتها</button>
+                                <button type="button" class="btn hist-phase-btn" data-phase="peak"><span class="hist-phase-dot dot-peak"></span> أكبر اتساع لها</button>
+                                <button type="button" class="btn hist-phase-btn" data-phase="end"><span class="hist-phase-dot dot-end"></span> نهايتها</button>
+                            </div>
+                        </div>
                         <div class="hist-card-polities" id="histEraCardPolities"></div>
                     </div>
                 </div>
@@ -944,8 +960,9 @@
 
     <script type="module" src="firebase.js"></script>
 
-    <script src="boot.js?v=2026-08-19A"></script>
-    <script src="data.js?v=2026-08-19A"></script>
-    <script src="app.js?v=2026-08-19A"></script>
+    <script src="boot.js?v=2026-09-04C"></script>
+    <script src="data.js?v=2026-09-04C"></script>
+    <script src="historical-polities-data.js?v=2026-09-04C"></script>
+    <script src="app.js?v=2026-09-04C"></script>
 </body>
 </html>

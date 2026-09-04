@@ -5855,6 +5855,194 @@ body.section-history .dock-unified-wrap { flex: 1 1 auto; min-width: 0; }
     flex-shrink: 0;
 }
 
+/* ── محدد المراحل الثلاث للحرب أو الحقبة (بدايتها، أكبر اتساع لها، نهايتها) ── */
+.hist-phase-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 8px 0 6px;
+    padding: 6px 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md, 10px);
+}
+.hist-phase-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 0, 0, 0.35);
+    padding: 3px 4px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.hist-phase-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px !important;
+    font-size: 0.76rem !important;
+    font-weight: 600;
+    border-radius: 999px;
+    background: transparent;
+    color: #cbd5e1 !important;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+}
+.hist-phase-btn:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #ffffff !important;
+}
+.hist-phase-btn.active {
+    background: rgba(20, 184, 166, 0.22) !important;
+    color: #2dd4bf !important;
+    border-color: rgba(45, 212, 191, 0.5) !important;
+    font-weight: 700;
+    box-shadow: 0 0 10px rgba(45, 212, 191, 0.25);
+}
+.hist-phase-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: inline-block;
+}
+.hist-phase-dot.dot-start { background: #10b981; box-shadow: 0 0 6px #10b981; }
+.hist-phase-dot.dot-peak { background: #f59e0b; box-shadow: 0 0 6px #f59e0b; }
+.hist-phase-dot.dot-end { background: #ef4444; box-shadow: 0 0 6px #ef4444; }
+
+.country-panel:has(.hist-profile-card) {
+    max-width: 440px !important;
+    min-width: 320px !important;
+}
+.hist-profile-card {
+    text-align: start;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 4px 0 8px;
+    font-size: 0.84rem;
+    color: var(--text, #0f172a);
+}
+.hist-profile-header {
+    border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.1));
+    padding-bottom: 8px;
+    margin-bottom: 2px;
+}
+.hist-profile-title {
+    margin: 0 0 4px;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text, #0f172a);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.hist-profile-subtitle {
+    font-size: 0.78rem;
+    color: var(--text-muted, #64748b);
+    margin: 0;
+}
+.hist-profile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+.hist-profile-item {
+    background: var(--bg-hover, rgba(0, 0, 0, 0.04));
+    border: 1px solid var(--border, rgba(0, 0, 0, 0.08));
+    border-radius: 8px;
+    padding: 6px 8px;
+}
+.hist-profile-item.full-width {
+    grid-column: span 2;
+}
+.hist-profile-item-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--teal-600, #0d9488);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 3px;
+}
+.hist-profile-item-val {
+    font-size: 0.78rem;
+    color: var(--text, #1e293b);
+    line-height: 1.4;
+}
+.hist-narrative-box {
+    border-radius: 10px;
+    padding: 8px 10px;
+    border-inline-start: 4px solid #14b8a6;
+    background: rgba(20, 184, 166, 0.08);
+    border: 1px solid rgba(20, 184, 166, 0.22);
+    margin-top: 2px;
+}
+.hist-narrative-box.origin-box {
+    border-inline-start-color: #10b981;
+    background: rgba(16, 185, 129, 0.08);
+    border-color: rgba(16, 185, 129, 0.22);
+}
+.hist-narrative-box.fall-box {
+    border-inline-start-color: #ef4444;
+    background: rgba(239, 68, 68, 0.08);
+    border-color: rgba(239, 68, 68, 0.22);
+}
+.hist-narrative-title {
+    font-size: 0.76rem;
+    font-weight: 700;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.hist-narrative-box.origin-box .hist-narrative-title { color: #059669; }
+.hist-narrative-box.fall-box .hist-narrative-title { color: #dc2626; }
+.hist-narrative-text {
+    font-size: 0.78rem;
+    color: var(--text, #1e293b);
+    line-height: 1.45;
+    margin: 0;
+}
+
+/* Dark mode theme overrides for historical profile card */
+[data-theme="dark"] .hist-profile-card,
+body.dark .hist-profile-card {
+    color: #f1f5f9;
+}
+[data-theme="dark"] .hist-profile-title,
+body.dark .hist-profile-title {
+    color: #ffffff;
+}
+[data-theme="dark"] .hist-profile-subtitle,
+body.dark .hist-profile-subtitle {
+    color: #94a3b8;
+}
+[data-theme="dark"] .hist-profile-item,
+body.dark .hist-profile-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+[data-theme="dark"] .hist-profile-item-val,
+body.dark .hist-profile-item-val {
+    color: #e2e8f0;
+}
+[data-theme="dark"] .hist-narrative-text,
+body.dark .hist-narrative-text {
+    color: #e2e8f0;
+}
+[data-theme="dark"] .hist-narrative-box.origin-box .hist-narrative-title,
+body.dark .hist-narrative-box.origin-box .hist-narrative-title {
+    color: #34d399;
+}
+[data-theme="dark"] .hist-narrative-box.fall-box .hist-narrative-title,
+body.dark .hist-narrative-box.fall-box .hist-narrative-title {
+    color: #f87171;
+}
+
 /* ── شبكة التقسيم الأفقي للعصور الخمسة ── */
 .hist-epoch-grid {
     display: grid !important;

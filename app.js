@@ -336,6 +336,25 @@
             // it loads asynchronously. The epoch filter reads from this source.
             let historyWarData = (typeof historicalWarsData !== 'undefined') ? historicalWarsData : [];
             let historyWarEpochFilter = 'all';
+            let historyEraEpochFilter = 'all';
+            var HIST_EPOCHS = [
+                { id: 'ancient', key: 'warEpochAncient', icon: 'landmark', labelAr: 'العصور القديمة' },
+                { id: 'medieval', key: 'warEpochMedieval', icon: 'shield', labelAr: 'العصور الوسطى' },
+                { id: 'early-modern', key: 'warEpochEarlyModern', icon: 'compass', labelAr: 'العصر الحديث المبكر' },
+                { id: 'nineteenth', key: 'warEpoch19th', icon: 'feather', labelAr: 'القرن التاسع عشر' },
+                { id: 'modern', key: 'warEpochModern', icon: 'zap', labelAr: 'القرن العشرون والمعاصر' }
+            ];
+            function getEraEpoch(e) {
+                if (!e) return 'ancient';
+                if (e.epoch) return e.epoch;
+                var y = e.sort || 0;
+                if (y <= 500) return 'ancient';
+                if (y <= 1500) return 'medieval';
+                if (y < 1800) return 'early-modern';
+                if (y <= 1900) return 'nineteenth';
+                return 'modern';
+            }
+            window.getEraEpoch = getEraEpoch;
             let measureActive = false;
             let measurePoints = [];
             let gMeasure = null;
@@ -7695,6 +7714,8 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 function drawHistoryScenario(skipFadeIn) {
                     var _es = document.getElementById('histEmptyState');
                     if (_es) _es.style.display = 'none';
+                    var _warDet = document.getElementById('histWarCardDetails');
+                    if (_warDet) _warDet.style.display = 'block';
                     var _row = document.getElementById('histScenarioBtns');
                     if (_row) _row.style.removeProperty('display');
                     if (historyTab === 'eras') { drawEraScene(skipFadeIn); return; }
@@ -7930,6 +7951,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     return true;
                 }
                 function eraPassesFilters(e) {
+                    if (historyEraEpochFilter !== 'all' && getEraEpoch(e) !== historyEraEpochFilter) return false;
                     if (historyRegionFilter !== 'all' && e.region !== historyRegionFilter && e.region !== 'world') return false;
                     // NOTE: Religion filtering is intentionally omitted for Eras.
                     // A naive heuristic would infer an ancient empire's religion from
@@ -7957,9 +7979,9 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     var bb = document.getElementById('historyBottomBar');
                     var etw = document.getElementById('historyEraTimelineWrap');
                     var ftw = document.getElementById('historyFaithsTimelineWrap');
-                    if (wt) wt.style.setProperty('display', wars ? 'flex' : 'none', 'important');
+                    if (wt) wt.style.setProperty('display', wars ? 'grid' : 'none', 'important');
                     if (sb) sb.style.setProperty('display', wars ? 'flex' : 'none', 'important');
-                    if (eg) eg.style.setProperty('display', eras ? 'flex' : 'none', 'important');
+                    if (eg) eg.style.setProperty('display', eras ? 'grid' : 'none', 'important');
                     if (bb) bb.style.display = (eras || faiths) ? 'flex' : 'none';
                     if (etw) etw.style.display = eras ? 'flex' : 'none';
                     if (ftw) ftw.style.display = faiths ? 'flex' : 'none';
@@ -7997,7 +8019,11 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             var emptyMsg = onlyRelig ? t('histNoResultsReligion') : t('histNoResults');
                             renderHistoryResetBox(tabs, emptyMsg);
                             var emptyRow = document.getElementById('histScenarioBtns');
-                            if (emptyRow) { emptyRow.innerHTML = ''; emptyRow.style.setProperty('display', 'none', 'important'); }
+                            if (emptyRow) { emptyRow.innerHTML = ''; }
+                            var warCardDet = document.getElementById('histWarCardDetails');
+                            if (warCardDet) warCardDet.style.display = 'none';
+                            var esEmpty = document.getElementById('histEmptyState');
+                            if (esEmpty) esEmpty.style.display = 'block';
                             if (gHistoryOverlay) gHistoryOverlay.selectAll('*').remove();
                             var legEmptyW = document.getElementById('legend');
                             if (legEmptyW && historyActive) legEmptyW.innerHTML = '';
@@ -8005,9 +8031,6 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             return;
                         }
                         if (!visibleWars.some(function(w) { return w.id === historyWarId; })) {
-                            // Only auto-select a war if the user has already made a
-                            // choice. Otherwise leave the neutral empty state so
-                            // nothing is implicitly selected for them.
                             if (historyWarId) {
                                 war = visibleWars[0];
                                 historyWarId = war.id;
@@ -8019,36 +8042,87 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             war = getHistWar();
                         }
                     }
-                    visibleWars.forEach(function(w) {
-                        var b = document.createElement('button');
-                        b.type = 'button';
-                        b.className = 'btn history-war-tab' + (historyTab === 'wars' && w.id === historyWarId ? ' active' : '');
-                        b.setAttribute('role', 'tab');
-                        b.setAttribute('aria-selected', historyTab === 'wars' && w.id === historyWarId ? 'true' : 'false');
-                        b.textContent = locField(w, 'name') + ' (' + locField(w, 'years') + ')';
-                        b.addEventListener('click', function() {
-                            historyTab = 'wars';
-                            historyWarId = w.id;
-                            historyScenarioId = w.scenarios[0].id;
-                            selectedHistoryPolity = null;
-                            renderHistoryBar();
-                            drawHistoryScenario();
-                        });
-                        tabs.appendChild(b);
+
+                    // تقسيم الحروب بالعرض إلى الـ 5 عصور الرئيسية
+                    HIST_EPOCHS.forEach(function(ep) {
+                        var colWars = visibleWars.filter(function(w) { return w.epoch === ep.id; });
+                        if (historyWarEpochFilter !== 'all' && historyWarEpochFilter !== ep.id) return;
+
+                        var col = document.createElement('div');
+                        col.className = 'hist-epoch-col';
+                        col.setAttribute('data-epoch', ep.id);
+
+                        var header = document.createElement('div');
+                        header.className = 'hist-epoch-col-header';
+                        header.innerHTML = '<span class="hist-epoch-col-title">' + htmlEscape(t(ep.key)) + '</span>' +
+                            '<span class="hist-epoch-col-count">' + colWars.length + ' ' + htmlEscape(t('histItemCountWars') || '') + '</span>';
+                        col.appendChild(header);
+
+                        var items = document.createElement('div');
+                        items.className = 'hist-epoch-col-items';
+
+                        if (!colWars.length) {
+                            var emptyHint = document.createElement('div');
+                            emptyHint.className = 'hist-col-empty-msg';
+                            emptyHint.textContent = '—';
+                            items.appendChild(emptyHint);
+                        } else {
+                            colWars.forEach(function(w) {
+                                var b = document.createElement('button');
+                                b.type = 'button';
+                                b.className = 'btn history-war-tab' + (historyTab === 'wars' && w.id === historyWarId ? ' active' : '');
+                                b.setAttribute('role', 'tab');
+                                b.setAttribute('aria-selected', historyTab === 'wars' && w.id === historyWarId ? 'true' : 'false');
+                                b.innerHTML = '<span class="war-tab-name">' + htmlEscape(locField(w, 'name')) + '</span>' +
+                                    '<span class="war-tab-years">' + htmlEscape(locField(w, 'years')) + '</span>';
+                                b.addEventListener('click', function() {
+                                    historyTab = 'wars';
+                                    historyWarId = w.id;
+                                    historyScenarioId = w.scenarios[0].id;
+                                    selectedHistoryPolity = null;
+                                    renderHistoryBar();
+                                    drawHistoryScenario();
+                                });
+                                items.appendChild(b);
+                            });
+                        }
+                        col.appendChild(items);
+                        tabs.appendChild(col);
                     });
+
                     if (historyTab === 'eras') {
                         renderEraTabContent();
                         return;
                     }
+
+                    // تحديث البطاقة المثبتة في أعلى قائمة الحروب
+                    var emptyStateEl = document.getElementById('histEmptyState');
+                    var warCardDetailsEl = document.getElementById('histWarCardDetails');
+                    var warCardTitleEl = document.getElementById('histWarCardTitle');
+                    var warCardEpochEl = document.getElementById('histWarCardEpoch');
+                    var warCardYearsEl = document.getElementById('histWarCardYears');
+                    var warCardDescEl = document.getElementById('histWarCardDesc');
                     var row = document.getElementById('histScenarioBtns');
-                    row.innerHTML = '';
+                    if (row) row.innerHTML = '';
+
                     if (!war) {
                         updateHistSubmodeVis();
-                        row.style.setProperty('display', 'none', 'important');
+                        if (emptyStateEl) emptyStateEl.style.display = 'block';
+                        if (warCardDetailsEl) warCardDetailsEl.style.display = 'none';
                         clearHistoryOverlay();
                         renderHistoryEmptyState();
                         return;
                     }
+
+                    if (emptyStateEl) emptyStateEl.style.display = 'none';
+                    if (warCardDetailsEl) warCardDetailsEl.style.display = 'block';
+                    if (warCardTitleEl) warCardTitleEl.textContent = locField(war, 'name');
+                    if (warCardYearsEl) warCardYearsEl.textContent = locField(war, 'years');
+                    var epMatch = HIST_EPOCHS.find(function(e) { return e.id === war.epoch; });
+                    if (warCardEpochEl) warCardEpochEl.textContent = epMatch ? t(epMatch.key) : war.epoch;
+                    var curSc = war.scenarios.find(function(s) { return s.id === historyScenarioId; }) || war.scenarios[0];
+                    if (warCardDescEl) warCardDescEl.textContent = (curSc && locField(curSc, 'desc')) || locField(war, 'desc') || locField(war, 'name');
+
                     war.scenarios.forEach(function(s) {
                         var b = document.createElement('button');
                         b.type = 'button';
@@ -8061,7 +8135,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             drawHistoryScenario();
                             if (selectedCountry && countryPanel.classList.contains('visible')) openHistoryPanel(selectedCountry);
                         });
-                        row.appendChild(b);
+                        if (row) row.appendChild(b);
                     });
                     var seen = {}, chips = [];
                     war.scenarios.forEach(function(s) {
@@ -8537,6 +8611,12 @@ _lastPanelRenderTime = performance.now();
                             '<div class="hist-empty-title">' + htmlEscape(t('histSelectToBegin')) + '</div>' +
                             '<div class="hist-empty-cue">' + htmlEscape(t('histSelectCue')) + '</div>';
                     }
+                    var warDet = document.getElementById('histWarCardDetails');
+                    if (warDet) warDet.style.display = 'none';
+                    var eraEs = document.getElementById('histEraEmptyState');
+                    if (eraEs) eraEs.style.display = 'block';
+                    var eraDet = document.getElementById('histEraCardDetails');
+                    if (eraDet) eraDet.style.display = 'none';
                     triggerHistoryListPulse();
                 }
                 // Render a zero-results state with a one-click "Reset Filters" action.
@@ -8697,7 +8777,11 @@ _lastPanelRenderTime = performance.now();
                     if (!historicalErasLoading) {
                         historicalErasLoading = fetch(BASE + 'historical-eras-data.json')
                             .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-                            .then(function(d) { historicalErasData = d.eras || []; return historicalErasData; })
+                            .then(function(d) {
+                                historicalErasData = d.eras || [];
+                                historicalErasData.forEach(function(e) { e.epoch = getEraEpoch(e); });
+                                return historicalErasData;
+                            })
                             .catch(function(e) { historicalErasLoading = null; throw e; });
                     }
                     return historicalErasLoading;
@@ -8743,6 +8827,10 @@ function buildEraFeature(p) {
                 function drawEraScene(skipFadeIn) {
                     var _es = document.getElementById('histEmptyState');
                     if (_es) _es.style.display = 'none';
+                    var _eraEs = document.getElementById('histEraEmptyState');
+                    if (_eraEs) _eraEs.style.display = 'none';
+                    var _eraDet = document.getElementById('histEraCardDetails');
+                    if (_eraDet) _eraDet.style.display = 'block';
                     if (!gHistoryOverlay) return;
                     // Clear comparison overlay if active to prevent stale dual-views
                     // when switching to a new era (normal redraw). The dual-comparison
@@ -8917,31 +9005,65 @@ function buildEraFeature(p) {
                     countryPanel.style.display = 'block';
                     requestAnimationFrame(function(){requestAnimationFrame(function(){countryPanel.classList.add('visible');});});
                 }
-                // Update the bottom timeline bar's year badge and caption for the
-                // currently active era. Falls back gracefully when the bar is absent.
+                // Update the bottom timeline bar's year badge, progress fill, and caption for the active era.
                 function updateEraBottomBadge(era) {
                     var badge = document.getElementById('histCurrentYearBadge');
                     var cap = document.getElementById('histTimelineCaption');
+                    var tl = document.getElementById('histTimeline');
                     if (era) {
                         if (badge) badge.textContent = era.yearLabel || '';
                         if (cap) cap.textContent = locField(era, 'desc') || locField(era, 'title') || '';
+                        if (tl && historicalErasData && historicalErasData.length) {
+                            var allSorts = historicalErasData.map(function(e) { return e.sort || 0; });
+                            var min = Math.min.apply(null, allSorts) - 50;
+                            var max = Math.max.apply(null, allSorts) + 50;
+                            var pct = Math.max(0, Math.min(100, (era.sort - min) / (max - min) * 100));
+                            tl.style.setProperty('--era-pct', pct + '%');
+                        }
                     } else {
                         if (badge) badge.textContent = '';
                         if (cap) cap.textContent = '';
                     }
                 }
+
+                function updateEraTopCard(era) {
+                    var eraEmptyEl = document.getElementById('histEraEmptyState');
+                    var eraCardDetEl = document.getElementById('histEraCardDetails');
+                    var eraCardTitleEl = document.getElementById('histEraCardTitle');
+                    var eraCardEpochEl = document.getElementById('histEraCardEpoch');
+                    var eraCardYearsEl = document.getElementById('histEraCardYears');
+                    var eraCardDescEl = document.getElementById('histEraCardDesc');
+                    var eraCardPolitiesEl = document.getElementById('histEraCardPolities');
+
+                    if (!era) {
+                        if (eraEmptyEl) eraEmptyEl.style.display = 'block';
+                        if (eraCardDetEl) eraCardDetEl.style.display = 'none';
+                        return;
+                    }
+                    if (eraEmptyEl) eraEmptyEl.style.display = 'none';
+                    if (eraCardDetEl) eraCardDetEl.style.display = 'block';
+                    if (eraCardTitleEl) eraCardTitleEl.textContent = (era.yearLabel ? era.yearLabel + ' · ' : '') + locField(era, 'title');
+                    if (eraCardYearsEl) eraCardYearsEl.textContent = era.yearLabel || '';
+                    var eraEp = getEraEpoch(era);
+                    var eraEpObj = HIST_EPOCHS.find(function(x) { return x.id === eraEp; });
+                    if (eraCardEpochEl) eraCardEpochEl.textContent = eraEpObj ? t(eraEpObj.key) : eraEp;
+                    if (eraCardDescEl) eraCardDescEl.textContent = locField(era, 'desc') || locField(era, 'title') || '';
+                    if (eraCardPolitiesEl) {
+                        eraCardPolitiesEl.innerHTML = (era.polities || []).map(function(p) {
+                            return '<span class="hist-card-polity-chip"><span class="hist-card-polity-swatch" style="background:' + p.color + '"></span> ' + htmlEscape(locField(p, 'name')) + '</span>';
+                        }).join('');
+                    }
+                }
+
                 function renderEraTabContent() {
                     var sp = document.getElementById('histSourcesPanel');
                     var tl = document.getElementById('histTimeline');
                     var eraGroupEl = document.getElementById('historyEraGroup');
                     if (!eraGroupEl) return;
                     eraGroupEl.innerHTML = '';
-                    var row = document.createElement('div');
-                    row.className = 'history-scenarios';
                     var era = getHistEra();
                     if (!era) {
-                        row.innerHTML = '<span class="history-loading">' + htmlEscape(t('histEraLoading')) + '</span>';
-                        eraGroupEl.appendChild(row);
+                        eraGroupEl.innerHTML = '<span class="history-loading">' + htmlEscape(t('histEraLoading')) + '</span>';
                         if (tl) tl.style.display = 'none';
                         sp.innerHTML = '';
                         fetchHistoricalEras().then(function() {
@@ -8955,8 +9077,7 @@ function buildEraFeature(p) {
                             }
                         }).catch(function() {
                             if (historyTab !== 'eras') return;
-                            var r2 = document.querySelector('#historyEraGroup .history-scenarios') || document.getElementById('historyEraGroup');
-                            if (r2) r2.innerHTML = '<span class="history-loading">' + htmlEscape(t('histEraLoadError')) + '</span>';
+                            eraGroupEl.innerHTML = '<span class="history-loading">' + htmlEscape(t('histEraLoadError')) + '</span>';
                         });
                         return;
                     }
@@ -8964,13 +9085,13 @@ function buildEraFeature(p) {
                     filtered.sort(function(a, b) { return (a.sort || 0) - (b.sort || 0); });
                     histPlayOrder = filtered.slice();
                     if (!filtered.length) {
-                        renderHistoryResetBox(row, t('histNoResults'));
-                        eraGroupEl.appendChild(row);
+                        renderHistoryResetBox(eraGroupEl, t('histNoResults'));
                         if (tl) tl.style.display = 'none';
                         sp.innerHTML = '';
                         if (gHistoryOverlay) gHistoryOverlay.selectAll('*').remove();
                         var legEmpty = document.getElementById('legend');
                         if (legEmpty && historyActive) legEmpty.innerHTML = '';
+                        updateEraTopCard(null);
                         return;
                     }
                     var curIn = filtered.some(function(e) { return e.id === historyEraId; });
@@ -8979,42 +9100,77 @@ function buildEraFeature(p) {
                         era = getHistEra();
                     }
                     updateEraBottomBadge(era);
-                    filtered.forEach(function(e) {
-                        var b = document.createElement('button');
-                        b.type = 'button';
-                        b.className = 'btn history-scenario-btn' + (e.id === historyEraId ? ' active' : '');
-                        b.textContent = (e.yearLabel || '') + ' · ' + locField(e, 'title');
-                        b.title = locField(e, 'desc');
-                        b.addEventListener('click', function() {
-                            stopHistPlay();
-                            historyEraId = e.id;
-                            selectedHistoryPolity = null;
-                            renderHistoryBar();
-                            drawEraScene();
-                            if (selectedCountry && selectedFeatureType === 'history' && countryPanel.classList.contains('visible')) openHistoryPanel(selectedCountry);
-                        });
-                        row.appendChild(b);
+                    updateEraTopCard(era);
+
+                    // تقسيم الحقب بالعرض إلى الـ 5 عصور الرئيسية
+                    HIST_EPOCHS.forEach(function(ep) {
+                        var colEras = filtered.filter(function(e) { return getEraEpoch(e) === ep.id; });
+                        if (historyEraEpochFilter !== 'all' && historyEraEpochFilter !== ep.id) return;
+
+                        var col = document.createElement('div');
+                        col.className = 'hist-epoch-col';
+                        col.setAttribute('data-epoch', ep.id);
+
+                        var header = document.createElement('div');
+                        header.className = 'hist-epoch-col-header';
+                        header.innerHTML = '<span class="hist-epoch-col-title">' + htmlEscape(t(ep.key)) + '</span>' +
+                            '<span class="hist-epoch-col-count">' + colEras.length + ' ' + htmlEscape(t('histItemCountEras') || '') + '</span>';
+                        col.appendChild(header);
+
+                        var items = document.createElement('div');
+                        items.className = 'hist-epoch-col-items';
+
+                        if (!colEras.length) {
+                            var emptyHint = document.createElement('div');
+                            emptyHint.className = 'hist-col-empty-msg';
+                            emptyHint.textContent = '—';
+                            items.appendChild(emptyHint);
+                        } else {
+                            colEras.forEach(function(e) {
+                                var b = document.createElement('button');
+                                b.type = 'button';
+                                b.className = 'btn history-scenario-btn' + (e.id === historyEraId ? ' active' : '');
+                                b.textContent = (e.yearLabel || '') + ' · ' + locField(e, 'title');
+                                b.title = locField(e, 'desc');
+                                b.addEventListener('click', function() {
+                                    stopHistPlay();
+                                    historyEraId = e.id;
+                                    selectedHistoryPolity = null;
+                                    renderHistoryBar();
+                                    drawEraScene();
+                                    if (selectedCountry && selectedFeatureType === 'history' && countryPanel.classList.contains('visible')) openHistoryPanel(selectedCountry);
+                                });
+                                items.appendChild(b);
+                            });
+                        }
+                        col.appendChild(items);
+                        eraGroupEl.appendChild(col);
                     });
-                    eraGroupEl.appendChild(row);
+
                     if (!historyEraId) {
                         if (tl) tl.style.display = 'none';
                         clearHistoryOverlay();
                         renderHistoryEmptyState();
+                        updateEraTopCard(null);
                         return;
                     }
-                    // Timeline range is derived from the actual era data (padded),
-                    // so no era ever renders past the edge and future additions
-                    // don't require editing a hard-coded window.
-                    var histSorts = filtered.map(function(e) { return e.sort || 0; });
-                    var min = (histSorts.length ? Math.min.apply(null, histSorts) : -600) - 0;
-                    var max = (histSorts.length ? Math.max.apply(null, histSorts) : 1650) - 0;
-                    var pad = histSorts.length > 1 ? Math.round((max - min) * 0.08) : 50;
-                    min = min - pad;
-                    max = max + pad;
+
+                    // شريط الحقب الزمني التفاعلي (Scrubber)
+                    var allSorts = (historicalErasData && historicalErasData.length) ? historicalErasData.map(function(e) { return e.sort || 0; }) : filtered.map(function(e) { return e.sort || 0; });
+                    var min = (allSorts.length ? Math.min.apply(null, allSorts) : -2500) - 50;
+                    var max = (allSorts.length ? Math.max.apply(null, allSorts) : 1962) + 50;
+
                     if (tl) {
                         tl.style.display = 'block';
                         tl.innerHTML = '';
+                        var curPct = Math.max(0, Math.min(100, (era.sort - min) / (max - min) * 100));
+                        tl.style.setProperty('--era-pct', curPct + '%');
+
+                        var thumb = document.createElement('div');
+                        thumb.className = 'history-era-timeline-thumb';
+                        tl.appendChild(thumb);
                     }
+
                     filtered.forEach(function(e) {
                         var dot = document.createElement('button');
                         dot.type = 'button';
@@ -9022,7 +9178,9 @@ function buildEraFeature(p) {
                         dot.style.left = Math.max(0, Math.min(100, (e.sort - min) / (max - min) * 100)) + '%';
                         dot.title = (e.yearLabel || '') + ' · ' + locField(e, 'title');
                         dot.setAttribute('aria-label', dot.title);
-                        dot.addEventListener('click', function() {
+                        dot.dataset.eraId = e.id;
+                        dot.addEventListener('click', function(ev) {
+                            ev.stopPropagation();
                             stopHistPlay();
                             historyEraId = e.id;
                             updateEraBottomBadge(e);
@@ -9031,9 +9189,8 @@ function buildEraFeature(p) {
                         });
                         if (tl) tl.appendChild(dot);
                     });
-                    // Ensure pointer events are bound ONLY ONCE to avoid listener
-                    // stacking when renderEraTabContent runs again (tab switches,
-                    // filters, timeline scrubbing).
+
+                    // تفعيل السحب والتفاعل باللمس والفأرة على شريط الحقب
                     if (tl && !tl._eventsBound) {
                         tl._eventsBound = true;
                         tl.style.cursor = 'pointer';
@@ -9043,25 +9200,30 @@ function buildEraFeature(p) {
                             var rect = tl.getBoundingClientRect();
                             if (!rect.width) return;
                             var ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-                            var filtered = (histPlayOrder && histPlayOrder.length) ? histPlayOrder : (historicalErasData || []);
-                            if (!filtered || !filtered.length) return;
-                            var histSorts = filtered.map(function(e) { return e.sort || 0; });
-                            var min = Math.min.apply(null, histSorts) - 50;
-                            var max = Math.max.apply(null, histSorts) + 50;
-                            var year = min + ratio * (max - min);
+                            var allData = (historicalErasData && historicalErasData.length) ? historicalErasData : [];
+                            if (!allData.length) return;
+                            var sList = allData.map(function(e) { return e.sort || 0; });
+                            var sMin = Math.min.apply(null, sList) - 50;
+                            var sMax = Math.max.apply(null, sList) + 50;
+                            var year = sMin + ratio * (sMax - sMin);
                             var best = null, bestDist = Infinity;
-                            filtered.forEach(function(e) {
+                            (histPlayOrder && histPlayOrder.length ? histPlayOrder : allData).forEach(function(e) {
                                 var d2 = Math.abs((e.sort || 0) - year);
                                 if (d2 < bestDist) { bestDist = d2; best = e; }
                             });
-                            if (best && best.id !== historyEraId) {
-                                historyEraId = best.id;
-                                selectedHistoryPolity = null;
-                                updateEraBottomBadge(best);
-                                drawEraScene(true);
-                                tl.querySelectorAll('.history-tl-dot').forEach(function(d2) {
-                                    d2.classList.toggle('active', d2.title.indexOf(best.yearLabel) === 0);
-                                });
+                            if (best) {
+                                var bestPct = Math.max(0, Math.min(100, (best.sort - sMin) / (sMax - sMin) * 100));
+                                tl.style.setProperty('--era-pct', bestPct + '%');
+                                if (best.id !== historyEraId) {
+                                    historyEraId = best.id;
+                                    selectedHistoryPolity = null;
+                                    updateEraBottomBadge(best);
+                                    updateEraTopCard(best);
+                                    drawEraScene(true);
+                                    tl.querySelectorAll('.history-tl-dot').forEach(function(d2) {
+                                        d2.classList.toggle('active', d2.dataset.eraId === best.id);
+                                    });
+                                }
                             }
                         }
                         tl.addEventListener('pointerdown', function(e) {
@@ -9070,6 +9232,7 @@ function buildEraFeature(p) {
                             tlDrag = true;
                             try { tl.setPointerCapture(e.pointerId); } catch (err) {}
                             tlPick(e.clientX);
+                            e.preventDefault();
                         });
                         tl.addEventListener('pointermove', function(e) {
                             if (tlDrag) {
@@ -9083,6 +9246,9 @@ function buildEraFeature(p) {
                             tlDrag = false;
                             renderHistoryBar();
                             if (selectedCountry && selectedFeatureType === 'history' && countryPanel.classList.contains('visible')) openHistoryPanel(selectedCountry);
+                        });
+                        tl.addEventListener('pointercancel', function() {
+                            tlDrag = false;
                         });
                     }
                     var leg = document.getElementById('legend');
@@ -11480,6 +11646,15 @@ function buildEraFeature(p) {
                     refreshHistoryAfterFilterChange();
                 });
             });
+            // تصنيف عصور الحقب: تفعيل أزرار التبويب الخمسة داخل قائمة الحقب.
+            document.querySelectorAll('#histEraEpochTabs .era-epoch-tab').forEach(function(tabBtn) {
+                tabBtn.addEventListener('click', function() {
+                    document.querySelectorAll('#histEraEpochTabs .era-epoch-tab').forEach(function(b) { b.classList.remove('active'); });
+                    this.classList.add('active');
+                    historyEraEpochFilter = this.getAttribute('data-epoch') || 'all';
+                    refreshHistoryAfterFilterChange();
+                });
+            });
             function refreshHistoryAfterFilterChange() {
                 if (!historyActive) return;
                 if (window.renderHistoryBar) window.renderHistoryBar();
@@ -12349,8 +12524,13 @@ function getReligionSlice(religion, year) {
                 var vh = window.innerHeight;
                 var margin = 8;
                 var rtl = document.documentElement.dir === 'rtl';
-                var left = rtl ? r.right - pw : r.left;
-                left = Math.max(margin, Math.min(left, vw - pw - margin));
+                var left;
+                if (modal.classList.contains('hist-popover-menu') && pw > 700) {
+                    left = Math.max(margin, Math.round((vw - pw) / 2));
+                } else {
+                    left = rtl ? r.right - pw : r.left;
+                    left = Math.max(margin, Math.min(left, vw - pw - margin));
+                }
                 var top = r.bottom + margin;
                 var flipped = false;
                 if (top + ph > vh - margin && r.top - ph - margin >= margin) {

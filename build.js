@@ -38,6 +38,7 @@ const dataJsonFiles = [
     'glaciated-areas-data.json',
     'admin-name-translations.json',
     'historical-eras-data.json',
+    'historical-wars-data.json',
     'religions-history-data.json',
     'timezone-data.json'
 ];

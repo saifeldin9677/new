@@ -100,7 +100,7 @@
                     <button type="button" class="history-play-btn" id="histPlayBtn" data-i18n-title="histPlayTip" aria-label="Play/Pause" aria-pressed="false">
                         <i data-lucide="play" class="lucide-icon"></i>
                     </button>
-                    <div class="history-timeline" id="histTimeline" style="display:none"></div>
+                    <div class="history-timeline" id="histTimeline" role="slider" aria-label="Eras timeline" aria-valuemin="-2500" aria-valuemax="1962"></div>
                     <span class="history-year-badge" id="histCurrentYearBadge"></span>
                 </div>
 
@@ -226,34 +226,82 @@
              our position:fixed menus (shifting them off-screen in RTL). -->
         <div class="hist-popover-menu" id="histWarsPopoverMenu" role="menu" hidden>
             <div class="hist-popover-body">
+                <!-- بطاقة الحرب المختارة المثبتة في أعلى القائمة -->
+                <div class="hist-selected-card" id="histWarSelectedCard">
+                    <div class="history-empty-state" id="histEmptyState">
+                        <div class="hist-empty-title"><i data-lucide="swords" class="lucide-icon"></i> <span data-i18n="histSelectToBegin">اختر حربًا أو حقبة لبدء العرض</span></div>
+                        <div class="hist-empty-cue" data-i18n="histSelectCue">اختر حربًا من القائمة أدناه لعرضها على الخريطة</div>
+                    </div>
+                    <div class="hist-card-details" id="histWarCardDetails" style="display:none">
+                        <div class="hist-card-header">
+                            <div class="hist-card-title-wrap">
+                                <h3 class="hist-card-title" id="histWarCardTitle"></h3>
+                                <div class="hist-card-badges">
+                                    <span class="hist-badge hist-badge-epoch" id="histWarCardEpoch"></span>
+                                    <span class="hist-badge hist-badge-years" id="histWarCardYears"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="hist-card-desc" id="histWarCardDesc"></p>
+                        <div class="hist-card-scenarios-wrap">
+                            <span class="hist-card-label" data-i18n="histWarScenariosLabel">مراحل وسيناريوهات الحرب:</span>
+                            <div class="history-scenarios" id="histScenarioBtns"></div>
+                        </div>
+                    </div>
+                </div>
                 <!-- شريط تصنيف عصور الحروب الخمسة -->
                 <div class="history-epoch-tabs" id="histWarEpochTabs" role="tablist">
                     <button type="button" class="btn war-epoch-tab active" data-epoch="all" data-i18n="warEpochAll">الكل</button>
-                    <button type="button" class="btn war-epoch-tab" data-epoch="ancient" data-i18n="warEpochAncient">القديم</button>
-                    <button type="button" class="btn war-epoch-tab" data-epoch="medieval" data-i18n="warEpochMedieval">الوسيط</button>
-                    <button type="button" class="btn war-epoch-tab" data-epoch="early-modern" data-i18n="warEpochEarlyModern">الحديث المبكر</button>
-                    <button type="button" class="btn war-epoch-tab" data-epoch="nineteenth" data-i18n="warEpoch19th">القرن 19</button>
-                    <button type="button" class="btn war-epoch-tab" data-epoch="modern" data-i18n="warEpochModern">المعاصر</button>
+                    <button type="button" class="btn war-epoch-tab" data-epoch="ancient" data-i18n="warEpochAncient">العصور القديمة</button>
+                    <button type="button" class="btn war-epoch-tab" data-epoch="medieval" data-i18n="warEpochMedieval">العصور الوسطى</button>
+                    <button type="button" class="btn war-epoch-tab" data-epoch="early-modern" data-i18n="warEpochEarlyModern">العصر الحديث المبكر</button>
+                    <button type="button" class="btn war-epoch-tab" data-epoch="nineteenth" data-i18n="warEpoch19th">القرن التاسع عشر</button>
+                    <button type="button" class="btn war-epoch-tab" data-epoch="modern" data-i18n="warEpochModern">القرن العشرون والمعاصر</button>
                 </div>
                 <div class="history-filter-row" id="historyFilterRow">
                     <input type="text" class="history-search-input" id="histSearchInput" data-i18n-placeholder="histSearchPlaceholder" autocomplete="off" />
                     <select class="history-region-select" id="histFilterRegion"></select>
                     <select class="history-region-select" id="histFilterReligion"></select>
                 </div>
-                <div class="history-war-tabs" id="histWarTabs" role="tablist"></div>
-                <div class="history-scenarios" id="histScenarioBtns"></div>
-                <div class="history-empty-state" id="histEmptyState" style="display:none"></div>
+                <div class="history-war-tabs hist-epoch-grid" id="histWarTabs" role="tablist"></div>
             </div>
         </div>
         <div class="hist-popover-menu" id="histErasPopoverMenu" role="menu" hidden>
             <div class="hist-popover-body">
+                <!-- بطاقة الحقبة المختارة المثبتة في أعلى القائمة -->
+                <div class="hist-selected-card" id="histEraSelectedCard">
+                    <div class="history-empty-state" id="histEraEmptyState">
+                        <div class="hist-empty-title"><i data-lucide="landmark" class="lucide-icon"></i> <span data-i18n="histSelectEraToBegin">اختر حقبة لبدء العرض</span></div>
+                        <div class="hist-empty-cue" data-i18n="histSelectEraCue">اختر حقبة من القائمة أدناه لعرضها على الخريطة</div>
+                    </div>
+                    <div class="hist-card-details" id="histEraCardDetails" style="display:none">
+                        <div class="hist-card-header">
+                            <div class="hist-card-title-wrap">
+                                <h3 class="hist-card-title" id="histEraCardTitle"></h3>
+                                <div class="hist-card-badges">
+                                    <span class="hist-badge hist-badge-epoch" id="histEraCardEpoch"></span>
+                                    <span class="hist-badge hist-badge-years" id="histEraCardYears"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="hist-card-desc" id="histEraCardDesc"></p>
+                        <div class="hist-card-polities" id="histEraCardPolities"></div>
+                    </div>
+                </div>
+                <!-- شريط تصنيف عصور الحقب الخمسة -->
+                <div class="history-epoch-tabs" id="histEraEpochTabs" role="tablist">
+                    <button type="button" class="btn era-epoch-tab active" data-epoch="all" data-i18n="warEpochAll">الكل</button>
+                    <button type="button" class="btn era-epoch-tab" data-epoch="ancient" data-i18n="warEpochAncient">العصور القديمة</button>
+                    <button type="button" class="btn era-epoch-tab" data-epoch="medieval" data-i18n="warEpochMedieval">العصور الوسطى</button>
+                    <button type="button" class="btn era-epoch-tab" data-epoch="early-modern" data-i18n="warEpochEarlyModern">العصر الحديث المبكر</button>
+                    <button type="button" class="btn era-epoch-tab" data-epoch="nineteenth" data-i18n="warEpoch19th">القرن التاسع عشر</button>
+                    <button type="button" class="btn era-epoch-tab" data-epoch="modern" data-i18n="warEpochModern">القرن العشرون والمعاصر</button>
+                </div>
                 <div class="history-era-pop-filter-row" id="histErasFilterRow">
                     <input type="text" class="history-search-input" id="histErasSearchInput" data-i18n-placeholder="histSearchPlaceholder" autocomplete="off" />
                     <select class="history-region-select" id="histErasFilterRegion"></select>
                 </div>
-                <div class="history-era-group" id="historyEraGroup" style="display:none">
-                    <!-- Era browsing chips (selection) live in the popover; the timeline slider is in the bottom timeline bar. -->
-                </div>
+                <div class="history-era-group hist-epoch-grid" id="historyEraGroup" style="display:none"></div>
             </div>
         </div>
         <div class="hist-popover-menu" id="histFaithsPopoverMenu" role="menu" hidden>

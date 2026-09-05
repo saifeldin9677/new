@@ -5345,17 +5345,17 @@ html[dir="rtl"] .section-picker-content { text-align: center; }
 
 .history-sources-toggle { border-radius: 999px; padding: 4px 12px; font-size: 0.8rem; }
 .history-sources-panel {
-    position: absolute;
-    bottom: calc(100% + 8px);
-    inset-inline-end: 0;
+    position: fixed;
+    top: 60px;
+    inset-inline-start: 20px;
     background: var(--panel-overlay-97, rgba(20,24,32,0.97));
-    border: 1px solid rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.16);
     border-radius: 12px;
-    padding: 10px 14px;
-    max-width: 420px;
-    max-height: 260px;
+    padding: 14px 18px;
+    max-width: 440px;
+    max-height: 70vh;
     overflow-y: auto;
-    z-index: 20;
+    z-index: var(--z-tools-dropdown, 3000);
     box-shadow: var(--shadow-lg);
     color: var(--text, #e0e8f0);
 }
@@ -5441,8 +5441,8 @@ body.section-history #modeRow {
 .hist-popover-menu {
     position: fixed;
     z-index: var(--z-tools-dropdown, 3000);
-    width: 350px;
-    max-width: calc(100vw - 20px);
+    width: clamp(380px, 30vw, 480px);
+    max-width: min(520px, calc(100vw - 20px));
     max-height: calc(100vh - 140px);
     overflow-y: auto;
     overflow-x: hidden;
@@ -5463,8 +5463,8 @@ body.section-history #modeRow {
     scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 #histFaithsPopoverMenu {
-    width: 350px;
-    max-width: calc(100vw - 20px);
+    width: clamp(380px, 30vw, 480px);
+    max-width: min(520px, calc(100vw - 20px));
 }
 .hist-popover-menu[hidden] {
     display: none !important;
@@ -5712,8 +5712,6 @@ body.section-history #modeRow {
 }
 #historyEraGroup .history-scenario-btn { white-space: nowrap; }
 #historyEraGroup .history-timeline { pointer-events: auto; }
-body.section-history #controlsBar { width: min(94vw, 900px); }
-body.section-history .dock-unified-wrap { flex: 1 1 auto; min-width: 0; }
 
 #historyEraGroup .history-timeline { flex: 1 1 auto; min-width: 160px; }
 #historyEraGroup .history-scenario-btn {
@@ -5818,22 +5816,16 @@ body.section-history .dock-unified-wrap { flex: 1 1 auto; min-width: 0; }
     min-width: 32px;
     text-align: center;
 }
-/* ── تبويبات عصور الحروب داخل الـ Popover ── */
 .history-epoch-tabs {
     display: flex;
     align-items: center;
-    gap: 5px;
+    flex-wrap: wrap;
+    gap: 6px;
     width: 100%;
-    overflow-x: auto;
-    scrollbar-width: none;
     margin-bottom: 8px;
     padding: 2px 2px 4px;
     flex-shrink: 0;
-    min-height: 32px;
     box-sizing: border-box;
-}
-.history-epoch-tabs::-webkit-scrollbar {
-    display: none;
 }
 .war-epoch-tab,
 .era-epoch-tab {
@@ -6225,9 +6217,12 @@ body.dark .hist-narrative-box.fall-box .hist-narrative-title {
 .hist-epoch-col-items .history-war-tab,
 .hist-epoch-col-items .history-scenario-btn {
     width: 100%;
+    min-width: 0;
     text-align: start;
     justify-content: space-between;
     white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
     line-height: 1.35;
     padding: 7px 10px !important;
     font-size: 0.78rem !important;
@@ -6259,7 +6254,10 @@ body.dark .hist-narrative-box.fall-box .hist-narrative-title {
 }
 .hist-tab-title {
     flex: 1 1 auto;
+    min-width: 0;
     font-weight: 600;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 .hist-tab-years {
     font-size: 0.68rem;
@@ -6268,6 +6266,7 @@ body.dark .hist-narrative-box.fall-box .hist-narrative-title {
     padding: 1px 5px;
     border-radius: 4px;
     white-space: nowrap;
+    flex-shrink: 0;
 }
 .hist-epoch-col-items .history-scenario-btn.active .hist-tab-years,
 .hist-epoch-col-items .history-war-tab.active .hist-tab-years {

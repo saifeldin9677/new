@@ -6894,9 +6894,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             return document.querySelector('#barLayersBtn') || document.querySelector('#layersToggleBtn');
                         }, icon: '🗂️', titleKey: 'onboardStep6Title', textKey: 'onboardStep6Text' },
                         { getEl: function() {
-                            var lg = document.querySelector('#legend');
-                            if (lg && lg.innerHTML.trim().length > 5) return lg;
-                            return document.querySelector('#mapSvg');
+                            return document.getElementById('legend') || document.querySelector('#mapSvg');
                         }, icon: '📋', titleKey: 'onboardStep7Title', textKey: 'onboardStep7Text' },
                         { getEl: function() { return document.querySelector('.zoom-controls'); }, icon: '🔍', titleKey: 'onboardStep8Title', textKey: 'onboardStep8Text' },
                         { getEl: function() {
@@ -6923,14 +6921,18 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     ];
                     var histSteps = [
                         { getEl: function() {
-                            return document.querySelector('#historyEraGroup') || document.querySelector('#histWarTabs');
+                            return document.querySelector('#historyModeDock') || document.querySelector('#histErasPopoverBtn');
                         }, icon: '📜', titleKey: 'histOnboard1Title', textKey: 'histOnboard1Text' },
                         { getEl: function() {
-                            return document.getElementById('histTimeline');
+                            var bb = document.getElementById('historyBottomBar');
+                            if (bb && getComputedStyle(bb).display !== 'none') return bb;
+                            return document.getElementById('histTimeline') || document.querySelector('#controlsBar');
                         }, icon: '⏳', titleKey: 'histOnboard2Title', textKey: 'histOnboard2Text' },
                         { getEl: function() {
-                            return document.getElementById('histRegionFilter') || document.querySelector('.history-region-select') || document.getElementById('histScenarioBtns');
-                        }, icon: '🌍', titleKey: 'histOnboard3Title', textKey: 'histOnboard3Text' },
+                            var op = document.getElementById('histOpacityControl');
+                            if (op && getComputedStyle(op).display !== 'none') return op;
+                            return document.getElementById('histTerrainBtn') || document.querySelector('#filterRow');
+                        }, icon: '🎚️', titleKey: 'histOnboard3Title', textKey: 'histOnboard3Text' },
                         { getEl: function() {
                             return document.querySelector('#mapSvg');
                         }, icon: '🖱️', titleKey: 'histOnboard4Title', textKey: 'histOnboard4Text' },
@@ -6938,7 +6940,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             return document.getElementById('legend');
                         }, icon: '🎨', titleKey: 'histOnboard5Title', textKey: 'histOnboard5Text' },
                         { getEl: function() {
-                            return document.getElementById('histSourcesBtn');
+                            return document.getElementById('toolsBtn') || document.getElementById('histSourcesBtn');
                         }, icon: '📚', titleKey: 'histOnboard6Title', textKey: 'histOnboard6Text' }
                     ];
                     function activeSteps() {
@@ -7094,8 +7096,9 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
 
                     // Reposition on resize
                     window.addEventListener('resize', function() {
-                        if (isOpen && steps[currentStep]) {
-                            var el = steps[currentStep].getEl ? steps[currentStep].getEl() : null;
+                        var curSteps = activeSteps();
+                        if (isOpen && curSteps && curSteps[currentStep]) {
+                            var el = curSteps[currentStep].getEl ? curSteps[currentStep].getEl() : null;
                             if (el) { positionGlow(el); positionCard(el); }
                         }
                     });
@@ -8106,6 +8109,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                
                     if (typeof updateHistoryLabels === 'function') updateHistoryLabels(k);
                     if (historicalRoutesVisible && window.drawHistoricalRoutes) window.drawHistoricalRoutes(true);
+                    renderHistoryLegend();
                 }
                 // Normalize a search string for robust multilingual matching:
                 // lowercase, strip Arabic diacritics/tashkeel/tatweel, collapse
@@ -8461,44 +8465,13 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         });
                         if (row) row.appendChild(b);
                     });
-                    var seen = {}, chips = [];
-                    war.scenarios.forEach(function(s) {
-                        if (s.id !== historyScenarioId) return;
-                        s.participants.forEach(function(p) {
-                            var key = p.side + '_' + p.role;
-                            if (seen[key]) return;
-                            seen[key] = true;
-                            chips.push({ key: key, side: p.side, role: p.role, color: histColorFor(p) });
-                        });
-                        (s.empires || []).forEach(function(emp) {
-                            var key = emp.side + '_' + emp.role;
-                            if (seen[key]) return;
-                            seen[key] = true;
-                            chips.push({ key: key, side: emp.side, role: emp.role, color: histColorFor(emp), dashed: true });
-                        });
-                    });
-                    var leg = document.getElementById('legend');
-                    leg.innerHTML = '<div style="font-weight:700;margin-bottom:4px">' + htmlEscape(t('histLegendLabel')) + '</div>';
-                    chips.forEach(function(ch) {
-                        var item = document.createElement('div');
-                        item.className = 'legend-item';
-                        var hasSide = !!war.sides[ch.side];
-                        var fullSide = hasSide ? t(war.sides[ch.side]) : '';
-                        var shortSide = fullSide ? fullSide.split('—')[0].trim() : '';
-                        item.title = shortSide ? (shortSide + ' — ' + t(histRoleKey(ch.role))) : t(histRoleKey(ch.role));
-                        var sw = document.createElement('span');
-                        sw.className = 'legend-color';
-                        sw.style.background = ch.color || 'transparent';
-                        if (!ch.color) { sw.style.border = '1px solid #9aa5b1'; }
-                        if (ch.dashed) { sw.style.backgroundImage = 'repeating-linear-gradient(45deg, rgba(255,255,255,.85) 0 2px, transparent 2px 5px)'; }
-                        item.appendChild(sw);
-                        item.appendChild(document.createTextNode(t(histRoleKey(ch.role)) + (shortSide ? ' · ' + shortSide : '')));
-                        leg.appendChild(item);
-                    });
+                    renderHistoryLegend();
                     var sp = document.getElementById('histSourcesPanel');
-                    sp.innerHTML = '<h4>' + htmlEscape(t('histSourcesTitle')) + '</h4><ul>' +
-                        formatAcademicSourcesList(war.sources) +
-                        '</ul>';
+                    if (sp) {
+                        sp.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><h4>' + htmlEscape(t('histSourcesTitle')) + '</h4><button type="button" class="hist-drawer-close-btn" style="width:24px;height:24px;font-size:1rem;" onclick="document.getElementById(\'histSourcesPanel\').style.display=\'none\'">&times;</button></div><ul>' +
+                            formatAcademicSourcesList(war.sources) +
+                            '</ul>';
+                    }
                     refreshLucideIcons();
                     if (historyActive && window.updateHash) window.updateHash();
                 }
@@ -9337,6 +9310,7 @@ function buildEraFeature(p, phase) {
                     });
                     if (typeof updateHistoryLabels === 'function') updateHistoryLabels(k);
                     if (historicalRoutesVisible && window.drawHistoricalRoutes) window.drawHistoricalRoutes(true);
+                    renderHistoryLegend();
                 }
                 function deselectHistoryPolity() {
                     selectedHistoryPolity = null;
@@ -9809,21 +9783,11 @@ function buildEraFeature(p, phase) {
                             tlDrag = false;
                         });
                     }
-                    var leg = document.getElementById('legend');
-                    leg.innerHTML = '<div style="font-weight:700;margin-bottom:4px">' + htmlEscape(t('histLegendLabel')) + '</div>';
-                    era.polities.forEach(function(p) {
-                        var item = document.createElement('div');
-                        item.className = 'legend-item';
-                        item.title = locField(p, 'name');
-                        var sw = document.createElement('span');
-                        sw.className = 'legend-color';
-                        sw.style.background = p.color;
-                        item.appendChild(sw);
-                        item.appendChild(document.createTextNode(locField(p, 'name')));
-                        leg.appendChild(item);
-                    });
-                    sp.innerHTML = '<h4>' + htmlEscape(t('histSourcesTitle')) + '</h4><ul>' +
-                        formatAcademicSourcesList(era.sources) + '</ul>';
+                    renderHistoryLegend();
+                    if (sp) {
+                        sp.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><h4>' + htmlEscape(t('histSourcesTitle')) + '</h4><button type="button" class="hist-drawer-close-btn" style="width:24px;height:24px;font-size:1rem;" onclick="document.getElementById(\'histSourcesPanel\').style.display=\'none\'">&times;</button></div><ul>' +
+                            formatAcademicSourcesList(era.sources) + '</ul>';
+                    }
                     refreshLucideIcons();
                     if (historyActive && window.updateHash) window.updateHash();
                 }
@@ -9831,35 +9795,39 @@ function buildEraFeature(p, phase) {
                     var leg = document.getElementById('legend');
                     if (!leg) return;
                     leg.innerHTML = '';
+                    if (!historyActive) return;
                     if (historyTab === 'eras') {
                         var era = getHistEra();
                         if (!era) return;
+                        var activePhaseData = (era.phases && era.phases[historyEraPhase]) ? era.phases[historyEraPhase] : null;
+                        var politiesToDraw = (activePhaseData && Array.isArray(activePhaseData.polities) && activePhaseData.polities.length) ? activePhaseData.polities : (era.polities || []);
                         leg.innerHTML = '<div style="font-weight:700;margin-bottom:4px">' + htmlEscape(t('histLegendLabel')) + '</div>';
-                        era.polities.forEach(function(p) {
+                        politiesToDraw.forEach(function(p) {
                             var item = document.createElement('div');
                             item.className = 'legend-item';
                             item.title = locField(p, 'name');
                             var sw = document.createElement('span');
                             sw.className = 'legend-color';
-                            sw.style.background = p.color;
+                            sw.style.background = p.color || '#14B8A6';
                             item.appendChild(sw);
-                            item.appendChild(document.createTextNode(locField(p, 'name')));
+                            item.appendChild(document.createTextNode(cleanHistoricalName(locField(p, 'name'))));
                             leg.appendChild(item);
                         });
                         return;
                     }
                     var war = getHistWar();
+                    if (!war) return;
                     var sc = getHistScenario(war);
                     if (!sc) return;
                     leg.innerHTML = '<div style="font-weight:700;margin-bottom:4px">' + htmlEscape(t('histLegendLabel')) + '</div>';
                     var seen2 = {};
-                    sc.participants.forEach(function(p) {
+                    (sc.participants || []).forEach(function(p) {
                         var key = p.side + '_' + p.role;
                         if (seen2[key]) return;
                         seen2[key] = true;
                         var item = document.createElement('div');
                         item.className = 'legend-item';
-                        var fullSide = war.sides[p.side] ? t(war.sides[p.side]) : '';
+                        var fullSide = (war.sides && war.sides[p.side]) ? t(war.sides[p.side]) : '';
                         var shortSide = fullSide ? fullSide.split('—')[0].trim() : '';
                         item.title = shortSide ? (shortSide + ' — ' + t(histRoleKey(p.role))) : t(histRoleKey(p.role));
                         var sw = document.createElement('span');
@@ -9868,6 +9836,23 @@ function buildEraFeature(p, phase) {
                         if (!histColorFor(p)) { sw.style.border = '1px solid #9aa5b1'; }
                         item.appendChild(sw);
                         item.appendChild(document.createTextNode(t(histRoleKey(p.role)) + (shortSide ? ' · ' + shortSide : '')));
+                        leg.appendChild(item);
+                    });
+                    (sc.empires || []).forEach(function(emp) {
+                        var key = emp.side + '_' + emp.role;
+                        if (seen2[key]) return;
+                        seen2[key] = true;
+                        var item = document.createElement('div');
+                        item.className = 'legend-item';
+                        var fullSide = (war.sides && war.sides[emp.side]) ? t(war.sides[emp.side]) : '';
+                        var shortSide = fullSide ? fullSide.split('—')[0].trim() : '';
+                        item.title = shortSide ? (shortSide + ' — ' + t(histRoleKey(emp.role))) : t(histRoleKey(emp.role));
+                        var sw = document.createElement('span');
+                        sw.className = 'legend-color';
+                        sw.style.background = histColorFor(emp) || 'transparent';
+                        sw.style.backgroundImage = 'repeating-linear-gradient(45deg, rgba(255,255,255,.85) 0 2px, transparent 2px 5px)';
+                        item.appendChild(sw);
+                        item.appendChild(document.createTextNode(t(histRoleKey(emp.role)) + (shortSide ? ' · ' + shortSide : '')));
                         leg.appendChild(item);
                     });
                 }
@@ -12099,6 +12084,13 @@ function buildEraFeature(p, phase) {
                     e.stopPropagation();
                     var sp = document.getElementById('histSourcesPanel');
                     if (sp) sp.style.display = sp.style.display === 'none' ? 'block' : 'none';
+                    var m = document.getElementById('toolsDropdownMenu');
+                    if (m) {
+                        m.classList.remove('visible');
+                        m.setAttribute('hidden', '');
+                    }
+                    var b = document.getElementById('toolsBtn');
+                    if (b) b.setAttribute('aria-expanded', 'false');
                 });
             }
             // History boundary opacity control. Live-updates the opacity of the

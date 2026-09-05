@@ -40,6 +40,14 @@
         </div>
 
         <div class="header-left-group tools-row-middle" id="toolsRowMiddle">
+            <div class="hist-opacity-control hist-only" id="histOpacityControl" style="display:none">
+                <label for="histOpacitySlider" class="hist-opacity-label" data-i18n-title="histOpacityTip" title="شفافية الحدود التاريخية">
+                    <i data-lucide="layers" class="lucide-icon"></i>
+                    <span class="btn-text" data-i18n="histOpacity">الشفافية</span>
+                </label>
+                <input type="range" id="histOpacitySlider" min="0.1" max="1" step="0.05" value="0.55" class="hist-opacity-slider">
+                <span class="hist-opacity-val" id="histOpacityVal">55%</span>
+            </div>
             <div class="tools-dropdown tools-wrapper" id="toolsDropdown">
                 <button class="btn header-btn" id="toolsBtn" title="أدوات" aria-label="أدوات" data-i18n="sectionTools" data-i18n-title="sectionTools" data-i18n-aria-label="sectionTools" aria-haspopup="true" aria-expanded="false" aria-controls="toolsDropdownMenu"><i data-lucide="settings" class="lucide-icon"></i><span class="btn-text">أدوات</span></button>
                 <button class="btn header-btn" id="colorblindToggle" aria-pressed="false" title="إضافة نقش شكل لكل فئة لتكون قابلة للتمييز بدون لون" data-i18n="colorblindToggle" data-i18n-title="colorblindToggle_title"><i data-lucide="contrast" class="lucide-icon"></i><span class="btn-text">أنماط عمى الألوان</span></button>
@@ -54,6 +62,7 @@
                         <button class="tool-card" id="resetBtn" data-i18n-title="resetBtn_title" role="menuitem"><i data-lucide="rotate-ccw" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="resetBtn"></span></button>
                         <button class="tool-card" id="shortcutsBtn" data-i18n-title="shortcutsBtn_title" role="menuitem"><i data-lucide="keyboard" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="shortcutsLabel"></span></button>
                         <button class="tool-card" id="onboardBtn" data-i18n-title="onboardMapGuide" role="menuitem"><i data-lucide="book-open" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="onboardMapGuide"></span></button>
+                        <button class="tool-card hist-only" id="histSourcesBtn" style="display:none" data-i18n-title="histSourcesTitle" role="menuitem"><i data-lucide="book-marked" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="histSourcesBtn">المصادر</span></button>
                     </div>
                 </div>
             </div>
@@ -91,6 +100,7 @@
         <div class="legend" id="legend" role="region" aria-label="وسيلة الإيضاح" data-i18n-aria-label="legendLabel"></div>
         <div class="border-disputes-counter" id="borderDisputesCounter" style="display:none"></div>
         <div class="info-overlay" id="infoOverlay"></div>
+        <div class="history-sources-panel" id="histSourcesPanel" style="display:none" role="dialog" aria-label="مصادر تاريخية"></div>
 
         <!-- Dedicated Floating Bottom Timeline Bar for History Mode -->
         <div class="history-bottom-bar" id="historyBottomBar" style="display:none" role="region" aria-label="Timeline Controls">
@@ -181,17 +191,6 @@
                                 <button type="button" class="btn header-btn hist-popover-btn" id="histWarsPopoverBtn" aria-haspopup="true" aria-expanded="false" aria-controls="histWarsPopoverMenu"><i data-lucide="swords" class="lucide-icon"></i><span class="btn-text" data-i18n="histSegWars">Wars</span><i data-lucide="chevron-down" class="dropdown-arrow lucide-icon"></i></button>
                                 <button type="button" class="btn header-btn hist-popover-btn" id="histErasPopoverBtn" aria-haspopup="true" aria-expanded="false" aria-controls="histErasPopoverMenu"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text" data-i18n="histSegEras">Eras</span><i data-lucide="chevron-down" class="dropdown-arrow lucide-icon"></i></button>
                                 <button type="button" class="btn header-btn hist-popover-btn" id="histFaithsPopoverBtn" aria-haspopup="true" aria-expanded="false" aria-controls="histFaithsPopoverMenu"><i data-lucide="book-open" class="lucide-icon"></i><span class="btn-text" data-i18n="religionsListBtn">Religions</span><i data-lucide="chevron-down" class="dropdown-arrow lucide-icon"></i></button>
-                                <span class="history-mode-spacer"></span>
-                                <div class="hist-opacity-control hist-only" id="histOpacityControl" style="display:none">
-                                    <label for="histOpacitySlider" class="hist-opacity-label" data-i18n-title="histOpacityTip" title="شفافية الحدود التاريخية">
-                                        <i data-lucide="layers" class="lucide-icon"></i>
-                                        <span class="btn-text" data-i18n="histOpacity">الشفافية</span>
-                                    </label>
-                                    <input type="range" id="histOpacitySlider" min="0.1" max="1" step="0.05" value="0.55" class="hist-opacity-slider">
-                                    <span class="hist-opacity-val" id="histOpacityVal">55%</span>
-                                </div>
-                                <button class="btn hist-only" id="histTerrainBtn" style="display:none" type="button" data-i18n-title="mode_terrain_tip"><i data-lucide="mountain" class="lucide-icon"></i><span class="btn-text" data-i18n="mode_terrain"></span></button>
-                                <button class="btn hist-only" id="histSourcesBtn" style="display:none" type="button" data-i18n-title="histSourcesTitle"><i data-lucide="book-marked" class="lucide-icon"></i><span class="btn-text" data-i18n="histSourcesBtn"></span></button>
                             </div>
                         </div>
                         <div class="control-group" id="modeButtons">
@@ -210,10 +209,9 @@
                         <button class="btn" id="globeViewBtn" title="عرض الكرة الأرضية" data-i18n-title="globeViewBtn_title"><i data-lucide="earth" class="lucide-icon"></i><span class="btn-text" data-i18n="globeViewBtn">كرة أرضية</span></button>
                         <button class="btn quiz-btn" id="quizBtn" data-i18n-title="quizMode"><i data-lucide="brain" class="lucide-icon"></i><span class="btn-text" data-i18n="quizMode"></span></button>
                         <button class="btn" id="compareProjectionsBtn" data-i18n-title="compareProjectionsBtn_title"><i data-lucide="git-compare" class="lucide-icon"></i><span class="btn-text" data-i18n="compareProjectionsBtn_title">مقارنة</span></button>
+                        <button class="btn hist-only" id="histTerrainBtn" style="display:none" type="button" data-i18n-title="mode_terrain_tip"><i data-lucide="mountain" class="lucide-icon"></i><span class="btn-text" data-i18n="mode_terrain"></span></button>
                     </div>
                     </div>
-
-                        <div class="history-sources-panel" id="histSourcesPanel" style="display:none"></div>
                 </div>
                 <button class="btn bar-layers-btn floating-capsule" id="barLayersBtn" title="فتح نافذة الطبقات" aria-label="فتح الطبقات" data-i18n-title="layersToggle" data-i18n-aria-label="layersToggle"><i data-lucide="layers" class="lucide-icon"></i><span class="btn-text" data-i18n="layersToggle">الطبقات</span></button>
                 <button class="btn bar-layers-btn floating-capsule" id="barDivisionBtn" data-i18n-title="rowFilterLabel"><i data-lucide="filter" class="lucide-icon"></i><span class="btn-text" data-i18n="rowFilterLabel">التقسيم</span></button>

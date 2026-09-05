@@ -9579,9 +9579,7 @@ function buildEraFeature(p, phase) {
                     }
 
                     if (eraCardPolitiesEl) {
-                        eraCardPolitiesEl.innerHTML = politiesToDraw.map(function(p) {
-                            return '<span class="hist-card-polity-chip"><span class="hist-card-polity-swatch" style="background:' + p.color + '"></span> ' + htmlEscape(locField(p, 'name')) + '</span>';
-                        }).join('');
+                        eraCardPolitiesEl.innerHTML = '';
                     }
                 }
 

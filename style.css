@@ -5375,30 +5375,28 @@ body.section-history .history-dock .history-war-tabs { flex-wrap: nowrap; overfl
 /* In-place section swap: history dock occupies the geography button slots */
 #historyModeDock {
     display: none;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 6px;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
     flex: 1;
     min-width: 0;
     max-width: 100%;
+    height: 100%;
 }
 #historyModeDock .history-war-tabs { justify-content: flex-start; }
 #historyModeDock .history-war-tabs { flex-wrap: wrap; }
 
-/* The redundant top-left "History" section tag (#sectionHistoryLabel) was
-   removed — it duplicated the header History toggle and rendered as a stray
-   green pill at the far-left edge, detached from the dock. Its historical
-   positioning fix is removed along with it. */
 body.section-history #modeRow {
-    align-items: flex-start;
+    align-items: center;
 }
 
-/* Wars / Eras segmented switch — visually distinct from the chip lists below it */
+/* Wars / Eras / Faiths primary buttons — visually distinct and prominent in the wide dock zone */
 .history-mode-row {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: clamp(8px, 0.8vw, 14px);
     width: 100%;
+    height: 100%;
 }
 .history-mode-spacer { flex: 1 1 auto; }
 .history-mode-seg {
@@ -5550,11 +5548,50 @@ body.section-history #modeRow {
     }
 }
 .hist-popover-btn {
-    border-radius: var(--dock-radius, clamp(8px, 0.65vw, 14px));
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: clamp(6px, 0.5vw, 10px) !important;
+    min-height: clamp(34px, 2.35vw, 42px) !important;
+    padding: clamp(6px, 0.45vw, 9px) clamp(16px, 1.2vw, 24px) !important;
+    font-size: clamp(0.86rem, 0.75vw + 0.25rem, 1.02rem) !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    color: #e2e8f0 !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    border-radius: var(--dock-radius, clamp(10px, 0.8vw, 16px)) !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    transition: all var(--dur-fast, 0.15s) var(--ease, ease);
+    cursor: pointer;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
-.hist-popover-btn.active {
-    background: #0f766e;
-    color: #fff;
+.hist-popover-btn i.lucide-icon,
+.hist-popover-btn svg {
+    width: clamp(17px, 1.1vw, 20px) !important;
+    height: clamp(17px, 1.1vw, 20px) !important;
+    stroke-width: 2.2px;
+}
+.hist-popover-btn .dropdown-arrow {
+    width: 14px !important;
+    height: 14px !important;
+    margin-inline-start: 4px !important;
+    opacity: 0.75;
+    transition: transform var(--dur-fast, 0.15s) var(--ease, ease);
+}
+.hist-popover-btn:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.32) !important;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+}
+.hist-popover-btn.active,
+.hist-popover-btn[aria-expanded="true"] {
+    background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%) !important;
+    border-color: #2dd4bf !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 16px rgba(45, 212, 191, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3) !important;
 }
 .hist-popover-btn[aria-expanded="true"] .dropdown-arrow {
     transform: rotate(180deg);
@@ -5754,7 +5791,6 @@ body.section-history #modeRow {
 /* أزرار وحقول التاريخ */
 .history-war-tab,
 .history-scenario-btn,
-.hist-popover-btn,
 .history-mode-seg-btn,
 .history-mode-seg,
 .hist-chip,
@@ -5946,12 +5982,7 @@ body.section-history #modeRow {
     white-space: nowrap;
 }
 .hist-card-polities {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 6px;
-    padding-top: 6px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: none !important;
 }
 .hist-card-polity-chip {
     display: inline-flex;

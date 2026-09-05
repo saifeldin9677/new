@@ -5441,37 +5441,113 @@ body.section-history #modeRow {
 .hist-popover-menu {
     position: fixed;
     z-index: var(--z-tools-dropdown, 3000);
-    width: min(96vw, 1200px);
-    max-width: 1200px;
-    max-height: min(85vh, 720px);
+    width: 350px;
+    max-width: calc(100vw - 20px);
+    max-height: calc(100vh - 140px);
     overflow-y: auto;
     overflow-x: hidden;
     box-sizing: border-box;
-    background: #0f172a;
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(17, 24, 39, 0.98) 100%);
     color: #f1f5f9;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: var(--radius-md, 12px);
-    padding: 14px;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 16px;
+    padding: 12px 12px 16px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.05);
     display: none;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 #histFaithsPopoverMenu {
-    width: min(92vw, 380px);
-    max-width: 380px;
+    width: 350px;
+    max-width: calc(100vw - 20px);
 }
 .hist-popover-menu[hidden] {
     display: none !important;
 }
 .hist-popover-menu.visible {
-    display: block !important;
+    display: flex !important;
+    flex-direction: column;
     opacity: 1;
     visibility: visible;
-    animation: menu-popover-in 0.18s ease;
+    animation: hist-drawer-slide 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes hist-drawer-slide {
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+.hist-popover-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+.hist-drawer-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #2dd4bf;
+}
+.hist-drawer-title .lucide-icon {
+    width: 17px;
+    height: 17px;
+    color: #2dd4bf;
+}
+.hist-drawer-close-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #94a3b8;
+    border-radius: 8px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: all 0.15s ease;
+}
+.hist-drawer-close-btn:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #fca5a5;
+}
+.hist-popover-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 2px;
+}
+@media (max-width: 680px) {
+    .hist-popover-menu {
+        width: 100% !important;
+        max-width: 100% !important;
+        left: 0 !important;
+        right: 0 !important;
+        top: auto !important;
+        bottom: 0 !important;
+        max-height: 58vh !important;
+        border-radius: 20px 20px 0 0 !important;
+        border-bottom: none !important;
+    }
 }
 .hist-popover-btn {
     border-radius: var(--dock-radius, clamp(8px, 0.65vw, 14px));
@@ -5483,17 +5559,64 @@ body.section-history #modeRow {
 .hist-popover-btn[aria-expanded="true"] .dropdown-arrow {
     transform: rotate(180deg);
 }
-/* Eras popover keeps its own filter row, visually consistent with the shared one. */
-.history-era-pop-filter-row {
-    display: flex;
-    align-items: center;
+/* History filter rows */
+.history-filter-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 6px;
     width: 100%;
-    flex-wrap: wrap;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+}
+.history-filter-row .history-search-input {
+    grid-column: 1 / -1;
+    width: 100%;
+    box-sizing: border-box;
+}
+.history-filter-row .history-region-select {
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+}
+.history-era-pop-filter-row {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+    margin-bottom: 8px;
+    flex-shrink: 0;
 }
 .history-era-pop-filter-row .history-search-input {
-    flex: 1 1 130px;
+    flex: 1 1 58%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+.history-era-pop-filter-row .history-region-select {
+    flex: 1 1 42%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+.history-search-input {
+    background: rgba(15, 23, 42, 0.7);
+    color: var(--text, #e0e8f0);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-size: 0.78rem;
+    height: 30px;
+}
+.history-search-input:focus {
+    outline: none;
+    border-color: var(--brand-accent, #14B8A6);
+}
+.history-region-select {
+    background: rgba(15, 23, 42, 0.7);
+    color: var(--text, #e0e8f0);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 8px;
+    padding: 4px 6px;
+    font-size: 0.75rem;
+    height: 30px;
+    min-width: 0;
 }
 /* Faiths list items in the Faiths popover. */
 .history-faiths-list {
@@ -5534,29 +5657,7 @@ body.section-history #modeRow {
     white-space: nowrap;
 }
 
-/* Shared Wars/Eras filter row: search + region + religion */
-.history-filter-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    width: 100%;
-    flex-wrap: wrap;
-}
-.history-search-input {
-    flex: 1 1 130px;
-    min-width: 110px;
-    background: var(--panel-bg, #21252b);
-    color: var(--text, #e0e8f0);
-    border: 1px solid rgba(255,255,255,0.16);
-    border-radius: 999px;
-    padding: 3px 12px;
-    font-size: 0.78rem;
-    height: 28px;
-}
-.history-search-input:focus {
-    outline: none;
-    border-color: var(--brand-accent, #14B8A6);
-}
+
 
 /* Related-wars section in the geography country panel */
 .panel-related-wars {
@@ -5721,12 +5822,15 @@ body.section-history .dock-unified-wrap { flex: 1 1 auto; min-width: 0; }
 .history-epoch-tabs {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     width: 100%;
     overflow-x: auto;
     scrollbar-width: none;
     margin-bottom: 8px;
-    padding-bottom: 2px;
+    padding: 2px 2px 4px;
+    flex-shrink: 0;
+    min-height: 32px;
+    box-sizing: border-box;
 }
 .history-epoch-tabs::-webkit-scrollbar {
     display: none;
@@ -5759,18 +5863,17 @@ body.section-history .dock-unified-wrap { flex: 1 1 auto; min-width: 0; }
 
 /* ── البطاقة المثبتة في أعلى قائمة الحروب والحقب ── */
 .hist-selected-card {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    background: #111827;
+    position: relative;
+    background: rgba(15, 23, 42, 0.65);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(20, 184, 166, 0.25);
     border-radius: var(--radius-md, 12px);
-    padding: 12px 14px;
-    margin-bottom: 10px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
     color: #f1f5f9;
+    flex-shrink: 0;
 }
 .hist-selected-card .history-empty-state {
     margin: 0;
@@ -6067,64 +6170,57 @@ body.dark .hist-narrative-box.fall-box .hist-narrative-title {
     color: #f87171;
 }
 
-/* ── شبكة التقسيم الأفقي للعصور الخمسة ── */
+/* ── قائمة العصور الرأسية المدمجة في اللوحة الجانبية ── */
 .hist-epoch-grid {
-    display: grid !important;
-    grid-template-columns: repeat(5, minmax(180px, 1fr)) !important;
-    gap: 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
     width: 100% !important;
-    overflow-x: auto !important;
-    padding: 6px 2px 8px !important;
+    overflow-x: hidden !important;
+    padding: 2px 0 8px !important;
     box-sizing: border-box !important;
-    align-items: start !important;
 }
 .hist-epoch-col {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius-md, 10px);
-    padding: 8px;
-    min-width: 180px;
-    max-height: 48vh;
-    overflow-y: auto;
-    scrollbar-width: thin;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 10px;
+    padding: 6px 8px;
+    width: 100%;
+    box-sizing: border-box;
+    max-height: none;
+    overflow: visible;
 }
 .hist-epoch-col-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 6px;
-    padding: 4px 6px 6px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 3px 4px 5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     margin-bottom: 2px;
-    position: sticky;
-    top: -8px;
-    background: #111827;
-    z-index: 2;
+    position: static;
+    background: transparent;
 }
 .hist-epoch-col-title {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 700;
     color: #2dd4bf;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 .hist-epoch-col-count {
-    font-size: 0.68rem;
+    font-size: 0.65rem;
     padding: 1px 6px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.1);
-    color: #cbd5e1;
+    background: rgba(255, 255, 255, 0.08);
+    color: #94a3b8;
     font-weight: 600;
-    white-space: nowrap;
 }
 .hist-epoch-col-items {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 4px;
 }
 .hist-epoch-col-items .history-war-tab,
 .hist-epoch-col-items .history-scenario-btn {
@@ -6133,22 +6229,50 @@ body.dark .hist-narrative-box.fall-box .hist-narrative-title {
     justify-content: space-between;
     white-space: normal;
     line-height: 1.35;
-    padding: 6px 8px !important;
-    font-size: 0.77rem !important;
+    padding: 7px 10px !important;
+    font-size: 0.78rem !important;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     box-sizing: border-box;
-    border-radius: var(--radius-sm, 8px) !important;
+    border-radius: 8px !important;
+    background: rgba(255, 255, 255, 0.035) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    color: #cbd5e1 !important;
+    cursor: pointer;
     transition: all 0.15s ease;
+}
+.hist-epoch-col-items .history-war-tab:hover,
+.hist-epoch-col-items .history-scenario-btn:hover {
+    background: rgba(20, 184, 166, 0.14) !important;
+    border-color: rgba(20, 184, 166, 0.35) !important;
+    color: #ffffff !important;
+    transform: translateX(-2px);
 }
 .hist-epoch-col-items .history-war-tab.active,
 .hist-epoch-col-items .history-scenario-btn.active {
-    background: var(--brand-accent, #14B8A6) !important;
-    color: #08202c !important;
+    background: #0f766e !important;
+    border-color: #2dd4bf !important;
+    color: #ffffff !important;
     font-weight: 700 !important;
-    border-color: var(--brand-accent, #14B8A6) !important;
-    box-shadow: 0 0 10px rgba(20, 184, 166, 0.4);
+    box-shadow: 0 0 10px rgba(45, 212, 191, 0.25);
+}
+.hist-tab-title {
+    flex: 1 1 auto;
+    font-weight: 600;
+}
+.hist-tab-years {
+    font-size: 0.68rem;
+    color: #94a3b8;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 1px 5px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+.hist-epoch-col-items .history-scenario-btn.active .hist-tab-years,
+.hist-epoch-col-items .history-war-tab.active .hist-tab-years {
+    color: #ccfbf1;
+    background: rgba(0, 0, 0, 0.25);
 }
 .hist-col-empty-msg {
     font-size: 0.75rem;

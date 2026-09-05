@@ -3641,7 +3641,7 @@
             terminal_coords: [79.5, 26.5],
             id: 'harsha-realm_terminal',
             name_ar: 'أواخر عهد إمبراطورية هارشا',
-            name_en: 'Late's Empire',
+            name_en: 'Late Harsha Empire',
             founder_ar: 'قيادات وسلالات تاريخية موثقة',
             foundingYear: '720 م',
             capital_ar: 'حاضرة تاريخية',

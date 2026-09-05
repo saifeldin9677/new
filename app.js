@@ -8401,7 +8401,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                     historyWarId = w.id;
                                     historyScenarioId = w.scenarios[0].id;
                                     selectedHistoryPolity = null;
-                                    if (typeof closeAllHistPopovers === 'function') closeAllHistPopovers();
+                                    if (window.innerWidth <= 680 && typeof closeAllHistPopovers === 'function') closeAllHistPopovers();
                                     renderHistoryBar();
                                     drawHistoryScenario();
                                 });
@@ -9686,13 +9686,14 @@ function buildEraFeature(p, phase) {
                                 var b = document.createElement('button');
                                 b.type = 'button';
                                 b.className = 'btn history-scenario-btn' + (e.id === historyEraId ? ' active' : '');
-                                b.textContent = (e.yearLabel || '') + ' · ' + locField(e, 'title');
-                                b.title = locField(e, 'desc');
+                                b.innerHTML = '<span class="hist-tab-title">' + htmlEscape(locField(e, 'title')) + '</span>' +
+                                    (e.yearLabel ? ' <span class="hist-tab-years">' + htmlEscape(e.yearLabel) + '</span>' : '');
+                                b.title = (e.yearLabel || '') + ' · ' + locField(e, 'title');
                                 b.addEventListener('click', function() {
                                     stopHistPlay();
                                     historyEraId = e.id;
                                     selectedHistoryPolity = null;
-                                    if (typeof closeAllHistPopovers === 'function') closeAllHistPopovers();
+                                    if (window.innerWidth <= 680 && typeof closeAllHistPopovers === 'function') closeAllHistPopovers();
                                     renderHistoryBar();
                                     drawEraScene();
                                     if (selectedCountry && selectedFeatureType === 'history' && countryPanel.classList.contains('visible')) openHistoryPanel(selectedCountry);
@@ -12186,6 +12187,14 @@ function buildEraFeature(p, phase) {
                     positionPopover(menu, btn);
                 });
                 menu.addEventListener('click', function(e) { e.stopPropagation(); });
+                var cBtn = menu.querySelector('.hist-drawer-close-btn');
+                if (cBtn && !cBtn.dataset.bound) {
+                    cBtn.dataset.bound = '1';
+                    cBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        closeAllHistPopovers();
+                    });
+                }
             });
             // إغلاق القوائم عند النقر في الخارج مع استثناء شريط الزمن والتفاعل معه
             document.addEventListener('click', function(e) {
@@ -13107,13 +13116,32 @@ function getReligionSlice(religion, year) {
                 var vh = window.innerHeight;
                 var margin = 8;
                 var rtl = document.documentElement.dir === 'rtl';
-                var left;
-                if (modal.classList.contains('hist-popover-menu') && pw > 700) {
-                    left = Math.max(margin, Math.round((vw - pw) / 2));
-                } else {
-                    left = rtl ? r.right - pw : r.left;
-                    left = Math.max(margin, Math.min(left, vw - pw - margin));
+
+                if (modal.classList.contains('hist-popover-menu')) {
+                    var topY = Math.max(54, Math.round(r.bottom + 8));
+                    modal.style.top = topY + 'px';
+                    modal.style.bottom = '82px';
+                    modal.style.maxHeight = 'calc(100vh - ' + (topY + 90) + 'px)';
+                    if (vw > 680) {
+                        if (rtl) {
+                            modal.style.right = '16px';
+                            modal.style.left = 'auto';
+                        } else {
+                            modal.style.left = '16px';
+                            modal.style.right = 'auto';
+                        }
+                    } else {
+                        modal.style.left = '8px';
+                        modal.style.right = '8px';
+                        modal.style.width = 'calc(100vw - 16px)';
+                        modal.style.bottom = '12px';
+                    }
+                    modal.style.transformOrigin = (rtl ? 'top right' : 'top left');
+                    return;
                 }
+
+                var left = rtl ? r.right - pw : r.left;
+                left = Math.max(margin, Math.min(left, vw - pw - margin));
                 var top = r.bottom + margin;
                 var flipped = false;
                 if (top + ph > vh - margin && r.top - ph - margin >= margin) {

@@ -225,6 +225,10 @@
              drop-shadow filter would otherwise become the containing block for
              our position:fixed menus (shifting them off-screen in RTL). -->
         <div class="hist-popover-menu" id="histWarsPopoverMenu" role="menu" hidden>
+            <div class="hist-popover-header">
+                <div class="hist-drawer-title"><i data-lucide="swords" class="lucide-icon"></i> <span data-i18n="histSegWars">الحروب والمعارك</span></div>
+                <button type="button" class="hist-drawer-close-btn" aria-label="إغلاق">&times;</button>
+            </div>
             <div class="hist-popover-body">
                 <!-- بطاقة الحرب المختارة المثبتة في أعلى القائمة -->
                 <div class="hist-selected-card" id="histWarSelectedCard">
@@ -275,6 +279,10 @@
             </div>
         </div>
         <div class="hist-popover-menu" id="histErasPopoverMenu" role="menu" hidden>
+            <div class="hist-popover-header">
+                <div class="hist-drawer-title"><i data-lucide="landmark" class="lucide-icon"></i> <span data-i18n="histSegEras">الحقب التاريخية</span></div>
+                <button type="button" class="hist-drawer-close-btn" aria-label="إغلاق">&times;</button>
+            </div>
             <div class="hist-popover-body">
                 <!-- بطاقة الحقبة المختارة المثبتة في أعلى القائمة -->
                 <div class="hist-selected-card" id="histEraSelectedCard">
@@ -321,6 +329,10 @@
             </div>
         </div>
         <div class="hist-popover-menu" id="histFaithsPopoverMenu" role="menu" hidden>
+            <div class="hist-popover-header">
+                <div class="hist-drawer-title"><i data-lucide="book-open" class="lucide-icon"></i> <span data-i18n="religionsListBtn">الأديان والمعتقدات</span></div>
+                <button type="button" class="hist-drawer-close-btn" aria-label="إغلاق">&times;</button>
+            </div>
             <div class="hist-popover-body">
                 <div class="history-faiths-list" id="histFaithsList"></div>
             </div>

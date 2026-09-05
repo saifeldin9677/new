@@ -8994,44 +8994,37 @@
         var raw = String(idOrName).toLowerCase().trim();
         var norm = normalizeStr(idOrName);
         var normNoSpaces = norm.replace(/\s+/g, '-');
-        
-        // 1. فحص مباشر بالمعرف
+        var strippedId = raw.replace(/[-_]\d+$/, '');
+        var strippedNorm = norm.replace(/\s+\d+$/, '');
+
+        // 1. فحص مباشر بالمعرف الصريح أو المجرد من لاحقة العام
         if (HISTORICAL_POLITIES_DATA[raw]) return HISTORICAL_POLITIES_DATA[raw];
         if (HISTORICAL_POLITIES_DATA[normNoSpaces]) return HISTORICAL_POLITIES_DATA[normNoSpaces];
-        
-        // 2. فحص البدائل
-        if (POLITY_ALIASES[raw] && HISTORICAL_POLITIES_DATA[POLITY_ALIASES[raw]]) {
-            return HISTORICAL_POLITIES_DATA[POLITY_ALIASES[raw]];
-        }
-        if (POLITY_ALIASES[normNoSpaces] && HISTORICAL_POLITIES_DATA[POLITY_ALIASES[normNoSpaces]]) {
-            return HISTORICAL_POLITIES_DATA[POLITY_ALIASES[normNoSpaces]];
-        }
-        if (POLITY_ALIASES[norm] && HISTORICAL_POLITIES_DATA[POLITY_ALIASES[norm]]) {
-            return HISTORICAL_POLITIES_DATA[POLITY_ALIASES[norm]];
-        }
+        if (HISTORICAL_POLITIES_DATA[strippedId]) return HISTORICAL_POLITIES_DATA[strippedId];
 
-        // 3. فحص تطابق بالبدائل الجزئية
-        var aliasKeys = Object.keys(POLITY_ALIASES);
-        for (var a = 0; a < aliasKeys.length; a++) {
-            var ak = aliasKeys[a];
-            var normAk = normalizeStr(ak);
-            if (norm.indexOf(normAk) !== -1 || normAk.indexOf(norm) !== -1) {
-                var targetId = POLITY_ALIASES[ak];
-                if (HISTORICAL_POLITIES_DATA[targetId]) return HISTORICAL_POLITIES_DATA[targetId];
-            }
-        }
+        // 2. فحص البدائل المطابقة بدقة
+        if (POLITY_ALIASES[raw] && HISTORICAL_POLITIES_DATA[POLITY_ALIASES[raw]]) return HISTORICAL_POLITIES_DATA[POLITY_ALIASES[raw]];
+        if (POLITY_ALIASES[normNoSpaces] && HISTORICAL_POLITIES_DATA[POLITY_ALIASES[normNoSpaces]]) return HISTORICAL_POLITIES_DATA[POLITY_ALIASES[normNoSpaces]];
+        if (POLITY_ALIASES[norm] && HISTORICAL_POLITIES_DATA[POLITY_ALIASES[norm]]) return HISTORICAL_POLITIES_DATA[POLITY_ALIASES[norm]];
+        if (POLITY_ALIASES[strippedId] && HISTORICAL_POLITIES_DATA[POLITY_ALIASES[strippedId]]) return HISTORICAL_POLITIES_DATA[POLITY_ALIASES[strippedId]];
+        if (POLITY_ALIASES[strippedNorm] && HISTORICAL_POLITIES_DATA[POLITY_ALIASES[strippedNorm]]) return HISTORICAL_POLITIES_DATA[POLITY_ALIASES[strippedNorm]];
 
-        // 4. فحص تطابق جزئي بالأسماء العربية والإنجليزية
+        // 3. فحص تطابق تام بالأسماء العربية والإنجليزية
         var keys = Object.keys(HISTORICAL_POLITIES_DATA);
         for (var i = 0; i < keys.length; i++) {
             var item = HISTORICAL_POLITIES_DATA[keys[i]];
-            var normNameAr = normalizeStr(item.name_ar);
-            var normNameEn = (item.name_en || '').toLowerCase();
-            if (normNameAr && (norm.indexOf(normNameAr) !== -1 || normNameAr.indexOf(norm) !== -1)) {
-                return item;
-            }
-            if (normNameEn && (raw.indexOf(normNameEn) !== -1 || normNameEn.indexOf(raw) !== -1)) {
-                return item;
+            var normItemAr = normalizeStr(item.name_ar);
+            var lowerItemEn = (item.name_en || '').toLowerCase();
+            if (normItemAr === norm || normItemAr === strippedNorm) return item;
+            if (lowerItemEn === raw || lowerItemEn === strippedId) return item;
+        }
+
+        // 4. فحص البدائل بالكلمات الكاملة (Whole-word tokens) لمنع التداخل العشوائي
+        var words = norm.split(/\s+/);
+        for (var w = 0; w < words.length; w++) {
+            var word = words[w];
+            if (word.length >= 3 && POLITY_ALIASES[word] && HISTORICAL_POLITIES_DATA[POLITY_ALIASES[word]]) {
+                return HISTORICAL_POLITIES_DATA[POLITY_ALIASES[word]];
             }
         }
 

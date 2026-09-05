@@ -123,6 +123,11 @@
                     <span class="history-year-badge" id="religionsYearValue"></span>
                     <div class="religions-caption" id="religionsCaption"></div>
                 </div>
+
+                <!-- Travelers Tray Content -->
+                <div class="history-travelers-timeline-wrap" id="historyTravelersTimelineWrap" style="display:none">
+                    <div class="hist-travelers-chips" id="histTravelersChips"></div>
+                </div>
             </div>
             <!-- Active Caption / Context Line -->
             <div class="history-timeline-caption" id="histTimelineCaption"></div>
@@ -191,6 +196,7 @@
                                 <button type="button" class="btn header-btn hist-popover-btn" id="histWarsPopoverBtn" aria-haspopup="true" aria-expanded="false" aria-controls="histWarsPopoverMenu"><i data-lucide="swords" class="lucide-icon"></i><span class="btn-text" data-i18n="histSegWars">Wars</span><i data-lucide="chevron-down" class="dropdown-arrow lucide-icon"></i></button>
                                 <button type="button" class="btn header-btn hist-popover-btn" id="histErasPopoverBtn" aria-haspopup="true" aria-expanded="false" aria-controls="histErasPopoverMenu"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text" data-i18n="histSegEras">Eras</span><i data-lucide="chevron-down" class="dropdown-arrow lucide-icon"></i></button>
                                 <button type="button" class="btn header-btn hist-popover-btn" id="histFaithsPopoverBtn" aria-haspopup="true" aria-expanded="false" aria-controls="histFaithsPopoverMenu"><i data-lucide="book-open" class="lucide-icon"></i><span class="btn-text" data-i18n="religionsListBtn">Religions</span><i data-lucide="chevron-down" class="dropdown-arrow lucide-icon"></i></button>
+                                <button type="button" class="btn header-btn hist-popover-btn" id="histTravelersPopoverBtn" aria-haspopup="true" aria-expanded="false" aria-controls="histTravelersPopoverMenu"><i data-lucide="compass" class="lucide-icon"></i><span class="btn-text" data-i18n="histSegTravelers">الرحالة</span><i data-lucide="chevron-down" class="dropdown-arrow lucide-icon"></i></button>
                             </div>
                         </div>
                         <div class="control-group" id="modeButtons">
@@ -308,6 +314,12 @@
                             </div>
                         </div>
                         <div class="hist-card-polities" id="histEraCardPolities"></div>
+                        <div class="hist-card-actions" style="margin-top:10px">
+                            <button type="button" class="btn btn-sm hist-action-btn" id="histComparePolitiesBtn">
+                                <i data-lucide="git-compare" class="lucide-icon"></i>
+                                <span data-i18n="histComparePolitiesBtn">مقارنة بين قوتين معاصرتين</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <!-- شريط تصنيف عصور الحقب الخمسة -->
@@ -336,6 +348,62 @@
             </div>
         </div>
 
+        <div class="hist-popover-menu" id="histTravelersPopoverMenu" role="menu" hidden>
+            <div class="hist-popover-header">
+                <div class="hist-drawer-title"><i data-lucide="compass" class="lucide-icon"></i> <span data-i18n="histSegTravelers">الرحالة والمستكشفون</span></div>
+                <button type="button" class="hist-drawer-close-btn" aria-label="إغلاق">&times;</button>
+            </div>
+            <div class="hist-popover-body">
+                <div class="history-filter-row" style="margin-bottom:8px">
+                    <input type="text" class="history-search-input" id="histTravelersSearchInput" data-i18n-placeholder="histSearchPlaceholder" autocomplete="off" />
+                    <button type="button" class="btn btn-sm" id="histTravelersClearBtn" style="white-space:nowrap">إلغاء التحديد</button>
+                </div>
+                <div class="history-travelers-list" id="histTravelersList"></div>
+            </div>
+        </div>
+
+        <!-- Floating Traveler Details Card on Map -->
+        <div class="hist-traveler-card" id="histTravelerCard" style="display:none" role="region" aria-label="Traveler Details">
+            <div class="hist-traveler-card-header">
+                <button type="button" class="hist-traveler-nav-arrow" id="histTravelerPrevBtn" title="الرحالة السابق" aria-label="السابق" data-i18n-title="histTravelerPrev">
+                    <i data-lucide="chevron-right" class="lucide-icon"></i>
+                </button>
+                <div class="hist-traveler-nav-title-wrap">
+                    <span class="hist-traveler-nav-name" id="histTravelerNavName"></span>
+                    <span class="hist-traveler-nav-counter" id="histTravelerNavCounter"></span>
+                </div>
+                <button type="button" class="hist-traveler-nav-arrow" id="histTravelerNextBtn" title="الرحالة التالي" aria-label="التالي" data-i18n-title="histTravelerNext">
+                    <i data-lucide="chevron-left" class="lucide-icon"></i>
+                </button>
+                <button type="button" class="hist-traveler-close-btn" id="histTravelerCardClose" aria-label="إغلاق">&times;</button>
+            </div>
+            <div class="hist-traveler-card-body" id="histTravelerCardBody"></div>
+        </div>
+
+        <!-- Contemporary Polity Comparison Modal -->
+        <div class="hist-compare-modal menu-popover" id="histPolityCompareModal" role="dialog" aria-modal="true" aria-labelledby="histCompareModalTitle" hidden>
+            <div class="hist-compare-modal-content">
+                <div class="hist-compare-modal-header">
+                    <h3 id="histCompareModalTitle"><i data-lucide="git-compare" class="lucide-icon"></i> <span data-i18n="histCompareTitle">مقارنة القوى التاريخية المتزامنة</span></h3>
+                    <button class="close-btn" id="histCompareModalClose" aria-label="إغلاق">&times;</button>
+                </div>
+                <div class="hist-compare-modal-body">
+                    <div class="hist-compare-selectors">
+                        <div class="hist-compare-col-select">
+                            <label for="histComparePolity1Select">القوة الأولى:</label>
+                            <select id="histComparePolity1Select" class="history-region-select"></select>
+                        </div>
+                        <div class="hist-compare-vs-badge">VS</div>
+                        <div class="hist-compare-col-select">
+                            <label for="histComparePolity2Select">القوة الثانية:</label>
+                            <select id="histComparePolity2Select" class="history-region-select"></select>
+                        </div>
+                    </div>
+                    <div class="hist-compare-grid" id="histCompareGrid"></div>
+                </div>
+            </div>
+        </div>
+
         <div class="layers-modal menu-popover" id="layersModal" role="dialog" aria-modal="false" aria-labelledby="layersModalTitle">
             <div class="layers-modal-content layers-dropdown-container">
                 <div class="layers-modal-header">
@@ -361,8 +429,10 @@
                     <select id="blocSelect" class="bloc-select geo-layer" data-i18n-title="blocSelect_title"><option value="all">جميع التكتلات</option></select>
                     <button class="btn geo-layer" id="desertsForestsToggle" aria-pressed="false" title="إظهار/إخفاء الصحاري والغابات" data-i18n="desertsForests" data-i18n-title="desertsForestsToggle_title"><i data-lucide="sun" class="lucide-icon"></i><span class="btn-text">صحاري</span></button>
                     <button class="btn geo-layer" id="borderDisputesToggle" aria-pressed="false" title="إظهار/إخفاء النزاعات الحدودية" data-i18n="borderDisputes" data-i18n-title="borderDisputesToggle_title"><i data-lucide="swords" class="lucide-icon"></i><span class="btn-text">نزاعات</span></button>
-                    <button class="btn geo-layer" id="adminBoundariesToggle" aria-pressed="false" title="إظهار/إخفاء الحدود الإدارية" data-i18n="adminBoundariesToggle" data-i18n-title="adminBoundariesToggle_title"><i data-lucide="map" class="lucide-icon"></i><span class="btn-text">حدود إدارية</span></button>
-                    <button class="btn" id="historicalRoutesToggle" aria-pressed="false" title="إظهار/إخفاء الطرق التاريخية" data-i18n="historicalRoutes" data-i18n-title="historicalRoutesToggle_title"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text">طرق تاريخية</span></button>
+                    <button class="btn hist-layer" id="historicalRoutesToggle" aria-pressed="false" title="إظهار/إخفاء الطرق التاريخية" data-i18n="historicalRoutes" data-i18n-title="historicalRoutesToggle_title"><i data-lucide="route" class="lucide-icon"></i><span class="btn-text" data-i18n="historicalRoutes">طرق تاريخية</span></button>
+                    <button class="btn hist-layer" id="histCapitalsToggle" aria-pressed="false" title="إظهار/إخفاء العواصم التاريخية" data-i18n="histCapitalsToggle" data-i18n-title="histCapitalsToggle_title"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text" data-i18n="histCapitalsToggle">عواصم تاريخية</span></button>
+                    <button class="btn hist-layer" id="histBattlesToggle" aria-pressed="false" title="إظهار/إخفاء المعارك الفاصلة" data-i18n="histBattlesToggle" data-i18n-title="histBattlesToggle_title"><i data-lucide="swords" class="lucide-icon"></i><span class="btn-text" data-i18n="histBattlesToggle">معارك فاصلة</span></button>
+                    <button class="btn hist-layer" id="histWondersToggle" aria-pressed="false" title="إظهار/إخفاء عجائب العالم والمعالم الكبرى" data-i18n="histWondersToggle" data-i18n-title="histWondersToggle_title"><i data-lucide="sparkles" class="lucide-icon"></i><span class="btn-text" data-i18n="histWondersToggle">عجائب ومعالم</span></button>
                 </div>
             </div>
         </div>

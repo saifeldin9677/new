@@ -319,7 +319,7 @@
             let historySavedState = null;
             let historicalErasData = null;
             let historicalErasLoading = null;
-            let historyTab = 'wars';
+            let historyTab = null;
             let historyEraId = null;
             let histPlayActive = false;
             let histPlayTimer = null;
@@ -396,6 +396,8 @@
             let adminNameTranslationsLoading = null;
             let _adminBoundariesRedrawTimeout = null;
             let lang = (function() { var s = localStorage.getItem('mapLang'); return s && ['ar','en','ru','uz','es'].includes(s) ? s : 'ar'; })();
+            function getCurrentLang() { return lang || 'ar'; }
+            window.getCurrentLang = getCurrentLang;
             let allCountryFeatures = [];
             let countryPaths = null;
             let gCBPatterns = null;
@@ -406,7 +408,10 @@
             let dataTableSortKey = 'name';
             let dataTableSortAsc = true;
             let selectedFeatureType = null; // 'mountain' | 'river' | null
-            let gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gBorderDisputes, gAdminBoundaries, gGlaciatedAreas, gGeopoliticalBlocs, gDesertsForests, gHistoryOverlay, gHistoryCompareOverlay, gHistoricalRoutes;
+            let gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gBorderDisputes, gAdminBoundaries, gGlaciatedAreas, gGeopoliticalBlocs, gDesertsForests, gHistoryOverlay, gHistoryCompareOverlay, gHistoricalRoutes, gHistTravelers, gHistCapitals, gHistBattles, gHistWonders;
+            let historicalTravelersData = null, historicalCapitalsData = null, historicalBattlesData = null, historicalWondersData = null;
+            let selectedTravelerIds = [], activeTravelerCarouselIndex = 0, activeWaypointIndex = null;
+            let histCapitalsVisible = false, histBattlesVisible = false, histWondersVisible = false;
             let projection, pathGen;
             let svg, gMap, gCountries, gCountryLabels, gGraticule, gIceCap, gOcean, gCorridors, gPhysical, gTemperature, gAuthoringMarkers, gQuizMarkers;
             let currentTransform = d3.zoomIdentity;
@@ -470,6 +475,9 @@
                 desertsForests:      { getFlag: function(){ return desertsForestsVisible; },   setFlag: function(v){ desertsForestsVisible = v; },   btnId: 'desertsForestsToggle',      drawFn: drawDesertsForests, hashKey: 'deserts', setNorm: true },
                 borderDisputes:      { getFlag: function(){ return borderDisputesVisible; },   setFlag: function(v){ borderDisputesVisible = v; },   btnId: 'borderDisputesToggle',      drawFn: drawBorderDisputes, hashKey: 'borderdisputes', setNorm: true },
                 adminBoundaries:    { getFlag: function(){ return adminBoundariesVisible; }, setFlag: function(v){ adminBoundariesVisible = v; }, btnId: 'adminBoundariesToggle',    drawFn: drawAdminBoundaries, hashKey: 'adminbounds' },
+                histCapitals:        { getFlag: function(){ return histCapitalsVisible; },     setFlag: function(v){ histCapitalsVisible = v; },     btnId: 'histCapitalsToggle',        drawFn: function() { if (window.drawHistCapitals) drawHistCapitals(); }, hashKey: 'histcaps', setNorm: true },
+                histBattles:         { getFlag: function(){ return histBattlesVisible; },      setFlag: function(v){ histBattlesVisible = v; },      btnId: 'histBattlesToggle',         drawFn: function() { if (window.drawHistBattles) drawHistBattles(); },   hashKey: 'histbattles', setNorm: true },
+                histWonders:         { getFlag: function(){ return histWondersVisible; },      setFlag: function(v){ histWondersVisible = v; },      btnId: 'histWondersToggle',         drawFn: function() { if (window.drawHistWonders) drawHistWonders(); },   hashKey: 'histwonders', setNorm: true },
                 coords:              { getFlag: function(){ return coordsVisible; },          setFlag: function(v){ coordsVisible = v; },           btnId: 'coordsToggle',              drawFn: null, hashKey: 'coords', skip: true,
                     on: function(state) { var cd = document.getElementById('coordinatesDisplay'); if (cd) cd.classList.toggle('hidden', !state); } }
             };
@@ -1228,6 +1236,10 @@
                 gGeopoliticalBlocs = svg.append('g');
                 gHistoryOverlay = svg.append('g').attr('id', 'historyOverlayLayer');
                 gHistoryCompareOverlay = svg.append('g').attr('id', 'historyCompareOverlayLayer').style('pointer-events', 'none');
+                gHistTravelers = svg.append('g').attr('id', 'histTravelersLayer');
+                gHistCapitals = svg.append('g').attr('id', 'histCapitalsLayer');
+                gHistBattles = svg.append('g').attr('id', 'histBattlesLayer');
+                gHistWonders = svg.append('g').attr('id', 'histWondersLayer');
                 gDesertsForests = svg.append('g');
                 gBorderDisputes = svg.append('g');
                 gAdminBoundaries = svg.append('g');
@@ -1236,7 +1248,7 @@
                 gQuizMarkers = svg.append('g');
 
                 gMap = svg.append('g').attr('class', 'map-transform-group');
-                [gOcean, gGraticule, gIceCap, gCountries, gCBPatterns, gAdminBoundaries, gGlaciatedAreas, gCountryLabels, gPhysical, gCorridors, gHistoricalRoutes, gTemperature, gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gGeopoliticalBlocs, gHistoryOverlay, gHistoryCompareOverlay, gDesertsForests, gBorderDisputes, gAuthoringMarkers, gQuizMarkers]
+                [gOcean, gGraticule, gIceCap, gCountries, gCBPatterns, gAdminBoundaries, gGlaciatedAreas, gCountryLabels, gPhysical, gCorridors, gHistoricalRoutes, gTemperature, gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gGeopoliticalBlocs, gHistoryOverlay, gHistoryCompareOverlay, gHistTravelers, gHistCapitals, gHistBattles, gHistWonders, gDesertsForests, gBorderDisputes, gAuthoringMarkers, gQuizMarkers]
                     .forEach(g => gMap.append(() => g.node()));
 
                 projection = setupProjection(width, height);
@@ -1525,8 +1537,8 @@
                 var dur = prefersReducedMotion() ? 0 : 300;
                 var histYear = null;
                 if (historyActive) {
-                    if (historyTab === 'eras' && historicalErasData) {
-                        var _he = historicalErasData.find(function(x) { return x.id === historyEraId; }) || historicalErasData[0];
+                    if (historyTab === 'eras') {
+                        var _he = (typeof getHistEra === 'function') ? getHistEra() : null;
                         if (_he) histYear = _he.sort;
                     } else if (historyTab === 'wars') {
                         var _hw = historyWarData.find(function(x) { return x.id === historyWarId; });
@@ -3066,6 +3078,10 @@
                 drawGeopoliticalBlocs();
                 drawDesertsForests();
                 drawBorderDisputes();
+                if (window.drawHistoricalTravelers) window.drawHistoricalTravelers();
+                if (window.drawHistCapitals) window.drawHistCapitals();
+                if (window.drawHistBattles) window.drawHistBattles();
+                if (window.drawHistWonders) window.drawHistWonders();
                 if (!(_annotStrokePoints && _annotStrokePoints.length)) {
                     try { redrawAnnotations(); if (annotateKind === 'region' && annotatePoints && annotatePoints.length > 0) redrawAnnotationDrawing(); } catch (e) {}
                 }
@@ -7076,14 +7092,6 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     // Expose for replay button
                     var baseOpenTutorial = openTutorial;
                     window.startOnboarding = function() {
-                        if (typeof currentSection !== 'undefined' && currentSection === 'history' && historyTab !== 'eras') {
-                            historyTab = 'eras';
-                            if ((!historyEraId || !historicalErasData.some(function(x) { return x.id === historyEraId; })) && historicalErasData && historicalErasData.length) {
-                                historyEraId = historicalErasData[0].id;
-                            }
-                            renderHistoryBar();
-                            drawEraScene(true);
-                        }
                         baseOpenTutorial();
                     };
 
@@ -7734,7 +7742,8 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     return pal[p.role] || pal.major || '#8d97a5';
                 }
                 function getHistWar() {
-                    return historyWarData.find(function(w) { return w.id === historyWarId; }) || historyWarData[0];
+                    if (!historyWarId) return null;
+                    return historyWarData.find(function(w) { return w.id === historyWarId; }) || null;
                 }
                 function getWarPhaseScenario(war, phase) {
                     if (!war) return null;
@@ -8018,7 +8027,11 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     gHistoryOverlay.selectAll('*').remove();
                     if (!historyActive) return;
                     var sc = getHistScenario();
-                    if (!sc) return;
+                    if (!sc) {
+                        clearHistoryOverlay();
+                        renderHistoryEmptyState();
+                        return;
+                    }
                     var k = Math.max(0.4, currentTransform.k);
                     var fs = Math.max(4, Math.min(16, (isMobile ? 8 : 11) / k));
                     var dur = prefersReducedMotion() ? 0 : 300;
@@ -8109,6 +8122,10 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                
                     if (typeof updateHistoryLabels === 'function') updateHistoryLabels(k);
                     if (historicalRoutesVisible && window.drawHistoricalRoutes) window.drawHistoricalRoutes(true);
+                    if (window.drawHistoricalTravelers) window.drawHistoricalTravelers();
+                    if (window.drawHistCapitals) window.drawHistCapitals();
+                    if (window.drawHistBattles) window.drawHistBattles();
+                    if (window.drawHistWonders) window.drawHistWonders();
                     renderHistoryLegend();
                 }
                 // Normalize a search string for robust multilingual matching:
@@ -8289,30 +8306,35 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     return true;
                 }
                 function updateHistSubmodeVis() {
-                    var mode = historyTab === 'faiths' ? 'faiths' : (historyTab === 'eras' ? 'eras' : 'wars');
+                    var mode = historyTab === 'faiths' ? 'faiths' : (historyTab === 'eras' ? 'eras' : (historyTab === 'travelers' ? 'travelers' : 'wars'));
                     var eras = historyTab === 'eras';
                     var faiths = historyTab === 'faiths';
                     var wars = historyTab === 'wars';
+                    var travelers = historyTab === 'travelers';
                     var wt = document.getElementById('histWarTabs');
                     var sb = document.getElementById('histScenarioBtns');
                     var eg = document.getElementById('historyEraGroup');
                     var mw = document.getElementById('histWarsPopoverBtn');
                     var me = document.getElementById('histErasPopoverBtn');
                     var mf = document.getElementById('histFaithsPopoverBtn');
+                    var mt = document.getElementById('histTravelersPopoverBtn');
                     // The timeline slider / play control lives in the dedicated
                     // floating bottom bar, which only appears for Eras and Faiths.
                     var bb = document.getElementById('historyBottomBar');
                     var etw = document.getElementById('historyEraTimelineWrap');
                     var ftw = document.getElementById('historyFaithsTimelineWrap');
+                    var ttw = document.getElementById('historyTravelersTimelineWrap');
                     if (wt) wt.style.setProperty('display', wars ? 'grid' : 'none', 'important');
                     if (sb) sb.style.setProperty('display', wars ? 'flex' : 'none', 'important');
                     if (eg) eg.style.setProperty('display', eras ? 'grid' : 'none', 'important');
-                    if (bb) bb.style.display = (eras || faiths) ? 'flex' : 'none';
+                    if (bb) bb.style.display = (eras || faiths || (travelers && selectedTravelerIds && selectedTravelerIds.length > 0)) ? 'flex' : 'none';
                     if (etw) etw.style.display = eras ? 'flex' : 'none';
                     if (ftw) ftw.style.display = faiths ? 'flex' : 'none';
+                    if (ttw) ttw.style.display = travelers ? 'flex' : 'none';
                     if (mw) { mw.classList.toggle('active', wars); mw.setAttribute('aria-selected', wars ? 'true' : 'false'); }
                     if (me) { me.classList.toggle('active', eras); me.setAttribute('aria-selected', eras ? 'true' : 'false'); }
                     if (mf) { mf.classList.toggle('active', faiths); mf.setAttribute('aria-selected', faiths ? 'true' : 'false'); }
+                    if (mt) { mt.classList.toggle('active', travelers); mt.setAttribute('aria-selected', travelers ? 'true' : 'false'); }
                     // The religion filter is only meaningful for Wars (it derives
                     // from real per-participant religion data). Eras and Faiths
                     // have their own per-religion controls, so hide it there and
@@ -8323,6 +8345,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (rf) rf.style.setProperty('display', wars ? '' : 'none', wars ? '' : 'important');
                     if (!wars) historyReligionFilter = 'all';
                 }
+                window.updateHistSubmodeVis = updateHistSubmodeVis;
                 function renderHistoryBar() {
                     // Ensure the richer external JSON dataset is loaded before
                     // rendering. Until it resolves the embedded fallback shows.
@@ -8959,12 +8982,15 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     }
                     if (colorMode !== 'normal') setMode('normal');
                     historyActive = true;
+                    if (!historyWarId && !historyEraId && (!window.religionsStillActive || !window.religionsStillActive())) {
+                        historyTab = null;
+                    }
                     renderHistoryBar();
                     syncGlobeBtnState();
-                    // Do not auto-select/draw a scenario — a neutral empty state
-                    // is shown until the user explicitly picks a war/era.
-                    if (window.historyWarSelected()) {
+                    if (historyTab === 'wars' && window.historyWarSelected()) {
                         drawHistoryScenario();
+                    } else if (historyTab === 'eras' && historyEraId) {
+                        drawEraScene();
                     } else {
                         clearHistoryOverlay();
                         renderHistoryEmptyState();
@@ -9119,6 +9145,9 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     document.querySelectorAll('.geo-layer').forEach(function(el) {
                         setSectionVis(el, !hist);
                     });
+                    document.querySelectorAll('.hist-layer').forEach(function(el) {
+                        setSectionVis(el, hist);
+                    });
                 }
                 function applySection(section, persist) {
                     if (section !== 'geo' && section !== 'history') return;
@@ -9181,8 +9210,8 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     return historicalErasLoading;
                 }
                 function getHistEra() {
-                    if (!historicalErasData || !historicalErasData.length) return null;
-                    return historicalErasData.find(function(e) { return e.id === historyEraId; }) || historicalErasData[0];
+                    if (!historicalErasData || !historicalErasData.length || !historyEraId) return null;
+                    return historicalErasData.find(function(e) { return e.id === historyEraId; }) || null;
                 }
                 function normalizeEraRing(ring) {
                     while (Array.isArray(ring) && ring.length === 1 && Array.isArray(ring[0])) ring = ring[0];
@@ -9248,7 +9277,11 @@ function buildEraFeature(p, phase) {
                     }
                     if (!historyActive || historyTab !== 'eras') return;
                     var era = getHistEra();
-                    if (!era) return;
+                    if (!era) {
+                        clearHistoryOverlay();
+                        renderHistoryEmptyState();
+                        return;
+                    }
                     var k = Math.max(0.4, currentTransform.k);
                     var fs = Math.max(4, Math.min(15, (isMobile ? 8 : 11) / k));
                     var dur = prefersReducedMotion() ? 0 : 300;
@@ -9310,6 +9343,10 @@ function buildEraFeature(p, phase) {
                     });
                     if (typeof updateHistoryLabels === 'function') updateHistoryLabels(k);
                     if (historicalRoutesVisible && window.drawHistoricalRoutes) window.drawHistoricalRoutes(true);
+                    if (window.drawHistoricalTravelers) window.drawHistoricalTravelers();
+                    if (window.drawHistCapitals) window.drawHistCapitals();
+                    if (window.drawHistBattles) window.drawHistBattles();
+                    if (window.drawHistWonders) window.drawHistWonders();
                     renderHistoryLegend();
                 }
                 function deselectHistoryPolity() {
@@ -9589,11 +9626,10 @@ function buildEraFeature(p, phase) {
                     var eraGroupEl = document.getElementById('historyEraGroup');
                     if (!eraGroupEl) return;
                     eraGroupEl.innerHTML = '';
-                    var era = getHistEra();
-                    if (!era) {
+                    if (!historicalErasData || !historicalErasData.length) {
                         eraGroupEl.innerHTML = '<span class="history-loading">' + htmlEscape(t('histEraLoading')) + '</span>';
                         if (tl) tl.style.display = 'none';
-                        sp.innerHTML = '';
+                        if (sp) sp.innerHTML = '';
                         fetchHistoricalEras().then(function() {
                             if (historyTab !== 'eras') return;
                             renderHistoryBar();
@@ -9609,6 +9645,7 @@ function buildEraFeature(p, phase) {
                         });
                         return;
                     }
+                    var era = getHistEra();
                     var filtered = historicalErasData.filter(eraPassesFilters);
                     filtered.sort(function(a, b) { return (a.sort || 0) - (b.sort || 0); });
                     histPlayOrder = filtered.slice();
@@ -9663,6 +9700,7 @@ function buildEraFeature(p, phase) {
                                 b.title = (e.yearLabel || '') + ' · ' + locField(e, 'title');
                                 b.addEventListener('click', function() {
                                     stopHistPlay();
+                                    historyTab = 'eras';
                                     historyEraId = e.id;
                                     selectedHistoryPolity = null;
                                     if (window.innerWidth <= 680 && typeof closeAllHistPopovers === 'function') closeAllHistPopovers();
@@ -9677,7 +9715,7 @@ function buildEraFeature(p, phase) {
                         eraGroupEl.appendChild(col);
                     });
 
-                    if (!historyEraId) {
+                    if (!historyEraId || !era) {
                         if (tl) tl.style.display = 'none';
                         clearHistoryOverlay();
                         renderHistoryEmptyState();
@@ -9712,6 +9750,7 @@ function buildEraFeature(p, phase) {
                         dot.addEventListener('click', function(ev) {
                             ev.stopPropagation();
                             stopHistPlay();
+                            historyTab = 'eras';
                             historyEraId = e.id;
                             updateEraBottomBadge(e);
                             renderHistoryBar();
@@ -9745,6 +9784,7 @@ function buildEraFeature(p, phase) {
                                 var bestPct = Math.max(0, Math.min(100, (best.sort - sMin) / (sMax - sMin) * 100));
                                 tl.style.setProperty('--era-pct', bestPct + '%');
                                 if (best.id !== historyEraId) {
+                                    historyTab = 'eras';
                                     historyEraId = best.id;
                                     selectedHistoryPolity = null;
                                     updateEraBottomBadge(best);
@@ -9856,6 +9896,8 @@ function buildEraFeature(p, phase) {
                 }
                 window.renderHistoryLegend = renderHistoryLegend;
                 window.selectHistoryTab = selectHistoryTab;
+                window.getHistEra = getHistEra;
+                window.getHistWar = getHistWar;
                 window.warsForCountry = function(name) {
                     var cn = getCleanName(name || '');
                     if (!cn) return [];
@@ -9892,6 +9934,11 @@ function buildEraFeature(p, phase) {
                     if (tab === 'faiths') {
                         renderHistoryBar();
                         if (window.renderFaithsMode) window.renderFaithsMode();
+                        return;
+                    }
+                    if (tab === 'travelers') {
+                        renderHistoryBar();
+                        if (window.renderTravelersMode) window.renderTravelersMode();
                         return;
                     }
                     if (tab === 'eras') {
@@ -12025,6 +12072,12 @@ function buildEraFeature(p, phase) {
             document.getElementById('borderDisputesToggle').addEventListener('click', toggleBorderDisputes);
             const historicalRoutesToggleBtn = document.getElementById('historicalRoutesToggle');
             if (historicalRoutesToggleBtn) historicalRoutesToggleBtn.addEventListener('click', function() { toggleLayerByName('historicalRoutes'); });
+            const histCapitalsToggleBtn = document.getElementById('histCapitalsToggle');
+            if (histCapitalsToggleBtn) histCapitalsToggleBtn.addEventListener('click', function() { toggleLayerByName('histCapitals'); });
+            const histBattlesToggleBtn = document.getElementById('histBattlesToggle');
+            if (histBattlesToggleBtn) histBattlesToggleBtn.addEventListener('click', function() { toggleLayerByName('histBattles'); });
+            const histWondersToggleBtn = document.getElementById('histWondersToggle');
+            if (histWondersToggleBtn) histWondersToggleBtn.addEventListener('click', function() { toggleLayerByName('histWonders'); });
             if (adminBoundariesToggle) adminBoundariesToggle.addEventListener('click', toggleAdminBoundaries);
             if (globeViewBtn) globeViewBtn.addEventListener('click', function() {
                 if (quizActive) return;
@@ -12081,7 +12134,19 @@ function buildEraFeature(p, phase) {
                 histSourcesBtnEl.addEventListener('click', function(e) {
                     e.stopPropagation();
                     var sp = document.getElementById('histSourcesPanel');
-                    if (sp) sp.style.display = sp.style.display === 'none' ? 'block' : 'none';
+                    if (sp) {
+                        var willOpen = (sp.style.display === 'none' || !sp.style.display);
+                        var curEra = (typeof getHistEra === 'function' ? getHistEra() : (window.getHistEra ? window.getHistEra() : historyEraId));
+                        var curWar = (typeof getHistWar === 'function' ? getHistWar() : (window.getHistWar ? window.getHistWar() : historyWarId));
+                        if (willOpen && !curEra && !curWar) {
+                            sp.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">' +
+                                '<h4>' + htmlEscape(t('histSourcesTitle')) + '</h4>' +
+                                '<button type="button" class="hist-drawer-close-btn" style="width:24px;height:24px;font-size:1rem;" onclick="document.getElementById(\'histSourcesPanel\').style.display=\'none\'">&times;</button>' +
+                                '</div>' +
+                                '<p class="hist-empty-cue" style="margin:8px 0;font-size:0.85rem;color:var(--text-muted);">' + htmlEscape(t('histSelectEraCue')) + '</p>';
+                        }
+                        sp.style.display = willOpen ? 'block' : 'none';
+                    }
                     var m = document.getElementById('toolsDropdownMenu');
                     if (m) {
                         m.classList.remove('visible');
@@ -12140,7 +12205,8 @@ function buildEraFeature(p, phase) {
             var histPopoverDefs = [
                 { btnId: 'histWarsPopoverBtn', menuId: 'histWarsPopoverMenu', tab: 'wars' },
                 { btnId: 'histErasPopoverBtn', menuId: 'histErasPopoverMenu', tab: 'eras' },
-                { btnId: 'histFaithsPopoverBtn', menuId: 'histFaithsPopoverMenu', tab: 'faiths' }
+                { btnId: 'histFaithsPopoverBtn', menuId: 'histFaithsPopoverMenu', tab: 'faiths' },
+                { btnId: 'histTravelersPopoverBtn', menuId: 'histTravelersPopoverMenu', tab: 'travelers' }
             ];
             function closeAllHistPopovers() {
                 histPopoverDefs.forEach(function(d) {
@@ -12149,6 +12215,10 @@ function buildEraFeature(p, phase) {
                     if (btn) btn.setAttribute('aria-expanded', 'false');
                     if (menu) { menu.classList.remove('visible'); menu.setAttribute('hidden', ''); }
                 });
+                if (!historyWarId && !historyEraId && (!window.religionsStillActive || !window.religionsStillActive()) && (!selectedTravelerIds || !selectedTravelerIds.length)) {
+                    historyTab = null;
+                    if (typeof updateHistSubmodeVis === 'function') updateHistSubmodeVis();
+                }
             }
             window.closeAllHistPopovers = closeAllHistPopovers;
             histPopoverDefs.forEach(function(d) {
@@ -12174,6 +12244,7 @@ function buildEraFeature(p, phase) {
                     if (d.tab === 'wars') { if (window.renderHistoryBar) renderHistoryBar(); }
                     else if (d.tab === 'eras') { if (window.renderEraTabContent) renderEraTabContent(); }
                     else if (d.tab === 'faiths') { if (window.renderFaithsPopoverList) renderFaithsPopoverList(); }
+                    else if (d.tab === 'travelers') { if (window.renderTravelersPopoverList) renderTravelersPopoverList(); }
                     positionPopover(menu, btn);
                 });
                 menu.addEventListener('click', function(e) { e.stopPropagation(); });
@@ -12572,6 +12643,7 @@ function getReligionSlice(religion, year) {
                         if (rel && window.setReligionsYear) {
                             setReligionsYear(rel.startYear);
                             if (historyTab !== 'faiths' && window.selectHistoryTab) selectHistoryTab('faiths');
+                            if (window.innerWidth <= 680 && typeof closeAllHistPopovers === 'function') closeAllHistPopovers();
                         }
                     });
                 });
@@ -12610,6 +12682,814 @@ function getReligionSlice(religion, year) {
             window.getActiveReligionsAtYear = getActiveReligionsAtYear;
             window.religionsStillActive = function() { return religionsActive; };
             window.drawReligionsSceneNow = function(skipFadeIn) { drawReligionsScene(religionsYear, skipFadeIn); };
+
+            // ══════════════════════════════════════════════════════════════════
+            // ── Historical Travelers & Explorers Layer ──
+            // ══════════════════════════════════════════════════════════════════
+            var _histTravelersSearchText = '';
+
+            function fetchHistoricalTravelers() {
+                if (historicalTravelersData) return Promise.resolve(historicalTravelersData);
+                return fetch('historical-travelers-data.json')
+                    .then(function(r) { return r.json(); })
+                    .then(function(data) {
+                        historicalTravelersData = (data && data.travelers) ? data.travelers : (Array.isArray(data) ? data : []);
+                        return historicalTravelersData;
+                    });
+            }
+            window.fetchHistoricalTravelers = fetchHistoricalTravelers;
+
+            function activateTravelersMode() {
+                fetchHistoricalTravelers().then(function() {
+                    renderTravelersPopoverList();
+                    renderTravelersBottomBar();
+                    drawTravelerRoutes();
+                    updateTravelerCard();
+                }).catch(function(e) {
+                    if (typeof console !== 'undefined') console.error('Failed to load travelers:', e);
+                });
+            }
+            window.renderTravelersMode = activateTravelersMode;
+
+            function drawTravelerRoutes() {
+                if (!gHistTravelers) return;
+                gHistTravelers.selectAll('*').remove();
+                if (!selectedTravelerIds || !selectedTravelerIds.length || !historicalTravelersData) return;
+
+                var proj = getActiveProjection();
+                var isMob = window.innerWidth <= 768;
+
+                selectedTravelerIds.forEach(function(tId, idx) {
+                    var tr = historicalTravelersData.find(function(x) { return x.id === tId; });
+                    if (!tr || !tr.track || tr.track.length < 2) return;
+
+                    var isActive = (idx === activeTravelerCarouselIndex);
+                    var col = tr.color || '#14b8a6';
+
+                    // Draw track halo (clickable)
+                    gHistTravelers.append('path')
+                        .datum({ type: 'LineString', coordinates: tr.track })
+                        .attr('d', pathGen)
+                        .attr('fill', 'none')
+                        .attr('stroke', col)
+                        .attr('stroke-width', isActive ? (isMob ? 9 : 13) : (isMob ? 5 : 7))
+                        .attr('stroke-opacity', isActive ? 0.32 : 0.16)
+                        .attr('vector-effect', 'non-scaling-stroke')
+                        .style('cursor', 'pointer')
+                        .on('click', function() {
+                            activeTravelerCarouselIndex = idx;
+                            activeWaypointIndex = null;
+                            updateTravelerCard();
+                            renderTravelersBottomBar();
+                            drawTravelerRoutes();
+                        });
+
+                    // Main track line
+                    gHistTravelers.append('path')
+                        .datum({ type: 'LineString', coordinates: tr.track })
+                        .attr('d', pathGen)
+                        .attr('fill', 'none')
+                        .attr('stroke', col)
+                        .attr('stroke-width', isActive ? (isMob ? 2.8 : 3.5) : (isMob ? 1.8 : 2.2))
+                        .attr('stroke-dasharray', isActive ? 'none' : '8,5')
+                        .attr('vector-effect', 'non-scaling-stroke')
+                        .style('pointer-events', 'none');
+
+                    // Waypoints
+                    if (Array.isArray(tr.waypoints)) {
+                        tr.waypoints.forEach(function(wp, wIdx) {
+                            var pt = wp.coords || [wp.lon, wp.lat];
+                            if (!pt) return;
+                            var xy = proj(pt);
+                            if (!xy || isNaN(xy[0])) return;
+
+                            var isWpActive = (isActive && activeWaypointIndex === wIdx);
+
+                            var gWp = gHistTravelers.append('g')
+                                .attr('class', 'hist-wp-marker')
+                                .style('cursor', 'pointer')
+                                .on('click', function(e) {
+                                    if (e && e.stopPropagation) e.stopPropagation();
+                                    activeTravelerCarouselIndex = idx;
+                                    activeWaypointIndex = wIdx;
+                                    updateTravelerCard();
+                                    renderTravelersBottomBar();
+                                    drawTravelerRoutes();
+                                    var wpEl = document.getElementById('histWpItem_' + wIdx);
+                                    if (wpEl) wpEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                                });
+
+                            gWp.append('circle')
+                                .attr('cx', xy[0])
+                                .attr('cy', xy[1])
+                                .attr('r', isWpActive ? (isMob ? 7 : 8.5) : (isMob ? 4 : 5))
+                                .attr('fill', isWpActive ? '#fff' : col)
+                                .attr('stroke', isWpActive ? col : '#fff')
+                                .attr('stroke-width', isWpActive ? 3 : 1.5)
+                                .attr('vector-effect', 'non-scaling-stroke');
+
+                            if (isWpActive || (isActive && wIdx === 0)) {
+                                gWp.append('text')
+                                    .attr('x', xy[0])
+                                    .attr('y', xy[1] - (isWpActive ? 12 : 8))
+                                    .text(locField(wp, 'name'))
+                                    .attr('fill', '#ffffff')
+                                    .attr('font-size', isMob ? 8 : 10)
+                                    .attr('font-weight', isWpActive ? 'bold' : 'normal')
+                                    .attr('text-anchor', 'middle')
+                                    .attr('paint-order', 'stroke')
+                                    .attr('stroke', 'rgba(0,0,0,0.85)')
+                                    .attr('stroke-width', 2.5)
+                                    .style('pointer-events', 'none');
+                            }
+                        });
+                    }
+                });
+            }
+            window.drawTravelerRoutes = drawTravelerRoutes;
+
+            function renderTravelersPopoverList() {
+                var list = document.getElementById('histTravelersList');
+                if (!list) return;
+                if (!historicalTravelersData) {
+                    list.innerHTML = '<div class="history-loading">' + htmlEscape(t('histEraLoading') || 'جاري التحميل...') + '</div>';
+                    fetchHistoricalTravelers().then(function() {
+                        renderTravelersPopoverList();
+                    });
+                    return;
+                }
+
+                var q = (_histTravelersSearchText || '').trim().toLowerCase();
+                var filtered = historicalTravelersData.filter(function(tr) {
+                    if (!q) return true;
+                    var datesStr = locField(tr, 'period') || tr.dates || '';
+                    var blob = (locField(tr, 'name') + ' ' + (locField(tr, 'title') || '') + ' ' + datesStr + ' ' + (locField(tr, 'bio') || '')).toLowerCase();
+                    return blob.indexOf(q) !== -1;
+                });
+
+                if (!filtered.length) {
+                    list.innerHTML = '<div class="hist-col-empty-msg" style="padding:16px;text-align:center;">' + htmlEscape(t('histNoResults') || 'لا توجد نتائج') + '</div>';
+                    return;
+                }
+
+                list.innerHTML = filtered.map(function(tr) {
+                    var isChecked = selectedTravelerIds.indexOf(tr.id) !== -1;
+                    var datesStr = locField(tr, 'period') || tr.dates || '';
+                    return '<div class="hist-traveler-item' + (isChecked ? ' selected' : '') + '" data-traveler-id="' + tr.id + '">' +
+                        '<div class="hist-traveler-color-bar" style="background:' + tr.color + '"></div>' +
+                        '<div class="hist-traveler-info">' +
+                            '<div class="hist-traveler-title-row">' +
+                                '<span class="hist-traveler-name">' + htmlEscape(locField(tr, 'name')) + '</span>' +
+                                '<span class="hist-traveler-dates">' + htmlEscape(datesStr) + '</span>' +
+                            '</div>' +
+                            '<div class="hist-traveler-desc-line">' + htmlEscape(locField(tr, 'title') || locField(tr, 'bio') || '') + '</div>' +
+                        '</div>' +
+                        '<input type="checkbox" class="hist-traveler-checkbox" ' + (isChecked ? 'checked' : '') + ' tabindex="-1" />' +
+                    '</div>';
+                }).join('');
+
+                list.querySelectorAll('.hist-traveler-item').forEach(function(item) {
+                    item.addEventListener('click', function(e) {
+                        var id = this.getAttribute('data-traveler-id');
+                        var idx = selectedTravelerIds.indexOf(id);
+                        if (idx === -1) {
+                            selectedTravelerIds.push(id);
+                            activeTravelerCarouselIndex = selectedTravelerIds.length - 1;
+                        } else {
+                            selectedTravelerIds.splice(idx, 1);
+                            if (activeTravelerCarouselIndex >= selectedTravelerIds.length) {
+                                activeTravelerCarouselIndex = Math.max(0, selectedTravelerIds.length - 1);
+                            }
+                        }
+                        activeWaypointIndex = null;
+                        renderTravelersPopoverList();
+                        renderTravelersBottomBar();
+                        drawTravelerRoutes();
+                        updateTravelerCard();
+                        if (window.updateHistSubmodeVis) window.updateHistSubmodeVis();
+                    });
+                });
+            }
+            window.renderTravelersPopoverList = renderTravelersPopoverList;
+
+            function renderTravelersBottomBar() {
+                var chipsCont = document.getElementById('histTravelersChips');
+                if (!chipsCont) return;
+                if (!selectedTravelerIds || !selectedTravelerIds.length || !historicalTravelersData) {
+                    chipsCont.innerHTML = '<span style="color:#94a3b8;font-size:12px;">' + htmlEscape(t('histSelectTravelerCue') || 'اختر رحالة من القائمة أعلاه') + '</span>';
+                    return;
+                }
+
+                chipsCont.innerHTML = selectedTravelerIds.map(function(tId, idx) {
+                    var tr = historicalTravelersData.find(function(x) { return x.id === tId; });
+                    if (!tr) return '';
+                    var isActive = (idx === activeTravelerCarouselIndex);
+                    return '<button type="button" class="hist-traveler-chip' + (isActive ? ' active' : '') + '" data-tidx="' + idx + '">' +
+                        '<span class="hist-traveler-chip-dot" style="background:' + tr.color + '"></span>' +
+                        '<span>' + htmlEscape(locField(tr, 'name')) + '</span>' +
+                    '</button>';
+                }).join('');
+
+                chipsCont.querySelectorAll('.hist-traveler-chip').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        var tidx = parseInt(this.getAttribute('data-tidx'), 10);
+                        activeTravelerCarouselIndex = tidx;
+                        activeWaypointIndex = null;
+                        updateTravelerCard();
+                        renderTravelersBottomBar();
+                        drawTravelerRoutes();
+                    });
+                });
+            }
+            window.renderTravelersBottomBar = renderTravelersBottomBar;
+
+            function updateTravelerCard() {
+                var card = document.getElementById('histTravelerCard');
+                if (!card) return;
+                if (!selectedTravelerIds || !selectedTravelerIds.length || !historicalTravelersData) {
+                    card.style.display = 'none';
+                    return;
+                }
+                card.style.display = 'flex';
+
+                if (activeTravelerCarouselIndex < 0) activeTravelerCarouselIndex = 0;
+                if (activeTravelerCarouselIndex >= selectedTravelerIds.length) activeTravelerCarouselIndex = selectedTravelerIds.length - 1;
+
+                var tr = historicalTravelersData.find(function(x) { return x.id === selectedTravelerIds[activeTravelerCarouselIndex]; });
+                if (!tr) return;
+
+                var prevBtn = document.getElementById('histTravelerPrevBtn');
+                var nextBtn = document.getElementById('histTravelerNextBtn');
+                var counter = document.getElementById('histTravelerNavCounter');
+                var navName = document.getElementById('histTravelerNavName');
+                var body = document.getElementById('histTravelerCardBody');
+
+                if (counter) counter.textContent = (activeTravelerCarouselIndex + 1) + ' / ' + selectedTravelerIds.length;
+                if (navName) navName.textContent = locField(tr, 'name');
+
+                var multi = selectedTravelerIds.length > 1;
+                if (prevBtn) prevBtn.disabled = !multi;
+                if (nextBtn) nextBtn.disabled = !multi;
+
+                var datesStr = locField(tr, 'period') || tr.dates || '';
+                var html = '';
+                html += '<div class="hist-traveler-badges">';
+                if (datesStr) html += '<span class="hist-traveler-badge">' + htmlEscape(datesStr) + '</span>';
+                if (tr.distance_km) html += '<span class="hist-traveler-badge badge-dist">' + htmlEscape(tr.distance_km.toLocaleString()) + ' ' + htmlEscape(t('km') || 'كم') + '</span>';
+                if (locField(tr, 'title')) html += '<span class="hist-traveler-badge">' + htmlEscape(locField(tr, 'title')) + '</span>';
+                html += '</div>';
+
+                var src = locField(tr, 'primary_source');
+                if (src) {
+                    html += '<div class="hist-traveler-source"><strong>' + htmlEscape(t('histTravelerQuote') || 'المصدر التاريخي الأصيل') + ':</strong> «' + htmlEscape(src) + '»</div>';
+                }
+
+                var bio = locField(tr, 'bio');
+                if (bio) {
+                    html += '<div class="hist-traveler-bio">' + htmlEscape(bio) + '</div>';
+                }
+
+                var rSummary = locField(tr, 'route_summary');
+                if (rSummary) {
+                    html += '<div class="hist-traveler-section-title"><i data-lucide="route" class="lucide-icon"></i> ' + htmlEscape(t('corridorsToggle') || 'ملخص خط السير') + '</div>';
+                    html += '<div class="hist-traveler-details" style="font-size:12px;margin-bottom:10px;">' + htmlEscape(rSummary) + '</div>';
+                }
+
+                if (Array.isArray(tr.waypoints) && tr.waypoints.length) {
+                    html += '<div class="hist-traveler-section-title"><i data-lucide="map-pin" class="lucide-icon"></i> ' + htmlEscape(t('histTravelerStations') || 'محطات الرحلة وأقوال الرحالة') + ' (' + tr.waypoints.length + ')</div>';
+                    html += '<div class="hist-waypoints-list">';
+                    tr.waypoints.forEach(function(wp, wIdx) {
+                        var isWpActive = (activeWaypointIndex === wIdx);
+                        var wpName = locField(wp, 'name');
+                        var wpDur = locField(wp, 'duration');
+                        var wpEv = locField(wp, 'events') || locField(wp, 'event');
+                        var wpQuote = locField(wp, 'quote');
+                        html += '<div class="hist-waypoint-item' + (isWpActive ? ' active' : '') + '" id="histWpItem_' + wIdx + '" data-wp-idx="' + wIdx + '">';
+                        html += '<div class="hist-waypoint-header">';
+                        html += '<span class="hist-waypoint-name">' + (wIdx + 1) + '. ' + htmlEscape(wpName) + (wp.year ? ' (' + wp.year + ')' : '') + '</span>';
+                        if (wpDur) html += '<span class="hist-waypoint-duration">' + htmlEscape(wpDur) + '</span>';
+                        html += '</div>';
+                        if (wpEv) {
+                            html += '<div class="hist-waypoint-details"><strong>' + htmlEscape(t('histEvents') || 'الحدث:') + '</strong> ' + htmlEscape(wpEv) + '</div>';
+                        }
+                        if (wpQuote) {
+                            html += '<div class="hist-waypoint-quote">' + htmlEscape(wpQuote) + '</div>';
+                        }
+                        html += '</div>';
+                    });
+                    html += '</div>';
+                }
+
+                body.innerHTML = html;
+                if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+
+                body.querySelectorAll('.hist-waypoint-item').forEach(function(item) {
+                    item.addEventListener('click', function() {
+                        var wIdx = parseInt(this.getAttribute('data-wp-idx'), 10);
+                        activeWaypointIndex = wIdx;
+                        updateTravelerCard();
+                        drawTravelerRoutes();
+                    });
+                });
+            }
+            window.updateTravelerCard = updateTravelerCard;
+
+            // Wire traveler controls
+            var travPrevBtn = document.getElementById('histTravelerPrevBtn');
+            if (travPrevBtn) {
+                travPrevBtn.addEventListener('click', function() {
+                    if (!selectedTravelerIds || selectedTravelerIds.length <= 1) return;
+                    activeTravelerCarouselIndex = (activeTravelerCarouselIndex - 1 + selectedTravelerIds.length) % selectedTravelerIds.length;
+                    activeWaypointIndex = null;
+                    updateTravelerCard();
+                    renderTravelersBottomBar();
+                    drawTravelerRoutes();
+                });
+            }
+            var travNextBtn = document.getElementById('histTravelerNextBtn');
+            if (travNextBtn) {
+                travNextBtn.addEventListener('click', function() {
+                    if (!selectedTravelerIds || selectedTravelerIds.length <= 1) return;
+                    activeTravelerCarouselIndex = (activeTravelerCarouselIndex + 1) % selectedTravelerIds.length;
+                    activeWaypointIndex = null;
+                    updateTravelerCard();
+                    renderTravelersBottomBar();
+                    drawTravelerRoutes();
+                });
+            }
+            var travCloseBtn = document.getElementById('histTravelerCardClose');
+            if (travCloseBtn) {
+                travCloseBtn.addEventListener('click', function() {
+                    var card = document.getElementById('histTravelerCard');
+                    if (card) card.style.display = 'none';
+                });
+            }
+            var travClearBtn = document.getElementById('histTravelersClearBtn');
+            if (travClearBtn) {
+                travClearBtn.addEventListener('click', function() {
+                    selectedTravelerIds = [];
+                    activeTravelerCarouselIndex = 0;
+                    activeWaypointIndex = null;
+                    renderTravelersPopoverList();
+                    renderTravelersBottomBar();
+                    drawTravelerRoutes();
+                    updateTravelerCard();
+                    if (window.updateHistSubmodeVis) window.updateHistSubmodeVis();
+                });
+            }
+            var travSearchInp = document.getElementById('histTravelersSearchInput');
+            if (travSearchInp) {
+                travSearchInp.addEventListener('input', function() {
+                    _histTravelersSearchText = this.value;
+                    renderTravelersPopoverList();
+                });
+            }
+
+            // ══════════════════════════════════════════════════════════════════
+            // ── Synchronic Contemporary Polity Comparison ──
+            // ══════════════════════════════════════════════════════════════════
+            var CONTEMPORARY_POWERS_BANK = [
+                {
+                    id: 'abbasid',
+                    name: { ar: 'الخلافة العباسية', en: 'Abbasid Caliphate', ru: 'Аббасидский халифат', uz: 'Abbosiylar xalifaligi', es: 'Califato Abasí' },
+                    eraRange: [750, 1258],
+                    capital: { ar: 'بغداد (مدينة السلام)', en: 'Baghdad (Round City)', ru: 'Багдад', uz: 'Bogʻdod', es: 'Bagdad' },
+                    system: { ar: 'خلافة إسلامية مركزية جامعة', en: 'Centralized Islamic Caliphate', ru: 'Централизованный халифат', uz: 'Markazlashgan islom xalifaligi', es: 'Califato islámico centralizado' },
+                    vitality: { ar: 'العصر الذهبي والذروة العلمية والحضارية', en: 'Golden Age peak of science & culture', ru: 'Золотой век науки и культуры', uz: 'Ilm-fan va madaniyatning Oltin davri', es: 'Edad de Oro de ciencia y cultura' },
+                    religion: { ar: 'الإسلام (مع تنوع فكري وفلسفي واسع)', en: 'Islam (rich scholastic & philosophical diversity)', ru: 'Ислам', uz: 'Islom', es: 'Islam' },
+                    military: { ar: 'جيش بري محترف وشبكة بريد ومراكز حراسة وتجارة عالمية', en: 'Professional land army, global trade routes', ru: 'Профессиональная армия, торговые пути', uz: 'Professional armiya, savdo yoʻllari', es: 'Ejército profesional y rutas globales' }
+                },
+                {
+                    id: 'tang',
+                    name: { ar: 'سلالة تانغ الصينية', en: 'Tang Dynasty', ru: 'Династия Тан', uz: 'Tang sulolasi', es: 'Dinastía Tang' },
+                    eraRange: [618, 907],
+                    capital: { ar: 'تشانغآن (شيان حالياً)', en: "Chang'an (modern Xi'an)", ru: 'Чанъань', uz: 'Chanʼan', es: "Chang'an" },
+                    system: { ar: 'إمبراطورية كونفوشية مركزية مع نظام امتحانات مدنية', en: 'Centralized Confucian bureaucracy with imperial examinations', ru: 'Конфуцианская империя', uz: 'Konfutsiychilik imperiyasi', es: 'Imperio burocrático confuciano' },
+                    vitality: { ar: 'ذروة الازدهار التجاري عبر طريق الحرير والشعر والفنون', en: 'Cosmopolitan zenith via Silk Road commerce & arts', ru: 'Зенит космополитизма и Великого шелкового пути', uz: 'Buyuk Ipak yoʻli savdosi choʻqqisi', es: 'Cénit cosmopolita de la Ruta de la Seda' },
+                    religion: { ar: 'البوذية والطاوية والكونفوشية', en: 'Buddhism, Taoism & Confucianism', ru: 'Буддизм, даосизм и конфуцианство', uz: 'Buddizm, daosizm va konfutsiychilik', es: 'Budismo, taoísmo y confucianismo' },
+                    military: { ar: 'جيش مشاة وفرسان ضخم مع نظام التجنيد ومطوعي الحدود', en: 'Massive cavalry & infantry with border garrisons', ru: 'Массивная пехота и конница', uz: 'Katta otliq va piyoda qoʻshin', es: 'Poderosa caballería e infantería' }
+                },
+                {
+                    id: 'byzantine',
+                    name: { ar: 'الإمبراطورية البيزنطية (الروم)', en: 'Byzantine Empire', ru: 'Византийская империя', uz: 'Vizantiya imperiyasi', es: 'Imperio Bizantino' },
+                    eraRange: [330, 1453],
+                    capital: { ar: 'القسطنطينية (إسطنبول)', en: 'Constantinople', ru: 'Константинополь', uz: 'Konstantinopol', es: 'Constantinopla' },
+                    system: { ar: 'إمبراطورية قيصرية مسيحية أرثوذكسية', en: 'Autocratic Christian Empire', ru: 'Самодержавная христианская империя', uz: 'Xristian imperiyasi', es: 'Imperio autocrático cristiano' },
+                    vitality: { ar: 'دفاع استراتيجي وتوازن متجدد بين الشرق والغرب', en: 'Strategic defense & trade nexus between East & West', ru: 'Стратегический мост между Востоком и Западом', uz: 'Sharq va Gʻarb oʻrtasidagi strategik koʻprik', es: 'Nexo estratégico entre Oriente y Occidente' },
+                    religion: { ar: 'المسيحية الأرثوذكسية الشرقية', en: 'Eastern Orthodox Christianity', ru: 'Православное христианство', uz: 'Sharqiy pravoslav xristianligi', es: 'Cristianismo ortodoxo' },
+                    military: { ar: 'جيش الثغور (الـ Themes) والأسطول المجهز بالنار الإغريقية', en: 'Thematic army & fleet with Greek Fire', ru: 'Фемная армия и флот с греческим огнём', uz: 'Fem armiyasi va flot', es: 'Ejército temático y Fuego Griego' }
+                },
+                {
+                    id: 'holy_roman',
+                    name: { ar: 'الإمبراطورية الرومانية المقدسة', en: 'Holy Roman Empire', ru: 'Священная Римская империя', uz: 'Muqaddas Rim imperiyasi', es: 'Sacro Imperio Romano Germánico' },
+                    eraRange: [962, 1806],
+                    capital: { ar: 'مقر متنقل (آخن / فرانكفورت / فيينا)', en: 'Itinerant (Aachen / Frankfurt / Vienna)', ru: 'Ахен / Вена', uz: 'Axen / Vena', es: 'Aquisgrán / Viena' },
+                    system: { ar: 'اتحاد إقطاعي إمبراطوري لدويلات وأسقفيات منتخبة', en: 'Feudal elective confederation of principalities', ru: 'Выборная феодальная конфедерация', uz: 'Feodal konfederatsiya', es: 'Confederación feudal electiva' },
+                    vitality: { ar: 'تشتت سياسي مع نمو المدن التجارية والحرفية', en: 'Decentralized political landscape with rising merchant cities', ru: 'Децентрализованная структура с ростом торговых городов', uz: 'Savdo shaharlarining yuksalishi', es: 'Descentralizado con auge comercial urbano' },
+                    religion: { ar: 'المسيحية الكاثوليكية (ثم صراع بروتستانتي لاحق)', en: 'Roman Catholicism (later Reformation struggles)', ru: 'Католицизм', uz: 'Katolitsizm', es: 'Catolicismo romano' },
+                    military: { ar: 'فرسان إقطاعيون وميليشيات مدنية تحت رايات الأمراء', en: 'Feudal knights and imperial prince levies', ru: 'Рыцарское феодальное ополчение', uz: 'Ritsarlar va knyaz qoʻshinlari', es: 'Caballeros feudales y levas de príncipes' }
+                },
+                {
+                    id: 'srivijaya',
+                    name: { ar: 'إمبراطورية سريفيجايا البحرية', en: 'Srivijaya Maritime Empire', ru: 'Империя Шривиджая', uz: 'Shrivijaya dengiz imperiyasi', es: 'Imperio Marítimo de Srivijaya' },
+                    eraRange: [650, 1377],
+                    capital: { ar: 'بالمبانغ (سومطرة)', en: 'Palembang (Sumatra)', ru: 'Палембанг', uz: 'Palembang', es: 'Palembang' },
+                    system: { ar: 'ثالاسوقراطية (إمبراطورية بحرية تجارية مهيمنة على المضائق)', en: 'Thalassocracy controlling Malacca Straits', ru: 'Талассократия контролирующая Малаккский пролив', uz: 'Malakka boʻgʻozini boshqargan dengiz imperiyasi', es: 'Talasocracia comercial del estrecho de Malaca' },
+                    vitality: { ar: 'احتكار تجارة التوابل والحرير البحرية بين الصين والهند', en: 'Monopoly on maritime spice & silk trade between China & India', ru: 'Монополия на морскую торговлю пряностями', uz: 'Ziravorlar savdosi monopoliyasi', es: 'Monopolio del comercio marítimo de especias' },
+                    religion: { ar: 'البوذية فاجرايانا مع تقاليد ملاوية أصلية', en: 'Vajrayana Buddhism & Malay traditions', ru: 'Буддизм Ваджраяны', uz: 'Buddizm', es: 'Budismo Vajrayana' },
+                    military: { ar: 'أساطيل بحرية خفيفة وسريعة للسيطرة على السواحل والملاحة', en: 'Swift coastal navies and corsair enforcement', ru: 'Быстрый каботажный флот', uz: 'Tezkor dengiz floti', es: 'Flotas navales rápidas de control costero' }
+                },
+                {
+                    id: 'maya',
+                    name: { ar: 'المدن-الدول المايانية (العصر الكلاسيكي)', en: 'Maya City-States (Classic Period)', ru: 'Города-государства Майя', uz: 'Mayya shahar-davlatlari', es: 'Ciudades-Estado Mayas' },
+                    eraRange: [250, 950],
+                    capital: { ar: 'مراكز متعددة (تيكال، كالاكمول، بالينكي)', en: 'Multiple centres (Tikal, Calakmul, Palenque)', ru: 'Тикаль, Калакмуль', uz: 'Tikal, Kalakmul', es: 'Tikal, Calakmul, Palenque' },
+                    system: { ar: 'دويلات مدن متنافسة يقودها ملوك كهنة (أهاو)', en: 'Competing divine kingships (K\'uhul Ajaw)', ru: 'Города-государства под властью царей-жрецов', uz: 'Raqobatchi shahar-davlatlar', es: 'Ciudades-estado divinizadas en pugna' },
+                    vitality: { ar: 'قمة الإنجاز الفلكي والرياضي والمعماري الأهرامي في أمريكا', en: 'Pinnacle of Mesoamerican astronomy, mathematics and architecture', ru: 'Вершина астрономии, математики и пирамид Америки', uz: 'Astronomiya, matematika va meʼmorchilik choʻqqisi', es: 'Cúspide de astronomía, matemáticas y pirámides' },
+                    religion: { ar: 'ديانة المايا المتعددة الآلهة وعبادة قوى الطبيعة والكون', en: 'Polytheistic Maya pantheon & cosmic cycles', ru: 'Политеизм майя', uz: 'Koʻpxudolik', es: 'Politeísmo maya y ciclos cósmicos' },
+                    military: { ar: 'محاربو النخبة والاشتباك القريب لأسر النبلاء والسيطرة المحدودة', en: 'Elite warrior orders and dynastic capture warfare', ru: 'Элитные воинские ордена', uz: 'Elita jangchilari', es: 'Guerreros de élite y capturas dinásticas' }
+                }
+            ];
+
+            function openContemporaryPolityCompare(polityAId, polityBId) {
+                var modal = document.getElementById('histPolityCompareModal');
+                if (!modal) return;
+
+                var era = (typeof getHistEra === 'function') ? getHistEra() : null;
+                var p1Select = document.getElementById('histComparePolity1Select');
+                var p2Select = document.getElementById('histComparePolity2Select');
+
+                var candidates = [];
+                if (era) {
+                    var pols = (era.phases && era.phases[historyEraPhase] && era.phases[historyEraPhase].polities) || era.polities || [];
+                    pols.forEach(function(p, i) {
+                        candidates.push({
+                            id: 'era_polity_' + i,
+                            name: { ar: p.name, en: p.name_en || p.name, ru: p.name_ru || p.name, uz: p.name_uz || p.name, es: p.name_es || p.name },
+                            capital: { ar: p.capital || '—', en: p.capital_en || p.capital || '—', ru: p.capital_ru || p.capital || '—', uz: p.capital_uz || p.capital || '—', es: p.capital_es || p.capital || '—' },
+                            system: { ar: p.system || 'إمبراطورية كبرى', en: p.system_en || 'Major Empire', ru: 'Империя', uz: 'Imperiya', es: 'Gran Imperio' },
+                            vitality: { ar: p.desc || 'قوة مهيمنة في هذه الحقبة', en: p.desc_en || 'Dominant power of the era', ru: 'Ведущая сила эпохи', uz: 'Davrning yetakchi kuchi', es: 'Poder dominante de la era' },
+                            religion: { ar: p.religion || 'عقيدة الدولة السائدة', en: p.religion_en || 'State religion', ru: 'Гос. религия', uz: 'Davlat dini', es: 'Religión estatal' },
+                            military: { ar: 'جيش إمبراطوري بري وبحري', en: 'Imperial land & naval forces', ru: 'Имперские силы', uz: 'Imperiya qoʻshinlari', es: 'Fuerzas imperiales' }
+                        });
+                    });
+                }
+                CONTEMPORARY_POWERS_BANK.forEach(function(b) {
+                    if (!candidates.some(function(c) { return c.id === b.id; })) {
+                        candidates.push(b);
+                    }
+                });
+
+                p1Select.innerHTML = candidates.map(function(c) {
+                    return '<option value="' + c.id + '">' + htmlEscape(locField(c, 'name')) + '</option>';
+                }).join('');
+                p2Select.innerHTML = candidates.map(function(c) {
+                    return '<option value="' + c.id + '">' + htmlEscape(locField(c, 'name')) + '</option>';
+                }).join('');
+
+                if (polityAId) p1Select.value = polityAId;
+                else if (candidates.length > 0) p1Select.value = candidates[0].id;
+
+                if (polityBId) p2Select.value = polityBId;
+                else if (candidates.length > 1) p2Select.value = candidates[1].id;
+
+                function renderComparison() {
+                    var pA = candidates.find(function(c) { return c.id === p1Select.value; }) || candidates[0];
+                    var pB = candidates.find(function(c) { return c.id === p2Select.value; }) || candidates[1];
+                    var grid = document.getElementById('histCompareGrid');
+                    if (!grid || !pA || !pB) return;
+
+                    var nameA = locField(pA, 'name');
+                    var nameB = locField(pB, 'name');
+
+                    var relType = '';
+                    var relDesc = '';
+                    if (pA.id === pB.id) {
+                        relType = t('histCompareSame') || 'الكيان نفسه';
+                        relDesc = t('histCompareSameDesc') || 'يرجى اختيار قوتين مختلفتين للمقارنة الموضوعية.';
+                    } else if ((pA.id === 'abbasid' && pB.id === 'tang') || (pA.id === 'tang' && pB.id === 'abbasid')) {
+                        relType = 'تبادل تجاري ودبلوماسي مع صدام محلي حاسم (معركة طلاس 751 م)';
+                        relDesc = 'تواصلت القوتان عبر قوافل طريق الحرير والسفن البحرية في المحيط الهندي. ورغم الصدام الوحيد في طلاس عام 751 م (الذي انتقلت بسببه صناعة الورق من الصين إلى العالم الإسلامي)، سادت بعده علاقات تجارية ودبلوماسية نشطة وتبادل للسفارات.';
+                    } else if ((pA.id === 'abbasid' && pB.id === 'byzantine') || (pA.id === 'byzantine' && pB.id === 'abbasid')) {
+                        relType = 'صراع جيوسياسي ومذهبي حدودي مباشر مع تبادل ثقافي';
+                        relDesc = 'حالة تنافس عسكري مستمر على الثغور الشامية والأناضولية والسيطرة على البحر المتوسط، تخللتها فترات هدنة وافتداء أسرى وتبادل للمخطوطات الفلسفية واليونانية التي تُرجمت في بيت الحكمة ببغداد.';
+                    } else if (pA.id === 'maya' || pB.id === 'maya') {
+                        relType = 'تعايش حضاري متباعد دون أي اتصال مباشر';
+                        relDesc = 'عاشت الحضارتان في نفس القرون الزمنية لكن في نصفي كرة أرضية مختلفين تماماً دون أي معرفة بوجود الأخرى. توضح المقارنة الفوارق في مسار التطور الإنساني، والرياضيات، والعمران دون احتكاك جغرافي.';
+                    } else {
+                        relType = 'تزامن حضاري عبر شبكات التجارة غير المباشرة وطرق التوابل والحرير';
+                        relDesc = 'عاصرت كل قوة واقع عصرها من خلال مراكز ثقلها الإقليمية، وتدفقت السلع والأفكار بينهما عبر وسطاء تجاريين بريين وبحريين دون اصطدام عسكري شامل.';
+                    }
+
+                    var rows = [
+                        { title: t('histCompareTrajectory') || 'الواقع والمسار الحضاري', valA: locField(pA, 'vitality'), valB: locField(pB, 'vitality') },
+                        { title: t('capitalsToggle') || 'العاصمة ومركز الثقل', valA: locField(pA, 'capital'), valB: locField(pB, 'capital') },
+                        { title: 'نظام الحكم والإدارة', valA: locField(pA, 'system'), valB: locField(pB, 'system') },
+                        { title: t('religionsListBtn') || 'الديانة والثقافة السائدة', valA: locField(pA, 'religion'), valB: locField(pB, 'religion') },
+                        { title: 'الطابع العسكري والجيوسياسي', valA: locField(pA, 'military'), valB: locField(pB, 'military') }
+                    ];
+
+                    var gridHtml = '';
+                    rows.forEach(function(r) {
+                        gridHtml += '<div class="hist-compare-row">' +
+                            '<div class="hist-compare-row-title">' + htmlEscape(r.title) + '</div>' +
+                            '<div class="hist-compare-row-values">' +
+                                '<div class="hist-compare-val val-a"><strong>' + htmlEscape(nameA) + ':</strong> ' + htmlEscape(r.valA) + '</div>' +
+                                '<div class="hist-compare-val val-b"><strong>' + htmlEscape(nameB) + ':</strong> ' + htmlEscape(r.valB) + '</div>' +
+                            '</div>' +
+                        '</div>';
+                    });
+
+                    gridHtml += '<div class="hist-compare-relation-box">' +
+                        '<div class="hist-compare-relation-title"><i data-lucide="git-merge" class="lucide-icon"></i> ' + htmlEscape(t('histCompareRelation') || 'طبيعة العلاقة بين الكيانين') + ': ' + htmlEscape(relType) + '</div>' +
+                        '<div class="hist-compare-relation-desc">' + htmlEscape(relDesc) + '</div>' +
+                    '</div>';
+
+                    grid.innerHTML = gridHtml;
+                    if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+                }
+
+                p1Select.onchange = renderComparison;
+                p2Select.onchange = renderComparison;
+                renderComparison();
+
+                modal.removeAttribute('hidden');
+                modal.style.display = 'block';
+            }
+            window.openContemporaryPolityCompare = openContemporaryPolityCompare;
+
+            var cmpModalClose = document.getElementById('histCompareModalClose');
+            if (cmpModalClose) {
+                cmpModalClose.addEventListener('click', function() {
+                    var modal = document.getElementById('histPolityCompareModal');
+                    if (modal) { modal.setAttribute('hidden', ''); modal.style.display = 'none'; }
+                });
+            }
+            var cmpPolitiesBtn = document.getElementById('histComparePolitiesBtn');
+            if (cmpPolitiesBtn) {
+                cmpPolitiesBtn.addEventListener('click', function() {
+                    openContemporaryPolityCompare();
+                });
+            }
+
+            // ══════════════════════════════════════════════════════════════════
+            // ── Dedicated Historical Landmark Layers (Capitals, Battles, Wonders)
+            // ══════════════════════════════════════════════════════════════════
+            function fetchHistoricalCapitals() {
+                if (historicalCapitalsData) return Promise.resolve(historicalCapitalsData);
+                return fetch('historical-capitals-data.json')
+                    .then(function(r) { return r.json(); })
+                    .then(function(d) {
+                        historicalCapitalsData = (d && d.capitals) ? d.capitals : (Array.isArray(d) ? d : []);
+                        return historicalCapitalsData;
+                    });
+            }
+            window.fetchHistoricalCapitals = fetchHistoricalCapitals;
+
+            function fetchHistoricalBattles() {
+                if (historicalBattlesData) return Promise.resolve(historicalBattlesData);
+                return fetch('historical-battles-data.json')
+                    .then(function(r) { return r.json(); })
+                    .then(function(d) {
+                        historicalBattlesData = (d && d.battles) ? d.battles : (Array.isArray(d) ? d : []);
+                        return historicalBattlesData;
+                    });
+            }
+            window.fetchHistoricalBattles = fetchHistoricalBattles;
+
+            function fetchHistoricalWonders() {
+                if (historicalWondersData) return Promise.resolve(historicalWondersData);
+                return fetch('historical-wonders-data.json')
+                    .then(function(r) { return r.json(); })
+                    .then(function(d) {
+                        historicalWondersData = (d && d.wonders) ? d.wonders : (Array.isArray(d) ? d : []);
+                        return historicalWondersData;
+                    });
+            }
+            window.fetchHistoricalWonders = fetchHistoricalWonders;
+
+            function showHistoricalCapitalDetail(c) {
+                selectedFeature = c;
+                selectedFeatureType = 'histCapital';
+                var name = locField(c, 'name');
+                var ancName = locField(c, 'ancient_name');
+                var html = '<h3>🏛️ ' + htmlEscape(name) + (ancName && ancName !== name ? ' (' + htmlEscape(ancName) + ')' : '') + '</h3>';
+                if (c.modern_location) html += '<p><strong>' + t('country') + ':</strong> ' + htmlEscape(locField(c, 'modern_location')) + '</p>';
+                var founder = locField(c, 'founder');
+                if (c.founded) html += '<p><strong>' + (getCurrentLang() === 'ar' ? 'التأسيس:' : 'Founded:') + '</strong> ' + htmlEscape(c.founded) + (founder ? ' — ' + htmlEscape(founder) : '') + '</p>';
+                var empires = (getCurrentLang() === 'ar' || !c.empires_en) ? c.empires_ar : c.empires_en;
+                if (!empires && Array.isArray(c.empires)) empires = c.empires;
+                if (Array.isArray(empires) && empires.length) {
+                    var empNames = empires.map(function(e) { return typeof e === 'object' ? locField(e, 'name') : e; }).join('، ');
+                    html += '<p><strong>' + (getCurrentLang() === 'ar' ? 'الإمبراطوريات والدول:' : 'Empires & States:') + '</strong> ' + htmlEscape(empNames) + '</p>';
+                }
+                var sig = locField(c, 'significance');
+                if (sig) html += '<p>' + htmlEscape(sig) + '</p>';
+                _lastPanelRenderTime = performance.now();
+                panelContent.innerHTML = html;
+                countryPanel.style.display = 'block';
+                requestAnimationFrame(function(){ requestAnimationFrame(function(){ countryPanel.classList.add('visible'); }); });
+            }
+
+            function showHistoricalBattleDetail(b) {
+                selectedFeature = b;
+                selectedFeatureType = 'histBattle';
+                var name = locField(b, 'name');
+                var dateStr = locField(b, 'date_str') || b.year;
+                var html = '<h3>⚔️ ' + htmlEscape(name) + (dateStr ? ' (' + htmlEscape(dateStr) + ')' : '') + '</h3>';
+                var bell = locField(b, 'belligerents');
+                if (bell) html += '<p><strong>' + (getCurrentLang() === 'ar' ? 'أطراف المعركة:' : 'Belligerents:') + '</strong> ' + htmlEscape(bell) + '</p>';
+                var outcome = locField(b, 'outcome');
+                if (outcome) html += '<p><strong>النتيجة:</strong> ' + htmlEscape(outcome) + '</p>';
+                var sig = locField(b, 'significance');
+                if (sig) html += '<p><strong>' + (getCurrentLang() === 'ar' ? 'الأثر والتحول الاستراتيجي:' : 'Strategic Impact:') + '</strong> ' + htmlEscape(sig) + '</p>';
+                _lastPanelRenderTime = performance.now();
+                panelContent.innerHTML = html;
+                countryPanel.style.display = 'block';
+                requestAnimationFrame(function(){ requestAnimationFrame(function(){ countryPanel.classList.add('visible'); }); });
+            }
+
+            function showHistoricalWonderDetail(w) {
+                selectedFeature = w;
+                selectedFeatureType = 'histWonder';
+                var name = locField(w, 'name');
+                var html = '<h3>🏺 ' + htmlEscape(name) + '</h3>';
+                var cat = locField(w, 'category');
+                if (cat) html += '<p><strong>' + (getCurrentLang() === 'ar' ? 'التصنيف:' : 'Category:') + '</strong> ' + htmlEscape(cat) + '</p>';
+                var builder = locField(w, 'builder');
+                var built = w.date_built || w.built;
+                if (built) html += '<p><strong>' + (getCurrentLang() === 'ar' ? 'تاريخ الإنشاء:' : 'Date Built:') + '</strong> ' + htmlEscape(built) + (builder ? ' — ' + htmlEscape(builder) : '') + '</p>';
+                var status = locField(w, 'status');
+                if (status) {
+                    html += '<p><strong>' + (getCurrentLang() === 'ar' ? 'الحالة:' : 'Status:') + '</strong> ' + htmlEscape(status) + '</p>';
+                } else if (w.extant !== undefined) {
+                    html += '<p><strong>' + (getCurrentLang() === 'ar' ? 'الحالة:' : 'Status:') + '</strong> ' + (w.extant ? '✅ قائم حتى اليوم' : '⚠️ أطلال / مدمّر') + '</p>';
+                }
+                var purpose = locField(w, 'purpose');
+                if (purpose) html += '<p><strong>' + (getCurrentLang() === 'ar' ? 'الهدف المعماري والحضاري:' : 'Purpose:') + '</strong> ' + htmlEscape(purpose) + '</p>';
+                var disputes = locField(w, 'disputes');
+                if (disputes) html += '<p><strong>' + (getCurrentLang() === 'ar' ? 'حقائق وملاحظات تاريخية:' : 'Historical Notes:') + '</strong> ' + htmlEscape(disputes) + '</p>';
+                var sig = locField(w, 'significance');
+                if (sig) html += '<p>' + htmlEscape(sig) + '</p>';
+                _lastPanelRenderTime = performance.now();
+                panelContent.innerHTML = html;
+                countryPanel.style.display = 'block';
+                requestAnimationFrame(function(){ requestAnimationFrame(function(){ countryPanel.classList.add('visible'); }); });
+            }
+
+            function drawHistCapitals() {
+                if (!gHistCapitals) return;
+                gHistCapitals.selectAll('*').remove();
+                if (!histCapitalsVisible) return;
+                if (!historicalCapitalsData) {
+                    fetchHistoricalCapitals().then(function() { drawHistCapitals(); });
+                    return;
+                }
+                var proj = getActiveProjection();
+                var isMob = window.innerWidth <= 768;
+                historicalCapitalsData.forEach(function(c) {
+                    var coords = c.coords || [c.lon, c.lat];
+                    if (!coords) return;
+                    var xy = proj(coords);
+                    if (!xy || isNaN(xy[0])) return;
+                    var g = gHistCapitals.append('g')
+                        .attr('class', 'hist-capital-pin')
+                        .style('cursor', 'pointer')
+                        .on('click', function(e) {
+                            if (e && e.stopPropagation) e.stopPropagation();
+                            showHistoricalCapitalDetail(c);
+                        });
+                    g.append('circle')
+                        .attr('cx', xy[0])
+                        .attr('cy', xy[1])
+                        .attr('r', isMob ? 4 : 5.5)
+                        .attr('fill', '#a855f7')
+                        .attr('stroke', '#fff')
+                        .attr('stroke-width', 1.5)
+                        .attr('vector-effect', 'non-scaling-stroke');
+                    g.append('text')
+                        .attr('x', xy[0])
+                        .attr('y', xy[1] - 7)
+                        .text(locField(c, 'name'))
+                        .attr('fill', '#e9d5ff')
+                        .attr('font-size', isMob ? 8 : 9.5)
+                        .attr('font-weight', '600')
+                        .attr('text-anchor', 'middle')
+                        .attr('paint-order', 'stroke')
+                        .attr('stroke', 'rgba(0,0,0,0.85)')
+                        .attr('stroke-width', 2.5)
+                        .style('pointer-events', 'none');
+                });
+            }
+            window.drawHistCapitals = drawHistCapitals;
+
+            function drawHistBattles() {
+                if (!gHistBattles) return;
+                gHistBattles.selectAll('*').remove();
+                if (!histBattlesVisible) return;
+                if (!historicalBattlesData) {
+                    fetchHistoricalBattles().then(function() { drawHistBattles(); });
+                    return;
+                }
+                var proj = getActiveProjection();
+                var isMob = window.innerWidth <= 768;
+                historicalBattlesData.forEach(function(b) {
+                    var coords = b.coords || [b.lon, b.lat];
+                    if (!coords) return;
+                    var xy = proj(coords);
+                    if (!xy || isNaN(xy[0])) return;
+                    var g = gHistBattles.append('g')
+                        .attr('class', 'hist-battle-pin')
+                        .style('cursor', 'pointer')
+                        .on('click', function(e) {
+                            if (e && e.stopPropagation) e.stopPropagation();
+                            showHistoricalBattleDetail(b);
+                        });
+                    g.append('circle')
+                        .attr('cx', xy[0])
+                        .attr('cy', xy[1])
+                        .attr('r', isMob ? 4.5 : 6)
+                        .attr('fill', '#ef4444')
+                        .attr('stroke', '#fff')
+                        .attr('stroke-width', 1.5)
+                        .attr('vector-effect', 'non-scaling-stroke');
+                    g.append('text')
+                        .attr('x', xy[0])
+                        .attr('y', xy[1] + 3.5)
+                        .text('⚔')
+                        .attr('fill', '#fff')
+                        .attr('font-size', isMob ? 7 : 9)
+                        .attr('text-anchor', 'middle')
+                        .style('pointer-events', 'none');
+                    g.append('text')
+                        .attr('x', xy[0])
+                        .attr('y', xy[1] - 8)
+                        .text(locField(b, 'name'))
+                        .attr('fill', '#fca5a5')
+                        .attr('font-size', isMob ? 8 : 9.5)
+                        .attr('font-weight', '600')
+                        .attr('text-anchor', 'middle')
+                        .attr('paint-order', 'stroke')
+                        .attr('stroke', 'rgba(0,0,0,0.85)')
+                        .attr('stroke-width', 2.5)
+                        .style('pointer-events', 'none');
+                });
+            }
+            window.drawHistBattles = drawHistBattles;
+
+            function drawHistWonders() {
+                if (!gHistWonders) return;
+                gHistWonders.selectAll('*').remove();
+                if (!histWondersVisible) return;
+                if (!historicalWondersData) {
+                    fetchHistoricalWonders().then(function() { drawHistWonders(); });
+                    return;
+                }
+                var proj = getActiveProjection();
+                var isMob = window.innerWidth <= 768;
+                historicalWondersData.forEach(function(w) {
+                    var coords = w.coords || [w.lon, w.lat];
+                    if (!coords) return;
+                    var xy = proj(coords);
+                    if (!xy || isNaN(xy[0])) return;
+                    var g = gHistWonders.append('g')
+                        .attr('class', 'hist-wonder-pin')
+                        .style('cursor', 'pointer')
+                        .on('click', function(e) {
+                            if (e && e.stopPropagation) e.stopPropagation();
+                            showHistoricalWonderDetail(w);
+                        });
+                    g.append('circle')
+                        .attr('cx', xy[0])
+                        .attr('cy', xy[1])
+                        .attr('r', isMob ? 4.5 : 6)
+                        .attr('fill', '#eab308')
+                        .attr('stroke', '#fff')
+                        .attr('stroke-width', 1.5)
+                        .attr('vector-effect', 'non-scaling-stroke');
+                    g.append('text')
+                        .attr('x', xy[0])
+                        .attr('y', xy[1] + 3.5)
+                        .text('★')
+                        .attr('fill', '#fff')
+                        .attr('font-size', isMob ? 7 : 9)
+                        .attr('text-anchor', 'middle')
+                        .style('pointer-events', 'none');
+                    g.append('text')
+                        .attr('x', xy[0])
+                        .attr('y', xy[1] - 8)
+                        .text(locField(w, 'name'))
+                        .attr('fill', '#fde047')
+                        .attr('font-size', isMob ? 8 : 9.5)
+                        .attr('font-weight', '600')
+                        .attr('text-anchor', 'middle')
+                        .attr('paint-order', 'stroke')
+                        .attr('stroke', 'rgba(0,0,0,0.85)')
+                        .attr('stroke-width', 2.5)
+                        .style('pointer-events', 'none');
+                });
+            }
+            window.drawHistWonders = drawHistWonders;
 
             function toggleLangDropdown(btn, menu) {
                 var isVisible = menu.classList.contains('visible');

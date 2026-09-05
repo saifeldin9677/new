@@ -9156,70 +9156,20 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 }
 function buildEraFeature(p, phase) {
                      if (!phase) phase = (typeof historyEraPhase !== 'undefined' && historyEraPhase) ? historyEraPhase : 'peak';
-                     var profile = (typeof getHistoricalPolityProfile === 'function') ? getHistoricalPolityProfile(p.id || locField(p, 'name')) : null;
-
-                     if (profile && profile.phases && profile.phases[phase] && Array.isArray(profile.phases[phase].rings) && profile.phases[phase].rings.length) {
-                         var pRings = profile.phases[phase].rings;
-                         return {
-                             type: 'MultiPolygon',
-                             coordinates: pRings.map(function(ring) {
-                                 var r = normalizeEraRing(ring);
-                                 if (r.length && (r[0][0] !== r[r.length - 1][0] || r[0][1] !== r[r.length - 1][1])) r = r.concat([r[0].slice()]);
-                                 return [r];
-                             })
-                         };
-                     }
-
-                     var baseRings = p.rings || [];
+                     var baseRings = (p && p.rings) || [];
                      if (!baseRings.length) return { type: 'MultiPolygon', coordinates: [] };
 
-                     if (phase === 'peak') {
-                         var rings = baseRings.map(function(ring) {
-                             var r = normalizeEraRing(ring);
-                             if (r.length && (r[0][0] !== r[r.length - 1][0] || r[0][1] !== r[r.length - 1][1])) {
-                                 r = r.concat([r[0].slice()]);
-                             }
-                             try {
-                                 if (d3.geoArea({ type: 'Polygon', coordinates: [r] }) > Math.PI * 2) r = r.slice().reverse();
-                             } catch (e) {}
-                             return r;
-                         });
-                         return { type: 'MultiPolygon', coordinates: rings.map(function(r) { return [r]; }) };
-                     }
-
-                     // التحويل الجغرافي الواقعي لمرحلة النشأة (start) ومرحلة الأفول (end)
-                     var anchor = null;
-                     if (phase === 'start') {
-                         anchor = (profile && profile.origin_coords) || p.label || null;
-                     } else if (phase === 'end') {
-                         anchor = (profile && profile.terminal_coords) || p.label || null;
-                     }
-                     if (!anchor) anchor = p.label || null;
-                     var factor = (phase === 'start') ? 0.38 : 0.30;
-
-                     var transRings = baseRings.map(function(ring) {
+                     var rings = baseRings.map(function(ring) {
                          var r = normalizeEraRing(ring);
-                         if (!r.length) return r;
-                         var center = anchor;
-                         if (!center) {
-                             var sx = 0, sy = 0;
-                             for (var i = 0; i < r.length; i++) { sx += r[i][0]; sy += r[i][1]; }
-                             center = [sx / r.length, sy / r.length];
-                         }
-                         var newR = r.map(function(pt) {
-                             var nx = center[0] + (pt[0] - center[0]) * factor;
-                             var ny = center[1] + (pt[1] - center[1]) * factor;
-                             return [nx, ny];
-                         });
-                         if (newR.length && (newR[0][0] !== newR[newR.length - 1][0] || newR[0][1] !== newR[newR.length - 1][1])) {
-                             newR = newR.concat([newR[0].slice()]);
+                         if (r.length && (r[0][0] !== r[r.length - 1][0] || r[0][1] !== r[r.length - 1][1])) {
+                             r = r.concat([r[0].slice()]);
                          }
                          try {
-                             if (d3.geoArea({ type: 'Polygon', coordinates: [newR] }) > Math.PI * 2) newR = newR.slice().reverse();
+                             if (d3.geoArea({ type: 'Polygon', coordinates: [r] }) > Math.PI * 2) r = r.slice().reverse();
                          } catch (e) {}
-                         return newR;
+                         return r;
                      });
-                     return { type: 'MultiPolygon', coordinates: transRings.map(function(r) { return [r]; }) };
+                     return { type: 'MultiPolygon', coordinates: rings.map(function(r) { return [r]; }) };
                  }
                 window.__buildEraFeature = buildEraFeature;
                 window.__normalizeEraRing = normalizeEraRing;
@@ -9253,7 +9203,9 @@ function buildEraFeature(p, phase) {
                     var k = Math.max(0.4, currentTransform.k);
                     var fs = Math.max(4, Math.min(15, (isMobile ? 8 : 11) / k));
                     var dur = prefersReducedMotion() ? 0 : 300;
-                    era.polities.forEach(function(p) {
+                    var activePhaseData = (era.phases && era.phases[historyEraPhase]) ? era.phases[historyEraPhase] : null;
+                    var politiesToDraw = (activePhaseData && Array.isArray(activePhaseData.polities) && activePhaseData.polities.length) ? activePhaseData.polities : era.polities;
+                    politiesToDraw.forEach(function(p) {
                         var feature = buildEraFeature(p, historyEraPhase);
                         var pd = pathGen(feature);
                         if (pd) {
@@ -9276,15 +9228,9 @@ function buildEraFeature(p, phase) {
                             if (skipFadeIn) s.attr('opacity', 1).style('opacity', 1); else s.attr('opacity', 0).style('opacity', 0).transition().duration(dur).attr('opacity', 1).style('opacity', 1);
                         }
                     });
-                    era.polities.forEach(function(p) {
-                        var profile = (typeof getHistoricalPolityProfile === 'function') ? getHistoricalPolityProfile(p.id || locField(p, 'name') || (era && era.id)) : null;
+                    politiesToDraw.forEach(function(p) {
                         var lblPos = p.label;
-                        if (historyEraPhase === 'start' && profile && profile.origin_coords) {
-                            lblPos = profile.origin_coords;
-                        } else if (historyEraPhase === 'end' && profile && profile.terminal_coords) {
-                            lblPos = profile.terminal_coords;
-                        }
-                        var xy = getActiveProjection()(lblPos || p.label);
+                        var xy = getActiveProjection()(lblPos || [0, 0]);
                         if (!xy || isNaN(xy[0])) return;
                         var lbl = gHistoryOverlay.append('text').attr('x', xy[0]).attr('y', xy[1])
                             .text(locField(p, 'name')).attr('fill', '#ffffff').attr('font-size', fs)
@@ -9315,8 +9261,8 @@ function buildEraFeature(p, phase) {
                     var langVal = (profile && profile.language_ar) || p.language || '';
                     var ethVal = (profile && profile.ethnicity_ar) || p.ethnicity || '';
                     var capVal = (profile && profile.capital_ar) || p.capital || '';
-                    var originVal = (profile && profile.origin_ar) || '';
-                    var fallVal = (profile && profile.fall_ar) || p.endYear || '';
+                    var originVal = (profile && profile.origin_ar) || p.origin || '';
+                    var fallVal = (profile && profile.fall_ar) || p.fall || p.endYear || '';
 
                     var html = '<div class="hist-profile-card">' +
                         '<div class="hist-profile-header">' +
@@ -9519,40 +9465,30 @@ function buildEraFeature(p, phase) {
                     historyEraPhase = phase;
                     var era = getHistEra();
                     if (!era) return;
-                    var group = document.getElementById('histEraPhaseGroup');
-                    if (group) {
-                        group.querySelectorAll('.hist-phase-btn').forEach(function(b) {
-                            b.classList.toggle('active', b.getAttribute('data-phase') === phase);
-                        });
-                    }
-                    var profile = null;
-                    if (typeof getHistoricalPolityProfile === 'function') {
-                        profile = getHistoricalPolityProfile(era.id) || (era.polities && era.polities[0] && getHistoricalPolityProfile(era.polities[0].id || locField(era.polities[0], 'name')));
-                    }
-                    var eraCardYearsEl = document.getElementById('histEraCardYears');
-                    var eraCardDescEl = document.getElementById('histEraCardDesc');
+                    syncHistEraPhaseUI(era);
+                    updateEraTopCard(era);
+                    var activePhaseData = (era.phases && era.phases[phase]) ? era.phases[phase] : null;
                     var badge = document.getElementById('histCurrentYearBadge');
                     var cap = document.getElementById('histTimelineCaption');
-
-                    if (profile && profile.phases && profile.phases[phase]) {
-                        var ph = profile.phases[phase];
-                        if (eraCardYearsEl) eraCardYearsEl.textContent = ph.year;
-                        if (eraCardDescEl) eraCardDescEl.textContent = ph.desc_ar;
-                        if (badge) badge.textContent = ph.year;
-                        if (cap) cap.textContent = (ph.title_ar ? ph.title_ar + ' — ' : '') + ph.desc_ar;
-                    } else {
-                        var fallbackTitles = {
-                            start: 'المرحلة الأولى: البداية والتأسيس',
-                            peak: 'المرحلة الثانية: أوج الاتساع والازدهار',
-                            end: 'المرحلة الثالثة: الانحدار والسقوط'
-                        };
-                        var origDesc = locField(era, 'desc') || locField(era, 'title') || '';
-                        if (eraCardDescEl) eraCardDescEl.textContent = fallbackTitles[phase] + ' — ' + origDesc;
-                        if (cap) cap.textContent = fallbackTitles[phase] + ' — ' + origDesc;
+                    if (activePhaseData) {
+                        if (badge) badge.textContent = activePhaseData.yearLabel || '';
+                        if (cap) cap.textContent = (locField(activePhaseData, 'title') ? locField(activePhaseData, 'title') + ' — ' : '') + (locField(activePhaseData, 'desc') || '');
                     }
                     drawEraScene(true);
                 };
                 window.setHistEraPhase = setHistEraPhase;
+                window.selectHistEra = function(id) {
+                    var found = (historicalErasData || []).find(function(x) { return x.id === id; });
+                    if (!found) return;
+                    if (typeof stopHistPlay === 'function') stopHistPlay();
+                    historyEraId = found.id;
+                    selectedHistoryPolity = null;
+                    if (typeof closeFeatureDetail === 'function') closeFeatureDetail();
+                    var panel = document.getElementById('countryPanel');
+                    if (panel) { panel.classList.remove('visible'); panel.style.display = 'none'; }
+                    renderHistoryBar();
+                    drawEraScene();
+                };
 
                 function updateEraTopCard(era) {
                     var eraEmptyEl = document.getElementById('histEraEmptyState');
@@ -9570,28 +9506,29 @@ function buildEraFeature(p, phase) {
                     }
                     if (eraEmptyEl) eraEmptyEl.style.display = 'none';
                     if (eraCardDetEl) eraCardDetEl.style.display = 'block';
-                    if (eraCardTitleEl) eraCardTitleEl.textContent = (era.yearLabel ? era.yearLabel + ' · ' : '') + locField(era, 'title');
+
+                    var activePhaseData = (era.phases && era.phases[historyEraPhase]) ? era.phases[historyEraPhase] : null;
+                    var politiesToDraw = (activePhaseData && Array.isArray(activePhaseData.polities) && activePhaseData.polities.length) ? activePhaseData.polities : (era.polities || []);
+
+                    if (eraCardTitleEl) {
+                        var phTitle = activePhaseData ? locField(activePhaseData, 'title') : '';
+                        eraCardTitleEl.textContent = phTitle || ((era.yearLabel ? era.yearLabel + ' · ' : '') + locField(era, 'title'));
+                    }
                     var eraEp = getEraEpoch(era);
                     var eraEpObj = HIST_EPOCHS.find(function(x) { return x.id === eraEp; });
                     if (eraCardEpochEl) eraCardEpochEl.textContent = eraEpObj ? t(eraEpObj.key) : eraEp;
 
                     syncHistEraPhaseUI(era);
 
-                    var profile = null;
-                    if (typeof getHistoricalPolityProfile === 'function') {
-                        profile = getHistoricalPolityProfile(era.id) || (era.polities && era.polities[0] && getHistoricalPolityProfile(era.polities[0].id || locField(era.polities[0], 'name')));
+                    if (eraCardYearsEl) {
+                        eraCardYearsEl.textContent = (activePhaseData && activePhaseData.yearLabel) || era.yearLabel || '';
                     }
-                    if (profile && profile.phases && profile.phases[historyEraPhase]) {
-                        var ph = profile.phases[historyEraPhase];
-                        if (eraCardYearsEl) eraCardYearsEl.textContent = ph.year || era.yearLabel || '';
-                        if (eraCardDescEl) eraCardDescEl.textContent = ph.desc_ar || locField(era, 'desc') || locField(era, 'title') || '';
-                    } else {
-                        if (eraCardYearsEl) eraCardYearsEl.textContent = era.yearLabel || '';
-                        if (eraCardDescEl) eraCardDescEl.textContent = locField(era, 'desc') || locField(era, 'title') || '';
+                    if (eraCardDescEl) {
+                        eraCardDescEl.textContent = (activePhaseData && locField(activePhaseData, 'desc')) || locField(era, 'desc') || locField(era, 'title') || '';
                     }
 
                     if (eraCardPolitiesEl) {
-                        eraCardPolitiesEl.innerHTML = (era.polities || []).map(function(p) {
+                        eraCardPolitiesEl.innerHTML = politiesToDraw.map(function(p) {
                             return '<span class="hist-card-polity-chip"><span class="hist-card-polity-swatch" style="background:' + p.color + '"></span> ' + htmlEscape(locField(p, 'name')) + '</span>';
                         }).join('');
                     }

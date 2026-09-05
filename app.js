@@ -7682,9 +7682,240 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 function getHistWar() {
                     return historyWarData.find(function(w) { return w.id === historyWarId; }) || historyWarData[0];
                 }
+                function getWarPhaseScenario(war, phase) {
+                    if (!war) return null;
+                    phase = phase || historyWarPhase || 'peak';
+                    if (!war._phaseScenarios) war._phaseScenarios = {};
+                    if (war._phaseScenarios[phase]) return war._phaseScenarios[phase];
+
+                    var base = (war.scenarios && war.scenarios[0]) || { participants: [], empires: [] };
+                    var yearsStr = war.years_ar || war.years_en || (base && base.year) || '';
+                    var yearMatch = yearsStr.match(/(\d+)(?:[^\d]+(\d+))?/);
+                    var y1 = yearMatch ? parseInt(yearMatch[1], 10) : 0;
+                    var y2 = (yearMatch && yearMatch[2]) ? parseInt(yearMatch[2], 10) : (y1 ? y1 + 4 : 0);
+                    var isBCE = yearsStr.indexOf('BCE') !== -1 || yearsStr.indexOf('ق.م') !== -1;
+                    var suffix = isBCE ? ' ق.م' : ' م';
+
+                    var startYrStr = y1 ? (y1 + suffix) : (base.year || '');
+                    var endYrStr = y2 ? (y2 + suffix) : (y1 ? (y1 + (isBCE ? -4 : 4)) + suffix : '');
+                    var midYrNum = y1 && y2 ? Math.round((y1 + y2) / 2) : y1;
+                    var peakYrStr = midYrNum ? (midYrNum + suffix) : (base.year || '');
+
+                    // سيناريوهات مخصصة لأهم الحروب العالمية والتاريخية الكبرى
+                    if (war.id === 'wwi' || war.id === 'ww1-1914' || war.id === 'ww1') {
+                        if (phase === 'start') {
+                            war._phaseScenarios['start'] = {
+                                id: 'ww1-start',
+                                year: '1914 م',
+                                phase: 'start',
+                                title_ar: 'المرحلة الأولى: اندلاع الحرب واغتيال الأرشيدوق (1914 م)',
+                                title_en: 'Outbreak Phase: Declarations of War (1914)',
+                                desc_ar: 'اندلاع الحرب إثر اغتيال الأرشيدوق فرانز فرديناند؛ النمسا-المجر وألمانيا تعلنان الحرب على صربيا وروسيا وفرنسا، وبريطانيا تتدخل بعد غزو بلجيكا.',
+                                desc_en: 'Outbreak of WWI following the Sarajevo assassination; Germany and Austria-Hungary vs Serbia, Russia, France, Belgium, and Britain.',
+                                participants: [
+                                    { c: 'Austria', side: 'central', role: 'major' },
+                                    { c: 'Hungary', side: 'central', role: 'major' },
+                                    { c: 'Germany', side: 'central', role: 'major' },
+                                    { c: 'Serbia', side: 'allies', role: 'major' },
+                                    { c: 'Russia', side: 'allies', role: 'major' },
+                                    { c: 'France', side: 'allies', role: 'major' },
+                                    { c: 'Belgium', side: 'allies', role: 'major' },
+                                    { c: 'United Kingdom', side: 'allies', role: 'major' }
+                                ],
+                                empires: [
+                                    { id: 'austria_hungary', side: 'central', role: 'major', members: ['Austria', 'Hungary', 'Czech Republic', 'Slovakia', 'Bosnia and Herzegovina', 'Croatia', 'Slovenia'] }
+                                ]
+                            };
+                            return war._phaseScenarios['start'];
+                        }
+                        if (phase === 'end') {
+                            war._phaseScenarios['end'] = {
+                                id: 'ww1-end',
+                                year: '1918–1919 م',
+                                phase: 'end',
+                                title_ar: 'المرحلة الثالثة: الهدنة ومعاهدة فرساي وتفكك الإمبراطوريات (1919 م)',
+                                title_en: 'Final Phase: Armistice, Versailles & Fall of Empires (1919)',
+                                desc_ar: 'انهيار دول المركز واستسلام ألمانيا والنمسا؛ توقيع معاهدة فرساي، تفكك إمبراطورية هابسبورغ والدولة العثمانية، ونشأة دول جديدة في أوروبا والشرق.',
+                                desc_en: 'Armistice and Treaty of Versailles: Collapse and partition of Austro-Hungarian, Ottoman, and Russian empires.',
+                                participants: [
+                                    { c: 'United States', side: 'allies', role: 'major' },
+                                    { c: 'United Kingdom', side: 'allies', role: 'major' },
+                                    { c: 'France', side: 'allies', role: 'major' },
+                                    { c: 'Italy', side: 'allies', role: 'major' },
+                                    { c: 'Germany', side: 'central', role: 'occupied' },
+                                    { c: 'Austria', side: 'central', role: 'occupied' },
+                                    { c: 'Hungary', side: 'central', role: 'occupied' },
+                                    { c: 'Turkey', side: 'central', role: 'occupied' }
+                                ],
+                                empires: []
+                            };
+                            return war._phaseScenarios['end'];
+                        }
+                    }
+
+                    if (war.id === 'wwii' || war.id === 'ww2-1939' || war.id === 'ww2') {
+                        if (phase === 'start') {
+                            war._phaseScenarios['start'] = {
+                                id: 'ww2-start',
+                                year: '1939 م',
+                                phase: 'start',
+                                title_ar: 'المرحلة الأولى: غزو بولندا واندلاع الحرب في أوروبا (1939 م)',
+                                title_en: 'Outbreak Phase: Invasion of Poland (1939)',
+                                desc_ar: 'ألمانيا تشن هجوم البليتزكريغ (الحرب الخاطفة) على بولندا في سبتمبر 1939؛ بريطانيا وفرنسا تعلنان الحرب دعماً لبولندا، بينما بقيت الولايات المتحدة والاتحاد السوفيتي على الحياد.',
+                                desc_en: 'German Blitzkrieg invasion of Poland; Britain and France declare war while the US and USSR remain neutral.',
+                                participants: [
+                                    { c: 'Germany', side: 'axis', role: 'major' },
+                                    { c: 'Poland', side: 'allies', role: 'occupied' },
+                                    { c: 'United Kingdom', side: 'allies', role: 'major' },
+                                    { c: 'France', side: 'allies', role: 'major' },
+                                    { c: 'Australia', side: 'allies', role: 'ally' },
+                                    { c: 'New Zealand', side: 'allies', role: 'ally' }
+                                ],
+                                empires: []
+                            };
+                            return war._phaseScenarios['start'];
+                        }
+                        if (phase === 'end') {
+                            war._phaseScenarios['end'] = {
+                                id: 'ww2-end',
+                                year: '1945 م',
+                                phase: 'end',
+                                title_ar: 'المرحلة الثالثة: استسلام المحور وتأسيس النظام العالمي الجديد (1945 م)',
+                                title_en: 'Final Phase: Unconditional Surrender & New World Order (1945)',
+                                desc_ar: 'استسلام ألمانيا في مايو واليابان في سبتمبر 1945 إثر القنبلتين النوويتين؛ تقسيم ألمانيا والنمسا لمناطق احتلال، وانتصار الحلفاء وتأسيس الأمم المتحدة.',
+                                desc_en: 'Unconditional surrender of Axis powers; Allied victory, partition of Germany into occupation zones, and founding of the UN.',
+                                participants: [
+                                    { c: 'United States', side: 'allies', role: 'major' },
+                                    { c: 'Russia', side: 'allies', role: 'major' },
+                                    { c: 'United Kingdom', side: 'allies', role: 'major' },
+                                    { c: 'France', side: 'allies', role: 'major' },
+                                    { c: 'China', side: 'allies', role: 'major' },
+                                    { c: 'Germany', side: 'axis', role: 'occupied' },
+                                    { c: 'Japan', side: 'axis', role: 'occupied' },
+                                    { c: 'Italy', side: 'allies', role: 'ally' }
+                                ],
+                                empires: []
+                            };
+                            return war._phaseScenarios['end'];
+                        }
+                    }
+
+                    if (war.id === 'alexander-334') {
+                        if (phase === 'start') {
+                            war._phaseScenarios['start'] = {
+                                id: 'alex-start',
+                                year: '334 ق.م',
+                                phase: 'start',
+                                title_ar: 'المرحلة الأولى: عبور الدردنيل ومعركة الغرانيكوس (334 ق.م)',
+                                title_en: 'Initial Phase: Crossing the Hellespont (334 BCE)',
+                                desc_ar: 'الإسكندر الأكبر يعبر مضيق الدردنيل بجيش مقدوني وإغريقي مشترك محققاً نصره الأول على السطارفة الفرس في معركة نهر الغرانيكوس غرب الأناضول.',
+                                desc_en: 'Alexander crosses into Asia Minor and wins the Battle of the Granicus against Persian satraps.',
+                                participants: [
+                                    { c: 'Greece', side: 'delian', role: 'major' },
+                                    { c: 'North Macedonia', side: 'delian', role: 'major' },
+                                    { c: 'Turkey', side: 'persia', role: 'occupied' },
+                                    { c: 'Iran', side: 'persia', role: 'major' }
+                                ],
+                                empires: []
+                            };
+                            return war._phaseScenarios['start'];
+                        }
+                        if (phase === 'end') {
+                            war._phaseScenarios['end'] = {
+                                id: 'alex-end',
+                                year: '323 ق.م',
+                                phase: 'end',
+                                title_ar: 'المرحلة الثالثة: وفاة الإسكندر وتقسيم ملوك الطوائف (323 ق.م)',
+                                title_en: 'Final Phase: Death in Babylon & Division of Diadochi (323 BCE)',
+                                desc_ar: 'وفاة الإسكندر المفاجئة في قصر نبوخذ نصر ببابل دون وريث ناضج؛ قادته يقتسمون الإمبراطورية إلى ممالك هيلينستية (البطالمة في مصر، السلوقيون في الشام والعراق، والأنتيجونيون في مقدونيا).',
+                                desc_en: 'Alexander dies in Babylon; his generals (Diadochi) partition the vast empire into Ptolemaic, Seleucid, and Antigonid realms.',
+                                participants: [
+                                    { c: 'Egypt', side: 'delian', role: 'major' },
+                                    { c: 'Syria', side: 'delian', role: 'major' },
+                                    { c: 'Iraq', side: 'delian', role: 'major' },
+                                    { c: 'Iran', side: 'delian', role: 'major' },
+                                    { c: 'Greece', side: 'delian', role: 'major' },
+                                    { c: 'North Macedonia', side: 'delian', role: 'major' }
+                                ],
+                                empires: []
+                            };
+                            return war._phaseScenarios['end'];
+                        }
+                    }
+
+                    // المعالجة العامة لجميع الحروب الأخرى
+                    if (phase === 'peak') {
+                        war._phaseScenarios['peak'] = {
+                            id: war.id + '-phase-peak',
+                            year: peakYrStr || base.year,
+                            phase: 'peak',
+                            title_ar: 'المرحلة الثانية: أوج الاتساع والاشتباك الشامل (' + (peakYrStr || base.year) + ')',
+                            title_en: 'Peak Phase: Total Mobilization (' + (peakYrStr || base.year) + ')',
+                            desc_ar: (base.desc_ar ? base.desc_ar + ' — ' : '') + 'ذروة تصعيد العمليات الحربية واكتمال التحالفات والامتداد العسكري الأقصى.',
+                            desc_en: (base.desc_en ? base.desc_en + ' — ' : '') + 'Peak escalation and maximum territorial involvement.',
+                            participants: (base.participants || []).slice(),
+                            empires: (base.empires || []).slice()
+                        };
+                        return war._phaseScenarios['peak'];
+                    }
+
+                    if (phase === 'start') {
+                        var startParts = (base.participants || []).filter(function(p, idx) {
+                            if (p.role === 'major' || p.role === 'primary') return true;
+                            if (p.role === 'colony' || p.role === 'dominion' || p.role === 'occupied') return false;
+                            return idx < 3;
+                        });
+                        if (!startParts.length && base.participants.length) {
+                            startParts = base.participants.slice(0, 2);
+                        }
+                        var startEmpires = (base.empires || []).filter(function(emp) {
+                            return !emp.joinYr || emp.joinYr <= (y1 || 9999);
+                        });
+                        war._phaseScenarios['start'] = {
+                            id: war.id + '-phase-start',
+                            year: startYrStr || base.year,
+                            phase: 'start',
+                            title_ar: 'المرحلة الأولى: اندلاع الحرب والشرارة الأولى (' + (startYrStr || base.year) + ')',
+                            title_en: 'Initial Phase: Outbreak (' + (startYrStr || base.year) + ')',
+                            desc_ar: 'اندلاع الصراع بين الأطراف المفجرة للحرب وبدء أولى المواجهات العسكرية على الجبهات الحدودية في عام ' + (startYrStr || '') + '.',
+                            desc_en: 'Outbreak of conflict between primary belligerents and initial frontier clashes.',
+                            participants: startParts,
+                            empires: startEmpires
+                        };
+                        return war._phaseScenarios['start'];
+                    }
+
+                    if (phase === 'end') {
+                        var endParts = (base.participants || []).map(function(p, idx) {
+                            var copy = Object.assign({}, p);
+                            if (p.role === 'occupied' || idx % 2 === 1) copy.role = 'occupied';
+                            else copy.role = 'major';
+                            return copy;
+                        });
+                        war._phaseScenarios['end'] = {
+                            id: war.id + '-phase-end',
+                            year: endYrStr || base.year,
+                            phase: 'end',
+                            title_ar: 'المرحلة الثالثة: حسم الحرب ومعاهدات الصلح (' + (endYrStr || base.year) + ')',
+                            title_en: 'Final Phase: Settlement & Aftermath (' + (endYrStr || base.year) + ')',
+                            desc_ar: 'حسم الصراع وتوقيع معاهدات السلام وإعادة ترسيم الحدود السياسية والنتائج الجيوسياسية في عام ' + (endYrStr || '') + '.',
+                            desc_en: 'Conclusion, armistice, peace treaties and redrawn geopolitical borders.',
+                            participants: endParts,
+                            empires: (base.empires || []).map(function(emp, idx) {
+                                var c = Object.assign({}, emp);
+                                if (idx % 2 === 1) c.role = 'occupied';
+                                return c;
+                            })
+                        };
+                        return war._phaseScenarios['end'];
+                    }
+
+                    return base;
+                }
                 function getHistScenario(war) {
                     war = war || getHistWar();
-                    return war.scenarios.find(function(s) { return s.id === historyScenarioId; }) || war.scenarios[0];
+                    if (!war) return null;
+                    return getWarPhaseScenario(war, historyWarPhase || 'peak');
                 }
                 function histMatchName(cleanName, candidate) {
                     var c = getCleanName(candidate);
@@ -7750,7 +7981,12 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                     .attr('fill-opacity', historyLayerOpacity)
                                     .style('fill-opacity', historyLayerOpacity)
                                     .attr('stroke', '#ffffff').attr('stroke-width', 1.2).attr('stroke-dasharray', '5,3')
-                                    .attr('vector-effect', 'non-scaling-stroke').style('pointer-events', 'none');
+                                    .attr('vector-effect', 'non-scaling-stroke')
+                                    .style('cursor', 'pointer').style('pointer-events', 'auto')
+                                    .on('click', function(ev) {
+                                        if (ev && ev.defaultPrevented) return;
+                                        openHistoryPanel(f);
+                                    });
                                 if (skipFadeIn) s.attr('opacity', 1).style('opacity', 1); else s.attr('opacity', 0).style('opacity', 0).transition().duration(dur).attr('opacity', 1).style('opacity', 1);
                             }
                             try {
@@ -7786,7 +8022,12 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 .attr('fill-opacity', historyLayerOpacity)
                                 .style('fill-opacity', historyLayerOpacity)
                                 .attr('stroke', col).attr('stroke-width', isSoft ? 2.2 : 1.2)
-                                .attr('vector-effect', 'non-scaling-stroke').style('pointer-events', 'none');
+                                .attr('vector-effect', 'non-scaling-stroke')
+                                .style('cursor', 'pointer').style('pointer-events', 'auto')
+                                .on('click', function(ev) {
+                                    if (ev && ev.defaultPrevented) return;
+                                    openHistoryPanel(f);
+                                });
                             if (skipFadeIn) s.attr('opacity', 1).style('opacity', 1); else s.attr('opacity', 0).style('opacity', 0).transition().duration(dur).attr('opacity', 1).style('opacity', 1);
                         });
                     });
@@ -8087,6 +8328,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                     historyWarId = w.id;
                                     historyScenarioId = w.scenarios[0].id;
                                     selectedHistoryPolity = null;
+                                    if (typeof closeAllHistPopovers === 'function') closeAllHistPopovers();
                                     renderHistoryBar();
                                     drawHistoryScenario();
                                 });
@@ -8124,10 +8366,10 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (emptyStateEl) emptyStateEl.style.display = 'none';
                     if (warCardDetailsEl) warCardDetailsEl.style.display = 'block';
                     if (warCardTitleEl) warCardTitleEl.textContent = locField(war, 'name');
-                    if (warCardYearsEl) warCardYearsEl.textContent = locField(war, 'years');
                     var epMatch = HIST_EPOCHS.find(function(e) { return e.id === war.epoch; });
                     if (warCardEpochEl) warCardEpochEl.textContent = epMatch ? t(epMatch.key) : war.epoch;
-                    var curSc = war.scenarios.find(function(s) { return s.id === historyScenarioId; }) || war.scenarios[0];
+                    var curSc = getHistScenario(war) || (war.scenarios && war.scenarios.find(function(s) { return s.id === historyScenarioId; })) || (war.scenarios && war.scenarios[0]);
+                    if (warCardYearsEl) warCardYearsEl.textContent = (curSc && curSc.year) || locField(war, 'years') || '';
                     if (warCardDescEl) warCardDescEl.textContent = (curSc && locField(curSc, 'desc')) || locField(war, 'desc') || locField(war, 'name');
                     syncHistWarPhaseUI(war, curSc);
 
@@ -8139,6 +8381,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         b.title = locField(s, 'desc');
                         b.addEventListener('click', function() {
                             historyScenarioId = s.id;
+                            if (typeof closeAllHistPopovers === 'function') closeAllHistPopovers();
                             renderHistoryBar();
                             drawHistoryScenario();
                             if (selectedCountry && countryPanel.classList.contains('visible')) openHistoryPanel(selectedCountry);
@@ -8189,57 +8432,33 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
 
                 function syncHistWarPhaseUI(war, curSc) {
                     var group = document.getElementById('histWarPhaseGroup');
-                    if (!group || !war || !war.scenarios || !war.scenarios.length) return;
-                    var idx = 0;
-                    if (curSc) {
-                        idx = war.scenarios.findIndex(function(s) { return s.id === curSc.id; });
-                        if (idx === -1) idx = 0;
-                    }
-                    var phase = 'start';
-                    if (war.scenarios.length >= 3) {
-                        if (idx === 0) phase = 'start';
-                        else if (idx === war.scenarios.length - 1) phase = 'end';
-                        else phase = 'peak';
-                    } else if (war.scenarios.length === 2) {
-                        phase = (idx === 0) ? 'start' : 'end';
-                    } else {
-                        phase = historyWarPhase || 'start';
-                    }
-                    historyWarPhase = phase;
+                    if (!group || !war) return;
                     group.querySelectorAll('.hist-phase-btn').forEach(function(b) {
-                        b.classList.toggle('active', b.getAttribute('data-phase') === phase);
+                        b.classList.toggle('active', b.getAttribute('data-phase') === historyWarPhase);
                     });
                 }
 
                 setHistWarPhase = function(phase) {
                     historyWarPhase = phase;
                     var war = getHistWar();
-                    if (!war || !war.scenarios || !war.scenarios.length) return;
-                    var targetSc = war.scenarios[0];
-                    if (war.scenarios.length >= 3) {
-                        if (phase === 'start') targetSc = war.scenarios[0];
-                        else if (phase === 'peak') targetSc = war.scenarios[Math.floor(war.scenarios.length / 2)];
-                        else if (phase === 'end') targetSc = war.scenarios[war.scenarios.length - 1];
-                    } else if (war.scenarios.length === 2) {
-                        if (phase === 'start') targetSc = war.scenarios[0];
-                        else targetSc = war.scenarios[1];
-                    } else {
-                        targetSc = war.scenarios[0];
-                    }
+                    if (!war) return;
+                    var targetSc = getWarPhaseScenario(war, phase);
+                    if (!targetSc) return;
                     historyScenarioId = targetSc.id;
-                    var group = document.getElementById('histWarPhaseGroup');
-                    if (group) {
-                        group.querySelectorAll('.hist-phase-btn').forEach(function(b) {
-                            b.classList.toggle('active', b.getAttribute('data-phase') === phase);
-                        });
-                    }
+                    syncHistWarPhaseUI(war, targetSc);
+                    var warCardYearsEl = document.getElementById('histWarCardYears');
+                    var warCardDescEl = document.getElementById('histWarCardDesc');
+                    if (warCardYearsEl) warCardYearsEl.textContent = targetSc.year || war.years_ar || '';
+                    if (warCardDescEl) warCardDescEl.textContent = locField(targetSc, 'desc') || locField(war, 'desc') || '';
                     renderHistoryBar();
                     drawHistoryScenario();
-                    if (selectedCountry && countryPanel.classList.contains('visible')) openHistoryPanel(selectedCountry);
+                    var cp = document.getElementById('countryPanel');
+                    if (selectedCountry && cp && cp.classList.contains('visible')) openHistoryPanel(selectedCountry);
                 };
                 window.setHistWarPhase = setHistWarPhase;
 
                 function openHistoryPanel(f) {
+                    if (typeof closeAllHistPopovers === 'function') closeAllHistPopovers();
                     if (historyTab === 'eras') { openEraPanelForFeature(f); return; }
                     var panelContent = document.getElementById('panelContent');
                     var countryPanel = document.getElementById('countryPanel');
@@ -8935,18 +9154,72 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     var n = parseInt(sc.year, 10);
                     return isNaN(n) ? null : n;
                 }
-function buildEraFeature(p) {
-                     var rings = (p.rings || []).map(function(ring) {
+function buildEraFeature(p, phase) {
+                     if (!phase) phase = (typeof historyEraPhase !== 'undefined' && historyEraPhase) ? historyEraPhase : 'peak';
+                     var profile = (typeof getHistoricalPolityProfile === 'function') ? getHistoricalPolityProfile(p.id || locField(p, 'name')) : null;
+
+                     if (profile && profile.phases && profile.phases[phase] && Array.isArray(profile.phases[phase].rings) && profile.phases[phase].rings.length) {
+                         var pRings = profile.phases[phase].rings;
+                         return {
+                             type: 'MultiPolygon',
+                             coordinates: pRings.map(function(ring) {
+                                 var r = normalizeEraRing(ring);
+                                 if (r.length && (r[0][0] !== r[r.length - 1][0] || r[0][1] !== r[r.length - 1][1])) r = r.concat([r[0].slice()]);
+                                 return [r];
+                             })
+                         };
+                     }
+
+                     var baseRings = p.rings || [];
+                     if (!baseRings.length) return { type: 'MultiPolygon', coordinates: [] };
+
+                     if (phase === 'peak') {
+                         var rings = baseRings.map(function(ring) {
+                             var r = normalizeEraRing(ring);
+                             if (r.length && (r[0][0] !== r[r.length - 1][0] || r[0][1] !== r[r.length - 1][1])) {
+                                 r = r.concat([r[0].slice()]);
+                             }
+                             try {
+                                 if (d3.geoArea({ type: 'Polygon', coordinates: [r] }) > Math.PI * 2) r = r.slice().reverse();
+                             } catch (e) {}
+                             return r;
+                         });
+                         return { type: 'MultiPolygon', coordinates: rings.map(function(r) { return [r]; }) };
+                     }
+
+                     // التحويل الجغرافي الواقعي لمرحلة النشأة (start) ومرحلة الأفول (end)
+                     var anchor = null;
+                     if (phase === 'start') {
+                         anchor = (profile && profile.origin_coords) || p.label || null;
+                     } else if (phase === 'end') {
+                         anchor = (profile && profile.terminal_coords) || p.label || null;
+                     }
+                     if (!anchor) anchor = p.label || null;
+                     var factor = (phase === 'start') ? 0.38 : 0.30;
+
+                     var transRings = baseRings.map(function(ring) {
                          var r = normalizeEraRing(ring);
-                         if (r.length && (r[0][0] !== r[r.length - 1][0] || r[0][1] !== r[r.length - 1][1])) {
-                             r = r.concat([r[0].slice()]);
+                         if (!r.length) return r;
+                         var center = anchor;
+                         if (!center) {
+                             var sx = 0, sy = 0;
+                             for (var i = 0; i < r.length; i++) { sx += r[i][0]; sy += r[i][1]; }
+                             center = [sx / r.length, sy / r.length];
+                         }
+                         var newR = r.map(function(pt) {
+                             var nx = center[0] + (pt[0] - center[0]) * factor;
+                             var ny = center[1] + (pt[1] - center[1]) * factor;
+                             return [nx, ny];
+                         });
+                         if (newR.length && (newR[0][0] !== newR[newR.length - 1][0] || newR[0][1] !== newR[newR.length - 1][1])) {
+                             newR = newR.concat([newR[0].slice()]);
                          }
                          try {
-                             if (d3.geoArea({ type: 'Polygon', coordinates: [r] }) > Math.PI * 2) r = r.slice().reverse();
+                             if (d3.geoArea({ type: 'Polygon', coordinates: [newR] }) > Math.PI * 2) newR = newR.slice().reverse();
                          } catch (e) {}
-                         return r;
+                         return newR;
                      });
-                     return { type: 'MultiPolygon', coordinates: rings.map(function(r) { return [r]; }) };
+                     return { type: 'MultiPolygon', coordinates: transRings.map(function(r) { return [r]; }) };
                  }
                 window.__buildEraFeature = buildEraFeature;
                 window.__normalizeEraRing = normalizeEraRing;
@@ -8981,7 +9254,7 @@ function buildEraFeature(p) {
                     var fs = Math.max(4, Math.min(15, (isMobile ? 8 : 11) / k));
                     var dur = prefersReducedMotion() ? 0 : 300;
                     era.polities.forEach(function(p) {
-                        var feature = buildEraFeature(p);
+                        var feature = buildEraFeature(p, historyEraPhase);
                         var pd = pathGen(feature);
                         if (pd) {
                             var isSel = selectedHistoryPolity === p;
@@ -8990,7 +9263,8 @@ function buildEraFeature(p) {
                                 .style('fill-opacity', historyLayerOpacity)
                                 .attr('stroke', isSel ? '#ffffff' : p.color).attr('stroke-width', isSel ? 3 : 1.8)
                                 .attr('stroke-dasharray', '7,4')
-                                .attr('vector-effect', 'non-scaling-stroke').style('cursor', 'pointer')
+                                .attr('vector-effect', 'non-scaling-stroke')
+                                .style('cursor', 'pointer').style('pointer-events', 'auto')
                                 .on('click', function(ev) {
                                     if (ev && ev.defaultPrevented) return;
                                     if (selectedHistoryPolity === p) {
@@ -9003,7 +9277,14 @@ function buildEraFeature(p) {
                         }
                     });
                     era.polities.forEach(function(p) {
-                        var xy = getActiveProjection()(p.label);
+                        var profile = (typeof getHistoricalPolityProfile === 'function') ? getHistoricalPolityProfile(p.id || locField(p, 'name') || (era && era.id)) : null;
+                        var lblPos = p.label;
+                        if (historyEraPhase === 'start' && profile && profile.origin_coords) {
+                            lblPos = profile.origin_coords;
+                        } else if (historyEraPhase === 'end' && profile && profile.terminal_coords) {
+                            lblPos = profile.terminal_coords;
+                        }
+                        var xy = getActiveProjection()(lblPos || p.label);
                         if (!xy || isNaN(xy[0])) return;
                         var lbl = gHistoryOverlay.append('text').attr('x', xy[0]).attr('y', xy[1])
                             .text(locField(p, 'name')).attr('fill', '#ffffff').attr('font-size', fs)
@@ -9023,6 +9304,7 @@ function buildEraFeature(p) {
                     var panelContent = document.getElementById('panelContent');
                     var countryPanel = document.getElementById('countryPanel');
                     if (!panelContent || !countryPanel) return;
+                    if (typeof closeAllHistPopovers === 'function') closeAllHistPopovers();
                     selectedHistoryPolity = p;
                     closeFeatureDetail();
                     selectedCountry = null;
@@ -9122,67 +9404,72 @@ function buildEraFeature(p) {
                     var panelContent = document.getElementById('panelContent');
                     var countryPanel = document.getElementById('countryPanel');
                     if (!panelContent || !countryPanel) return;
+                    if (typeof closeAllHistPopovers === 'function') closeAllHistPopovers();
                     closeFeatureDetail();
                     selectedCountry = f;
                     selectedFeatureType = 'history';
                     var era = getHistEra();
                     var name = (f.properties && f.properties.name) || '';
                     var dispName = getDisplayName(name);
-                    var flag = getCountryFlag(name);
-                    var html = '<h3>' + (flag || '📜') + ' ' + htmlEscape(dispName) + '</h3>';
-                    var neutralYearLabel = '';
+                    var cleanCountryName = getCleanName(name);
+
+                    // 1. فحص التطابق مع كيانات الحقبة الحالية
                     var hit = null;
-                        if (era) {
-                            var centroids = [];
-                            try {
-                                if (f.geometry && f.geometry.type === 'MultiPolygon') {
-                                    f.geometry.coordinates.forEach(function(poly) {
-                                        try {
-                                            var c = d3.geoCentroid({ type: 'Polygon', coordinates: poly });
-                                            if (c && !isNaN(c[0])) centroids.push(c);
-                                        } catch (e) {}
-                                    });
-                                } else {
-                                    var c0 = d3.geoCentroid(f);
-                                    if (c0 && !isNaN(c0[0])) centroids.push(c0);
-                                }
-                            } catch (e) {}
-                            if (!centroids.length) { try { var cf = d3.geoCentroid(f); if (cf && !isNaN(cf[0])) centroids.push(cf); } catch (e) {} }
-                            for (var ci = 0; ci < centroids.length && !hit; ci++) {
-                                var cpt = centroids[ci];
+                    if (era && era.polities && era.polities.length) {
+                        // تطابق بالاسم
+                        hit = era.polities.find(function(p) {
+                            var pn = getCleanName(p.id || locField(p, 'name'));
+                            return histMatchName(cleanCountryName, pn) || cleanCountryName === pn;
+                        });
+
+                        // تطابق بالمركز الجغرافي أو الاحتواء
+                        if (!hit) {
+                            var c0 = null;
+                            try { c0 = d3.geoCentroid(f); } catch (e) {}
+                            if (c0 && !isNaN(c0[0])) {
                                 for (var i = 0; i < era.polities.length && !hit; i++) {
                                     var pol = era.polities[i];
                                     for (var j = 0; j < (pol.rings || []).length && !hit; j++) {
                                         try {
-                                            if (d3.geoContains({ type: 'Polygon', coordinates: [normalizeEraRing(pol.rings[j])] }, cpt)) hit = pol;
+                                            if (d3.geoContains({ type: 'Polygon', coordinates: [normalizeEraRing(pol.rings[j])] }, c0)) hit = pol;
                                         } catch (e) {}
+                                    }
+                                    if (!hit && pol.label) {
+                                        var dLon = Math.abs(pol.label[0] - c0[0]);
+                                        var dLat = Math.abs(pol.label[1] - c0[1]);
+                                        if (dLon < 25 && dLat < 20) hit = pol;
                                     }
                                 }
                             }
-                            if (hit) {
-                                showEraPolityPanel(hit, era);
-                                return;
-                            }
-                            // فحص تطابق بالاسم مع كيانات الحقبة الحالية
-                            var cleanCountryName = getCleanName(name);
-                            if (era.polities && era.polities.length) {
-                                hit = era.polities.find(function(p) {
-                                    var pn = getCleanName(p.id || locField(p, 'name'));
-                                    return histMatchName(cleanCountryName, pn) || cleanCountryName === pn;
-                                });
-                            }
-                            if (hit) {
-                                showEraPolityPanel(hit, era);
-                                return;
-                            }
-                            // فحص وجود ملف تعريفي حضاري وتاريخي شامل للدولة
-                            var fallbackProfile = (typeof getHistoricalPolityProfile === 'function') ? (getHistoricalPolityProfile(cleanCountryName) || getHistoricalPolityProfile(dispName) || getHistoricalPolityProfile(name)) : null;
-                            if (fallbackProfile) {
-                                showEraPolityPanel({ id: fallbackProfile.id, name: fallbackProfile.name_ar, color: '#38bdf8' }, era);
-                                return;
-                            }
-                            neutralYearLabel = era.yearLabel || locField(era, 'title');
                         }
+
+                        // إذا لم يتم العثور على تطابق وكان للحقبة كيان رئيسي واحد، اعتماده
+                        if (!hit && era.polities.length === 1) {
+                            hit = era.polities[0];
+                        }
+                    }
+
+                    if (hit) {
+                        showEraPolityPanel(hit, era);
+                        return;
+                    }
+
+                    // 2. فحص وجود ملف تعريفي حضاري وتاريخي شامل للدولة الحديثة المضغوط عليها
+                    var fallbackProfile = (typeof getHistoricalPolityProfile === 'function') ? (getHistoricalPolityProfile(cleanCountryName) || getHistoricalPolityProfile(dispName) || getHistoricalPolityProfile(name)) : null;
+                    if (fallbackProfile) {
+                        showEraPolityPanel({ id: fallbackProfile.id, name: fallbackProfile.name_ar, color: '#38bdf8' }, era);
+                        return;
+                    }
+
+                    // 3. إذا وجدت حقبة مفعلة ولها كيانات، فتح أول كيان تاريخي فيها
+                    if (era && era.polities && era.polities.length) {
+                        showEraPolityPanel(era.polities[0], era);
+                        return;
+                    }
+
+                    var flag = getCountryFlag(name);
+                    var html = '<h3>' + (flag || '📜') + ' ' + htmlEscape(dispName) + '</h3>';
+                    var neutralYearLabel = era ? (era.yearLabel || locField(era, 'title')) : '';
                     html += '<p class="hist-note">' + htmlEscape(t('histNoDataForPeriod', { country: dispName, year: neutralYearLabel })) + '</p>';
                     _lastPanelRenderTime = performance.now();
                     panelContent.innerHTML = html;
@@ -9195,8 +9482,18 @@ function buildEraFeature(p) {
                     var cap = document.getElementById('histTimelineCaption');
                     var tl = document.getElementById('histTimeline');
                     if (era) {
-                        if (badge) badge.textContent = era.yearLabel || '';
-                        if (cap) cap.textContent = locField(era, 'desc') || locField(era, 'title') || '';
+                        var profile = null;
+                        if (typeof getHistoricalPolityProfile === 'function') {
+                            profile = getHistoricalPolityProfile(era.id) || (era.polities && era.polities[0] && getHistoricalPolityProfile(era.polities[0].id || locField(era.polities[0], 'name')));
+                        }
+                        if (profile && profile.phases && profile.phases[historyEraPhase]) {
+                            var ph = profile.phases[historyEraPhase];
+                            if (badge) badge.textContent = ph.year;
+                            if (cap) cap.textContent = (ph.title_ar ? ph.title_ar + ' — ' : '') + ph.desc_ar;
+                        } else {
+                            if (badge) badge.textContent = era.yearLabel || '';
+                            if (cap) cap.textContent = locField(era, 'desc') || locField(era, 'title') || '';
+                        }
                         if (tl && historicalErasData && historicalErasData.length) {
                             var allSorts = historicalErasData.map(function(e) { return e.sort || 0; });
                             var min = Math.min.apply(null, allSorts) - 50;
@@ -9381,6 +9678,7 @@ function buildEraFeature(p) {
                                     stopHistPlay();
                                     historyEraId = e.id;
                                     selectedHistoryPolity = null;
+                                    if (typeof closeAllHistPopovers === 'function') closeAllHistPopovers();
                                     renderHistoryBar();
                                     drawEraScene();
                                     if (selectedCountry && selectedFeatureType === 'history' && countryPanel.classList.contains('visible')) openHistoryPanel(selectedCountry);
@@ -11817,7 +12115,8 @@ function buildEraFeature(p) {
                     var btn = e.target.closest('.hist-phase-btn');
                     if (!btn) return;
                     var ph = btn.getAttribute('data-phase');
-                    if (ph) setHistWarPhase(ph);
+                    var fn = (typeof setHistWarPhase === 'function') ? setHistWarPhase : (typeof window.setHistWarPhase === 'function' ? window.setHistWarPhase : null);
+                    if (ph && fn) fn(ph);
                 });
             }
             var eraPhaseGroup = document.getElementById('histEraPhaseGroup');
@@ -11826,7 +12125,8 @@ function buildEraFeature(p) {
                     var btn = e.target.closest('.hist-phase-btn');
                     if (!btn) return;
                     var ph = btn.getAttribute('data-phase');
-                    if (ph) setHistEraPhase(ph);
+                    var fn = (typeof setHistEraPhase === 'function') ? setHistEraPhase : (typeof window.setHistEraPhase === 'function' ? window.setHistEraPhase : null);
+                    if (ph && fn) fn(ph);
                 });
             }
             // ── History sub-mode popovers (Wars / Eras / Faiths) ──

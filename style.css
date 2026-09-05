@@ -5914,8 +5914,11 @@ body.section-history .dock-unified-wrap { flex: 1 1 auto; min-width: 0; }
 .hist-phase-dot.dot-end { background: #ef4444; box-shadow: 0 0 6px #ef4444; }
 
 .country-panel:has(.hist-profile-card) {
-    max-width: 440px !important;
+    max-width: 460px !important;
     min-width: 320px !important;
+    max-height: calc(100vh - 100px) !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
 }
 .hist-profile-card {
     text-align: start;

@@ -1166,11 +1166,27 @@
                         .attr('flood-opacity', 0.35);
                 }
 
-                gOcean = svg.append('g');
+                gOcean = svg.append('g').style('cursor', 'default')
+                    .on('click', function(e) {
+                        if (e && e.defaultPrevented) return;
+                        if (window.historyIsActive && window.historyIsActive()) {
+                            if (typeof selectedHistoryPolity !== 'undefined' && selectedHistoryPolity) {
+                                if (typeof deselectHistoryPolity === 'function') deselectHistoryPolity();
+                                else closeCountryPanel();
+                            } else {
+                                closeCountryPanel();
+                            }
+                            return;
+                        }
+                        if (selectedCountry) {
+                            closeCountryPanel();
+                        }
+                    });
                 gOcean.append('rect')
                     .attr('x', -500).attr('y', -500)
                     .attr('width', width + 1000).attr('height', height + 1000)
-                    .attr('fill', 'url(#oceanGradient)');
+                    .attr('fill', 'url(#oceanGradient)')
+                    .style('pointer-events', 'all');
 
                 gGraticule = svg.append('g');
                 gIceCap = svg.append('g');
@@ -4023,6 +4039,12 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 compareCountry = null;
                 highlightSelectedCountry(null);
                 closeFeatureDetail();
+                if (typeof selectedHistoryPolity !== 'undefined' && selectedHistoryPolity) {
+                    selectedHistoryPolity = null;
+                    if (typeof drawEraScene === 'function' && typeof historyActive !== 'undefined' && historyActive && typeof historyTab !== 'undefined' && historyTab === 'eras') {
+                        drawEraScene(true);
+                    }
+                }
             }
 
             function renderCountryPanel(d) {
@@ -4293,6 +4315,16 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             }
 
             // ── Map transform & overlay positioning ──
+            function cleanHistoricalName(s) {
+                if (!s) return '';
+                return String(s)
+                    .replace(/\s*\([^)]*\)/g, '')
+                    .replace(/\s*\/.*$/, '')
+                    .replace(/\s{2,}/g, ' ')
+                    .trim();
+            }
+            window.cleanHistoricalName = cleanHistoricalName;
+
             function updateHistoryLabels(k) {
                 if (!gHistoryOverlay) return;
                 var zoom = k || (currentTransform && currentTransform.k) || 1;
@@ -4300,10 +4332,8 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 var maxScreenPx = isMobile ? 16 : 22;
                 var screenPx = Math.max(minScreenPx, Math.min(maxScreenPx, minScreenPx * Math.pow(zoom, 0.35)));
                 var fs = (screenPx / zoom) + 'px';
-                var strokeW = Math.max(1, Math.min(3.5, 2.5 / zoom)) + 'px';
                 gHistoryOverlay.selectAll('text.hist-era-label, text.hist-war-label')
-                    .attr('font-size', fs)
-                    .attr('stroke-width', strokeW);
+                    .attr('font-size', fs);
             }
             window.updateHistoryLabels = updateHistoryLabels;
 
@@ -8028,15 +8058,15 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             } catch (err) {}
                         });
                         if (found) {
-                            var nm = locField(histEmpireNames[emp.id], 'name');
+                            var nm = cleanHistoricalName(locField(histEmpireNames[emp.id], 'name'));
                             var suffix = emp.joinYr ? ' (' + emp.joinYr + ')' : (emp.endYr ? ' (†' + emp.endYr + ')' : '');
                             var lbl = gHistoryOverlay.append('text')
                                 .attr('class', 'hist-war-label')
                                 .attr('x', sx / sw).attr('y', sy / sw)
                                 .text(nm + suffix)
                                 .attr('fill', '#ffffff').attr('font-size', fs + 'px').attr('font-weight', 'bold')
-                                .attr('text-anchor', 'middle').attr('pointer-events', 'none')
-                                .attr('paint-order', 'stroke').attr('stroke', 'rgba(0,0,0,0.85)').attr('stroke-width', (isMobile ? 2 : 2.5) + 'px');
+                                .attr('text-anchor', 'middle').attr('dominant-baseline', 'central').attr('pointer-events', 'none')
+                                .attr('style', 'text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.85); letter-spacing: 0.3px;');
                             if (skipFadeIn) lbl.attr('opacity', 0.95); else lbl.attr('opacity', 0).transition().duration(dur).attr('opacity', 0.95);
                         }
                     });
@@ -9152,6 +9182,9 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 window.drawHistoryScenario = drawHistoryScenario;
                 window.drawEraScene = drawEraScene;
                 window.openHistoryPanel = openHistoryPanel;
+                window.deselectHistoryPolity = deselectHistoryPolity;
+                window.showEraPolityPanel = showEraPolityPanel;
+                window.getSelectedHistoryPolity = function() { return selectedHistoryPolity; };
                 window.historyIsActive = function() { return historyActive; };
                 if (typeof zoomBehavior !== 'undefined' && zoomBehavior) {
                     zoomBehavior.on('end.histzoom', function() {
@@ -9248,16 +9281,17 @@ function buildEraFeature(p, phase) {
                     var dur = prefersReducedMotion() ? 0 : 300;
                     var activePhaseData = (era.phases && era.phases[historyEraPhase]) ? era.phases[historyEraPhase] : null;
                     var politiesToDraw = (activePhaseData && Array.isArray(activePhaseData.polities) && activePhaseData.polities.length) ? activePhaseData.polities : era.polities;
+                    var _lastPolityClickT = 0;
                     politiesToDraw.forEach(function(p) {
                         var feature = buildEraFeature(p, historyEraPhase);
                         var pd = pathGen(feature);
                         if (pd) {
-                            var isSel = selectedHistoryPolity === p;
+                            var isSel = selectedHistoryPolity === p || (selectedHistoryPolity && p && selectedHistoryPolity.id && p.id && selectedHistoryPolity.id === p.id);
                             var s = gHistoryOverlay.append('path').attr('d', pd).attr('fill', p.color)
                                 .attr('fill-opacity', historyLayerOpacity)
                                 .style('fill-opacity', historyLayerOpacity)
                                 .attr('stroke', isSel ? '#ffffff' : p.color).attr('stroke-width', isSel ? 3 : 1.8)
-                                .attr('stroke-dasharray', '7,4')
+                                .attr('stroke-dasharray', isSel ? 'none' : '7,4')
                                 .attr('vector-effect', 'non-scaling-stroke')
                                 .style('cursor', 'pointer').style('pointer-events', 'auto');
                             var _epDownX = 0, _epDownY = 0, _epDownT = 0;
@@ -9269,14 +9303,17 @@ function buildEraFeature(p, phase) {
                                 var dist = Math.hypot(ev.clientX - _epDownX, ev.clientY - _epDownY);
                                 if (dist < 8 && (Date.now() - _epDownT) < 600) {
                                     if (ev.stopPropagation) ev.stopPropagation();
-                                    if (selectedHistoryPolity === p) {
+                                    _lastPolityClickT = Date.now();
+                                    if (selectedHistoryPolity === p || (selectedHistoryPolity && p && selectedHistoryPolity.id && p.id && selectedHistoryPolity.id === p.id)) {
                                         deselectHistoryPolity();
                                     } else {
                                         showEraPolityPanel(p, era);
                                     }
                                 }
-                            }).on('click', function() {
-                                if (selectedHistoryPolity === p) {
+                            }).on('click', function(ev) {
+                                if (ev && ev.stopPropagation) ev.stopPropagation();
+                                if (Date.now() - _lastPolityClickT < 500) return;
+                                if (selectedHistoryPolity === p || (selectedHistoryPolity && p && selectedHistoryPolity.id && p.id && selectedHistoryPolity.id === p.id)) {
                                     deselectHistoryPolity();
                                 } else {
                                     showEraPolityPanel(p, era);
@@ -9289,11 +9326,13 @@ function buildEraFeature(p, phase) {
                         var lblPos = p.label;
                         var xy = getActiveProjection()(lblPos || [0, 0]);
                         if (!xy || isNaN(xy[0])) return;
+                        var cleanTxt = cleanHistoricalName(locField(p, 'name'));
                         var lbl = gHistoryOverlay.append('text').attr('x', xy[0]).attr('y', xy[1])
                             .attr('class', 'hist-era-label')
-                            .text(locField(p, 'name')).attr('fill', '#ffffff').attr('font-size', fs + 'px')
-                            .attr('font-weight', 'bold').attr('text-anchor', 'middle').attr('pointer-events', 'none')
-                            .attr('paint-order', 'stroke').attr('stroke', 'rgba(0,0,0,0.85)').attr('stroke-width', (isMobile ? 2 : 2.5) + 'px');
+                            .text(cleanTxt).attr('fill', '#ffffff').attr('font-size', fs + 'px')
+                            .attr('font-weight', 'bold').attr('text-anchor', 'middle')
+                            .attr('dominant-baseline', 'central').attr('pointer-events', 'none')
+                            .attr('style', 'text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.85); letter-spacing: 0.3px;');
                         if (skipFadeIn) lbl.attr('opacity', 0.95); else lbl.attr('opacity', 0).transition().duration(dur).attr('opacity', 0.95);
                     });
                     if (typeof updateHistoryLabels === 'function') updateHistoryLabels(k);
@@ -9314,6 +9353,7 @@ function buildEraFeature(p, phase) {
                     closeFeatureDetail();
                     selectedCountry = null;
                     selectedFeatureType = 'history';
+                    drawEraScene(true);
                     var profile = (typeof getHistoricalPolityProfile === 'function') ? getHistoricalPolityProfile(p.id || locField(p, 'name') || (era && era.id)) : null;
                     var founderVal = (profile && profile.founder_ar) || p.founder || p.foundingYear || '';
                     var religionVal = (profile && profile.religion_ar) || p.religion || '';
@@ -9325,8 +9365,8 @@ function buildEraFeature(p, phase) {
 
                     var html = '<div class="hist-profile-card">' +
                         '<div class="hist-profile-header">' +
-                        '<h3 class="hist-profile-title">🏛️ ' + htmlEscape((profile && profile.name_ar) || locField(p, 'name')) + '</h3>' +
-                        '<p class="hist-profile-subtitle"><strong>' + htmlEscape(locField(era, 'title')) + '</strong> — ' + htmlEscape(era.yearLabel || '') + '</p>' +
+                        '<h3 class="hist-profile-title">🏛️ ' + htmlEscape(cleanHistoricalName((profile && profile.name_ar) || locField(p, 'name'))) + '</h3>' +
+                        '<p class="hist-profile-subtitle"><strong>' + htmlEscape(cleanHistoricalName(locField(era, 'title'))) + '</strong> — ' + htmlEscape(era.yearLabel || '') + '</p>' +
                         '</div>';
 
                     // Grid of key metadata
@@ -9441,18 +9481,8 @@ function buildEraFeature(p, phase) {
                                             if (d3.geoContains({ type: 'Polygon', coordinates: [normalizeEraRing(pol.rings[j])] }, c0)) hit = pol;
                                         } catch (e) {}
                                     }
-                                    if (!hit && pol.label) {
-                                        var dLon = Math.abs(pol.label[0] - c0[0]);
-                                        var dLat = Math.abs(pol.label[1] - c0[1]);
-                                        if (dLon < 25 && dLat < 20) hit = pol;
-                                    }
                                 }
                             }
-                        }
-
-                        // إذا لم يتم العثور على تطابق وكان للحقبة كيان رئيسي واحد، اعتماده
-                        if (!hit && politiesToCheck.length === 1) {
-                            hit = politiesToCheck[0];
                         }
                     }
 
@@ -9461,27 +9491,12 @@ function buildEraFeature(p, phase) {
                         return;
                     }
 
-                    // 2. فحص وجود ملف تعريفي حضاري وتاريخي شامل للدولة الحديثة المضغوط عليها
-                    var fallbackProfile = (typeof getHistoricalPolityProfile === 'function') ? (getHistoricalPolityProfile(cleanCountryName) || getHistoricalPolityProfile(dispName) || getHistoricalPolityProfile(name)) : null;
-                    if (fallbackProfile) {
-                        showEraPolityPanel({ id: fallbackProfile.id, name: fallbackProfile.name_ar, color: '#38bdf8' }, era);
-                        return;
+                    // إذا كانت المنطقة المضغوط عليها غير مظللة/غير تابعة لكيانات الحقبة النشطة: إلغاء التحديد وإغلاق اللوحة
+                    if (selectedHistoryPolity) {
+                        deselectHistoryPolity();
+                    } else {
+                        closeCountryPanel();
                     }
-
-                    // 3. إذا وجدت حقبة مفعلة ولها كيانات، فتح أول كيان تاريخي فيها
-                    if (politiesToCheck.length) {
-                        showEraPolityPanel(politiesToCheck[0], era);
-                        return;
-                    }
-
-                    var flag = getCountryFlag(name);
-                    var html = '<h3>' + (flag || '📜') + ' ' + htmlEscape(dispName) + '</h3>';
-                    var neutralYearLabel = era ? (era.yearLabel || locField(era, 'title')) : '';
-                    html += '<p class="hist-note">' + htmlEscape(t('histNoDataForPeriod', { country: dispName, year: neutralYearLabel })) + '</p>';
-                    _lastPanelRenderTime = performance.now();
-                    panelContent.innerHTML = html;
-                    countryPanel.style.display = 'block';
-                    requestAnimationFrame(function(){requestAnimationFrame(function(){countryPanel.classList.add('visible');});});
                 }
                 // Update the bottom timeline bar's year badge, progress fill, and caption for the active era.
                 function updateEraBottomBadge(era) {

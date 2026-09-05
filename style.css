@@ -971,6 +971,16 @@ header,
     pointer-events: none;
     text-shadow: 0 0 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 0, 0, 0.6);
 }
+.hist-era-label, .hist-war-label {
+    font-weight: 700;
+    fill: #ffffff;
+    text-anchor: middle;
+    dominant-baseline: central;
+    pointer-events: none;
+    user-select: none;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95), 0 0 6px rgba(0, 0, 0, 0.85);
+    letter-spacing: 0.3px;
+}
 .capital-label {
     fill: #fff;
     text-anchor: start;
@@ -1019,13 +1029,24 @@ header,
     isolation: isolate;
 }
 .map-transform-group text {
-    text-shadow: none ;
+    text-shadow: none;
     paint-order: stroke;
     stroke: rgba(0,0,0,0.7);
     stroke-width: 2px;
     stroke-linecap: round;
     stroke-linejoin: round;
     pointer-events: none;
+}
+.map-transform-group text.hist-era-label,
+.map-transform-group text.hist-war-label,
+.map-transform-group text.country-label,
+.hist-era-label,
+.hist-war-label,
+.country-label {
+    stroke: none !important;
+    stroke-width: 0 !important;
+    paint-order: normal !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95), 0 0 6px rgba(0, 0, 0, 0.85);
 }
 .zooming-active text {
     display: none;

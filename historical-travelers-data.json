@@ -226,7 +226,14 @@
           "year": "1325 م",
           "duration_ar": "نقطة الانطلاق ومسقط الرأس",
           "events_ar": "خرج منها وحيداً وهو ابن إحدى وعشرين سنة في رجب 725 هـ، مودعاً أهله وهو يبكي فراقهم.",
-          "quote_ar": "«حزمتُ أمري على هجران الأحباب والانسلاخ عن الأوطان... فودعتُ والديّ بالدموع، وخرجتُ منفرداً ليس معي رفيق يُؤنسني»."
+          "quote_ar": "«حزمتُ أمري على هجران الأحباب والانسلاخ عن الأوطان... فودعتُ والديّ بالدموع، وخرجتُ منفرداً ليس معي رفيق يُؤنسني».",
+          "ruler_ar": "السلطان أبو سعيد عثمان الثاني المريني",
+          "ruler_en": "Sultan Abu Said Uthman II (Marinid)",
+          "polity_ar": "الدولة المرينية (المغرب الأقصى)",
+          "polity_en": "Marinid Sultanate",
+          "condition_ar": "استقرار داخلي ونشاط تجاري وبداية نهضة عمرانية وثقافية في المغرب.",
+          "condition_en": "Internal stability, commercial flourishing, and Marinid cultural patronage.",
+          "condition_type": "prosperity"
         },
         {
           "name_ar": "القاهرة ومصر",
@@ -238,7 +245,14 @@
           "year": "1326 م",
           "duration_ar": "شهر تقريباً",
           "events_ar": "أبهرته عمارة القاهرة المملوكية ونيلها العظيم، وزار أهرامات الجيزة ومؤسسات السلطان الناصر محمد بن قلاوون الخيرية.",
-          "quote_ar": "«وصلتُ إلى مدينة مصر، وهي أم البلاد، ومستقر الوالي والفرسان، ذات المباني الفائقة والمحاسن الرائقة، تموج بموجات السكان»."
+          "quote_ar": "«وصلتُ إلى مدينة مصر، وهي أم البلاد، ومستقر الوالي والفرسان، ذات المباني الفائقة والمحاسن الرائقة، تموج بموجات السكان».",
+          "ruler_ar": "السلطان الناصر محمد بن قلاوون",
+          "ruler_en": "Sultan Al-Nasir Muhammad ibn Qalawun",
+          "polity_ar": "السلطنة المملوكية (مصر والشام)",
+          "polity_en": "Mamluk Sultanate",
+          "condition_ar": "أوج العصر الذهبي للمماليك، رخاء اقتصادي هائل، نشاط تجاري دولي وأمان تام.",
+          "condition_en": "Golden age of the Mamluk Sultanate; peak economic prosperity and international trade.",
+          "condition_type": "prosperity"
         },
         {
           "name_ar": "مكة المكرمة",
@@ -250,7 +264,14 @@
           "year": "1326–1329 م",
           "duration_ar": "حج 4 مرات وأقام بها سنوات للمجاورة والعبادة",
           "events_ar": "أدى فريضة الحج أول مرة سنة 726هـ، وجاور البيت العتيق لثلاث سنوات متتالية يتعبد ويطلب العلم.",
-          "quote_ar": "«شاهدنا البيت الحرام المشرّف، فامتلأت النفوس هيبة وجلالاً، وطُفنا طواف القدوم واستلمنا الحجر الأسعد»."
+          "quote_ar": "«شاهدنا البيت الحرام المشرّف، فامتلأت النفوس هيبة وجلالاً، وطُفنا طواف القدوم واستلمنا الحجر الأسعد».",
+          "ruler_ar": "الشريف رميثة بن أبي نمي الحسني",
+          "ruler_en": "Sharif Rumaithah ibn Abi Numayy",
+          "polity_ar": "شرافة مكة (تحت الحماية المملوكية)",
+          "polity_en": "Sharifate of Mecca (under Mamluk suzerainty)",
+          "condition_ar": "استقرار موسمي بفضل رعاية قوافل الحج الكبرى وتأمين الحرمين الشريفين.",
+          "condition_en": "Seasonal stability and religious vibrancy under Mamluk pilgrim caravan security.",
+          "condition_type": "stable"
         },
         {
           "name_ar": "دمشق",
@@ -262,7 +283,14 @@
           "year": "1326 م",
           "duration_ar": "عدة أسابيع",
           "events_ar": "شهد أوقاف دمشق الخيرية العظيمة مثل وقف القطط وأواني الخدم المكسورة، وتعلّم في جامع بني أمية الكبير.",
-          "quote_ar": "«جامع دمشق هو أعظم جوامع الدنيا وأتقنها محاسن، وفضائل أوقاف أهل دمشق لا تُحصى كثرة»."
+          "quote_ar": "«جامع دمشق هو أعظم جوامع الدنيا وأتقنها محاسن، وفضائل أوقاف أهل دمشق لا تُحصى كثرة».",
+          "ruler_ar": "الأمير سيف الدين تنكز الحسامي (نائب الشام)",
+          "ruler_en": "Emir Tankiz al-Husami (Mamluk Viceroy of Syria)",
+          "polity_ar": "السلطنة المملوكية (نيابة دمشق)",
+          "polity_en": "Mamluk Sultanate (Viceroyalty of Damascus)",
+          "condition_ar": "أزهى فترات دمشق العمرانية؛ تشييد الجوامع والمدارس وازدهار أسواق القوافل.",
+          "condition_en": "Damascus architectural and civic peak; great construction of madrasas and busy caravan trade.",
+          "condition_type": "prosperity"
         },
         {
           "name_ar": "سلطنة دلهي (الهند)",
@@ -274,7 +302,14 @@
           "year": "1334–1342 م",
           "duration_ar": "قرابة 8 سنوات",
           "events_ar": "عيّنه السلطان محمد بن تغلق قاضياً للمالكية في دلهي براتب ضخم، ثم أرسله سفيراً رسمياً إلى إمبراطور الصين.",
-          "quote_ar": "«دلهي حاضرة ملك الهند، وهي مدينة عظيمة الاتساع، محكمة الأسوار والعمائر، والسلطان محمد شاه أكرم الناس على الغرباء»."
+          "quote_ar": "«دلهي حاضرة ملك الهند، وهي مدينة عظيمة الاتساع، محكمة الأسوار والعمائر، والسلطان محمد شاه أكرم الناس على الغرباء».",
+          "ruler_ar": "السلطان محمد بن تغلق شاه",
+          "ruler_en": "Sultan Muhammad bin Tughluq",
+          "polity_ar": "سلطنة دلهي (الدولة التغلقية)",
+          "polity_en": "Delhi Sultanate (Tughluq Dynasty)",
+          "condition_ar": "ثراء فاحش في البلاط يقابله اضطراب إداري وتقلبات سياسية وثورات إقليمية قاسية.",
+          "condition_en": "Great court wealth contrasted with severe administrative volatility and widespread rebellions.",
+          "condition_type": "crisis"
         },
         {
           "name_ar": "مملكة مالي وتيمبوكتو",
@@ -286,7 +321,14 @@
           "year": "1352–1353 م",
           "duration_ar": "قرابة سنة",
           "events_ar": "عبر الصحراء الكبرى مع قوافل الملح والذهب، وزار مدن تيمبوكتو وغاوي وميناء كيدال والتقى بسلطان مالي سليمان كايتا.",
-          "quote_ar": "«أهل مالي أعظم الناس إنصافاً وأبعدهم عن الظلم، وبلادهم في أمن تام لا يخاف فيها مسافر ولا سارق»."
+          "quote_ar": "«أهل مالي أعظم الناس إنصافاً وأبعدهم عن الظلم، وبلادهم في أمن تام لا يخاف فيها مسافر ولا سارق».",
+          "ruler_ar": "مانسا سليمان كيتا",
+          "ruler_en": "Mansa Sulayman Keita",
+          "polity_ar": "إمبراطورية مالي الإسلامية",
+          "polity_en": "Mali Empire",
+          "condition_ar": "أمن شامل للقوافل، وعدالة اجتماعية، ووفرة الذهب والتجارة الصحراوية المزدهرة.",
+          "condition_en": "Exceptional caravan safety, praised rule of law, and thriving trans-Saharan gold trade.",
+          "condition_type": "prosperity"
         }
       ]
     },
@@ -432,7 +474,14 @@
           "year": "1271 م",
           "duration_ar": "نقطة الانطلاق سنة 1271 والعودة سنة 1295",
           "events_ar": "غادر وهو في السابعة عشرة من عمره برفقة والده نيكولو وعمه مافيو في رحلة تاريخية شرقية.",
-          "quote_ar": "«أيها الأباطرة والملوك والفرسان، إن أردتم معرفة الأجناس المتباينة وممالك المشرق العظيمة، فخذوا هذا الكتاب واقرؤوه»."
+          "quote_ar": "«أيها الأباطرة والملوك والفرسان، إن أردتم معرفة الأجناس المتباينة وممالك المشرق العظيمة، فخذوا هذا الكتاب واقرؤوه».",
+          "ruler_ar": "الدوق لورينزو تيبولو (دوج البندقية)",
+          "ruler_en": "Doge Lorenzo Tiepolo",
+          "polity_ar": "جمهورية البندقية البحرية",
+          "polity_en": "Republic of Venice",
+          "condition_ar": "ذروة النفوذ البحري والتجاري في البحر المتوسط بعد السيطرة على خطوط المشرق.",
+          "condition_en": "Maritime dominance and commercial expansion throughout the Eastern Mediterranean.",
+          "condition_type": "prosperity"
         },
         {
           "name_ar": "هرمز (مضيق هرمز)",
@@ -444,7 +493,14 @@
           "year": "1272 م",
           "duration_ar": "عدة أشهر",
           "events_ar": "شهد مركز تجارة التوابل واللؤلؤ على الخليج العربي، لكنه عدل عن الإبحار نظراً لرداءة السفن وقرر مواصلة السير براً.",
-          "quote_ar": "«هرمز ميناء تجاري يقصده التجار من الهند بالسفن المحملة بالتوابل والأحجار الكريمة والحرير»."
+          "quote_ar": "«هرمز ميناء تجاري يقصده التجار من الهند بالسفن المحملة بالتوابل والأحجار الكريمة والحرير».",
+          "ruler_ar": "الملك ركن الدين محمود (أتابك هرمز)",
+          "ruler_en": "King Rukn al-Din Mahmud (Atabeg of Hormuz)",
+          "polity_ar": "مملكة هرمز البحرية (تحت التبعية الإلخانية)",
+          "polity_en": "Kingdom of Hormuz (Ilkhanate vassal)",
+          "condition_ar": "مركز حيوي لتجارة التوابل والخيول العربية، مناخ قاسٍ وحركة ملاحة مكثفة.",
+          "condition_en": "Thriving strategic trade emporium for Indian spices and Arabian horses under harsh climate.",
+          "condition_type": "stable"
         },
         {
           "name_ar": "خان بالق / بكين (بلاط قبيلاي خان)",
@@ -456,7 +512,14 @@
           "year": "1275–1291 م",
           "duration_ar": "قرابة 17 سنة في خدمة الخان",
           "events_ar": "كسب ثقة قبيلاي خان، وتعلّم اللغات المنغولية والصينية، وعُيّن مبعوثاً إمبراطورياً وحاكماً لمدينة يانغتشو لثلاث سنوات.",
-          "quote_ar": "«قصر الخان الأعظم هو أعظم وأبهى قصر رآه إنسان، وجدرانه كلها مغطاة بالذهب والفضة ومزينة بالفرسان والتنانين»."
+          "quote_ar": "«قصر الخان الأعظم هو أعظم وأبهى قصر رآه إنسان، وجدرانه كلها مغطاة بالذهب والفضة ومزينة بالفرسان والتنانين».",
+          "ruler_ar": "الخاقان قبيلاي خان (الإمبراطور شيزو)",
+          "ruler_en": "Khagan Kublai Khan (Emperor Shizu of Yuan)",
+          "polity_ar": "إمبراطورية يوان (الصين وسلالة المغول العظمى)",
+          "polity_en": "Yuan Dynasty (Mongol Empire)",
+          "condition_ar": "سلام مغولي (Pax Mongolica)، عاصمة إمبراطورية عامرة، وتجارة ورقية ونظام بريدي متطور.",
+          "condition_en": "Pax Mongolica, booming imperial capital, cosmopolitan administration, and paper currency.",
+          "condition_type": "prosperity"
         },
         {
           "name_ar": "هانغتشو (خنساء)",
@@ -468,7 +531,14 @@
           "year": "1280 م",
           "duration_ar": "عدة زيارات أثناء خدمته الإمبراطورية",
           "events_ar": "أدهشته بنية المدينة المائية ونظافتها واحتوائها على 12,000 جسر حجري ونظام أوراق النقد.",
-          "quote_ar": "«مدينة خنساء هي بغير شك أرقى وأعظم مدائن الأرض قاطبة، وفيها من النعيم والتجارة ما لا تصفه العقول»."
+          "quote_ar": "«مدينة خنساء هي بغير شك أرقى وأعظم مدائن الأرض قاطبة، وفيها من النعيم والتجارة ما لا تصفه العقول».",
+          "ruler_ar": "الإدارة الإقليمية الإلخانية/اليوانية في جيانغنان",
+          "ruler_en": "Yuan Regional Administration in Jiangnan",
+          "polity_ar": "إمبراطورية يوان (عاصمة سونغ الجنوبية السابقة)",
+          "polity_en": "Yuan Dynasty (former Southern Song capital)",
+          "condition_ar": "أكبر وأفخم مدن العالم آنذاك؛ تجارة الحرير الفائقة رغم مرارة الخضوع لحكم المغول الحديث.",
+          "condition_en": "The world's largest metropolis of silk and porcelain; magnificent wealth amid recent Mongol conquest.",
+          "condition_type": "transition"
         }
       ]
     },
@@ -606,7 +676,14 @@
           "year": "1405 م",
           "duration_ar": "قاعدة انطلاق الأسطول ومصانع السفن",
           "events_ar": "بناء أسطول الكنز في أحواض لونغجيانغ وإبحار أول رحلة بـ 317 سفينة تحمل الحرير والخزف والذهب.",
-          "quote_ar": "«نشرنا أشرعتنا الشاهقة كالسحب في السماء، وماخرنا عباب الأمواج الهائجة نصل إلى أقاصي بلاد البرابرة بسلام»."
+          "quote_ar": "«نشرنا أشرعتنا الشاهقة كالسحب في السماء، وماخرنا عباب الأمواج الهائجة نصل إلى أقاصي بلاد البرابرة بسلام».",
+          "ruler_ar": "الإمبراطور يونغلي (تشو دي)",
+          "ruler_en": "Emperor Yongle (Zhu Di)",
+          "polity_ar": "إمبراطورية مينغ الصينية",
+          "polity_en": "Ming Dynasty",
+          "condition_ar": "قمة القوة العسكرية والبحرية الصينية، طفرة اقتصادية وبناء أعظم أسطول بحري في التاريخ.",
+          "condition_en": "Peak Ming military and maritime power; monumental fleet construction and imperial confidence.",
+          "condition_type": "prosperity"
         },
         {
           "name_ar": "مضيق ملقا",
@@ -618,7 +695,14 @@
           "year": "1407 م",
           "duration_ar": "محطة تجارية استراتيجية دائمة للأسطول",
           "events_ar": "قضى على القراصنة وأمّن المضيق، وأقام مخازن إمداد ومستودعات كبرى لأسطول الكنز، ودعم سلطان ملقا المسلم.",
-          "quote_ar": "«أقامت القوات الصينية أسواراً ومستودعات، وكانت كل سفينة تعود تجد مؤنها محفوظة بدقة متناهية»."
+          "quote_ar": "«أقامت القوات الصينية أسواراً ومستودعات، وكانت كل سفينة تعود تجد مؤنها محفوظة بدقة متناهية».",
+          "ruler_ar": "السلطان باراميسوارا (إسكندر شاه)",
+          "ruler_en": "Sultan Parameswara (Iskandar Shah)",
+          "polity_ar": "سلطنة ملقا",
+          "polity_en": "Malacca Sultanate",
+          "condition_ar": "صعود ملقا كأهم ممر تجاري بين المحيطين تحت الحماية الدبلوماسية الصينية.",
+          "condition_en": "Rapid rise of Malacca as the premier spice choke-point under Ming diplomatic protection.",
+          "condition_type": "prosperity"
         },
         {
           "name_ar": "كلكتا (كوزيكود، الهند)",
@@ -630,7 +714,14 @@
           "year": "1407–1433 م",
           "duration_ar": "المحطة الرئيسية في جميع الرحلات السبع",
           "events_ar": "المركز البحري الرئيسي لتبادل البضائع الصينية مع تجار العرب والهنود، وفيها تُوفي تشنغ خه خلال الرحلة السابعة.",
-          "quote_ar": "«كلكتا هي الميناء الأعظم في بلاد الهند الغربية، ويحكمها ملك يُعرف بالسامري، وأهلها يحترمون العهود والتجارة»."
+          "quote_ar": "«كلكتا هي الميناء الأعظم في بلاد الهند الغربية، ويحكمها ملك يُعرف بالسامري، وأهلها يحترمون العهود والتجارة».",
+          "ruler_ar": "السامري مانافيكراما (زامورين كوزيكود)",
+          "ruler_en": "The Zamorin of Calicut (Mana Vikrama)",
+          "polity_ar": "مملكة كوزيكود الهندوسية",
+          "polity_en": "Kingdom of Calicut (Zamorin)",
+          "condition_ar": "أمان تجاري منقطع النظير، حرية تجارة الفلفل والحرير، وتسامح ديني ودولي عميق.",
+          "condition_en": "Exemplary free-trade port for Malabar black pepper; equitable merchant laws and religious tolerance.",
+          "condition_type": "prosperity"
         },
         {
           "name_ar": "مليندي ومقديشو (شرق أفريقيا)",
@@ -642,7 +733,14 @@
           "year": "1418 م",
           "duration_ar": "عدة أشهر في الرحلتين الخامسة والسادسة",
           "events_ar": "وصل الأسطول الصيني إلى كينيا والصومال وتبادل الهدايا مع الحكام المحليين، وجلب الزراف والأسود كهدية للإمبراطور.",
-          "quote_ar": "«جلبنا من بلاد أفريقيا دابة الزرافة العجيبة، فاستبشر بها بلاط الإمبراطور واعتبروها بشارة يمن وبركة سماوية»."
+          "quote_ar": "«جلبنا من بلاد أفريقيا دابة الزرافة العجيبة، فاستبشر بها بلاط الإمبراطور واعتبروها بشارة يمن وبركة سماوية».",
+          "ruler_ar": "سلاطين مقديشو ومليندي السواحليون",
+          "ruler_en": "Swahili Sultans of Mogadishu & Malindi",
+          "polity_ar": "الدويلات-المدن السواحلية في شرق أفريقيا",
+          "polity_en": "Swahili City-States",
+          "condition_ar": "ازدهار تجارة الذهب والعاج والمنسوجات وتبادل السفارات والهدايا الدبلوماسية مع الصين.",
+          "condition_en": "Flourishing Indian Ocean maritime trade in ivory, frankincense, and exotic diplomatic exchanges.",
+          "condition_type": "prosperity"
         }
       ]
     },
@@ -728,7 +826,14 @@
           "year": "921 م",
           "duration_ar": "نقطة الانطلاق في صفر 309 هـ",
           "events_ar": "انطلاق البعثة الدبلوماسية العباسية الرسمية برئاسة السفير سوسن الرسي وابن فضلان كمرشد ومسؤول مالي وديني.",
-          "quote_ar": "«وصل كتاب ألمش بن شلكي ملك الصقالبة إلى أمير المؤمنين المقتدر يسأله فيه أن يبعث إليه من يُفقهه في الدين ويقيم له مسجداً»."
+          "quote_ar": "«وصل كتاب ألمش بن شلكي ملك الصقالبة إلى أمير المؤمنين المقتدر يسأله فيه أن يبعث إليه من يُفقهه في الدين ويقيم له مسجداً».",
+          "ruler_ar": "الخليفة المقتدر بالله العباسي",
+          "ruler_en": "Caliph Al-Muqtadir Billah (Abbasid)",
+          "polity_ar": "الخلافة العباسية",
+          "polity_en": "Abbasid Caliphate",
+          "condition_ar": "ضعف النفوذ السياسي للخليفة وتنافس قادة الجند، مع استمرار بغداد كمركز حضاري وديني عظيم.",
+          "condition_en": "Political fragmentation and military factionalism at the palace, amidst Baghdad's cultural prestige.",
+          "condition_type": "transition"
         },
         {
           "name_ar": "بخارى وخوارزم",
@@ -740,7 +845,14 @@
           "year": "921 م",
           "duration_ar": "عدة أسابيع",
           "events_ar": "لقاء الوزير الجيهاني والعلماء في بخارى، والتزود بالملابس الشتوية والفراء الثقيلة لتحمل صقيع الشمال الخارق.",
-          "quote_ar": "«رأينا في خوارزم برداً لم نسمع بمثله قط، حتى إن الأرض تنشق من شدة الزمهرير والماء يتجمد في الأواني فور سكبه»."
+          "quote_ar": "«رأينا في خوارزم برداً لم نسمع بمثله قط، حتى إن الأرض تنشق من شدة الزمهرير والماء يتجمد في الأواني فور سكبه».",
+          "ruler_ar": "الأمير نصر بن أحمد الساماني (أمير بخارى)",
+          "ruler_en": "Emir Nasr II ibn Ahmad (Samanid)",
+          "polity_ar": "الدولة السامانية",
+          "polity_en": "Samanid Empire",
+          "condition_ar": "عصر ذهبي للسامانيين؛ ازدهار علمي وفكري باهر، واستقرار تجاري واسع على طريق الحرير.",
+          "condition_en": "Samanid Golden Age; extraordinary scientific and Persian-Islamic cultural renaissance.",
+          "condition_type": "prosperity"
         },
         {
           "name_ar": "معسكر الروس (الفايكنج على الفولغا)",
@@ -752,7 +864,14 @@
           "year": "922 م",
           "duration_ar": "عدة أسابيع",
           "events_ar": "تسجيل طقوس جنازة زعيم الفايكنج وحرق السفينة، وأوصاف أسلحتهم وشياتهم وأجسادهم الوشومة.",
-          "quote_ar": "«رأيتُ الروسية وقد وافوا في تجاراتهم، فلم أرَ أتم أبداناً منهم، كأنهم النخيل، شقر حمر، ومع كل واحد منهم فأس وسيف وسكين»."
+          "quote_ar": "«رأيتُ الروسية وقد وافوا في تجاراتهم، فلم أرَ أتم أبداناً منهم، كأنهم النخيل، شقر حمر، ومع كل واحد منهم فأس وسيف وسكين».",
+          "ruler_ar": "الملك ألمش بن شيلكي (يلطوار الصقالبة)",
+          "ruler_en": "King Almış (Elteber of Volga Bulgaria)",
+          "polity_ar": "مملكة بلغار الفولغا",
+          "polity_en": "Volga Bulgaria",
+          "condition_ar": "اعتناق الإسلام والتحالف مع بغداد للحماية من خطر الخزر؛ نشاط تجاري مكثف للفراء والكهرمان.",
+          "condition_en": "Adoption of Islam to counter Khazar dominion; booming northern fur and amber river commerce.",
+          "condition_type": "transition"
         }
       ]
     },
@@ -850,7 +969,14 @@
           "year": "450 ق.م",
           "duration_ar": "عدة أشهر",
           "events_ar": "استقصى من الكهنة تاريخ الفراعنة وطرق التحنيط وبناء الأهرامات وفيضان النيل.",
-          "quote_ar": "«مصر هبة النيل؛ فلا أرض كمصر في كثرة ما بها من عجائب ومآثر تعجز عنها العقول»."
+          "quote_ar": "«مصر هبة النيل؛ فلا أرض كمصر في كثرة ما بها من عجائب ومآثر تعجز عنها العقول».",
+          "ruler_ar": "الإمبراطور أرتحششتا الأول / المرزبان الأخميني",
+          "ruler_en": "Artaxerxes I (Achaemenid Persian Satrapy)",
+          "polity_ar": "الأسرة السابعة والعشرون (مصر تحت الحكم الأخميني)",
+          "polity_en": "27th Dynasty (First Persian Period of Egypt)",
+          "condition_ar": "هدوء نسبي بعد إخماد الثورات؛ حزن مصري على الاستقلال الضائع مع بقاء المعابد والكهنة في هيبتهم.",
+          "condition_en": "Uneasy calm following past rebellions; Persian garrison control amidst proud priestly temple traditions.",
+          "condition_type": "stable"
         },
         {
           "name_ar": "بابل العظيمة",
@@ -862,7 +988,14 @@
           "year": "445 ق.م",
           "duration_ar": "عدة أسابيع",
           "events_ar": "وصف أسوار بابل الشاهقة وبواباتها المائة من البرونز وبرج معبد مردوخ وشوارعها المنتظمة.",
-          "quote_ar": "«تقع بابل في سهل فسيح، وهي مبنية على هيئة مربع عظيم، وجمالها وتخطيطها يفوق أي مدينة أخرى في العالم المعروف»."
+          "quote_ar": "«تقع بابل في سهل فسيح، وهي مبنية على هيئة مربع عظيم، وجمالها وتخطيطها يفوق أي مدينة أخرى في العالم المعروف».",
+          "ruler_ar": "الإمبراطور أرتحششتا الأول الأخميني",
+          "ruler_en": "Emperor Artaxerxes I (Persian Empire)",
+          "polity_ar": "الإمبراطورية الأخمينية الفارسية (ولاية بابل)",
+          "polity_en": "Achaemenid Persian Empire (Babylonian Satrapy)",
+          "condition_ar": "ثراء زراعي وتجاري أسطوري على ضفاف الفرات وعمارة دينية مهيبة تحت الإدارة الفارسية.",
+          "condition_en": "Immense agricultural wealth and trade along the Euphrates, preserved ancient monuments under Persian rule.",
+          "condition_type": "stable"
         }
       ]
     },
@@ -1008,7 +1141,14 @@
           "year": "629 م",
           "duration_ar": "نقطة الانطلاق سنة 629 والعودة المظفرة سنة 645",
           "events_ar": "انطلق بمفرده سراً ضد رغبة الإمبراطور تايزونغ، وعاد بعد 16 عاماً محملاً بـ 657 مخطوطاً سنسكريتياً مقدساً استقبله الإمبراطور استقبال الفاتحين.",
-          "quote_ar": "«نذرتُ نفسي للذهاب إلى أرض الغرب بحثاً عن الحقيقة، ولن ألتفت خلفي حتى أبلغ مبتغاي ولو كلفني ذلك حياتي»."
+          "quote_ar": "«نذرتُ نفسي للذهاب إلى أرض الغرب بحثاً عن الحقيقة، ولن ألتفت خلفي حتى أبلغ مبتغاي ولو كلفني ذلك حياتي».",
+          "ruler_ar": "الإمبراطور تايزونغ (لي شيمين)",
+          "ruler_en": "Emperor Taizong of Tang",
+          "polity_ar": "سلالة تانغ الإمبراطورية",
+          "polity_en": "Tang Dynasty",
+          "condition_ar": "بداية عصر تشنغوان المجيد؛ إجراءات أمنية مشددة وحظر للسفر الخارجي بسبب الحملات الشمالية.",
+          "condition_en": "Dawn of the Zhenguan era; centralized restructuring and strict border controls during northern campaigns.",
+          "condition_type": "transition"
         },
         {
           "name_ar": "جامعة نالاندا (الهند)",
@@ -1020,7 +1160,14 @@
           "year": "637–642 م",
           "duration_ar": "قرابة 5 سنوات دارساً ومناظراً",
           "events_ar": "درس في أعظم جامعة بالعالم القديم، وتتلمذ على يد رئيسها شيلابهادرا، وناظر كبار فلاسفة الهند وتفوق عليهم.",
-          "quote_ar": "«نالاندا صرح لا نظير له في العالم، فيها عشرة آلاف راهب وطالب علم، وأبراجها تناطح السحاب وبحيراتها تفيض بنور المعرفة»."
+          "quote_ar": "«نالاندا صرح لا نظير له في العالم، فيها عشرة آلاف راهب وطالب علم، وأبراجها تناطح السحاب وبحيراتها تفيض بنور المعرفة».",
+          "ruler_ar": "الإمبراطور هارشا فاردانا",
+          "ruler_en": "Emperor Harsha Vardhana",
+          "polity_ar": "إمبراطورية هارشا (شمال الهند)",
+          "polity_en": "Harsha Empire",
+          "condition_ar": "ذروة التسامح الديني والازدهار الفلسفي البوذي؛ نالاندا تضم آلاف الرهبان برعاية ملكية سخية.",
+          "condition_en": "Zenith of Buddhist scholasticism; thousands of scholars at Nalanda supported by Emperor Harsha's grand patronage.",
+          "condition_type": "prosperity"
         }
       ]
     },
@@ -1126,7 +1273,14 @@
           "year": "1116 م",
           "duration_ar": "سنوات الدراسة الأولى والشباب",
           "events_ar": "درس في جامعات قرطبة علوم الفلك والجغرافيا والرياضيات والنبات على أيدي كبار علماء عصره.",
-          "quote_ar": "«قرطبة أم مدائن الأندلس، وقاعدة الملك، ومجمع العلماء، لم يكن في الغرب كله مثل بهائها وعمارتها»."
+          "quote_ar": "«قرطبة أم مدائن الأندلس، وقاعدة الملك، ومجمع العلماء، لم يكن في الغرب كله مثل بهائها وعمارتها».",
+          "ruler_ar": "أمير المسلمين علي بن يوسف بن تاشفين المرابطي",
+          "ruler_en": "Ali ibn Yusuf (Amir of the Almoravids)",
+          "polity_ar": "دولة المرابطين",
+          "polity_en": "Almoravid Empire",
+          "condition_ar": "صرامة دينية وقوة عسكرية مرابطية في مواجهة الممالك الشمالية مع ترقب للمتغيرات في الأندلس.",
+          "condition_en": "Almoravid military vigilance against northern Christian kingdoms, marking cultural conservatism.",
+          "condition_type": "stable"
         },
         {
           "name_ar": "باليرمو (بلاط صقلية)",
@@ -1138,7 +1292,14 @@
           "year": "1138–1154 م",
           "duration_ar": "قرابة 16 سنة",
           "events_ar": "صنع خريطة العالم المنقوشة على دائرة من الفضة الخالصة وألف موسوعته الجغرافية العظمى بدعم الملك روجر الثاني.",
-          "quote_ar": "«رسمنا الأرض كروية كما هي في حقيقة الخلق، وأثبتنا الأقاليم السبعة بمسالكها وبحارها وأنهارها بدقة متناهية»."
+          "quote_ar": "«رسمنا الأرض كروية كما هي في حقيقة الخلق، وأثبتنا الأقاليم السبعة بمسالكها وبحارها وأنهارها بدقة متناهية».",
+          "ruler_ar": "الملك روجر الثاني (روجار النورماني)",
+          "ruler_en": "King Roger II of Sicily",
+          "polity_ar": "مملكة صقلية النورمانية",
+          "polity_en": "Kingdom of Sicily",
+          "condition_ar": "تمازج حضاري فريد بين الثقافات العربية والبيزنطية واللاتينية؛ رعاية ملكية للعلوم ورسم خرائط العالم.",
+          "condition_en": "Extraordinary Arab-Norman-Byzantine cultural synthesis and royal sponsorship of geography and cartography.",
+          "condition_type": "prosperity"
         }
       ]
     },
@@ -1268,7 +1429,14 @@
           "year": "1183 م",
           "duration_ar": "شهر تقريباً",
           "events_ar": "شهد إجراءات الجمارك وبناء قلعة صلاح الدين الأيوبي والأبراج الدفاعية وحسن رعاية المرضى في المارستان.",
-          "quote_ar": "«من مفاخر صلاح الدين المدارس والمارستانات التي أقامها، فرأينا فيها من الرعاية بالمرضى والغرباء ما يثلج الصدور»."
+          "quote_ar": "«من مفاخر صلاح الدين المدارس والمارستانات التي أقامها، فرأينا فيها من الرعاية بالمرضى والغرباء ما يثلج الصدور».",
+          "ruler_ar": "السلطان الناصر صلاح الدين الأيوبي",
+          "ruler_en": "Sultan Saladin (Salah al-Din al-Ayyubi)",
+          "polity_ar": "الدولة الأيوبية",
+          "polity_en": "Ayyubid Sultanate",
+          "condition_ar": "تعبئة عسكرية كبرى لمواجهة الصليبيين؛ إسقاط المكوس والمظالم عن الحجاج وبناء المدارس والمشافي.",
+          "condition_en": "Massive military mobilization against Crusaders, abolition of pilgrim taxes, and civic welfare works.",
+          "condition_type": "transition"
         },
         {
           "name_ar": "عكا وصور (الموانئ الصليبية)",
@@ -1280,7 +1448,14 @@
           "year": "1184 م",
           "duration_ar": "عدة أسابيع في انتظار سفينة العودة",
           "events_ar": "لاحظ باستغراب استمرار التجارة وحركة القوافل بين المسلمين والصليبيين رغم اشتعال الحروب العسكرية بينهم.",
-          "quote_ar": "«العجب العجاب أن الحرب مشتعلة بين العسكرين، وقوافل التجار من المسلمين والنصارى تختلف بينهم آمنة بغير تعرض!»."
+          "quote_ar": "«العجب العجاب أن الحرب مشتعلة بين العسكرين، وقوافل التجار من المسلمين والنصارى تختلف بينهم آمنة بغير تعرض!».",
+          "ruler_ar": "الملك بلدوين الرابع (ملك أورشليم)",
+          "ruler_en": "King Baldwin IV (Kingdom of Jerusalem)",
+          "polity_ar": "مملكة بيت المقدس الصليبية",
+          "polity_en": "Crusader Kingdom of Jerusalem",
+          "condition_ar": "توتر عسكري حاد وهدنات هشة مع استمرار حركة التجارة والملاحة بين المسلمين والفرنجة.",
+          "condition_en": "High political-military tension, yet bustling Mediterranean trade conducted across religious borders.",
+          "condition_type": "crisis"
         }
       ]
     },
@@ -1390,7 +1565,14 @@
           "year": "1640 م",
           "duration_ar": "مسقط رأسه ومقر انطلاقه",
           "events_ar": "نشأ في البلاط العثماني كقارئ للقرآن ونديم للسلطان مراد الرابع، وبدأ رحلته بتوثيق كل حي وقصر ومسجد في إسطنبول.",
-          "quote_ar": "«إسطنبول هي قبة الأرض ومجمع محاسن العالم، لا يمل ناظرها ولا ينفد عجب ساكنها»."
+          "quote_ar": "«إسطنبول هي قبة الأرض ومجمع محاسن العالم، لا يمل ناظرها ولا ينفد عجب ساكنها».",
+          "ruler_ar": "السلطان مراد الرابع / السلطان إبراهيم الأول",
+          "ruler_en": "Sultan Murad IV / Sultan Ibrahim I",
+          "polity_ar": "الدولة العثمانية",
+          "polity_en": "Ottoman Empire",
+          "condition_ar": "قبضة حديدية أعادت هيبة الدولة في عهد مراد الرابع؛ عاصمة إمبراطورية زاهرة بنقابات الحرف والتجارة.",
+          "condition_en": "Restoration of central authority under Murad IV; bustling imperial capital with thousands of craft guilds.",
+          "condition_type": "transition"
         },
         {
           "name_ar": "فيينا (النمسا)",
@@ -1402,7 +1584,14 @@
           "year": "1665 م",
           "duration_ar": "عدة أشهر ضمن بعثة السفارة العثمانية",
           "events_ar": "دخل فيينا مع السفير العثماني قرة محمد باشا، وزار كاتدرائية القديس ستيفان وقلعة الهابسبورغ ودوّن عادات النمساويين ونظام مدينتهم.",
-          "quote_ar": "«قلعة فيينا حصن عظيم منيع، وأهلها مولعون بالعلوم وفنون الساعات والموسيقى»."
+          "quote_ar": "«قلعة فيينا حصن عظيم منيع، وأهلها مولعون بالعلوم وفنون الساعات والموسيقى».",
+          "ruler_ar": "الإمبراطور ليوبولد الأول (إمبراطور هابسبورغ)",
+          "ruler_en": "Emperor Leopold I (Habsburg Monarchy)",
+          "polity_ar": "إمبراطورية هابسبورغ النمساوية",
+          "polity_en": "Habsburg Monarchy",
+          "condition_ar": "هدنة مؤقتة بعد معاهدة فاشفار؛ تحصين ضخم للمدينة وترقب حذر للصدام العثماني الهابسبورغي القادم.",
+          "condition_en": "Tense interwar diplomatic lull following the Peace of Vasvár; heavy fortification of the Habsburg bastion.",
+          "condition_type": "stable"
         },
         {
           "name_ar": "القاهرة ومصر العليا",
@@ -1414,7 +1603,14 @@
           "year": "1672–1682 م",
           "duration_ar": "العقد الأخير من حياته",
           "events_ar": "عاش في القاهرة يكتب ويصنف مجلدات كتابه العاشر، وزار الصعيد والسودان وسنار وتوفي ودُفن في القاهرة.",
-          "quote_ar": "«مصر جنة الدنيا ومركز العلم والأزهر الشريف، فيها عشتُ آخر سني عمري أجمع ما رأيتُ في الآفاق»."
+          "quote_ar": "«مصر جنة الدنيا ومركز العلم والأزهر الشريف، فيها عشتُ آخر سني عمري أجمع ما رأيتُ في الآفاق».",
+          "ruler_ar": "الولاة العثمانيون بالتشارك مع بكوات المماليك",
+          "ruler_en": "Ottoman Valis & Mamluk Sanjak-Beys",
+          "polity_ar": "إيالة مصر العثمانية",
+          "polity_en": "Ottoman Eyalet of Egypt",
+          "condition_ar": "توازن قوى حساس بين الباشوات العثمانيين وبكوات المماليك مع ازدهار التجارة النيلية وقوافل الحج.",
+          "condition_en": "Balance of power between Ottoman governors and local Mamluk beys; strong Nile and Red Sea commerce.",
+          "condition_type": "stable"
         }
       ]
     },
@@ -1540,7 +1736,14 @@
           "year": "1519 م",
           "duration_ar": "انطلاق أسطول الملوك الخمسة",
           "events_ar": "إبحار الأسطول الإسباني بقيادة ماجلان على متن سفينة ترينيداد و4 سفن أخرى تضم 270 بحاراً.",
-          "quote_ar": "«أبحرنا صوب المجهول نبتغي مجد الملك وفتح طريق الغرب إلى جزر التوابل»."
+          "quote_ar": "«أبحرنا صوب المجهول نبتغي مجد الملك وفتح طريق الغرب إلى جزر التوابل».",
+          "ruler_ar": "الملك كارلوس الأول (الإمبراطور شارلكان)",
+          "ruler_en": "King Charles I of Spain (Emperor Charles V)",
+          "polity_ar": "الإمبراطورية الإسبانية (تاج قشتالة)",
+          "polity_en": "Spanish Empire (Crown of Castile)",
+          "condition_ar": "حمى استكشافية عالمية وسعي للسيطرة على جزر التوابل للتفوق في السباق الملاحي ضد البرتغال.",
+          "condition_en": "Global exploratory fervor and crown investment to reach the Spice Islands before Portugal.",
+          "condition_type": "prosperity"
         },
         {
           "name_ar": "مضيق ماجلان (أقصى جنوب أمريكا)",
@@ -1552,7 +1755,14 @@
           "year": "1520 م",
           "duration_ar": "38 يوماً للمرور عبر المتاهة المائية",
           "events_ar": "اكتشاف الممر البحري الصخري العنيف الرابط بين الأطلسي والمحيط الهادئ وتسمية أرض النار (تييرا ديل فويغو).",
-          "quote_ar": "«بكى القائد ماجلان فرحاً حين رأينا البحر العظيم الآخر ينفتح أمامنا، وأطلق عليه اسم المحيط الهادئ لسكينة مياهه»."
+          "quote_ar": "«بكى القائد ماجلان فرحاً حين رأينا البحر العظيم الآخر ينفتح أمامنا، وأطلق عليه اسم المحيط الهادئ لسكينة مياهه».",
+          "ruler_ar": "شعوب التيولشي والسل كنام (الأصليون)",
+          "ruler_en": "Indigenous Tehuelche & Selk'nam Peoples",
+          "polity_ar": "أراضي باتاغونيا وأرض النار (قبل الاستعمار)",
+          "polity_en": "Patagonia / Tierra del Fuego (Indigenous lands)",
+          "condition_ar": "أزمة وجودية حادة؛ شتاء قطبي قارس، تمرد بحارة، وظروف إبحار مميتة وسط صخور المضيق المجهول.",
+          "condition_en": "Severe existential crisis: mutiny, starvation, freezing sub-Antarctic winter, and uncharted treacherous straits.",
+          "condition_type": "crisis"
         },
         {
           "name_ar": "جزيرة ماكتان (الفلبين)",
@@ -1564,7 +1774,14 @@
           "year": "1521 م",
           "duration_ar": "مقتل ماجلان في المعركة",
           "events_ar": "خاض معركة ضد زعيم الجزيرة المسلم لابو لابو ورجاله، فقُتل ماجلان في المعركة وسقطت جثته في البحر.",
-          "quote_ar": "«هكذا قضى ماجلان، مرشدنا ونورنا، وكان مقداماً لا يهاب الصعاب، خسرنا أعظم ربان عرفته البحار»."
+          "quote_ar": "«هكذا قضى ماجلان، مرشدنا ونورنا، وكان مقداماً لا يهاب الصعاب، خسرنا أعظم ربان عرفته البحار».",
+          "ruler_ar": "داتو لابو لابو (زعيم ماكتان)",
+          "ruler_en": "Datu Lapulapu (Chieftain of Mactan)",
+          "polity_ar": "مشيخات جزر البيسايا (الفلبين)",
+          "polity_en": "Rajahnate of Cebu / Mactan Chiefdom",
+          "condition_ar": "صراع دموي واشتعال المقاومة ضد الغزو الخارجي؛ مقتل ماجلان في المعركة وانسحاب الإسبان.",
+          "condition_en": "Violent anti-colonial resistance; fierce battle resulting in Magellan's death and Spanish withdrawal.",
+          "condition_type": "crisis"
         }
       ]
     },
@@ -1678,7 +1895,14 @@
           "year": "1497 م",
           "duration_ar": "الانطلاق في 8 يوليو 1497 من ميناء ريستيلو",
           "events_ar": "ودّع البرتغاليون الأسطول الصغير المكون من 4 سفن بصلوات حارة وهم يخشون ألا يعود أحد.",
-          "quote_ar": "«أبحرنا من لشبونة والقلوب واجفة والأعين تفيض دمعاً، نمضي إلى أقاصي محيطات مجهولة لم تشهدها سفن المسيحيين»."
+          "quote_ar": "«أبحرنا من لشبونة والقلوب واجفة والأعين تفيض دمعاً، نمضي إلى أقاصي محيطات مجهولة لم تشهدها سفن المسيحيين».",
+          "ruler_ar": "الملك مانويل الأول (مانويل العظيم)",
+          "ruler_en": "King Manuel I of Portugal",
+          "polity_ar": "مملكة البرتغال",
+          "polity_en": "Kingdom of Portugal",
+          "condition_ar": "أوج الطموح التوسعي وبناء الإمبراطورية البحرية في عصر الاكتشافات البرتغالي.",
+          "condition_en": "Height of Portuguese maritime ambition; crown monopoly on oceanic expansion and navigation.",
+          "condition_type": "prosperity"
         },
         {
           "name_ar": "رأس الرجاء الصالح",
@@ -1690,7 +1914,14 @@
           "year": "1497 م",
           "duration_ar": "عدة أيام لتجاوز العواصف العاتية",
           "events_ar": "تغلب على التمرد والأمواج الهائلة ودار حول الطرف الجنوبي للقارة الأفريقية نحو المحيط الهندي.",
-          "quote_ar": "«عبرنا رأس العواصف بعد جهاد مرير ضد الرياح والرياح المعاكسة، وبدأنا نشهد مياه المحيط الشرقي ترحب بنا»."
+          "quote_ar": "«عبرنا رأس العواصف بعد جهاد مرير ضد الرياح والرياح المعاكسة، وبدأنا نشهد مياه المحيط الشرقي ترحب بنا».",
+          "ruler_ar": "قبائل الخويخوي (سكان الجنوب الأفريقي)",
+          "ruler_en": "Indigenous Khoikhoi Communities",
+          "polity_ar": "جنوب القارة الأفريقية (أراضي الخويخوي)",
+          "polity_en": "Southern Africa (Khoikhoi ancestral lands)",
+          "condition_ar": "عواصف بحرية عاتية، إنهاك البحارة، وتوتر أمني واشتباكات مع السكان المحليين على الماشية والماء.",
+          "condition_en": "Treacherous stormy seas, crew exhaustion, and skirmishes with local pastoralists over water.",
+          "condition_type": "crisis"
         },
         {
           "name_ar": "كلكتا (الهند)",
@@ -1702,7 +1933,14 @@
           "year": "1498 م",
           "duration_ar": "3 أشهر في المفاوضات والتجارة",
           "events_ar": "وصل إلى ساحل ملبار بالهند والتقى بحاكمها السامري، معلناً فتح خط تجارة التوابل البحري المباشر مع أوروبا.",
-          "quote_ar": "«سألنا أهل كلكتا: عمّ تبحثون في هذه البلاد النائية؟ فأجبناهم بكلمتين: نبحث عن النصارى والتوابل»."
+          "quote_ar": "«سألنا أهل كلكتا: عمّ تبحثون في هذه البلاد النائية؟ فأجبناهم بكلمتين: نبحث عن النصارى والتوابل».",
+          "ruler_ar": "السامري مانافيكراما (زامورين كوزيكود)",
+          "ruler_en": "The Zamorin of Calicut",
+          "polity_ar": "مملكة كوزيكود الهندوسية",
+          "polity_en": "Kingdom of Calicut (Zamorin)",
+          "condition_ar": "توتر تجاري ودبلوماسي متصاعد؛ احتكار التجار العرب والهنود للسوق وازدراء الهدايا البرتغالية.",
+          "condition_en": "Diplomatic friction; established Arab-Indian trade cartels suspicious of Portuguese militarized intentions.",
+          "condition_type": "crisis"
         }
       ]
     },
@@ -1808,7 +2046,14 @@
           "year": "915 م",
           "duration_ar": "مسقط الرأس والنشأة الأولى في دار السلام",
           "events_ar": "نهل من علوم بغداد ومكتباتها ثم بدأ رحلته الكبرى وهو شاب يبتغي معاينة الأمم بنفسه.",
-          "quote_ar": "«لم نزل نطوف الآفاق ونخوض الغمار، نلتمس مشاهدة ما تباينت فيه الأخبار وتفرقت فيه الآثار»."
+          "quote_ar": "«لم نزل نطوف الآفاق ونخوض الغمار، نلتمس مشاهدة ما تباينت فيه الأخبار وتفرقت فيه الآثار».",
+          "ruler_ar": "الخليفة المقتدر بالله العباسي",
+          "ruler_en": "Caliph Al-Muqtadir Billah (Abbasid)",
+          "polity_ar": "الخلافة العباسية",
+          "polity_en": "Abbasid Caliphate",
+          "condition_ar": "ازدهار علمي ومكتبات عامرة برغم تصاعد الاضطرابات السياسية والاقتصادية في العاصمة.",
+          "condition_en": "Vibrant scholarship and vast libraries amidst rising central financial distress and palace intrigues.",
+          "condition_type": "transition"
         },
         {
           "name_ar": "ساحل الهند وسيلان (المحيط الهندي)",
@@ -1820,7 +2065,14 @@
           "year": "916 م",
           "duration_ar": "سنتان في مدن الهند وبحارها",
           "events_ar": "عاين حكام الهند وأوصاف أفيالهم ومعتقداتهم وعلومهم في الرياضيات والفلك.",
-          "quote_ar": "«الهند منبع الحكمة في قديم الزمان، وملوكهم يحمون التجار من كل ملة ويعظمون العدل والعقل»."
+          "quote_ar": "«الهند منبع الحكمة في قديم الزمان، وملوكهم يحمون التجار من كل ملة ويعظمون العدل والعقل».",
+          "ruler_ar": "ملوك الراشتراكوتا (الملك إندرا الثالث)",
+          "ruler_en": "King Indra III (Rashtrakuta Dynasty)",
+          "polity_ar": "إمبراطورية راشتراكوتا الهندوسية",
+          "polity_en": "Rashtrakuta Empire",
+          "condition_ar": "ازدهار تجاري وأمان مطلق للتجار المسلمين والأجانب وتسامح ديني فريد سجله المسعودي بإعجاب.",
+          "condition_en": "Exceptional religious tolerance and prosperous maritime trading ports warmly hosting foreign merchants.",
+          "condition_type": "prosperity"
         },
         {
           "name_ar": "الفسطاط والقاهرة (مصر)",
@@ -1832,7 +2084,14 @@
           "year": "947–956 م",
           "duration_ar": "العقد الأخير حتى وفاته",
           "events_ar": "استقر في الفسطاط بمصر وأكمل تنقيح وتأليف كتابه الخالد مروج الذهب وتوفي ودُفن بها.",
-          "quote_ar": "«أودعتُ كتابي هذا خلاصة ما شهدتُه بحواسي في أقطار الأرض، ليكون أنيساً للعاقل ومرآة للزمن»."
+          "quote_ar": "«أودعتُ كتابي هذا خلاصة ما شهدتُه بحواسي في أقطار الأرض، ليكون أنيساً للعاقل ومرآة للزمن».",
+          "ruler_ar": "الأمير أبو القاسم أنوجور بن الإخشيد / كافور الإخشيدي",
+          "ruler_en": "Abu al-Qasim Unujur / Abu al-Misk Kafur (Ikhshidid)",
+          "polity_ar": "الدولة الإخشيدية",
+          "polity_en": "Ikhshidid Dynasty of Egypt",
+          "condition_ar": "استقرار نسبي وثراء زراعي في وادي النيل حيث أتم المسعودي كتابه الشهير «مروج الذهب».",
+          "condition_en": "Relative calm and Nile agricultural richness; sanctuary where Al-Mas'udi finalized his 'Meadows of Gold'.",
+          "condition_type": "stable"
         }
       ]
     }

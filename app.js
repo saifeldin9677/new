@@ -4396,11 +4396,13 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 var isMob = window.innerWidth <= 768;
 
                 if (gHistCapitals) {
-                    var capR = (isMob ? 3.5 : 4.5) / zoom;
-                    var capFs = (isMob ? 8.5 : 10) / zoom;
-                    var capOffY = 6.5 / zoom;
-                    var capSw = 1.2 / zoom;
-                    var capTxtSw = 2.2 / zoom;
+                    var minCapPx = isMob ? 11.5 : 13.5;
+                    var maxCapPx = isMob ? 13.5 : 15.5;
+                    var capScreenPx = Math.max(minCapPx, Math.min(maxCapPx, minCapPx * Math.pow(zoom, 0.15)));
+                    var capR = (isMob ? 4.5 : 5.5) / zoom;
+                    var capFs = capScreenPx / zoom;
+                    var capOffY = ((isMob ? 5.5 : 6.5) + capScreenPx * 0.7) / zoom;
+                    var capSw = 1.4 / zoom;
                     gHistCapitals.selectAll('circle.hist-capital-circle')
                         .attr('r', capR)
                         .attr('stroke-width', capSw);
@@ -4408,18 +4410,20 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         var t = d3.select(this);
                         var cy = parseFloat(t.attr('data-cy') || 0);
                         if (cy) t.attr('y', cy - capOffY);
-                        t.attr('font-size', capFs + 'px').attr('stroke-width', capTxtSw);
+                        t.attr('font-size', capFs + 'px');
                     });
                 }
 
                 if (gHistBattles) {
-                    var batR = (isMob ? 4 : 5) / zoom;
-                    var batFs = (isMob ? 8.5 : 10) / zoom;
-                    var batIconFs = (isMob ? 6.5 : 8) / zoom;
-                    var batOffY = 7.5 / zoom;
-                    var batIconOffY = 3 / zoom;
-                    var batSw = 1.2 / zoom;
-                    var batTxtSw = 2.2 / zoom;
+                    var minBatPx = isMob ? 11.5 : 13.5;
+                    var maxBatPx = isMob ? 13.5 : 15.5;
+                    var batScreenPx = Math.max(minBatPx, Math.min(maxBatPx, minBatPx * Math.pow(zoom, 0.15)));
+                    var batR = (isMob ? 5.0 : 6.0) / zoom;
+                    var batFs = batScreenPx / zoom;
+                    var batIconFs = (isMob ? 7.5 : 9.0) / zoom;
+                    var batOffY = ((isMob ? 6.0 : 7.0) + batScreenPx * 0.7) / zoom;
+                    var batIconOffY = 3.5 / zoom;
+                    var batSw = 1.4 / zoom;
                     gHistBattles.selectAll('circle.hist-battle-circle')
                         .attr('r', batR)
                         .attr('stroke-width', batSw);
@@ -4433,18 +4437,20 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         var t = d3.select(this);
                         var cy = parseFloat(t.attr('data-cy') || 0);
                         if (cy) t.attr('y', cy - batOffY);
-                        t.attr('font-size', batFs + 'px').attr('stroke-width', batTxtSw);
+                        t.attr('font-size', batFs + 'px');
                     });
                 }
 
                 if (gHistWonders) {
-                    var wonR = (isMob ? 4 : 5) / zoom;
-                    var wonFs = (isMob ? 8.5 : 10) / zoom;
-                    var wonIconFs = (isMob ? 6.5 : 8) / zoom;
-                    var wonOffY = 7.5 / zoom;
-                    var wonIconOffY = 3 / zoom;
-                    var wonSw = 1.2 / zoom;
-                    var wonTxtSw = 2.2 / zoom;
+                    var minWonPx = isMob ? 11.5 : 13.5;
+                    var maxWonPx = isMob ? 13.5 : 15.5;
+                    var wonScreenPx = Math.max(minWonPx, Math.min(maxWonPx, minWonPx * Math.pow(zoom, 0.15)));
+                    var wonR = (isMob ? 5.0 : 6.0) / zoom;
+                    var wonFs = wonScreenPx / zoom;
+                    var wonIconFs = (isMob ? 7.5 : 9.0) / zoom;
+                    var wonOffY = ((isMob ? 6.0 : 7.0) + wonScreenPx * 0.7) / zoom;
+                    var wonIconOffY = 3.5 / zoom;
+                    var wonSw = 1.4 / zoom;
                     gHistWonders.selectAll('circle.hist-wonder-circle')
                         .attr('r', wonR)
                         .attr('stroke-width', wonSw);
@@ -4458,26 +4464,28 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         var t = d3.select(this);
                         var cy = parseFloat(t.attr('data-cy') || 0);
                         if (cy) t.attr('y', cy - wonOffY);
-                        t.attr('font-size', wonFs + 'px').attr('stroke-width', wonTxtSw);
+                        t.attr('font-size', wonFs + 'px');
                     });
                 }
 
                 if (gHistTravelers) {
-                    var wpFs = (isMob ? 7.5 : 9) / zoom;
-                    var wpTxtSw = 2.2 / zoom;
+                    var minWpPx = isMob ? 11.0 : 13.0;
+                    var maxWpPx = isMob ? 13.0 : 15.0;
+                    var wpScreenPx = Math.max(minWpPx, Math.min(maxWpPx, minWpPx * Math.pow(zoom, 0.15)));
+                    var wpFs = wpScreenPx / zoom;
                     gHistTravelers.selectAll('circle.hist-wp-circle').each(function() {
                         var c = d3.select(this);
                         var isAct = c.classed('active-wp');
-                        var r = (isAct ? (isMob ? 6 : 7.5) : (isMob ? 3.5 : 4.5)) / zoom;
+                        var r = (isAct ? (isMob ? 6.5 : 8.0) : (isMob ? 4.0 : 5.0)) / zoom;
                         c.attr('r', r).attr('stroke-width', (isAct ? 2.5 : 1.5) / zoom);
                     });
                     gHistTravelers.selectAll('text.hist-wp-label').each(function() {
                         var t = d3.select(this);
                         var cy = parseFloat(t.attr('data-cy') || 0);
                         var isAct = t.classed('active-wp');
-                        var offY = (isAct ? 10 : 7) / zoom;
+                        var offY = ((isAct ? 8.5 : 6.0) + wpScreenPx * 0.7) / zoom;
                         if (cy) t.attr('y', cy - offY);
-                        t.attr('font-size', wpFs + 'px').attr('stroke-width', wpTxtSw);
+                        t.attr('font-size', wpFs + 'px');
                     });
                 }
 
@@ -4488,6 +4496,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             window.updateHistoricalLandmarkLabels = updateHistoricalLandmarkLabels;
 
             function applyMapTransform(t) {
+                window.currentTransform = t;
                 // Use SVG transform attribute (not CSS transform).
                 // CSS transform on a will-change element creates a separate GPU
                 // compositor layer that can exceed mobile texture memory limits,
@@ -4572,6 +4581,9 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     }
                     currentTransform = e.transform;
                     applyMapTransform(currentTransform);
+                    if (typeof updateHistoricalLandmarkLabels === 'function') {
+                        updateHistoricalLandmarkLabels(currentTransform && currentTransform.k);
+                    }
                     if (_activeWaypointCoords && typeof positionWaypointPopup === 'function') {
                         positionWaypointPopup(_activeWaypointCoords);
                     }
@@ -12648,8 +12660,8 @@ function getReligionSlice(religion, year) {
                         .style('pointer-events', 'none');
                     g.append('text').attr('x', xy[0]).attr('y', xy[1] - 6 / k)
                         .text(locField(rel, 'name')).attr('fill', '#ffffff').attr('font-size', fs)
-                        .attr('font-weight', 'bold').attr('text-anchor', 'middle').attr('pointer-events', 'none')
-                        .attr('paint-order', 'stroke').attr('stroke', 'rgba(0,0,0,0.6)').attr('stroke-width', 3 / k);
+                        .attr('font-weight', 'bold').attr('text-anchor', 'middle')
+                        .attr('style', 'text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.85); pointer-events: none;');
                     if (skipFadeIn) {} else {
                         g.selectAll('circle:last-of-type,text:last-of-type').attr('opacity', 0)
                             .transition().duration(dur).attr('opacity', 1);
@@ -12939,7 +12951,10 @@ function getReligionSlice(religion, year) {
                                     goToWaypoint(tr, wIdx, false);
                                 });
 
-                            var rVal = (isWpActive ? (isMob ? 6 : 7.5) : (isMob ? 3.5 : 4.5)) / zoom;
+                            var minWpPx = isMob ? 11.0 : 13.0;
+                            var maxWpPx = isMob ? 13.0 : 15.0;
+                            var wpScreenPx = Math.max(minWpPx, Math.min(maxWpPx, minWpPx * Math.pow(zoom, 0.15)));
+                            var rVal = (isWpActive ? (isMob ? 6.5 : 8.0) : (isMob ? 4.0 : 5.0)) / zoom;
                             var swVal = (isWpActive ? 2.5 : 1.5) / zoom;
 
                             gWp.append('circle')
@@ -12954,8 +12969,8 @@ function getReligionSlice(religion, year) {
 
                             if (isWpActive || (isActive && wIdx === 0)) {
                                 var wpCleanName = cleanHistoricalName(locField(wp, 'name'));
-                                var fsVal = (isMob ? 7.5 : 9) / zoom;
-                                var offYVal = (isWpActive ? 10 : 7) / zoom;
+                                var fsVal = wpScreenPx / zoom;
+                                var offYVal = ((isWpActive ? 8.5 : 6.0) + wpScreenPx * 0.7) / zoom;
                                 gWp.append('text')
                                     .attr('class', 'hist-wp-label' + (isWpActive ? ' active-wp' : ''))
                                     .attr('data-cy', xy[1])
@@ -12966,10 +12981,7 @@ function getReligionSlice(religion, year) {
                                     .attr('font-size', fsVal + 'px')
                                     .attr('font-weight', isWpActive ? 'bold' : 'normal')
                                     .attr('text-anchor', 'middle')
-                                    .attr('paint-order', 'stroke')
-                                    .attr('stroke', 'rgba(0,0,0,0.85)')
-                                    .attr('stroke-width', 2.2 / zoom)
-                                    .style('pointer-events', 'none');
+                                    .attr('style', 'text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.85); pointer-events: none;');
                             }
                         });
                     }
@@ -12993,6 +13005,12 @@ function getReligionSlice(religion, year) {
                 var prevBtn = document.getElementById('histWpPrevBtn');
                 var nextBtn = document.getElementById('histWpNextBtn');
 
+                var contextGridEl = document.getElementById('histWpContextGrid');
+                var rulerValEl = document.getElementById('histWpRulerVal');
+                var polityValEl = document.getElementById('histWpPolityVal');
+                var condBadgeEl = document.getElementById('histWpCondBadge');
+                var condDescEl = document.getElementById('histWpCondDesc');
+
                 if (stepNumEl) stepNumEl.textContent = (wpIndex + 1);
                 if (titleEl) titleEl.textContent = cleanHistoricalName(locField(wp, 'name'));
                 if (yearEl) yearEl.textContent = wp.year ? (wp.year + ' م') : '';
@@ -13001,6 +13019,28 @@ function getReligionSlice(religion, year) {
                     durationEl.textContent = dur ? dur : '';
                     durationEl.style.display = dur ? 'inline-block' : 'none';
                 }
+
+                var ruler = locField(wp, 'ruler');
+                var polity = locField(wp, 'polity');
+                var condDesc = locField(wp, 'condition');
+                var condType = wp.condition_type || 'stable';
+
+                if (contextGridEl) {
+                    if (ruler || polity || condDesc) {
+                        if (rulerValEl) rulerValEl.textContent = ruler || '—';
+                        if (polityValEl) polityValEl.textContent = polity || '—';
+                        if (condBadgeEl) {
+                            condBadgeEl.className = 'hist-cond-badge cond-' + condType;
+                            var condBadgeKey = 'histCond' + condType.charAt(0).toUpperCase() + condType.slice(1);
+                            condBadgeEl.textContent = t(condBadgeKey) || condType;
+                        }
+                        if (condDescEl) condDescEl.textContent = condDesc || '';
+                        contextGridEl.style.display = 'flex';
+                    } else {
+                        contextGridEl.style.display = 'none';
+                    }
+                }
+
                 var ev = locField(wp, 'events') || locField(wp, 'event');
                 if (eventsEl) {
                     if (ev) {
@@ -13051,6 +13091,10 @@ function getReligionSlice(religion, year) {
                         p.classList.remove('active');
                     });
                 }
+                var card = document.getElementById('histTravelerCard');
+                if (card && card.style.display !== 'none' && typeof updateTravelerCard === 'function') {
+                    updateTravelerCard();
+                }
                 drawTravelerRoutes();
             }
             window.closeWaypointPopup = closeWaypointPopup;
@@ -13091,9 +13135,11 @@ function getReligionSlice(religion, year) {
                 if (prevBtn) prevBtn.disabled = false;
                 if (nextBtn) nextBtn.disabled = false;
 
-                // Update pills in side card if visible
-                var cardBody = document.getElementById('histTravelerCardBody');
-                if (cardBody) {
+                // Update side card if visible
+                var card = document.getElementById('histTravelerCard');
+                if (card && card.style.display !== 'none' && typeof updateTravelerCard === 'function') {
+                    updateTravelerCard();
+                } else if (cardBody) {
                     cardBody.querySelectorAll('.hist-traveler-station-pill').forEach(function(pill, idx) {
                         pill.classList.toggle('active', idx === wpIndex);
                     });
@@ -13382,6 +13428,22 @@ function getReligionSlice(religion, year) {
                         html += '</button>';
                     });
                     html += '</div>';
+                    if (activeWaypointIndex !== null && tr.waypoints[activeWaypointIndex]) {
+                        var actWp = tr.waypoints[activeWaypointIndex];
+                        var actRuler = locField(actWp, 'ruler');
+                        var actPolity = locField(actWp, 'polity');
+                        var actCond = locField(actWp, 'condition');
+                        var actCondType = actWp.condition_type || 'stable';
+                        var actCondKey = 'histCond' + actCondType.charAt(0).toUpperCase() + actCondType.slice(1);
+                        if (actRuler || actPolity || actCond) {
+                            html += '<div class="hist-card-active-wp-context">';
+                            html += '<div class="hist-card-wp-ctx-header"><strong>' + htmlEscape(cleanHistoricalName(locField(actWp, 'name'))) + (actWp.year ? (' · ' + htmlEscape(actWp.year)) : '') + '</strong><span class="hist-cond-badge cond-' + actCondType + '">' + htmlEscape(t(actCondKey) || actCondType) + '</span></div>';
+                            if (actRuler) html += '<div class="hist-card-wp-ctx-row"><span class="ctx-lbl"><i data-lucide="crown" class="lucide-icon"></i> ' + htmlEscape(t('histWpRuler') || 'الحاكم:') + '</span> <strong>' + htmlEscape(actRuler) + '</strong></div>';
+                            if (actPolity) html += '<div class="hist-card-wp-ctx-row"><span class="ctx-lbl"><i data-lucide="landmark" class="lucide-icon"></i> ' + htmlEscape(t('histWpPolity') || 'الدولة:') + '</span> <strong>' + htmlEscape(actPolity) + '</strong></div>';
+                            if (actCond) html += '<div class="hist-card-wp-ctx-desc">' + htmlEscape(actCond) + '</div>';
+                            html += '</div>';
+                        }
+                    }
                     html += '<div class="hist-traveler-station-hint"><i data-lucide="info" class="lucide-icon"></i> ' + htmlEscape(t('clickStationHint') || 'اضغط على أي محطة أو استخدم الشريط السفلي لاستكشاف نصوص وتفاصيل الرحالة على الخريطة') + '</div>';
                 }
 
@@ -13834,29 +13896,31 @@ function getReligionSlice(religion, year) {
                             if (e && e.stopPropagation) e.stopPropagation();
                             showHistoricalCapitalDetail(c);
                         });
+                    var minCapPx = isMob ? 11.5 : 13.5;
+                    var maxCapPx = isMob ? 13.5 : 15.5;
+                    var capScreenPx = Math.max(minCapPx, Math.min(maxCapPx, minCapPx * Math.pow(zoom, 0.15)));
+                    var capFs = capScreenPx / zoom;
+                    var capOffY = ((isMob ? 5.5 : 6.5) + capScreenPx * 0.7) / zoom;
                     g.append('circle')
                         .attr('class', 'hist-capital-circle')
                         .attr('cx', xy[0])
                         .attr('cy', xy[1])
-                        .attr('r', (isMob ? 3.5 : 4.5) / zoom)
+                        .attr('r', (isMob ? 4.5 : 5.5) / zoom)
                         .attr('fill', '#a855f7')
                         .attr('stroke', '#fff')
-                        .attr('stroke-width', 1.2 / zoom)
+                        .attr('stroke-width', 1.4 / zoom)
                         .attr('vector-effect', 'non-scaling-stroke');
                     g.append('text')
                         .attr('class', 'hist-capital-label')
                         .attr('data-cy', xy[1])
                         .attr('x', xy[0])
-                        .attr('y', xy[1] - (6.5 / zoom))
+                        .attr('y', xy[1] - capOffY)
                         .text(capName)
                         .attr('fill', '#e9d5ff')
-                        .attr('font-size', ((isMob ? 8.5 : 10) / zoom) + 'px')
+                        .attr('font-size', capFs + 'px')
                         .attr('font-weight', '600')
                         .attr('text-anchor', 'middle')
-                        .attr('paint-order', 'stroke')
-                        .attr('stroke', 'rgba(0,0,0,0.85)')
-                        .attr('stroke-width', 2.2 / zoom)
-                        .style('pointer-events', 'none');
+                        .attr('style', 'text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.85); pointer-events: none;');
                 });
             }
             window.drawHistCapitals = drawHistCapitals;
@@ -13885,39 +13949,41 @@ function getReligionSlice(religion, year) {
                             if (e && e.stopPropagation) e.stopPropagation();
                             showHistoricalBattleDetail(b);
                         });
+                    var minBatPx = isMob ? 11.5 : 13.5;
+                    var maxBatPx = isMob ? 13.5 : 15.5;
+                    var batScreenPx = Math.max(minBatPx, Math.min(maxBatPx, minBatPx * Math.pow(zoom, 0.15)));
+                    var batFs = batScreenPx / zoom;
+                    var batOffY = ((isMob ? 6.0 : 7.0) + batScreenPx * 0.7) / zoom;
                     g.append('circle')
                         .attr('class', 'hist-battle-circle')
                         .attr('cx', xy[0])
                         .attr('cy', xy[1])
-                        .attr('r', (isMob ? 4 : 5) / zoom)
+                        .attr('r', (isMob ? 5.0 : 6.0) / zoom)
                         .attr('fill', '#ef4444')
                         .attr('stroke', '#fff')
-                        .attr('stroke-width', 1.2 / zoom)
+                        .attr('stroke-width', 1.4 / zoom)
                         .attr('vector-effect', 'non-scaling-stroke');
                     g.append('text')
                         .attr('class', 'hist-battle-icon')
                         .attr('data-cy', xy[1])
                         .attr('x', xy[0])
-                        .attr('y', xy[1] + (3 / zoom))
+                        .attr('y', xy[1] + (3.5 / zoom))
                         .text('⚔')
                         .attr('fill', '#fff')
-                        .attr('font-size', ((isMob ? 6.5 : 8) / zoom) + 'px')
+                        .attr('font-size', ((isMob ? 7.5 : 9.0) / zoom) + 'px')
                         .attr('text-anchor', 'middle')
                         .style('pointer-events', 'none');
                     g.append('text')
                         .attr('class', 'hist-battle-label')
                         .attr('data-cy', xy[1])
                         .attr('x', xy[0])
-                        .attr('y', xy[1] - (7.5 / zoom))
+                        .attr('y', xy[1] - batOffY)
                         .text(batName)
                         .attr('fill', '#fca5a5')
-                        .attr('font-size', ((isMob ? 8.5 : 10) / zoom) + 'px')
+                        .attr('font-size', batFs + 'px')
                         .attr('font-weight', '600')
                         .attr('text-anchor', 'middle')
-                        .attr('paint-order', 'stroke')
-                        .attr('stroke', 'rgba(0,0,0,0.85)')
-                        .attr('stroke-width', 2.2 / zoom)
-                        .style('pointer-events', 'none');
+                        .attr('style', 'text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.85); pointer-events: none;');
                 });
             }
             window.drawHistBattles = drawHistBattles;
@@ -13946,39 +14012,41 @@ function getReligionSlice(religion, year) {
                             if (e && e.stopPropagation) e.stopPropagation();
                             showHistoricalWonderDetail(w);
                         });
+                    var minWonPx = isMob ? 11.5 : 13.5;
+                    var maxWonPx = isMob ? 13.5 : 15.5;
+                    var wonScreenPx = Math.max(minWonPx, Math.min(maxWonPx, minWonPx * Math.pow(zoom, 0.15)));
+                    var wonFs = wonScreenPx / zoom;
+                    var wonOffY = ((isMob ? 6.0 : 7.0) + wonScreenPx * 0.7) / zoom;
                     g.append('circle')
                         .attr('class', 'hist-wonder-circle')
                         .attr('cx', xy[0])
                         .attr('cy', xy[1])
-                        .attr('r', (isMob ? 4 : 5) / zoom)
+                        .attr('r', (isMob ? 5.0 : 6.0) / zoom)
                         .attr('fill', '#eab308')
                         .attr('stroke', '#fff')
-                        .attr('stroke-width', 1.2 / zoom)
+                        .attr('stroke-width', 1.4 / zoom)
                         .attr('vector-effect', 'non-scaling-stroke');
                     g.append('text')
                         .attr('class', 'hist-wonder-icon')
                         .attr('data-cy', xy[1])
                         .attr('x', xy[0])
-                        .attr('y', xy[1] + (3 / zoom))
+                        .attr('y', xy[1] + (3.5 / zoom))
                         .text('★')
                         .attr('fill', '#fff')
-                        .attr('font-size', ((isMob ? 6.5 : 8) / zoom) + 'px')
+                        .attr('font-size', ((isMob ? 7.5 : 9.0) / zoom) + 'px')
                         .attr('text-anchor', 'middle')
                         .style('pointer-events', 'none');
                     g.append('text')
                         .attr('class', 'hist-wonder-label')
                         .attr('data-cy', xy[1])
                         .attr('x', xy[0])
-                        .attr('y', xy[1] - (7.5 / zoom))
+                        .attr('y', xy[1] - wonOffY)
                         .text(wonderName)
                         .attr('fill', '#fde047')
-                        .attr('font-size', ((isMob ? 8.5 : 10) / zoom) + 'px')
+                        .attr('font-size', wonFs + 'px')
                         .attr('font-weight', '600')
                         .attr('text-anchor', 'middle')
-                        .attr('paint-order', 'stroke')
-                        .attr('stroke', 'rgba(0,0,0,0.85)')
-                        .attr('stroke-width', 2.2 / zoom)
-                        .style('pointer-events', 'none');
+                        .attr('style', 'text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.85); pointer-events: none;');
                 });
             }
             window.drawHistWonders = drawHistWonders;

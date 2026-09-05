@@ -405,6 +405,26 @@
                     <span class="hist-waypoint-year" id="histWpYear"></span>
                     <span class="hist-waypoint-duration" id="histWpDuration"></span>
                 </div>
+                <!-- Historical & Geopolitical Context at time of visit -->
+                <div class="hist-waypoint-context-grid" id="histWpContextGrid" style="display:none">
+                    <div class="hist-wp-context-row">
+                        <div class="hist-wp-context-item">
+                            <span class="hist-wp-context-label"><i data-lucide="crown" class="lucide-icon"></i> <span data-i18n="histWpRuler">الحاكم وقت المرور</span></span>
+                            <span class="hist-wp-context-val" id="histWpRulerVal"></span>
+                        </div>
+                        <div class="hist-wp-context-item">
+                            <span class="hist-wp-context-label"><i data-lucide="landmark" class="lucide-icon"></i> <span data-i18n="histWpPolity">الدولة / الكيان الحاكم</span></span>
+                            <span class="hist-wp-context-val" id="histWpPolityVal"></span>
+                        </div>
+                    </div>
+                    <div class="hist-wp-context-item hist-wp-context-cond-item">
+                        <div class="hist-wp-context-cond-header">
+                            <span class="hist-wp-context-label"><i data-lucide="activity" class="lucide-icon"></i> <span data-i18n="histWpCondition">حالة المنطقة وقت الزيارة</span></span>
+                            <span class="hist-cond-badge" id="histWpCondBadge"></span>
+                        </div>
+                        <div class="hist-wp-cond-desc" id="histWpCondDesc"></div>
+                    </div>
+                </div>
                 <div class="hist-waypoint-events" id="histWpEvents"></div>
                 <div class="hist-waypoint-quote-wrap" id="histWpQuoteWrap" style="display:none">
                     <div class="hist-waypoint-quote-label"><i data-lucide="quote" class="lucide-icon"></i> <span data-i18n="travelerQuote">من نصوص الرحالة:</span></div>

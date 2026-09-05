@@ -1044,12 +1044,14 @@ header,
 .map-transform-group text.hist-battle-label,
 .map-transform-group text.hist-wonder-label,
 .map-transform-group text.hist-wp-label,
+.map-transform-group text.hist-route-label,
 .hist-era-label,
 .hist-war-label,
 .hist-capital-label,
 .hist-battle-label,
 .hist-wonder-label,
 .hist-wp-label,
+.hist-route-label,
 .country-label {
     stroke: none !important;
     stroke-width: 0 !important;

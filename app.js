@@ -1531,10 +1531,22 @@
             }
             window.drawHistoricalRoutes = drawHistoricalRoutes;
             function drawHistoricalRoutes(skipFadeIn) {
+                if (!gHistoricalRoutes) return;
                 gHistoricalRoutes.selectAll('*').remove();
                 if (!historicalRoutesVisible) return;
                 var proj = getActiveProjection();
                 var dur = prefersReducedMotion() ? 0 : 300;
+                var zoom = (currentTransform && currentTransform.k) || 1;
+                var isMob = window.innerWidth <= 768;
+
+                var minRoutePx = isMob ? 11.5 : 13.5;
+                var maxRoutePx = isMob ? 13.5 : 15.5;
+                var routeScreenPx = Math.max(minRoutePx, Math.min(maxRoutePx, minRoutePx * Math.pow(zoom, 0.15)));
+                var routeFs = routeScreenPx / zoom;
+                var routeOffY = 6.0 / zoom;
+                var routeNodeR = (isMob ? 3.0 : 4.0) / zoom;
+                var routeNodeSw = 1.0 / zoom;
+
                 var histYear = null;
                 if (historyActive) {
                     if (historyTab === 'eras') {
@@ -1551,18 +1563,36 @@
                 historicalRoutesData.forEach(function(r) {
                     if (histYear !== null && ((r.from !== undefined && histYear < r.from) || (r.to !== undefined && r.to !== null && histYear > r.to))) return;
                     var points = r.coords;
-                    var halo = gHistoricalRoutes.append('path').datum({type:'LineString', coordinates:points}).attr('d',pathGen).attr('fill','none').attr('stroke',r.color).attr('stroke-width',isMobile?8:11).attr('stroke-opacity',0.22).attr('vector-effect','non-scaling-stroke').style('cursor','pointer').on('click',function(){showHistoricalRouteDetail(r);});
-                    var line = gHistoricalRoutes.append('path').datum({type:'LineString', coordinates:points}).attr('d',pathGen).attr('fill','none').attr('stroke',r.color).attr('stroke-width',isMobile?2.5:3).attr('stroke-dasharray','10,6').attr('vector-effect','non-scaling-stroke').style('pointer-events','none');
+                    var halo = gHistoricalRoutes.append('path').datum({type:'LineString', coordinates:points}).attr('d',pathGen).attr('fill','none').attr('stroke',r.color).attr('stroke-width',isMob?8:11).attr('stroke-opacity',0.22).attr('vector-effect','non-scaling-stroke').style('cursor','pointer').on('click',function(){showHistoricalRouteDetail(r);});
+                    var line = gHistoricalRoutes.append('path').datum({type:'LineString', coordinates:points}).attr('d',pathGen).attr('fill','none').attr('stroke',r.color).attr('stroke-width',isMob?2.5:3).attr('stroke-dasharray','10,6').attr('vector-effect','non-scaling-stroke').style('pointer-events','none');
                     var first = points[0], last = points[points.length-1];
                     [first,last].forEach(function(p){
                         var xy = proj(p);
                         if (!xy||isNaN(xy[0])) return;
-                        gHistoricalRoutes.append('circle').attr('cx',xy[0]).attr('cy',xy[1]).attr('r',isMobile?2.5:3.5).attr('fill',r.color).attr('stroke','#fff').attr('stroke-width',0.6).attr('vector-effect','non-scaling-stroke').style('pointer-events','none');
+                        gHistoricalRoutes.append('circle')
+                            .attr('class', 'hist-route-node')
+                            .attr('cx',xy[0]).attr('cy',xy[1])
+                            .attr('r', routeNodeR)
+                            .attr('fill',r.color).attr('stroke','#fff')
+                            .attr('stroke-width', routeNodeSw)
+                            .attr('vector-effect','non-scaling-stroke')
+                            .style('pointer-events','none');
                     });
                     var mid = points[Math.floor(points.length/2)];
                     var mxy = proj(mid);
                     if (mxy&&!isNaN(mxy[0])) {
-                        gHistoricalRoutes.append('text').attr('x',mxy[0]).attr('y',mxy[1]-5).text(function(){return locField(r,'name');}).attr('fill',r.color).attr('font-size',isMobile?7:9).attr('font-weight','bold').attr('text-anchor','middle').attr('paint-order','stroke').attr('stroke','rgba(0,0,0,0.7)').attr('stroke-width',2.5).style('pointer-events','none');
+                        var cleanRName = cleanHistoricalName(locField(r, 'name'));
+                        gHistoricalRoutes.append('text')
+                            .attr('class', 'hist-route-label')
+                            .attr('data-cy', mxy[1])
+                            .attr('x', mxy[0])
+                            .attr('y', mxy[1] - routeOffY)
+                            .text(cleanRName)
+                            .attr('fill', r.color || '#fbbf24')
+                            .attr('font-size', routeFs + 'px')
+                            .attr('font-weight', '700')
+                            .attr('text-anchor', 'middle')
+                            .attr('style', 'text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.85); pointer-events: none;');
                     }
                     if (skipFadeIn) { halo.attr('opacity',1); line.attr('opacity',0.95); }
                     else {
@@ -4489,6 +4519,27 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     });
                 }
 
+                if (gHistoricalRoutes && historicalRoutesVisible) {
+                    var minRoutePx = isMob ? 11.5 : 13.5;
+                    var maxRoutePx = isMob ? 13.5 : 15.5;
+                    var routeScreenPx = Math.max(minRoutePx, Math.min(maxRoutePx, minRoutePx * Math.pow(zoom, 0.15)));
+                    var routeFs = routeScreenPx / zoom;
+                    var routeOffY = 6.0 / zoom;
+                    var routeNodeR = (isMob ? 3.0 : 4.0) / zoom;
+                    var routeNodeSw = 1.0 / zoom;
+
+                    gHistoricalRoutes.selectAll('circle.hist-route-node')
+                        .attr('r', routeNodeR)
+                        .attr('stroke-width', routeNodeSw);
+
+                    gHistoricalRoutes.selectAll('text.hist-route-label').each(function() {
+                        var t = d3.select(this);
+                        var cy = parseFloat(t.attr('data-cy') || 0);
+                        if (cy) t.attr('y', cy - routeOffY);
+                        t.attr('font-size', routeFs + 'px');
+                    });
+                }
+
                 if (_activeWaypointCoords) {
                     positionWaypointPopup(_activeWaypointCoords);
                 }
@@ -4612,7 +4663,8 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             [windsVisible, function() { drawWinds(true); }],
                             [earthquakesVisible, function() { drawEarthquakes(true); }],
                             [volcanoesVisible, function() { drawVolcanoes(true); }],
-                            [timezonesVisible, function() { drawTimezones(true); }]
+                            [timezonesVisible, function() { drawTimezones(true); }],
+                            [historicalRoutesVisible, function() { drawHistoricalRoutes(true); }]
                         ].filter(function(p) { return p[0]; });
                         var _li = 0;
                         (function runNextLayer() {

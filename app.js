@@ -2943,6 +2943,9 @@
                 if (typeof updateHistoryLabels === 'function') {
                     updateHistoryLabels(currentTransform && currentTransform.k);
                 }
+                if (typeof updateHistoricalLandmarkLabels === 'function') {
+                    updateHistoricalLandmarkLabels(currentTransform && currentTransform.k);
+                }
                 if (!countryLabelSelection) return;
                 if (!showLabels) {
                     countryLabelSelection.style('opacity', 0);
@@ -4353,6 +4356,137 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             }
             window.updateHistoryLabels = updateHistoryLabels;
 
+            var _activeWaypointCoords = null;
+            function positionWaypointPopup(coords) {
+                var pop = document.getElementById('histWaypointPopup');
+                if (!pop || pop.style.display === 'none' || !coords || !svg) return;
+                var proj = getActiveProjection();
+                var xy = proj(coords);
+                if (!xy || isNaN(xy[0])) return;
+
+                var svgNode = svg.node();
+                var rect = svgNode ? svgNode.getBoundingClientRect() : { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
+                var k = (currentTransform && currentTransform.k) || 1;
+                var tx = (currentTransform && currentTransform.x) || 0;
+                var ty = (currentTransform && currentTransform.y) || 0;
+
+                var screenX = rect.left + tx + xy[0] * k;
+                var screenY = rect.top + ty + xy[1] * k;
+
+                var popWidth = pop.offsetWidth || 340;
+                var popHeight = pop.offsetHeight || 240;
+
+                var left = screenX - (popWidth / 2);
+                var top = screenY - popHeight - 20;
+
+                if (top < 70) {
+                    top = screenY + 24;
+                }
+
+                left = Math.max(16, Math.min(window.innerWidth - popWidth - 16, left));
+                top = Math.max(65, Math.min(window.innerHeight - popHeight - 85, top));
+
+                pop.style.left = left + 'px';
+                pop.style.top = top + 'px';
+            }
+            window.positionWaypointPopup = positionWaypointPopup;
+
+            function updateHistoricalLandmarkLabels(k) {
+                var zoom = k || (currentTransform && currentTransform.k) || 1;
+                var isMob = window.innerWidth <= 768;
+
+                if (gHistCapitals) {
+                    var capR = (isMob ? 3.5 : 4.5) / zoom;
+                    var capFs = (isMob ? 8.5 : 10) / zoom;
+                    var capOffY = 6.5 / zoom;
+                    var capSw = 1.2 / zoom;
+                    var capTxtSw = 2.2 / zoom;
+                    gHistCapitals.selectAll('circle.hist-capital-circle')
+                        .attr('r', capR)
+                        .attr('stroke-width', capSw);
+                    gHistCapitals.selectAll('text.hist-capital-label').each(function() {
+                        var t = d3.select(this);
+                        var cy = parseFloat(t.attr('data-cy') || 0);
+                        if (cy) t.attr('y', cy - capOffY);
+                        t.attr('font-size', capFs + 'px').attr('stroke-width', capTxtSw);
+                    });
+                }
+
+                if (gHistBattles) {
+                    var batR = (isMob ? 4 : 5) / zoom;
+                    var batFs = (isMob ? 8.5 : 10) / zoom;
+                    var batIconFs = (isMob ? 6.5 : 8) / zoom;
+                    var batOffY = 7.5 / zoom;
+                    var batIconOffY = 3 / zoom;
+                    var batSw = 1.2 / zoom;
+                    var batTxtSw = 2.2 / zoom;
+                    gHistBattles.selectAll('circle.hist-battle-circle')
+                        .attr('r', batR)
+                        .attr('stroke-width', batSw);
+                    gHistBattles.selectAll('text.hist-battle-icon').each(function() {
+                        var t = d3.select(this);
+                        var cy = parseFloat(t.attr('data-cy') || 0);
+                        if (cy) t.attr('y', cy + batIconOffY);
+                        t.attr('font-size', batIconFs + 'px');
+                    });
+                    gHistBattles.selectAll('text.hist-battle-label').each(function() {
+                        var t = d3.select(this);
+                        var cy = parseFloat(t.attr('data-cy') || 0);
+                        if (cy) t.attr('y', cy - batOffY);
+                        t.attr('font-size', batFs + 'px').attr('stroke-width', batTxtSw);
+                    });
+                }
+
+                if (gHistWonders) {
+                    var wonR = (isMob ? 4 : 5) / zoom;
+                    var wonFs = (isMob ? 8.5 : 10) / zoom;
+                    var wonIconFs = (isMob ? 6.5 : 8) / zoom;
+                    var wonOffY = 7.5 / zoom;
+                    var wonIconOffY = 3 / zoom;
+                    var wonSw = 1.2 / zoom;
+                    var wonTxtSw = 2.2 / zoom;
+                    gHistWonders.selectAll('circle.hist-wonder-circle')
+                        .attr('r', wonR)
+                        .attr('stroke-width', wonSw);
+                    gHistWonders.selectAll('text.hist-wonder-icon').each(function() {
+                        var t = d3.select(this);
+                        var cy = parseFloat(t.attr('data-cy') || 0);
+                        if (cy) t.attr('y', cy + wonIconOffY);
+                        t.attr('font-size', wonIconFs + 'px');
+                    });
+                    gHistWonders.selectAll('text.hist-wonder-label').each(function() {
+                        var t = d3.select(this);
+                        var cy = parseFloat(t.attr('data-cy') || 0);
+                        if (cy) t.attr('y', cy - wonOffY);
+                        t.attr('font-size', wonFs + 'px').attr('stroke-width', wonTxtSw);
+                    });
+                }
+
+                if (gHistTravelers) {
+                    var wpFs = (isMob ? 7.5 : 9) / zoom;
+                    var wpTxtSw = 2.2 / zoom;
+                    gHistTravelers.selectAll('circle.hist-wp-circle').each(function() {
+                        var c = d3.select(this);
+                        var isAct = c.classed('active-wp');
+                        var r = (isAct ? (isMob ? 6 : 7.5) : (isMob ? 3.5 : 4.5)) / zoom;
+                        c.attr('r', r).attr('stroke-width', (isAct ? 2.5 : 1.5) / zoom);
+                    });
+                    gHistTravelers.selectAll('text.hist-wp-label').each(function() {
+                        var t = d3.select(this);
+                        var cy = parseFloat(t.attr('data-cy') || 0);
+                        var isAct = t.classed('active-wp');
+                        var offY = (isAct ? 10 : 7) / zoom;
+                        if (cy) t.attr('y', cy - offY);
+                        t.attr('font-size', wpFs + 'px').attr('stroke-width', wpTxtSw);
+                    });
+                }
+
+                if (_activeWaypointCoords) {
+                    positionWaypointPopup(_activeWaypointCoords);
+                }
+            }
+            window.updateHistoricalLandmarkLabels = updateHistoricalLandmarkLabels;
+
             function applyMapTransform(t) {
                 // Use SVG transform attribute (not CSS transform).
                 // CSS transform on a will-change element creates a separate GPU
@@ -4388,6 +4522,9 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 const k = Math.max(0.4, currentTransform.k);
                 if (typeof updateHistoryLabels === 'function') {
                     updateHistoryLabels(k);
+                }
+                if (typeof updateHistoricalLandmarkLabels === 'function') {
+                    updateHistoricalLandmarkLabels(k);
                 }
                 if (naturalResourcesVisible) {
                     const r2 = Math.max(4, Math.min(14, (isMobile ? 6 : 8) * Math.pow(k, 0.4)));
@@ -4435,6 +4572,9 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     }
                     currentTransform = e.transform;
                     applyMapTransform(currentTransform);
+                    if (_activeWaypointCoords && typeof positionWaypointPopup === 'function') {
+                        positionWaypointPopup(_activeWaypointCoords);
+                    }
                     updateInfoOverlay();
                     updateHashDebounced();
                     schedulePointLayersRedraw();
@@ -12711,6 +12851,29 @@ function getReligionSlice(religion, year) {
             }
             window.renderTravelersMode = activateTravelersMode;
 
+            var histTravelerPlayTimer = null;
+
+            function getActiveTraveler() {
+                if (!selectedTravelerIds || !selectedTravelerIds.length || !historicalTravelersData) return null;
+                if (activeTravelerCarouselIndex < 0) activeTravelerCarouselIndex = 0;
+                if (activeTravelerCarouselIndex >= selectedTravelerIds.length) activeTravelerCarouselIndex = selectedTravelerIds.length - 1;
+                return historicalTravelersData.find(function(x) { return x.id === selectedTravelerIds[activeTravelerCarouselIndex]; });
+            }
+
+            function centerMapOnCoords(coords, targetK) {
+                if (!coords || !svg || !zoomBehavior) return;
+                var proj = getActiveProjection();
+                var p = proj(coords);
+                if (!p || isNaN(p[0])) return;
+                var dims = getContainerDimensions();
+                var k = targetK || Math.max(2.8, (currentTransform && currentTransform.k) || 1);
+                var targetX = dims.width / 2 - p[0] * k;
+                var targetY = dims.height / 2 - p[1] * k;
+                var transform = d3.zoomIdentity.translate(targetX, targetY).scale(k);
+                svg.transition().duration(prefersReducedMotion() ? 0 : 700).ease(d3.easeCubicInOut).call(zoomBehavior.transform, transform);
+            }
+            window.centerMapOnCoords = centerMapOnCoords;
+
             function drawTravelerRoutes() {
                 if (!gHistTravelers) return;
                 gHistTravelers.selectAll('*').remove();
@@ -12718,6 +12881,7 @@ function getReligionSlice(religion, year) {
 
                 var proj = getActiveProjection();
                 var isMob = window.innerWidth <= 768;
+                var zoom = (currentTransform && currentTransform.k) || 1;
 
                 selectedTravelerIds.forEach(function(tId, idx) {
                     var tr = historicalTravelersData.find(function(x) { return x.id === tId; });
@@ -12739,6 +12903,7 @@ function getReligionSlice(religion, year) {
                         .on('click', function() {
                             activeTravelerCarouselIndex = idx;
                             activeWaypointIndex = null;
+                            closeWaypointPopup();
                             updateTravelerCard();
                             renderTravelersBottomBar();
                             drawTravelerRoutes();
@@ -12771,35 +12936,39 @@ function getReligionSlice(religion, year) {
                                 .on('click', function(e) {
                                     if (e && e.stopPropagation) e.stopPropagation();
                                     activeTravelerCarouselIndex = idx;
-                                    activeWaypointIndex = wIdx;
-                                    updateTravelerCard();
-                                    renderTravelersBottomBar();
-                                    drawTravelerRoutes();
-                                    var wpEl = document.getElementById('histWpItem_' + wIdx);
-                                    if (wpEl) wpEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                                    goToWaypoint(tr, wIdx, false);
                                 });
 
+                            var rVal = (isWpActive ? (isMob ? 6 : 7.5) : (isMob ? 3.5 : 4.5)) / zoom;
+                            var swVal = (isWpActive ? 2.5 : 1.5) / zoom;
+
                             gWp.append('circle')
+                                .attr('class', 'hist-wp-circle' + (isWpActive ? ' active-wp' : ''))
                                 .attr('cx', xy[0])
                                 .attr('cy', xy[1])
-                                .attr('r', isWpActive ? (isMob ? 7 : 8.5) : (isMob ? 4 : 5))
-                                .attr('fill', isWpActive ? '#fff' : col)
-                                .attr('stroke', isWpActive ? col : '#fff')
-                                .attr('stroke-width', isWpActive ? 3 : 1.5)
+                                .attr('r', rVal)
+                                .attr('fill', isWpActive ? '#ffffff' : col)
+                                .attr('stroke', isWpActive ? col : '#ffffff')
+                                .attr('stroke-width', swVal)
                                 .attr('vector-effect', 'non-scaling-stroke');
 
                             if (isWpActive || (isActive && wIdx === 0)) {
+                                var wpCleanName = cleanHistoricalName(locField(wp, 'name'));
+                                var fsVal = (isMob ? 7.5 : 9) / zoom;
+                                var offYVal = (isWpActive ? 10 : 7) / zoom;
                                 gWp.append('text')
+                                    .attr('class', 'hist-wp-label' + (isWpActive ? ' active-wp' : ''))
+                                    .attr('data-cy', xy[1])
                                     .attr('x', xy[0])
-                                    .attr('y', xy[1] - (isWpActive ? 12 : 8))
-                                    .text(locField(wp, 'name'))
+                                    .attr('y', xy[1] - offYVal)
+                                    .text(wpCleanName)
                                     .attr('fill', '#ffffff')
-                                    .attr('font-size', isMob ? 8 : 10)
+                                    .attr('font-size', fsVal + 'px')
                                     .attr('font-weight', isWpActive ? 'bold' : 'normal')
                                     .attr('text-anchor', 'middle')
                                     .attr('paint-order', 'stroke')
                                     .attr('stroke', 'rgba(0,0,0,0.85)')
-                                    .attr('stroke-width', 2.5)
+                                    .attr('stroke-width', 2.2 / zoom)
                                     .style('pointer-events', 'none');
                             }
                         });
@@ -12807,6 +12976,190 @@ function getReligionSlice(religion, year) {
                 });
             }
             window.drawTravelerRoutes = drawTravelerRoutes;
+
+            function openWaypointPopup(tr, wpIndex) {
+                var pop = document.getElementById('histWaypointPopup');
+                if (!pop || !tr || !tr.waypoints || !tr.waypoints[wpIndex]) return;
+                var wp = tr.waypoints[wpIndex];
+
+                var stepNumEl = document.getElementById('histWpStepNum');
+                var titleEl = document.getElementById('histWpTitle');
+                var yearEl = document.getElementById('histWpYear');
+                var durationEl = document.getElementById('histWpDuration');
+                var eventsEl = document.getElementById('histWpEvents');
+                var quoteWrapEl = document.getElementById('histWpQuoteWrap');
+                var quoteEl = document.getElementById('histWpQuote');
+                var stageIndEl = document.getElementById('histWpStageIndicator');
+                var prevBtn = document.getElementById('histWpPrevBtn');
+                var nextBtn = document.getElementById('histWpNextBtn');
+
+                if (stepNumEl) stepNumEl.textContent = (wpIndex + 1);
+                if (titleEl) titleEl.textContent = cleanHistoricalName(locField(wp, 'name'));
+                if (yearEl) yearEl.textContent = wp.year ? (wp.year + ' م') : '';
+                var dur = locField(wp, 'duration');
+                if (durationEl) {
+                    durationEl.textContent = dur ? dur : '';
+                    durationEl.style.display = dur ? 'inline-block' : 'none';
+                }
+                var ev = locField(wp, 'events') || locField(wp, 'event');
+                if (eventsEl) {
+                    if (ev) {
+                        eventsEl.innerHTML = '<span class="hist-wp-ev-label">' + htmlEscape(t('histEventsLabel') || 'الحدث:') + '</span> ' + htmlEscape(ev);
+                        eventsEl.style.display = 'block';
+                    } else {
+                        eventsEl.style.display = 'none';
+                    }
+                }
+                var quote = locField(wp, 'quote');
+                if (quoteWrapEl && quoteEl) {
+                    if (quote) {
+                        quoteEl.textContent = '«' + quote + '»';
+                        quoteWrapEl.style.display = 'block';
+                    } else {
+                        quoteWrapEl.style.display = 'none';
+                    }
+                }
+                if (stageIndEl) {
+                    stageIndEl.textContent = (wpIndex + 1) + ' / ' + tr.waypoints.length;
+                }
+                if (prevBtn) prevBtn.disabled = (wpIndex <= 0);
+                if (nextBtn) nextBtn.disabled = (wpIndex >= tr.waypoints.length - 1);
+
+                pop.style.display = 'block';
+                if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+
+                var coords = wp.coords || [wp.lon, wp.lat];
+                _activeWaypointCoords = coords;
+                positionWaypointPopup(coords);
+            }
+            window.openWaypointPopup = openWaypointPopup;
+
+            function closeWaypointPopup() {
+                var pop = document.getElementById('histWaypointPopup');
+                if (pop) pop.style.display = 'none';
+                _activeWaypointCoords = null;
+                activeWaypointIndex = null;
+                var track = document.getElementById('histTravelerTimeline');
+                if (track) {
+                    track.querySelectorAll('.hist-traveler-wp-node').forEach(function(n) {
+                        n.classList.remove('active');
+                    });
+                }
+                var cardBody = document.getElementById('histTravelerCardBody');
+                if (cardBody) {
+                    cardBody.querySelectorAll('.hist-traveler-station-pill').forEach(function(p) {
+                        p.classList.remove('active');
+                    });
+                }
+                drawTravelerRoutes();
+            }
+            window.closeWaypointPopup = closeWaypointPopup;
+
+            function goToWaypoint(tr, wpIndex, center) {
+                if (!tr || !Array.isArray(tr.waypoints) || !tr.waypoints.length) return;
+                if (wpIndex < 0) wpIndex = 0;
+                if (wpIndex >= tr.waypoints.length) wpIndex = tr.waypoints.length - 1;
+
+                activeWaypointIndex = wpIndex;
+                var wp = tr.waypoints[wpIndex];
+                var coords = wp.coords || [wp.lon, wp.lat];
+                _activeWaypointCoords = coords;
+
+                // Update timeline stepper active class and scroll into view
+                var track = document.getElementById('histTravelerTimeline');
+                if (track) {
+                    track.querySelectorAll('.hist-traveler-wp-node').forEach(function(node, idx) {
+                        var isAct = (idx === wpIndex);
+                        node.classList.toggle('active', isAct);
+                        if (isAct) {
+                            try { node.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); } catch (e) {}
+                        }
+                    });
+                }
+
+                // Update bottom stage badge
+                var badge = document.getElementById('histTravelerStageBadge');
+                if (badge) {
+                    var yr = wp.year ? (wp.year + ' م · ') : '';
+                    var stepTxt = (getCurrentLang() === 'ar' ? 'محطة ' : 'Station ') + (wpIndex + 1) + ' / ' + tr.waypoints.length;
+                    badge.textContent = yr + stepTxt;
+                }
+
+                // Update prev/next button states
+                var prevBtn = document.getElementById('histTravelerStepPrev');
+                var nextBtn = document.getElementById('histTravelerStepNext');
+                if (prevBtn) prevBtn.disabled = false;
+                if (nextBtn) nextBtn.disabled = false;
+
+                // Update pills in side card if visible
+                var cardBody = document.getElementById('histTravelerCardBody');
+                if (cardBody) {
+                    cardBody.querySelectorAll('.hist-traveler-station-pill').forEach(function(pill, idx) {
+                        pill.classList.toggle('active', idx === wpIndex);
+                    });
+                }
+
+                // Redraw traveler route
+                drawTravelerRoutes();
+
+                // Open waypoint popup on map
+                openWaypointPopup(tr, wpIndex);
+
+                // Center map smoothly
+                if (center && coords) {
+                    centerMapOnCoords(coords);
+                }
+            }
+            window.goToWaypoint = goToWaypoint;
+
+            function toggleTravelerPlay() {
+                if (histTravelerPlayTimer) {
+                    stopTravelerPlay();
+                } else {
+                    startTravelerPlay();
+                }
+            }
+            function startTravelerPlay() {
+                var tr = getActiveTraveler();
+                if (!tr || !tr.waypoints || !tr.waypoints.length) return;
+                var btn = document.getElementById('histTravelerPlayBtn');
+                if (btn) {
+                    btn.classList.add('playing');
+                    btn.setAttribute('aria-pressed', 'true');
+                    btn.innerHTML = '<i data-lucide="pause" class="lucide-icon"></i>';
+                    if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+                }
+                if (activeWaypointIndex === null || activeWaypointIndex >= tr.waypoints.length - 1) {
+                    goToWaypoint(tr, 0, true);
+                }
+                histTravelerPlayTimer = setInterval(function() {
+                    var currTr = getActiveTraveler();
+                    if (!currTr || !currTr.waypoints || !currTr.waypoints.length) {
+                        stopTravelerPlay();
+                        return;
+                    }
+                    var nextIdx = (activeWaypointIndex === null ? 0 : activeWaypointIndex + 1);
+                    if (nextIdx >= currTr.waypoints.length) {
+                        nextIdx = 0;
+                    }
+                    goToWaypoint(currTr, nextIdx, true);
+                }, 3200);
+            }
+            function stopTravelerPlay() {
+                if (histTravelerPlayTimer) {
+                    clearInterval(histTravelerPlayTimer);
+                    histTravelerPlayTimer = null;
+                }
+                var btn = document.getElementById('histTravelerPlayBtn');
+                if (btn) {
+                    btn.classList.remove('playing');
+                    btn.setAttribute('aria-pressed', 'false');
+                    btn.innerHTML = '<i data-lucide="play" class="lucide-icon"></i>';
+                    if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+                }
+            }
+            window.toggleTravelerPlay = toggleTravelerPlay;
+            window.stopTravelerPlay = stopTravelerPlay;
 
             function renderTravelersPopoverList() {
                 var list = document.getElementById('histTravelersList');
@@ -12862,6 +13215,7 @@ function getReligionSlice(religion, year) {
                             }
                         }
                         activeWaypointIndex = null;
+                        closeWaypointPopup();
                         renderTravelersPopoverList();
                         renderTravelersBottomBar();
                         drawTravelerRoutes();
@@ -12874,30 +13228,91 @@ function getReligionSlice(religion, year) {
 
             function renderTravelersBottomBar() {
                 var chipsCont = document.getElementById('histTravelersChips');
-                if (!chipsCont) return;
+                var timelineTrack = document.getElementById('histTravelerTimeline');
+                var stageBadge = document.getElementById('histTravelerStageBadge');
+                var stepPrev = document.getElementById('histTravelerStepPrev');
+                var stepNext = document.getElementById('histTravelerStepNext');
+                var playBtn = document.getElementById('histTravelerPlayBtn');
+
+                // Keep chips updated (for test queries)
+                if (chipsCont) {
+                    if (selectedTravelerIds && selectedTravelerIds.length && historicalTravelersData) {
+                        chipsCont.innerHTML = selectedTravelerIds.map(function(tId, idx) {
+                            var tr = historicalTravelersData.find(function(x) { return x.id === tId; });
+                            if (!tr) return '';
+                            var isActive = (idx === activeTravelerCarouselIndex);
+                            return '<button type="button" class="hist-traveler-chip' + (isActive ? ' active' : '') + '" data-tidx="' + idx + '">' +
+                                '<span class="hist-traveler-chip-dot" style="background:' + tr.color + '"></span>' +
+                                '<span>' + htmlEscape(locField(tr, 'name')) + '</span>' +
+                            '</button>';
+                        }).join('');
+                        chipsCont.querySelectorAll('.hist-traveler-chip').forEach(function(btn) {
+                            btn.addEventListener('click', function() {
+                                var tidx = parseInt(this.getAttribute('data-tidx'), 10);
+                                activeTravelerCarouselIndex = tidx;
+                                activeWaypointIndex = null;
+                                closeWaypointPopup();
+                                updateTravelerCard();
+                                renderTravelersBottomBar();
+                                drawTravelerRoutes();
+                            });
+                        });
+                    } else {
+                        chipsCont.innerHTML = '<span style="color:#94a3b8;font-size:12px;">' + htmlEscape(t('histSelectTravelerCue') || 'اختر رحالة من القائمة أعلاه') + '</span>';
+                    }
+                }
+
+                if (!timelineTrack) return;
+
                 if (!selectedTravelerIds || !selectedTravelerIds.length || !historicalTravelersData) {
-                    chipsCont.innerHTML = '<span style="color:#94a3b8;font-size:12px;">' + htmlEscape(t('histSelectTravelerCue') || 'اختر رحالة من القائمة أعلاه') + '</span>';
+                    stopTravelerPlay();
+                    timelineTrack.innerHTML = '<span class="hist-stepper-empty-cue" style="color:#94a3b8;font-size:12px;padding:0 8px;">' + htmlEscape(t('histSelectTravelerCue') || 'اختر رحالة من القائمة أعلاه') + '</span>';
+                    if (stageBadge) stageBadge.textContent = '';
+                    if (stepPrev) stepPrev.disabled = true;
+                    if (stepNext) stepNext.disabled = true;
+                    if (playBtn) playBtn.disabled = true;
                     return;
                 }
 
-                chipsCont.innerHTML = selectedTravelerIds.map(function(tId, idx) {
-                    var tr = historicalTravelersData.find(function(x) { return x.id === tId; });
-                    if (!tr) return '';
-                    var isActive = (idx === activeTravelerCarouselIndex);
-                    return '<button type="button" class="hist-traveler-chip' + (isActive ? ' active' : '') + '" data-tidx="' + idx + '">' +
-                        '<span class="hist-traveler-chip-dot" style="background:' + tr.color + '"></span>' +
-                        '<span>' + htmlEscape(locField(tr, 'name')) + '</span>' +
+                if (stepPrev) stepPrev.disabled = false;
+                if (stepNext) stepNext.disabled = false;
+                if (playBtn) playBtn.disabled = false;
+
+                var tr = getActiveTraveler();
+                if (!tr || !Array.isArray(tr.waypoints) || !tr.waypoints.length) {
+                    timelineTrack.innerHTML = '<span class="hist-stepper-empty-cue" style="color:#94a3b8;font-size:12px;padding:0 8px;">' + htmlEscape(locField(tr, 'name')) + '</span>';
+                    if (stageBadge) stageBadge.textContent = locField(tr, 'period') || tr.dates || '';
+                    return;
+                }
+
+                // Render stepper nodes for active traveler
+                var wpsHtml = tr.waypoints.map(function(wp, wIdx) {
+                    var isAct = (activeWaypointIndex === wIdx);
+                    var cleanName = cleanHistoricalName(locField(wp, 'name'));
+                    var fullTitle = locField(wp, 'name') + (wp.year ? ' (' + wp.year + ')' : '');
+                    return '<button type="button" class="hist-traveler-wp-node' + (isAct ? ' active' : '') + '" data-wp-idx="' + wIdx + '" title="' + htmlEscape(fullTitle) + '">' +
+                        '<span class="hist-traveler-node-dot"></span>' +
+                        '<span class="hist-traveler-node-label">' + (wIdx + 1) + '. ' + htmlEscape(cleanName) + '</span>' +
                     '</button>';
                 }).join('');
 
-                chipsCont.querySelectorAll('.hist-traveler-chip').forEach(function(btn) {
-                    btn.addEventListener('click', function() {
-                        var tidx = parseInt(this.getAttribute('data-tidx'), 10);
-                        activeTravelerCarouselIndex = tidx;
-                        activeWaypointIndex = null;
-                        updateTravelerCard();
-                        renderTravelersBottomBar();
-                        drawTravelerRoutes();
+                timelineTrack.innerHTML = wpsHtml;
+
+                if (stageBadge) {
+                    if (activeWaypointIndex !== null && tr.waypoints[activeWaypointIndex]) {
+                        var cWp = tr.waypoints[activeWaypointIndex];
+                        var yr = cWp.year ? (cWp.year + ' م · ') : '';
+                        stageBadge.textContent = yr + (getCurrentLang() === 'ar' ? 'محطة ' : 'Station ') + (activeWaypointIndex + 1) + ' / ' + tr.waypoints.length;
+                    } else {
+                        var datesStr = locField(tr, 'period') || tr.dates || '';
+                        stageBadge.textContent = tr.waypoints.length + ' ' + (t('travelerStations') || 'محطات') + (datesStr ? ' · ' + datesStr : '');
+                    }
+                }
+
+                timelineTrack.querySelectorAll('.hist-traveler-wp-node').forEach(function(node) {
+                    node.addEventListener('click', function() {
+                        var wIdx = parseInt(this.getAttribute('data-wp-idx'), 10);
+                        goToWaypoint(tr, wIdx, true);
                     });
                 });
             }
@@ -12956,51 +13371,40 @@ function getReligionSlice(religion, year) {
                 }
 
                 if (Array.isArray(tr.waypoints) && tr.waypoints.length) {
-                    html += '<div class="hist-traveler-section-title"><i data-lucide="map-pin" class="lucide-icon"></i> ' + htmlEscape(t('histTravelerStations') || 'محطات الرحلة وأقوال الرحالة') + ' (' + tr.waypoints.length + ')</div>';
-                    html += '<div class="hist-waypoints-list">';
+                    html += '<div class="hist-traveler-section-title"><i data-lucide="map-pin" class="lucide-icon"></i> ' + htmlEscape(t('travelerStations') || 'محطات الرحلة') + ' (' + tr.waypoints.length + ')</div>';
+                    html += '<div class="hist-traveler-stations-overview">';
                     tr.waypoints.forEach(function(wp, wIdx) {
                         var isWpActive = (activeWaypointIndex === wIdx);
-                        var wpName = locField(wp, 'name');
-                        var wpDur = locField(wp, 'duration');
-                        var wpEv = locField(wp, 'events') || locField(wp, 'event');
-                        var wpQuote = locField(wp, 'quote');
-                        html += '<div class="hist-waypoint-item' + (isWpActive ? ' active' : '') + '" id="histWpItem_' + wIdx + '" data-wp-idx="' + wIdx + '">';
-                        html += '<div class="hist-waypoint-header">';
-                        html += '<span class="hist-waypoint-name">' + (wIdx + 1) + '. ' + htmlEscape(wpName) + (wp.year ? ' (' + wp.year + ')' : '') + '</span>';
-                        if (wpDur) html += '<span class="hist-waypoint-duration">' + htmlEscape(wpDur) + '</span>';
-                        html += '</div>';
-                        if (wpEv) {
-                            html += '<div class="hist-waypoint-details"><strong>' + htmlEscape(t('histEvents') || 'الحدث:') + '</strong> ' + htmlEscape(wpEv) + '</div>';
-                        }
-                        if (wpQuote) {
-                            html += '<div class="hist-waypoint-quote">' + htmlEscape(wpQuote) + '</div>';
-                        }
-                        html += '</div>';
+                        var wpName = cleanHistoricalName(locField(wp, 'name'));
+                        html += '<button type="button" class="hist-traveler-station-pill' + (isWpActive ? ' active' : '') + '" data-wp-idx="' + wIdx + '">';
+                        html += '<span class="pill-num">' + (wIdx + 1) + '</span>';
+                        html += '<span>' + htmlEscape(wpName) + '</span>';
+                        html += '</button>';
                     });
                     html += '</div>';
+                    html += '<div class="hist-traveler-station-hint"><i data-lucide="info" class="lucide-icon"></i> ' + htmlEscape(t('clickStationHint') || 'اضغط على أي محطة أو استخدم الشريط السفلي لاستكشاف نصوص وتفاصيل الرحالة على الخريطة') + '</div>';
                 }
 
                 body.innerHTML = html;
                 if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
 
-                body.querySelectorAll('.hist-waypoint-item').forEach(function(item) {
-                    item.addEventListener('click', function() {
+                body.querySelectorAll('.hist-traveler-station-pill').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
                         var wIdx = parseInt(this.getAttribute('data-wp-idx'), 10);
-                        activeWaypointIndex = wIdx;
-                        updateTravelerCard();
-                        drawTravelerRoutes();
+                        goToWaypoint(tr, wIdx, true);
                     });
                 });
             }
             window.updateTravelerCard = updateTravelerCard;
 
-            // Wire traveler controls
+            // Wire traveler card controls
             var travPrevBtn = document.getElementById('histTravelerPrevBtn');
             if (travPrevBtn) {
                 travPrevBtn.addEventListener('click', function() {
                     if (!selectedTravelerIds || selectedTravelerIds.length <= 1) return;
                     activeTravelerCarouselIndex = (activeTravelerCarouselIndex - 1 + selectedTravelerIds.length) % selectedTravelerIds.length;
                     activeWaypointIndex = null;
+                    closeWaypointPopup();
                     updateTravelerCard();
                     renderTravelersBottomBar();
                     drawTravelerRoutes();
@@ -13012,6 +13416,7 @@ function getReligionSlice(religion, year) {
                     if (!selectedTravelerIds || selectedTravelerIds.length <= 1) return;
                     activeTravelerCarouselIndex = (activeTravelerCarouselIndex + 1) % selectedTravelerIds.length;
                     activeWaypointIndex = null;
+                    closeWaypointPopup();
                     updateTravelerCard();
                     renderTravelersBottomBar();
                     drawTravelerRoutes();
@@ -13020,21 +13425,89 @@ function getReligionSlice(religion, year) {
             var travCloseBtn = document.getElementById('histTravelerCardClose');
             if (travCloseBtn) {
                 travCloseBtn.addEventListener('click', function() {
+                    stopTravelerPlay();
+                    selectedTravelerIds = [];
+                    activeTravelerCarouselIndex = 0;
+                    activeWaypointIndex = null;
+                    closeWaypointPopup();
                     var card = document.getElementById('histTravelerCard');
                     if (card) card.style.display = 'none';
+                    renderTravelersPopoverList();
+                    renderTravelersBottomBar();
+                    drawTravelerRoutes();
+                    if (window.updateHistSubmodeVis) window.updateHistSubmodeVis();
                 });
             }
             var travClearBtn = document.getElementById('histTravelersClearBtn');
             if (travClearBtn) {
                 travClearBtn.addEventListener('click', function() {
+                    stopTravelerPlay();
                     selectedTravelerIds = [];
                     activeTravelerCarouselIndex = 0;
                     activeWaypointIndex = null;
+                    closeWaypointPopup();
                     renderTravelersPopoverList();
                     renderTravelersBottomBar();
                     drawTravelerRoutes();
                     updateTravelerCard();
                     if (window.updateHistSubmodeVis) window.updateHistSubmodeVis();
+                });
+            }
+            var travSearchInp = document.getElementById('histTravelersSearchInput');
+            if (travSearchInp) {
+                travSearchInp.addEventListener('input', function() {
+                    _histTravelersSearchText = this.value;
+                    renderTravelersPopoverList();
+                });
+            }
+
+            // Wire bottom stepper controls
+            var travStepPrev = document.getElementById('histTravelerStepPrev');
+            if (travStepPrev) {
+                travStepPrev.addEventListener('click', function() {
+                    var tr = getActiveTraveler();
+                    if (!tr || !tr.waypoints || !tr.waypoints.length) return;
+                    var nextIdx = (activeWaypointIndex === null || activeWaypointIndex <= 0) ? (tr.waypoints.length - 1) : (activeWaypointIndex - 1);
+                    goToWaypoint(tr, nextIdx, true);
+                });
+            }
+            var travStepNext = document.getElementById('histTravelerStepNext');
+            if (travStepNext) {
+                travStepNext.addEventListener('click', function() {
+                    var tr = getActiveTraveler();
+                    if (!tr || !tr.waypoints || !tr.waypoints.length) return;
+                    var nextIdx = (activeWaypointIndex === null || activeWaypointIndex >= tr.waypoints.length - 1) ? 0 : (activeWaypointIndex + 1);
+                    goToWaypoint(tr, nextIdx, true);
+                });
+            }
+            var travPlayBtn = document.getElementById('histTravelerPlayBtn');
+            if (travPlayBtn) {
+                travPlayBtn.addEventListener('click', function() {
+                    toggleTravelerPlay();
+                });
+            }
+
+            // Wire waypoint popup controls
+            var wpCloseBtn = document.getElementById('histWpCloseBtn');
+            if (wpCloseBtn) {
+                wpCloseBtn.addEventListener('click', function() {
+                    closeWaypointPopup();
+                });
+            }
+            var wpPrevBtn = document.getElementById('histWpPrevBtn');
+            if (wpPrevBtn) {
+                wpPrevBtn.addEventListener('click', function() {
+                    var tr = getActiveTraveler();
+                    if (!tr || activeWaypointIndex === null || activeWaypointIndex <= 0) return;
+                    goToWaypoint(tr, activeWaypointIndex - 1, true);
+                });
+            }
+            var wpNextBtn = document.getElementById('histWpNextBtn');
+            if (wpNextBtn) {
+                wpNextBtn.addEventListener('click', function() {
+                    var tr = getActiveTraveler();
+                    if (!tr || activeWaypointIndex === null || activeWaypointIndex >= tr.waypoints.length - 1) return;
+                    goToWaypoint(tr, activeWaypointIndex + 1, true);
                 });
             }
             var travSearchInp = document.getElementById('histTravelersSearchInput');
@@ -13347,11 +13820,13 @@ function getReligionSlice(religion, year) {
                 }
                 var proj = getActiveProjection();
                 var isMob = window.innerWidth <= 768;
+                var zoom = (currentTransform && currentTransform.k) || 1;
                 historicalCapitalsData.forEach(function(c) {
                     var coords = c.coords || [c.lon, c.lat];
                     if (!coords) return;
                     var xy = proj(coords);
                     if (!xy || isNaN(xy[0])) return;
+                    var capName = cleanHistoricalName(locField(c, 'name'));
                     var g = gHistCapitals.append('g')
                         .attr('class', 'hist-capital-pin')
                         .style('cursor', 'pointer')
@@ -13360,24 +13835,27 @@ function getReligionSlice(religion, year) {
                             showHistoricalCapitalDetail(c);
                         });
                     g.append('circle')
+                        .attr('class', 'hist-capital-circle')
                         .attr('cx', xy[0])
                         .attr('cy', xy[1])
-                        .attr('r', isMob ? 4 : 5.5)
+                        .attr('r', (isMob ? 3.5 : 4.5) / zoom)
                         .attr('fill', '#a855f7')
                         .attr('stroke', '#fff')
-                        .attr('stroke-width', 1.5)
+                        .attr('stroke-width', 1.2 / zoom)
                         .attr('vector-effect', 'non-scaling-stroke');
                     g.append('text')
+                        .attr('class', 'hist-capital-label')
+                        .attr('data-cy', xy[1])
                         .attr('x', xy[0])
-                        .attr('y', xy[1] - 7)
-                        .text(locField(c, 'name'))
+                        .attr('y', xy[1] - (6.5 / zoom))
+                        .text(capName)
                         .attr('fill', '#e9d5ff')
-                        .attr('font-size', isMob ? 8 : 9.5)
+                        .attr('font-size', ((isMob ? 8.5 : 10) / zoom) + 'px')
                         .attr('font-weight', '600')
                         .attr('text-anchor', 'middle')
                         .attr('paint-order', 'stroke')
                         .attr('stroke', 'rgba(0,0,0,0.85)')
-                        .attr('stroke-width', 2.5)
+                        .attr('stroke-width', 2.2 / zoom)
                         .style('pointer-events', 'none');
                 });
             }
@@ -13393,11 +13871,13 @@ function getReligionSlice(religion, year) {
                 }
                 var proj = getActiveProjection();
                 var isMob = window.innerWidth <= 768;
+                var zoom = (currentTransform && currentTransform.k) || 1;
                 historicalBattlesData.forEach(function(b) {
                     var coords = b.coords || [b.lon, b.lat];
                     if (!coords) return;
                     var xy = proj(coords);
                     if (!xy || isNaN(xy[0])) return;
+                    var batName = cleanHistoricalName(locField(b, 'name'));
                     var g = gHistBattles.append('g')
                         .attr('class', 'hist-battle-pin')
                         .style('cursor', 'pointer')
@@ -13406,32 +13886,37 @@ function getReligionSlice(religion, year) {
                             showHistoricalBattleDetail(b);
                         });
                     g.append('circle')
+                        .attr('class', 'hist-battle-circle')
                         .attr('cx', xy[0])
                         .attr('cy', xy[1])
-                        .attr('r', isMob ? 4.5 : 6)
+                        .attr('r', (isMob ? 4 : 5) / zoom)
                         .attr('fill', '#ef4444')
                         .attr('stroke', '#fff')
-                        .attr('stroke-width', 1.5)
+                        .attr('stroke-width', 1.2 / zoom)
                         .attr('vector-effect', 'non-scaling-stroke');
                     g.append('text')
+                        .attr('class', 'hist-battle-icon')
+                        .attr('data-cy', xy[1])
                         .attr('x', xy[0])
-                        .attr('y', xy[1] + 3.5)
+                        .attr('y', xy[1] + (3 / zoom))
                         .text('⚔')
                         .attr('fill', '#fff')
-                        .attr('font-size', isMob ? 7 : 9)
+                        .attr('font-size', ((isMob ? 6.5 : 8) / zoom) + 'px')
                         .attr('text-anchor', 'middle')
                         .style('pointer-events', 'none');
                     g.append('text')
+                        .attr('class', 'hist-battle-label')
+                        .attr('data-cy', xy[1])
                         .attr('x', xy[0])
-                        .attr('y', xy[1] - 8)
-                        .text(locField(b, 'name'))
+                        .attr('y', xy[1] - (7.5 / zoom))
+                        .text(batName)
                         .attr('fill', '#fca5a5')
-                        .attr('font-size', isMob ? 8 : 9.5)
+                        .attr('font-size', ((isMob ? 8.5 : 10) / zoom) + 'px')
                         .attr('font-weight', '600')
                         .attr('text-anchor', 'middle')
                         .attr('paint-order', 'stroke')
                         .attr('stroke', 'rgba(0,0,0,0.85)')
-                        .attr('stroke-width', 2.5)
+                        .attr('stroke-width', 2.2 / zoom)
                         .style('pointer-events', 'none');
                 });
             }
@@ -13447,11 +13932,13 @@ function getReligionSlice(religion, year) {
                 }
                 var proj = getActiveProjection();
                 var isMob = window.innerWidth <= 768;
+                var zoom = (currentTransform && currentTransform.k) || 1;
                 historicalWondersData.forEach(function(w) {
                     var coords = w.coords || [w.lon, w.lat];
                     if (!coords) return;
                     var xy = proj(coords);
                     if (!xy || isNaN(xy[0])) return;
+                    var wonderName = cleanHistoricalName(locField(w, 'name'));
                     var g = gHistWonders.append('g')
                         .attr('class', 'hist-wonder-pin')
                         .style('cursor', 'pointer')
@@ -13460,32 +13947,37 @@ function getReligionSlice(religion, year) {
                             showHistoricalWonderDetail(w);
                         });
                     g.append('circle')
+                        .attr('class', 'hist-wonder-circle')
                         .attr('cx', xy[0])
                         .attr('cy', xy[1])
-                        .attr('r', isMob ? 4.5 : 6)
+                        .attr('r', (isMob ? 4 : 5) / zoom)
                         .attr('fill', '#eab308')
                         .attr('stroke', '#fff')
-                        .attr('stroke-width', 1.5)
+                        .attr('stroke-width', 1.2 / zoom)
                         .attr('vector-effect', 'non-scaling-stroke');
                     g.append('text')
+                        .attr('class', 'hist-wonder-icon')
+                        .attr('data-cy', xy[1])
                         .attr('x', xy[0])
-                        .attr('y', xy[1] + 3.5)
+                        .attr('y', xy[1] + (3 / zoom))
                         .text('★')
                         .attr('fill', '#fff')
-                        .attr('font-size', isMob ? 7 : 9)
+                        .attr('font-size', ((isMob ? 6.5 : 8) / zoom) + 'px')
                         .attr('text-anchor', 'middle')
                         .style('pointer-events', 'none');
                     g.append('text')
+                        .attr('class', 'hist-wonder-label')
+                        .attr('data-cy', xy[1])
                         .attr('x', xy[0])
-                        .attr('y', xy[1] - 8)
-                        .text(locField(w, 'name'))
+                        .attr('y', xy[1] - (7.5 / zoom))
+                        .text(wonderName)
                         .attr('fill', '#fde047')
-                        .attr('font-size', isMob ? 8 : 9.5)
+                        .attr('font-size', ((isMob ? 8.5 : 10) / zoom) + 'px')
                         .attr('font-weight', '600')
                         .attr('text-anchor', 'middle')
                         .attr('paint-order', 'stroke')
                         .attr('stroke', 'rgba(0,0,0,0.85)')
-                        .attr('stroke-width', 2.5)
+                        .attr('stroke-width', 2.2 / zoom)
                         .style('pointer-events', 'none');
                 });
             }

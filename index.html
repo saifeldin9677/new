@@ -124,9 +124,20 @@
                     <div class="religions-caption" id="religionsCaption"></div>
                 </div>
 
-                <!-- Travelers Tray Content -->
+                <!-- Travelers Journey Timeline Content -->
                 <div class="history-travelers-timeline-wrap" id="historyTravelersTimelineWrap" style="display:none">
-                    <div class="hist-travelers-chips" id="histTravelersChips"></div>
+                    <button type="button" class="history-play-btn" id="histTravelerPlayBtn" data-i18n-title="histPlayTip" aria-label="Play/Pause" aria-pressed="false">
+                        <i data-lucide="play" class="lucide-icon"></i>
+                    </button>
+                    <button type="button" class="btn hist-traveler-step-btn" id="histTravelerStepPrev" title="المحطة السابقة" aria-label="المحطة السابقة">
+                        <i data-lucide="chevron-right" class="lucide-icon"></i>
+                    </button>
+                    <div class="hist-traveler-timeline-track" id="histTravelerTimeline" role="slider" aria-label="Traveler journey timeline"></div>
+                    <button type="button" class="btn hist-traveler-step-btn" id="histTravelerStepNext" title="المحطة التالية" aria-label="المحطة التالية">
+                        <i data-lucide="chevron-left" class="lucide-icon"></i>
+                    </button>
+                    <span class="history-year-badge hist-traveler-stage-badge" id="histTravelerStageBadge"></span>
+                    <div class="hist-travelers-chips" id="histTravelersChips" style="display:none"></div>
                 </div>
             </div>
             <!-- Active Caption / Context Line -->
@@ -378,6 +389,37 @@
                 <button type="button" class="hist-traveler-close-btn" id="histTravelerCardClose" aria-label="إغلاق">&times;</button>
             </div>
             <div class="hist-traveler-card-body" id="histTravelerCardBody"></div>
+        </div>
+
+        <!-- Floating Waypoint Details Popup on Map -->
+        <div class="hist-waypoint-popup" id="histWaypointPopup" style="display:none" role="dialog" aria-modal="false" aria-label="تفاصيل المحطة">
+            <div class="hist-waypoint-popup-header">
+                <div class="hist-waypoint-popup-title-wrap">
+                    <span class="hist-waypoint-popup-step" id="histWpStepNum"></span>
+                    <h4 class="hist-waypoint-popup-title" id="histWpTitle"></h4>
+                </div>
+                <button type="button" class="hist-waypoint-popup-close" id="histWpCloseBtn" aria-label="إغلاق">&times;</button>
+            </div>
+            <div class="hist-waypoint-popup-body">
+                <div class="hist-waypoint-meta">
+                    <span class="hist-waypoint-year" id="histWpYear"></span>
+                    <span class="hist-waypoint-duration" id="histWpDuration"></span>
+                </div>
+                <div class="hist-waypoint-events" id="histWpEvents"></div>
+                <div class="hist-waypoint-quote-wrap" id="histWpQuoteWrap" style="display:none">
+                    <div class="hist-waypoint-quote-label"><i data-lucide="quote" class="lucide-icon"></i> <span data-i18n="travelerQuote">من نصوص الرحالة:</span></div>
+                    <blockquote class="hist-waypoint-quote" id="histWpQuote"></blockquote>
+                </div>
+            </div>
+            <div class="hist-waypoint-popup-footer">
+                <button type="button" class="btn btn-sm hist-wp-nav-btn" id="histWpPrevBtn">
+                    <i data-lucide="chevron-right" class="lucide-icon"></i> <span data-i18n="prevWaypoint">المحطة السابقة</span>
+                </button>
+                <span class="hist-wp-stage-indicator" id="histWpStageIndicator"></span>
+                <button type="button" class="btn btn-sm hist-wp-nav-btn" id="histWpNextBtn">
+                    <span data-i18n="nextWaypoint">المحطة التالية</span> <i data-lucide="chevron-left" class="lucide-icon"></i>
+                </button>
+            </div>
         </div>
 
         <!-- Contemporary Polity Comparison Modal -->

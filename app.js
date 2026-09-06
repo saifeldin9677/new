@@ -397,6 +397,7 @@
             // upgraded to the richer external JSON (historical-wars-data.json) once
             // it loads asynchronously. The epoch filter reads from this source.
             let historyWarData = (typeof historicalWarsData !== 'undefined') ? historicalWarsData : [];
+            window.historyWarData = historyWarData;
             let historyWarEpochFilter = 'all';
             let historyEraEpochFilter = 'all';
             var HIST_EPOCHS = [
@@ -1050,20 +1051,56 @@
                 }
                 return idx;
             }
-            function drawColorblindOverlay() {
-                if (!gCBPatterns || !countryPaths) return;
-                if (!cbPatternsVisible || colorMode === 'normal') {
-                    gCBPatterns.selectAll('path.cbpat').remove();
+            function getHistSidePattern(war, side) {
+                if (!war || !war.sides) return 0;
+                var keys = Object.keys(war.sides);
+                var idx = keys.indexOf(side);
+                if (idx === -1) idx = 0;
+                var patMap = [0, 2, 1, 3, 4, 5, 6, 7];
+                return patMap[idx % patMap.length];
+            }
+            window.getHistSidePattern = getHistSidePattern;
+
+            function updateHistoryColorblindOverlay() {
+                if (!cbPatternsVisible) {
+                    d3.selectAll('.hist-cbpat').remove();
+                    if (typeof renderHistoryLegend === 'function' && typeof historyActive !== 'undefined' && historyActive) {
+                        renderHistoryLegend();
+                    }
+                    if (typeof renderReligionsLegend === 'function' && typeof historyTab !== 'undefined' && historyTab === 'faiths') {
+                        renderReligionsLegend(religionsYear);
+                    }
                     return;
                 }
                 ensureColorblindDefs();
-                var data = allCountryFeatures.filter(function(d) { return getCBBucket(d) >= 0; });
-                var sel = gCBPatterns.selectAll('path.cbpat').data(data, function(d) { return d.properties && d.properties.name || ''; });
-                sel.exit().remove();
-                sel.enter().append('path').attr('class', 'cbpat').attr('stroke', 'none').style('pointer-events', 'none');
-                gCBPatterns.selectAll('path.cbpat')
-                    .attr('d', function(d) { return pathGen(d); })
-                    .attr('fill', function(d) { return 'url(#cbpat-' + (((getCBBucket(d) % 8) + 8) % 8) + ')'; });
+                if (typeof historyActive !== 'undefined' && historyActive) {
+                    if (typeof historyTab !== 'undefined' && historyTab === 'wars') {
+                        if (typeof drawHistoryScenario === 'function') drawHistoryScenario(true);
+                    } else if (typeof historyTab !== 'undefined' && historyTab === 'eras') {
+                        if (typeof drawEraScene === 'function') drawEraScene(true);
+                    } else if (typeof historyTab !== 'undefined' && historyTab === 'faiths') {
+                        if (typeof drawReligionsScene === 'function') drawReligionsScene(religionsYear, true);
+                    }
+                }
+            }
+            window.updateHistoryColorblindOverlay = updateHistoryColorblindOverlay;
+
+            function drawColorblindOverlay() {
+                if (gCBPatterns && countryPaths) {
+                    if (!cbPatternsVisible || colorMode === 'normal') {
+                        gCBPatterns.selectAll('path.cbpat').remove();
+                    } else {
+                        ensureColorblindDefs();
+                        var data = allCountryFeatures.filter(function(d) { return getCBBucket(d) >= 0; });
+                        var sel = gCBPatterns.selectAll('path.cbpat').data(data, function(d) { return d.properties && d.properties.name || ''; });
+                        sel.exit().remove();
+                        sel.enter().append('path').attr('class', 'cbpat').attr('stroke', 'none').style('pointer-events', 'none');
+                        gCBPatterns.selectAll('path.cbpat')
+                            .attr('d', function(d) { return pathGen(d); })
+                            .attr('fill', function(d) { return 'url(#cbpat-' + (((getCBBucket(d) % 8) + 8) % 8) + ')'; });
+                    }
+                }
+                updateHistoryColorblindOverlay();
             }
             function toggleColorblind() {
                 cbPatternsVisible = !cbPatternsVisible;
@@ -1075,6 +1112,9 @@
                 }
                 drawColorblindOverlay();
                 updateActiveLayerCount();
+                if (typeof announceToScreenReader === 'function') {
+                    announceToScreenReader(cbPatternsVisible ? (t('colorblindToggleOn') || 'تم تفعيل أنماط عمى الألوان') : (t('colorblindToggleOff') || 'تم إيقاف أنماط عمى الألوان'));
+                }
             }
 
             function getCorridorColor() {
@@ -6133,6 +6173,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 });
 
                 allCountryFeatures = features;
+                window.allCountryFeatures = allCountryFeatures;
                 countryNamesList = features.map(f => f.properties?.name || '').filter(n => n);
                 extraIslands.forEach(is => {
                     if (!countryNamesList.includes(is.name)) countryNamesList.push(is.name);
@@ -8440,6 +8481,16 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                     }
                                 });
                                 if (skipFadeIn) s.attr('opacity', 1).style('opacity', 1); else s.attr('opacity', 0).style('opacity', 0).transition().duration(dur).attr('opacity', 1).style('opacity', 1);
+                                if (cbPatternsVisible) {
+                                    ensureColorblindDefs();
+                                    var patIdxEmp = getHistSidePattern(getHistWar(), emp.side);
+                                    gHistoryOverlay.append('path')
+                                        .attr('class', 'hist-cbpat')
+                                        .attr('d', pd)
+                                        .attr('fill', 'url(#cbpat-' + patIdxEmp + ')')
+                                        .attr('stroke', 'none')
+                                        .style('pointer-events', 'none');
+                                }
                             }
                             try {
                                 var cen = d3.geoCentroid(f);
@@ -8502,6 +8553,16 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 }
                             });
                             if (skipFadeIn) s.attr('opacity', 1).style('opacity', 1); else s.attr('opacity', 0).style('opacity', 0).transition().duration(dur).attr('opacity', 1).style('opacity', 1);
+                            if (cbPatternsVisible) {
+                                ensureColorblindDefs();
+                                var patIdxPart = getHistSidePattern(getHistWar(), p.side);
+                                gHistoryOverlay.append('path')
+                                    .attr('class', 'hist-cbpat')
+                                    .attr('d', pd)
+                                    .attr('fill', 'url(#cbpat-' + patIdxPart + ')')
+                                    .attr('stroke', 'none')
+                                    .style('pointer-events', 'none');
+                            }
                         });
                     });
                
@@ -8657,6 +8718,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             historyWarData.forEach(function(w) { byId[w.id] = w; });
                             list.forEach(function(w) { byId[w.id] = w; });
                             historyWarData = Object.keys(byId).map(function(k) { return byId[k]; });
+                            window.historyWarData = historyWarData;
                             window.__histWarsLoaded = true;
                             window.__histWarsLoading = null;
                             return historyWarData;
@@ -8822,6 +8884,9 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                     historyWarId = w.id;
                                     historyScenarioId = (w.scenarios && w.scenarios[0]) ? w.scenarios[0].id : null;
                                     selectedHistoryPolity = null;
+                                    if (typeof announceToScreenReader === 'function') {
+                                        announceToScreenReader((t('histTabWars') || 'حرب') + ': ' + locField(w, 'name') + ' (' + (w.years_ar || w.years_en || '') + ')');
+                                    }
                                     if (window.innerWidth <= 680 && typeof closeAllHistPopovers === 'function') closeAllHistPopovers();
                                     renderHistoryBar();
                                     drawHistoryScenario();
@@ -8915,6 +8980,10 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (warCardDescEl) warCardDescEl.textContent = locField(targetSc, 'desc') || locField(war, 'desc') || '';
                     renderHistoryBar();
                     drawHistoryScenario();
+                    if (typeof announceToScreenReader === 'function') {
+                        var phaseLbl = (phase === 'start' ? t('histPhaseStart') : (phase === 'peak' ? t('histPhasePeak') : t('histPhaseEnd'))) || phase;
+                        announceToScreenReader(locField(war, 'name') + ' — ' + phaseLbl + ' (' + (targetSc.year || '') + ')');
+                    }
                     var cp = document.getElementById('countryPanel');
                     if (selectedCountry && cp && cp.classList.contains('visible')) openHistoryPanel(selectedCountry);
                 };
@@ -8937,19 +9006,27 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     var dispName = getDisplayName(name);
                     var flag = getCountryFlag(name);
 
-                    // البحث عن الملف التعريفي التاريخي الشامل
+                    // إذا كان المستخدم في تبويب الحروب ولم تكن هذه الدولة طرفاً في الحرب
+                    if (historyTab === 'wars') {
+                        if (!p) {
+                            if (typeof closeCountryPanel === 'function') closeCountryPanel();
+                            return;
+                        }
+                    }
+
+                    // البحث عن الملف التعريفي التاريخي الشامل المرتبط بالحرب أو الكيان فقط
                     var profile = null;
                     if (typeof getHistoricalPolityProfile === 'function') {
                         if (p && p._empire) profile = getHistoricalPolityProfile(p._empire.id);
                         if (!profile && p && p.c) profile = getHistoricalPolityProfile(p.c);
-                        if (!profile) profile = getHistoricalPolityProfile(cn);
-                        if (!profile) profile = getHistoricalPolityProfile(dispName);
-                        if (!profile) profile = getHistoricalPolityProfile(name);
+                        if (!profile && historyTab !== 'wars') {
+                            profile = getHistoricalPolityProfile(cn) || getHistoricalPolityProfile(dispName) || getHistoricalPolityProfile(name);
+                        }
                     }
 
                     var html = '<div class="hist-profile-card">';
                     html += '<div class="hist-profile-header">';
-                    html += '<h3 class="hist-profile-title">' + (flag || '📜') + ' ' + htmlEscape((profile && locField(profile, 'name')) || dispName) + '</h3>';
+                    html += '<h3 class="hist-profile-title">' + (flag || '📜') + ' ' + htmlEscape((profile && locField(profile, 'name')) || (p && (typeof histCountryNames !== 'undefined' && histCountryNames[p.c] ? locField(histCountryNames[p.c], 'name') : p.c)) || dispName) + '</h3>';
                     if (war) {
                         html += '<p class="hist-profile-subtitle"><strong>' + htmlEscape(locField(war, 'name')) + '</strong> — ' + (sc ? sc.year + ' · ' + htmlEscape(locField(sc, 'title')) : '') + '</p>';
                     }
@@ -9734,6 +9811,17 @@ function buildEraFeature(p, phase) {
                                 }
                             });
                             if (skipFadeIn) s.attr('opacity', 1).style('opacity', 1); else s.attr('opacity', 0).style('opacity', 0).transition().duration(dur).attr('opacity', 1).style('opacity', 1);
+                            if (cbPatternsVisible) {
+                                ensureColorblindDefs();
+                                var pIdxEra = politiesToDraw.indexOf(p);
+                                var patIdxEra = ((pIdxEra >= 0 ? pIdxEra : 0) % 8);
+                                gHistoryOverlay.append('path')
+                                    .attr('class', 'hist-cbpat')
+                                    .attr('d', pd)
+                                    .attr('fill', 'url(#cbpat-' + patIdxEra + ')')
+                                    .attr('stroke', 'none')
+                                    .style('pointer-events', 'none');
+                            }
                         }
                     });
                     politiesToDraw.forEach(function(p) {
@@ -9982,6 +10070,10 @@ function buildEraFeature(p, phase) {
                         if (cap) cap.textContent = (locField(activePhaseData, 'title') ? locField(activePhaseData, 'title') + ' — ' : '') + (locField(activePhaseData, 'desc') || '');
                     }
                     drawEraScene(true);
+                    if (typeof announceToScreenReader === 'function') {
+                        var phaseLbl = (phase === 'start' ? t('histPhaseStart') : (phase === 'peak' ? t('histPhasePeak') : t('histPhaseEnd'))) || phase;
+                        announceToScreenReader(locField(era, 'title') + ' — ' + phaseLbl + (activePhaseData && activePhaseData.yearLabel ? ' (' + activePhaseData.yearLabel + ')' : ''));
+                    }
                 };
                 window.setHistEraPhase = setHistEraPhase;
                 window.selectHistEra = function(id) {
@@ -9996,6 +10088,9 @@ function buildEraFeature(p, phase) {
                         if (panel) { panel.classList.remove('visible'); panel.style.display = 'none'; }
                         renderHistoryBar();
                         drawEraScene();
+                        if (typeof announceToScreenReader === 'function') {
+                            announceToScreenReader((t('histTabEras') || 'حقبة') + ': ' + locField(found, 'title') + ' (' + (found.yearLabel || '') + ')');
+                        }
                     }
                     if (!historicalErasData || !historicalErasData.length) {
                         return fetchHistoricalEras().then(function() {
@@ -10142,6 +10237,9 @@ function buildEraFeature(p, phase) {
                                     historyTab = 'eras';
                                     historyEraId = e.id;
                                     selectedHistoryPolity = null;
+                                    if (typeof announceToScreenReader === 'function') {
+                                        announceToScreenReader((t('histTabEras') || 'حقبة') + ': ' + locField(e, 'title') + ' (' + (e.yearLabel || '') + ')');
+                                    }
                                     if (window.innerWidth <= 680 && typeof closeAllHistPopovers === 'function') closeAllHistPopovers();
                                     renderHistoryBar();
                                     drawEraScene();
@@ -10306,13 +10404,18 @@ function buildEraFeature(p, phase) {
                         var activePhaseData = (era.phases && era.phases[historyEraPhase]) ? era.phases[historyEraPhase] : null;
                         var politiesToDraw = (activePhaseData && Array.isArray(activePhaseData.polities) && activePhaseData.polities.length) ? activePhaseData.polities : (era.polities || []);
                         leg.innerHTML = '<div style="font-weight:700;margin-bottom:4px">' + htmlEscape(t('histLegendLabel')) + '</div>';
-                        politiesToDraw.forEach(function(p) {
+                        politiesToDraw.forEach(function(p, pIdx) {
                             var item = document.createElement('div');
                             item.className = 'legend-item';
                             item.title = locField(p, 'name');
                             var sw = document.createElement('span');
                             sw.className = 'legend-color';
                             sw.style.background = p.color || '#14B8A6';
+                            if (cbPatternsVisible) {
+                                ensureColorblindDefs();
+                                var patIdxEra = (pIdx % 8);
+                                sw.innerHTML = '<svg width="18" height="12" style="display:block;border-radius:2px;"><rect width="18" height="12" fill="' + (p.color || '#14B8A6') + '"/><rect width="18" height="12" fill="url(#cbpat-' + patIdxEra + ')"/></svg>';
+                            }
                             item.appendChild(sw);
                             item.appendChild(document.createTextNode(cleanHistoricalName(locField(p, 'name'))));
                             leg.appendChild(item);
@@ -10336,8 +10439,14 @@ function buildEraFeature(p, phase) {
                         item.title = shortSide ? (shortSide + ' — ' + t(histRoleKey(p.role))) : t(histRoleKey(p.role));
                         var sw = document.createElement('span');
                         sw.className = 'legend-color';
-                        sw.style.background = histColorFor(p) || 'transparent';
+                        var colP = histColorFor(p) || 'transparent';
+                        sw.style.background = colP;
                         if (!histColorFor(p)) { sw.style.border = '1px solid #9aa5b1'; }
+                        if (cbPatternsVisible) {
+                            ensureColorblindDefs();
+                            var patIdxP = getHistSidePattern(war, p.side);
+                            sw.innerHTML = '<svg width="18" height="12" style="display:block;border-radius:2px;"><rect width="18" height="12" fill="' + (histColorFor(p) || '#9aa5b1') + '"/><rect width="18" height="12" fill="url(#cbpat-' + patIdxP + ')"/></svg>';
+                        }
                         item.appendChild(sw);
                         item.appendChild(document.createTextNode(t(histRoleKey(p.role)) + (shortSide ? ' · ' + shortSide : '')));
                         leg.appendChild(item);
@@ -10355,6 +10464,11 @@ function buildEraFeature(p, phase) {
                         sw.className = 'legend-color';
                         sw.style.background = histColorFor(emp) || 'transparent';
                         sw.style.backgroundImage = 'repeating-linear-gradient(45deg, rgba(255,255,255,.85) 0 2px, transparent 2px 5px)';
+                        if (cbPatternsVisible) {
+                            ensureColorblindDefs();
+                            var patIdxEmp = getHistSidePattern(war, emp.side);
+                            sw.innerHTML = '<svg width="18" height="12" style="display:block;border-radius:2px;"><rect width="18" height="12" fill="' + (histColorFor(emp) || '#9aa5b1') + '"/><rect width="18" height="12" fill="url(#cbpat-' + patIdxEmp + ')"/></svg>';
+                        }
                         item.appendChild(sw);
                         item.appendChild(document.createTextNode(t(histRoleKey(emp.role)) + (shortSide ? ' · ' + shortSide : '')));
                         leg.appendChild(item);
@@ -12980,6 +13094,17 @@ function getReligionSlice(religion, year) {
                             .style('cursor', 'default').style('pointer-events', 'none');
                         if (skipFadeIn) s.attr('opacity', 1);
                         else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 1);
+                        if (cbPatternsVisible) {
+                            ensureColorblindDefs();
+                            var rIdxRel = active.indexOf(rel);
+                            var patIdxRel = ((rIdxRel >= 0 ? rIdxRel : 0) % 8);
+                            g.append('path')
+                                .attr('class', 'hist-cbpat')
+                                .attr('d', pd)
+                                .attr('fill', 'url(#cbpat-' + patIdxRel + ')')
+                                .attr('stroke', 'none')
+                                .style('pointer-events', 'none');
+                        }
                     });
                 });
                 active.forEach(function(rel) {
@@ -13019,10 +13144,13 @@ function getReligionSlice(religion, year) {
                 } else {
                     html = '<div class="legend-title">' + htmlEscape(t('religionsListBtn')) + '</div>' +
                         '<div class="religions-legend">' +
-                        active.map(function(rel) {
+                        active.map(function(rel, rIdx) {
                             var isSelected = (selectedFaithId === rel.id);
+                            var swatchHtml = cbPatternsVisible ?
+                                '<svg width="16" height="12" style="display:inline-block;vertical-align:middle;border-radius:2px;margin-inline-end:6px;"><rect width="16" height="12" fill="' + rel.color + '"/><rect width="16" height="12" fill="url(#cbpat-' + (rIdx % 8) + ')"/></svg>' :
+                                '<span class="religions-legend-swatch" style="background:' + rel.color + '"></span>';
                             return '<div class="religions-legend-item' + (isSelected ? ' selected' : '') + '" style="' + (isSelected ? 'font-weight:bold;color:#14B8A6;' : '') + '">' +
-                                '<span class="religions-legend-swatch" style="background:' + rel.color + '"></span>' +
+                                swatchHtml +
                                 '<span class="religions-legend-name">' + htmlEscape(locField(rel, 'name')) + (isSelected ? ' ✓' : '') + '</span>' +
                                 '</div>';
                         }).join('') +
@@ -13150,12 +13278,18 @@ function getReligionSlice(religion, year) {
                         if (!rel) return;
                         if (selectedFaithId === id) {
                             selectedFaithId = null;
+                            if (typeof announceToScreenReader === 'function') {
+                                announceToScreenReader(t('all') || 'الكل');
+                            }
                             window.renderFaithsPopoverList();
                             drawReligionsScene(religionsYear, true);
                             renderReligionsLegend(religionsYear);
                             return;
                         }
                         selectedFaithId = id;
+                        if (typeof announceToScreenReader === 'function') {
+                            announceToScreenReader((t('histTabFaiths') || 'دين') + ': ' + locField(rel, 'name'));
+                        }
                         if (window.setReligionsYear) {
                             setReligionsYear(rel.startYear);
                         }

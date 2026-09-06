@@ -1053,9 +1053,11 @@ header,
 .hist-wp-label,
 .hist-route-label,
 .country-label {
-    stroke: none !important;
-    stroke-width: 0 !important;
-    paint-order: normal !important;
+    stroke: rgba(0, 0, 0, 0.92) !important;
+    stroke-width: 3px !important;
+    stroke-linejoin: round !important;
+    stroke-linecap: round !important;
+    paint-order: stroke fill !important;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95), 0 0 6px rgba(0, 0, 0, 0.85);
 }
 .zooming-active text {
@@ -2158,6 +2160,10 @@ header,
 .hist-traveler-close-btn:focus-visible,
 .hist-waypoint-popup-close:focus-visible,
 .hist-phase-btn:focus-visible,
+.history-war-tab:focus-visible,
+.history-scenario-btn:focus-visible,
+.faiths-popover-item:focus-visible,
+.hist-epoch-col-items button:focus-visible,
 .hist-action-btn:focus-visible,
 .hist-station-pill:focus-visible,
 .quiz-input:focus-visible,

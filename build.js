@@ -47,7 +47,9 @@ const dataJsonFiles = [
     'historical-travelers-data.json',
     'historical-capitals-data.json',
     'historical-battles-data.json',
-    'historical-wonders-data.json'
+    'historical-wonders-data.json',
+    'historical-sacred-sites-data.json',
+    'microstates-data.json'
 ];
 dataJsonFiles.forEach(function(f) {
     if (!fs.existsSync(path.join(SRC, f))) {

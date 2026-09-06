@@ -67,6 +67,14 @@
             //  52.  Language overlay (i18n bootstrapper)
             // ──────────────────────────────────────────────────────────
 
+            function refreshLucideIcons() {
+                if (typeof lucide !== 'undefined' && lucide && lucide.createIcons) {
+                    try { lucide.createIcons(); } catch (e) {}
+                }
+            }
+            window.refreshLucideIcons = refreshLucideIcons;
+            window.switchSection = function(sec) { if (window.applySection) window.applySection(sec); };
+
             // ── Utility: debounce ──
             function debounce(fn, delay) {
                 let timer;
@@ -467,10 +475,10 @@
             let dataTableSortKey = 'name';
             let dataTableSortAsc = true;
             let selectedFeatureType = null; // 'mountain' | 'river' | null
-            let gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gBorderDisputes, gAdminBoundaries, gGlaciatedAreas, gGeopoliticalBlocs, gDesertsForests, gHistoryOverlay, gHistoryCompareOverlay, gHistoricalRoutes, gHistTravelers, gHistCapitals, gHistBattles, gHistWonders;
-            let historicalTravelersData = null, historicalCapitalsData = null, historicalBattlesData = null, historicalWondersData = null;
+            let gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gBorderDisputes, gAdminBoundaries, gGlaciatedAreas, gGeopoliticalBlocs, gDesertsForests, gHistoryOverlay, gHistoryCompareOverlay, gHistoricalRoutes, gHistTravelers, gHistCapitals, gHistBattles, gHistWonders, gHistSacredSites;
+            let historicalTravelersData = null, historicalCapitalsData = null, historicalBattlesData = null, historicalWondersData = null, historicalSacredSitesData = null;
             let selectedTravelerIds = [], activeTravelerCarouselIndex = 0, activeWaypointIndex = null;
-            let histCapitalsVisible = false, histBattlesVisible = false, histWondersVisible = false;
+            let histCapitalsVisible = false, histBattlesVisible = false, histWondersVisible = false, histSacredSitesVisible = false, histModernBordersVisible = false;
             let projection, pathGen;
             let svg, gMap, gCountries, gCountryLabels, gGraticule, gIceCap, gOcean, gCorridors, gPhysical, gTemperature, gAuthoringMarkers, gQuizMarkers;
             let currentTransform = d3.zoomIdentity;
@@ -513,7 +521,7 @@
             //    skip    – (optional) if true, generic toggleLayer skips this;
             //              its toggle function is hand-written (labels, sect,
             //              routes, densitySpots, coords)
-            const HIST_LAYER_KEYS = ['historicalRoutes', 'histCapitals', 'histBattles', 'histWonders'];
+            const HIST_LAYER_KEYS = ['historicalRoutes', 'histCapitals', 'histBattles', 'histWonders', 'histSacredSites', 'histModernBorders'];
             const GEO_LAYER_KEYS = [
                 'labels', 'sect', 'corridors', 'riversAndGlaciers', 'densitySpots',
                 'capitals', 'timezones', 'majorCities', 'naturalResources', 'ethnicGroups',
@@ -545,6 +553,8 @@
                 histCapitals:        { getFlag: function(){ return histCapitalsVisible; },     setFlag: function(v){ histCapitalsVisible = v; },     btnId: 'histCapitalsToggle',        drawFn: function() { if (window.drawHistCapitals) drawHistCapitals(); }, hashKey: 'histcaps', setNorm: true },
                 histBattles:         { getFlag: function(){ return histBattlesVisible; },      setFlag: function(v){ histBattlesVisible = v; },      btnId: 'histBattlesToggle',         drawFn: function() { if (window.drawHistBattles) drawHistBattles(); },   hashKey: 'histbattles', setNorm: true },
                 histWonders:         { getFlag: function(){ return histWondersVisible; },      setFlag: function(v){ histWondersVisible = v; },      btnId: 'histWondersToggle',         drawFn: function() { if (window.drawHistWonders) drawHistWonders(); },   hashKey: 'histwonders', setNorm: true },
+                histSacredSites:     { getFlag: function(){ return histSacredSitesVisible; },  setFlag: function(v){ histSacredSitesVisible = v; },  btnId: 'histSacredSitesToggle',     drawFn: function() { if (window.drawHistSacredSites) drawHistSacredSites(); }, hashKey: 'histsacred', setNorm: true },
+                histModernBorders:   { getFlag: function(){ return histModernBordersVisible; },setFlag: function(v){ histModernBordersVisible = v; },btnId: 'histModernBordersToggle',   drawFn: function() { if (window.updateHistModernBorders) window.updateHistModernBorders(); }, hashKey: 'histmodern', setNorm: false },
                 coords:              { getFlag: function(){ return coordsVisible; },          setFlag: function(v){ coordsVisible = v; },           btnId: 'coordsToggle',              drawFn: null, hashKey: 'coords', skip: true,
                     on: function(state) { var cd = document.getElementById('coordinatesDisplay'); if (cd) cd.classList.toggle('hidden', !state); } }
             };
@@ -955,6 +965,8 @@
             }
 
             function getCountryFill(d) {
+                var inHist = (typeof historyActive !== 'undefined' && historyActive) || (typeof currentSection !== 'undefined' && currentSection === 'history');
+                if (inHist) return '#24303f';
                 const name = d.properties?.name || '';
                 if (colorMode === 'normal') return getNormalCountryColor(name);
 
@@ -978,13 +990,34 @@
             }
 
             function getStroke(d) {
+                var inHist = (typeof historyActive !== 'undefined' && historyActive) || (typeof currentSection !== 'undefined' && currentSection === 'history');
+                if (inHist) {
+                    return histModernBordersVisible ? 'rgba(255,255,255,0.22)' : 'none';
+                }
                 if (colorMode === 'normal') return MAP_COLORS.country.normalStroke;
                 const name = d.properties?.name || '';
                 if (currentReligionFilter !== 'all' && getReligion(name) === currentReligionFilter) return '#fff';
                 return MAP_COLORS.country.dimStroke;
             }
 
-            function getStrokeWidth(d) { return 0.8; }
+            function getStrokeWidth(d) {
+                var inHist = (typeof historyActive !== 'undefined' && historyActive) || (typeof currentSection !== 'undefined' && currentSection === 'history');
+                if (inHist) {
+                    return histModernBordersVisible ? 0.6 : 0;
+                }
+                return 0.8;
+            }
+
+            function updateHistModernBorders() {
+                if (!countryPaths) return;
+                var inHist = (typeof historyActive !== 'undefined' && historyActive) || (typeof currentSection !== 'undefined' && currentSection === 'history');
+                if (!inHist) return;
+                countryPaths
+                    .attr('stroke', histModernBordersVisible ? 'rgba(255,255,255,0.22)' : 'none')
+                    .attr('stroke-width', histModernBordersVisible ? 0.6 : 0)
+                    .attr('stroke-dasharray', histModernBordersVisible ? '2,2' : 'none');
+            }
+            window.updateHistModernBorders = updateHistModernBorders;
 
             function getOpacity(d) {
                 if (colorMode === 'normal') return 0.95;
@@ -1321,7 +1354,7 @@
 
                 gGraticule = svg.append('g');
                 gIceCap = svg.append('g');
-                gCountries = svg.append('g');
+                gCountries = svg.append('g').attr('id', 'gCountries');
                 gCBPatterns = svg.append('g').attr('id', 'gColorblindPatterns');
                 gCountryLabels = svg.append('g');
 
@@ -1363,6 +1396,7 @@
                 gHistCapitals = svg.append('g').attr('id', 'histCapitalsLayer');
                 gHistBattles = svg.append('g').attr('id', 'histBattlesLayer');
                 gHistWonders = svg.append('g').attr('id', 'histWondersLayer');
+                gHistSacredSites = svg.append('g').attr('id', 'histSacredSitesLayer');
                 gDesertsForests = svg.append('g').attr('id', 'desertsForestsLayer');
                 gBorderDisputes = svg.append('g').attr('id', 'borderDisputesLayer');
                 gAdminBoundaries = svg.append('g').attr('id', 'adminBoundariesLayer');
@@ -1371,7 +1405,7 @@
                 gQuizMarkers = svg.append('g').attr('id', 'quizMarkersLayer');
 
                 gMap = svg.append('g').attr('class', 'map-transform-group');
-                [gOcean, gGraticule, gIceCap, gCountries, gCBPatterns, gAdminBoundaries, gGlaciatedAreas, gCountryLabels, gPhysical, gCorridors, gHistoricalRoutes, gTemperature, gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gGeopoliticalBlocs, gHistoryOverlay, gHistoryCompareOverlay, gHistTravelers, gHistCapitals, gHistBattles, gHistWonders, gDesertsForests, gBorderDisputes, gAuthoringMarkers, gQuizMarkers]
+                [gOcean, gGraticule, gIceCap, gCountries, gCBPatterns, gAdminBoundaries, gGlaciatedAreas, gCountryLabels, gPhysical, gCorridors, gHistoricalRoutes, gTemperature, gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gGeopoliticalBlocs, gHistoryOverlay, gHistoryCompareOverlay, gHistTravelers, gHistCapitals, gHistBattles, gHistWonders, gHistSacredSites, gDesertsForests, gBorderDisputes, gAuthoringMarkers, gQuizMarkers]
                     .forEach(g => gMap.append(() => g.node()));
 
                 projection = setupProjection(width, height);
@@ -3739,10 +3773,15 @@
                         countryPaths = gCountries.selectAll('path')
                             .data(allCountryFeatures)
                             .join('path')
+                            .attr('class', 'country-path')
                             .attr('d', pathGen)
                             .attr('fill', function(d) { return getCountryFill(d); })
                             .attr('stroke', function(d) { return getStroke(d); })
                             .attr('stroke-width', function(d) { return getStrokeWidth(d); })
+                            .attr('stroke-dasharray', function(d) {
+                                var inHist = (typeof historyActive !== 'undefined' && historyActive) || (typeof currentSection !== 'undefined' && currentSection === 'history');
+                                return (inHist && histModernBordersVisible) ? '2,2' : 'none';
+                            })
                             .attr('opacity', function(d) { return getOpacity(d); })
                             .attr('filter', getCountryFilterAttr)
                             .attr('cursor', 'pointer')
@@ -3953,6 +3992,20 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     'Australia': '🇦🇺',
                     'Austria': '🇦🇹',
                     'Azerbaijan': '🇦🇿',
+                    'Andorra': '🇦🇩',
+                    'Antigua and Barbuda': '🇦🇬',
+                    'Kiribati': '🇰🇮',
+                    'Liechtenstein': '🇱🇮',
+                    'Marshall Islands': '🇲🇭',
+                    'Micronesia': '🇫🇲',
+                    'Monaco': '🇲🇨',
+                    'Nauru': '🇳🇷',
+                    'Palau': '🇵🇼',
+                    'Saint Kitts and Nevis': '🇰🇳',
+                    'Saint Vincent and the Grenadines': '🇻🇨',
+                    'San Marino': '🇸🇲',
+                    'Tuvalu': '🇹🇻',
+                    'Vatican City': '🇻🇦',
                     'Bahrain': '🇧🇭',
                     'Bangladesh': '🇧🇩',
                     'Belarus': '🇧🇾',
@@ -4625,6 +4678,38 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     });
                 }
 
+                if (gHistSacredSites) {
+                    var minSacPx = isMob ? 11.5 : 13.5;
+                    var maxSacPx = isMob ? 13.5 : 15.5;
+                    var sacScreenPx = Math.max(minSacPx, Math.min(maxSacPx, minSacPx * Math.pow(zoom, 0.15)));
+                    var sacR = (isMob ? 5.0 : 6.0) / zoom;
+                    var sacRingR = (isMob ? 7.5 : 9.0) / zoom;
+                    var sacFs = sacScreenPx / zoom;
+                    var sacIconFs = (isMob ? 8.0 : 9.5) / zoom;
+                    var sacOffY = ((isMob ? 6.5 : 7.5) + sacScreenPx * 0.7) / zoom;
+                    var sacIconOffY = 3.0 / zoom;
+                    var sacSw = 1.4 / zoom;
+                    gHistSacredSites.selectAll('circle.hist-sacred-site-ring')
+                        .attr('r', sacRingR)
+                        .attr('stroke-width', 0.8 / zoom)
+                        .attr('stroke-dasharray', (2 / zoom) + ',' + (2 / zoom));
+                    gHistSacredSites.selectAll('circle.hist-sacred-site-circle')
+                        .attr('r', sacR)
+                        .attr('stroke-width', sacSw);
+                    gHistSacredSites.selectAll('text.hist-sacred-site-icon').each(function() {
+                        var t = d3.select(this);
+                        var cy = parseFloat(t.attr('data-cy') || 0);
+                        if (cy) t.attr('y', cy + sacIconOffY);
+                        t.attr('font-size', sacIconFs + 'px');
+                    });
+                    gHistSacredSites.selectAll('text.hist-sacred-site-label').each(function() {
+                        var t = d3.select(this);
+                        var cy = parseFloat(t.attr('data-cy') || 0);
+                        if (cy) t.attr('y', cy - sacOffY);
+                        t.attr('font-size', sacFs + 'px');
+                    });
+                }
+
                 if (gHistTravelers) {
                     var minWpPx = isMob ? 11.0 : 13.0;
                     var maxWpPx = isMob ? 13.0 : 15.0;
@@ -4799,7 +4884,8 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             [!isHist && timezonesVisible, function() { drawTimezones(true); }],
                             [!isHist && naturalResourcesVisible, function() { if (typeof drawNaturalResources === 'function') drawNaturalResources(); }],
                             [!isHist && ethnicGroupsVisible, function() { if (typeof drawEthnicGroups === 'function') drawEthnicGroups(); }],
-                            [isHist && historicalRoutesVisible, function() { drawHistoricalRoutes(true); }]
+                            [isHist && historicalRoutesVisible, function() { drawHistoricalRoutes(true); }],
+                            [isHist && histSacredSitesVisible, function() { drawHistSacredSites(true); }]
                         ].filter(function(p) { return p[0]; });
                         var _li = 0;
                         (function runNextLayer() {
@@ -4822,10 +4908,24 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 const timeout = setTimeout(() => controller.abort(), 15000);
                 try {
                     const basePath = window.location.pathname.replace(/\/[^\/]*$/, '/');
-                    const response = await fetch(basePath + 'countries-110m.json', { signal: controller.signal });
-                    if (!response.ok) throw new Error('HTTP ' + response.status);
-                    const data = await response.json();
-                    return topojson.feature(data, data.objects.countries).features;
+                    const [resWorld, resMicro] = await Promise.all([
+                        fetch(basePath + 'countries-110m.json', { signal: controller.signal }),
+                        fetch(basePath + 'microstates-data.json', { signal: controller.signal }).catch(() => null)
+                    ]);
+                    if (!resWorld.ok) throw new Error('HTTP ' + resWorld.status);
+                    const data = await resWorld.json();
+                    let features = topojson.feature(data, data.objects.countries).features;
+                    if (resMicro && resMicro.ok) {
+                        try {
+                            const microData = await resMicro.json();
+                            if (microData && Array.isArray(microData.features)) {
+                                features = features.concat(microData.features);
+                            }
+                        } catch (e) {
+                            console.warn('Could not parse microstates data:', e);
+                        }
+                    }
+                    return features;
                 } finally {
                     clearTimeout(timeout);
                 }
@@ -6142,84 +6242,23 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 }
 
             function renderCountries(features) {
-                const bahrainFeature = {
-                    type: 'Feature',
-                    properties: { name: 'Bahrain' },
-                    geometry: {
-                        type: 'Polygon',
-                        coordinates: [
-                            [
-                                [50.3, 26.5],
-                                [50.7, 26.5],
-                                [50.7, 26.0],
-                                [50.3, 26.0],
-                                [50.3, 26.5]
-                            ]
-                        ]
-                    }
-                };
-                features.push(bahrainFeature);
-
-                const extraIslands = [
-                    { name: 'Hokkaido', coords: [142.0, 43.0] },
-                    { name: 'Honshu', coords: [138.0, 37.0] },
-                    { name: 'Shikoku', coords: [133.5, 33.5] },
-                    { name: 'Kyushu', coords: [131.0, 33.0] },
-                    { name: 'Okinawa', coords: [127.5, 26.5] },
-                    { name: 'Sumatra', coords: [101.0, -1.0] },
-                    { name: 'Java', coords: [110.0, -7.0] },
-                    { name: 'Kalimantan', coords: [115.0, -1.0] },
-                    { name: 'Sulawesi', coords: [121.0, -2.0] },
-                    { name: 'West Papua', coords: [136.0, -4.0] },
-                    { name: 'Bali', coords: [115.2, -8.4] },
-                    { name: 'Lombok', coords: [116.5, -8.6] },
-                    { name: 'Luzon', coords: [121.0, 16.0] },
-                    { name: 'Mindanao', coords: [125.0, 7.0] },
-                    { name: 'Palawan', coords: [118.5, 9.5] },
-                    { name: 'Cebu', coords: [123.9, 10.3] },
-                    { name: 'Mindoro', coords: [121.0, 12.5] },
-                    { name: 'Negros', coords: [123.0, 10.0] },
-                    { name: 'Rhodes', coords: [28.2, 36.2] },
-                    { name: 'Lesbos', coords: [26.2, 39.2] },
-                    { name: 'Chios', coords: [26.0, 38.4] },
-                    { name: 'Samos', coords: [26.8, 37.7] },
-                    { name: 'Cyclades', coords: [25.0, 37.0] },
-                    { name: 'Crete', coords: [24.5, 35.2] },
-                    { name: 'Dominica', coords: [-61.4, 15.4] },
-                    { name: 'Saint Lucia', coords: [-60.9, 13.9] },
-                    { name: 'Grenada', coords: [-61.7, 12.1] },
-                    { name: 'Barbados', coords: [-59.6, 13.1] },
-                    { name: 'Solomon Is.', coords: [160.0, -9.0] },
-                    { name: 'Vanuatu', coords: [167.0, -16.0] },
-                    { name: 'Fiji', coords: [178.0, -17.0] },
-                    { name: 'Socotra', coords: [53.5, 12.5] },
-                    { name: 'Azores', coords: [-27.0, 38.5] },
-                    { name: 'Canary Is.', coords: [-15.5, 28.0] }
-                ];
-                extraIslands.forEach(island => {
-                    features.push({
-                        type: 'Feature',
-                        properties: { name: island.name },
-                        geometry: { type: 'Point', coordinates: island.coords }
-                    });
-                });
-
                 allCountryFeatures = features;
                 window.allCountryFeatures = allCountryFeatures;
                 countryNamesList = features.map(f => f.properties?.name || '').filter(n => n);
-                extraIslands.forEach(is => {
-                    if (!countryNamesList.includes(is.name)) countryNamesList.push(is.name);
-                });
-                if (!countryNamesList.includes('Bahrain')) countryNamesList.push('Bahrain');
 
                 gCountries.selectAll('*').remove();
                 countryPaths = gCountries.selectAll('path')
                     .data(features)
                     .join('path')
+                    .attr('class', 'country-path')
                     .attr('d', pathGen)
                     .attr('fill', d => getCountryFill(d))
                     .attr('stroke', d => getStroke(d))
                     .attr('stroke-width', d => getStrokeWidth(d))
+                    .attr('stroke-dasharray', d => {
+                        var inHist = (typeof historyActive !== 'undefined' && historyActive) || (typeof currentSection !== 'undefined' && currentSection === 'history');
+                        return (inHist && histModernBordersVisible) ? '2,2' : 'none';
+                    })
                     .attr('opacity', d => getOpacity(d))
                     .attr('filter', getCountryFilterAttr)
                     .attr('cursor', 'pointer')
@@ -6230,8 +6269,13 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
 
                 countryPaths.on('mouseenter', function(e, d) {
                     if (quizActive) return;
+                    var inHist = (typeof historyActive !== 'undefined' && historyActive) || (typeof currentSection !== 'undefined' && currentSection === 'history');
+                    if (inHist && !histModernBordersVisible) return;
                     const name = d.properties?.name || '';
                     let displayName = getDisplayName(name);
+                    if (inHist && histModernBordersVisible) {
+                        displayName += ' (' + (lang === 'ar' ? 'حدود معاصرة للمقارنة' : lang === 'ru' ? 'современные границы' : lang === 'uz' ? 'zamonaviy chegara' : lang === 'es' ? 'frontera moderna' : 'modern reference') + ')';
+                    }
                     const rel = getReligion(name);
                     const denom = sectMode ? getDenomination(name) : null;
                     let html = `<div class="country-name"><strong>${displayName}</strong></div>`;
@@ -9340,6 +9384,10 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 function openHistoryPanel(f) {
                     if (typeof closeAllHistPopovers === 'function') closeAllHistPopovers();
                     if (historyTab === 'eras') { openEraPanelForFeature(f); return; }
+                    if (historyTab === 'faiths' || historyTab === 'religions' || (typeof window.religionsStillActive === 'function' && window.religionsStillActive())) {
+                        if (typeof closeCountryPanel === 'function') closeCountryPanel();
+                        return;
+                    }
                     var panelContent = document.getElementById('panelContent');
                     var countryPanel = document.getElementById('countryPanel');
                     if (!panelContent || !countryPanel) return;
@@ -9814,6 +9862,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (histWondersVisible && window.drawHistWonders) drawHistWonders();
                     if (histCapitalsVisible && window.drawHistCapitals) drawHistCapitals();
                     if (histBattlesVisible && window.drawHistBattles) drawHistBattles();
+                    if (histSacredSitesVisible && window.drawHistSacredSites) drawHistSacredSites();
                     if (historicalRoutesVisible && window.drawHistoricalRoutes) drawHistoricalRoutes();
 
                     if (historyTab === 'wars' && window.historyWarSelected()) {
@@ -9846,6 +9895,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (gHistCapitals) gHistCapitals.selectAll('*').interrupt().remove();
                     if (gHistBattles) gHistBattles.selectAll('*').interrupt().remove();
                     if (gHistWonders) gHistWonders.selectAll('*').interrupt().remove();
+                    if (gHistSacredSites) gHistSacredSites.selectAll('*').interrupt().remove();
                     hideHistoryComparisonBanner();
                     selectedHistoryPolity = null;
                     var leg = document.getElementById('legend');
@@ -9982,7 +10032,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     ];
                     var histSvgGroups = [
                         gHistWonders, gHistCapitals, gHistBattles, gHistoricalRoutes,
-                        gHistTravelers, gHistoryOverlay, gHistoryCompareOverlay
+                        gHistTravelers, gHistSacredSites, gHistoryOverlay, gHistoryCompareOverlay
                     ];
 
                     geoSvgGroups.forEach(function(g) {
@@ -9996,9 +10046,23 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         if (densityCtx && densityCanvas) {
                             densityCtx.clearRect(0, 0, densityCanvas.width, densityCanvas.height);
                         }
+                        if (countryPaths) {
+                            countryPaths
+                                .attr('fill', '#24303f')
+                                .attr('stroke', histModernBordersVisible ? 'rgba(255,255,255,0.22)' : 'none')
+                                .attr('stroke-width', histModernBordersVisible ? 0.6 : 0)
+                                .attr('stroke-dasharray', histModernBordersVisible ? '2,2' : 'none');
+                        }
                     } else {
                         if (typeof drawPointLayersCanvas === 'function') {
                             drawPointLayersCanvas();
+                        }
+                        if (countryPaths) {
+                            countryPaths
+                                .attr('fill', function(d) { return getCountryFill(d); })
+                                .attr('stroke', function(d) { return getStroke(d); })
+                                .attr('stroke-width', function(d) { return getStrokeWidth(d); })
+                                .attr('stroke-dasharray', 'none');
                         }
                     }
                 }
@@ -13095,6 +13159,10 @@ function buildEraFeature(p, phase) {
             if (histBattlesToggleBtn) histBattlesToggleBtn.addEventListener('click', function() { toggleLayerByName('histBattles'); });
             const histWondersToggleBtn = document.getElementById('histWondersToggle');
             if (histWondersToggleBtn) histWondersToggleBtn.addEventListener('click', function() { toggleLayerByName('histWonders'); });
+            const histSacredSitesToggleBtn = document.getElementById('histSacredSitesToggle');
+            if (histSacredSitesToggleBtn) histSacredSitesToggleBtn.addEventListener('click', function() { toggleLayerByName('histSacredSites'); });
+            const histModernBordersToggleBtn = document.getElementById('histModernBordersToggle');
+            if (histModernBordersToggleBtn) histModernBordersToggleBtn.addEventListener('click', function() { toggleLayerByName('histModernBorders'); });
             if (adminBoundariesToggle) adminBoundariesToggle.addEventListener('click', toggleAdminBoundaries);
             if (globeViewBtn) globeViewBtn.addEventListener('click', function() {
                 if (quizActive) return;
@@ -13548,22 +13616,48 @@ function getReligionSlice(religion, year) {
                     var xy = getActiveProjection()(rel.origin);
                     if (!xy || isNaN(xy[0])) return;
                     var isSelected = (selectedFaithId === rel.id);
-                    var elemOp = selectedFaithId ? (isSelected ? 1.0 : 0.3) : 0.9;
-                    var circleR = isSelected ? Math.max(4, 7 / k) : Math.max(3, 5 / k);
-                    g.append('circle')
+                    var elemOp = selectedFaithId ? (isSelected ? 1.0 : 0.35) : 0.95;
+                    var circleR = isSelected ? Math.max(5, 8 / k) : Math.max(3.5, 6 / k);
+                    var pinG = g.append('g')
+                        .attr('class', 'rel-origin-pin')
+                        .attr('data-faith-id', rel.id)
+                        .attr('role', 'button')
+                        .attr('tabindex', '0')
+                        .attr('aria-label', (locField(rel, 'name') || rel.id))
+                        .style('cursor', 'pointer')
+                        .style('pointer-events', 'all')
+                        .on('click', function(event) {
+                            if (event && event.stopPropagation) event.stopPropagation();
+                            showReligionDetail(rel);
+                        })
+                        .on('keydown', function(event) {
+                            if (event.key === 'Enter' || event.key === ' ') {
+                                if (event.preventDefault) event.preventDefault();
+                                showReligionDetail(rel);
+                            }
+                        });
+
+                    if (isSelected) {
+                        pinG.append('circle')
+                            .attr('cx', xy[0]).attr('cy', xy[1])
+                            .attr('r', circleR + 3.5 / k)
+                            .attr('fill', 'none')
+                            .attr('stroke', rel.color)
+                            .attr('stroke-width', 2 / k)
+                            .attr('opacity', 0.85);
+                    }
+                    pinG.append('circle')
                         .attr('cx', xy[0]).attr('cy', xy[1])
                         .attr('r', circleR).attr('fill', rel.color)
-                        .attr('stroke', '#fff').attr('stroke-width', (isSelected ? 2.2 : 1.5) / k)
-                        .attr('opacity', elemOp)
-                        .style('pointer-events', 'none');
-                    g.append('text').attr('x', xy[0]).attr('y', xy[1] - (isSelected ? 8 : 6) / k)
+                        .attr('stroke', '#ffffff').attr('stroke-width', (isSelected ? 2.2 : 1.5) / k)
+                        .attr('opacity', elemOp);
+                    pinG.append('text').attr('x', xy[0]).attr('y', xy[1] - (isSelected ? 9 : 7) / k)
                         .text(locField(rel, 'name')).attr('fill', '#ffffff').attr('font-size', isSelected ? fs * 1.15 : fs)
                         .attr('font-weight', 'bold').attr('text-anchor', 'middle')
                         .attr('opacity', elemOp)
                         .attr('style', 'text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.85); pointer-events: none;');
-                    if (skipFadeIn) {} else {
-                        g.selectAll('circle:last-of-type,text:last-of-type').attr('opacity', 0)
-                            .transition().duration(dur).attr('opacity', elemOp);
+                    if (!skipFadeIn) {
+                        pinG.attr('opacity', 0).transition().duration(dur).attr('opacity', elemOp);
                     }
                 });
                 renderReligionsLegend(year, active);
@@ -13586,7 +13680,7 @@ function getReligionSlice(religion, year) {
                             var swatchHtml = cbPatternsVisible ?
                                 '<svg width="16" height="12" style="display:inline-block;vertical-align:middle;border-radius:2px;margin-inline-end:6px;"><rect width="16" height="12" fill="' + rel.color + '"/><rect width="16" height="12" fill="url(#cbpat-' + (rIdx % 8) + ')"/></svg>' :
                                 '<span class="religions-legend-swatch" style="background:' + rel.color + '"></span>';
-                            return '<div class="religions-legend-item' + (isSelected ? ' selected' : '') + '" style="' + (isSelected ? 'font-weight:bold;color:#14B8A6;' : '') + '">' +
+                            return '<div class="religions-legend-item' + (isSelected ? ' selected' : '') + '" data-faith-id="' + rel.id + '" style="cursor:pointer;' + (isSelected ? 'font-weight:bold;color:#14B8A6;' : '') + '" title="' + htmlEscape(locField(rel, 'name')) + '" role="button" tabindex="0">' +
                                 swatchHtml +
                                 '<span class="religions-legend-name">' + htmlEscape(locField(rel, 'name')) + (isSelected ? ' ✓' : '') + '</span>' +
                                 '</div>';
@@ -13594,6 +13688,19 @@ function getReligionSlice(religion, year) {
                         '</div>';
                 }
                 leg.innerHTML = html;
+                leg.querySelectorAll('.religions-legend-item').forEach(function(item) {
+                    function activate() {
+                        var id = item.getAttribute('data-faith-id');
+                        if (id && window.showReligionDetailById) window.showReligionDetailById(id);
+                    }
+                    item.addEventListener('click', activate);
+                    item.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            if (e.preventDefault) e.preventDefault();
+                            activate();
+                        }
+                    });
+                });
             }
             function renderReligionsCaption(year, active) {
                 if (!rgCaptionEl) return;
@@ -13610,6 +13717,125 @@ function getReligionSlice(religion, year) {
                 });
                 rgCaptionEl.innerHTML = parts.join(' &nbsp;·&nbsp; ');
             }
+
+            function showReligionDetail(rel) {
+                if (!rel) return;
+                var panelContent = document.getElementById('panelContent');
+                var countryPanel = document.getElementById('countryPanel');
+                if (!panelContent || !countryPanel) return;
+                if (typeof closeAllHistPopovers === 'function') closeAllHistPopovers();
+                closeFeatureDetail();
+                selectedCountry = null;
+                selectedFeature = rel;
+                selectedFeatureType = 'histReligion';
+
+                var relName = locField(rel, 'name') || rel.id;
+                var symbol = rel.symbol || '🕊️';
+                var founder = locField(rel, 'founder') || '';
+                var originEra = locField(rel, 'origin_era') || '';
+                var originPlace = locField(rel, 'origin_place') || '';
+                var originCombined = originEra ? (originEra + (originPlace ? ' — ' + originPlace : '')) : originPlace;
+                var calendar = locField(rel, 'calendar') || '';
+                var classification = locField(rel, 'classification') || '';
+                var texts = locField(rel, 'sacred_texts') || '';
+                var sites = locField(rel, 'sacred_sites') || '';
+                var adherents = locField(rel, 'adherents') || '';
+                var distribution = locField(rel, 'modern_distribution') || '';
+                var summary = locField(rel, 'summary') || '';
+                var isSelected = (selectedFaithId === rel.id);
+
+                var html = '<div class="hist-profile-card">' +
+                    '<div class="hist-profile-header" style="border-inline-start: 4px solid ' + rel.color + '; padding-inline-start: 10px;">' +
+                    '<h3 class="hist-profile-title"><span style="color:' + rel.color + ';">' + htmlEscape(symbol) + '</span> ' + htmlEscape(relName) + '</h3>' +
+                    '<p class="hist-profile-subtitle"><strong>' + htmlEscape(t('religionsListBtn') || 'أديان ومعتقدات') + '</strong> &nbsp;·&nbsp; ' + htmlEscape(rel.startYear) + ' → ' + (rel.endYear === null || rel.endYear === undefined ? htmlEscape(t('faithsPresent') || 'الحاضر') : htmlEscape(rel.endYear)) + '</p>' +
+                    '</div>';
+
+                // Summary narrative box
+                if (summary) {
+                    html += '<div class="hist-narrative-box origin-box" style="border-inline-start-color:' + rel.color + '; background: ' + rel.color + '14; border-color: ' + rel.color + '33;">' +
+                        '<div class="hist-narrative-title" style="color:' + rel.color + ';">' + htmlEscape(symbol) + ' ' + htmlEscape(t('histRelSummary') || 'الجوهر والملخص') + '</div>' +
+                        '<p class="hist-narrative-text">' + htmlEscape(summary) + '</p>' +
+                        '</div>';
+                }
+
+                // Grid of metadata
+                html += '<div class="hist-profile-grid">';
+                if (classification) {
+                    html += '<div class="hist-profile-item full-width"><div class="hist-profile-item-label">🧭 ' + htmlEscape(t('histRelClassification')) + '</div><div class="hist-profile-item-val">' + htmlEscape(classification) + '</div></div>';
+                }
+                if (founder) {
+                    html += '<div class="hist-profile-item"><div class="hist-profile-item-label">👤 ' + htmlEscape(t('histRelFounder')) + '</div><div class="hist-profile-item-val">' + htmlEscape(founder) + '</div></div>';
+                }
+                if (originCombined) {
+                    html += '<div class="hist-profile-item"><div class="hist-profile-item-label">📍 ' + htmlEscape(t('histRelOriginPlace')) + '</div><div class="hist-profile-item-val">' + htmlEscape(originCombined) + '</div></div>';
+                }
+                if (calendar) {
+                    html += '<div class="hist-profile-item"><div class="hist-profile-item-label">📅 ' + htmlEscape(t('histRelCalendar')) + '</div><div class="hist-profile-item-val">' + htmlEscape(calendar) + '</div></div>';
+                }
+                if (adherents) {
+                    html += '<div class="hist-profile-item"><div class="hist-profile-item-label">👥 ' + htmlEscape(t('histRelAdherents')) + '</div><div class="hist-profile-item-val">' + htmlEscape(adherents) + '</div></div>';
+                }
+                if (texts) {
+                    html += '<div class="hist-profile-item full-width"><div class="hist-profile-item-label">📖 ' + htmlEscape(t('histRelTexts')) + '</div><div class="hist-profile-item-val">' + htmlEscape(texts) + '</div></div>';
+                }
+                if (sites) {
+                    html += '<div class="hist-profile-item full-width"><div class="hist-profile-item-label">🕌 ' + htmlEscape(t('histRelSites')) + '</div><div class="hist-profile-item-val">' + htmlEscape(sites) + '</div></div>';
+                }
+                if (distribution) {
+                    html += '<div class="hist-profile-item full-width"><div class="hist-profile-item-label">🌍 ' + htmlEscape(t('histRelDistribution')) + '</div><div class="hist-profile-item-val">' + htmlEscape(distribution) + '</div></div>';
+                }
+                html += '</div>';
+
+                // Highlight / Filter button
+                var btnText = isSelected ? (t('reset') || 'إلغاء التحديد') : (t('histRelHighlight') || 'تسليط الضوء على الخريطة');
+                html += '<div class="history-actions" style="margin-top:10px;">' +
+                    '<button type="button" class="btn history-action-btn" id="relActHighlight" style="width:100%; justify-content:center; background:' + (isSelected ? 'var(--card-bg, #1e293b)' : rel.color) + '; color:#ffffff; border:none; padding:8px 14px; border-radius:8px; font-weight:700; cursor:pointer;">' +
+                    (isSelected ? '✕ ' : '🔍 ') + htmlEscape(btnText) +
+                    '</button>' +
+                    '</div>';
+
+                html += '</div>';
+
+                _lastPanelRenderTime = performance.now();
+                panelContent.innerHTML = html;
+                countryPanel.style.display = 'block';
+                requestAnimationFrame(function() {
+                    requestAnimationFrame(function() {
+                        countryPanel.classList.add('visible');
+                    });
+                });
+
+                var highlightBtn = panelContent.querySelector('#relActHighlight');
+                if (highlightBtn) {
+                    highlightBtn.onclick = function() {
+                        if (selectedFaithId === rel.id) {
+                            selectedFaithId = null;
+                        } else {
+                            selectedFaithId = rel.id;
+                            if (window.setReligionsYear) {
+                                setReligionsYear(rel.startYear);
+                            }
+                        }
+                        if (window.renderFaithsPopoverList) window.renderFaithsPopoverList();
+                        drawReligionsScene(religionsYear, true);
+                        renderReligionsLegend(religionsYear);
+                        showReligionDetail(rel);
+                    };
+                }
+                refreshLucideIcons();
+            }
+            window.showReligionDetail = showReligionDetail;
+            window.showReligionDetailById = function(id) {
+                if (!religionsData) {
+                    fetchReligionsData().then(function() {
+                        var rel = (religionsData || []).find(function(r) { return r.id === id; });
+                        if (rel) showReligionDetail(rel);
+                    });
+                    return;
+                }
+                var r = (religionsData || []).find(function(item) { return item.id === id; });
+                if (r) showReligionDetail(r);
+            };
             function setReligionsYear(year) {
                 year = Math.max(YEAR_MIN, Math.min(YEAR_MAX, Math.round(year)));
                 religionsYear = year;
@@ -14819,6 +15045,145 @@ function getReligionSlice(religion, year) {
             }
             window.fetchHistoricalWonders = fetchHistoricalWonders;
 
+            function fetchHistoricalSacredSites() {
+                if (historicalSacredSitesData) return Promise.resolve(historicalSacredSitesData);
+                return fetch(BASE + 'historical-sacred-sites-data.json')
+                    .then(function(r) { return r.json(); })
+                    .then(function(d) {
+                        historicalSacredSitesData = (d && (d.sites || d.sacred_sites)) ? (d.sites || d.sacred_sites) : (Array.isArray(d) ? d : []);
+                        window.historicalSacredSitesData = historicalSacredSitesData;
+                        return historicalSacredSitesData;
+                    });
+            }
+            window.fetchHistoricalSacredSites = fetchHistoricalSacredSites;
+
+            function showSacredSiteDetail(site) {
+                if (!site) return;
+                var panelContent = document.getElementById('panelContent');
+                var countryPanel = document.getElementById('countryPanel');
+                if (!panelContent || !countryPanel) return;
+                if (typeof closeAllHistPopovers === 'function') closeAllHistPopovers();
+                closeFeatureDetail();
+                selectedCountry = null;
+                selectedFeature = site;
+                selectedFeatureType = 'histSacredSite';
+
+                var name = cleanHistoricalName(locField(site, 'name'));
+                var loc = locField(site, 'location');
+                var currentStatus = locField(site, 'current_status');
+                var summary = locField(site, 'summary');
+                var timeline = site.timeline || [];
+                var sigObj = site.significance || {};
+                var icon = site.icon || '🕊️';
+
+                var html = '<div class="hist-profile-card">' +
+                    '<div class="hist-profile-header" style="border-inline-start: 4px solid #f59e0b; padding-inline-start: 10px;">' +
+                    '<h3 class="hist-profile-title"><span style="color:#f59e0b;">' + icon + '</span> ' + htmlEscape(name) + '</h3>' +
+                    '<p class="hist-profile-subtitle"><strong>' + htmlEscape(t('histSacredSitesToggle') || 'مقدسات ونزاعات تاريخية') + '</strong>' +
+                    (loc ? ' &nbsp;·&nbsp; 📍 ' + htmlEscape(loc) : '') + '</p>' +
+                    '</div>';
+
+                // Summary box
+                if (summary) {
+                    html += '<div class="hist-narrative-box origin-box" style="border-inline-start-color: #f59e0b; background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.22);">' +
+                        '<div class="hist-narrative-title" style="color: #d97706;">' + icon + ' ' + htmlEscape(t('histRelSummary') || 'الجوهر والملخص') + '</div>' +
+                        '<p class="hist-narrative-text">' + htmlEscape(summary) + '</p>' +
+                        '</div>';
+                }
+
+                // Associated Faiths & Sacred Significance
+                var faithKeys = site.religions_involved || Object.keys(sigObj).map(function(k) { return k.replace(/_ar|_en|_ru|_uz|_es/, ''); }).filter(function(v, i, a) { return a.indexOf(v) === i; });
+                var faithColors = {
+                    islam: '#10b981', christianity: '#3b82f6', judaism: '#6366f1',
+                    hinduism: '#f97316', buddhism: '#eab308', jainism: '#14b8a6',
+                    sikhism: '#f59e0b', bon: '#8b5cf6', shinto: '#ec4899', zoroastrianism: '#e0a020'
+                };
+                var faithNamesAr = {
+                    islam: 'الإسلام', christianity: 'المسيحية', judaism: 'اليهودية',
+                    hinduism: 'الهندوسية', buddhism: 'البوذية', jainism: 'الجاينية',
+                    sikhism: 'السيخية', bon: 'البون التبتية', shinto: 'الشنتو', zoroastrianism: 'الزرادشتية'
+                };
+                var faithNamesEn = {
+                    islam: 'Islam', christianity: 'Christianity', judaism: 'Judaism',
+                    hinduism: 'Hinduism', buddhism: 'Buddhism', jainism: 'Jainism',
+                    sikhism: 'Sikhism', bon: 'Tibetan Bön', shinto: 'Shinto', zoroastrianism: 'Zoroastrianism'
+                };
+
+                if (faithKeys.length) {
+                    html += '<div style="margin-top: 6px;">' +
+                        '<div class="hist-profile-item-label" style="font-size: 0.76rem; color: var(--teal-600, #0d9488); margin-bottom: 6px;">🕊️ ' + htmlEscape(t('histSacredParties') || 'الأديان والمعتقدات المرتبطة') + '</div>' +
+                        '<div style="display: flex; flex-direction: column; gap: 6px;">';
+                    faithKeys.forEach(function(fKey) {
+                        var fName = (lang === 'ar' ? faithNamesAr[fKey] : faithNamesEn[fKey]) || fKey;
+                        var color = faithColors[fKey] || '#14b8a6';
+                        var fSig = sigObj[fKey + '_' + lang] || sigObj[fKey + '_en'] || sigObj[fKey + '_ar'] || (typeof sigObj[fKey] === 'string' ? sigObj[fKey] : (sigObj[fKey] && (sigObj[fKey][lang] || sigObj[fKey].en || sigObj[fKey].ar))) || '';
+                        html += '<div class="hist-profile-item full-width" style="border-inline-start: 3px solid ' + color + '; padding: 6px 10px;">' +
+                            '<div class="hist-profile-item-label" style="color: ' + color + '; font-weight: 700; margin-bottom: 3px;">' + htmlEscape(fName) + '</div>' +
+                            (fSig ? '<div class="hist-profile-item-val" style="font-size: 0.78rem; line-height: 1.45;">' + htmlEscape(fSig) + '</div>' : '') +
+                            '</div>';
+                    });
+                    html += '</div></div>';
+                }
+
+                // Historical Transitions Timeline
+                if (timeline.length) {
+                    html += '<div style="margin-top: 8px;">' +
+                        '<div class="hist-profile-item-label" style="font-size: 0.76rem; color: var(--teal-600, #0d9488); margin-bottom: 6px;">⏳ ' + htmlEscape(t('histSacredTimeline') || 'التسلسل الزمني للتحولات والنزاعات') + '</div>' +
+                        '<div style="display: flex; flex-direction: column; gap: 5px;">';
+                    timeline.forEach(function(item) {
+                        var era = locField(item, 'era');
+                        var yr = item.year_label || '';
+                        var ev = locField(item, 'desc') || locField(item, 'event');
+                        html += '<div style="background: var(--bg-hover, rgba(0,0,0,0.03)); border: 1px solid var(--border, rgba(0,0,0,0.08)); border-radius: 6px; padding: 6px 8px;">' +
+                            '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">' +
+                            '<span style="font-weight: 700; font-size: 0.74rem; color: var(--teal-600, #0d9488);">' + htmlEscape(era) + '</span>' +
+                            (yr ? '<span style="font-size: 0.7rem; color: var(--text-muted, #64748b); font-weight: 600;">' + htmlEscape(yr) + '</span>' : '') +
+                            '</div>' +
+                            '<div style="font-size: 0.77rem; color: var(--text, #1e293b); line-height: 1.4;">' + htmlEscape(ev) + '</div>' +
+                            '</div>';
+                    });
+                    html += '</div></div>';
+                }
+
+                // Current Status & Administration
+                if (currentStatus) {
+                    html += '<div class="hist-narrative-box" style="border-inline-start-color: #3b82f6; background: rgba(59, 130, 246, 0.08); border-color: rgba(59, 130, 246, 0.22); margin-top: 8px;">' +
+                        '<div class="hist-narrative-title" style="color: #2563eb;">⚖️ ' + htmlEscape(t('histSacredCurrentStatus') || 'الوضع الراهن وإدارته اليوم') + '</div>' +
+                        '<p class="hist-narrative-text">' + htmlEscape(currentStatus) + '</p>' +
+                        '</div>';
+                }
+
+                // Center on Map Button
+                if (site.coords && site.coords.length === 2) {
+                    html += '<div class="history-actions" style="margin-top: 10px;">' +
+                        '<button type="button" class="btn history-action-btn" id="sacredSiteCenterBtn" style="width: 100%; justify-content: center; background: #f59e0b; color: #ffffff; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 700; cursor: pointer;">' +
+                        '📍 ' + htmlEscape(lang === 'ar' ? 'التركيز على الموقع في الخريطة' : 'Center on Map') +
+                        '</button>' +
+                        '</div>';
+                }
+
+                html += '</div>';
+
+                _lastPanelRenderTime = performance.now();
+                panelContent.innerHTML = html;
+                countryPanel.style.display = 'block';
+                requestAnimationFrame(function(){ requestAnimationFrame(function(){ countryPanel.classList.add('visible'); }); });
+
+                var centerBtn = panelContent.querySelector('#sacredSiteCenterBtn');
+                if (centerBtn && site.coords) {
+                    centerBtn.onclick = function() {
+                        var coords = site.coords;
+                        if (typeof zoomToCoords === 'function') {
+                            zoomToCoords(coords[0], coords[1], 4);
+                        } else if (typeof panToLocation === 'function') {
+                            panToLocation(coords[0], coords[1], 4);
+                        }
+                    };
+                }
+                refreshLucideIcons();
+            }
+            window.showSacredSiteDetail = showSacredSiteDetail;
+
             function showHistoricalCapitalDetail(c) {
                 selectedFeature = c;
                 selectedFeatureType = 'histCapital';
@@ -15093,6 +15458,97 @@ function getReligionSlice(religion, year) {
                 });
             }
             window.drawHistWonders = drawHistWonders;
+
+            function drawHistSacredSites() {
+                if (!gHistSacredSites) return;
+                gHistSacredSites.selectAll('*').remove();
+                if (!histSacredSitesVisible || (typeof currentSection !== 'undefined' && currentSection === 'geo') || (typeof historyActive !== 'undefined' && !historyActive)) return;
+                if (!historicalSacredSitesData) {
+                    fetchHistoricalSacredSites().then(function() { drawHistSacredSites(); });
+                    return;
+                }
+                var proj = getActiveProjection();
+                var isMob = window.innerWidth <= 768;
+                var zoom = (currentTransform && currentTransform.k) || 1;
+                historicalSacredSitesData.forEach(function(site) {
+                    var coords = site.coords || [site.lon, site.lat];
+                    if (!coords) return;
+                    var xy = proj(coords);
+                    if (!xy || isNaN(xy[0])) return;
+                    var siteName = cleanHistoricalName(locField(site, 'name'));
+                    var g = gHistSacredSites.append('g')
+                        .attr('class', 'hist-sacred-site-pin hist-landmark-pin')
+                        .attr('role', 'button')
+                        .attr('tabindex', '0')
+                        .attr('aria-label', (t('histSacredSiteTitle') || 'مكان مقدس مشترك') + ': ' + siteName)
+                        .style('cursor', 'pointer')
+                        .on('click', function(e) {
+                            if (e && e.stopPropagation) e.stopPropagation();
+                            showSacredSiteDetail(site);
+                        })
+                        .on('keydown', function(e) {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                if (e.preventDefault) e.preventDefault();
+                                showSacredSiteDetail(site);
+                            }
+                        });
+
+                    var minSacPx = isMob ? 11.5 : 13.5;
+                    var maxSacPx = isMob ? 13.5 : 15.5;
+                    var sacScreenPx = Math.max(minSacPx, Math.min(maxSacPx, minSacPx * Math.pow(zoom, 0.15)));
+                    var sacR = (isMob ? 5.0 : 6.0) / zoom;
+                    var sacRingR = (isMob ? 7.5 : 9.0) / zoom;
+                    var sacFs = sacScreenPx / zoom;
+                    var sacIconFs = (isMob ? 8.0 : 9.5) / zoom;
+                    var sacOffY = ((isMob ? 6.5 : 7.5) + sacScreenPx * 0.7) / zoom;
+                    var sacIconOffY = 3.0 / zoom;
+                    var sacSw = 1.4 / zoom;
+
+                    g.append('circle')
+                        .attr('class', 'hist-sacred-site-ring')
+                        .attr('cx', xy[0])
+                        .attr('cy', xy[1])
+                        .attr('r', sacRingR)
+                        .attr('fill', 'rgba(245, 158, 11, 0.22)')
+                        .attr('stroke', '#f59e0b')
+                        .attr('stroke-width', 0.8 / zoom)
+                        .attr('stroke-dasharray', (2 / zoom) + ',' + (2 / zoom));
+
+                    g.append('circle')
+                        .attr('class', 'hist-sacred-site-circle')
+                        .attr('cx', xy[0])
+                        .attr('cy', xy[1])
+                        .attr('r', sacR)
+                        .attr('fill', '#d97706')
+                        .attr('stroke', '#ffffff')
+                        .attr('stroke-width', sacSw)
+                        .attr('vector-effect', 'non-scaling-stroke');
+
+                    g.append('text')
+                        .attr('class', 'hist-sacred-site-icon')
+                        .attr('data-cy', xy[1])
+                        .attr('x', xy[0])
+                        .attr('y', xy[1] + sacIconOffY)
+                        .text('✦')
+                        .attr('fill', '#ffffff')
+                        .attr('font-size', sacIconFs + 'px')
+                        .attr('text-anchor', 'middle')
+                        .style('pointer-events', 'none');
+
+                    g.append('text')
+                        .attr('class', 'hist-sacred-site-label')
+                        .attr('data-cy', xy[1])
+                        .attr('x', xy[0])
+                        .attr('y', xy[1] - sacOffY)
+                        .text(siteName)
+                        .attr('fill', '#fef3c7')
+                        .attr('font-size', sacFs + 'px')
+                        .attr('font-weight', '700')
+                        .attr('text-anchor', 'middle')
+                        .attr('style', 'text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.85); pointer-events: none;');
+                });
+            }
+            window.drawHistSacredSites = drawHistSacredSites;
 
             function toggleLangDropdown(btn, menu) {
                 var isVisible = menu.classList.contains('visible');

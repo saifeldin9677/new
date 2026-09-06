@@ -466,6 +466,7 @@
             function getCurrentLang() { return lang || 'ar'; }
             window.getCurrentLang = getCurrentLang;
             let allCountryFeatures = [];
+            let allLandFeatures = [];
             let countryPaths = null;
             let gCBPatterns = null;
             let selectedCountry = null;
@@ -480,7 +481,7 @@
             let selectedTravelerIds = [], activeTravelerCarouselIndex = 0, activeWaypointIndex = null;
             let histCapitalsVisible = false, histBattlesVisible = false, histWondersVisible = false, histSacredSitesVisible = false, histModernBordersVisible = false;
             let projection, pathGen;
-            let svg, gMap, gCountries, gCountryLabels, gGraticule, gIceCap, gOcean, gCorridors, gPhysical, gTemperature, gAuthoringMarkers, gQuizMarkers;
+            let svg, gMap, gCountries, gCountryLabels, gHistoryLand, gGraticule, gIceCap, gOcean, gCorridors, gPhysical, gTemperature, gAuthoringMarkers, gQuizMarkers;
             let currentTransform = d3.zoomIdentity;
             let _tooltipSize = { w: 180, h: 60 };
             let lastCanvasTransform = d3.zoomIdentity;
@@ -961,12 +962,12 @@
                 return offset >= 0 ? base.brighter(offset * 1.6).toString() : base.darker(-offset * 1.6).toString();
             }
             function getCountryFilterAttr() {
+                var inHist = (typeof historyActive !== 'undefined' && historyActive) || (typeof currentSection !== 'undefined' && currentSection === 'history');
+                if (inHist) return null;
                 return colorMode === 'normal' ? 'url(#countryShadow)' : null;
             }
 
             function getCountryFill(d) {
-                var inHist = (typeof historyActive !== 'undefined' && historyActive) || (typeof currentSection !== 'undefined' && currentSection === 'history');
-                if (inHist) return '#24303f';
                 const name = d.properties?.name || '';
                 if (colorMode === 'normal') return getNormalCountryColor(name);
 
@@ -990,10 +991,6 @@
             }
 
             function getStroke(d) {
-                var inHist = (typeof historyActive !== 'undefined' && historyActive) || (typeof currentSection !== 'undefined' && currentSection === 'history');
-                if (inHist) {
-                    return histModernBordersVisible ? 'rgba(255,255,255,0.22)' : 'none';
-                }
                 if (colorMode === 'normal') return MAP_COLORS.country.normalStroke;
                 const name = d.properties?.name || '';
                 if (currentReligionFilter !== 'all' && getReligion(name) === currentReligionFilter) return '#fff';
@@ -1001,21 +998,29 @@
             }
 
             function getStrokeWidth(d) {
-                var inHist = (typeof historyActive !== 'undefined' && historyActive) || (typeof currentSection !== 'undefined' && currentSection === 'history');
-                if (inHist) {
-                    return histModernBordersVisible ? 0.6 : 0;
-                }
                 return 0.8;
             }
 
             function updateHistModernBorders() {
-                if (!countryPaths) return;
                 var inHist = (typeof historyActive !== 'undefined' && historyActive) || (typeof currentSection !== 'undefined' && currentSection === 'history');
                 if (!inHist) return;
-                countryPaths
-                    .attr('stroke', histModernBordersVisible ? 'rgba(255,255,255,0.22)' : 'none')
-                    .attr('stroke-width', histModernBordersVisible ? 0.6 : 0)
-                    .attr('stroke-dasharray', histModernBordersVisible ? '2,2' : 'none');
+                if (gHistoryLand) gHistoryLand.style('display', null);
+                if (countryPaths && gCountries) {
+                    if (histModernBordersVisible) {
+                        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                        var ghostColor = isDark ? 'rgba(255,255,255,0.4)' : 'rgba(90,65,35,0.45)';
+                        gCountries.style('display', null);
+                        countryPaths
+                            .attr('fill', 'none')
+                            .attr('stroke', ghostColor)
+                            .attr('stroke-width', 0.7)
+                            .attr('stroke-dasharray', '2,2')
+                            .attr('filter', null)
+                            .style('pointer-events', 'none');
+                    } else {
+                        gCountries.style('display', 'none');
+                    }
+                }
             }
             window.updateHistModernBorders = updateHistModernBorders;
 
@@ -1354,6 +1359,7 @@
 
                 gGraticule = svg.append('g');
                 gIceCap = svg.append('g');
+                gHistoryLand = svg.append('g').attr('id', 'gHistoryLand').style('display', 'none');
                 gCountries = svg.append('g').attr('id', 'gCountries');
                 gCBPatterns = svg.append('g').attr('id', 'gColorblindPatterns');
                 gCountryLabels = svg.append('g');
@@ -1405,7 +1411,7 @@
                 gQuizMarkers = svg.append('g').attr('id', 'quizMarkersLayer');
 
                 gMap = svg.append('g').attr('class', 'map-transform-group');
-                [gOcean, gGraticule, gIceCap, gCountries, gCBPatterns, gAdminBoundaries, gGlaciatedAreas, gCountryLabels, gPhysical, gCorridors, gHistoricalRoutes, gTemperature, gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gGeopoliticalBlocs, gHistoryOverlay, gHistoryCompareOverlay, gHistTravelers, gHistCapitals, gHistBattles, gHistWonders, gHistSacredSites, gDesertsForests, gBorderDisputes, gAuthoringMarkers, gQuizMarkers]
+                [gOcean, gGraticule, gIceCap, gHistoryLand, gCountries, gCBPatterns, gAdminBoundaries, gGlaciatedAreas, gCountryLabels, gPhysical, gCorridors, gHistoricalRoutes, gTemperature, gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gGeopoliticalBlocs, gHistoryOverlay, gHistoryCompareOverlay, gHistTravelers, gHistCapitals, gHistBattles, gHistWonders, gHistSacredSites, gDesertsForests, gBorderDisputes, gAuthoringMarkers, gQuizMarkers]
                     .forEach(g => gMap.append(() => g.node()));
 
                 projection = setupProjection(width, height);
@@ -3267,6 +3273,8 @@
                     drawDesertsForests();
                     drawBorderDisputes();
                 } else {
+                    renderHistoryLand();
+                    updateHistModernBorders();
                     if (window.drawHistoricalTravelers) window.drawHistoricalTravelers();
                     if (window.drawHistCapitals) window.drawHistCapitals();
                     if (window.drawHistBattles) window.drawHistBattles();
@@ -3657,6 +3665,7 @@
 
                 drawGraticule();
                 drawIceCap();
+                if (gHistoryLand) gHistoryLand.selectAll('path').attr('d', pathGen);
                 gCountries.selectAll('path')
                     .attr('d', pathGen)
                     .attr('fill', isDragging ? 'var(--panel-bg, #3a4a5c)' : function(d) { return getCountryFill(d); })
@@ -3733,6 +3742,7 @@
                     gCountries.selectAll('*').remove();
                     if (countryLabelSelection) { countryLabelSelection.remove(); countryLabelSelection = null; }
                     if (allCountryFeatures && allCountryFeatures.length) {
+                        if (gHistoryLand) gHistoryLand.selectAll('path').attr('d', pathGen);
                         countryPaths = gCountries.selectAll('path')
                             .data(allCountryFeatures)
                             .join('path')
@@ -3769,6 +3779,7 @@
                     drawGraticule();
                 drawIceCap();
                     if (allCountryFeatures && allCountryFeatures.length) {
+                        if (gHistoryLand) gHistoryLand.selectAll('path').attr('d', pathGen);
                         gCountries.selectAll('*').remove();
                         countryPaths = gCountries.selectAll('path')
                             .data(allCountryFeatures)
@@ -4915,15 +4926,22 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (!resWorld.ok) throw new Error('HTTP ' + resWorld.status);
                     const data = await resWorld.json();
                     let features = topojson.feature(data, data.objects.countries).features;
+                    let microFeatures = [];
                     if (resMicro && resMicro.ok) {
                         try {
                             const microData = await resMicro.json();
                             if (microData && Array.isArray(microData.features)) {
-                                features = features.concat(microData.features);
+                                microFeatures = microData.features;
+                                features = features.concat(microFeatures);
                             }
                         } catch (e) {
                             console.warn('Could not parse microstates data:', e);
                         }
+                    }
+                    if (data.objects && data.objects.land) {
+                        const landData = topojson.feature(data, data.objects.land);
+                        allLandFeatures = (landData.features || [landData]).concat(microFeatures);
+                        window.allLandFeatures = allLandFeatures;
                     }
                     return features;
                 } finally {
@@ -6400,9 +6418,29 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 drawCapitals();
                 drawTimezones();
                 drawMajorCities();
+                renderHistoryLand();
                 updateLegend();
                 updateCoordinatesDisplay({ clientX: 0, clientY: 0 });
             }
+
+            function renderHistoryLand() {
+                if (!gHistoryLand || !allLandFeatures || !allLandFeatures.length) return;
+                var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                var landFill = isDark ? '#263342' : MAP_COLORS.country.normal;
+                var landStroke = isDark ? 'rgba(255,255,255,0.2)' : MAP_COLORS.country.normalStroke;
+                gHistoryLand.selectAll('*').remove();
+                gHistoryLand.selectAll('path')
+                    .data(allLandFeatures)
+                    .join('path')
+                    .attr('class', 'history-land-path')
+                    .attr('d', pathGen)
+                    .attr('fill', landFill)
+                    .attr('stroke', landStroke)
+                    .attr('stroke-width', 0.8)
+                    .attr('filter', 'url(#countryShadow)')
+                    .style('pointer-events', 'none');
+            }
+            window.renderHistoryLand = renderHistoryLand;
 
             // ── URL hash state management ──
             function updateHash() {
@@ -10046,23 +10084,25 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         if (densityCtx && densityCanvas) {
                             densityCtx.clearRect(0, 0, densityCanvas.width, densityCanvas.height);
                         }
-                        if (countryPaths) {
-                            countryPaths
-                                .attr('fill', '#24303f')
-                                .attr('stroke', histModernBordersVisible ? 'rgba(255,255,255,0.22)' : 'none')
-                                .attr('stroke-width', histModernBordersVisible ? 0.6 : 0)
-                                .attr('stroke-dasharray', histModernBordersVisible ? '2,2' : 'none');
+                        if (gHistoryLand) {
+                            gHistoryLand.style('display', null);
+                            renderHistoryLand();
                         }
+                        updateHistModernBorders();
                     } else {
                         if (typeof drawPointLayersCanvas === 'function') {
                             drawPointLayersCanvas();
                         }
+                        if (gHistoryLand) gHistoryLand.style('display', 'none');
+                        if (gCountries) gCountries.style('display', null);
                         if (countryPaths) {
                             countryPaths
                                 .attr('fill', function(d) { return getCountryFill(d); })
                                 .attr('stroke', function(d) { return getStroke(d); })
                                 .attr('stroke-width', function(d) { return getStrokeWidth(d); })
-                                .attr('stroke-dasharray', 'none');
+                                .attr('stroke-dasharray', 'none')
+                                .attr('filter', getCountryFilterAttr)
+                                .style('pointer-events', null);
                         }
                     }
                 }
@@ -12825,6 +12865,7 @@ function buildEraFeature(p, phase) {
                 drawIceCap();
                             if (allCountryFeatures.length) {
                                 gCountries.selectAll('path').attr('d', pathGen);
+                                if (gHistoryLand) gHistoryLand.selectAll('path').attr('d', pathGen);
                                 if (countryLabelSelection) {
                                     countryLabelSelection.remove();
                                     countryLabelSelection = null;
@@ -15569,6 +15610,8 @@ function getReligionSlice(religion, year) {
             document.getElementById('themeToggleBtn').addEventListener('click', function() {
                 var current = document.documentElement.getAttribute('data-theme');
                 applyTheme(current === 'light' ? 'dark' : 'light');
+                if (typeof updateHistModernBorders === 'function') updateHistModernBorders();
+                if (typeof renderHistoryLand === 'function') renderHistoryLand();
             });
             document.getElementById('measureToolBtn').addEventListener('click', toggleMeasureMode);
             document.getElementById('presentationModeBtn').addEventListener('click', togglePresentationMode);

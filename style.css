@@ -110,20 +110,24 @@ path:focus-visible {
 
 .skip-link {
     position: absolute;
-    top: -40px;
+    top: -120px;
     left: 8px;
     background: #115e59;
     color: #fff;
     padding: 8px 16px;
     border-radius: var(--radius-sm);
-    z-index: var(--z-button-tooltip);
+    z-index: 99999;
     text-decoration: none;
     font-weight: 600;
-    transition: top 0.2s ease;
+    transform: translateY(-100%);
+    transition: top 0.2s ease, transform 0.2s ease;
 }
-.skip-link:focus {
+.skip-link:focus,
+.skip-link:focus-visible {
     top: 8px;
+    transform: translateY(0);
 }
+
 
 .theme-icon-dark { display: none; }
 [data-theme="light"] .theme-icon-light { display: none; }
@@ -1029,13 +1033,9 @@ header,
     isolation: isolate;
 }
 .map-transform-group text {
-    text-shadow: none;
-    paint-order: stroke;
-    stroke: rgba(0,0,0,0.7);
-    stroke-width: 2px;
-    stroke-linecap: round;
-    stroke-linejoin: round;
     pointer-events: none;
+    stroke: none !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95), 0 0 6px rgba(0, 0, 0, 0.85);
 }
 .map-transform-group text.hist-era-label,
 .map-transform-group text.hist-war-label,
@@ -1053,11 +1053,7 @@ header,
 .hist-wp-label,
 .hist-route-label,
 .country-label {
-    stroke: rgba(0, 0, 0, 0.92) !important;
-    stroke-width: 3px !important;
-    stroke-linejoin: round !important;
-    stroke-linecap: round !important;
-    paint-order: stroke fill !important;
+    stroke: none !important;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95), 0 0 6px rgba(0, 0, 0, 0.85);
 }
 .zooming-active text {
@@ -1078,11 +1074,8 @@ header,
     text-anchor: start;
     dominant-baseline: central;
     pointer-events: none;
-    paint-order: stroke;
-    stroke: rgba(0,0,0,0.7);
-    stroke-width: 2px;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+    stroke: none !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95), 0 0 4px rgba(0, 0, 0, 0.85);
     font-weight: 400;
 }
 .mobile-topbar {
@@ -4471,10 +4464,8 @@ body.annotate-active .annotation-toolbar {
     fill: var(--text, #e0e8f0);
     font-size: 11px;
     font-weight: 600;
-    paint-order: stroke;
-    stroke: var(--map-bg, #16202b);
-    stroke-width: 3px;
-    stroke-linejoin: round;
+    stroke: none !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95), 0 0 4px rgba(0, 0, 0, 0.85);
     pointer-events: none;
 }
 .annotation-region-poly {

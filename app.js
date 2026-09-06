@@ -513,6 +513,14 @@
             //    skip    – (optional) if true, generic toggleLayer skips this;
             //              its toggle function is hand-written (labels, sect,
             //              routes, densitySpots, coords)
+            const HIST_LAYER_KEYS = ['historicalRoutes', 'histCapitals', 'histBattles', 'histWonders'];
+            const GEO_LAYER_KEYS = [
+                'labels', 'sect', 'corridors', 'riversAndGlaciers', 'densitySpots',
+                'capitals', 'timezones', 'majorCities', 'naturalResources', 'ethnicGroups',
+                'oceanCurrents', 'winds', 'earthquakes', 'volcanoes', 'geopoliticalBlocs',
+                'desertsForests', 'borderDisputes', 'adminBoundaries', 'coords'
+            ];
+
             const LAYER_DEFS = {
                 labels:              { getFlag: function(){ return showLabels; },              setFlag: function(v){ showLabels = v; },              btnId: 'labelsToggle',              drawFn: null, hashKey: 'labels', skip: true },
                 sect:                { getFlag: function(){ return sectMode; },                setFlag: function(v){ sectMode = v; },                btnId: 'sectToggle',                drawFn: null, hashKey: 'sect', skip: true },
@@ -559,10 +567,16 @@
                 }
                 toggleLayer(name);
             }
+            window.toggleLayerByName = toggleLayerByName;
+            window.toggleLayer = toggleLayer;
 
             function toggleLayer(name) {
                 var def = LAYER_DEFS[name];
                 if (!def || def.skip) return;
+                var isHistLayer = HIST_LAYER_KEYS.includes(name);
+                var inHistMode = (typeof currentSection !== 'undefined' && currentSection === 'history') || (typeof historyActive !== 'undefined' && historyActive);
+                if (isHistLayer && !inHistMode) return;
+                if (!isHistLayer && inHistMode && name !== 'labels') return;
                 var state = !def.getFlag();
                 def.setFlag(state);
                 var btn = document.getElementById(def.btnId);
@@ -1252,6 +1266,7 @@
                 svgEl.setAttribute('width', width);
                 svgEl.setAttribute('height', height);
                 svg = d3.select(svgEl);
+                window.svg = svg;
                 svg.selectAll('*').remove();
 
                 const defs = svg.append('defs');
@@ -1328,32 +1343,32 @@
                     document.body.style.backgroundColor = color;
                 }
                 window.syncOceanBackground = syncOceanBackground;
-                gPhysical = svg.append('g');
-                gCorridors = svg.append('g');
+                gPhysical = svg.append('g').attr('id', 'physicalLayer');
+                gCorridors = svg.append('g').attr('id', 'corridorsLayer');
                 gHistoricalRoutes = svg.append('g').attr('id', 'historicalRoutesLayer');
-                gTemperature = svg.append('g');
-                gCapitals = svg.append('g');
-                gTimezones = svg.append('g');
-                gMajorCities = svg.append('g');
-                gNaturalResources = svg.append('g');
-                gEthnicGroups = svg.append('g');
-                gOceanCurrents = svg.append('g');
-                gWinds = svg.append('g');
-                gEarthquakes = svg.append('g');
-                gVolcanoes = svg.append('g');
-                gGeopoliticalBlocs = svg.append('g');
+                gTemperature = svg.append('g').attr('id', 'temperatureLayer');
+                gCapitals = svg.append('g').attr('id', 'capitalsLayer');
+                gTimezones = svg.append('g').attr('id', 'timezonesLayer');
+                gMajorCities = svg.append('g').attr('id', 'majorCitiesLayer');
+                gNaturalResources = svg.append('g').attr('id', 'naturalResourcesLayer');
+                gEthnicGroups = svg.append('g').attr('id', 'ethnicGroupsLayer');
+                gOceanCurrents = svg.append('g').attr('id', 'oceanCurrentsLayer');
+                gWinds = svg.append('g').attr('id', 'windsLayer');
+                gEarthquakes = svg.append('g').attr('id', 'earthquakesLayer');
+                gVolcanoes = svg.append('g').attr('id', 'volcanoesLayer');
+                gGeopoliticalBlocs = svg.append('g').attr('id', 'geopoliticalBlocsLayer');
                 gHistoryOverlay = svg.append('g').attr('id', 'historyOverlayLayer');
                 gHistoryCompareOverlay = svg.append('g').attr('id', 'historyCompareOverlayLayer').style('pointer-events', 'none');
                 gHistTravelers = svg.append('g').attr('id', 'histTravelersLayer');
                 gHistCapitals = svg.append('g').attr('id', 'histCapitalsLayer');
                 gHistBattles = svg.append('g').attr('id', 'histBattlesLayer');
                 gHistWonders = svg.append('g').attr('id', 'histWondersLayer');
-                gDesertsForests = svg.append('g');
-                gBorderDisputes = svg.append('g');
-                gAdminBoundaries = svg.append('g');
-                gGlaciatedAreas = svg.append('g');
-                gAuthoringMarkers = svg.append('g');
-                gQuizMarkers = svg.append('g');
+                gDesertsForests = svg.append('g').attr('id', 'desertsForestsLayer');
+                gBorderDisputes = svg.append('g').attr('id', 'borderDisputesLayer');
+                gAdminBoundaries = svg.append('g').attr('id', 'adminBoundariesLayer');
+                gGlaciatedAreas = svg.append('g').attr('id', 'glaciatedAreasLayer');
+                gAuthoringMarkers = svg.append('g').attr('id', 'authoringMarkersLayer');
+                gQuizMarkers = svg.append('g').attr('id', 'quizMarkersLayer');
 
                 gMap = svg.append('g').attr('class', 'map-transform-group');
                 [gOcean, gGraticule, gIceCap, gCountries, gCBPatterns, gAdminBoundaries, gGlaciatedAreas, gCountryLabels, gPhysical, gCorridors, gHistoricalRoutes, gTemperature, gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gGeopoliticalBlocs, gHistoryOverlay, gHistoryCompareOverlay, gHistTravelers, gHistCapitals, gHistBattles, gHistWonders, gDesertsForests, gBorderDisputes, gAuthoringMarkers, gQuizMarkers]
@@ -1604,16 +1619,19 @@
                     _sel = gCorridors.append('path').datum({type:'LineString', coordinates:points}).attr('d',pathGen).attr('fill','none').attr('stroke',color).attr('stroke-width',isMobile?2.5:3).attr('vector-effect','non-scaling-stroke').style('pointer-events','none');
                     if (skipFadeIn) _sel.attr('opacity',1); else _sel.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',1);
                     var first = points[0], last = points[points.length-1];
+                    var k = Math.max(0.4, currentTransform.k);
+                    var rCircle = (isMobile ? 2.0 : 2.8) / k;
+                    var textFs = (isMobile ? 6.5 : 8.5) / k;
                     [first,last].forEach(function(p){
                         var xy = proj(p);
                         if (!xy||isNaN(xy[0])) return;
-                        var _sel2 = gCorridors.append('circle').attr('cx',xy[0]).attr('cy',xy[1]).attr('r',isMobile?2.5:3.5).attr('fill',color).attr('stroke','#fff').attr('stroke-width',0.5).attr('vector-effect','non-scaling-stroke').style('pointer-events','none');
+                        var _sel2 = gCorridors.append('circle').attr('cx',xy[0]).attr('cy',xy[1]).attr('r',rCircle).attr('fill',color).attr('stroke','#fff').attr('stroke-width',0.5/k).style('pointer-events','none');
                         if (skipFadeIn) _sel2.attr('opacity',1); else _sel2.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',1);
                     });
                     var mid = points[Math.floor(points.length/2)];
                     var mxy = proj(mid);
                     if (mxy&&!isNaN(mxy[0])) {
-                        var _sel3 = gCorridors.append('text').attr('x',mxy[0]).attr('y',mxy[1]-4).text(function(){return lang==='ar'?c.name_ar:lang==='ru'?(c.name_ru||c.name_en):lang==='uz'?(c.name_uz||c.name_en):lang==='es'?(c.name_es||c.name_en):c.name_en;}).attr('fill','#fff').attr('font-size',isMobile?6:8).attr('text-anchor','middle').style('pointer-events','none');
+                        var _sel3 = gCorridors.append('text').attr('x',mxy[0]).attr('y',mxy[1]-4/k).text(function(){return lang==='ar'?c.name_ar:lang==='ru'?(c.name_ru||c.name_en):lang==='uz'?(c.name_uz||c.name_en):lang==='es'?(c.name_es||c.name_en):c.name_en;}).attr('fill','#fff').attr('font-size',textFs+'px').attr('text-anchor','middle').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.9)');
                         if (skipFadeIn) _sel3.attr('opacity',0.85); else _sel3.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.85);
                     }
                 });
@@ -1641,7 +1659,7 @@
             function drawHistoricalRoutes(skipFadeIn) {
                 if (!gHistoricalRoutes) return;
                 gHistoricalRoutes.selectAll('*').remove();
-                if (!historicalRoutesVisible) return;
+                if (!historicalRoutesVisible || (typeof currentSection !== 'undefined' && currentSection === 'geo') || (typeof historyActive !== 'undefined' && !historyActive)) return;
                 var proj = getActiveProjection();
                 var dur = prefersReducedMotion() ? 0 : 300;
                 var zoom = (currentTransform && currentTransform.k) || 1;
@@ -1763,17 +1781,18 @@
 
                     // Clickable centroid marker — compute in lon/lat, then project
                     var centroidLonLat = d3.geoCentroid(geoFeature);
-                    if (centroidLonLat && !isNaN(centroidLonLat[0]) && !isNaN(centroidLonLat[1])) {
                         var centroid = getActiveProjection()(centroidLonLat);
                         if (centroid && !isNaN(centroid[0]) && !isNaN(centroid[1])) {
+                            var k = Math.max(0.4, currentTransform.k);
+                            var tzR = (isMobile ? 2.5 : 3.5) / k;
                             gTimezones.append('circle')
                                 .attr('cx', centroid[0])
                                 .attr('cy', centroid[1])
-                                .attr('r', isMobile ? 3 : 4)
+                                .attr('r', tzR)
                                 .attr('fill', color)
                                 .attr('fill-opacity', 0.85)
                                 .attr('stroke', '#fff')
-                                .attr('stroke-width', 0.5)
+                                .attr('stroke-width', 0.5 / k)
                                 .style('cursor', 'pointer')
                                 .on('mouseenter', function(e) {
                                     mainPath.attr('stroke-width', isMobile ? 2 : 3);
@@ -1793,7 +1812,6 @@
                                 })
                                 .on('click', function() { showFeatureDetail('timezone', tz); });
                         }
-                    }
                 });
             }
 
@@ -1854,13 +1872,13 @@
                             if (i % step !== 0) return;
                             const pr = proj(coord);
                             if (!pr || isNaN(pr[0])) return;
-                            const [px, py] = pr;
-                            const s = w * (isMobile ? 2 : 3.2);
+                            const k = Math.max(0.4, currentTransform.k);
+                            const s = (w * (isMobile ? 1.5 : 2.2)) / k;
                             grp.append('path')
                                 .attr('d', `M${px},${py - s} L${px - s * 0.75},${py + s * 0.55} L${px + s * 0.75},${py + s * 0.55} Z`)
                                 .attr('fill', w === 3 ? MAP_COLORS.physical.mountainPeakMajor : w === 2 ? MAP_COLORS.physical.mountainPeakImportant : MAP_COLORS.physical.mountainPeakMinor)
                                 .attr('stroke', MAP_COLORS.physical.mountainShadow)
-                                .attr('stroke-width', 0.3)
+                                .attr('stroke-width', 0.3 / k)
                                 .attr('opacity', 0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity', 0.9 * targetOpacity);
                         });
                         grp.on('mouseenter', function() { mainPath.attr('stroke', MAP_COLORS.physical.mountainHover).attr('opacity', Math.min(1, targetOpacity)); })
@@ -1931,8 +1949,10 @@
                 if (!naturalResourcesVisible) return;
                 var k = Math.max(0.4, currentTransform.k);
                 var resourceColorMap = MAP_COLORS.naturalResources;
-                var r = Math.max(4, Math.min(14, (isMobile ? 6 : 8) * Math.pow(k, 0.4)));
-                var fontSize = Math.max(3, Math.min(16, (isMobile ? 9 : 12) / k));
+                var isMob = isMobile;
+                var rBase = isMob ? 2.6 : 3.6;
+                var r = rBase / k;
+                var fontSize = (isMob ? 8.5 : 10.5) / k;
                 if (!gNaturalResources.on('click')) {
                     gNaturalResources.on('click', function(e) {
                         if (e.target.tagName === 'circle') {
@@ -1946,15 +1966,21 @@
                     var xy = proj(Array.isArray(d.coords[0]) ? d.coords[0] : d.coords);
                     if (!xy || isNaN(xy[0])) return;
                     var color = resourceColorMap[d.type] || MAP_COLORS.naturalResources.default;
-                    gNaturalResources.append('circle').attr('cx',xy[0]).attr('cy',xy[1]).attr('r',r*1.8).attr('fill',color).style('pointer-events','none').attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.18);
-                    gNaturalResources.append('circle').datum(d).attr('cx',xy[0]).attr('cy',xy[1]).attr('r',r).attr('fill',color).attr('stroke','#fff').attr('stroke-width',1.2).style('cursor','pointer').attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.85);
-                    gNaturalResources.append('text').attr('x',xy[0]+r+3/k).attr('y',xy[1]+2/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill','#fff').attr('font-size',fontSize+'px').attr('font-weight','bold').style('pointer-events','none');
+                    gNaturalResources.append('circle').attr('cx',xy[0]).attr('cy',xy[1]).attr('r',r*1.5).attr('fill',color).style('pointer-events','none').attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.18);
+                    gNaturalResources.append('circle').datum(d).attr('cx',xy[0]).attr('cy',xy[1]).attr('r',r).attr('fill',color).attr('stroke','#fff').attr('stroke-width',0.8/k).style('cursor','pointer').attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.85);
+                    gNaturalResources.append('text').attr('x',xy[0]+r+2.5/k).attr('y',xy[1]+2.5/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill','#fff').attr('font-size',fontSize+'px').attr('font-weight','bold').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.95), 0 0 4px rgba(0,0,0,0.85)');
                 });
             }
+            window.drawNaturalResources = drawNaturalResources;
             function drawEthnicGroups() {
                 gEthnicGroups.selectAll('*').remove();
                 if (!ethnicGroupsVisible) return;
                 var ethnicColors = MAP_COLORS.ethnicGroups;
+                var isMob = isMobile;
+                var k = Math.max(0.4, currentTransform.k);
+                var rBase = isMob ? 2.6 : 3.6;
+                var r = rBase / k;
+                var fs = (isMob ? 8.5 : 10.5) / k;
                 if (!gEthnicGroups.on('click')) {
                     gEthnicGroups.on('click', function(e) {
                         if (e.target.tagName === 'circle') {
@@ -1967,13 +1993,10 @@
                 ethnicGroupsData.forEach(function(d,i) {
                     var xy = proj(Array.isArray(d.coords[0]) ? d.coords[0] : d.coords);
                     if (!xy || isNaN(xy[0])) return;
-                    var k = Math.max(0.4, currentTransform.k);
                     var color = ethnicColors[i%ethnicColors.length];
-                    var r = Math.max(4, Math.min(14, (isMobile ? 6 : 8) * Math.pow(k, 0.4)));
-                    var fs = Math.max(3, Math.min(16, (isMobile?9:12)/k));
-                    gEthnicGroups.append('circle').attr('cx',xy[0]).attr('cy',xy[1]).attr('r',r*1.8).attr('fill',color).style('pointer-events','none').attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.18);
-                    gEthnicGroups.append('circle').datum(d).attr('cx',xy[0]).attr('cy',xy[1]).attr('r',r).attr('fill',color).attr('stroke','#fff').attr('stroke-width',1).style('cursor','pointer').attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.6);
-                    gEthnicGroups.append('text').attr('x',xy[0]+r+3/k).attr('y',xy[1]+2/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill','#fff').attr('font-size',fs+'px').attr('font-weight','bold').style('pointer-events','none');
+                    gEthnicGroups.append('circle').attr('cx',xy[0]).attr('cy',xy[1]).attr('r',r*1.5).attr('fill',color).style('pointer-events','none').attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.18);
+                    gEthnicGroups.append('circle').datum(d).attr('cx',xy[0]).attr('cy',xy[1]).attr('r',r).attr('fill',color).attr('stroke','#fff').attr('stroke-width',0.8/k).style('cursor','pointer').attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.6);
+                    gEthnicGroups.append('text').attr('x',xy[0]+r+2.5/k).attr('y',xy[1]+2.5/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill','#fff').attr('font-size',fs+'px').attr('font-weight','bold').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.95), 0 0 4px rgba(0,0,0,0.85)');
                 });
             }
             function showOceanCurrentDetail(d) {
@@ -2000,17 +2023,18 @@
             }
             function drawOceanCurrents(skipFadeIn) {
                 gOceanCurrents.selectAll('*').remove();
-                if (!oceanCurrentsVisible) return;
+                if (!oceanCurrentsVisible || (typeof currentSection !== 'undefined' && currentSection === 'history') || (typeof historyActive !== 'undefined' && historyActive)) return;
                 var proj = getActiveProjection();
+                var k = Math.max(0.4, currentTransform.k);
                 oceanCurrentsData.forEach(function(d) {
                     if (d.type==='trench') {
                         var xy = proj(Array.isArray(d.coords[0])?d.coords[0]:d.coords);
                         if (!xy||isNaN(xy[0])) return;
-                        var s = isMobile?10:16;
-                        gOceanCurrents.append('rect').attr('x',xy[0]-s-6).attr('y',xy[1]-s-6).attr('width',(s+6)*2).attr('height',(s+6)*2).attr('fill','transparent').style('cursor','pointer').on('click',function(){showOceanCurrentDetail(d);});
-                        var _sel = gOceanCurrents.append('path').attr('d','M'+(xy[0]-s)+','+(xy[1]-s)+' L'+(xy[0]+s)+','+(xy[1]+s)+' M'+(xy[0]-s)+','+(xy[1]+s)+' L'+(xy[0]+s)+','+(xy[1]-s)).attr('stroke',MAP_COLORS.oceanCurrents.trench).attr('stroke-width',isMobile?3:4).style('pointer-events','none');
+                        var s = (isMobile ? 4.5 : 6.5) / k;
+                        gOceanCurrents.append('rect').attr('x',xy[0]-s-4/k).attr('y',xy[1]-s-4/k).attr('width',(s+4/k)*2).attr('height',(s+4/k)*2).attr('fill','transparent').style('cursor','pointer').on('click',function(){showOceanCurrentDetail(d);});
+                        var _sel = gOceanCurrents.append('path').attr('d','M'+(xy[0]-s)+','+(xy[1]-s)+' L'+(xy[0]+s)+','+(xy[1]+s)+' M'+(xy[0]-s)+','+(xy[1]+s)+' L'+(xy[0]+s)+','+(xy[1]-s)).attr('stroke',MAP_COLORS.oceanCurrents.trench).attr('stroke-width',(isMobile?1.5:2.0)/k).style('pointer-events','none');
                         if (skipFadeIn) _sel.attr('opacity',0.9); else _sel.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.9);
-                        _sel = gOceanCurrents.append('text').attr('x',xy[0]+s+6).attr('y',xy[1]+3).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill',MAP_COLORS.oceanCurrents.trench).attr('font-size',isMobile?8:11).attr('font-weight','bold').style('pointer-events','none');
+                        _sel = gOceanCurrents.append('text').attr('x',xy[0]+s+3/k).attr('y',xy[1]+2/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill',MAP_COLORS.oceanCurrents.trench).attr('font-size',(isMobile?7.5:9.5)/k+'px').attr('font-weight','bold').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.9)');
                         if (skipFadeIn) _sel.attr('opacity',1); else _sel.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',1);
                         return;
                     }
@@ -2024,7 +2048,7 @@
                         var mid = d.coords[Math.floor(d.coords.length/2)];
                         var mxy = proj(mid);
                         if (mxy&&!isNaN(mxy[0])) {
-                            var _sel2 = gOceanCurrents.append('text').attr('x',mxy[0]).attr('y',mxy[1]-10).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill',color).attr('font-size',isMobile?8:11).attr('font-weight','bold').attr('text-anchor','middle').style('pointer-events','none');
+                            var _sel2 = gOceanCurrents.append('text').attr('x',mxy[0]).attr('y',mxy[1]-6/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill',color).attr('font-size',(isMobile?7.5:9.5)/k+'px').attr('font-weight','bold').attr('text-anchor','middle').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.9)');
                             if (skipFadeIn) _sel2.attr('opacity',1); else _sel2.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',1);
                         }
                         return;
@@ -2037,7 +2061,7 @@
                     var last = d.coords[d.coords.length-1];
                     var xy = proj(last);
                     if (xy && !isNaN(xy[0])) {
-                        var _sel3 = gOceanCurrents.append('text').attr('x',xy[0]).attr('y',xy[1]).text(arrow).attr('fill',color).attr('font-size',isMobile?16:22).style('pointer-events','none');
+                        var _sel3 = gOceanCurrents.append('text').attr('x',xy[0]).attr('y',xy[1]).text(arrow).attr('fill',color).attr('font-size',(isMobile?9.0:12.0)/k+'px').style('pointer-events','none');
                         if (skipFadeIn) _sel3.attr('opacity',0.9); else _sel3.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.9);
                         var first = d.coords[0];
                         var fxy = proj(first);
@@ -2045,7 +2069,7 @@
                             var mid = d.coords[Math.floor(d.coords.length/2)];
                             var mxy = proj(mid);
                             if (mxy && !isNaN(mxy[0])) {
-                                var _sel4 = gOceanCurrents.append('text').attr('x',mxy[0]-10).attr('y',mxy[1]-6).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill','#fff').attr('font-size',isMobile?7:10).attr('font-weight','bold').style('pointer-events','none');
+                                var _sel4 = gOceanCurrents.append('text').attr('x',mxy[0]-6/k).attr('y',mxy[1]-4/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill','#fff').attr('font-size',(isMobile?7.5:9.5)/k+'px').attr('font-weight','bold').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.9)');
                                 if (skipFadeIn) _sel4.attr('opacity',0.95); else _sel4.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.95);
                             }
                         }
@@ -2054,8 +2078,9 @@
             }
             function drawWinds(skipFadeIn) {
                 gWinds.selectAll('*').remove();
-                if (!windsVisible) return;
+                if (!windsVisible || (typeof currentSection !== 'undefined' && currentSection === 'history') || (typeof historyActive !== 'undefined' && historyActive)) return;
                 var proj = getActiveProjection();
+                var k = Math.max(0.4, currentTransform.k);
                 windsData.forEach(function(d) {
                     var color = d.type === 'trade' ? MAP_COLORS.winds.trade : d.type === 'westerly' ? MAP_COLORS.winds.westerly : d.type === 'polar' ? MAP_COLORS.winds.polar : d.type === 'monsoon' ? MAP_COLORS.winds.monsoon : MAP_COLORS.winds.other;
                     var line = gWinds.append('path').datum({type:'LineString', coordinates:d.coords}).attr('d', pathGen).attr('fill','none').attr('stroke',color).attr('stroke-width',isMobile?3:5).attr('stroke-dasharray','5,5').attr('vector-effect','non-scaling-stroke').style('cursor','pointer').on('click',function(){showFeatureDetail('wind',d);});
@@ -2064,13 +2089,13 @@
                     var last = d.coords[d.coords.length-1];
                     var xy = proj(last);
                     if (xy && !isNaN(xy[0])) {
-                        var _sel = gWinds.append('text').attr('x',xy[0]).attr('y',xy[1]).text('➤').attr('fill',color).attr('font-size',isMobile?14:20).style('pointer-events','none').style('cursor','pointer');
+                        var _sel = gWinds.append('text').attr('x',xy[0]).attr('y',xy[1]).text('➤').attr('fill',color).attr('font-size',(isMobile?9.0:12.0)/k+'px').style('pointer-events','none').style('cursor','pointer');
                         if (skipFadeIn) _sel.attr('opacity',0.85); else _sel.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.85);
                     }
                     var mid = d.coords[Math.floor(d.coords.length/2)];
                     var mxy = proj(mid);
                     if (mxy && !isNaN(mxy[0])) {
-                        var _sel2 = gWinds.append('text').attr('x',mxy[0]).attr('y',mxy[1]-8).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill','#fff').attr('font-size',isMobile?9:13).attr('font-weight','bold').style('pointer-events','none').style('text-shadow','0 0 5px rgba(0,0,0,0.7)');
+                        var _sel2 = gWinds.append('text').attr('x',mxy[0]).attr('y',mxy[1]-5/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill','#fff').attr('font-size',(isMobile?7.5:9.5)/k+'px').attr('font-weight','bold').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.95), 0 0 5px rgba(0,0,0,0.85)');
                         if (skipFadeIn) _sel2.attr('opacity',0.95); else _sel2.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.95);
                     }
                 });
@@ -2102,8 +2127,9 @@
             }
             function drawEarthquakes(skipFadeIn) {
                 gEarthquakes.selectAll('*').remove();
-                if (!earthquakesVisible) return;
+                if (!earthquakesVisible || (typeof currentSection !== 'undefined' && currentSection === 'history') || (typeof historyActive !== 'undefined' && historyActive)) return;
                 var proj = getActiveProjection();
+                var k = Math.max(0.4, currentTransform.k);
                 var plateColors = MAP_COLORS.tectonicPlates;
                 tectonicPlatesData.forEach(function(p,i){
                     var pathD = pathGen({type:'Polygon',coordinates:[p.coords]});
@@ -2113,7 +2139,7 @@
                         var mid = p.coords[Math.floor(p.coords.length/2)];
                         var mxy = proj(mid);
                         if (mxy&&!isNaN(mxy[0])) {
-                            var _sel2 = gEarthquakes.append('text').attr('x',mxy[0]).attr('y',mxy[1]).text(function(){return lang==='ar'?p.name:lang==='ru'?(p.name_ru||p.name_en):lang==='uz'?(p.name_uz||p.name_en):lang==='es'?(p.name_es||p.name_en):p.name_en;}).attr('fill','#fff').attr('font-size',isMobile?8:11).attr('text-anchor','middle').style('pointer-events','none');
+                            var _sel2 = gEarthquakes.append('text').attr('x',mxy[0]).attr('y',mxy[1]).text(function(){return lang==='ar'?p.name:lang==='ru'?(p.name_ru||p.name_en):lang==='uz'?(p.name_uz||p.name_en):lang==='es'?(p.name_es||p.name_en):p.name_en;}).attr('fill','#fff').attr('font-size',(isMobile?7.5:9.5)/k+'px').attr('text-anchor','middle').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.9)');
                             if (skipFadeIn) _sel2.attr('opacity',0.7); else _sel2.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.7);
                         }
                     }
@@ -2124,10 +2150,10 @@
                     var xy = proj(mainCoord);
                     if (!xy || isNaN(xy[0])) return;
                     var eqColor = d.magnitude >= 9 ? MAP_COLORS.earthquakes.major9 : d.magnitude >= 8 ? MAP_COLORS.earthquakes.major8 : d.magnitude >= 7 ? MAP_COLORS.earthquakes.major7 : d.magnitude >= 6 ? MAP_COLORS.earthquakes.major6 : MAP_COLORS.earthquakes.below6;
-                    var r = isMobile ? 8 : 12;
-                    var _sel3 = gEarthquakes.append('circle').attr('cx',xy[0]).attr('cy',xy[1]).attr('r',r).attr('fill',eqColor).attr('stroke','#fff').attr('stroke-width',1.5).style('cursor','pointer').on('click',function(){showEarthquakeDetail(d);});
+                    var r = (isMobile ? 3.5 : 5.0) / k;
+                    var _sel3 = gEarthquakes.append('circle').attr('cx',xy[0]).attr('cy',xy[1]).attr('r',r).attr('fill',eqColor).attr('stroke','#fff').attr('stroke-width',0.8/k).style('cursor','pointer').on('click',function(){showEarthquakeDetail(d);});
                     if (skipFadeIn) _sel3.attr('opacity',0.85); else _sel3.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.85);
-                    gEarthquakes.append('circle').attr('cx',xy[0]).attr('cy',xy[1]).attr('r',r+4).attr('fill','transparent').style('cursor','pointer').on('click',function(){showEarthquakeDetail(d);});
+                    gEarthquakes.append('circle').attr('cx',xy[0]).attr('cy',xy[1]).attr('r',r+3.5/k).attr('fill','transparent').style('cursor','pointer').on('click',function(){showEarthquakeDetail(d);});
                 });
             }
             function showVolcanoDetail(d) {
@@ -2146,24 +2172,25 @@
             }
             function drawVolcanoes(skipFadeIn) {
                 gVolcanoes.selectAll('*').remove();
-                if (!volcanoesVisible) return;
+                if (!volcanoesVisible || (typeof currentSection !== 'undefined' && currentSection === 'history') || (typeof historyActive !== 'undefined' && historyActive)) return;
                 var proj = getActiveProjection();
+                var k = Math.max(0.4, currentTransform.k);
                 volcanoesData.forEach(function(d) {
                     var xy = proj(Array.isArray(d.coords[0]) ? d.coords[0] : d.coords);
                     if (!xy || isNaN(xy[0])) return;
                     var px = xy[0], py = xy[1];
-                    var s = isMobile ? 8 : 13;
+                    var s = (isMobile ? 3.5 : 5.0) / k;
                     var group = gVolcanoes.append('g').style('cursor','pointer').on('click',function(){showVolcanoDetail(d);});
-                    var _sel = group.append('path').attr('d','M'+px+','+(py-s)+' L'+(px-s*0.7)+','+(py+s*0.5)+' L'+(px+s*0.7)+','+(py+s*0.5)+' Z').attr('fill',MAP_COLORS.volcanoes.fill).attr('stroke',MAP_COLORS.volcanoes.stroke).attr('stroke-width',1);
+                    var _sel = group.append('path').attr('d','M'+px+','+(py-s)+' L'+(px-s*0.7)+','+(py+s*0.5)+' L'+(px+s*0.7)+','+(py+s*0.5)+' Z').attr('fill',MAP_COLORS.volcanoes.fill).attr('stroke',MAP_COLORS.volcanoes.stroke).attr('stroke-width',0.8/k);
                     if (skipFadeIn) _sel.attr('opacity',0.9); else _sel.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.9);
-                    _sel = group.append('circle').attr('cx',px).attr('cy',py-s*0.2).attr('r',isMobile?3:4).attr('fill',MAP_COLORS.volcanoes.glow);
+                    _sel = group.append('circle').attr('cx',px).attr('cy',py-s*0.2).attr('r',(isMobile?1.5:2.2)/k).attr('fill',MAP_COLORS.volcanoes.glow);
                     if (skipFadeIn) _sel.attr('opacity',0.8); else _sel.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.8);
-                    group.append('text').attr('x',px+s+3).attr('y',py+2).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill',MAP_COLORS.volcanoes.fill).attr('font-size',isMobile?9:12).attr('font-weight','bold').style('pointer-events','none');
+                    group.append('text').attr('x',px+s+2.5/k).attr('y',py+2/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill',MAP_COLORS.volcanoes.fill).attr('font-size',(isMobile?7.5:9.5)/k+'px').attr('font-weight','bold').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.9)');
                 });
             }
             function drawGeopoliticalBlocs(skipFadeIn) {
                 gGeopoliticalBlocs.selectAll('*').remove();
-                if (!geopoliticalBlocsVisible) return;
+                if (!geopoliticalBlocsVisible || (typeof currentSection !== 'undefined' && currentSection === 'history') || (typeof historyActive !== 'undefined' && historyActive)) return;
                 if (selectedBloc !== 'all') {
                     var bloc = geopoliticalBlocsData.find(function(b){return b.name_en===selectedBloc||b.name===selectedBloc;});
                     if (bloc && bloc.members && bloc.members.length) {
@@ -2245,7 +2272,7 @@
             }
             function drawDesertsForests(skipFadeIn) {
                 gDesertsForests.selectAll('*').remove();
-                if (!desertsForestsVisible) return;
+                if (!desertsForestsVisible || (typeof currentSection !== 'undefined' && currentSection === 'history') || (typeof historyActive !== 'undefined' && historyActive)) return;
                 var proj = getActiveProjection();
                 var k = Math.max(0.4, currentTransform.k);
                 desertsForestsData.forEach(function(d) {
@@ -2262,10 +2289,10 @@
                         var mxy = proj(mid);
                         if (mxy && !isNaN(mxy[0])) {
                             var labelText = lang === 'ar' ? d.name : lang === 'ru' ? (d.name_ru || d.name_en) : lang === 'uz' ?(d.name_uz || d.name_en): lang === 'es' ?(d.name_es || d.name_en) : d.name_en;
-                            var fontSize = Math.max(3, Math.min(15, (isMobile ? 9 : 12) / k));
-                            var _sel = gDesertsForests.append('text').attr('x',mxy[0]).attr('y',mxy[1]).text(labelText).attr('fill','#fff').attr('font-size',fontSize).attr('font-weight','bold').attr('text-anchor','middle').style('pointer-events','none');
+                            var fontSize = Math.max(3, Math.min(13, (isMobile ? 7.5 : 10.0) / k));
+                            var _sel = gDesertsForests.append('text').attr('x',mxy[0]).attr('y',mxy[1]).text(labelText).attr('fill','#fff').attr('font-size',fontSize+'px').attr('font-weight','bold').attr('text-anchor','middle').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.95), 0 0 5px rgba(0,0,0,0.85)');
                             if (skipFadeIn) _sel.attr('opacity',0.95); else _sel.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.95);
-                            gDesertsForests.append('circle').datum(d).attr('cx',mxy[0]).attr('cy',mxy[1]).attr('r',isMobile?20:30).attr('fill','transparent').style('cursor','pointer').on('click',function(e,dd){showDesertForestDetail(dd);});
+                            gDesertsForests.append('circle').datum(d).attr('cx',mxy[0]).attr('cy',mxy[1]).attr('r',(isMobile?10:15)/k).attr('fill','transparent').style('cursor','pointer').on('click',function(e,dd){showDesertForestDetail(dd);});
                         }
                     }
                 });
@@ -2273,27 +2300,27 @@
             function drawBorderDisputes(skipFadeIn) {
                 gBorderDisputes.selectAll('*').remove();
                 var counterEl = document.getElementById('borderDisputesCounter');
-                if (!borderDisputesVisible) { if (counterEl) counterEl.style.display = 'none'; return; }
+                if (!borderDisputesVisible || (typeof currentSection !== 'undefined' && currentSection === 'history') || (typeof historyActive !== 'undefined' && historyActive)) { if (counterEl) counterEl.style.display = 'none'; return; }
                 var proj = getActiveProjection();
                 borderDisputesData.forEach(function(d) {
                     var p = proj(d.coords);
                     if (!p || isNaN(p[0])) return;
                     var color = d.type === 'active' ? MAP_COLORS.borderDisputes.active : d.type === 'ceasefire' ? MAP_COLORS.borderDisputes.ceasefire : MAP_COLORS.borderDisputes.maritime;
                     var k = Math.max(0.4, currentTransform.k);
-                    var rBase = isMobile ? 7 : 11;
+                    var rBase = isMobile ? 3.0 : 4.2;
                     var r = rBase / k;
                     var x = p[0], y = p[1];
-                    var _sel = gBorderDisputes.append('circle').attr('cx',x).attr('cy',y).attr('r',Math.max(2, r*2.2)).attr('fill',color).attr('vector-effect','non-scaling-stroke').style('pointer-events','none');
+                    var _sel = gBorderDisputes.append('circle').attr('cx',x).attr('cy',y).attr('r',r*2.0).attr('fill',color).style('pointer-events','none');
                     if (skipFadeIn) _sel.attr('opacity',0.12); else _sel.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.12);
-                    _sel = gBorderDisputes.append('circle').attr('cx',x).attr('cy',y).attr('r',Math.max(1.5, r*1.4)).attr('fill',color).attr('vector-effect','non-scaling-stroke').style('pointer-events','none');
+                    _sel = gBorderDisputes.append('circle').attr('cx',x).attr('cy',y).attr('r',r*1.4).attr('fill',color).style('pointer-events','none');
                     if (skipFadeIn) _sel.attr('opacity',0.2); else _sel.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.2);
-                    _sel = gBorderDisputes.append('circle').datum(d).attr('cx',x).attr('cy',y).attr('r',Math.max(1, r)).attr('fill',color).attr('stroke','#fff').attr('stroke-width',(isMobile?1:1.5)).attr('vector-effect','non-scaling-stroke').style('cursor','pointer').on('click',function(e,dd){showBorderDisputeDetail(dd);});
+                    _sel = gBorderDisputes.append('circle').datum(d).attr('cx',x).attr('cy',y).attr('r',r).attr('fill',color).attr('stroke','#fff').attr('stroke-width',(isMobile?0.7:1.0)/k).style('cursor','pointer').on('click',function(e,dd){showBorderDisputeDetail(dd);});
                     if (skipFadeIn) _sel.attr('opacity',0.9); else _sel.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.9);
-                    _sel = gBorderDisputes.append('circle').attr('cx',x).attr('cy',y).attr('r',Math.max(3, r*3)).attr('fill','transparent').attr('stroke',color).attr('stroke-width',(isMobile?0.8:1.2)).attr('vector-effect','non-scaling-stroke').style('pointer-events','none');
+                    _sel = gBorderDisputes.append('circle').attr('cx',x).attr('cy',y).attr('r',r*2.6).attr('fill','transparent').attr('stroke',color).attr('stroke-width',(isMobile?0.6:0.9)/k).style('pointer-events','none');
                     if (skipFadeIn) _sel.attr('opacity',0.25); else _sel.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.25);
                     var labelText = lang === 'ar' ? d.name_ar : lang === 'ru' ? (d.name_ru || d.name_en) : lang === 'uz' ?(d.name_uz || d.name_en): lang === 'es' ?(d.name_es || d.name_en) : d.name_en;
-                    var fs = Math.max(3, Math.min(14, (isMobile ? 7 : 10) / k));
-                    gBorderDisputes.append('text').attr('x',x).attr('y',y-r-3/k).text(labelText).attr('fill',color).attr('font-size',fs).attr('font-weight','bold').attr('text-anchor','middle').style('pointer-events','none');
+                    var fs = (isMobile ? 7.5 : 9.5) / k;
+                    gBorderDisputes.append('text').attr('x',x).attr('y',y-r-2.5/k).text(labelText).attr('fill',color).attr('font-size',fs+'px').attr('font-weight','bold').attr('text-anchor','middle').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.95), 0 0 4px rgba(0,0,0,0.85)');
                 });
                 var activeCount = borderDisputesData.filter(function(d){return d.type==='active';}).length;
                 var ceasefireCount = borderDisputesData.filter(function(d){return d.type==='ceasefire';}).length;
@@ -2757,6 +2784,7 @@
             // ── Canvas point layer drawing ──
             function drawPointLayersCanvas() {
                 if (!densityCtx) return;
+                var isHist = (typeof historyActive !== 'undefined' && historyActive) || (typeof currentSection !== 'undefined' && currentSection === 'history');
                 const rect = getMapRect();
                 const dpr = window.devicePixelRatio || 1;
                 const targetW = rect.width * dpr;
@@ -2767,6 +2795,7 @@
                     densityCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
                 }
                 densityCtx.clearRect(0, 0, rect.width, rect.height);
+                if (isHist) return;
                 const proj = getActiveProjection();
                 const k = Math.max(0.4, currentTransform.k);
                 const tx = currentTransform.x;
@@ -2777,7 +2806,7 @@
                 if (colorMode === 'density' && densitySpotsMode) {
                     hasAny = true;
                     const spots = isMobile ? densitySpots.filter((d, i) => i % Math.ceil(densitySpots.length / 40) === 0) : densitySpots;
-                    const fontSize = Math.max(11, Math.min(22, 13 * Math.pow(k, 0.4)));
+                    const fontSize = isMobile ? 9 : 11;
                     if (!_isZooming) {
                         densityCtx.font = 'bold ' + fontSize + 'px -apple-system, BlinkMacSystemFont, "Noto Sans Arabic", Tahoma, sans-serif';
                         densityCtx.textBaseline = 'middle';
@@ -2790,12 +2819,12 @@
                         const sy = y * k + ty;
                         const margin = 60;
                         if (sx < -margin || sx > rect.width + margin || sy < -margin || sy > rect.height + margin) return;
-                        const baseR = Math.max(3, Math.sqrt(s.density) / (isMobile ? 40 : 30));
+                        const baseR = Math.max(2.5, Math.sqrt(s.density) / (isMobile ? 50 : 38));
                         const color = s.density > 10000 ? MAP_COLORS.densitySpots.high : s.density > 4000 ? MAP_COLORS.densitySpots.medium : MAP_COLORS.densitySpots.low;
-                        const r1 = Math.max(3, baseR / k);
+                        const r1 = Math.max(2.5, baseR);
                         if (!_isZooming) {
-                            const r2 = Math.max(5, baseR * 1.8 / k);
-                            const r3 = Math.max(8, baseR * 3 / k);
+                            const r2 = baseR * 1.5;
+                            const r3 = baseR * 2.2;
                             densityCtx.beginPath();
                             densityCtx.arc(sx, sy, r3, 0, Math.PI * 2);
                             densityCtx.fillStyle = color;
@@ -2812,7 +2841,7 @@
                         densityCtx.globalAlpha = 0.95;
                         densityCtx.fill();
                         densityCtx.strokeStyle = MAP_COLORS.ui.white;
-                        densityCtx.lineWidth = 1.2;
+                        densityCtx.lineWidth = 1.0;
                         densityCtx.stroke();
                         densityCtx.globalAlpha = 1;
                         if (!_isZooming) {
@@ -2820,9 +2849,9 @@
                             densityCtx.lineWidth = 3;
                             densityCtx.strokeStyle = MAP_COLORS.ui.textStroke;
                             densityCtx.lineJoin = 'round';
-                            densityCtx.strokeText(label, sx + r1 + 3 / k, sy);
+                            densityCtx.strokeText(label, sx + r1 + 3, sy);
                             densityCtx.fillStyle = MAP_COLORS.ui.white;
-                            densityCtx.fillText(label, sx + r1 + 3 / k, sy);
+                            densityCtx.fillText(label, sx + r1 + 3, sy);
                         }
                     });
                 }
@@ -2830,7 +2859,7 @@
                 // ── Capitals ──
                 if (capitalsVisible) {
                     hasAny = true;
-                    const fontSize = Math.max(11, Math.min(22, 14 * Math.pow(k, 0.4)));
+                    const fontSize = isMobile ? 9 : 11;
                     if (!_isZooming) {
                         densityCtx.font = 'bold ' + fontSize + 'px -apple-system, BlinkMacSystemFont, "Noto Sans Arabic", Tahoma, sans-serif';
                         densityCtx.textBaseline = 'middle';
@@ -2845,16 +2874,16 @@
                         const sy = y * k + ty;
                         const margin = 60;
                         if (sx < -margin || sx > rect.width + margin || sy < -margin || sy > rect.height + margin) return;
-                        const capSize = Math.max(5.5, Math.min(20, (isMobile ? 9 : 11) * Math.pow(k, 0.4)));
+                        const capSize = isMobile ? 3.5 : 4.5;
                         const capColor = '#ffd700';
                         if (!_isZooming) {
                             densityCtx.beginPath();
-                            densityCtx.arc(sx, sy, capSize * 1.9, 0, Math.PI * 2);
+                            densityCtx.arc(sx, sy, capSize * 1.6, 0, Math.PI * 2);
                             densityCtx.fillStyle = capColor;
-                            densityCtx.globalAlpha = 0.12;
+                            densityCtx.globalAlpha = 0.15;
                             densityCtx.fill();
                             densityCtx.beginPath();
-                            densityCtx.arc(sx, sy, capSize * 1.35, 0, Math.PI * 2);
+                            densityCtx.arc(sx, sy, capSize * 1.3, 0, Math.PI * 2);
                             densityCtx.globalAlpha = 0.3;
                             densityCtx.fill();
                         }
@@ -2864,7 +2893,7 @@
                         densityCtx.globalAlpha = 0.9;
                         densityCtx.fill();
                         densityCtx.strokeStyle = MAP_COLORS.ui.white;
-                        densityCtx.lineWidth = 1.2;
+                        densityCtx.lineWidth = 1.0;
                         densityCtx.stroke();
                         densityCtx.globalAlpha = 1;
                         if (!_isZooming) {
@@ -2872,9 +2901,9 @@
                             densityCtx.lineWidth = 3;
                             densityCtx.strokeStyle = MAP_COLORS.ui.textStroke;
                             densityCtx.lineJoin = 'round';
-                            densityCtx.strokeText(label, sx, sy);
+                            densityCtx.strokeText(label, sx, sy - capSize - 4);
                             densityCtx.fillStyle = MAP_COLORS.ui.white;
-                            densityCtx.fillText(label, sx, sy);
+                            densityCtx.fillText(label, sx, sy - capSize - 4);
                         }
                     });
                 }
@@ -2882,13 +2911,7 @@
                 // ── Major cities ──
                 if (majorCitiesVisible) {
                     hasAny = true;
-                    let citySize;
-                    if (!_isZooming) {
-                        citySize = Math.max(5, Math.min(18, (isMobile ? 8 : 10) * Math.pow(k, 0.4)));
-                        _frozenCitySize = citySize;
-                    } else {
-                        citySize = _frozenCitySize !== null ? _frozenCitySize : Math.max(5, Math.min(18, (isMobile ? 8 : 10) * Math.pow(k, 0.4)));
-                    }
+                    const citySize = isMobile ? 3.0 : 4.0;
                     const cityCatColors = MAP_COLORS.cities;
                     majorCitiesData.forEach(city => {
                         if (globeModeActive && !isPointVisibleOnGlobe(city.coords)) return;
@@ -2901,13 +2924,9 @@
                         const fillColor = cityCatColors[city.category] || MAP_COLORS.cities.other;
                         if (!_isZooming) {
                             densityCtx.beginPath();
-                            densityCtx.arc(sx, sy, citySize * 1.9, 0, Math.PI * 2);
+                            densityCtx.arc(sx, sy, citySize * 1.5, 0, Math.PI * 2);
                             densityCtx.fillStyle = fillColor;
-                            densityCtx.globalAlpha = 0.12;
-                            densityCtx.fill();
-                            densityCtx.beginPath();
-                            densityCtx.arc(sx, sy, citySize * 1.35, 0, Math.PI * 2);
-                            densityCtx.globalAlpha = 0.3;
+                            densityCtx.globalAlpha = 0.15;
                             densityCtx.fill();
                         }
                         densityCtx.beginPath();
@@ -2916,7 +2935,7 @@
                         densityCtx.globalAlpha = 0.9;
                         densityCtx.fill();
                         densityCtx.strokeStyle = MAP_COLORS.ui.white;
-                        densityCtx.lineWidth = 1.2;
+                        densityCtx.lineWidth = 1.0;
                         densityCtx.stroke();
                     });
                 }
@@ -3193,28 +3212,32 @@
                     countryLabelSelection.remove();
                     countryLabelSelection = null;
                 }
-                drawCountryLabels(allCountryFeatures);
-                drawColorblindOverlay();
-                drawPhysicalFeatures();
-                drawIceCap();
-                drawCorridors();
-                drawPointLayersCanvas();
-                drawCapitals();
-                drawTimezones();
-                drawMajorCities();
-                drawNaturalResources();
-                drawEthnicGroups();
-                drawOceanCurrents();
-                drawWinds();
-                drawEarthquakes();
-                drawVolcanoes();
-                drawGeopoliticalBlocs();
-                drawDesertsForests();
-                drawBorderDisputes();
-                if (window.drawHistoricalTravelers) window.drawHistoricalTravelers();
-                if (window.drawHistCapitals) window.drawHistCapitals();
-                if (window.drawHistBattles) window.drawHistBattles();
-                if (window.drawHistWonders) window.drawHistWonders();
+                var isHist = (typeof historyActive !== 'undefined' && historyActive) || (typeof currentSection !== 'undefined' && currentSection === 'history');
+                if (!isHist) {
+                    drawCountryLabels(allCountryFeatures);
+                    drawColorblindOverlay();
+                    drawPhysicalFeatures();
+                    drawIceCap();
+                    drawCorridors();
+                    drawPointLayersCanvas();
+                    drawCapitals();
+                    drawTimezones();
+                    drawMajorCities();
+                    drawNaturalResources();
+                    drawEthnicGroups();
+                    drawOceanCurrents();
+                    drawWinds();
+                    drawEarthquakes();
+                    drawVolcanoes();
+                    drawGeopoliticalBlocs();
+                    drawDesertsForests();
+                    drawBorderDisputes();
+                } else {
+                    if (window.drawHistoricalTravelers) window.drawHistoricalTravelers();
+                    if (window.drawHistCapitals) window.drawHistCapitals();
+                    if (window.drawHistBattles) window.drawHistBattles();
+                    if (window.drawHistWonders) window.drawHistWonders();
+                }
                 if (!(_annotStrokePoints && _annotStrokePoints.length)) {
                     try { redrawAnnotations(); if (annotateKind === 'region' && annotatePoints && annotatePoints.length > 0) redrawAnnotationDrawing(); } catch (e) {}
                 }
@@ -4662,14 +4685,16 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             }
 
             function fastUpdateLabels(el, circles, k, r, fs, offX, offY) {
+                if (!el || !el.node()) return;
                 var circleNodes = circles.nodes();
                 var textNodes = el.node().querySelectorAll('text');
-                var rVal = Math.max(0.3, r);
+                var rVal = Math.max(0.2 / k, r);
                 var fsVal = fs;
                 var ox = offX / k, oy = offY / k;
                 for (var i = 0; i < circleNodes.length; i++) {
                     var isHalo = (i % 2 === 0);
-                    circleNodes[i].setAttribute('r', isHalo ? rVal * 1.8 : rVal);
+                    circleNodes[i].setAttribute('r', isHalo ? rVal * 1.5 : rVal);
+                    if (!isHalo) circleNodes[i].setAttribute('stroke-width', 0.8 / k);
                 }
                 for (var i = 0; i < textNodes.length; i++) {
                     var t = textNodes[i];
@@ -4690,15 +4715,17 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 if (typeof updateHistoricalLandmarkLabels === 'function') {
                     updateHistoricalLandmarkLabels(k);
                 }
-                if (naturalResourcesVisible) {
-                    const r2 = Math.max(4, Math.min(14, (isMobile ? 6 : 8) * Math.pow(k, 0.4)));
-                    const fs2 = Math.max(3, Math.min(16, (isMobile ? 9 : 12) / k));
-                    fastUpdateLabels(gNaturalResources, gNaturalResources.selectAll('circle'), k, r2, fs2, 3, 2);
+                if (naturalResourcesVisible && gNaturalResources) {
+                    const rBase = isMobile ? 2.6 : 3.6;
+                    const r2 = rBase / k;
+                    const fs2 = (isMobile ? 8.5 : 10.5) / k;
+                    fastUpdateLabels(gNaturalResources, gNaturalResources.selectAll('circle'), k, r2, fs2, 2.5, 2.5);
                 }
-                if (ethnicGroupsVisible) {
-                    const r3 = Math.max(4, Math.min(14, (isMobile ? 6 : 8) * Math.pow(k, 0.4)));
-                    const fs3 = Math.max(3, Math.min(16, (isMobile ? 9 : 12) / k));
-                    fastUpdateLabels(gEthnicGroups, gEthnicGroups.selectAll('circle'), k, r3, fs3, 3, 2);
+                if (ethnicGroupsVisible && gEthnicGroups) {
+                    const rBase = isMobile ? 2.6 : 3.6;
+                    const r3 = rBase / k;
+                    const fs3 = (isMobile ? 8.5 : 10.5) / k;
+                    fastUpdateLabels(gEthnicGroups, gEthnicGroups.selectAll('circle'), k, r3, fs3, 2.5, 2.5);
                 }
             }
 
@@ -4742,6 +4769,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (_activeWaypointCoords && typeof positionWaypointPopup === 'function') {
                         positionWaypointPopup(_activeWaypointCoords);
                     }
+                    updateOverlayPositions();
                     updateInfoOverlay();
                     updateHashDebounced();
                     schedulePointLayersRedraw();
@@ -4756,19 +4784,22 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         drawPointLayersCanvas();
                         _adminBakeDirty = true;
                         scheduleAdminBoundariesRedraw();
+                        var isHist = (typeof historyActive !== 'undefined' && historyActive) || (typeof currentSection !== 'undefined' && currentSection === 'history');
                         var _pendingLayers = [
-                            [corridorsVisible || additionalWaterwaysVisible, function() { drawRoutes(true); }],
-                            [borderDisputesVisible, function() { drawBorderDisputes(true); }],
-                            [desertsForestsVisible, function() { drawDesertsForests(true); }],
-                            [riversGlaciersVisible, function() { drawPhysicalFeatures(); drawGlaciatedAreas(true); }],
-                            [cbPatternsVisible, function() { drawColorblindOverlay(); }],
-                            [geopoliticalBlocsVisible, function() { drawGeopoliticalBlocs(true); }],
-                            [oceanCurrentsVisible, function() { drawOceanCurrents(true); }],
-                            [windsVisible, function() { drawWinds(true); }],
-                            [earthquakesVisible, function() { drawEarthquakes(true); }],
-                            [volcanoesVisible, function() { drawVolcanoes(true); }],
-                            [timezonesVisible, function() { drawTimezones(true); }],
-                            [historicalRoutesVisible, function() { drawHistoricalRoutes(true); }]
+                            [!isHist && (corridorsVisible || additionalWaterwaysVisible), function() { drawRoutes(true); }],
+                            [!isHist && borderDisputesVisible, function() { drawBorderDisputes(true); }],
+                            [!isHist && desertsForestsVisible, function() { drawDesertsForests(true); }],
+                            [!isHist && riversGlaciersVisible, function() { drawPhysicalFeatures(); drawGlaciatedAreas(true); }],
+                            [!isHist && cbPatternsVisible, function() { drawColorblindOverlay(); }],
+                            [!isHist && geopoliticalBlocsVisible, function() { drawGeopoliticalBlocs(true); }],
+                            [!isHist && oceanCurrentsVisible, function() { drawOceanCurrents(true); }],
+                            [!isHist && windsVisible, function() { drawWinds(true); }],
+                            [!isHist && earthquakesVisible, function() { drawEarthquakes(true); }],
+                            [!isHist && volcanoesVisible, function() { drawVolcanoes(true); }],
+                            [!isHist && timezonesVisible, function() { drawTimezones(true); }],
+                            [!isHist && naturalResourcesVisible, function() { if (typeof drawNaturalResources === 'function') drawNaturalResources(); }],
+                            [!isHist && ethnicGroupsVisible, function() { if (typeof drawEthnicGroups === 'function') drawEthnicGroups(); }],
+                            [isHist && historicalRoutesVisible, function() { drawHistoricalRoutes(true); }]
                         ].filter(function(p) { return p[0]; });
                         var _li = 0;
                         (function runNextLayer() {
@@ -4780,6 +4811,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
         })();
                     }, 200);
                 });
+                window.zoomBehavior = zoomBehavior;
                 svg.call(zoomBehavior);
                 svg.on('dblclick.zoom', null);
             }
@@ -6698,7 +6730,9 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             var onboardBtn = document.getElementById('onboardBtn');
             if (onboardBtn) {
                 onboardBtn.addEventListener('click', function() {
-                    maybeShowProjectionExplainer(true);
+                    if (typeof window.startOnboarding === 'function') {
+                        window.startOnboarding();
+                    }
                 });
             }
 
@@ -7379,6 +7413,9 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         glow.style.width = '0';
                         glow.style.height = '0';
                         glow.style.opacity = '0';
+                        var curSec = (typeof currentSection !== 'undefined' && currentSection === 'history') ? 'history' : 'geo';
+                        try { localStorage.setItem('onboardDone_' + curSec, '1'); } catch(e) {}
+                        try { localStorage.setItem('onboardCompleted_' + curSec, '1'); } catch(e) {}
                         try { localStorage.setItem('onboardDone', '1'); } catch(e) {}
                         // Persistent completion marker. Unlike `onboardDone` (which is
                         // also set transiently during language selection), this flag is
@@ -7388,6 +7425,14 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     }
 
                     function openTutorial() {
+                        var langOv = document.getElementById('langOverlay');
+                        var secOv = document.getElementById('sectionPickerOverlay');
+                        var projOv = document.getElementById('projectionOverlay');
+                        if ((langOv && getComputedStyle(langOv).display !== 'none') ||
+                            (secOv && getComputedStyle(secOv).display !== 'none') ||
+                            (projOv && projOv.classList.contains('active'))) {
+                            return;
+                        }
                         currentStep = 0;
                         overlay.classList.add('active');
                         isOpen = true;
@@ -7417,10 +7462,16 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     };
 
                     // Auto-show on first visit
+                    var curSecInit = (typeof currentSection !== 'undefined' && currentSection === 'history') ? 'history' : 'geo';
                     var alreadyDone = false;
-                    try { alreadyDone = localStorage.getItem('onboardDone') === '1'; } catch(e) {}
+                    try {
+                        alreadyDone = (localStorage.getItem('onboardDone_' + curSecInit) === '1') ||
+                                      (localStorage.getItem('onboardCompleted_' + curSecInit) === '1');
+                    } catch(e) {}
                     if (!alreadyDone) {
-                        setTimeout(openTutorial, 800);
+                        setTimeout(function() {
+                            if (!isOpen) openTutorial();
+                        }, 800);
                     }
 
                     // Reposition on resize
@@ -9741,11 +9792,8 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     // content isn't rendered on the rotating globe.
                     if (globeModeActive) toggleGlobeMode();
                     historySavedState = { colorMode: colorMode, currentReligionFilter: currentReligionFilter };
-                    Object.keys(LAYER_DEFS).forEach(function(nm) {
+                    GEO_LAYER_KEYS.forEach(function(nm) {
                         historySavedState[nm] = LAYER_DEFS[nm].getFlag();
-                    });
-                    Object.keys(LAYER_DEFS).forEach(function(nm) {
-                        if (LAYER_DEFS[nm].getFlag()) toggleLayerByName(nm);
                     });
                     if (currentReligionFilter !== 'all') {
                         currentReligionFilter = 'all';
@@ -9758,6 +9806,16 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     }
                     renderHistoryBar();
                     syncGlobeBtnState();
+                    if (typeof updateSvgSectionLayers === 'function') {
+                        updateSvgSectionLayers('history');
+                    }
+
+                    // Restore any active history layers
+                    if (histWondersVisible && window.drawHistWonders) drawHistWonders();
+                    if (histCapitalsVisible && window.drawHistCapitals) drawHistCapitals();
+                    if (histBattlesVisible && window.drawHistBattles) drawHistBattles();
+                    if (historicalRoutesVisible && window.drawHistoricalRoutes) drawHistoricalRoutes();
+
                     if (historyTab === 'wars' && window.historyWarSelected()) {
                         drawHistoryScenario();
                     } else if (historyTab === 'eras' && historyEraId) {
@@ -9783,6 +9841,11 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (gHistoryOverlay) gHistoryOverlay.selectAll('*').interrupt().remove();
                     if (gHistoryCompareOverlay) gHistoryCompareOverlay.selectAll('*').interrupt().remove();
                     if (gReligionsOverlay) gReligionsOverlay.selectAll('*').interrupt().remove();
+                    if (gHistTravelers) gHistTravelers.selectAll('*').interrupt().remove();
+                    if (gHistoricalRoutes) gHistoricalRoutes.selectAll('*').interrupt().remove();
+                    if (gHistCapitals) gHistCapitals.selectAll('*').interrupt().remove();
+                    if (gHistBattles) gHistBattles.selectAll('*').interrupt().remove();
+                    if (gHistWonders) gHistWonders.selectAll('*').interrupt().remove();
                     hideHistoryComparisonBanner();
                     selectedHistoryPolity = null;
                     var leg = document.getElementById('legend');
@@ -9866,9 +9929,13 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (hetw) hetw.style.display = 'none';
                     if (selectedFeatureType === 'history' && countryPanel.classList.contains('visible')) closeCountryPanel();
                     syncGlobeBtnState();
+                    if (typeof updateSvgSectionLayers === 'function') {
+                        updateSvgSectionLayers('geo');
+                    }
+
                     if (restore !== false && historySavedState) {
                         var s = historySavedState;
-                        Object.keys(LAYER_DEFS).forEach(function(nm) {
+                        GEO_LAYER_KEYS.forEach(function(nm) {
                             if (s[nm] && !LAYER_DEFS[nm].getFlag()) toggleLayerByName(nm);
                         });
                         if (s.currentReligionFilter !== 'all') {
@@ -9905,6 +9972,38 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (visible) el.style.setProperty('display', 'flex', 'important');
                     else el.style.setProperty('display', 'none', 'important');
                 }
+                function updateSvgSectionLayers(section) {
+                    var hist = (section === 'history');
+                    var geoSvgGroups = [
+                        gCorridors, gPhysical, gGlaciatedAreas, gCapitals, gTimezones,
+                        gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents,
+                        gWinds, gEarthquakes, gVolcanoes, gGeopoliticalBlocs,
+                        gDesertsForests, gBorderDisputes, gAdminBoundaries, gCountryLabels
+                    ];
+                    var histSvgGroups = [
+                        gHistWonders, gHistCapitals, gHistBattles, gHistoricalRoutes,
+                        gHistTravelers, gHistoryOverlay, gHistoryCompareOverlay
+                    ];
+
+                    geoSvgGroups.forEach(function(g) {
+                        if (g) g.style('display', hist ? 'none' : null);
+                    });
+                    histSvgGroups.forEach(function(g) {
+                        if (g) g.style('display', hist ? null : 'none');
+                    });
+
+                    if (hist) {
+                        if (densityCtx && densityCanvas) {
+                            densityCtx.clearRect(0, 0, densityCanvas.width, densityCanvas.height);
+                        }
+                    } else {
+                        if (typeof drawPointLayersCanvas === 'function') {
+                            drawPointLayersCanvas();
+                        }
+                    }
+                }
+                window.updateSvgSectionLayers = updateSvgSectionLayers;
+
                 function setSectionDisplay(section) {
                     var hist = section === 'history';
                     SECTION_GEO_ONLY.forEach(function(sel) {
@@ -9919,6 +10018,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     document.querySelectorAll('.hist-layer').forEach(function(el) {
                         setSectionVis(el, hist);
                     });
+                    updateSvgSectionLayers(section);
                 }
                 function applySection(section, persist) {
                     if (section !== 'geo' && section !== 'history') return;
@@ -9926,18 +10026,38 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     setSectionDisplay(section);
                     if (section === currentSection) { updateSectionToggleUI(); return; }
                     if (section === 'history') {
-                        enterHistoryMode();
                         currentSection = 'history';
+                        enterHistoryMode();
                     } else {
-                        exitHistoryMode();
                         currentSection = 'geo';
-                        if (historicalRoutesVisible && window.drawHistoricalRoutes) window.drawHistoricalRoutes(true);
+                        exitHistoryMode();
+                        if (corridorsVisible && typeof drawRoutes === 'function') drawRoutes(true);
                     }
                     setSectionDisplay(section);
                     if (persist !== false) { try { localStorage.setItem('lepidosSection', section); } catch (e) {} }
                     updateSectionToggleUI();
                     updateLegend();
                     if (window.updateHash) window.updateHash();
+
+                    // Independent first-time onboarding tour for this section
+                    var secDone = false;
+                    try {
+                        secDone = (localStorage.getItem('onboardCompleted_' + section) === '1') ||
+                                  (localStorage.getItem('onboardDone_' + section) === '1');
+                    } catch (e) {}
+                    if (!secDone) {
+                        setTimeout(function() {
+                            var langOv = document.getElementById('langOverlay');
+                            var secOv = document.getElementById('sectionPickerOverlay');
+                            var projOv = document.getElementById('projectionOverlay');
+                            if (langOv && getComputedStyle(langOv).display !== 'none') return;
+                            if (secOv && getComputedStyle(secOv).display !== 'none') return;
+                            if (projOv && projOv.classList.contains('active')) return;
+                            if (typeof window.startOnboarding === 'function') {
+                                window.startOnboarding();
+                            }
+                        }, 700);
+                    }
                 }
                 window.applySection = applySection;
                 window.applySectionWhenReady = function(section, cb) {
@@ -13727,7 +13847,7 @@ function getReligionSlice(religion, year) {
             function drawTravelerRoutes() {
                 if (!gHistTravelers) return;
                 gHistTravelers.selectAll('*').remove();
-                if (!selectedTravelerIds || !selectedTravelerIds.length || !historicalTravelersData) return;
+                if (!selectedTravelerIds || !selectedTravelerIds.length || !historicalTravelersData || (typeof currentSection !== 'undefined' && currentSection === 'geo') || (typeof historyActive !== 'undefined' && !historyActive)) return;
 
                 var proj = getActiveProjection();
                 var isMob = window.innerWidth <= 768;
@@ -14771,7 +14891,7 @@ function getReligionSlice(religion, year) {
             function drawHistCapitals() {
                 if (!gHistCapitals) return;
                 gHistCapitals.selectAll('*').remove();
-                if (!histCapitalsVisible) return;
+                if (!histCapitalsVisible || (typeof currentSection !== 'undefined' && currentSection === 'geo') || (typeof historyActive !== 'undefined' && !historyActive)) return;
                 if (!historicalCapitalsData) {
                     fetchHistoricalCapitals().then(function() { drawHistCapitals(); });
                     return;
@@ -14833,7 +14953,7 @@ function getReligionSlice(religion, year) {
             function drawHistBattles() {
                 if (!gHistBattles) return;
                 gHistBattles.selectAll('*').remove();
-                if (!histBattlesVisible) return;
+                if (!histBattlesVisible || (typeof currentSection !== 'undefined' && currentSection === 'geo') || (typeof historyActive !== 'undefined' && !historyActive)) return;
                 if (!historicalBattlesData) {
                     fetchHistoricalBattles().then(function() { drawHistBattles(); });
                     return;
@@ -14905,7 +15025,7 @@ function getReligionSlice(religion, year) {
             function drawHistWonders() {
                 if (!gHistWonders) return;
                 gHistWonders.selectAll('*').remove();
-                if (!histWondersVisible) return;
+                if (!histWondersVisible || (typeof currentSection !== 'undefined' && currentSection === 'geo') || (typeof historyActive !== 'undefined' && !historyActive)) return;
                 if (!historicalWondersData) {
                     fetchHistoricalWonders().then(function() { drawHistWonders(); });
                     return;
@@ -15355,18 +15475,18 @@ function getReligionSlice(religion, year) {
                     projOverlay.classList.remove('active');
                     try { localStorage.setItem('projectionExplainerDone', '1'); } catch(e) {}
                     // Only chain the onboarding tutorial for a genuine first-time
-                    // visitor who has not already completed it. Re-opening the
-                    // tutorial unconditionally (as before) re-shows the transparent
-                    // full-screen overlay that, while active, swallowed all clicks on
-                    // the map (polities, countries, controls) — even for returning
-                    // users on every session. We gate on the persistent completion
-                    // marker (`onboardCompleted`), which is never set transiently,
-                    // so returning users are never blocked again while first-time
-                    // visitors still get the guided tour after the explainer.
+                    // visitor to this section who has not already completed it.
+                    var curSec = (typeof currentSection !== 'undefined' && currentSection === 'history') ? 'history' : 'geo';
                     var onboardCompleted = false;
-                    try { onboardCompleted = localStorage.getItem('onboardCompleted') === '1'; } catch(e) {}
+                    try {
+                        onboardCompleted = (localStorage.getItem('onboardCompleted_' + curSec) === '1') ||
+                                           (localStorage.getItem('onboardDone_' + curSec) === '1');
+                    } catch(e) {}
                     if (!onboardCompleted && typeof window.startOnboarding === 'function') {
-                        try { localStorage.removeItem('onboardDone'); } catch(e) {}
+                        try {
+                            localStorage.removeItem('onboardDone');
+                            localStorage.removeItem('onboardDone_' + curSec);
+                        } catch(e) {}
                         setTimeout(function() { window.startOnboarding(); }, 300);
                     }
                 }
@@ -15432,7 +15552,13 @@ function getReligionSlice(religion, year) {
                     return;
                 }
                 // Language overlay is showing → fresh start → clear onboard flag
-                try { localStorage.removeItem('onboardDone'); } catch(e) {}
+                try {
+                    localStorage.removeItem('onboardDone');
+                    localStorage.removeItem('onboardDone_geo');
+                    localStorage.removeItem('onboardDone_history');
+                    localStorage.removeItem('onboardCompleted_geo');
+                    localStorage.removeItem('onboardCompleted_history');
+                } catch(e) {}
                 overlay.querySelectorAll('.lang-overlay-btn').forEach(function(btn) {
                     btn.addEventListener('click', function() {
                         var code = this.dataset.lang;

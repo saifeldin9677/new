@@ -593,6 +593,11 @@
                     annotationUndone: 'تم التراجع عن آخر إضافة.',
 
                     annotationTutorialTitle: 'دليل أدوات الشرح',
+                    annotationTutorialIntro: 'مرحبًا بك في وضع الشرح! يمكنك الرسم على الخريطة وإضافة الملاحظات وتحديد المناطق وإدارتها بسهولة.',
+                    annotationTutorialRegion: 'أداة تلوين المناطق: اختر لونًا ثم انقر على أي دولة أو إقليم لتلوينه بلمسة واحدة.',
+                    annotationTutorialDraw: 'أداة الرسم الحر: ارسم خطوطًا ومسارات وأشكالاً توضيحية مباشرة على الخريطة بحرية تامة.',
+                    annotationTutorialManage: 'إدارة الشروحات: استعرض جميع العناصر المرسومة، قم بإخفائها أو حذفها، أو تصدير أعمالك والاحتفاظ بها.',
+                    annotationTutorialPin: 'إضافة الدبابيس والملاحظات: ثبّت علامة على أي موقع جغرافي واكتب وصفًا أو ملاحظة تعليمية مخصصة.',
 
                     // --- Historical & UI Parity Extensions (ar) ---
                     histOnboard1Text: 'استكشف عبر القائمة العلوية الحقب الإمبراطورية الكبرى، مسارات الحروب والنزاعات، تطور الأديان، ورحلات المستكشفين التاريخية.',
@@ -1363,6 +1368,11 @@
                     annotationUndone: 'Last addition removed.',
 
                     annotationTutorialTitle: 'Annotation Tools Guide',
+                    annotationTutorialIntro: 'Welcome to Annotation Mode! You can draw on the map, add notes, highlight regions, and manage all your marks with ease.',
+                    annotationTutorialRegion: 'Region Highlighter: Choose a color and click any country or territory to highlight it instantly.',
+                    annotationTutorialDraw: 'Freehand Drawing: Draw custom lines, paths, and explanatory shapes directly on the map.',
+                    annotationTutorialManage: 'Manage Annotations: Review, hide, edit, or delete marks, and export or import your annotations anytime.',
+                    annotationTutorialPin: 'Add Pins & Notes: Place a marker on any geographic coordinate and attach a custom title and pedagogical note.',
 
                     // --- Historical & UI Parity Extensions (en) ---
                     histOnboard1Text: 'Explore major imperial eras, wars and conflicts, the evolution of world religions, and historic traveler journeys from the dock.',
@@ -2132,6 +2142,11 @@
                     annotationUndone: 'Последнее добавление удалено.',
 
                     annotationTutorialTitle: 'Руководство по инструментам пометок',
+                    annotationTutorialIntro: 'Добро пожаловать в режим пометок! Вы можете рисовать на карте, добавлять заметки, выделять регионы и управлять ими.',
+                    annotationTutorialRegion: 'Выделение регионов: выберите цвет и нажмите на любую страну или территорию для быстрой подсветки.',
+                    annotationTutorialDraw: 'Свободное рисование: проводите линии, маршруты и пояснительные контуры прямо на карте.',
+                    annotationTutorialManage: 'Управление пометками: просматривайте, скрывайте или удаляйте элементы, а также экспортируйте результаты.',
+                    annotationTutorialPin: 'Метки и заметки: установите метку в любой географической точке и добавьте описание или пояснение.',
 
                     // --- Historical & UI Parity Extensions (ru) ---
                     histOnboard1Text: 'Исследуйте на панели великие имперские эпохи, войны и конфликты, эволюцию религий и маршруты великих путешественников.',
@@ -2901,6 +2916,11 @@
                     annotationUndone: 'Oxirgi qo\'shilgan element o\'chirildi.',
 
                     annotationTutorialTitle: 'Izoh vositalari qo\'llanmasi',
+                    annotationTutorialIntro: 'Izohlar rejimiga xush kelibsiz! Xaritada chizishingiz, qaydlar qo\'shishingiz, hududlarni ajratib ko\'rsatishingiz va ularni boshqarishingiz mumkin.',
+                    annotationTutorialRegion: 'Hududlarni bo\'yash vositasi: rangni tanlang va istalgan mamlakat yoki hududni bir marta bosish bilan ajratib ko\'rsating.',
+                    annotationTutorialDraw: 'Erkin chizish vositasi: xaritada to\'g\'ridan-to\'g\'ri chiziqlar, marshrutlar va tushuntirish shakllarini chizing.',
+                    annotationTutorialManage: 'Izohlarni boshqarish: chizilgan barcha elementlarni ko\'ring, yashiring yoki o\'chiring, ishlaringizni eksport qiling.',
+                    annotationTutorialPin: 'Belgilar va qaydlar: istalgan geografik nuqtaga belgi qo\'ying va unga izoh yoki ta\'limiy qayd yozing.',
 
                     // --- Historical & UI Parity Extensions (uz) ---
                     histOnboard1Text: 'Yuqori panel orqali buyuk imperiya davrlari, urushlar va to‘qnashuvlar, dinlar evolyutsiyasi hamda buyuk sayyohlar yo‘llarini o‘rganing.',
@@ -3670,6 +3690,11 @@
                     annotationUndone: 'Se eliminó la última adición.',
 
                     annotationTutorialTitle: 'Guía de herramientas de anotaciones',
+                    annotationTutorialIntro: '¡Bienvenido al modo de anotaciones! Puedes dibujar en el mapa, añadir notas, resaltar regiones y gestionarlas con facilidad.',
+                    annotationTutorialRegion: 'Resaltado de regiones: elige un color y pulsa en cualquier país o territorio para colorearlo al instante.',
+                    annotationTutorialDraw: 'Dibujo a mano alzada: traza líneas, rutas y figuras explicativas directamente sobre el mapa.',
+                    annotationTutorialManage: 'Gestión de anotaciones: revisa, oculta o elimina elementos, y exporta o guarda tus trabajos en cualquier momento.',
+                    annotationTutorialPin: 'Marcadores y notas: fija una chincheta en cualquier punto geográfico y añade un título y una nota personalizada.',
 
                     // --- Historical & UI Parity Extensions (es) ---
                     histOnboard1Text: 'Explora desde el panel superior las grandes épocas imperiales, guerras y conflictos, la evolución de las religiones y las rutas de los viajeros.',

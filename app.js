@@ -7225,11 +7225,6 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             return document.querySelector('#historyModeDock') || document.querySelector('#histErasPopoverBtn');
                         }, icon: '📜', titleKey: 'histOnboard1Title', textKey: 'histOnboard1Text' },
                         { getEl: function() {
-                            var bb = document.getElementById('historyBottomBar');
-                            if (bb && getComputedStyle(bb).display !== 'none') return bb;
-                            return document.getElementById('histTimeline') || document.querySelector('#controlsBar');
-                        }, icon: '⏳', titleKey: 'histOnboard2Title', textKey: 'histOnboard2Text' },
-                        { getEl: function() {
                             var op = document.getElementById('histOpacityControl');
                             if (op && getComputedStyle(op).display !== 'none') return op;
                             return document.getElementById('histTerrainBtn') || document.querySelector('#filterRow');
@@ -7997,6 +7992,38 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
 
                 function pickHistNote(o) { return o ? (o[lang] !== undefined && o[lang] !== null ? o[lang] : (o.en !== undefined ? o.en : '')) : ''; }
                 function histRoleKey(role) { return 'histRole' + role.charAt(0).toUpperCase() + role.slice(1); }
+
+                var semanticSidePalettes = {
+                    allies: 'blue',
+                    entente: 'blue',
+                    axis: 'red',
+                    central: 'red',
+                    delian: 'blue',
+                    persia: 'gold',
+                    coalition: 'blue',
+                    axis_coalition: 'red',
+                    republic: 'blue',
+                    empire: 'purple',
+                    confederacy: 'gold',
+                    union: 'blue',
+                    islamic: 'green',
+                    crusaders: 'red',
+                    byzantine: 'purple',
+                    rome: 'red',
+                    carthage: 'teal',
+                    athens: 'blue',
+                    sparta: 'red'
+                };
+
+                var histRoleColorPalettes = {
+                    blue:   { major: '#1d4ed8', primary: '#1d4ed8', ally: '#3b82f6', dominion: '#0284c7', colony: '#38bdf8', protectorate: '#7dd3fc', occupied: '#64748b' },
+                    red:    { major: '#b91c1c', primary: '#b91c1c', ally: '#ef4444', dominion: '#dc2626', colony: '#f87171', protectorate: '#fca5a5', occupied: '#64748b' },
+                    green:  { major: '#15803d', primary: '#15803d', ally: '#22c55e', dominion: '#16a34a', colony: '#4ade80', protectorate: '#86efac', occupied: '#64748b' },
+                    purple: { major: '#7e22ce', primary: '#7e22ce', ally: '#a855f7', dominion: '#9333ea', colony: '#c084fc', protectorate: '#d8b4fe', occupied: '#64748b' },
+                    gold:   { major: '#b45309', primary: '#b45309', ally: '#f59e0b', dominion: '#d97706', colony: '#fbbf24', protectorate: '#fde68a', occupied: '#64748b' },
+                    teal:   { major: '#0f766e', primary: '#0f766e', ally: '#14b8a6', dominion: '#0d9488', colony: '#2dd4bf', protectorate: '#99f6e4', occupied: '#64748b' }
+                };
+
                 // تحديد الباليتة اللونية المناسبة للطرف مع ضمان التناقض التام بين الأعداء
                 function histFamily(side, war) {
                     if (!side) return 'blue';
@@ -8782,9 +8809,18 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 b.innerHTML = '<span class="war-tab-name">' + htmlEscape(locField(w, 'name')) + '</span>' +
                                     '<span class="war-tab-years">' + htmlEscape(locField(w, 'years')) + '</span>';
                                 b.addEventListener('click', function() {
+                                    if (historyTab === 'wars' && historyWarId === w.id) {
+                                        historyWarId = null;
+                                        historyScenarioId = null;
+                                        selectedHistoryPolity = null;
+                                        renderHistoryBar();
+                                        clearHistoryOverlay();
+                                        renderHistoryEmptyState();
+                                        return;
+                                    }
                                     historyTab = 'wars';
                                     historyWarId = w.id;
-                                    historyScenarioId = w.scenarios[0].id;
+                                    historyScenarioId = (w.scenarios && w.scenarios[0]) ? w.scenarios[0].id : null;
                                     selectedHistoryPolity = null;
                                     if (window.innerWidth <= 680 && typeof closeAllHistPopovers === 'function') closeAllHistPopovers();
                                     renderHistoryBar();
@@ -10095,6 +10131,14 @@ function buildEraFeature(p, phase) {
                                 b.title = (e.yearLabel || '') + ' · ' + locField(e, 'title');
                                 b.addEventListener('click', function() {
                                     stopHistPlay();
+                                    if (historyTab === 'eras' && historyEraId === e.id) {
+                                        historyEraId = null;
+                                        selectedHistoryPolity = null;
+                                        renderHistoryBar();
+                                        clearHistoryOverlay();
+                                        renderHistoryEmptyState();
+                                        return;
+                                    }
                                     historyTab = 'eras';
                                     historyEraId = e.id;
                                     selectedHistoryPolity = null;
@@ -12834,6 +12878,7 @@ function buildEraFeature(p, phase) {
             var religionsLoading = null;
             var religionsActive = false;
             var religionsYear = 0;
+            var selectedFaithId = null;
             var religionsPlayActive = false;
             var religionsPlayTimer = null;
             var YEAR_MIN = -2200;
@@ -12916,6 +12961,10 @@ function getReligionSlice(religion, year) {
                     if (!slice || !slice.rings || !slice.rings.length) return;
                     rel.rings = rel.rings || [];
                     var ringsData = slice.rings.map(function(ring) { return window.__normalizeEraRing(ring); });
+                    var isSelected = (selectedFaithId === rel.id);
+                    var fillOp = selectedFaithId ? (isSelected ? 0.55 : 0.12) : 0.35;
+                    var strokeW = selectedFaithId ? (isSelected ? 2.6 : 1.0) : 1.5;
+                    var strokeDash = (selectedFaithId && isSelected) ? 'none' : '6,3';
                     ringsData.forEach(function(ring) {
                         var feature;
                         try {
@@ -12924,9 +12973,9 @@ function getReligionSlice(religion, year) {
                         var pd = pathGen(feature);
                         if (!pd) return;
                         var s = g.append('path').attr('d', pd)
-                            .attr('fill', rel.color).attr('fill-opacity', 0.35)
-                            .attr('stroke', rel.color).attr('stroke-width', 1.5)
-                            .attr('stroke-dasharray', '6,3')
+                            .attr('fill', rel.color).attr('fill-opacity', fillOp)
+                            .attr('stroke', rel.color).attr('stroke-width', strokeW)
+                            .attr('stroke-dasharray', strokeDash)
                             .attr('vector-effect', 'non-scaling-stage').attr('vector-effect', 'non-scaling-stroke')
                             .style('cursor', 'default').style('pointer-events', 'none');
                         if (skipFadeIn) s.attr('opacity', 1);
@@ -12936,19 +12985,23 @@ function getReligionSlice(religion, year) {
                 active.forEach(function(rel) {
                     var xy = getActiveProjection()(rel.origin);
                     if (!xy || isNaN(xy[0])) return;
+                    var isSelected = (selectedFaithId === rel.id);
+                    var elemOp = selectedFaithId ? (isSelected ? 1.0 : 0.3) : 0.9;
+                    var circleR = isSelected ? Math.max(4, 7 / k) : Math.max(3, 5 / k);
                     g.append('circle')
                         .attr('cx', xy[0]).attr('cy', xy[1])
-                        .attr('r', Math.max(3, 5 / k)).attr('fill', rel.color)
-                        .attr('stroke', '#fff').attr('stroke-width', 1.5 / k)
-                        .attr('opacity', 0.9)
+                        .attr('r', circleR).attr('fill', rel.color)
+                        .attr('stroke', '#fff').attr('stroke-width', (isSelected ? 2.2 : 1.5) / k)
+                        .attr('opacity', elemOp)
                         .style('pointer-events', 'none');
-                    g.append('text').attr('x', xy[0]).attr('y', xy[1] - 6 / k)
-                        .text(locField(rel, 'name')).attr('fill', '#ffffff').attr('font-size', fs)
+                    g.append('text').attr('x', xy[0]).attr('y', xy[1] - (isSelected ? 8 : 6) / k)
+                        .text(locField(rel, 'name')).attr('fill', '#ffffff').attr('font-size', isSelected ? fs * 1.15 : fs)
                         .attr('font-weight', 'bold').attr('text-anchor', 'middle')
+                        .attr('opacity', elemOp)
                         .attr('style', 'text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.85); pointer-events: none;');
                     if (skipFadeIn) {} else {
                         g.selectAll('circle:last-of-type,text:last-of-type').attr('opacity', 0)
-                            .transition().duration(dur).attr('opacity', 1);
+                            .transition().duration(dur).attr('opacity', elemOp);
                     }
                 });
                 renderReligionsLegend(year, active);
@@ -12967,9 +13020,10 @@ function getReligionSlice(religion, year) {
                     html = '<div class="legend-title">' + htmlEscape(t('religionsListBtn')) + '</div>' +
                         '<div class="religions-legend">' +
                         active.map(function(rel) {
-                            return '<div class="religions-legend-item">' +
+                            var isSelected = (selectedFaithId === rel.id);
+                            return '<div class="religions-legend-item' + (isSelected ? ' selected' : '') + '" style="' + (isSelected ? 'font-weight:bold;color:#14B8A6;' : '') + '">' +
                                 '<span class="religions-legend-swatch" style="background:' + rel.color + '"></span>' +
-                                '<span class="religions-legend-name">' + htmlEscape(locField(rel, 'name')) + '</span>' +
+                                '<span class="religions-legend-name">' + htmlEscape(locField(rel, 'name')) + (isSelected ? ' ✓' : '') + '</span>' +
                                 '</div>';
                         }).join('') +
                         '</div>';
@@ -13048,6 +13102,7 @@ function getReligionSlice(religion, year) {
             }
             function deactivateReligionsMode() {
                 religionsActive = false;
+                selectedFaithId = null;
                 stopReligionsPlay();
                 if (rgGroupEl) rgGroupEl.style.display = 'none';
                 clearReligionsOverlay();
@@ -13069,22 +13124,46 @@ function getReligionSlice(religion, year) {
                 var names = {};
                 (active || []).forEach(function(a) { names[a.id] = true; });
                 list.innerHTML = religionsData.map(function(rel) {
-                    var on = !!names[rel.id];
-                    return '<button type="button" class="faiths-popover-item' + (on ? ' active' : '') + '" data-faith-id="' + rel.id + '">' +
+                    var isSelected = (selectedFaithId === rel.id);
+                    var on = isSelected || (!selectedFaithId && !!names[rel.id]);
+                    return '<button type="button" class="faiths-popover-item' + (isSelected ? ' selected active' : (on ? ' in-year' : '')) + '" data-faith-id="' + rel.id + '" role="checkbox" aria-checked="' + isSelected + '">' +
                         '<span class="religions-legend-swatch" style="background:' + rel.color + '"></span>' +
                         '<span class="faiths-popover-name">' + htmlEscape(locField(rel, 'name')) + '</span>' +
+                        (isSelected ? '<span class="faiths-selected-check">✓</span>' : '') +
                         '<span class="faiths-popover-range">' + rel.startYear + '→' + (rel.endYear === null || rel.endYear === undefined ? t('faithsPresent') : rel.endYear) + '</span>' +
                         '</button>';
                 }).join('');
+
+                var scrollCue = document.getElementById('histFaithsScrollCue');
+                function syncFaithsCue() {
+                    if (!scrollCue) return;
+                    var hasMore = list.scrollHeight > list.clientHeight + 8 && (list.scrollTop + list.clientHeight < list.scrollHeight - 16);
+                    scrollCue.classList.toggle('hidden', !hasMore);
+                }
+                syncFaithsCue();
+                list.onscroll = syncFaithsCue;
+
                 list.querySelectorAll('.faiths-popover-item').forEach(function(btn) {
                     btn.addEventListener('click', function() {
                         var id = this.getAttribute('data-faith-id');
                         var rel = (religionsData || []).find(function(r) { return r.id === id; });
-                        if (rel && window.setReligionsYear) {
-                            setReligionsYear(rel.startYear);
-                            if (historyTab !== 'faiths' && window.selectHistoryTab) selectHistoryTab('faiths');
-                            if (window.innerWidth <= 680 && typeof closeAllHistPopovers === 'function') closeAllHistPopovers();
+                        if (!rel) return;
+                        if (selectedFaithId === id) {
+                            selectedFaithId = null;
+                            window.renderFaithsPopoverList();
+                            drawReligionsScene(religionsYear, true);
+                            renderReligionsLegend(religionsYear);
+                            return;
                         }
+                        selectedFaithId = id;
+                        if (window.setReligionsYear) {
+                            setReligionsYear(rel.startYear);
+                        }
+                        if (historyTab !== 'faiths' && window.selectHistoryTab) selectHistoryTab('faiths');
+                        window.renderFaithsPopoverList();
+                        drawReligionsScene(religionsYear, true);
+                        renderReligionsLegend(religionsYear);
+                        if (window.innerWidth <= 680 && typeof closeAllHistPopovers === 'function') closeAllHistPopovers();
                     });
                 });
             };
@@ -13555,6 +13634,15 @@ function getReligionSlice(religion, year) {
                         '<input type="checkbox" class="hist-traveler-checkbox" ' + (isChecked ? 'checked' : '') + ' tabindex="-1" aria-hidden="true" />' +
                     '</div>';
                 }).join('');
+
+                var scrollCue = document.getElementById('histTravelersScrollCue');
+                function syncTravelersCue() {
+                    if (!scrollCue) return;
+                    var hasMore = list.scrollHeight > list.clientHeight + 8 && (list.scrollTop + list.clientHeight < list.scrollHeight - 16);
+                    scrollCue.classList.toggle('hidden', !hasMore);
+                }
+                syncTravelersCue();
+                list.onscroll = syncTravelersCue;
 
                 list.querySelectorAll('.hist-traveler-item').forEach(function(item) {
                     function toggleItem() {

@@ -118,7 +118,10 @@
       ],
       "battle_ids": [
         "gaugamela-331-bce"
-      ]
+      ],
+      "years_ru": "334–323 гг. до н.э.",
+      "years_uz": "mil. av. 334–323 yillar",
+      "years_es": "334–323 a.C."
     },
     {
       "id": "algerian-rev-1954",
@@ -202,7 +205,10 @@
       ],
       "battle_ids": [
         "algiers-1957-ce"
-      ]
+      ],
+      "years_ru": "1954–1962 гг. н.э.",
+      "years_uz": "1954–1962-yillar",
+      "years_es": "1954–1962 d.C."
     },
     {
       "id": "almohad-marrakesh-1147",
@@ -245,7 +251,8 @@
             {
               "c": "Spain",
               "side": "almohad",
-              "role": "occupied"
+              "role": "occupied",
+              "polity_id": "castile"
             }
           ],
           "empires": [],
@@ -272,7 +279,10 @@
       "sides_es": {
         "almohad": "Movimiento almohade (Abd al-Mumin)",
         "almoravid": "Estado almorávide (Ishaq ibn Ali)"
-      }
+      },
+      "years_ru": "1145–1147 гг. н.э.",
+      "years_uz": "1145–1147-yillar",
+      "years_es": "1145–1147 d.C."
     },
     {
       "id": "american-civil-1861",
@@ -345,7 +355,10 @@
       ],
       "battle_ids": [
         "gettysburg-1863-ce"
-      ]
+      ],
+      "years_ru": "1861–1865 гг. н.э.",
+      "years_uz": "1861–1865-yillar",
+      "years_es": "1861–1865 d.C."
     },
     {
       "id": "american-rev-1775",
@@ -439,7 +452,10 @@
       ],
       "battle_ids": [
         "yorktown-1781-ce"
-      ]
+      ],
+      "years_ru": "1775–1783 гг. н.э.",
+      "years_uz": "1775–1783-yillar",
+      "years_es": "1775–1783 d.C."
     },
     {
       "id": "an-lushan-755",
@@ -514,7 +530,10 @@
       "coords": [
         115.65,
         34.42
-      ]
+      ],
+      "years_ru": "755–763 гг. н.э.",
+      "years_uz": "755–763-yillar",
+      "years_es": "755–763 d.C."
     },
     {
       "id": "andalus-conquest-711",
@@ -545,29 +564,34 @@
           "desc_en": "Tariq ibn Ziyad crosses the straits and defeats King Roderic, collapsing the Visigothic kingdom.",
           "participants": [
             {
-              "c": "Morocco",
-              "side": "muslim",
-              "role": "major"
+              "polity_id": "umayyad",
+              "side": "umayyad",
+              "role": "major",
+              "name_ar": "الدولة الأموية (جيش الأندلس)",
+              "name_en": "Umayyad Caliphate (Army of al-Andalus)",
+              "name_ru": "Омейядский халифат",
+              "name_uz": "Umaviylar xalifaligi",
+              "name_es": "Califato Omeya"
             },
             {
-              "c": "Syria",
-              "side": "muslim",
-              "role": "major"
-            },
-            {
-              "c": "Spain",
-              "side": "muslim",
-              "role": "occupied"
-            },
-            {
-              "c": "Portugal",
-              "side": "muslim",
-              "role": "occupied"
-            },
-            {
-              "c": "France",
+              "polity_id": "visigoths",
               "side": "visigoth",
-              "role": "major"
+              "role": "major",
+              "name_ar": "مملكة القوط الغربيين (الملك لذريق)",
+              "name_en": "Visigothic Kingdom (King Roderic)",
+              "name_ru": "Королевство вестготов",
+              "name_uz": "Vestgotlar qirolligi",
+              "name_es": "Reino Visigodo"
+            },
+            {
+              "polity_id": "franks",
+              "side": "visigoth",
+              "role": "ally",
+              "name_ar": "مملكة الفرنجة (شارل مارتيل)",
+              "name_en": "Frankish Kingdom (Charles Martel)",
+              "name_ru": "Королевство франков (Карл Мартелл)",
+              "name_uz": "Franklar qirolligi (Karl Martell)",
+              "name_es": "Reino Franco (Carlos Martel)"
             }
           ],
           "empires": [],
@@ -578,6 +602,7 @@
           "desc_uz": "Toriq ibn Ziyod boʻgʻozdan oʻtib, vestgotlar qiroli Roderikni magʻlub etadi va Andalus fathi boshlanadi.",
           "desc_es": "Táriq ibn Ziyad cruza el estrecho y derrota al rey Rodrigo, precipitando el fin del reino visigodo.",
           "battle_ids": [
+            "guadalete-711-ce",
             "tours-poitiers-732-ce"
           ],
           "coords": [
@@ -607,8 +632,12 @@
         36.58
       ],
       "battle_ids": [
+        "guadalete-711-ce",
         "tours-poitiers-732-ce"
-      ]
+      ],
+      "years_ru": "711–732 гг. н.э.",
+      "years_uz": "711–732-yillar",
+      "years_es": "711–732 d.C."
     },
     {
       "id": "arab-israeli-1948",
@@ -698,7 +727,10 @@
       "sides_es": {
         "arab": "Ejércitos árabes (Egipto, Jordania, Siria, Irak, Líbano)",
         "israel": "Fuerzas israelíes (Haganá y ejército)"
-      }
+      },
+      "years_ru": "1948–1949 гг. н.э.",
+      "years_uz": "1948–1949-yillar",
+      "years_es": "1948–1949 d.C."
     },
     {
       "id": "attila-hun-451",
@@ -729,24 +761,93 @@
           "desc_en": "Flavius Aetius leads a Roman-Visigothic alliance to halt Attila the Hun in Gaul, checking Hunnish expansion into Western Europe.",
           "participants": [
             {
-              "c": "Italy",
+              "polity_id": "roman-empire",
+              "c": "Western Roman Empire",
               "side": "rome",
-              "role": "major"
+              "role": "major",
+              "name_ar": "الإمبراطورية الرومانية الغربية (فلافيوس أيتيوس)",
+              "name_en": "Western Roman Empire (Flavius Aetius)",
+              "name_ru": "Западная Римская империя (Флавий Аэций)",
+              "name_uz": "Gʻarbiy Rim imperiyasi (Flaviy Aetsiy)",
+              "name_es": "Imperio Romano de Occidente (Flavio Aecio)"
             },
             {
-              "c": "France",
+              "polity_id": "visigoths",
+              "c": "Visigothic Kingdom",
               "side": "rome",
-              "role": "major"
+              "role": "ally",
+              "name_ar": "مملكة القوط الغربيين (الملك تيودوريك الأول)",
+              "name_en": "Visigothic Kingdom (King Theodoric I)",
+              "name_ru": "Королевство вестготов (Теодорих I)",
+              "name_uz": "Vestgotlar qirolligi (Teodorix I)",
+              "name_es": "Reino Visigodo (Teodorico I)"
             },
             {
-              "c": "Germany",
+              "polity_id": "huns",
+              "c": "Hunnic Empire",
               "side": "huns",
-              "role": "ally"
-            },
-            {
-              "c": "Hungary",
-              "side": "huns",
-              "role": "major"
+              "role": "major",
+              "name_ar": "إمبراطورية الهون (أتيلا الهوني وحلفاؤه)",
+              "name_en": "Hunnic Empire (Attila the Hun & Allies)",
+              "name_ru": "Гуннская держава (Аттила)",
+              "name_uz": "Gunnlar imperiyasi (Attila)",
+              "name_es": "Imperio Huno (Atila el Huno)",
+              "rings": [
+                [
+                  [
+                    14.0,
+                    48.5
+                  ],
+                  [
+                    16.5,
+                    48.8
+                  ],
+                  [
+                    19.0,
+                    49.2
+                  ],
+                  [
+                    22.5,
+                    49.0
+                  ],
+                  [
+                    26.0,
+                    48.0
+                  ],
+                  [
+                    28.5,
+                    46.5
+                  ],
+                  [
+                    29.0,
+                    45.0
+                  ],
+                  [
+                    26.5,
+                    44.2
+                  ],
+                  [
+                    22.0,
+                    44.0
+                  ],
+                  [
+                    18.5,
+                    44.5
+                  ],
+                  [
+                    16.0,
+                    45.2
+                  ],
+                  [
+                    14.5,
+                    46.5
+                  ],
+                  [
+                    14.0,
+                    48.5
+                  ]
+                ]
+              ]
             }
           ],
           "empires": [],
@@ -755,7 +856,10 @@
           "title_es": "Batalla de los Campos Catalaúnicos",
           "desc_ru": "Полководец Аэций во главе римско-вестготского союза останавливает вторжение Аттилы в Галлию.",
           "desc_uz": "Aetsiy boshchiligidagi Rim-vestgot ittifoqi Attila boshchiligidagi gunnlarning Gʻarbiy Yevropaga yurishini toʻxtatadi.",
-          "desc_es": "Flavio Aecio lidera la alianza romano-visigoda para detener a Atila en la Galia, frenando la expansión huna."
+          "desc_es": "Flavio Aecio lidera la alianza romano-visigoda para detener a Atila en la Galia, frenando la expansión huna.",
+          "battle_ids": [
+            "catalaunian-451-ce"
+          ]
         }
       ],
       "sides_en": {
@@ -773,7 +877,13 @@
       "sides_es": {
         "huns": "Imperio huno y aliados (Atila)",
         "rome": "Alianza romana y visigoda (Aecio)"
-      }
+      },
+      "years_ru": "451–452 гг. н.э.",
+      "years_uz": "451–452-yillar",
+      "years_es": "451–452 d.C.",
+      "battle_ids": [
+        "catalaunian-451-ce"
+      ]
     },
     {
       "id": "balkan-wars-1912",
@@ -863,7 +973,10 @@
       "sides_es": {
         "coalition": "Liga Balcánica (Serbia, Grecia, Bulgaria, Montenegro)",
         "ottoman": "Imperio otomano"
-      }
+      },
+      "years_ru": "1912–1913 гг. н.э.",
+      "years_uz": "1912–1913-yillar",
+      "years_es": "1912–1913 d.C."
     },
     {
       "id": "boer-war2-1899",
@@ -938,7 +1051,10 @@
       "sides_es": {
         "england": "Imperio británico y dominios",
         "boers": "Repúblicas bóeres (Transvaal y Estado Libre de Orange)"
-      }
+      },
+      "years_ru": "1899–1902 гг. н.э.",
+      "years_uz": "1899–1902-yillar",
+      "years_es": "1899–1902 d.C."
     },
     {
       "id": "byz-bulgar-968",
@@ -976,7 +1092,8 @@
             {
               "c": "Turkey",
               "side": "byzantine",
-              "role": "major"
+              "role": "major",
+              "polity_id": "ottoman"
             },
             {
               "c": "Bulgaria",
@@ -1018,7 +1135,10 @@
       "sides_es": {
         "byzantine": "Imperio bizantino (Basilio II)",
         "coalition": "Primer Imperio búlgaro (Samuel)"
-      }
+      },
+      "years_ru": "968–1018 гг. н.э.",
+      "years_uz": "968–1018-yillar",
+      "years_es": "968–1018 d.C."
     },
     {
       "id": "byz-sasanian-602",
@@ -1123,7 +1243,10 @@
       "coords": [
         36.0,
         34.0
-      ]
+      ],
+      "years_ru": "602–628 гг. н.э.",
+      "years_uz": "602–628-yillar",
+      "years_es": "602–628 d.C."
     },
     {
       "id": "chaldiran-1514",
@@ -1216,7 +1339,10 @@
       ],
       "battle_ids": [
         "chaldiran-1514-ce"
-      ]
+      ],
+      "years_ru": "1514–1555 гг. н.э.",
+      "years_uz": "1514–1555-yillar",
+      "years_es": "1514–1555 d.C."
     },
     {
       "id": "charlemagne-saxons-772",
@@ -1249,17 +1375,20 @@
             {
               "c": "France",
               "side": "allies",
-              "role": "major"
+              "role": "major",
+              "polity_id": "france_louis14"
             },
             {
               "c": "Germany",
               "side": "rebels",
-              "role": "occupied"
+              "role": "occupied",
+              "polity_id": "habsburg"
             },
             {
               "c": "Italy",
               "side": "allies",
-              "role": "ally"
+              "role": "ally",
+              "polity_id": "venetian-republic"
             },
             {
               "c": "Netherlands",
@@ -1291,7 +1420,10 @@
       "sides_es": {
         "allies": "Reino franco e Imperio carolingio",
         "rebels": "Tribus sajonas paganas (Widukind)"
-      }
+      },
+      "years_ru": "772–804 гг. н.э.",
+      "years_uz": "772–804-yillar",
+      "years_es": "772–804 d.C."
     },
     {
       "id": "conquest-maghreb-647",
@@ -1324,7 +1456,8 @@
             {
               "c": "Egypt",
               "side": "muslim",
-              "role": "major"
+              "role": "major",
+              "polity_id": "ayyubid"
             },
             {
               "c": "Tunisia",
@@ -1371,7 +1504,10 @@
       "sides_es": {
         "muslim": "Ejércitos de la conquista islámica (Uqba, Hasán, Musa)",
         "byzantine": "Imperio bizantino y tribus locales"
-      }
+      },
+      "years_ru": "647–709 гг. н.э.",
+      "years_uz": "647–709-yillar",
+      "years_es": "647–709 d.C."
     },
     {
       "id": "constantinople-1453",
@@ -1458,7 +1594,10 @@
       ],
       "battle_ids": [
         "constantinople-1453-ce"
-      ]
+      ],
+      "years_ru": "1453 гг. н.э.",
+      "years_uz": "1453-yillar",
+      "years_es": "1453 d.C."
     },
     {
       "id": "crimean-1853",
@@ -1543,7 +1682,10 @@
       "sides_es": {
         "allies": "Alianza otomana, británica y francesa",
         "russia": "Imperio ruso"
-      }
+      },
+      "years_ru": "1853–1856 гг. н.э.",
+      "years_uz": "1853–1856-yillar",
+      "years_es": "1853–1856 d.C."
     },
     {
       "id": "crusade1-1096",
@@ -1594,7 +1736,8 @@
             {
               "c": "Egypt",
               "side": "muslim",
-              "role": "major"
+              "role": "major",
+              "polity_id": "ayyubid"
             },
             {
               "c": "Syria",
@@ -1646,7 +1789,10 @@
       "coords": [
         35.21,
         31.78
-      ]
+      ],
+      "years_ru": "1096–1099 гг. н.э.",
+      "years_uz": "1096–1099-yillar",
+      "years_es": "1096–1099 d.C."
     },
     {
       "id": "crusade2-1147",
@@ -1679,12 +1825,14 @@
             {
               "c": "France",
               "side": "crusaders",
-              "role": "major"
+              "role": "major",
+              "polity_id": "france_louis14"
             },
             {
               "c": "Germany",
               "side": "crusaders",
-              "role": "major"
+              "role": "major",
+              "polity_id": "habsburg"
             },
             {
               "c": "Syria",
@@ -1731,7 +1879,10 @@
       "sides_es": {
         "crusaders": "Ejércitos de reyes cruzados (Conrado III y Luis VII)",
         "muslim": "Estado zanguí y atabegs (Nur al-Din Zengi)"
-      }
+      },
+      "years_ru": "1147–1149 гг. н.э.",
+      "years_uz": "1147–1149-yillar",
+      "years_es": "1147–1149 d.C."
     },
     {
       "id": "crusade3-1189",
@@ -1764,7 +1915,8 @@
             {
               "c": "Egypt",
               "side": "muslim",
-              "role": "major"
+              "role": "major",
+              "polity_id": "ayyubid"
             },
             {
               "c": "Syria",
@@ -1779,17 +1931,20 @@
             {
               "c": "United Kingdom",
               "side": "crusaders",
-              "role": "major"
+              "role": "major",
+              "polity_id": "england_early_empire"
             },
             {
               "c": "France",
               "side": "crusaders",
-              "role": "major"
+              "role": "major",
+              "polity_id": "france_louis14"
             },
             {
               "c": "Germany",
               "side": "crusaders",
-              "role": "major"
+              "role": "major",
+              "polity_id": "habsburg"
             },
             {
               "c": "Palestine",
@@ -1826,7 +1981,10 @@
       "sides_es": {
         "muslim": "Sultanato ayubí",
         "crusaders": "Coalición cruzada europea"
-      }
+      },
+      "years_ru": "1189–1192 гг. н.э.",
+      "years_uz": "1189–1192-yillar",
+      "years_es": "1189–1192 d.C."
     },
     {
       "id": "crusade4-1202",
@@ -1859,12 +2017,14 @@
             {
               "c": "France",
               "side": "crusaders",
-              "role": "major"
+              "role": "major",
+              "polity_id": "france_louis14"
             },
             {
               "c": "Italy",
               "side": "crusaders",
-              "role": "major"
+              "role": "major",
+              "polity_id": "venetian-republic"
             },
             {
               "c": "Greece",
@@ -1874,7 +2034,8 @@
             {
               "c": "Turkey",
               "side": "byzantine",
-              "role": "occupied"
+              "role": "occupied",
+              "polity_id": "ottoman"
             }
           ],
           "empires": [],
@@ -1901,7 +2062,10 @@
       "sides_es": {
         "crusaders": "Cruzados latinos y República de Venecia",
         "byzantine": "Imperio bizantino"
-      }
+      },
+      "years_ru": "1202–1204 гг. н.э.",
+      "years_uz": "1202–1204-yillar",
+      "years_es": "1202–1204 d.C."
     },
     {
       "id": "diadochi-322",
@@ -1932,34 +2096,34 @@
           "desc_en": "Massive coalition defeat of Antigonus at Ipsus firmly partitions Alexander's empire into the Ptolemaic and Seleucid realms.",
           "participants": [
             {
-              "c": "Egypt",
-              "side": "seleucid",
-              "role": "major"
+              "polity_id": "ptolemaic-egypt",
+              "side": "ptolemy",
+              "role": "major",
+              "name_ar": "المملكة البطلمية المصرية",
+              "name_en": "Ptolemaic Kingdom of Egypt",
+              "name_ru": "Птолемеевский Египет",
+              "name_uz": "Ptolemeylar Misri",
+              "name_es": "Reino Ptolemaico de Egipto"
             },
             {
-              "c": "Syria",
-              "side": "seleucid",
-              "role": "major"
+              "polity_id": "seleucid",
+              "side": "seleucus",
+              "role": "major",
+              "name_ar": "الإمبراطورية السلوقية",
+              "name_en": "Seleucid Empire",
+              "name_ru": "Государство Селевкидов",
+              "name_uz": "Salavkiylar saltanati",
+              "name_es": "Imperio Seléucida"
             },
             {
-              "c": "Iraq",
-              "side": "seleucid",
-              "role": "major"
-            },
-            {
-              "c": "Iran",
-              "side": "seleucid",
-              "role": "major"
-            },
-            {
-              "c": "Turkey",
-              "side": "antigonid",
-              "role": "major"
-            },
-            {
-              "c": "Greece",
-              "side": "antigonid",
-              "role": "major"
+              "polity_id": "macedonian-empire",
+              "side": "antigonus",
+              "role": "major",
+              "name_ar": "المملكة الأنتيغونية المقدونية",
+              "name_en": "Antigonid Kingdom of Macedon",
+              "name_ru": "Антигонидская Македония",
+              "name_uz": "Antigoniylar Makedoniyasi",
+              "name_es": "Reino Antigónida de Macedonia"
             }
           ],
           "empires": [],
@@ -1968,7 +2132,10 @@
           "title_es": "Batalla de Ipso y partición helenística",
           "desc_ru": "Коалиция диадохов побеждает Антигона Одноглазого, окончательно закрепляя раздел державы Александра Македонского.",
           "desc_uz": "Ips jangi Iskandar saltanatining vorislari oʻrtasidagi boʻlinishni batamom mustahkamlaydi.",
-          "desc_es": "La coalición de diádocos vence a Antígono, sellando la división definitiva del imperio de Alejandro."
+          "desc_es": "La coalición de diádocos vence a Antígono, sellando la división definitiva del imperio de Alejandro.",
+          "battle_ids": [
+            "ipsus-301-bce"
+          ]
         }
       ],
       "sides_en": {
@@ -1986,7 +2153,13 @@
       "sides_es": {
         "seleucid": "Seléucidas y ptolomeos (Oriente y Egipto)",
         "antigonid": "Antígono y Pérdicas (Macedonia y Grecia)"
-      }
+      },
+      "years_ru": "322–275 гг. до н.э.",
+      "years_uz": "mil. av. 322–275 yillar",
+      "years_es": "322–275 a.C.",
+      "battle_ids": [
+        "ipsus-301-bce"
+      ]
     },
     {
       "id": "dutch-revolt-1568",
@@ -2024,12 +2197,14 @@
             {
               "c": "United Kingdom",
               "side": "anti-habsburg",
-              "role": "ally"
+              "role": "ally",
+              "polity_id": "england_early_empire"
             },
             {
               "c": "Spain",
               "side": "habsburg",
-              "role": "major"
+              "role": "major",
+              "polity_id": "castile"
             },
             {
               "c": "Belgium",
@@ -2061,7 +2236,10 @@
       "sides_es": {
         "anti-habsburg": "Provincias Unidas de los Países Bajos y aliados",
         "habsburg": "Imperio español (Habsburgo)"
-      }
+      },
+      "years_ru": "1568–1648 гг. н.э.",
+      "years_uz": "1568–1648-yillar",
+      "years_es": "1568–1648 d.C."
     },
     {
       "id": "egypt-ottoman-1831",
@@ -2146,7 +2324,10 @@
       "sides_es": {
         "arab": "Ejército egipcio moderno (Mehmet Alí e Ibrahim Bajá)",
         "ottoman": "Imperio otomano y aliados europeos"
-      }
+      },
+      "years_ru": "1831–1833 гг. н.э.",
+      "years_uz": "1831–1833-yillar",
+      "years_es": "1831–1833 d.C."
     },
     {
       "id": "english-civil-1642",
@@ -2179,7 +2360,8 @@
             {
               "c": "United Kingdom",
               "side": "union",
-              "role": "major"
+              "role": "major",
+              "polity_id": "england_early_empire"
             },
             {
               "c": "Ireland",
@@ -2211,7 +2393,10 @@
       "sides_es": {
         "union": "Parlamentarios y el Nuevo Ejército Modelo (Cromwell)",
         "coalition": "Realistas caballeros (Rey Carlos I)"
-      }
+      },
+      "years_ru": "1642–1651 гг. н.э.",
+      "years_uz": "1642–1651-yillar",
+      "years_es": "1642–1651 d.C."
     },
     {
       "id": "franco-prussian-1870",
@@ -2276,7 +2461,10 @@
       "sides_es": {
         "prussia": "Confederación Alemana del Norte y Prusia (Bismarck)",
         "france": "Segundo Imperio francés (Napoleón III)"
-      }
+      },
+      "years_ru": "1870–1871 гг. н.э.",
+      "years_uz": "1870–1871-yillar",
+      "years_es": "1870–1871 d.C."
     },
     {
       "id": "french-egypt-1798",
@@ -2356,7 +2544,10 @@
       "sides_es": {
         "france": "República Francesa (Napoleón Bonaparte)",
         "coalition": "Imperio otomano, Gran Bretaña y mamelucos"
-      }
+      },
+      "years_ru": "1798–1801 гг. н.э.",
+      "years_uz": "1798–1801-yillar",
+      "years_es": "1798–1801 d.C."
     },
     {
       "id": "gallic-58",
@@ -2395,7 +2586,8 @@
             {
               "c": "France",
               "side": "coalition",
-              "role": "occupied"
+              "role": "occupied",
+              "polity_id": "france_louis14"
             },
             {
               "c": "Belgium",
@@ -2405,7 +2597,8 @@
             {
               "c": "Germany",
               "side": "coalition",
-              "role": "ally"
+              "role": "ally",
+              "polity_id": "habsburg"
             }
           ],
           "empires": [],
@@ -2440,7 +2633,10 @@
       "coords": [
         4.48,
         47.53
-      ]
+      ],
+      "years_ru": "58–50 гг. до н.э.",
+      "years_uz": "mil. av. 58–50 yillar",
+      "years_es": "58–50 a.C."
     },
     {
       "id": "ghaznavid-india-1001",
@@ -2471,19 +2667,48 @@
           "desc_en": "Mahmud of Ghazni conducts seventeen major expeditions into northern India, permanently incorporating Punjab as an Islamic province.",
           "participants": [
             {
-              "c": "Afghanistan",
+              "polity_id": "ghaznavids",
               "side": "ghaznavid",
-              "role": "major"
+              "role": "major",
+              "name_ar": "الدولة الغزنوية (محمود الغزنوي)",
+              "name_en": "Ghaznavid Empire (Mahmud of Ghazni)",
+              "name_ru": "Газневидское государство",
+              "name_uz": "Gʻaznaviylar davlati",
+              "name_es": "Imperio Gaznávida"
             },
             {
-              "c": "Pakistan",
-              "side": "ghaznavid",
-              "role": "occupied"
-            },
-            {
-              "c": "India",
-              "side": "hindu",
-              "role": "major"
+              "polity_id": "indus",
+              "rings": [
+                [
+                  [
+                    70,
+                    35
+                  ],
+                  [
+                    75,
+                    35
+                  ],
+                  [
+                    75,
+                    31
+                  ],
+                  [
+                    70,
+                    31
+                  ],
+                  [
+                    70,
+                    35
+                  ]
+                ]
+              ],
+              "side": "hindu_coalition",
+              "role": "major",
+              "name_ar": "سلالة كابل شاهي والتحالف الهندي (جايابالا)",
+              "name_en": "Hindu Shahi & Indian Coalition (Jayapala)",
+              "name_ru": "Индусские шахи",
+              "name_uz": "Hindushohiylar",
+              "name_es": "Dinastía Hindu Shahi"
             }
           ],
           "empires": [],
@@ -2510,7 +2735,10 @@
       "sides_es": {
         "ghaznavid": "Imperio gaznávida (Mahmud de Ghazni)",
         "hindu": "Alianza de rajás y reinos Shahi"
-      }
+      },
+      "years_ru": "1001–1026 гг. н.э.",
+      "years_uz": "1001–1026-yillar",
+      "years_es": "1001–1026 d.C."
     },
     {
       "id": "granada-1482",
@@ -2541,14 +2769,48 @@
           "desc_en": "The Catholic Monarchs enter the Alhambra following a ten-year campaign, ending 781 years of Muslim presence in Iberia.",
           "participants": [
             {
-              "c": "Spain",
-              "side": "coalition",
-              "role": "major"
+              "polity_id": "castile",
+              "side": "spain",
+              "role": "major",
+              "name_ar": "مملكتا قشتالة وأراغون (الملكان الكاثوليكيان)",
+              "name_en": "Castile & Aragon (Catholic Monarchs)",
+              "name_ru": "Кастилия и Арагон",
+              "name_uz": "Kastiliya va Aragon",
+              "name_es": "Castilla y Aragón (Reyes Católicos)"
             },
             {
-              "c": "Morocco",
-              "side": "muslim",
-              "role": "ally"
+              "polity_id": "almohad",
+              "rings": [
+                [
+                  [
+                    -4.5,
+                    37.5
+                  ],
+                  [
+                    -2.5,
+                    37.5
+                  ],
+                  [
+                    -2.5,
+                    36.5
+                  ],
+                  [
+                    -4.5,
+                    36.5
+                  ],
+                  [
+                    -4.5,
+                    37.5
+                  ]
+                ]
+              ],
+              "side": "granada",
+              "role": "major",
+              "name_ar": "إمارة غرناطة النصرية (أبو عبد الله محمد الثاني عشر)",
+              "name_en": "Nasrid Emirate of Granada (Muhammad XII)",
+              "name_ru": "Гранадский эмират Насридов",
+              "name_uz": "Nasriylar Granada amirligi",
+              "name_es": "Emirato Nazarí de Granada"
             }
           ],
           "empires": [],
@@ -2557,7 +2819,10 @@
           "title_es": "Rendición de la Alhambra",
           "desc_ru": "Католические короли принимают капитуляцию последнего мусульманского эмира Гранады Абу Абдаллаха.",
           "desc_uz": "Katolik qirollar Gʻarnataning soʻnggi amiri Abu Abdullohdan Al-Hamro kalitlarini qabul qilib oladi.",
-          "desc_es": "Los Reyes Católicos reciben la rendición de Boabdil en Granada, concluyendo casi ocho siglos de Reconquista."
+          "desc_es": "Los Reyes Católicos reciben la rendición de Boabdil en Granada, concluyendo casi ocho siglos de Reconquista.",
+          "battle_ids": [
+            "granada-1492-ce"
+          ]
         }
       ],
       "sides_en": {
@@ -2575,7 +2840,13 @@
       "sides_es": {
         "coalition": "Corona española unificada (Fernando e Isabel)",
         "muslim": "Reino nazarí de Granada (Boabdil)"
-      }
+      },
+      "years_ru": "1482–1492 гг. н.э.",
+      "years_uz": "1482–1492-yillar",
+      "years_es": "1482–1492 d.C.",
+      "battle_ids": [
+        "granada-1492-ce"
+      ]
     },
     {
       "id": "great-northern-1700",
@@ -2665,7 +2936,10 @@
       "sides_es": {
         "russia": "Zarato ruso y aliados (Pedro el Grande)",
         "sweden": "Imperio sueco (Carlos XII)"
-      }
+      },
+      "years_ru": "1700–1721 гг. н.э.",
+      "years_uz": "1700–1721-yillar",
+      "years_es": "1700–1721 d.C."
     },
     {
       "id": "greco-persian-499",
@@ -2761,7 +3035,10 @@
         "marathon-490-bce",
         "thermopylae-480-bce",
         "salamis-480-bce"
-      ]
+      ],
+      "years_ru": "499–449 гг. до н.э.",
+      "years_uz": "mil. av. 499–449 yillar",
+      "years_es": "499–449 a.C."
     },
     {
       "id": "greek-indep-1821",
@@ -2846,7 +3123,10 @@
       "sides_es": {
         "allies": "Rebeldes griegos y aliados (Gran Bretaña, Francia y Rusia)",
         "ottoman": "Imperio otomano y ejército egipcio (Ibrahim Bajá)"
-      }
+      },
+      "years_ru": "1821–1829 гг. н.э.",
+      "years_uz": "1821–1829-yillar",
+      "years_es": "1821–1829 d.C."
     },
     {
       "id": "haitian-rev-1791",
@@ -2916,7 +3196,10 @@
       "sides_es": {
         "rebels": "Ejército revolucionario haitiano (Toussaint y Dessalines)",
         "france": "Imperio colonial francés y Gran Bretaña"
-      }
+      },
+      "years_ru": "1791–1804 гг. н.э.",
+      "years_uz": "1791–1804-yillar",
+      "years_es": "1791–1804 d.C."
     },
     {
       "id": "han-xiongnu-133",
@@ -2947,14 +3230,24 @@
           "desc_en": "Han cavalry legions push deep across the Gobi Desert, securing the Hexi Corridor and the eastern Silk Road.",
           "participants": [
             {
-              "c": "China",
+              "polity_id": "qin-empire",
               "side": "han",
-              "role": "major"
+              "role": "major",
+              "name_ar": "سلالة هان الإمبراطورية",
+              "name_en": "Han Dynasty China",
+              "name_ru": "Империя Хань",
+              "name_uz": "Xan imperiyasi",
+              "name_es": "Dinastía Han"
             },
             {
-              "c": "Mongolia",
+              "polity_id": "xiongnu",
               "side": "xiongnu",
-              "role": "major"
+              "role": "major",
+              "name_ar": "خاقانية شيونغنو البدوية",
+              "name_en": "Xiongnu Confederation",
+              "name_ru": "Конфедерация Хунну",
+              "name_uz": "Xunnlar konfederatsiyasi",
+              "name_es": "Confederación Xiongnu"
             }
           ],
           "empires": [],
@@ -2963,7 +3256,10 @@
           "title_es": "Batalla de Mobei",
           "desc_ru": "Ханьские генералы Вэй Цин и Хо Цюйбин наносят сокрушительное поражение хунну в глубине пустыни Гоби.",
           "desc_uz": "Xan lashkarboshilari Vey Tsin va Xo Tsyubin Gobi sahrosi qaʼrida Xunnularni tor-mor etadi.",
-          "desc_es": "Las fuerzas de la dinastía Han derrotan decisivamente a los Xiongnu en el desierto de Gobi."
+          "desc_es": "Las fuerzas de la dinastía Han derrotan decisivamente a los Xiongnu en el desierto de Gobi.",
+          "battle_ids": [
+            "mobei-119-bce"
+          ]
         }
       ],
       "sides_en": {
@@ -2981,7 +3277,13 @@
       "sides_es": {
         "han": "Imperio Han de China",
         "xiongnu": "Confederación nómada Xiongnu (Estepa septentrional)"
-      }
+      },
+      "years_ru": "133–89 гг. до н.э.",
+      "years_uz": "mil. av. 133–89 yillar",
+      "years_es": "133–89 a.C.",
+      "battle_ids": [
+        "mobei-119-bce"
+      ]
     },
     {
       "id": "hattin-1187",
@@ -3092,7 +3394,10 @@
       ],
       "battle_ids": [
         "hattin-1187-ce"
-      ]
+      ],
+      "years_ru": "1187 гг. н.э.",
+      "years_uz": "1187-yillar",
+      "years_es": "1187 d.C."
     },
     {
       "id": "hundred-years-1337",
@@ -3123,24 +3428,76 @@
           "desc_en": "Henry V's archers triumph at Agincourt before French revival led by Joan of Arc.",
           "participants": [
             {
-              "c": "United Kingdom",
-              "side": "england",
-              "role": "major"
-            },
-            {
-              "c": "France",
+              "polity_id": "france_louis14",
+              "rings": [
+                [
+                  [
+                    -4.5,
+                    48.5
+                  ],
+                  [
+                    2.0,
+                    51.0
+                  ],
+                  [
+                    7.5,
+                    48.5
+                  ],
+                  [
+                    6.5,
+                    43.5
+                  ],
+                  [
+                    -1.5,
+                    43.5
+                  ],
+                  [
+                    -4.5,
+                    48.5
+                  ]
+                ]
+              ],
               "side": "france",
-              "role": "major"
+              "role": "major",
+              "name_ar": "مملكة فرنسا (أسرة فالوا)",
+              "name_en": "Kingdom of France (House of Valois)",
+              "name_ru": "Королевство Франция (Валуа)",
+              "name_uz": "Fransiya qirolligi (Valua)",
+              "name_es": "Reino de Francia (Valois)"
             },
             {
-              "c": "Belgium",
+              "polity_id": "england_early_empire",
+              "rings": [
+                [
+                  [
+                    -3.5,
+                    54.0
+                  ],
+                  [
+                    0.5,
+                    54.0
+                  ],
+                  [
+                    1.4,
+                    51.2
+                  ],
+                  [
+                    -3.2,
+                    50.6
+                  ],
+                  [
+                    -3.5,
+                    54.0
+                  ]
+                ]
+              ],
               "side": "england",
-              "role": "ally"
-            },
-            {
-              "c": "Scotland",
-              "side": "france",
-              "role": "ally"
+              "role": "major",
+              "name_ar": "مملكة إنجلترا (أسرة بلانتاجانت)",
+              "name_en": "Kingdom of England (House of Plantagenet)",
+              "name_ru": "Королевство Англия (Плантагенеты)",
+              "name_uz": "Angliya qirolligi (Plantagenetlar)",
+              "name_es": "Reino de Inglaterra (Plantagenet)"
             }
           ],
           "empires": [],
@@ -3149,7 +3506,11 @@
           "title_es": "De Azincourt a Juana de Arco",
           "desc_ru": "Генрих V громит французских рыцарей при Азенкуре, но появление Жанны д'Арк переламывает ход войны в пользу Франции.",
           "desc_uz": "Genrix V ingliz kamonchilari yordamida Azenkurda gʻalaba qozonadi, biroq Janna d'Ark Fransiyani ozodlikka boshlaydi.",
-          "desc_es": "Enrique V triunfa en Azincourt gracias a los arqueros ingleses, antes de que Juana de Arco cambie el rumbo de la guerra."
+          "desc_es": "Enrique V triunfa en Azincourt gracias a los arqueros ingleses, antes de que Juana de Arco cambie el rumbo de la guerra.",
+          "battle_ids": [
+            "crecy-1346-ce",
+            "agincourt-1415-ce"
+          ]
         }
       ],
       "sides_en": {
@@ -3167,7 +3528,14 @@
       "sides_es": {
         "england": "Inglaterra y aliados",
         "france": "Francia y aliados"
-      }
+      },
+      "years_ru": "1337–1453 гг. н.э.",
+      "years_uz": "1337–1453-yillar",
+      "years_es": "1337–1453 d.C.",
+      "battle_ids": [
+        "crecy-1346-ce",
+        "agincourt-1415-ce"
+      ]
     },
     {
       "id": "hussite-1419",
@@ -3205,12 +3573,14 @@
             {
               "c": "Germany",
               "side": "coalition",
-              "role": "major"
+              "role": "major",
+              "polity_id": "habsburg"
             },
             {
               "c": "Austria",
               "side": "coalition",
-              "role": "major"
+              "role": "major",
+              "polity_id": "habsburg"
             },
             {
               "c": "Hungary",
@@ -3242,7 +3612,10 @@
       "sides_es": {
         "hussite": "Husitas bohemios (Jan Žižka)",
         "coalition": "Alianza papal y Sacro Imperio Romano Germánico"
-      }
+      },
+      "years_ru": "1419–1434 гг. н.э.",
+      "years_uz": "1419–1434-yillar",
+      "years_es": "1419–1434 d.C."
     },
     {
       "id": "imjin-1592",
@@ -3285,7 +3658,8 @@
             {
               "c": "China",
               "side": "korea-ming",
-              "role": "major"
+              "role": "major",
+              "polity_id": "ming"
             },
             {
               "c": "Japan",
@@ -3317,7 +3691,10 @@
       "sides_es": {
         "korea-ming": "Reino coreano de Joseon e Imperio Ming",
         "japan": "Japón (Toyotomi Hideyoshi)"
-      }
+      },
+      "years_ru": "1592–1598 гг. н.э.",
+      "years_uz": "1592–1598-yillar",
+      "years_es": "1592–1598 d.C."
     },
     {
       "id": "indian-rebellion-1857",
@@ -3387,7 +3764,10 @@
       "sides_es": {
         "rebels": "Rebeldes y cipayos indios (Bahadur Shah II)",
         "england": "Compañía de las Indias Orientales y Corona Británica"
-      }
+      },
+      "years_ru": "1857–1858 гг. н.э.",
+      "years_uz": "1857–1858-yillar",
+      "years_es": "1857–1858 d.C."
     },
     {
       "id": "italian-wars-1494",
@@ -3418,29 +3798,34 @@
           "desc_en": "Imperial-Spanish arquebusiers defeat French heavy cavalry at Pavia and capture King Francis I.",
           "participants": [
             {
-              "c": "Spain",
-              "side": "habsburg",
-              "role": "major"
-            },
-            {
-              "c": "Germany",
-              "side": "habsburg",
-              "role": "major"
-            },
-            {
-              "c": "Italy",
-              "side": "habsburg",
-              "role": "occupied"
-            },
-            {
-              "c": "France",
+              "polity_id": "france_louis14",
               "side": "france",
-              "role": "major"
+              "role": "major",
+              "name_ar": "مملكة فرنسا (فرانسوا الأول)",
+              "name_en": "Kingdom of France (Francis I)",
+              "name_ru": "Королевство Франция (Франциск I)",
+              "name_uz": "Fransiya qirolligi",
+              "name_es": "Reino de Francia (Francisco I)"
             },
             {
-              "c": "Switzerland",
-              "side": "france",
-              "role": "ally"
+              "polity_id": "habsburg",
+              "side": "habsburg",
+              "role": "major",
+              "name_ar": "إمبراطورية هابسبورغ وإسبانيا (شارلكان)",
+              "name_en": "Habsburg Empire & Spain (Charles V)",
+              "name_ru": "Империя Габсбургов и Испания (Карл V)",
+              "name_uz": "Gabsburglar imperiyasi va Ispaniya",
+              "name_es": "Imperio Habsburgo y España (Carlos V)"
+            },
+            {
+              "polity_id": "venetian-republic",
+              "side": "habsburg",
+              "role": "ally",
+              "name_ar": "جمهورية البندقية وحلفاؤها",
+              "name_en": "Republic of Venice & Allies",
+              "name_ru": "Венецианская республика",
+              "name_uz": "Venetsiya respublikasi",
+              "name_es": "República de Venecia"
             }
           ],
           "empires": [],
@@ -3449,7 +3834,10 @@
           "title_es": "Batalla de Pavía y hegemonía española",
           "desc_ru": "Имперско-испанские войска берут в плен французского короля Франциска I, закрепив контроль Габсбургов над Италией.",
           "desc_uz": "Gabsburglar qoʻshini Fransiya qiroli Fransisk I ni asir oladi va Italiyada Ispaniya hukmronligini oʻrnatadi.",
-          "desc_es": "Las fuerzas de Carlos I capturan al rey francés Francisco I en Pavía, consolidando la hegemonía española en Italia."
+          "desc_es": "Las fuerzas de Carlos I capturan al rey francés Francisco I en Pavía, consolidando la hegemonía española en Italia.",
+          "battle_ids": [
+            "pavia-1525-ce"
+          ]
         }
       ],
       "sides_en": {
@@ -3467,7 +3855,13 @@
       "sides_es": {
         "france": "Reino de Francia y aliados",
         "habsburg": "Imperio español y los Habsburgo"
-      }
+      },
+      "years_ru": "1494–1559 гг. н.э.",
+      "years_uz": "1494–1559-yillar",
+      "years_es": "1494–1559 d.C.",
+      "battle_ids": [
+        "pavia-1525-ce"
+      ]
     },
     {
       "id": "jewish-roman-66",
@@ -3498,29 +3892,48 @@
           "desc_en": "Titus's legions breach Jerusalem, destroying the Second Temple and initiating the major Jewish diaspora.",
           "participants": [
             {
-              "c": "Italy",
+              "polity_id": "roman-empire",
               "side": "rome",
-              "role": "major"
+              "role": "major",
+              "name_ar": "الإمبراطورية الرومانية (الفيالق الشرقية)",
+              "name_en": "Roman Empire (Legions of the East)",
+              "name_ru": "Римская империя",
+              "name_uz": "Rim imperiyasi",
+              "name_es": "Imperio Romano"
             },
             {
-              "c": "Syria",
-              "side": "rome",
-              "role": "ally"
-            },
-            {
-              "c": "Egypt",
-              "side": "rome",
-              "role": "ally"
-            },
-            {
-              "c": "Palestine",
-              "side": "rebels",
-              "role": "occupied"
-            },
-            {
-              "c": "Israel",
-              "side": "rebels",
-              "role": "occupied"
+              "polity_id": "crusader_jerusalem",
+              "rings": [
+                [
+                  [
+                    34.8,
+                    32.8
+                  ],
+                  [
+                    35.6,
+                    32.8
+                  ],
+                  [
+                    35.6,
+                    31.2
+                  ],
+                  [
+                    34.7,
+                    31.2
+                  ],
+                  [
+                    34.8,
+                    32.8
+                  ]
+                ]
+              ],
+              "side": "jewish",
+              "role": "major",
+              "name_ar": "الثوار اليهود في يهوذا",
+              "name_en": "Jewish Judean Rebels",
+              "name_ru": "Иудейские повстанцы",
+              "name_uz": "Yahudiya qoʻzgʻolonchilari",
+              "name_es": "Rebeldes de Judea"
             }
           ],
           "empires": [],
@@ -3529,7 +3942,10 @@
           "title_es": "Asedio de Jerusalén y destrucción del Templo",
           "desc_ru": "Римские легионы под командованием Тита штурмуют Иерусалим, сжигают Второй Храм и рассеивают еврейский народ.",
           "desc_uz": "Tit boshchiligidagi Rim legionlari Quddusni egallab, Ikkinchi maʼbadni butunlay vayron qiladi.",
-          "desc_es": "Tito sofoca la rebelión judía, destruyendo el Templo de Jerusalén e iniciando la gran diáspora."
+          "desc_es": "Tito sofoca la rebelión judía, destruyendo el Templo de Jerusalén e iniciando la gran diáspora.",
+          "battle_ids": [
+            "jerusalem-70-ce"
+          ]
         }
       ],
       "sides_en": {
@@ -3547,7 +3963,13 @@
       "sides_es": {
         "rome": "Imperio romano (Tito)",
         "rebels": "Rebeldes judíos y celotes"
-      }
+      },
+      "years_ru": "66–73 гг. н.э.",
+      "years_uz": "66–73-yillar",
+      "years_es": "66–73 d.C.",
+      "battle_ids": [
+        "jerusalem-70-ce"
+      ]
     },
     {
       "id": "kadesh-1274",
@@ -3646,7 +4068,10 @@
       ],
       "battle_ids": [
         "kadesh-1274-bce"
-      ]
+      ],
+      "years_ru": "1274 гг. до н.э.",
+      "years_uz": "mil. av. 1274 yillar",
+      "years_es": "1274 a.C."
     },
     {
       "id": "kalinga-261",
@@ -3677,19 +4102,48 @@
           "desc_en": "Devastating conquest of Kalinga causing massive casualties, prompting Emperor Ashoka to renounce violence and embrace Buddhism.",
           "participants": [
             {
-              "c": "India",
+              "polity_id": "maurya",
               "side": "maurya",
-              "role": "major"
+              "role": "major",
+              "name_ar": "الإمبراطورية الماورية (أشوكا الكبير)",
+              "name_en": "Maurya Empire (Ashoka the Great)",
+              "name_ru": "Империя Маурьев (Ашока)",
+              "name_uz": "Mavriya imperiyasi (Ashoka)",
+              "name_es": "Imperio Maurya (Ashoka el Grande)"
             },
             {
-              "c": "Pakistan",
-              "side": "maurya",
-              "role": "ally"
-            },
-            {
-              "c": "Bangladesh",
-              "side": "maurya",
-              "role": "occupied"
+              "polity_id": "indus",
+              "rings": [
+                [
+                  [
+                    84.0,
+                    21.5
+                  ],
+                  [
+                    87.0,
+                    21.5
+                  ],
+                  [
+                    86.5,
+                    18.5
+                  ],
+                  [
+                    83.5,
+                    18.5
+                  ],
+                  [
+                    84.0,
+                    21.5
+                  ]
+                ]
+              ],
+              "side": "kalinga",
+              "role": "major",
+              "name_ar": "دولة وجمهورية كالينغا المستقلة",
+              "name_en": "Independent State of Kalinga",
+              "name_ru": "Государство Калинга",
+              "name_uz": "Mustaqil Kalinga davlati",
+              "name_es": "Estado independiente de Kalinga"
             }
           ],
           "empires": [],
@@ -3698,7 +4152,10 @@
           "title_es": "Guerra de Kalinga y la conversión de Ashoka",
           "desc_ru": "Кровопролитное завоевание Калинги заставляет императора Ашоку раскаяться, принять буддизм и провозгласить ненасилие (ахимсу).",
           "desc_uz": "Kalinga urushidagi qirgʻin imperator Ashokani chuqur qaygʻuga solib, uni zoʻravonliksizlik va buddizm yoʻliga kiritadi.",
-          "desc_es": "La sangrienta conquista de Kalinga conmueve a Ashoka, quien renuncia a la guerra y abraza el budismo y la no violencia."
+          "desc_es": "La sangrienta conquista de Kalinga conmueve a Ashoka, quien renuncia a la guerra y abraza el budismo y la no violencia.",
+          "battle_ids": [
+            "kalinga-261-bce"
+          ]
         }
       ],
       "sides_en": {
@@ -3716,7 +4173,13 @@
       "sides_es": {
         "maurya": "Imperio Maurya (Ashoka)",
         "kalinga": "República independiente de Kalinga"
-      }
+      },
+      "years_ru": "261 гг. до н.э.",
+      "years_uz": "mil. av. 261 yillar",
+      "years_es": "261 a.C.",
+      "battle_ids": [
+        "kalinga-261-bce"
+      ]
     },
     {
       "id": "khazar-arab-652",
@@ -3747,29 +4210,24 @@
           "desc_en": "Umayyad general Marwan crosses the Caucasus gates, subduing the Khagan and stabilizing the northern frontier.",
           "participants": [
             {
-              "c": "Syria",
-              "side": "muslim",
-              "role": "major"
+              "polity_id": "umayyad",
+              "side": "caliphate",
+              "role": "major",
+              "name_ar": "دولة الخلافة الأموية / الراشدة",
+              "name_en": "Umayyad & Rashidun Caliphates",
+              "name_ru": "Арабский халифат",
+              "name_uz": "Arab xalifaligi",
+              "name_es": "Califato Árabe"
             },
             {
-              "c": "Saudi Arabia",
-              "side": "muslim",
-              "role": "major"
-            },
-            {
-              "c": "Azerbaijan",
-              "side": "muslim",
-              "role": "occupied"
-            },
-            {
-              "c": "Russia",
-              "side": "coalition",
-              "role": "major"
-            },
-            {
-              "c": "Georgia",
-              "side": "coalition",
-              "role": "ally"
+              "polity_id": "khazars",
+              "side": "khazars",
+              "role": "major",
+              "name_ar": "خاقانية الخزر التركية",
+              "name_en": "Khazar Khaganate",
+              "name_ru": "Хазарский каганат",
+              "name_uz": "Xazar xoqonligi",
+              "name_es": "Jaganato Jázaro"
             }
           ],
           "empires": [],
@@ -3796,7 +4254,10 @@
       "sides_es": {
         "muslim": "Califato omeya y Califato Rashidun",
         "coalition": "Jaganato jázaro y aliados"
-      }
+      },
+      "years_ru": "652–737 гг. н.э.",
+      "years_uz": "652–737-yillar",
+      "years_es": "652–737 d.C."
     },
     {
       "id": "korean-war-1950",
@@ -3886,7 +4347,10 @@
       "sides_es": {
         "un-south": "Naciones Unidas, Corea del Sur y Estados Unidos",
         "communist": "Corea del Norte, China y la Unión Soviética"
-      }
+      },
+      "years_ru": "1950–1953 гг. н.э.",
+      "years_uz": "1950–1953-yillar",
+      "years_es": "1950–1953 d.C."
     },
     {
       "id": "las-navas-1212",
@@ -3917,24 +4381,34 @@
           "desc_en": "A unified Christian coalition shatters the Almohad army, accelerating the southern advance into Andalusia.",
           "participants": [
             {
-              "c": "Spain",
-              "side": "coalition",
-              "role": "major"
+              "polity_id": "castile",
+              "side": "christians",
+              "role": "major",
+              "name_ar": "مملكة قشتالة والتحالف الإيبيري المسيحي",
+              "name_en": "Kingdom of Castile & Iberian Christian Allies",
+              "name_ru": "Королевство Кастилия и союзники",
+              "name_uz": "Kastiliya va xristian ittifoqchilari",
+              "name_es": "Reino de Castilla y aliados ibéricos"
             },
             {
-              "c": "Portugal",
-              "side": "coalition",
-              "role": "ally"
+              "polity_id": "aragon",
+              "side": "christians",
+              "role": "ally",
+              "name_ar": "تاج أراغون",
+              "name_en": "Crown of Aragon",
+              "name_ru": "Королевство Арагон",
+              "name_uz": "Aragon qirolligi",
+              "name_es": "Corona de Aragón"
             },
             {
-              "c": "Morocco",
-              "side": "muslim",
-              "role": "major"
-            },
-            {
-              "c": "Algeria",
-              "side": "muslim",
-              "role": "ally"
+              "polity_id": "almohad",
+              "side": "almohads",
+              "role": "major",
+              "name_ar": "الدولة الموحدية (الخليفة محمد الناصر)",
+              "name_en": "Almohad Caliphate (Muhammad al-Nasir)",
+              "name_ru": "Альмохадский халифат",
+              "name_uz": "Almohadlar xalifaligi",
+              "name_es": "Califato Almohade"
             }
           ],
           "empires": [],
@@ -3947,6 +4421,9 @@
           "coords": [
             -3.58,
             38.34
+          ],
+          "battle_ids": [
+            "las-navas-1212-ce"
           ]
         }
       ],
@@ -3969,6 +4446,12 @@
       "coords": [
         -3.58,
         38.34
+      ],
+      "years_ru": "1212 гг. н.э.",
+      "years_uz": "1212-yillar",
+      "years_es": "1212 d.C.",
+      "battle_ids": [
+        "las-navas-1212-ce"
       ]
     },
     {
@@ -4059,7 +4542,10 @@
       "sides_es": {
         "patriots": "Ejércitos libertadores (Simón Bolívar y San Martín)",
         "royalists": "Monarquía española y ejército virreinal"
-      }
+      },
+      "years_ru": "1808–1826 гг. н.э.",
+      "years_uz": "1808–1826-yillar",
+      "years_es": "1808–1826 d.C."
     },
     {
       "id": "lepanto-1571",
@@ -4092,12 +4578,14 @@
             {
               "c": "Spain",
               "side": "coalition",
-              "role": "major"
+              "role": "major",
+              "polity_id": "castile"
             },
             {
               "c": "Italy",
               "side": "coalition",
-              "role": "major"
+              "role": "major",
+              "polity_id": "venetian-republic"
             },
             {
               "c": "Turkey",
@@ -4150,7 +4638,10 @@
       ],
       "battle_ids": [
         "lepanto-1571-ce"
-      ]
+      ],
+      "years_ru": "1571 гг. н.э.",
+      "years_uz": "1571-yillar",
+      "years_es": "1571 d.C."
     },
     {
       "id": "mahdiyya-sudan-1881",
@@ -4220,7 +4711,10 @@
       "sides_es": {
         "muslim": "Estado mahdista de Sudán (Muhammad Ahmad al-Mahdi)",
         "england": "Imperio británico y Jedivato de Egipto"
-      }
+      },
+      "years_ru": "1881–1899 гг. н.э.",
+      "years_uz": "1881–1899-yillar",
+      "years_es": "1881–1899 d.C."
     },
     {
       "id": "mamluk-ottoman-1516",
@@ -4307,7 +4801,10 @@
       "coords": [
         37.19,
         36.56
-      ]
+      ],
+      "years_ru": "1516–1517 гг. н.э.",
+      "years_uz": "1516–1517-yillar",
+      "years_es": "1516–1517 d.C."
     },
     {
       "id": "manchu-conquest-1618",
@@ -4340,7 +4837,8 @@
             {
               "c": "China",
               "side": "qing",
-              "role": "major"
+              "role": "major",
+              "polity_id": "ming"
             },
             {
               "c": "Mongolia",
@@ -4372,7 +4870,10 @@
       "sides_es": {
         "qing": "Tribus manchúes y estado Qing",
         "ming": "Dinastía Ming de China y leales"
-      }
+      },
+      "years_ru": "1618–1683 гг. н.э.",
+      "years_uz": "1618–1683-yillar",
+      "years_es": "1618–1683 d.C."
     },
     {
       "id": "manzikert-1071",
@@ -4465,7 +4966,10 @@
       ],
       "battle_ids": [
         "manzikert-1071-ce"
-      ]
+      ],
+      "years_ru": "1071 гг. н.э.",
+      "years_uz": "1071-yillar",
+      "years_es": "1071 d.C."
     },
     {
       "id": "maratha-mughal-1680",
@@ -4496,14 +5000,24 @@
           "desc_en": "Emperor Aurangzeb's long southern campaigns bog down against resilient Maratha guerrilla warfare, precipitating Mughal decline.",
           "participants": [
             {
-              "c": "India",
-              "side": "mughal",
-              "role": "major"
+              "polity_id": "maratha-confederacy",
+              "side": "maratha",
+              "role": "major",
+              "name_ar": "إمبراطورية ماراثا (شيفاجي وسامبهاجي)",
+              "name_en": "Maratha Empire (Shivaji & Sambhaji)",
+              "name_ru": "Империя Маратха",
+              "name_uz": "Marathlar imperiyasi",
+              "name_es": "Imperio Maratha"
             },
             {
-              "c": "Pakistan",
+              "polity_id": "mughal",
               "side": "mughal",
-              "role": "major"
+              "role": "major",
+              "name_ar": "سلطنة مغول الهند (أورنكزيب عالمكير)",
+              "name_en": "Mughal Empire (Aurangzeb Alamgir)",
+              "name_ru": "Империя Великих Моголов (Аурангзеб)",
+              "name_uz": "Boburiylar saltanati (Avrangzeb)",
+              "name_es": "Imperio Mogol (Aurangzeb)"
             }
           ],
           "empires": [],
@@ -4530,7 +5044,10 @@
       "sides_es": {
         "mughal": "Imperio mogol (Aurangzeb)",
         "maratha": "Imperio maratha (Shivaji)"
-      }
+      },
+      "years_ru": "1680–1707 гг. н.э.",
+      "years_uz": "1680–1707-yillar",
+      "years_es": "1680–1707 d.C."
     },
     {
       "id": "marcomannic-166",
@@ -4561,34 +5078,48 @@
           "desc_en": "Marcus Aurelius defends the Danubian limes against massive Germanic incursions, authoring his Meditations on campaign.",
           "participants": [
             {
-              "c": "Italy",
+              "polity_id": "roman-empire",
               "side": "rome",
-              "role": "major"
+              "role": "major",
+              "name_ar": "الإمبراطورية الرومانية (ماركوس أوريليوس)",
+              "name_en": "Roman Empire (Marcus Aurelius)",
+              "name_ru": "Римская империя (Марк Аврелий)",
+              "name_uz": "Rim imperiyasi (Mark Avreliy)",
+              "name_es": "Imperio Romano (Marco Aurelio)"
             },
             {
-              "c": "Austria",
-              "side": "rome",
-              "role": "major"
-            },
-            {
-              "c": "Germany",
-              "side": "coalition",
-              "role": "major"
-            },
-            {
-              "c": "Czechia",
-              "side": "coalition",
-              "role": "major"
-            },
-            {
-              "c": "Slovakia",
-              "side": "coalition",
-              "role": "ally"
-            },
-            {
-              "c": "Hungary",
-              "side": "coalition",
-              "role": "occupied"
+              "polity_id": "visigoths",
+              "rings": [
+                [
+                  [
+                    11.5,
+                    50.5
+                  ],
+                  [
+                    17.5,
+                    50.5
+                  ],
+                  [
+                    18.0,
+                    48.0
+                  ],
+                  [
+                    12.0,
+                    48.0
+                  ],
+                  [
+                    11.5,
+                    50.5
+                  ]
+                ]
+              ],
+              "side": "tribes",
+              "role": "major",
+              "name_ar": "اتحاد الماركومانيين والقبائل الجرمانية",
+              "name_en": "Marcomannic & Germanic Coalition",
+              "name_ru": "Маркоманны и германские племена",
+              "name_uz": "Markomanlar va german qabilalari",
+              "name_es": "Coalición marcomana y germánica"
             }
           ],
           "empires": [],
@@ -4615,7 +5146,10 @@
       "sides_es": {
         "rome": "Imperio romano",
         "coalition": "Coalición germánica y sármata (Marcomana)"
-      }
+      },
+      "years_ru": "166–180 гг. н.э.",
+      "years_uz": "166–180-yillar",
+      "years_es": "166–180 d.C."
     },
     {
       "id": "mexican-american-1846",
@@ -4680,7 +5214,10 @@
       "sides_es": {
         "union": "Estados Unidos de América",
         "mexico": "República Mexicana"
-      }
+      },
+      "years_ru": "1846–1848 гг. н.э.",
+      "years_uz": "1846–1848-yillar",
+      "years_es": "1846–1848 d.C."
     },
     {
       "id": "mongol-1258",
@@ -4737,7 +5274,8 @@
             {
               "c": "Egypt",
               "side": "islamic",
-              "role": "major"
+              "role": "major",
+              "polity_id": "ayyubid"
             },
             {
               "c": "Syria",
@@ -4788,7 +5326,10 @@
       ],
       "battle_ids": [
         "ain-jalut-1260-ce"
-      ]
+      ],
+      "years_ru": "1256–1260 гг. н.э.",
+      "years_uz": "1256–1260-yillar",
+      "years_es": "1256–1260 d.C."
     },
     {
       "id": "mongol-rus-1237",
@@ -4881,7 +5422,10 @@
       "coords": [
         37.5,
         47.5
-      ]
+      ],
+      "years_ru": "1237–1242 гг. н.э.",
+      "years_uz": "1237–1242-yillar",
+      "years_es": "1237–1242 d.C."
     },
     {
       "id": "napoleonic-1803",
@@ -5044,7 +5588,10 @@
       ],
       "battle_ids": [
         "waterloo-1815-ce"
-      ]
+      ],
+      "years_ru": "1803–1815 гг. н.э.",
+      "years_uz": "1803–1815-yillar",
+      "years_es": "1803–1815 d.C."
     },
     {
       "id": "nineveh-612",
@@ -5075,24 +5622,34 @@
           "desc_en": "Combined Babylonian and Mede armies besiege and destroy Nineveh, ending centuries of Assyrian military supremacy.",
           "participants": [
             {
-              "c": "Iraq",
+              "polity_id": "neo-babylon",
               "side": "coalition",
-              "role": "major"
+              "role": "major",
+              "name_ar": "الإمبراطورية البابلية الحديثة (نبوبولاسر)",
+              "name_en": "Neo-Babylonian Empire (Nabopolassar)",
+              "name_ru": "Нововавилонское царство",
+              "name_uz": "Yangi Bobil saltanati",
+              "name_es": "Imperio Neobabilonio"
             },
             {
-              "c": "Iran",
+              "polity_id": "achaemenid",
               "side": "coalition",
-              "role": "major"
+              "role": "ally",
+              "name_ar": "الإمبراطورية الميدية (سياخريس)",
+              "name_en": "Median Empire (Cyaxares)",
+              "name_ru": "Мидийская держава",
+              "name_uz": "Midiya saltanati",
+              "name_es": "Imperio Medo"
             },
             {
-              "c": "Syria",
+              "polity_id": "assyrian-empire",
               "side": "assyria",
-              "role": "occupied"
-            },
-            {
-              "c": "Egypt",
-              "side": "assyria",
-              "role": "ally"
+              "role": "major",
+              "name_ar": "الإمبراطورية الآشورية الحديثة",
+              "name_en": "Neo-Assyrian Empire",
+              "name_ru": "Новоассирийская держава",
+              "name_uz": "Yangi Ossuriya imperiyasi",
+              "name_es": "Imperio Neoasirio"
             }
           ],
           "empires": [],
@@ -5101,7 +5658,10 @@
           "title_es": "El saqueo de Nínive",
           "desc_ru": "Союз вавилонян и мидийцев штурмует и разрушает Ниневию, сокрушая великую Ассирийскую империю.",
           "desc_uz": "Bobil va Midiya ittifoqchilari Ninaviyani vayron qilib, qudratli Ossuriya imperiyasiga chek qoʻyadi.",
-          "desc_es": "La alianza de medos y babilonios toma y destruye Nínive, marcando el fin del Imperio neoasirio."
+          "desc_es": "La alianza de medos y babilonios toma y destruye Nínive, marcando el fin del Imperio neoasirio.",
+          "battle_ids": [
+            "nineveh-612-bce"
+          ]
         }
       ],
       "sides_en": {
@@ -5119,7 +5679,13 @@
       "sides_es": {
         "coalition": "Alianza babilónica, meda y caldea",
         "assyria": "Imperio neoasirio y aliados"
-      }
+      },
+      "years_ru": "614–609 гг. до н.э.",
+      "years_uz": "mil. av. 614–609 yillar",
+      "years_es": "614–609 a.C.",
+      "battle_ids": [
+        "nineveh-612-bce"
+      ]
     },
     {
       "id": "norman-1066",
@@ -5150,19 +5716,72 @@
           "desc_en": "William the Conqueror defeats Harold Godwinson at Hastings, replacing the Anglo-Saxon elite with an Anglo-Norman aristocracy.",
           "participants": [
             {
-              "c": "France",
-              "side": "norman",
-              "role": "major"
+              "polity_id": "carolingians",
+              "rings": [
+                [
+                  [
+                    -1.8,
+                    49.7
+                  ],
+                  [
+                    1.5,
+                    49.9
+                  ],
+                  [
+                    1.6,
+                    48.8
+                  ],
+                  [
+                    -1.5,
+                    48.6
+                  ],
+                  [
+                    -1.8,
+                    49.7
+                  ]
+                ]
+              ],
+              "side": "normans",
+              "role": "major",
+              "name_ar": "دوقية نورماندي (وليام الفاتح)",
+              "name_en": "Duchy of Normandy (William the Conqueror)",
+              "name_ru": "Герцогство Нормандия",
+              "name_uz": "Normandiya gersogligi",
+              "name_es": "Ducado de Normandía"
             },
             {
-              "c": "United Kingdom",
-              "side": "anglo-saxon",
-              "role": "occupied"
-            },
-            {
-              "c": "Norway",
-              "side": "anglo-saxon",
-              "role": "ally"
+              "polity_id": "england_early_empire",
+              "rings": [
+                [
+                  [
+                    -3.5,
+                    54.0
+                  ],
+                  [
+                    0.5,
+                    54.0
+                  ],
+                  [
+                    1.4,
+                    51.2
+                  ],
+                  [
+                    -3.2,
+                    50.6
+                  ],
+                  [
+                    -3.5,
+                    54.0
+                  ]
+                ]
+              ],
+              "side": "english",
+              "role": "major",
+              "name_ar": "إنجلترا الأنجلوسكسونية (الملك هارولد الثاني)",
+              "name_en": "Anglo-Saxon England (King Harold II)",
+              "name_ru": "Англосаксонское королевство",
+              "name_uz": "Anglosaks qirolligi",
+              "name_es": "Inglaterra Anglosajona"
             }
           ],
           "empires": [],
@@ -5171,7 +5790,10 @@
           "title_es": "Batalla de Hastings",
           "desc_ru": "Вильгельм Завоеватель разбивает короля Гарольда II при Гастингсе, подчиняя Англию норманнам.",
           "desc_uz": "Vilgelm Bosqinchi qirol Garold II ni yengib, Angliya taxtini va normannlar sulolasini oʻrnatadi.",
-          "desc_es": "Guillermo el Conquistador derrota y mata al rey sajón Haroldo en Hastings, iniciando la conquista normanda de Inglaterra."
+          "desc_es": "Guillermo el Conquistador derrota y mata al rey sajón Haroldo en Hastings, iniciando la conquista normanda de Inglaterra.",
+          "battle_ids": [
+            "hastings-1066-ce"
+          ]
         }
       ],
       "sides_en": {
@@ -5189,7 +5811,13 @@
       "sides_es": {
         "norman": "Ducado de Normandía (Guillermo el Conquistador)",
         "anglo-saxon": "Reino anglosajón (Haroldo Godwinson)"
-      }
+      },
+      "years_ru": "1066 гг. н.э.",
+      "years_uz": "1066-yillar",
+      "years_es": "1066 d.C.",
+      "battle_ids": [
+        "hastings-1066-ce"
+      ]
     },
     {
       "id": "october-1973",
@@ -5293,7 +5921,10 @@
       ],
       "battle_ids": [
         "october-crossing-1973-ce"
-      ]
+      ],
+      "years_ru": "1973 гг. н.э.",
+      "years_uz": "1973-yillar",
+      "years_es": "1973 d.C."
     },
     {
       "id": "opium-war-1839",
@@ -5363,7 +5994,10 @@
       "sides_es": {
         "england": "Imperio británico",
         "qing": "Dinastía Qing de China"
-      }
+      },
+      "years_ru": "1839–1842 гг. н.э.",
+      "years_uz": "1839–1842-yillar",
+      "years_es": "1839–1842 d.C."
     },
     {
       "id": "panipat1-1526",
@@ -5449,7 +6083,10 @@
       "coords": [
         76.96,
         29.39
-      ]
+      ],
+      "years_ru": "1526 гг. н.э.",
+      "years_uz": "1526-yillar",
+      "years_es": "1526 d.C."
     },
     {
       "id": "panipat2-1556",
@@ -5524,7 +6161,10 @@
       "coords": [
         76.96,
         29.39
-      ]
+      ],
+      "years_ru": "1556 гг. н.э.",
+      "years_uz": "1556-yillar",
+      "years_es": "1556 d.C."
     },
     {
       "id": "paraguayan-war-1864",
@@ -5599,7 +6239,10 @@
       "sides_es": {
         "paraguay": "República del Paraguay (Francisco Solano López)",
         "coalition": "Triple Alianza (Brasil, Argentina y Uruguay)"
-      }
+      },
+      "years_ru": "1864–1870 гг. н.э.",
+      "years_uz": "1864–1870-yillar",
+      "years_es": "1864–1870 d.C."
     },
     {
       "id": "peloponnesian-431",
@@ -5630,24 +6273,58 @@
           "desc_en": "The struggle for Greek hegemony between maritime Athenian democracy and Spartan militarism.",
           "participants": [
             {
-              "c": "Greece",
+              "polity_id": "athenian-empire",
               "side": "delian",
-              "role": "major"
+              "role": "major",
+              "name_ar": "الحلف الديلي الإمبراطوري (أثينا)",
+              "name_en": "Delian League (Athens)",
+              "name_ru": "Делосский союз (Афины)",
+              "name_uz": "Delos ittifoqi (Afina)",
+              "name_es": "Liga de Delos (Atenas)"
             },
             {
-              "c": "Turkey",
-              "side": "delian",
-              "role": "ally"
-            },
-            {
-              "c": "Italy",
+              "polity_id": "greek-states",
+              "rings": [
+                [
+                  [
+                    21.5,
+                    38.0
+                  ],
+                  [
+                    23.2,
+                    37.8
+                  ],
+                  [
+                    23.1,
+                    36.4
+                  ],
+                  [
+                    21.6,
+                    36.7
+                  ],
+                  [
+                    21.5,
+                    38.0
+                  ]
+                ]
+              ],
               "side": "peloponnesian",
-              "role": "ally"
+              "role": "major",
+              "name_ar": "الحلف البيلوبونيزي (إسبرطة وحلفاؤها)",
+              "name_en": "Peloponnesian League (Sparta)",
+              "name_ru": "Пелопоннесский союз (Спарта)",
+              "name_uz": "Peloponnes ittifoqi (Sparta)",
+              "name_es": "Liga del Peloponeso (Esparta)"
             },
             {
-              "c": "Iran",
+              "polity_id": "achaemenid",
               "side": "peloponnesian",
-              "role": "ally"
+              "role": "ally",
+              "name_ar": "الإمبراطورية الأخمينية (تمويل الأسطول)",
+              "name_en": "Achaemenid Empire (Naval Funding)",
+              "name_ru": "Держава Ахеменидов",
+              "name_uz": "Ahamoniylar imperiyasi",
+              "name_es": "Imperio Aqueménida"
             }
           ],
           "empires": [],
@@ -5660,6 +6337,9 @@
           "coords": [
             23.72,
             37.98
+          ],
+          "battle_ids": [
+            "aegospotami-405-bce"
           ]
         }
       ],
@@ -5682,6 +6362,12 @@
       "coords": [
         23.72,
         37.98
+      ],
+      "years_ru": "431–404 гг. до н.э.",
+      "years_uz": "mil. av. 431–404 yillar",
+      "years_es": "431–404 a.C.",
+      "battle_ids": [
+        "aegospotami-405-bce"
       ]
     },
     {
@@ -5763,7 +6449,10 @@
       "coords": [
         12.48,
         41.89
-      ]
+      ],
+      "years_ru": "264–241 гг. до н.э.",
+      "years_uz": "mil. av. 264–241 yillar",
+      "years_es": "264–241 a.C."
     },
     {
       "id": "punic2-218",
@@ -5864,7 +6553,10 @@
       "battle_ids": [
         "cannae-216-bce",
         "zama-202-bce"
-      ]
+      ],
+      "years_ru": "218–201 гг. до н.э.",
+      "years_uz": "mil. av. 218–201 yillar",
+      "years_es": "218–201 a.C."
     },
     {
       "id": "punic3-149",
@@ -5945,7 +6637,10 @@
       "coords": [
         10.33,
         36.85
-      ]
+      ],
+      "years_ru": "149–146 гг. до н.э.",
+      "years_uz": "mil. av. 149–146 yillar",
+      "years_es": "149–146 a.C."
     },
     {
       "id": "qin-unification-230",
@@ -5976,9 +6671,48 @@
           "desc_en": "King Zheng of Qin annexes the last rival state of Qi, proclaiming himself the First Emperor of a unified China.",
           "participants": [
             {
-              "c": "China",
+              "polity_id": "qin",
               "side": "qin",
-              "role": "major"
+              "role": "major",
+              "name_ar": "دولة تشين (تشين شي هوانغ)",
+              "name_en": "State of Qin (Qin Shi Huang)",
+              "name_ru": "Царство Цинь",
+              "name_uz": "Sin podsholigi",
+              "name_es": "Estado de Qin"
+            },
+            {
+              "polity_id": "central",
+              "rings": [
+                [
+                  [
+                    112,
+                    38
+                  ],
+                  [
+                    118,
+                    38
+                  ],
+                  [
+                    119,
+                    31
+                  ],
+                  [
+                    112,
+                    31
+                  ],
+                  [
+                    112,
+                    38
+                  ]
+                ]
+              ],
+              "side": "coalition",
+              "role": "major",
+              "name_ar": "تحالف الممالك الست الشرقية المتحاربة",
+              "name_en": "Six Warring States Coalition",
+              "name_ru": "Коалиция шести восточных царств",
+              "name_uz": "Olti sharqiy podsholik koalitsiyasi",
+              "name_es": "Coalición de los Seis Reinos Combatientes"
             }
           ],
           "empires": [],
@@ -6005,7 +6739,10 @@
       "sides_es": {
         "qin": "Estado de Qin (Qin Shi Huang)",
         "six-states": "Alianza de los seis estados rivales"
-      }
+      },
+      "years_ru": "230–221 гг. до н.э.",
+      "years_uz": "mil. av. 230–221 yillar",
+      "years_es": "230–221 a.C."
     },
     {
       "id": "ridda-632",
@@ -6036,19 +6773,48 @@
           "desc_en": "Khalid ibn al-Walid secures central and eastern Arabia at Yamama, unifying the peninsula prior to external expansions.",
           "participants": [
             {
-              "c": "Saudi Arabia",
-              "side": "rashidun",
-              "role": "major"
+              "polity_id": "rashidun",
+              "side": "caliphate",
+              "role": "major",
+              "name_ar": "دولة الخلافة الراشدة (أبو بكر الصديق)",
+              "name_en": "Rashidun Caliphate (Abu Bakr)",
+              "name_ru": "Праведный халифат (Абу Бакр)",
+              "name_uz": "Roshidun xalifaligi (Abu Bakr)",
+              "name_es": "Califato Ortodoxo (Abu Bakr)"
             },
             {
-              "c": "Yemen",
-              "side": "rashidun",
-              "role": "occupied"
-            },
-            {
-              "c": "Oman",
-              "side": "rashidun",
-              "role": "ally"
+              "polity_id": "lakhmid-kingdom",
+              "rings": [
+                [
+                  [
+                    43,
+                    27
+                  ],
+                  [
+                    49,
+                    27
+                  ],
+                  [
+                    48,
+                    22
+                  ],
+                  [
+                    42,
+                    22
+                  ],
+                  [
+                    43,
+                    27
+                  ]
+                ]
+              ],
+              "side": "rebels",
+              "role": "major",
+              "name_ar": "قبائل الردة (مسيلمة وطليحة والأسود)",
+              "name_en": "Rebel Tribes (Musaylimah, Tulayha, etc.)",
+              "name_ru": "Мятежные племена Аравии",
+              "name_uz": "Arabiston isyonchi qabilalari",
+              "name_es": "Tribus rebeldes de Arabia"
             }
           ],
           "empires": [],
@@ -6061,6 +6827,9 @@
           "coords": [
             46.72,
             24.13
+          ],
+          "battle_ids": [
+            "yamama-632-ce"
           ]
         }
       ],
@@ -6083,6 +6852,12 @@
       "coords": [
         46.72,
         24.13
+      ],
+      "years_ru": "632–633 гг. н.э.",
+      "years_uz": "632–633-yillar",
+      "years_es": "632–633 d.C.",
+      "battle_ids": [
+        "yamama-632-ce"
       ]
     },
     {
@@ -6153,7 +6928,10 @@
       "sides_es": {
         "morocco": "República del Rif (Abd el-Krim)",
         "coalition": "Alianza colonial hispano-francesa"
-      }
+      },
+      "years_ru": "1921–1926 гг. н.э.",
+      "years_uz": "1921–1926-yillar",
+      "years_es": "1921–1926 d.C."
     },
     {
       "id": "rome-civil-49",
@@ -6184,29 +6962,34 @@
           "desc_en": "Caesar crosses the Rubicon and crushes Pompey's senatorial forces at Pharsalus, signaling the death of the Roman Republic.",
           "participants": [
             {
-              "c": "Italy",
-              "side": "union",
-              "role": "major"
+              "polity_id": "roman-empire",
+              "side": "caesar",
+              "role": "major",
+              "name_ar": "الفصيل القيصري (يوليوس قيصر)",
+              "name_en": "Caesarian Faction (Julius Caesar)",
+              "name_ru": "Фракция Цезаря",
+              "name_uz": "Sezar tarafdorlari",
+              "name_es": "Facción de Julio César"
             },
             {
-              "c": "France",
-              "side": "union",
-              "role": "ally"
+              "polity_id": "rome-republic",
+              "side": "pompey",
+              "role": "major",
+              "name_ar": "الفصيل الجمهوري السناتوري (بومبيوس)",
+              "name_en": "Senatorial Faction (Pompey)",
+              "name_ru": "Сенатская фракция Помпея",
+              "name_uz": "Pompey senat fraksiyasi",
+              "name_es": "Facción senatorial de Pompeyo"
             },
             {
-              "c": "Greece",
-              "side": "coalition",
-              "role": "major"
-            },
-            {
-              "c": "Spain",
-              "side": "coalition",
-              "role": "occupied"
-            },
-            {
-              "c": "Egypt",
-              "side": "union",
-              "role": "occupied"
+              "polity_id": "ptolemaic-egypt",
+              "side": "caesar",
+              "role": "ally",
+              "name_ar": "المملكة البطلمية (كليوباترا السابعة)",
+              "name_en": "Ptolemaic Kingdom (Cleopatra VII)",
+              "name_ru": "Птолемеевский Египет (Клеопатра)",
+              "name_uz": "Ptolemeylar Misri (Kleopatra)",
+              "name_es": "Reino Ptolemaico (Cleopatra)"
             }
           ],
           "empires": [],
@@ -6247,7 +7030,10 @@
       ],
       "battle_ids": [
         "actium-31-bce"
-      ]
+      ],
+      "years_ru": "49–45 гг. до н.э.",
+      "years_uz": "mil. av. 49–45 yillar",
+      "years_es": "49–45 a.C."
     },
     {
       "id": "russo-japanese-1904",
@@ -6322,7 +7108,10 @@
       "sides_es": {
         "japan": "Imperio de Japón",
         "russia": "Imperio ruso zarista"
-      }
+      },
+      "years_ru": "1904–1905 гг. н.э.",
+      "years_uz": "1904–1905-yillar",
+      "years_es": "1904–1905 d.C."
     },
     {
       "id": "russo-turkish-1877",
@@ -6402,7 +7191,10 @@
       "sides_es": {
         "russia": "Imperio ruso y Estados balcánicos",
         "ottoman": "Imperio otomano"
-      }
+      },
+      "years_ru": "1877–1878 гг. н.э.",
+      "years_uz": "1877–1878-yillar",
+      "years_es": "1877–1878 d.C."
     },
     {
       "id": "sasanian-rome-240",
@@ -6495,7 +7287,10 @@
       "coords": [
         38.79,
         37.16
-      ]
+      ],
+      "years_ru": "240–260 гг. н.э.",
+      "years_uz": "240–260-yillar",
+      "years_es": "240–260 d.C."
     },
     {
       "id": "scottish-indep-1296",
@@ -6526,19 +7321,72 @@
           "desc_en": "Robert the Bruce achieves a historic victory over Edward II at Bannockburn, preserving Scottish sovereignty.",
           "participants": [
             {
-              "c": "United Kingdom",
+              "polity_id": "england_early_empire",
+              "rings": [
+                [
+                  [
+                    -6.0,
+                    58.5
+                  ],
+                  [
+                    -2.0,
+                    58.5
+                  ],
+                  [
+                    -2.0,
+                    55.5
+                  ],
+                  [
+                    -5.0,
+                    55.0
+                  ],
+                  [
+                    -6.0,
+                    58.5
+                  ]
+                ]
+              ],
+              "side": "scotland",
+              "role": "major",
+              "name_ar": "مملكة اسكتلندا (روبرت بروس ووالاس)",
+              "name_en": "Kingdom of Scotland (Robert the Bruce)",
+              "name_ru": "Королевство Шотландия",
+              "name_uz": "Shotlandiya qirolligi",
+              "name_es": "Reino de Escocia"
+            },
+            {
+              "polity_id": "england_early_empire",
+              "rings": [
+                [
+                  [
+                    -3.5,
+                    54.0
+                  ],
+                  [
+                    0.5,
+                    54.0
+                  ],
+                  [
+                    1.4,
+                    51.2
+                  ],
+                  [
+                    -3.2,
+                    50.6
+                  ],
+                  [
+                    -3.5,
+                    54.0
+                  ]
+                ]
+              ],
               "side": "england",
-              "role": "major"
-            },
-            {
-              "c": "France",
-              "side": "scotland",
-              "role": "ally"
-            },
-            {
-              "c": "Ireland",
-              "side": "scotland",
-              "role": "ally"
+              "role": "major",
+              "name_ar": "مملكة إنجلترا (إدوارد الأول وإدوارد الثاني)",
+              "name_en": "Kingdom of England (Edward I & II)",
+              "name_ru": "Королевство Англия",
+              "name_uz": "Angliya qirolligi",
+              "name_es": "Reino de Inglaterra"
             }
           ],
           "empires": [],
@@ -6547,7 +7395,10 @@
           "title_es": "Batalla de Bannockburn",
           "desc_ru": "Роберт Брюс наносит сокрушительное поражение превосходящей английской армии Эдуарда II при Бэннокберне.",
           "desc_uz": "Robert Bryus Bannokbernda Angliya qiroli Eduard II qoʻshinini yengib, Shotlandiya mustaqilligini saqlab qoladi.",
-          "desc_es": "Robert the Bruce derrota decisivamente al ejército inglés de Eduardo II, restaurando la soberanía escocesa."
+          "desc_es": "Robert the Bruce derrota decisivamente al ejército inglés de Eduardo II, restaurando la soberanía escocesa.",
+          "battle_ids": [
+            "bannockburn-1314-ce"
+          ]
         }
       ],
       "sides_en": {
@@ -6565,7 +7416,13 @@
       "sides_es": {
         "scotland": "Reino de Escocia y aliados franceses",
         "england": "Reino de Inglaterra (Eduardo I y Eduardo II)"
-      }
+      },
+      "years_ru": "1296–1328 гг. н.э.",
+      "years_uz": "1296–1328-yillar",
+      "years_es": "1296–1328 d.C.",
+      "battle_ids": [
+        "bannockburn-1314-ce"
+      ]
     },
     {
       "id": "sengoku-sekigahara-1600",
@@ -6640,7 +7497,10 @@
       ],
       "battle_ids": [
         "sekigahara-1600-ce"
-      ]
+      ],
+      "years_ru": "1600 гг. н.э.",
+      "years_uz": "1600-yillar",
+      "years_es": "1600 d.C."
     },
     {
       "id": "seven-years-1756",
@@ -6740,7 +7600,10 @@
       "sides_es": {
         "anglo-prussian": "Gran Bretaña, Prusia y Portugal",
         "coalition": "Francia, Austria, Rusia y España"
-      }
+      },
+      "years_ru": "1756–1763 гг. н.э.",
+      "years_uz": "1756–1763-yillar",
+      "years_es": "1756–1763 d.C."
     },
     {
       "id": "sindh-transoxiana-705",
@@ -6783,7 +7646,8 @@
             {
               "c": "Iran",
               "side": "muslim",
-              "role": "major"
+              "role": "major",
+              "polity_id": "abbasid"
             },
             {
               "c": "India",
@@ -6815,7 +7679,10 @@
       "sides_es": {
         "muslim": "Califato omeya (Qutayba y Muhammad ibn al-Qasim)",
         "eastern": "Reinos sogdianos y rajás de la India"
-      }
+      },
+      "years_ru": "705–715 гг. н.э.",
+      "years_uz": "705–715-yillar",
+      "years_es": "705–715 d.C."
     },
     {
       "id": "sino-japanese1-1894",
@@ -6890,7 +7757,10 @@
       "sides_es": {
         "japan": "Imperio de Japón moderno (Era Meiji)",
         "qing": "Dinastía Qing de China"
-      }
+      },
+      "years_ru": "1894–1895 гг. н.э.",
+      "years_uz": "1894–1895-yillar",
+      "years_es": "1894–1895 d.C."
     },
     {
       "id": "spanish-american-1898",
@@ -6965,7 +7835,10 @@
       "sides_es": {
         "union": "Estados Unidos, rebeldes cubanos y filipinos",
         "royalists": "Reino colonial de España"
-      }
+      },
+      "years_ru": "1898 гг. н.э.",
+      "years_uz": "1898-yillar",
+      "years_es": "1898 d.C."
     },
     {
       "id": "spanish-aztec-1519",
@@ -6998,7 +7871,8 @@
             {
               "c": "Spain",
               "side": "coalition",
-              "role": "major"
+              "role": "major",
+              "polity_id": "castile"
             },
             {
               "c": "Mexico",
@@ -7039,7 +7913,10 @@
       "coords": [
         -99.13,
         19.43
-      ]
+      ],
+      "years_ru": "1519–1521 гг. н.э.",
+      "years_uz": "1519–1521-yillar",
+      "years_es": "1519–1521 d.C."
     },
     {
       "id": "spanish-civil-1936",
@@ -7114,7 +7991,10 @@
       "sides_es": {
         "republicans": "Segunda República Española, Brigadas Internacionales y URSS",
         "nationalists": "Nacionalistas sublevados (Franco, con apoyo del Eje)"
-      }
+      },
+      "years_ru": "1936–1939 гг. н.э.",
+      "years_uz": "1936–1939-yillar",
+      "years_es": "1936–1939 d.C."
     },
     {
       "id": "spanish-inca-1532",
@@ -7147,7 +8027,8 @@
             {
               "c": "Spain",
               "side": "coalition",
-              "role": "major"
+              "role": "major",
+              "polity_id": "castile"
             },
             {
               "c": "Peru",
@@ -7200,7 +8081,10 @@
       "coords": [
         -78.51,
         -7.16
-      ]
+      ],
+      "years_ru": "1532–1572 гг. н.э.",
+      "years_uz": "1532–1572-yillar",
+      "years_es": "1532–1572 d.C."
     },
     {
       "id": "spanish-succ-1701",
@@ -7285,7 +8169,10 @@
       "sides_es": {
         "france": "Francia y España (Luis XIV y Felipe V)",
         "allies": "Gran Alianza (Gran Bretaña, Austria y Países Bajos)"
-      }
+      },
+      "years_ru": "1701–1714 гг. н.э.",
+      "years_uz": "1701–1714-yillar",
+      "years_es": "1701–1714 d.C."
     },
     {
       "id": "suez-crisis-1956",
@@ -7360,7 +8247,10 @@
       "sides_es": {
         "egypt": "República de Egipto (Gamal Abdel Nasser)",
         "coalition": "Alianza tripartita (Gran Bretaña, Francia e Israel)"
-      }
+      },
+      "years_ru": "1956 гг. н.э.",
+      "years_uz": "1956-yillar",
+      "years_es": "1956 d.C."
     },
     {
       "id": "taiping-1850",
@@ -7430,7 +8320,10 @@
       "sides_es": {
         "qing": "Dinastía Qing de China y potencias occidentales",
         "taiping": "Reino Celestial Taiping (Hong Xiuquan)"
-      }
+      },
+      "years_ru": "1850–1864 гг. н.э.",
+      "years_uz": "1850–1864-yillar",
+      "years_es": "1850–1864 d.C."
     },
     {
       "id": "talas-751",
@@ -7520,7 +8413,10 @@
       ],
       "battle_ids": [
         "talas-751-ce"
-      ]
+      ],
+      "years_ru": "751 гг. н.э.",
+      "years_uz": "751-yillar",
+      "years_es": "751 d.C."
     },
     {
       "id": "tamerlane-ankara-1402",
@@ -7558,7 +8454,8 @@
             {
               "c": "Iran",
               "side": "mongol",
-              "role": "major"
+              "role": "major",
+              "polity_id": "safavid"
             },
             {
               "c": "Turkey",
@@ -7605,7 +8502,10 @@
       "coords": [
         32.85,
         39.93
-      ]
+      ],
+      "years_ru": "1402 гг. н.э.",
+      "years_uz": "1402-yillar",
+      "years_es": "1402 d.C."
     },
     {
       "id": "thirty-years-1618",
@@ -7656,7 +8556,8 @@
             {
               "c": "France",
               "side": "anti-habsburg",
-              "role": "major"
+              "role": "major",
+              "polity_id": "france_louis14"
             },
             {
               "c": "Sweden",
@@ -7707,7 +8608,10 @@
       "coords": [
         12.35,
         51.4
-      ]
+      ],
+      "years_ru": "1618–1648 гг. н.э.",
+      "years_uz": "1618–1648-yillar",
+      "years_es": "1618–1648 d.C."
     },
     {
       "id": "three-kingdoms-220",
@@ -7738,9 +8642,106 @@
           "desc_en": "The fracturing of Han China into three rival dynasties competing for the Mandate of Heaven.",
           "participants": [
             {
-              "c": "China",
+              "polity_id": "central",
+              "rings": [
+                [
+                  [
+                    109,
+                    39
+                  ],
+                  [
+                    119,
+                    39
+                  ],
+                  [
+                    119,
+                    33
+                  ],
+                  [
+                    109,
+                    33
+                  ],
+                  [
+                    109,
+                    39
+                  ]
+                ]
+              ],
               "side": "wei",
-              "role": "major"
+              "role": "major",
+              "name_ar": "مملكة تساو واي الشمالية",
+              "name_en": "Kingdom of Cao Wei",
+              "name_ru": "Царство Вэй",
+              "name_uz": "Vey podsholigi",
+              "name_es": "Reino de Cao Wei"
+            },
+            {
+              "polity_id": "shang",
+              "rings": [
+                [
+                  [
+                    102,
+                    33
+                  ],
+                  [
+                    108,
+                    33
+                  ],
+                  [
+                    108,
+                    27
+                  ],
+                  [
+                    102,
+                    27
+                  ],
+                  [
+                    102,
+                    33
+                  ]
+                ]
+              ],
+              "side": "shu",
+              "role": "major",
+              "name_ar": "مملكة شو هان (ليو باي)",
+              "name_en": "Kingdom of Shu Han (Liu Bei)",
+              "name_ru": "Царство Шу (Лю Бэй)",
+              "name_uz": "Shu podsholigi (Lyuk Bey)",
+              "name_es": "Reino de Shu Han"
+            },
+            {
+              "polity_id": "zhou-realm",
+              "rings": [
+                [
+                  [
+                    112,
+                    32
+                  ],
+                  [
+                    121,
+                    32
+                  ],
+                  [
+                    120,
+                    24
+                  ],
+                  [
+                    112,
+                    24
+                  ],
+                  [
+                    112,
+                    32
+                  ]
+                ]
+              ],
+              "side": "wu",
+              "role": "major",
+              "name_ar": "مملكة وو الشرقية (سون تشوان)",
+              "name_en": "Kingdom of Eastern Wu (Sun Quan)",
+              "name_ru": "Царство Восточное У",
+              "name_uz": "Sharqiy U podsholigi",
+              "name_es": "Reino de Wu Oriental"
             }
           ],
           "empires": [],
@@ -7749,7 +8750,10 @@
           "title_es": "Batalla de los Acantilados Rojos",
           "desc_ru": "Сунь Цюань и Лю Бэй сжигают флот Цао Цао при Чиби (Красных утесах), открывая эпоху Троецарствия в Китае.",
           "desc_uz": "Lyu Bey va Sun Tsyuan Chibi yonida Tsao Tsao flotini yondirib yuborib, Xitoyda Uch podsholik davrini boshlab beradi.",
-          "desc_es": "Liu Bei y Sun Quan derrotan la vasta flota de Cao Cao en los Acantilados Rojos, inaugurando el período de los Tres Reinos."
+          "desc_es": "Liu Bei y Sun Quan derrotan la vasta flota de Cao Cao en los Acantilados Rojos, inaugurando el período de los Tres Reinos.",
+          "battle_ids": [
+            "chibi-208-ce"
+          ]
         }
       ],
       "sides_en": {
@@ -7767,7 +8771,13 @@
       "sides_es": {
         "wei": "Reino de Wei (Cao Cao)",
         "allies": "Alianza Shu-Wu (Liu Bei y Sun Quan)"
-      }
+      },
+      "years_ru": "220–280 гг. н.э.",
+      "years_uz": "220–280-yillar",
+      "years_es": "220–280 d.C.",
+      "battle_ids": [
+        "chibi-208-ce"
+      ]
     },
     {
       "id": "vienna-1683",
@@ -7812,7 +8822,8 @@
             {
               "c": "Austria",
               "side": "coalition",
-              "role": "major"
+              "role": "major",
+              "polity_id": "habsburg"
             },
             {
               "c": "Poland",
@@ -7822,7 +8833,8 @@
             {
               "c": "Germany",
               "side": "coalition",
-              "role": "ally"
+              "role": "ally",
+              "polity_id": "habsburg"
             }
           ],
           "empires": [],
@@ -7857,7 +8869,10 @@
       "coords": [
         16.37,
         48.2
-      ]
+      ],
+      "years_ru": "1683–1699 гг. н.э.",
+      "years_uz": "1683–1699-yillar",
+      "years_es": "1683–1699 d.C."
     },
     {
       "id": "vienna-siege-1529",
@@ -7950,7 +8965,10 @@
       "coords": [
         16.37,
         48.2
-      ]
+      ],
+      "years_ru": "1526–1529 гг. н.э.",
+      "years_uz": "1526–1529-yillar",
+      "years_es": "1526–1529 d.C."
     },
     {
       "id": "vietnam-1955",
@@ -8045,7 +9063,10 @@
       "sides_es": {
         "un-south": "Estados Unidos, Vietnam del Sur y aliados",
         "communist": "Vietnam del Norte, Viet Cong, URSS y China"
-      }
+      },
+      "years_ru": "1955–1975 гг. н.э.",
+      "years_uz": "1955–1975-yillar",
+      "years_es": "1955–1975 d.C."
     },
     {
       "id": "viking-england-865",
@@ -8078,7 +9099,8 @@
             {
               "c": "United Kingdom",
               "side": "anglo-saxon",
-              "role": "major"
+              "role": "major",
+              "polity_id": "england_early_empire"
             },
             {
               "c": "Denmark",
@@ -8115,7 +9137,10 @@
       "sides_es": {
         "norse": "Gran ejército pagano (vikingos)",
         "anglo-saxon": "Reinos anglosajones (Alfredo el Grande)"
-      }
+      },
+      "years_ru": "865–878 гг. н.э.",
+      "years_uz": "865–878-yillar",
+      "years_es": "865–878 d.C."
     },
     {
       "id": "wars-of-roses-1455",
@@ -8148,12 +9173,14 @@
             {
               "c": "United Kingdom",
               "side": "lancaster",
-              "role": "major"
+              "role": "major",
+              "polity_id": "england_early_empire"
             },
             {
               "c": "France",
               "side": "lancaster",
-              "role": "ally"
+              "role": "ally",
+              "polity_id": "france_louis14"
             }
           ],
           "empires": [],
@@ -8180,7 +9207,10 @@
       "sides_es": {
         "lancaster": "Casa de Lancaster (Rosa Roja)",
         "york": "Casa de York (Rosa Blanca)"
-      }
+      },
+      "years_ru": "1455–1487 гг. н.э.",
+      "years_uz": "1455–1487-yillar",
+      "years_es": "1455–1487 d.C."
     },
     {
       "id": "wwi",
@@ -9052,7 +10082,10 @@
       "sides_es": {
         "entente": "Aliados (Triple Entente)",
         "central": "Potencias Centrales"
-      }
+      },
+      "years_ru": "1914–1918 гг. н.э.",
+      "years_uz": "1914–1918-yillar",
+      "years_es": "1914–1918 d.C."
     },
     {
       "id": "wwii",
@@ -10156,7 +11189,10 @@
       "battle_ids": [
         "stalingrad-1942-ce",
         "el-alamein-1942-ce"
-      ]
+      ],
+      "years_ru": "1939–1945 гг. н.э.",
+      "years_uz": "1939–1945-yillar",
+      "years_es": "1939–1945 d.C."
     },
     {
       "id": "yarmouk-636",
@@ -10187,39 +11223,34 @@
           "desc_en": "Decisive battles of Yarmouk and al-Qadisiyyah shatter Byzantine and Sasanian field armies.",
           "participants": [
             {
-              "c": "Saudi Arabia",
-              "side": "rashidun",
-              "role": "major"
+              "polity_id": "rashidun",
+              "side": "islam",
+              "role": "major",
+              "name_ar": "دولة الخلافة الراشدة",
+              "name_en": "Rashidun Caliphate",
+              "name_ru": "Праведный халифат",
+              "name_uz": "Roshidun xalifaligi",
+              "name_es": "Califato Ortodoxo"
             },
             {
-              "c": "Yemen",
-              "side": "rashidun",
-              "role": "ally"
+              "polity_id": "byzantine",
+              "side": "byz_pers",
+              "role": "major",
+              "name_ar": "الإمبراطورية البيزنطية (هرقل)",
+              "name_en": "Byzantine Empire (Heraclius)",
+              "name_ru": "Византийская империя",
+              "name_uz": "Vizantiya imperiyasi",
+              "name_es": "Imperio Bizantino"
             },
             {
-              "c": "Jordan",
-              "side": "rashidun",
-              "role": "occupied"
-            },
-            {
-              "c": "Syria",
-              "side": "empires",
-              "role": "occupied"
-            },
-            {
-              "c": "Iraq",
-              "side": "empires",
-              "role": "occupied"
-            },
-            {
-              "c": "Iran",
-              "side": "empires",
-              "role": "major"
-            },
-            {
-              "c": "Turkey",
-              "side": "empires",
-              "role": "major"
+              "polity_id": "sasanian",
+              "side": "byz_pers",
+              "role": "major",
+              "name_ar": "الإمبراطورية الساسانية (يزدجرد الثالث)",
+              "name_en": "Sasanian Empire (Yazdegerd III)",
+              "name_ru": "Государство Сасанидов",
+              "name_uz": "Sosoniylar davlati",
+              "name_es": "Imperio Sasánida"
             }
           ],
           "empires": [],
@@ -10262,7 +11293,10 @@
       "battle_ids": [
         "yarmouk-636-ce",
         "qadisiyyah-636-ce"
-      ]
+      ],
+      "years_ru": "632–651 гг. н.э.",
+      "years_uz": "632–651-yillar",
+      "years_es": "632–651 d.C."
     },
     {
       "id": "zallaqa-1086",
@@ -10342,7 +11376,10 @@
       "coords": [
         -6.97,
         38.88
-      ]
+      ],
+      "years_ru": "1086 гг. н.э.",
+      "years_uz": "1086-yillar",
+      "years_es": "1086 d.C."
     }
   ]
 }

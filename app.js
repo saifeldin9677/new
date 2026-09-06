@@ -8437,7 +8437,12 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         var minDiff = Infinity;
                         for (var i = 0; i < eras.length; i++) {
                             var era = eras[i];
-                            var pols = era.polities || [];
+                            var pols = (era.polities || []).slice();
+                            if (era.phases) {
+                                if (era.phases.peak && era.phases.peak.polities) pols = pols.concat(era.phases.peak.polities);
+                                if (era.phases.start && era.phases.start.polities) pols = pols.concat(era.phases.start.polities);
+                                if (era.phases.end && era.phases.end.polities) pols = pols.concat(era.phases.end.polities);
+                            }
                             for (var j = 0; j < pols.length; j++) {
                                 if (pols[j].id === pid && pols[j].rings && pols[j].rings.length) {
                                     var diff = (typeof warYear === 'number' && typeof era.sort === 'number') ? Math.abs(warYear - era.sort) : 0;
@@ -8450,9 +8455,61 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         }
                         if (best) return { feature: buildEraFeature(best), polity: best };
                     }
+                    var hpd = (typeof window !== 'undefined' && (window.HISTORICAL_POLITIES_DATA || window.historicalPolitiesData)) || (typeof HISTORICAL_POLITIES_DATA !== 'undefined' ? HISTORICAL_POLITIES_DATA : (typeof historicalPolitiesData !== 'undefined' ? historicalPolitiesData : null));
+                    if (hpd && hpd[pid] && hpd[pid].rings && hpd[pid].rings.length) {
+                        return { feature: buildEraFeature(hpd[pid]), polity: hpd[pid] };
+                    }
                     return null;
                 }
                 window.getPolityFeatureForScenario = getPolityFeatureForScenario;
+
+                function getTheaterFilteredFeature(f, war, sc) {
+                    if (!f || !f.geometry) return f;
+                    if (f.geometry.type !== 'MultiPolygon') return f;
+
+                    var warRegion = (war && war.region) || '';
+                    var warId = (war && war.id) || '';
+
+                    // Global conflicts (WW1, WW2, Cold War, Seven Years War) may span all oceans/continents
+                    var isGlobal = (warId === 'ww2-1939' || warId === 'ww1-1914' || warId === 'seven-years-1756' || warId === 'cold-war-1947' || warRegion === 'world');
+                    if (isGlobal) return f;
+
+                    var coords = f.geometry.coordinates;
+                    var filtered = coords.filter(function(polyRings) {
+                        if (!polyRings || !polyRings.length || !polyRings[0].length) return false;
+                        var r = polyRings[0];
+                        var avgLon = 0, avgLat = 0;
+                        for (var i = 0; i < r.length; i++) {
+                            avgLon += r[i][0];
+                            avgLat += r[i][1];
+                        }
+                        avgLon /= r.length;
+                        avgLat /= r.length;
+
+                        // In Old World wars (Europe, Middle East, Asia, Africa), NEVER draw components in the Americas (lon < -26)
+                        if (warRegion === 'europe' || warRegion === 'me' || warRegion === 'asia' || warRegion === 'africa') {
+                            if (avgLon < -26) return false;
+                            if ((warRegion === 'europe' || warRegion === 'me') && avgLat < 20 && avgLon > 30) return false;
+                        } else if (warRegion === 'americas') {
+                            if (avgLon > -26) return false;
+                        }
+                        return true;
+                    });
+
+                    if (filtered.length === 0) return null;
+                    if (filtered.length === coords.length) return f;
+
+                    return {
+                        type: 'Feature',
+                        properties: f.properties,
+                        geometry: {
+                            type: 'MultiPolygon',
+                            coordinates: filtered
+                        }
+                    };
+                }
+                window.getTheaterFilteredFeature = getTheaterFilteredFeature;
+
                 function drawHistoryScenario(skipFadeIn) {
                     var _es = document.getElementById('histEmptyState');
                     if (_es) _es.style.display = 'none';
@@ -8493,7 +8550,9 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         var sx = 0, sy = 0, sw = 0, found = false;
                         var empName = cleanHistoricalName(locField(histEmpireNames[emp.id], 'name'));
                         emp.members.forEach(function(m) {
-                            var f = allCountryFeatures.find(function(ff) { return histMatchName(getCleanName(ff.properties && ff.properties.name), m); });
+                            var fRaw = allCountryFeatures.find(function(ff) { return histMatchName(getCleanName(ff.properties && ff.properties.name), m); });
+                            if (!fRaw) return;
+                            var f = getTheaterFilteredFeature(fRaw, getHistWar(), sc);
                             if (!f) return;
                             var pd = pathGen(f);
                             if (pd) {
@@ -8640,9 +8699,11 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         }
 
                         // 2. Fallback to contemporary/modern countries
-                        allCountryFeatures.forEach(function(f) {
-                            var cn = getCleanName((f.properties && f.properties.name) || '');
+                        allCountryFeatures.forEach(function(fRaw) {
+                            var cn = getCleanName((fRaw.properties && fRaw.properties.name) || '');
                             if (!histMatchName(cn, p.c)) return;
+                            var f = getTheaterFilteredFeature(fRaw, getHistWar(), sc);
+                            if (!f) return;
                             var pd = pathGen(f);
                             if (!pd) return;
                             var isSoft = (p.role === 'protectorate' || p.role === 'colony' || p.role === 'dominion');

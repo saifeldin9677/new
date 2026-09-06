@@ -22496,6 +22496,28 @@
                 end: { year: '2042 م', title_ar: 'الأفول والسقوط', desc_ar: 'تحول سياسي وانتقال للحكم عبر معاهدات أو فتوحات تاريخية.' }
             }
         },
+        'huns': {
+            id: 'huns',
+            name_ar: 'إمبراطورية الهون',
+            name_en: 'Hunnic Empire',
+            name_ru: 'Гуннская империя',
+            name_uz: 'Gunnlar imperiyasi',
+            name_es: 'Imperio Huno',
+            founder_ar: 'أتيلا وبليدا وخانات الهون الرحل',
+            founder_en: 'Attila, Bleda and the Hunnic Khagans',
+            capital_ar: 'معسكر حوض بانونيا (المجر الحالية)',
+            capital_en: 'Pannonian Basin Encampment (modern Hungary)',
+            religion_ar: 'التنغرية والشامانية البدوية',
+            religion_en: 'Tengrism & Steppe Shamanism',
+            era_ar: 'عصر الهجرات الكبرى والعصور القديمة المتأخرة (نحو 370–469 م)',
+            era_en: 'Migration Period & Late Antiquity (c. 370–469 CE)',
+            summary_ar: 'اتحاد قبلي بدوي هائل اجتاح شرق ووسط أوروبا بقيادة أتيلا الملقب بـ "سوط الله"، زلزل أركان الإمبراطوريتين الرومانية الغربية والشرقية قبل أن يتفكك عقب معركة نداو.',
+            summary_en: 'Formidable nomadic confederation that swept across Central and Eastern Europe under Attila the Hun, shaking the foundations of both the Western and Eastern Roman Empires.',
+            summary_ru: 'Могущественный кочевой союз племен, вторгшийся в Центральную и Восточную Европу под предводительством Аттилы («Бича Божьего») и потрясший Римскую империю.',
+            summary_uz: 'Attila («Xudoning qamchisi») boshchiligida Markaziy va Sharqiy Yevropani larzaga keltirgan, Rim imperiyasi poydevorini silkitgan qudratli koʻchmanchilar ittifoqi.',
+            summary_es: 'Poderosa confederación nómada que arrasó Europa central y oriental bajo Atila el Huno, sacudiendo los cimientos del Imperio Romano.',
+            rings: [[[14.0, 48.5], [16.5, 48.8], [19.0, 49.2], [22.5, 49.0], [26.0, 48.0], [28.5, 46.5], [29.0, 45.0], [26.5, 44.2], [22.0, 44.0], [18.5, 44.5], [16.0, 45.2], [14.5, 46.5], [14.0, 48.5]]]
+        },
     };
 
     // قاموس التطابق بين أسماء الكيانات المختلفة ومفاتيح البيانات الموحدة
@@ -22606,6 +22628,8 @@
         'مصر القديمة': 'ancient-egypt',
         'قرطاج': 'carthage',
         'الأندلس': 'andalus'
+    
+
     };
 
     function normalizeStr(str) {

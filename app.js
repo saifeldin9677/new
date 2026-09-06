@@ -8257,10 +8257,10 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 desc_uz: 'Iskandar Zulqarnayn birlashgan qo‘shini bilan Dardanel bo‘g‘ozidan o‘tib, Granik jangida forslarni mag‘lub etadi.',
                                 desc_es: 'Alejandro Magno cruza hacia Asia Menor con el ejército greco-macedonio y vence a los sátrapas persas en el Gránico.',
                                 participants: [
-                                    { c: 'Greece', side: 'delian', role: 'major' },
-                                    { c: 'North Macedonia', side: 'delian', role: 'major' },
-                                    { c: 'Turkey', side: 'persia', role: 'occupied' },
-                                    { c: 'Iran', side: 'persia', role: 'major' }
+                                    { c: 'Greece', side: 'delian', role: 'major', polity_id: 'macedonian-empire' },
+                                    { c: 'North Macedonia', side: 'delian', role: 'major', polity_id: 'macedonian-empire' },
+                                    { c: 'Turkey', side: 'persia', role: 'occupied', polity_id: 'achaemenid' },
+                                    { c: 'Iran', side: 'persia', role: 'major', polity_id: 'achaemenid' }
                                 ],
                                 empires: []
                             };
@@ -8282,12 +8282,12 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 desc_uz: 'Iskandarning Bobilda vafoti; lashkarboshilari imperiyani ellinistik saltanatlarga (Ptolemeylar, Salavkiylar, Antigoniylar) bo‘lib olishadi.',
                                 desc_es: 'Muerte repentina de Alejandro en Babilonia; sus generales (diádocos) dividen el imperio en reinos helenísticos.',
                                 participants: [
-                                    { c: 'Egypt', side: 'delian', role: 'major' },
-                                    { c: 'Syria', side: 'delian', role: 'major' },
-                                    { c: 'Iraq', side: 'delian', role: 'major' },
-                                    { c: 'Iran', side: 'delian', role: 'major' },
-                                    { c: 'Greece', side: 'delian', role: 'major' },
-                                    { c: 'North Macedonia', side: 'delian', role: 'major' }
+                                    { c: 'Egypt', side: 'delian', role: 'major', polity_id: 'macedonian-empire' },
+                                    { c: 'Syria', side: 'delian', role: 'major', polity_id: 'macedonian-empire' },
+                                    { c: 'Iraq', side: 'delian', role: 'major', polity_id: 'macedonian-empire' },
+                                    { c: 'Iran', side: 'delian', role: 'major', polity_id: 'macedonian-empire' },
+                                    { c: 'Greece', side: 'delian', role: 'major', polity_id: 'macedonian-empire' },
+                                    { c: 'North Macedonia', side: 'delian', role: 'major', polity_id: 'macedonian-empire' }
                                 ],
                                 empires: []
                             };
@@ -8403,19 +8403,56 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     }
                     return a.length <= b.length ? boundaryHit(a, b) : boundaryHit(b, a);
                 }
-                function findHistParticipant(scenario, cleanName) {
+                function findHistParticipant(scenario, cleanName, feature) {
+                    if (!scenario) return null;
                     var i, j, emp;
+                    var fPolityId = (feature && feature.properties && (feature.properties.polity_id || feature.properties.id)) || null;
                     for (i = 0; i < scenario.participants.length; i++) {
-                        if (histMatchName(cleanName, scenario.participants[i].c)) return scenario.participants[i];
+                        var part = scenario.participants[i];
+                        if (fPolityId && part.polity_id && part.polity_id === fPolityId) return part;
+                        if (cleanName && part.polity_id && (part.polity_id === cleanName || part.polity_id.replace(/-/g, '') === cleanName.replace(/-/g, ''))) return part;
+                        if (cleanName && histMatchName(cleanName, part.c)) return part;
                     }
                     for (i = 0; i < (scenario.empires || []).length; i++) {
                         emp = scenario.empires[i];
+                        if (fPolityId && emp.id === fPolityId) return { side: emp.side, role: emp.role, n: null, yr: emp.joinYr || null, _empire: emp };
                         for (j = 0; j < emp.members.length; j++) {
-                            if (histMatchName(cleanName, emp.members[j])) return { side: emp.side, role: emp.role, n: null, yr: emp.joinYr || null, _empire: emp };
+                            if (cleanName && histMatchName(cleanName, emp.members[j])) return { side: emp.side, role: emp.role, n: null, yr: emp.joinYr || null, _empire: emp };
                         }
                     }
                     return null;
                 }
+                function getPolityFeatureForScenario(p, warYear) {
+                    if (!p) return null;
+                    if (p.rings && Array.isArray(p.rings) && p.rings.length) {
+                        return { feature: buildEraFeature(p), polity: p };
+                    }
+                    var pid = p.polity_id;
+                    if (!pid) return null;
+
+                    var eras = (typeof historicalErasData !== 'undefined' && Array.isArray(historicalErasData)) ? historicalErasData :
+                               (typeof window !== 'undefined' && Array.isArray(window.historicalErasData) ? window.historicalErasData : null);
+                    if (eras && eras.length) {
+                        var best = null;
+                        var minDiff = Infinity;
+                        for (var i = 0; i < eras.length; i++) {
+                            var era = eras[i];
+                            var pols = era.polities || [];
+                            for (var j = 0; j < pols.length; j++) {
+                                if (pols[j].id === pid && pols[j].rings && pols[j].rings.length) {
+                                    var diff = (typeof warYear === 'number' && typeof era.sort === 'number') ? Math.abs(warYear - era.sort) : 0;
+                                    if (diff < minDiff) {
+                                        minDiff = diff;
+                                        best = pols[j];
+                                    }
+                                }
+                            }
+                        }
+                        if (best) return { feature: buildEraFeature(best), polity: best };
+                    }
+                    return null;
+                }
+                window.getPolityFeatureForScenario = getPolityFeatureForScenario;
                 function drawHistoryScenario(skipFadeIn) {
                     var _es = document.getElementById('histEmptyState');
                     if (_es) _es.style.display = 'none';
@@ -8438,6 +8475,14 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         clearHistoryOverlay();
                         renderHistoryEmptyState();
                         return;
+                    }
+                    var warYear = null;
+                    if (sc && sc.year) {
+                        var ym = String(sc.year).match(/(\d+)\s*(BCE|BC|ق\.م)?/i);
+                        if (ym) {
+                            var num = parseInt(ym[1], 10);
+                            warYear = (ym[2] || /BCE|BC|ق\.م/i.test(String(sc.year))) ? -num : num;
+                        }
                     }
                     var k = Math.max(0.4, currentTransform.k);
                     var fs = Math.max(4, Math.min(16, (isMobile ? 8 : 11) / k));
@@ -8499,7 +8544,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 if (xy && !isNaN(xy[0])) { sx += xy[0] * area; sy += xy[1] * area; sw += area; found = true; }
                             } catch (err) {}
                         });
-                        if (found) {
+                        if (found && sw > 0) {
                             var nm = empName;
                             var suffix = emp.joinYr ? ' (' + emp.joinYr + ')' : (emp.endYr ? ' (†' + emp.endYr + ')' : '');
                             var lbl = gHistoryOverlay.append('text')
@@ -8517,6 +8562,84 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         var col = histColorFor(p);
                         if (!col) return;
                         var partName = (typeof histCountryNames !== 'undefined' && histCountryNames[p.c] && locField(histCountryNames[p.c], 'name')) || p.c || '';
+
+                        // 1. Check if participant is a genuine Historical Polity
+                        var polData = (p.polity_id || p.rings) ? getPolityFeatureForScenario(p, warYear) : null;
+                        if (polData && polData.feature) {
+                            var pd = pathGen(polData.feature);
+                            if (pd) {
+                                var isSoft = (p.role === 'protectorate' || p.role === 'colony' || p.role === 'dominion');
+                                var fName = (polData.polity && locField(polData.polity, 'name')) || locField(p, 'name') || partName;
+                                var polId = p.polity_id || (polData.polity && polData.polity.id) || '';
+                                var fSynth = {
+                                    type: 'Feature',
+                                    properties: {
+                                        name: fName,
+                                        polity_id: polId
+                                    },
+                                    _polity: polData.polity,
+                                    _warParticipant: p
+                                };
+                                var s = gHistoryOverlay.append('path')
+                                    .attr('class', 'hist-polity-boundary')
+                                    .attr('data-polity-id', polId)
+                                    .attr('d', pd)
+                                    .attr('fill', col)
+                                    .attr('fill-opacity', historyLayerOpacity)
+                                    .style('fill-opacity', historyLayerOpacity)
+                                    .attr('stroke', col).attr('stroke-width', isSoft ? 2.2 : 1.5)
+                                    .attr('vector-effect', 'non-scaling-stroke')
+                                    .attr('role', 'button')
+                                    .attr('tabindex', '0')
+                                    .attr('aria-label', fName)
+                                    .style('cursor', 'pointer').style('pointer-events', 'auto');
+                                var _ppDownX = 0, _ppDownY = 0, _ppDownT = 0;
+                                s.on('pointerdown', function(ev) {
+                                    _ppDownX = ev.clientX; _ppDownY = ev.clientY; _ppDownT = Date.now();
+                                }).on('pointerup', function(ev) {
+                                    var dist = Math.hypot(ev.clientX - _ppDownX, ev.clientY - _ppDownY);
+                                    if (dist < 8 && (Date.now() - _ppDownT) < 600) {
+                                        if (ev.stopPropagation) ev.stopPropagation();
+                                        openHistoryPanel(fSynth);
+                                    }
+                                }).on('click', function() {
+                                    openHistoryPanel(fSynth);
+                                }).on('keydown', function(ev) {
+                                    if (ev.key === 'Enter' || ev.key === ' ') {
+                                        if (ev.preventDefault) ev.preventDefault();
+                                        openHistoryPanel(fSynth);
+                                    }
+                                });
+                                if (skipFadeIn) s.attr('opacity', 1).style('opacity', 1); else s.attr('opacity', 0).style('opacity', 0).transition().duration(dur).attr('opacity', 1).style('opacity', 1);
+                                if (cbPatternsVisible) {
+                                    ensureColorblindDefs();
+                                    var patIdxPart = getHistSidePattern(getHistWar(), p.side);
+                                    gHistoryOverlay.append('path')
+                                        .attr('class', 'hist-cbpat')
+                                        .attr('d', pd)
+                                        .attr('fill', 'url(#cbpat-' + patIdxPart + ')')
+                                        .attr('stroke', 'none')
+                                        .style('pointer-events', 'none');
+                                }
+                                try {
+                                    var cen = d3.geoCentroid(polData.feature);
+                                    var xy = getActiveProjection()(cen);
+                                    if (xy && !isNaN(xy[0])) {
+                                        var lbl = gHistoryOverlay.append('text')
+                                            .attr('class', 'hist-war-label')
+                                            .attr('x', xy[0]).attr('y', xy[1])
+                                            .text(cleanHistoricalName(fName))
+                                            .attr('fill', '#ffffff').attr('font-size', fs + 'px').attr('font-weight', 'bold')
+                                            .attr('text-anchor', 'middle').attr('dominant-baseline', 'central').attr('pointer-events', 'none')
+                                            .attr('style', 'text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.85); letter-spacing: 0.3px;');
+                                        if (skipFadeIn) lbl.attr('opacity', 0.95); else lbl.attr('opacity', 0).transition().duration(dur).attr('opacity', 0.95);
+                                    }
+                                } catch (err) {}
+                            }
+                            return;
+                        }
+
+                        // 2. Fallback to contemporary/modern countries
                         allCountryFeatures.forEach(function(f) {
                             var cn = getCleanName((f.properties && f.properties.name) || '');
                             if (!histMatchName(cn, p.c)) return;
@@ -8524,7 +8647,10 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             if (!pd) return;
                             var isSoft = (p.role === 'protectorate' || p.role === 'colony' || p.role === 'dominion');
                             var fName = (f.properties && f.properties.name) || partName;
-                            var s = gHistoryOverlay.append('path').attr('d', pd).attr('fill', col)
+                            var s = gHistoryOverlay.append('path')
+                                .attr('class', 'hist-country-boundary')
+                                .attr('data-country-name', (f.properties && f.properties.name) || p.c || '')
+                                .attr('d', pd).attr('fill', col)
                                 .attr('fill-opacity', historyLayerOpacity)
                                 .style('fill-opacity', historyLayerOpacity)
                                 .attr('stroke', col).attr('stroke-width', isSoft ? 2.2 : 1.2)
@@ -8564,6 +8690,106 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                     .style('pointer-events', 'none');
                             }
                         });
+                    });
+
+                    // ── Tactical Battles & Operations Theaters for the War ──
+                    var currentWar = getHistWar();
+                    var scenarioBattles = [];
+                    if (sc.battles && Array.isArray(sc.battles)) {
+                        scenarioBattles = scenarioBattles.concat(sc.battles);
+                    }
+                    if (sc.battle_ids && Array.isArray(sc.battle_ids) && historicalBattlesData) {
+                        sc.battle_ids.forEach(function(bid) {
+                            var fb = historicalBattlesData.find(function(x) { return x.id === bid; });
+                            if (fb && !scenarioBattles.some(function(b) { return b.id === fb.id; })) scenarioBattles.push(fb);
+                        });
+                    }
+                    if (currentWar && historicalBattlesData) {
+                        historicalBattlesData.forEach(function(fb) {
+                            if (fb.war_id === currentWar.id && !scenarioBattles.some(function(b) { return b.id === fb.id; })) {
+                                scenarioBattles.push(fb);
+                            }
+                        });
+                    }
+
+                    var proj = getActiveProjection();
+                    var isMob = window.innerWidth <= 768;
+                    var zoom = (currentTransform && currentTransform.k) || 1;
+
+                    scenarioBattles.forEach(function(b) {
+                        var coords = b.coords || [b.lon, b.lat];
+                        if (!coords) return;
+                        var xy = proj(coords);
+                        if (!xy || isNaN(xy[0])) return;
+
+                        var batName = cleanHistoricalName(locField(b, 'name'));
+
+                        // 1. Tactical Operational Radius Circle
+                        gHistoryOverlay.append('circle')
+                            .attr('class', 'hist-tactical-radius')
+                            .attr('cx', xy[0])
+                            .attr('cy', xy[1])
+                            .attr('r', (b.radius || (isMob ? 24 : 32)) / Math.max(0.7, Math.pow(zoom, 0.4)))
+                            .attr('fill', '#ef4444')
+                            .attr('fill-opacity', 0.18)
+                            .attr('stroke', '#ef4444')
+                            .attr('stroke-width', (isMob ? 1.6 : 2.0) / zoom)
+                            .attr('stroke-dasharray', '5,3')
+                            .attr('pointer-events', 'none');
+
+                        // 2. Tactical Battle Pin
+                        var minBatPx = isMob ? 13 : 15.5;
+                        var maxBatPx = isMob ? 15.5 : 18;
+                        var batScreenPx = Math.max(minBatPx, Math.min(maxBatPx, minBatPx * Math.pow(zoom, 0.15)));
+                        var batFs = batScreenPx / zoom;
+                        var batOffY = ((isMob ? 7.0 : 8.5) + batScreenPx * 0.7) / zoom;
+
+                        var bg = gHistoryOverlay.append('g')
+                            .attr('class', 'hist-war-battle-pin hist-landmark-pin')
+                            .attr('data-battle-id', b.id || '')
+                            .attr('role', 'button')
+                            .attr('tabindex', '0')
+                            .attr('aria-label', (t('histBattlePinLabel') || 'معركة فاصلة') + ': ' + batName)
+                            .style('cursor', 'pointer')
+                            .on('click', function(ev) {
+                                if (ev && ev.stopPropagation) ev.stopPropagation();
+                                if (window.showHistoricalBattleDetail) window.showHistoricalBattleDetail(b);
+                            })
+                            .on('keydown', function(ev) {
+                                if (ev.key === 'Enter' || ev.key === ' ') {
+                                    if (ev.preventDefault) ev.preventDefault();
+                                    if (window.showHistoricalBattleDetail) window.showHistoricalBattleDetail(b);
+                                }
+                            });
+
+                        bg.append('circle')
+                            .attr('cx', xy[0])
+                            .attr('cy', xy[1])
+                            .attr('r', (isMob ? 6.5 : 8.0) / zoom)
+                            .attr('fill', '#dc2626')
+                            .attr('stroke', '#ffffff')
+                            .attr('stroke-width', 2.0 / zoom)
+                            .attr('vector-effect', 'non-scaling-stroke');
+
+                        bg.append('text')
+                            .attr('x', xy[0])
+                            .attr('y', xy[1] + (3.8 / zoom))
+                            .text('⚔')
+                            .attr('fill', '#ffffff')
+                            .attr('font-size', ((isMob ? 9 : 11) / zoom) + 'px')
+                            .attr('text-anchor', 'middle')
+                            .style('pointer-events', 'none');
+
+                        bg.append('text')
+                            .attr('class', 'hist-war-battle-label')
+                            .attr('x', xy[0])
+                            .attr('y', xy[1] - batOffY)
+                            .text(batName)
+                            .attr('fill', '#fecaca')
+                            .attr('font-size', batFs + 'px')
+                            .attr('font-weight', 'bold')
+                            .attr('text-anchor', 'middle')
+                            .attr('style', 'text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.85); pointer-events: none;');
                     });
                
                     if (typeof updateHistoryLabels === 'function') updateHistoryLabels(k);
@@ -8798,10 +9024,20 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     // rendering. Until it resolves the embedded fallback shows.
                     if (!window.__histWarsLoaded && !window.__histWarsLoading) {
                         fetchHistoricalWars().then(function() {
+                            if (typeof fetchHistoricalEras === 'function') fetchHistoricalEras().catch(function(){});
+                            if (typeof fetchHistoricalBattles === 'function') fetchHistoricalBattles().catch(function(){});
                             renderHistoryBar();
                             if (historyTab === 'wars') drawHistoryScenario();
                         }).catch(function(e) { if (typeof console !== 'undefined') console.error('Failed to load wars:', e); });
                         return;
+                    }
+                    if (historyTab === 'wars') {
+                        if (!historicalErasData && typeof fetchHistoricalEras === 'function') {
+                            fetchHistoricalEras().then(function() { if (historyTab === 'wars') drawHistoryScenario(true); }).catch(function(){});
+                        }
+                        if (!historicalBattlesData && typeof fetchHistoricalBattles === 'function') {
+                            fetchHistoricalBattles().then(function() { if (historyTab === 'wars') drawHistoryScenario(true); }).catch(function(){});
+                        }
                     }
                     var war = getHistWar();
                     updateHistSubmodeVis();
@@ -9002,7 +9238,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     var cn = getCleanName(name);
                     var sc = getHistScenario();
                     var war = getHistWar();
-                    var p = findHistParticipant(sc, cn);
+                    var p = (f && f._warParticipant) || findHistParticipant(sc, cn, f);
                     var dispName = getDisplayName(name);
                     var flag = getCountryFlag(name);
 
@@ -9016,8 +9252,11 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
 
                     // البحث عن الملف التعريفي التاريخي الشامل المرتبط بالحرب أو الكيان فقط
                     var profile = null;
+                    if (f && f._polity) profile = f._polity;
                     if (typeof getHistoricalPolityProfile === 'function') {
-                        if (p && p._empire) profile = getHistoricalPolityProfile(p._empire.id);
+                        if (!profile && p && p._empire) profile = getHistoricalPolityProfile(p._empire.id);
+                        if (!profile && p && p.polity_id) profile = getHistoricalPolityProfile(p.polity_id);
+                        if (!profile && f && f.properties && f.properties.polity_id) profile = getHistoricalPolityProfile(f.properties.polity_id);
                         if (!profile && p && p.c) profile = getHistoricalPolityProfile(p.c);
                         if (!profile && historyTab !== 'wars') {
                             profile = getHistoricalPolityProfile(cn) || getHistoricalPolityProfile(dispName) || getHistoricalPolityProfile(name);
@@ -9657,8 +9896,24 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 window.openHistoryPanel = openHistoryPanel;
                 window.deselectHistoryPolity = deselectHistoryPolity;
                 window.showEraPolityPanel = showEraPolityPanel;
-                window.getSelectedHistoryPolity = function() { return selectedHistoryPolity; };
                 window.historyIsActive = function() { return historyActive; };
+                window.selectHistoryWar = function(warId) {
+                    return Promise.all([
+                        (typeof fetchHistoricalWars === 'function' ? fetchHistoricalWars() : Promise.resolve()),
+                        (typeof fetchHistoricalEras === 'function' ? fetchHistoricalEras() : Promise.resolve()),
+                        (typeof fetchHistoricalBattles === 'function' ? fetchHistoricalBattles() : Promise.resolve())
+                    ]).then(function() {
+                        var wars = historyWarData || [];
+                        var w = wars.find(function(item) { return item.id === warId; });
+                        if (!w) throw new Error('War not found: ' + warId);
+                        historyTab = 'wars';
+                        historyWarId = w.id;
+                        historyScenarioId = (w.scenarios && w.scenarios[0]) ? w.scenarios[0].id : null;
+                        selectedHistoryPolity = null;
+                        renderHistoryBar();
+                        drawHistoryScenario();
+                    });
+                };
                 if (typeof zoomBehavior !== 'undefined' && zoomBehavior) {
                     zoomBehavior.on('end.histzoom', function() {
                         if (historyActive && window.drawHistoryScenario) window.drawHistoryScenario(true);
@@ -9674,6 +9929,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             .then(function(d) {
                                 historicalErasData = d.eras || [];
                                 historicalErasData.forEach(function(e) { e.epoch = getEraEpoch(e); });
+                                window.historicalErasData = historicalErasData;
                                 return historicalErasData;
                             })
                             .catch(function(e) { historicalErasLoading = null; throw e; });
@@ -14361,10 +14617,11 @@ function getReligionSlice(religion, year) {
 
             function fetchHistoricalBattles() {
                 if (historicalBattlesData) return Promise.resolve(historicalBattlesData);
-                return fetch('historical-battles-data.json')
+                return fetch(BASE + 'historical-battles-data.json')
                     .then(function(r) { return r.json(); })
                     .then(function(d) {
                         historicalBattlesData = (d && d.battles) ? d.battles : (Array.isArray(d) ? d : []);
+                        window.historicalBattlesData = historicalBattlesData;
                         return historicalBattlesData;
                     });
             }
@@ -14420,6 +14677,7 @@ function getReligionSlice(religion, year) {
                 countryPanel.style.display = 'block';
                 requestAnimationFrame(function(){ requestAnimationFrame(function(){ countryPanel.classList.add('visible'); }); });
             }
+            window.showHistoricalBattleDetail = showHistoricalBattleDetail;
 
             function showHistoricalWonderDetail(w) {
                 selectedFeature = w;

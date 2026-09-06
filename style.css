@@ -2174,6 +2174,24 @@ header,
     outline: 2px solid var(--focus-ring, #60a5fa);
     outline-offset: 2px;
 }
+/* Tactical Battlefield & Operations Styling in Wars */
+.hist-tactical-radius {
+    transition: r 0.3s ease, fill-opacity 0.3s ease;
+    animation: histTacticalPulse 2.8s ease-in-out infinite alternate;
+}
+@keyframes histTacticalPulse {
+    0% { fill-opacity: 0.12; stroke-opacity: 0.7; }
+    100% { fill-opacity: 0.28; stroke-opacity: 1; }
+}
+.hist-war-battle-pin circle {
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+    transition: transform 0.2s ease, r 0.2s ease;
+}
+.hist-war-battle-pin:hover circle,
+.hist-war-battle-pin:focus-visible circle {
+    stroke-width: 2.4px !important;
+    stroke: #ffffff !important;
+}
 .layers-modal {
     position: fixed;
     inset: 0;

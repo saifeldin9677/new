@@ -595,6 +595,18 @@
                     annotationTutorialTitle: 'دليل أدوات الشرح',
 
                     // --- Historical & UI Parity Extensions (ar) ---
+                    histOnboard1Text: 'استكشف عبر القائمة العلوية الحقب الإمبراطورية الكبرى، مسارات الحروب والنزاعات، تطور الأديان، ورحلات المستكشفين التاريخية.',
+                    histOnboard1Title: 'أقسام الأطلس التاريخي',
+                    histOnboard2Text: 'تنقل بين القرون والحقب بسحب المؤشر الزمني، أو اضغط زر التشغيل التلقائي لمشاهدة صعود وسقوط الحضارات عبر التاريخ.',
+                    histOnboard2Title: 'الشريط الزمني التفاعلي',
+                    histOnboard3Text: 'اضبط شفافية الخرائط الإمبراطورية لمقارنة حدود الممالك القديمة مع تضاريس وجغرافيا العالم المعاصر.',
+                    histOnboard3Title: 'الشفافية والتضاريس',
+                    histOnboard4Text: 'انقر على أي دولة أو عاصمة أو معركة أو معلم تاريخي على الخريطة لفتح ملفها الموسوعي المفصل وتاريخ تأسيسها.',
+                    histOnboard4Title: 'التفاعل واستكشاف المعالم',
+                    histOnboard5Text: 'تعرّف على دلالات الألوان ورموز المعالم، وطرق التجارة، ومناطق النفوذ السياسي الممثلة على رقعة الخريطة.',
+                    histOnboard5Title: 'وسيلة الإيضاح التاريخية',
+                    histOnboard6Text: 'استفد من أدوات مقارنة الحقب، واختبارات الفهم، وأوراق المراجعة القابلة للطباعة، واطلع على مراجع الأطالس التاريخية المعتمدة.',
+                    histOnboard6Title: 'الأدوات التعليمية والمصادر',
                     annotationAddByName: 'إضافة علامة بالاسم',
                     annotationAddByName_title: 'إضافة علامة بالاسم على الخريطة',
                     annotationExport: 'تصدير الملاحظات',
@@ -750,6 +762,11 @@
                     warEpochAncient: 'العصور القديمة',
                     warEpochEarlyModern: 'بداية العصر الحديث',
                     warEpochMedieval: 'العصور الوسطى',
+                    histEraThreePhases: 'المراحل التاريخية الثلاث:',
+                    histPhaseEnd: 'نهايتها',
+                    histPhasePeak: 'أكبر اتساع لها',
+                    histPhaseStart: 'بدايتها',
+                    histWarThreePhases: 'المراحل الثلاث للحرب:',
                     warEpochModern: 'العصر المعاصر'
                 },
                 en: {
@@ -1348,6 +1365,18 @@
                     annotationTutorialTitle: 'Annotation Tools Guide',
 
                     // --- Historical & UI Parity Extensions (en) ---
+                    histOnboard1Text: 'Explore major imperial eras, wars and conflicts, the evolution of world religions, and historic traveler journeys from the dock.',
+                    histOnboard1Title: 'Historical Atlas Sections',
+                    histOnboard2Text: 'Scrub across centuries using the timeline slider, or hit play to watch the rise and fall of civilizations unfold automatically.',
+                    histOnboard2Title: 'Interactive Timeline',
+                    histOnboard3Text: 'Adjust imperial map opacity to correlate ancient kingdom boundaries with modern world geography and physical terrain.',
+                    histOnboard3Title: 'Opacity & Overlays',
+                    histOnboard4Text: 'Click any polity, capital, decisive battle, or wonder on the map to open its in-depth encyclopedic profile and history.',
+                    histOnboard4Title: 'Explore & Interact',
+                    histOnboard5Text: 'Reference color codes, landmark markers, trade routes, and geopolitical spheres of influence depicted across the map.',
+                    histOnboard5Title: 'Historical Legend',
+                    histOnboard6Text: 'Access comparative era tools, comprehension quizzes, printable study sheets, and authoritative historical atlas citations.',
+                    histOnboard6Title: 'Study Tools & Sources',
                     annotationAddByName: 'Add pin by name',
                     annotationAddByName_title: 'Add pin by name on the map',
                     annotationExport: 'Export Annotations',
@@ -1503,6 +1532,11 @@
                     warEpochAncient: 'Ancient',
                     warEpochEarlyModern: 'Early Modern',
                     warEpochMedieval: 'Medieval',
+                    histEraThreePhases: 'Three historical phases:',
+                    histPhaseEnd: 'Its end',
+                    histPhasePeak: 'Peak / Greatest extent',
+                    histPhaseStart: 'Its beginning',
+                    histWarThreePhases: 'Three phases of the war:',
                     warEpochModern: 'Contemporary'
                 },
                 ru: {
@@ -2100,6 +2134,18 @@
                     annotationTutorialTitle: 'Руководство по инструментам пометок',
 
                     // --- Historical & UI Parity Extensions (ru) ---
+                    histOnboard1Text: 'Исследуйте на панели великие имперские эпохи, войны и конфликты, эволюцию религий и маршруты великих путешественников.',
+                    histOnboard1Title: 'Разделы исторического атласа',
+                    histOnboard2Text: 'Перемещайтесь по векам с помощью ползунка времени или нажмите кнопку автовоспроизведения, наблюдая за взлётом и падением цивилизаций.',
+                    histOnboard2Title: 'Интерактивная временная шкала',
+                    histOnboard3Text: 'Настраивайте прозрачность исторических карт, чтобы сопоставлять границы древних царств с современным рельефом и географией.',
+                    histOnboard3Title: 'Прозрачность и рельеф',
+                    histOnboard4Text: 'Нажмите на любое государство, столицу, битву или памятник на карте, чтобы открыть подробное энциклопедическое досье.',
+                    histOnboard4Title: 'Интерактивное исследование',
+                    histOnboard5Text: 'Ознакомьтесь с цветовыми обозначениями, символами памятников, торговыми путями и сферами влияния на карте.',
+                    histOnboard5Title: 'Легенда карты',
+                    histOnboard6Text: 'Пользуйтесь инструментами сравнения эпох, тестами, листами для печати и авторитетными историческими источниками.',
+                    histOnboard6Title: 'Учебные инструменты и источники',
                     annotationAddByName: 'Добавить метку по названию',
                     annotationAddByName_title: 'Добавить метку по названию на карту',
                     annotationExport: 'Экспорт аннотаций',
@@ -2255,6 +2301,11 @@
                     warEpochAncient: 'Древний мир',
                     warEpochEarlyModern: 'Раннее Новое время',
                     warEpochMedieval: 'Средние века',
+                    histEraThreePhases: 'Три исторических этапа:',
+                    histPhaseEnd: 'Конец',
+                    histPhasePeak: 'Наибольший расцвет',
+                    histPhaseStart: 'Начало',
+                    histWarThreePhases: 'Три этапа войны:',
                     warEpochModern: 'Новейшее время'
                 },
                 uz: {
@@ -2852,6 +2903,18 @@
                     annotationTutorialTitle: 'Izoh vositalari qo\'llanmasi',
 
                     // --- Historical & UI Parity Extensions (uz) ---
+                    histOnboard1Text: 'Yuqori panel orqali buyuk imperiya davrlari, urushlar va to‘qnashuvlar, dinlar evolyutsiyasi hamda buyuk sayyohlar yo‘llarini o‘rganing.',
+                    histOnboard1Title: 'Tarixiy atlas bo‘limlari',
+                    histOnboard2Text: 'Vaqt slayderi yordamida asrlar bo‘ylab harakatlaning yoki sivilizatsiyalarning yuksalishi va qulashini avtomatik ko‘rish uchun ijro tugmasini bosing.',
+                    histOnboard2Title: 'Interaktiv vaqt shkalasi',
+                    histOnboard3Text: 'Qadimgi davlatlar chegaralarini zamonaviy geografiya va relyef bilan solishtirish uchun tarixiy xaritalar shaffofligini sozlang.',
+                    histOnboard3Title: 'Shaffoflik va relyef',
+                    histOnboard4Text: 'Batafsil ensiklopedik ma’lumotlar va asos solinish tarixini ko‘rish uchun xaritadagi istalgan davlat, poytaxt, jang yoki obidani bosing.',
+                    histOnboard4Title: 'O‘rganish va muloqot',
+                    histOnboard5Text: 'Xaritada tasvirlangan ranglar ma’nosi, obidalar belgilari, savdo yo‘llari va ta’sir doiralari bilan tanishing.',
+                    histOnboard5Title: 'Tarixiy shartli belgilar',
+                    histOnboard6Text: 'Davrlarni solishtirish, testlar va chop etish mumkin bo‘lgan o‘quv varaqalaridan foydalaning hamda nufuzli manbalarni ko‘ring.',
+                    histOnboard6Title: 'O‘quv vositalari va manbalar',
                     annotationAddByName: 'Nomi bo‘yicha belgi qo‘shish',
                     annotationAddByName_title: 'Xaritada nomi bo‘yicha belgi qo‘shish',
                     annotationExport: 'Izohlarni eksport qilish',
@@ -3007,6 +3070,11 @@
                     warEpochAncient: 'Qadimgi davr',
                     warEpochEarlyModern: 'Ilk yangi davr',
                     warEpochMedieval: 'O‘rta asrlar',
+                    histEraThreePhases: 'Uch tarixiy bosqich:',
+                    histPhaseEnd: 'Tugashi',
+                    histPhasePeak: 'Eng kengaygan davri',
+                    histPhaseStart: 'Boshlanishi',
+                    histWarThreePhases: 'Urushning uch bosqichi:',
                     warEpochModern: 'Zamonaviy davr'
                 },
                 es: {
@@ -3604,6 +3672,18 @@
                     annotationTutorialTitle: 'Guía de herramientas de anotaciones',
 
                     // --- Historical & UI Parity Extensions (es) ---
+                    histOnboard1Text: 'Explora desde el panel superior las grandes épocas imperiales, guerras y conflictos, la evolución de las religiones y las rutas de los viajeros.',
+                    histOnboard1Title: 'Secciones del atlas histórico',
+                    histOnboard2Text: 'Desplázate a través de los siglos con el control deslizante o pulsa reproducir para ver el auge y la caída de las civilizaciones.',
+                    histOnboard2Title: 'Línea de tiempo interactiva',
+                    histOnboard3Text: 'Ajusta la opacidad de los mapas imperiales para comparar las fronteras antiguas con el relieve y la geografía moderna.',
+                    histOnboard3Title: 'Opacidad y relieve',
+                    histOnboard4Text: 'Haz clic en cualquier entidad, capital, batalla o monumento en el mapa para abrir su ficha enciclopédica detallada.',
+                    histOnboard4Title: 'Explorar e interactuar',
+                    histOnboard5Text: 'Consulta el significado de los colores, los símbolos de monumentos, las rutas comerciales y las zonas de influencia política.',
+                    histOnboard5Title: 'Leyenda histórica',
+                    histOnboard6Text: 'Utiliza las herramientas de comparación de épocas, cuestionarios, hojas de estudio para imprimir y fuentes históricas autorizadas.',
+                    histOnboard6Title: 'Herramientas de estudio y fuentes',
                     annotationAddByName: 'Añadir marcador por nombre',
                     annotationAddByName_title: 'Añadir marcador por nombre en el mapa',
                     annotationExport: 'Exportar anotaciones',
@@ -3759,6 +3839,11 @@
                     warEpochAncient: 'Antigüedad',
                     warEpochEarlyModern: 'Edad Moderna temprana',
                     warEpochMedieval: 'Edad Media',
+                    histEraThreePhases: 'Las tres fases históricas:',
+                    histPhaseEnd: 'Su final',
+                    histPhasePeak: 'Su máxima extensión',
+                    histPhaseStart: 'Su inicio',
+                    histWarThreePhases: 'Las tres fases de la guerra:',
                     warEpochModern: 'Época contemporánea'
                 }
             };
@@ -5959,6 +6044,12 @@
             ];
 
             // weight: 3=عالمية كبرى  2=إقليمية مهمة  1=ثانوية
+            
+            const histEmpireNames = {
+                ah: { name_ar: 'النمسا-المجر', name_en: 'Austria-Hungary', name_ru: 'Австро-Венгрия', name_uz: 'Avstriya-Vengriya', name_es: 'Austria-Hungría' },
+                ottoman: { name_ar: 'الدولة العثمانية', name_en: 'Ottoman Empire', name_ru: 'Османская империя', name_uz: 'Usmonli imperiyasi', name_es: 'Imperio otomano' }
+            };
+
             const historicalRoutesData = [
                 {
                                 "id": "silk_road",
@@ -6810,6 +6901,632 @@
             ];
             // Source: Natural Earth 10m Time Zones (public domain), simplified for web display.
             // "places" descriptions are kept in English only (standard convention for timezone/place identifiers).
+                        const timezoneTranslations = {
+                'Arctic Ocean': {
+                    places_ar: 'المحيط المتجمد الشمالي',
+                    places_en: 'Arctic Ocean',
+                    places_ru: 'Северный Ледовитый океан',
+                    places_uz: 'Shimoliy Muz okeani',
+                    places_es: 'Océano Ártico'
+                },
+                'United States (Aleutian Islands)': {
+                    places_ar: 'الولايات المتحدة (جزر ألوتيان)',
+                    places_en: 'United States (Aleutian Islands)',
+                    places_ru: 'США (Алеутские острова)',
+                    places_uz: 'AQSH (Aleut orollari)',
+                    places_es: 'Estados Unidos (Islas Aleutianas)'
+                },
+                'American Samoa, Niue': {
+                    places_ar: 'ساموا الأمريكية، نيوي',
+                    places_en: 'American Samoa, Niue',
+                    places_ru: 'Американское Самоа, Ниуэ',
+                    places_uz: 'Amerika Samoasi, Niue',
+                    places_es: 'Samoa Americana, Niue'
+                },
+                'United States (Hawaii)': {
+                    places_ar: 'الولايات المتحدة (هاواي)',
+                    places_en: 'United States (Hawaii)',
+                    places_ru: 'США (Гавайи)',
+                    places_uz: 'AQSH (Gavayi)',
+                    places_es: 'Estados Unidos (Hawái)'
+                },
+                'Southern Ocean': {
+                    places_ar: 'المحيط الجنوبي',
+                    places_en: 'Southern Ocean',
+                    places_ru: 'Южный океан',
+                    places_uz: 'Janubiy okean',
+                    places_es: 'Océano Austral'
+                },
+                'Siberia': {
+                    places_ar: 'سيبيريا',
+                    places_en: 'Siberia',
+                    places_ru: 'Сибирь',
+                    places_uz: 'Sibir',
+                    places_es: 'Siberia'
+                },
+                'Canada (northeastern British Columbia), Mexico (Sonora), United States (Arizona)': {
+                    places_ar: 'كندا (شمال شرق كولومبيا البريطانية)، المكسيك (سونورا)، الولايات المتحدة (أريزونا)',
+                    places_en: 'Canada (northeastern British Columbia), Mexico (Sonora), United States (Arizona)',
+                    places_ru: 'Канада (северо-восток Британской Колумбии), Мексика (Сонора), США (Аризона)',
+                    places_uz: 'Kanada (shimoli-sharqiy Britaniya Kolumbiyasi), Meksika (Sonora), AQSH (Arizona)',
+                    places_es: 'Canadá (noreste de Columbia Británica), México (Sonora), Estados Unidos (Arizona)'
+                },
+                'Marquesas Islands': {
+                    places_ar: 'جزر ماركيساس',
+                    places_en: 'Marquesas Islands',
+                    places_ru: 'Маркизские острова',
+                    places_uz: 'Markiz orollari',
+                    places_es: 'Islas Marquesas'
+                },
+                'Canada (almost all of Saskatchewan), Costa Rica, El Salvador, Ecuador (Galapagos Islands), Guatemala, Honduras, Mexico (most), Nicaragua,': {
+                    places_ar: 'كندا (ساسكاتشوان)، كوستاريكا، السلفادور، الإكوادور (غالاباغوس)، غواتيمالا، هندوراس، المكسيك، نيكاراغوا',
+                    places_en: 'Canada (almost all of Saskatchewan), Costa Rica, El Salvador, Ecuador (Galapagos Islands), Guatemala, Honduras, Mexico (most), Nicaragua,',
+                    places_ru: 'Канада (Саскачеван), Коста-Рика, Сальвадор, Эквадор (Галапагосы), Гватемала, Гондурас, Мексика, Никарагуа',
+                    places_uz: 'Kanada (Saskachevan), Kosta-Rika, Salvador, Ekvador (Galapagos), Gvatemala, Gonduras, Meksika, Nikaragua',
+                    places_es: 'Canadá (Saskatchewan), Costa Rica, El Salvador, Ecuador (Galápagos), Guatemala, Honduras, México, Nicaragua'
+                },
+                'Colombia, Cuba, Ecuador (continental), Jamaica, Panama, Peru': {
+                    places_ar: 'كولومبيا، كوبا، الإكوادور، جامايكا، بنما، بيرو',
+                    places_en: 'Colombia, Cuba, Ecuador (continental), Jamaica, Panama, Peru',
+                    places_ru: 'Колумбия, Куба, Эквадор, Ямайка, Панама, Перу',
+                    places_uz: 'Kolumbiya, Kuba, Ekvador, Yamayka, Panama, Peru',
+                    places_es: 'Colombia, Cuba, Ecuador, Jamaica, Panamá, Perú'
+                },
+                'Canada (island of Newfoundland and southern Labrador)': {
+                    places_ar: 'كندا (نيوفاوندلاند ولابرادور)',
+                    places_en: 'Canada (island of Newfoundland and southern Labrador)',
+                    places_ru: 'Канада (Ньюфаундленд и Лабрадор)',
+                    places_uz: 'Kanada (Nyufaundlend va Labrador)',
+                    places_es: 'Canadá (Terranova y Labrador)'
+                },
+                'Greenland (south eastern part)': {
+                    places_ar: 'غرينلاند (الجزء الجنوبي الشرقي)',
+                    places_en: 'Greenland (south eastern part)',
+                    places_ru: 'Гренландия (юго-восточная часть)',
+                    places_uz: 'Grenlandiya (janubi-sharqiy qismi)',
+                    places_es: 'Groenlandia (parte suroriental)'
+                },
+                'Bolivia, Brazil (Amazonas), Chile (continental), Dominican Republic, Canada (Nova Scotia), Puerto Rico, Trinidad and Tobago': {
+                    places_ar: 'بوليفيا، البرازيل (الأمازون)، تشيلي، جمهورية الدومينيكان، كندا (نوفا سكوشا)، بورتوريكو، ترينيداد وتوباغو',
+                    places_en: 'Bolivia, Brazil (Amazonas), Chile (continental), Dominican Republic, Canada (Nova Scotia), Puerto Rico, Trinidad and Tobago',
+                    places_ru: 'Боливия, Бразилия (Амазонас), Чили, Доминиканская Республика, Канада (Новая Шотландия), Пуэрто-Рико, Тринидад и Тобаго',
+                    places_uz: 'Boliviya, Braziliya (Amazonas), Chili, Dominika Respublikasi, Kanada (Yangi Shotlandiya), Puerto-Riko, Trinidad va Tobago',
+                    places_es: 'Bolivia, Brasil (Amazonas), Chile, República Dominicana, Canadá (Nueva Escocia), Puerto Rico, Trinidad y Tobago'
+                },
+                'Brazil (Fernando de Noronha), South Georgia and the South Sandwich Islands': {
+                    places_ar: 'البرازيل (فرناندو دي نورونيا)، جورجيا الجنوبية وجزر ساندويتش الجنوبية',
+                    places_en: 'Brazil (Fernando de Noronha), South Georgia and the South Sandwich Islands',
+                    places_ru: 'Бразилия (Фернанду-ди-Норонья), Южная Георгия и Южные Сандвичевы острова',
+                    places_uz: 'Braziliya (Fernando-di-Noronya), Janubiy Georgiya va Janubiy Sendvich orollari',
+                    places_es: 'Brasil (Fernando de Noronha), Georgia del Sur e Islas Sandwich del Sur'
+                },
+                'Portugal (Azores), Cape Verde': {
+                    places_ar: 'البرتغال (جزر الأزور)، الرأس الأخضر',
+                    places_en: 'Portugal (Azores), Cape Verde',
+                    places_ru: 'Португалия (Азорские острова), Кабо-Верде',
+                    places_uz: 'Portugaliya (Azor orollari), Kabo-Verde',
+                    places_es: 'Portugal (Azores), Cabo Verde'
+                },
+                'Canada (most of British Columbia), Mexico (Baja California), United States (California, most of Nevada, most of Oregon, Washington (state))': {
+                    places_ar: 'كندا (كولومبيا البريطانية)، المكسيك (باها كاليفورنيا)، الولايات المتحدة (كاليفورنيا، نيفادا، أوريغون، واشنطن)',
+                    places_en: 'Canada (most of British Columbia), Mexico (Baja California), United States (California, most of Nevada, most of Oregon, Washington (state))',
+                    places_ru: 'Канада (Британская Колумбия), Мексика (Нижняя Калифорния), США (Калифорния, Невада, Орегон, Вашингтон)',
+                    places_uz: 'Kanada (Britaniya Kolumbiyasi), Meksika (Quyi Kaliforniya), AQSH (Kaliforniya, Nevada, Oregon, Vashington)',
+                    places_es: 'Canadá (Columbia Británica), México (Baja California), Estados Unidos (California, Nevada, Oregón, Washington)'
+                },
+                'Kiribati (Phoenix Islands), Tonga, Samoa': {
+                    places_ar: 'كيريباتي (جزر فينيكس)، تونغا، ساموا',
+                    places_en: 'Kiribati (Phoenix Islands), Tonga, Samoa',
+                    places_ru: 'Кирибати (острова Феникс), Тонга, Самоа',
+                    places_uz: 'Kiribati (Feniks orollari), Tonga, Samoa',
+                    places_es: 'Kiribati (Islas Fénix), Tonga, Samoa'
+                },
+                'Kiribati (Line Islands), Tokelau': {
+                    places_ar: 'كيريباتي (جزر لاين)، توكيلاو',
+                    places_en: 'Kiribati (Line Islands), Tokelau',
+                    places_ru: 'Кирибати (острова Лайн), Токелау',
+                    places_uz: 'Kiribati (Layn orollari), Tokelau',
+                    places_es: 'Kiribati (Islas de la Línea), Tokelau'
+                },
+                'Papua New Guinea, Australia (Queensland, New South Wales, Tasmania, Victoria)': {
+                    places_ar: 'بابوا غينيا الجديدة، أستراليا (كوينزلاند، نيو ساوث ويلز، تسمانيا، فيكتوريا)',
+                    places_en: 'Papua New Guinea, Australia (Queensland, New South Wales, Tasmania, Victoria)',
+                    places_ru: 'Папуа — Новая Гвинея, Австралия (Квинсленд, Новый Южный Уэльс, Тасмания, Виктория)',
+                    places_uz: 'Papua — Yangi Gvineya, Avstraliya (Kvinslend, Yangi Janubiy Uels, Tasmaniya, Viktoriya)',
+                    places_es: 'Papúa Nueva Guinea, Australia (Queensland, Nueva Gales del Sur, Tasmania, Victoria)'
+                },
+                'Russia (Zabaykalsky Krai)': {
+                    places_ar: 'روسيا (كراي زابايكالسكي)',
+                    places_en: 'Russia (Zabaykalsky Krai)',
+                    places_ru: 'Россия (Забайкальский край)',
+                    places_uz: 'Rossiya (Zabaykalye o‘lkasi)',
+                    places_es: 'Rusia (Krai de Zabaikalsk)'
+                },
+                'New Caledonia, Solomon Islands': {
+                    places_ar: 'كاليدونيا الجديدة، جزر سليمان',
+                    places_en: 'New Caledonia, Solomon Islands',
+                    places_ru: 'Новая Каледония, Соломоновы Острова',
+                    places_uz: 'Yangi Kaledoniya, Solomon orollari',
+                    places_es: 'Nueva Caledonia, Islas Salomón'
+                },
+                'Russia (Primorsky Krai)': {
+                    places_ar: 'روسيا (كراي بريمورسكي)',
+                    places_en: 'Russia (Primorsky Krai)',
+                    places_ru: 'Россия (Приморский край)',
+                    places_uz: 'Rossiya (Primorye o‘lkasi)',
+                    places_es: 'Rusia (Krai de Primorie)'
+                },
+                'Russia (Kamchatka Krai)': {
+                    places_ar: 'روسيا (كراي كامتشاتكا)',
+                    places_en: 'Russia (Kamchatka Krai)',
+                    places_ru: 'Россия (Камчатский край)',
+                    places_uz: 'Rossiya (Kamchatka o‘lkasi)',
+                    places_es: 'Rusia (Krai de Kamchatka)'
+                },
+                'Mauritius, Oman, Seychelles, United Arab Emirates': {
+                    places_ar: 'موريشيوس، عمان، سيشل، الإمارات العربية المتحدة',
+                    places_en: 'Mauritius, Oman, Seychelles, United Arab Emirates',
+                    places_ru: 'Маврикий, Оман, Сейшелы, ОАЭ',
+                    places_uz: 'Mavrikiy, Ummon, Seyshell orollari, BAA',
+                    places_es: 'Mauricio, Omán, Seychelles, Emiratos Árabes Unidos'
+                },
+                'British Indian Ocean Territory': {
+                    places_ar: 'إقليم المحيط الهندي البريطاني',
+                    places_en: 'British Indian Ocean Territory',
+                    places_ru: 'Британская территория в Индийском океане',
+                    places_uz: 'Britaniyaning Hind okeanidagi hududi',
+                    places_es: 'Territorio Británico del Océano Índico'
+                },
+                'Bhutan': {
+                    places_ar: 'بوتان',
+                    places_en: 'Bhutan',
+                    places_ru: 'Бутан',
+                    places_uz: 'Butan',
+                    places_es: 'Bután'
+                },
+                'French Southern and Antarctic Lands': {
+                    places_ar: 'الأراضي الفرنسية الجنوبية والقطبية الجنوبية',
+                    places_en: 'French Southern and Antarctic Lands',
+                    places_ru: 'Французские Южные и Антарктические территории',
+                    places_uz: 'Fransiyaning Janubiy va Antarktika hududlari',
+                    places_es: 'Tierras Australes y Antárticas Francesas'
+                },
+                'Armenia, Azerbaijan, Georgia, Russia (European)': {
+                    places_ar: 'أرمينيا، أذربيجان، جورجيا، روسيا (الجزء الأوروبي)',
+                    places_en: 'Armenia, Azerbaijan, Georgia, Russia (European)',
+                    places_ru: 'Армения, Азербайджан, Грузия, Россия (Европейская часть)',
+                    places_uz: 'Armaniston, Ozarbayjon, Gruziya, Rossiya (Yevropa qismi)',
+                    places_es: 'Armenia, Azerbaiyán, Georgia, Rusia (parte europea)'
+                },
+                'Kazakhstan (most), Russia (Ural: Sverdlovsk Oblast, Chelyabinsk Oblast)': {
+                    places_ar: 'كازاخستان، روسيا (منطقة الأورال)',
+                    places_en: 'Kazakhstan (most), Russia (Ural: Sverdlovsk Oblast, Chelyabinsk Oblast)',
+                    places_ru: 'Казахстан, Россия (Урал: Свердловская, Челябинская области)',
+                    places_uz: 'Qozog‘iston, Rossiya (Ural hududi)',
+                    places_es: 'Kazajistán, Rusia (región de los Urales)'
+                },
+                'Russia (Irkutsk Oblast)': {
+                    places_ar: 'روسيا (أوبلاست إيركوتسك)',
+                    places_en: 'Russia (Irkutsk Oblast)',
+                    places_ru: 'Россия (Иркутская область)',
+                    places_uz: 'Rossiya (Irkutsk viloyati)',
+                    places_es: 'Rusia (Óblast de Irkutsk)'
+                },
+                'Iran': {
+                    places_ar: 'إيران',
+                    places_en: 'Iran',
+                    places_ru: 'Иран',
+                    places_uz: 'Eron',
+                    places_es: 'Irán'
+                },
+                'Afghanistan': {
+                    places_ar: 'أفغانستان',
+                    places_en: 'Afghanistan',
+                    places_ru: 'Афганистан',
+                    places_uz: 'Afg‘oniston',
+                    places_es: 'Afganistán'
+                },
+                'Nepal': {
+                    places_ar: 'نيبال',
+                    places_en: 'Nepal',
+                    places_ru: 'Непал',
+                    places_uz: 'Nepal',
+                    places_es: 'Nepal'
+                },
+                'China, Hong Kong, Russia (Krasnoyarsk Krai), Malaysia, Philippines, Singapore, Taiwan, most of Mongolia, Western Australia': {
+                    places_ar: 'الصين، هونغ كونغ، روسيا (كراسنويارسك)، ماليزيا، الفلبين، سنغافورة، تايوان، منغوليا، غرب أستراليا',
+                    places_en: 'China, Hong Kong, Russia (Krasnoyarsk Krai), Malaysia, Philippines, Singapore, Taiwan, most of Mongolia, Western Australia',
+                    places_ru: 'Китай, Гонконг, Россия (Красноярский край), Малайзия, Филиппины, Сингапур, Тайвань, Монголия, Западная Австралия',
+                    places_uz: 'Xitoy, Gonkong, Rossiya (Krasnoyarsk), Malayziya, Filippin, Singapur, Tayvan, Mo‘g‘uliston, G‘arbiy Avstraliya',
+                    places_es: 'China, Hong Kong, Rusia (Krasnoyarsk), Malasia, Filipinas, Singapur, Taiwán, Mongolia, Australia Occidental'
+                },
+                'Australia (Northern Territory)': {
+                    places_ar: 'أستراليا (الإقليم الشمالي)',
+                    places_en: 'Australia (Northern Territory)',
+                    places_ru: 'Австралия (Северная территория)',
+                    places_uz: 'Avstraliya (Shimoliy hudud)',
+                    places_es: 'Australia (Territorio del Norte)'
+                },
+                'Lord Howe Island': {
+                    places_ar: 'جزيرة لورد هاو',
+                    places_en: 'Lord Howe Island',
+                    places_ru: 'Остров Лорд-Хау',
+                    places_uz: 'Lord-Xau oroli',
+                    places_es: 'Isla de Lord Howe'
+                },
+                'Norfolk Island': {
+                    places_ar: 'جزيرة نورفولك',
+                    places_en: 'Norfolk Island',
+                    places_ru: 'Остров Норфолк',
+                    places_uz: 'Norfolk oroli',
+                    places_es: 'Isla Norfolk'
+                },
+                'Venezuela': {
+                    places_ar: 'فنزويلا',
+                    places_en: 'Venezuela',
+                    places_ru: 'Венесуэла',
+                    places_uz: 'Venesuela',
+                    places_es: 'Venezuela'
+                },
+                'East Timor, Japan, North Korea, South Korea': {
+                    places_ar: 'تيمور الشرقية، اليابان، كوريا الشمالية، كوريا الجنوبية',
+                    places_en: 'East Timor, Japan, North Korea, South Korea',
+                    places_ru: 'Восточный Тимор, Япония, КНДР, Южная Корея',
+                    places_uz: 'Sharqiy Timor, Yaponiya, Shimoliy Koreya, Janubiy Koreya',
+                    places_es: 'Timor Oriental, Japón, Corea del Norte, Corea del Sur'
+                },
+                'Libya, Egypt, Malawi, Mozambique, South Africa, Swaziland, Zambia, Zimbabwe': {
+                    places_ar: 'ليبيا، مصر، مالاوي، موزمبيق، جنوب أفريقيا، إسواتيني، زامبيا، زيمبابوي',
+                    places_en: 'Libya, Egypt, Malawi, Mozambique, South Africa, Swaziland, Zambia, Zimbabwe',
+                    places_ru: 'Ливия, Египет, Малави, Мозамбик, ЮАР, Эсватини, Замбия, Зимбабве',
+                    places_uz: 'Liviya, Misr, Malavi, Mozambik, Janubiy Afrika, Esvatini, Zambiya, Zimbabve',
+                    places_es: 'Libia, Egipto, Malaui, Mozambique, Sudáfrica, Suazilandia, Zambia, Zimbabue'
+                },
+                'Maldives, Pakistan': {
+                    places_ar: 'المالديف، باكستان',
+                    places_en: 'Maldives, Pakistan',
+                    places_ru: 'Мальдивы, Пакистан',
+                    places_uz: 'Maldiv orollari, Pokiston',
+                    places_es: 'Maldivas, Pakistán'
+                },
+                'Chatham Islands': {
+                    places_ar: 'جزر تشاتام',
+                    places_en: 'Chatham Islands',
+                    places_ru: 'Острова Чатем',
+                    places_uz: 'Chatem orollari',
+                    places_es: 'Islas Chatham'
+                },
+                'Bangladesh': {
+                    places_ar: 'بنغلاديش',
+                    places_en: 'Bangladesh',
+                    places_ru: 'Бангладеш',
+                    places_uz: 'Bangladesh',
+                    places_es: 'Bangladés'
+                },
+                'India (Laccadive Is.)': {
+                    places_ar: 'الهند (جزر لاكشادويب)',
+                    places_en: 'India (Laccadive Is.)',
+                    places_ru: 'Индия (Лакшадвип)',
+                    places_uz: 'Hindiston (Lakshadip orollari)',
+                    places_es: 'India (Islas Laquedivas)'
+                },
+                'Jakarta, Thailand, Vietnam': {
+                    places_ar: 'جاكرتا (إندونيسيا)، تايلاند، فيتنام',
+                    places_en: 'Jakarta, Thailand, Vietnam',
+                    places_ru: 'Джакарта (Индонезия), Таиланд, Вьетнам',
+                    places_uz: 'Jakarta (Indoneziya), Tailand, Vyetnam',
+                    places_es: 'Yakarta (Indonesia), Tailandia, Vietnam'
+                },
+                'India (Andaman Is.)': {
+                    places_ar: 'الهند (جزر أندمان)',
+                    places_en: 'India (Andaman Is.)',
+                    places_ru: 'Индия (Андаманские острова)',
+                    places_uz: 'Hindiston (Andaman orollari)',
+                    places_es: 'India (Islas Andamán)'
+                },
+                'India, Sri Lanka': {
+                    places_ar: 'الهند، سريلانكا',
+                    places_en: 'India, Sri Lanka',
+                    places_ru: 'Индия, Шри-Ланка',
+                    places_uz: 'Hindiston, Shri-Lanka',
+                    places_es: 'India, Sri Lanka'
+                },
+                'Tajikistan': {
+                    places_ar: 'طاجيكستان',
+                    places_en: 'Tajikistan',
+                    places_ru: 'Таджикистан',
+                    places_uz: 'Tojikiston',
+                    places_es: 'Tayikistán'
+                },
+                'Uzbekistan': {
+                    places_ar: 'أوزبكستان',
+                    places_en: 'Uzbekistan',
+                    places_ru: 'Узбекистан',
+                    places_uz: 'O‘zbekiston',
+                    places_es: 'Uzbekistán'
+                },
+                'Kazakhstan (West), Uzbekistan': {
+                    places_ar: 'غرب كازاخستان، أوزبكستان',
+                    places_en: 'Kazakhstan (West), Uzbekistan',
+                    places_ru: 'Западный Казахстан, Узбекистан',
+                    places_uz: 'G‘arbiy Qozog‘iston, O‘zbekiston',
+                    places_es: 'Kazajistán occidental, Uzbekistán'
+                },
+                'Belarus': {
+                    places_ar: 'بيلاروسيا',
+                    places_en: 'Belarus',
+                    places_ru: 'Беларусь',
+                    places_uz: 'Belarus',
+                    places_es: 'Bielorrusia'
+                },
+                'Russia (Kaliningrad Oblast)': {
+                    places_ar: 'روسيا (كالينينغراد)',
+                    places_en: 'Russia (Kaliningrad Oblast)',
+                    places_ru: 'Россия (Калининградская область)',
+                    places_uz: 'Rossiya (Kaliningrad viloyati)',
+                    places_es: 'Rusia (Óblast de Kaliningrado)'
+                },
+                'Estonia, Finland, Latvia, Lithuania': {
+                    places_ar: 'إستونيا، فنلندا، لاتفيا، ليتوانيا',
+                    places_en: 'Estonia, Finland, Latvia, Lithuania',
+                    places_ru: 'Эстония, Финляндия, Латвия, Литва',
+                    places_uz: 'Estoniya, Finlyandiya, Latviya, Litva',
+                    places_es: 'Estonia, Finlandia, Letonia, Lituania'
+                },
+                'Libya, Egypt, Bulgaria, Cyprus, Greece, Israel, Jordan, Lebanon, Moldova, Palestine, Romania, Syria, Turkey, Ukraine': {
+                    places_ar: 'مصر، ليبيا، بلغاريا، قبرص، اليونان، الأردن، لبنان، مولدوفا، فلسطين، رومانيا، سوريا، تركيا، أوكرانيا',
+                    places_en: 'Libya, Egypt, Bulgaria, Cyprus, Greece, Israel, Jordan, Lebanon, Moldova, Palestine, Romania, Syria, Turkey, Ukraine',
+                    places_ru: 'Египет, Ливия, Болгария, Кипр, Греция, Иордания, Ливан, Молдова, Палестина, Румыния, Сирия, Турция, Украина',
+                    places_uz: 'Misr, Liviya, Bolgariya, Kipr, Gretsiya, Iordaniya, Livan, Moldova, Falastin, Ruminiya, Suriya, Turkiya, Ukraina',
+                    places_es: 'Egipto, Libia, Bulgaria, Chipre, Grecia, Jordania, Líbano, Moldavia, Palestina, Rumania, Siria, Turquía, Ucrania'
+                },
+                'Côte d\'Ivoire, Ghana, Senegal, Morocco, Portugal (continental and Madeira), Spain (Canary Islands)': {
+                    places_ar: 'كوت ديفوار، غانا، السنغال، المغرب، البرتغال، إسبانيا (جزر الكناري)',
+                    places_en: 'Côte d\'Ivoire, Ghana, Senegal, Morocco, Portugal (continental and Madeira), Spain (Canary Islands)',
+                    places_ru: 'Кот-д\'Ивуар, Гана, Сенегал, Марокко, Португалия, Испания (Канарские острова)',
+                    places_uz: 'Kot-d\'Ivuar, Gana, Senegal, Marokash, Portugaliya, Ispaniya (Kanar orollari)',
+                    places_es: 'Costa de Marfil, Ghana, Senegal, Marruecos, Portugal, España (Islas Canarias)'
+                },
+                'Greenland (north eastern part)': {
+                    places_ar: 'غرينلاند (الجزء الشمالي الشرقي)',
+                    places_en: 'Greenland (north eastern part)',
+                    places_ru: 'Гренландия (северо-восточная часть)',
+                    places_uz: 'Grenlandiya (shimoli-sharqiy qismi)',
+                    places_es: 'Groenlandia (parte nororiental)'
+                },
+                'Iceland, United Kingdom, Ireland': {
+                    places_ar: 'آيسلندا، المملكة المتحدة، أيرلندا',
+                    places_en: 'Iceland, United Kingdom, Ireland',
+                    places_ru: 'Исландия, Великобритания, Ирландия',
+                    places_uz: 'Islandiya, Buyuk Britaniya, Irlandiya',
+                    places_es: 'Islandia, Reino Unido, Irlanda'
+                },
+                'Australia (Eucla)': {
+                    places_ar: 'أستراليا (يوكلا)',
+                    places_en: 'Australia (Eucla)',
+                    places_ru: 'Австралия (Юкла)',
+                    places_uz: 'Avstraliya (Yukla)',
+                    places_es: 'Australia (Eucla)'
+                },
+                'Angola, Cameroon, Nigeria, Tunisia': {
+                    places_ar: 'أنغولا، الكاميرون، نيجيريا، تونس',
+                    places_en: 'Angola, Cameroon, Nigeria, Tunisia',
+                    places_ru: 'Ангола, Камерун, Нигерия, Тунис',
+                    places_uz: 'Angola, Kamerun, Nigeriya, Tunis',
+                    places_es: 'Angola, Camerún, Nigeria, Túnez'
+                },
+                'Cocos Islands': {
+                    places_ar: 'جزر كوكوس',
+                    places_en: 'Cocos Islands',
+                    places_ru: 'Кокосовые острова',
+                    places_uz: 'Kokos orollari',
+                    places_es: 'Islas Cocos'
+                },
+                'Myanmar': {
+                    places_ar: 'ميانمار',
+                    places_en: 'Myanmar',
+                    places_ru: 'Мьянма',
+                    places_uz: 'Myanma',
+                    places_es: 'Myanmar'
+                },
+                'Baker Island, Howland Island (both uninhabited)': {
+                    places_ar: 'جزيرة بيكر، جزيرة هاولاند',
+                    places_en: 'Baker Island, Howland Island (both uninhabited)',
+                    places_ru: 'Остров Бейкер, остров Хауленд',
+                    places_uz: 'Beyker oroli, Xaulend oroli',
+                    places_es: 'Isla Baker, Isla Howland'
+                },
+                'Pacific Ocean': {
+                    places_ar: 'المحيط الهادئ',
+                    places_en: 'Pacific Ocean',
+                    places_ru: 'Тихий океан',
+                    places_uz: 'Tinch okeani',
+                    places_es: 'Océano Pacífico'
+                },
+                'United States (most of Alaska)': {
+                    places_ar: 'الولايات المتحدة (ألاسكا)',
+                    places_en: 'United States (most of Alaska)',
+                    places_ru: 'США (Аляска)',
+                    places_uz: 'AQSH (Alyaska)',
+                    places_es: 'Estados Unidos (Alaska)'
+                },
+                'Gambier Islands': {
+                    places_ar: 'جزر غامبييه',
+                    places_en: 'Gambier Islands',
+                    places_ru: 'Острова Гамбье',
+                    places_uz: 'Gambye orollari',
+                    places_es: 'Islas Gambier'
+                },
+                'Djibouti, Eritrea, Ethiopia, Iraq, Kenya, Madagasca, Saudi Arabia, South Sudan, Sudan, Somalia, South Sudan, Tanzania, Uganda, Yemen': {
+                    places_ar: 'جيبوتي، إريتريا، إثيوبيا، العراق، كينيا، مدغشقر، السعودية، السودان، الصومال، تنزانيا، أوغندا، اليمن',
+                    places_en: 'Djibouti, Eritrea, Ethiopia, Iraq, Kenya, Madagasca, Saudi Arabia, South Sudan, Sudan, Somalia, South Sudan, Tanzania, Uganda, Yemen',
+                    places_ru: 'Джибути, Эритрея, Эфиопия, Ирак, Кения, Мадагаскар, Саудовская Аравия, Судан, Сомали, Танзания, Уганда, Йемен',
+                    places_uz: 'Jibuti, Eritreya, Efiopiya, Iroq, Keniya, Madagaskar, Saudiya Arabistoni, Sudan, Somali, Tanzaniya, Uganda, Yaman',
+                    places_es: 'Yibuti, Eritrea, Etiopía, Irak, Kenia, Madagascar, Arabia Saudita, Sudán, Somalia, Tanzania, Uganda, Yemen'
+                },
+                'Russia (Novosibirsk Oblast), Mongolia (western part)': {
+                    places_ar: 'روسيا (أوبلاست نوفوسيبيرسك)، منغوليا (الجزء الغربي)',
+                    places_en: 'Russia (Novosibirsk Oblast), Mongolia (western part)',
+                    places_ru: 'Россия (Новосибирская область), Монголия (западная часть)',
+                    places_uz: 'Rossiya (Novosibirsk viloyati), Mo‘g‘uliston (g‘arbiy qismi)',
+                    places_es: 'Rusia (Óblast de Novosibirsk), Mongolia (parte occidental)'
+                },
+                'St. Pierre et Miquelon': {
+                    places_ar: 'سان بيير وميكلون',
+                    places_en: 'St. Pierre et Miquelon',
+                    places_ru: 'Сен-Пьер и Микелон',
+                    places_uz: 'Sen-Pyer va Mikelon',
+                    places_es: 'San Pedro y Miquelón'
+                },
+                'Greenland (central part)': {
+                    places_ar: 'غرينلاند (الجزء الأوسط)',
+                    places_en: 'Greenland (central part)',
+                    places_ru: 'Гренландия (центральная часть)',
+                    places_uz: 'Grenlandiya (markaziy qismi)',
+                    places_es: 'Groenlandia (parte central)'
+                },
+                'New Zealand, Kiribati (Gilbert Islands), Fiji': {
+                    places_ar: 'نيوزيلندا، كيريباتي (جزر غيلبرت)، فيجي',
+                    places_en: 'New Zealand, Kiribati (Gilbert Islands), Fiji',
+                    places_ru: 'Новая Зеландия, Кирибати (острова Гилберта), Фиджи',
+                    places_uz: 'Yangi Zelandiya, Kiribati (Gilbert orollari), Fici',
+                    places_es: 'Nueva Zelanda, Kiribati (Islas Gilbert), Fiyi'
+                },
+                'New Zealand': {
+                    places_ar: 'نيوزيلندا',
+                    places_en: 'New Zealand',
+                    places_ru: 'Новая Зеландия',
+                    places_uz: 'Yangi Zelandiya',
+                    places_es: 'Nueva Zelanda'
+                },
+                'Antarctica': {
+                    places_ar: 'القارة القطبية الجنوبية',
+                    places_en: 'Antarctica',
+                    places_ru: 'Антарктида',
+                    places_uz: 'Antarktida',
+                    places_es: 'Antártida'
+                },
+                'Palmer, Escudero, Great Wall, Gen. Bernado O\'Higgins Stations': {
+                    places_ar: 'محطات بالمر وإسكوديرو وسور الصين العظيم وبرناردو أوهيغينز',
+                    places_en: 'Palmer, Escudero, Great Wall, Gen. Bernado O\'Higgins Stations',
+                    places_ru: 'Станции Палмер, Эскудеро, Великая стена, Бернардо О’Хиггинс',
+                    places_uz: 'Palmer, Eskudero, Buyuk devor, Bernardo O’Xiggins stansiyalari',
+                    places_es: 'Estaciones Palmer, Escudero, Gran Muralla, Gen. Bernardo O\'Higgins'
+                },
+                'Aboa, Svea, Wasa, Novolazarevskaya Stations': {
+                    places_ar: 'محطات أبوا وسفيا وفاسا ونوفولازاريفسكايا',
+                    places_en: 'Aboa, Svea, Wasa, Novolazarevskaya Stations',
+                    places_ru: 'Станции Абоа, Свеа, Васа, Новолазаревская',
+                    places_uz: 'Aboa, Svea, Vasa, Novolazarevskaya stansiyalari',
+                    places_es: 'Estaciones Aboa, Svea, Wasa, Novolazarevskaya'
+                },
+                'Dumont d\'Urville Station': {
+                    places_ar: 'محطة دومون دورفيل',
+                    places_en: 'Dumont d\'Urville Station',
+                    places_ru: 'Станция Дюмон-д’Юрвиль',
+                    places_uz: 'Dyumon-d’Yurvil stansiyasi',
+                    places_es: 'Estación Dumont d\'Urville'
+                },
+                'Casety Station': {
+                    places_ar: 'محطة كاسيتي',
+                    places_en: 'Casety Station',
+                    places_ru: 'Станция Кейси',
+                    places_uz: 'Keysi stansiyasi',
+                    places_es: 'Estación Casey'
+                },
+                'Mawson Station, Zhongshan Station': {
+                    places_ar: 'محطة موسون، محطة تشونغشان',
+                    places_en: 'Mawson Station, Zhongshan Station',
+                    places_ru: 'Станция Моусон, станция Чжуншань',
+                    places_uz: 'Mouson stansiyasi, Chjunshan stansiyasi',
+                    places_es: 'Estación Mawson, Estación Zhongshan'
+                },
+                'Mirny Station': {
+                    places_ar: 'محطة ميرني',
+                    places_en: 'Mirny Station',
+                    places_ru: 'Станция Мирный',
+                    places_uz: 'Mirniy stansiyasi',
+                    places_es: 'Estación Mirny'
+                },
+                'Troll Station, Maitri Station': {
+                    places_ar: 'محطة ترول، محطة مايتري',
+                    places_en: 'Troll Station, Maitri Station',
+                    places_ru: 'Станция Тролль, станция Майтри',
+                    places_uz: 'Troll stansiyasi, Maytri stansiyasi',
+                    places_es: 'Estación Troll, Estación Maitri'
+                },
+                'General Belgrano, Doctor Sobral Stations': {
+                    places_ar: 'محطات الجنرال بيلجرانو والدكتور سوبرال',
+                    places_en: 'General Belgrano, Doctor Sobral Stations',
+                    places_ru: 'Станции Генерал Бельграно, Доктор Собраль',
+                    places_uz: 'General Belgrano, Doktor Sobral stansiyalari',
+                    places_es: 'Estaciones General Belgrano, Doctor Sobral'
+                },
+                'McMurdo Station, Scott Base, Zucchelli Station': {
+                    places_ar: 'محطة ماكموردو، قاعدة سكوت، محطة زوكيلي',
+                    places_en: 'McMurdo Station, Scott Base, Zucchelli Station',
+                    places_ru: 'Станция Мак-Мердо, база Скотт, станция Дзуккелли',
+                    places_uz: 'Mak-Merdo stansiyasi, Skott bazasi, Dzukshelli stansiyasi',
+                    places_es: 'Estación McMurdo, Base Scott, Estación Zucchelli'
+                },
+                'Concordia Research Station': {
+                    places_ar: 'محطة أبحاث كونكورديا',
+                    places_en: 'Concordia Research Station',
+                    places_ru: 'Исследовательская станция Конкордия',
+                    places_uz: 'Konkordiya tadqiqot stansiyasi',
+                    places_es: 'Estación de investigación Concordia'
+                },
+                'Vostok Station': {
+                    places_ar: 'محطة فوستوك',
+                    places_en: 'Vostok Station',
+                    places_ru: 'Станция Восток',
+                    places_uz: 'Vostok stansiyasi',
+                    places_es: 'Estación Vostok'
+                },
+                'Davis Station': {
+                    places_ar: 'محطة ديفيس',
+                    places_en: 'Davis Station',
+                    places_ru: 'Станция Дейвис',
+                    places_uz: 'Deyvis stansiyasi',
+                    places_es: 'Estación Davis'
+                },
+                'Neumayer Station': {
+                    places_ar: 'محطة نيوماير',
+                    places_en: 'Neumayer Station',
+                    places_ru: 'Станция Ноймайер',
+                    places_uz: 'Noymayer stansiyasi',
+                    places_es: 'Estación Neumayer'
+                },
+                'Halley Station': {
+                    places_ar: 'محطة هالي',
+                    places_en: 'Halley Station',
+                    places_ru: 'Станция Халли',
+                    places_uz: 'Xalli stansiyasi',
+                    places_es: 'Estación Halley'
+                },
+                'Rothera, San Martín Stations': {
+                    places_ar: 'محطات روثيرا وسان مارتين',
+                    places_en: 'Rothera, San Martín Stations',
+                    places_ru: 'Станции Ротера, Сан-Мартин',
+                    places_uz: 'Rotera, San-Martin stansiyalari',
+                    places_es: 'Estaciones Rothera, San Martín'
+                },
+                'Teniente Jubany Station': {
+                    places_ar: 'محطة تينينتي جوباني (كارليني)',
+                    places_en: 'Teniente Jubany Station',
+                    places_ru: 'Станция Карлини (Хубани)',
+                    places_uz: 'Karlini (Xubani) stansiyasi',
+                    places_es: 'Estación Teniente Jubany (Carlini)'
+                },
+                'Esperanza, Vicecomodoro Marambio Stations': {
+                    places_ar: 'محطات إسبيرانزا وفايسكومودورو مارامبيو',
+                    places_en: 'Esperanza, Vicecomodoro Marambio Stations',
+                    places_ru: 'Станции Эсперанса, Марамбио',
+                    places_uz: 'Esperansa, Marambio stansiyalari',
+                    places_es: 'Estaciones Esperanza, Vicecomodoro Marambio'
+                },
+            };
+
             const timezoneBoundariesData = [
                 { zone: -10, label: 'UTC-10:00', places: "Arctic Ocean", type: "Polygon", coordinates: [[[-157.53,71.33],[-156.71,71.6],[-154.02,71.1],[-151.82,70.98],[-151.2,70.67],[-149.12,70.76],[-147.29,70.41],[-144.81,70.21],[-142.44,70.23],[-142.46,73.54],[-142.47,75.81],[-142.48,78.54],[-142.49,81.72],[-142.5,83.99],[-142.52,87.22],[-142.53,90],[-157.53,90],[-157.53,87.68],[-157.53,84.45],[-157.53,82.63],[-157.53,79.45],[-157.53,77.17],[-157.53,74.9],[-157.53,71.33]]] },
                 { zone: -10, label: 'UTC-10:00', places: "United States (Aleutian Islands)", type: "Polygon", coordinates: [[[180,59.5],[177.04,57.68],[173.23,55.21],[170,53],[172.52,51.78],[176.48,49.8],[180,48],[180,48.4],[180,48.8],[180,49.2],[180,49.6],[180,50],[180,52.94],[180,56.36],[180,59.5]]] },
@@ -7660,8 +8377,8 @@
                     population_2026: 0.21, area: 964, lang_ar: 'البرتغالية', lang_en: 'Portuguese', lang_ru: 'Португальский', lang_uz: 'Portugal tili', lang_es: 'Portugués' },
                 'Saint Lucia': { capital_ar: 'كاستريس', capital_en: 'Castries', capital_ru: 'Кастри', capital_uz: 'Kastri', capital_es: 'Castries', capital_coords: [-60.9, 14.0],
                     population_2026: 0.185, area: 616, lang_ar: 'الإنجليزية', lang_en: 'English', lang_ru: 'Английский', lang_uz: 'Ingliz tili', lang_es: 'Inglés' },
-                'Grenada': { capital_ar: 'سانت جورجز', capital_en: "St. George's", capital_coords: [-61.7, 12.1],
-                    population_2026: 0.115, area: 344, lang_ar: 'الإنجليزية', lang_en: 'English' },
+                'Grenada': { capital_ar: 'سانت جورجز', capital_en: "St. George's", capital_ru: 'Сент-Джорджес', capital_uz: 'Sent-Jorj', capital_es: "Saint George", capital_coords: [-61.7, 12.1],
+                    population_2026: 0.115, area: 344, lang_ar: 'الإنجليزية', lang_en: 'English', lang_ru: 'Английский', lang_uz: 'Ingliz tili', lang_es: 'Inglés' },
                 'Barbados': { capital_ar: 'بريدج تاون', capital_en: 'Bridgetown', capital_ru: 'Бриджтаун', capital_uz: 'Brijtaun', capital_es: 'Bridgetown', capital_coords: [-59.6, 13.1],
                     population_2026: 0.285, area: 430, lang_ar: 'الإنجليزية', lang_en: 'English', lang_ru: 'Английский', lang_uz: 'Ingliz tili', lang_es: 'Inglés' },
                 'Bahamas': { capital_ar: 'ناساو', capital_en: 'Nassau', capital_ru: 'Нассау', capital_uz: 'Nassau', capital_es: 'Nasáu', capital_coords: [-77.3, 25.1], population_2026: 0.42,
@@ -7727,8 +8444,8 @@
                     area: 750, lang_ar: 'الإنجليزية', lang_en: 'English', lang_ru: 'Английский', lang_uz: 'Ingliz tili', lang_es: 'Inglés' },
                 'Saint Lucia': { capital_ar: 'كاستريس', capital_en: 'Castries', capital_ru: 'Кастри', capital_uz: 'Kastri', capital_es: 'Castries', capital_coords: [-60.9, 14.0],
                     population_2026: 0.18, area: 616, lang_ar: 'الإنجليزية', lang_en: 'English', lang_ru: 'Английский', lang_uz: 'Ingliz tili', lang_es: 'Inglés' },
-                'Grenada': { capital_ar: 'سانت جورجز', capital_en: "St. George's", capital_coords: [-61.7, 12.1],
-                    population_2026: 0.12, area: 344, lang_ar: 'الإنجليزية', lang_en: 'English' },
+                'Grenada': { capital_ar: 'سانت جورجز', capital_en: "St. George's", capital_ru: 'Сент-Джорджес', capital_uz: 'Sent-Jorj', capital_es: "Saint George", capital_coords: [-61.7, 12.1],
+                    population_2026: 0.12, area: 344, lang_ar: 'الإنجليزية', lang_en: 'English', lang_ru: 'Английский', lang_uz: 'Ingliz tili', lang_es: 'Inglés' },
                 'Barbados': { capital_ar: 'بريدج تاون', capital_en: 'Bridgetown', capital_ru: 'Бриджтаун', capital_uz: 'Brijtaun', capital_es: 'Bridgetown', capital_coords: [-59.6, 13.1],
                     population_2026: 0.28, area: 430, lang_ar: 'الإنجليزية', lang_en: 'English', lang_ru: 'Английский', lang_uz: 'Ingliz tili', lang_es: 'Inglés' },
                 'Solomon Is.': { capital_ar: 'هونيارا', capital_en: 'Honiara', capital_ru: 'Хониара', capital_uz: 'Xoniara', capital_es: 'Honiara', capital_coords: [159.9, -9.4],
@@ -8301,37 +9018,246 @@
                 'Federal Absolute Monarchy': 'Федеративная абсолютная монархия'
             };
             const densitySpotEnglish = {'طوكيو':'Tokyo','أوساكا':'Osaka','سيول':'Seoul','بوسان':'Busan','شنغهاي':'Shanghai','بكين':'Beijing','غوانزو':'Guangzhou','شنتشن':'Shenzhen','تايبيه':'Taipei','هونغ كونغ':'Hong Kong','نانجينغ':'Nanjing','تشينغداو':'Qingdao','تشانغشا':'Changsha','ووهان':'Wuhan','سنغافورة':'Singapore','دلهي':'Delhi','مومباي':'Mumbai','كلكتا':'Kolkata','بنغالور':'Bengaluru','تشيناي':'Chennai','حيدر أباد':'Hyderabad','أحمد أباد':'Ahmedabad','بونه':'Pune','كراتشي':'Karachi','لاهور':'Lahore','داكا':'Dhaka','كاتماندو':'Kathmandu','إسلام أباد':'Islamabad','فيصل أباد':'Faisalabad','جاكرتا':'Jakarta','مانيلا':'Manila','بانكوك':'Bangkok','هوشي منه':'Ho Chi Minh City','هانوي':'Hanoi','يانغون':'Yangon','القاهرة':'Cairo','طهران':'Tehran','بغداد':'Baghdad','الرياض':'Riyadh','إسطنبول':'Istanbul','دبي':'Dubai','القدس':'Jerusalem','جدة':'Jeddah','أبو ظبي':'Abu Dhabi','لاغوس':'Lagos','كينشاسا':'Kinshasa','نيروبي':'Nairobi','جوهانسبرغ':'Johannesburg','أديس أبابا':'Addis Ababa','دار السلام':'Dar es Salaam','أبيدجان':'Abidjan','داكار':'Dakar','لواندا':'Luanda','الخرطوم':'Khartoum','مقديشو':'Mogadishu','أكرا':'Accra','لندن':'London','باريس':'Paris','موسكو':'Moscow','مدريد':'Madrid','برلين':'Berlin','روما':'Rome','برشلونة':'Barcelona','أثينا':'Athens','وارسو':'Warsaw','فيينا':'Vienna','نيويورك':'New York','لوس أنجلوس':'Los Angeles','مكسيكو':'Mexico City','شيكاغو':'Chicago','تورنتو':'Toronto','فانكوفر':'Vancouver','ميامي':'Miami','هيوستن':'Houston','ساو باولو':'São Paulo','ريو دي جانيرو':'Rio de Janeiro','ليما':'Lima','بوغوتا':'Bogotá','بوينس آيرس':'Buenos Aires','سانتياغو':'Santiago','سيدني':'Sydney','ملبورن':'Melbourne','بريزبن':'Brisbane','أوكلاند':'Auckland','كوالالمبور':'Kuala Lumpur','عمان':'Amman','الكويت':'Kuwait City','الدوحة':'Doha','مسقط':'Muscat','صنعاء':'Sana\'a','دمشق':'Damascus','بيروت':'Beirut','الشارقة':'Sharjah','سورات':'Surat','جايبور':'Jaipur','لكناو':'Lucknow','كانبور':'Kanpur','ناغبور':'Nagpur','إندور':'Indore','بوبال':'Bhopal','راولبندي':'Rawalpindi','غوجرانوالا':'Gujranwala','بيشاور':'Peshawar','كويته':'Quetta','تشيتاغونغ':'Chittagong','ماندالاي':'Mandalay','بنوم بنه':'Phnom Penh','فيينتيان':'Vientiane','جورج تاون':'George Town','سورابايا':'Surabaya','ميدان':'Medan','ماكاسار':'Makassar','مانادو':'Manado','بالي':'Bali','كييف':'Kyiv','بودابست':'Budapest','براغ':'Prague','صوفيا':'Sofia','بلغراد':'Belgrade','زيورخ':'Zurich','أمستردام':'Amsterdam','بروكسل':'Brussels','ستوكهولم':'Stockholm','كوبنهاغن':'Copenhagen','أوسلو':'Oslo','هلسنكي':'Helsinki','دبلن':'Dublin','لشبونة':'Lisbon','نيقوسيا':'Nicosia','فاليتا':'Valletta','واشنطن':'Washington, D.C.','سان فرانسيسكو':'San Francisco','مونتريال':'Montreal','دالاس':'Dallas','أتلانتا':'Atlanta','بوسطن':'Boston','فينيكس':'Phoenix','ريفرسايد':'Riverside','ديترويت':'Detroit','سياتل':'Seattle','مينيابوليس':'Minneapolis','دنفر':'Denver','سان دييغو':'San Diego','تامبا':'Tampa','أورلاندو':'Orlando','برازيليا':'Brasília','بيلو هوريزونتي':'Belo Horizonte','كاراكاس':'Caracas','ميديلين':'Medellín','كيتو':'Quito','كالي':'Cali','لاباز':'La Paz','مونتفيدو':'Montevideo','الدار البيضاء':'Casablanca','الجزائر':'Algiers','تونس':'Tunis','طرابلس':'Tripoli','هرجيسا':'Hargeisa','هراري':'Harare','لوساكا':'Lusaka','كمبالا':'Kampala','كيغالي':'Kigali','بوجومبورا':'Bujumbura','باماكو':'Bamako','أبوجا':'Abuja','ياوندي':'Yaoundé','دوالا':'Douala','بيرث':'Perth','ويلينغتون':'Wellington','سوفا':'Suva','بورت مورسبي':'Port Moresby','أبيا':'Apia','نوك':'Nuuk','ريكيافيك':'Reykjavik','تيرانا':'Tirana','سراييفو':'Sarajevo','بريشتينا':'Pristina','بودغوريتسا':'Podgorica','سكوبيه':'Skopje','بوخارست':'Bucharest','تشيسيناو':'Chișinău','مينسك':'Minsk','فيلنيوس':'Vilnius','ريغا':'Riga','تالين':'Tallinn','أولان باتور':'Ulaanbaatar','بيونغ يانغ':'Pyongyang','بورت لويس':'Port Louis','فيكتوريا':'Victoria','ناساو':'Nassau','كينغستون':'Kingston','بورت أو برانس':'Port-au-Prince','سانتو دومينغو':'Santo Domingo','سان خوان':'San Juan','بلموبان':'Belmopan','غواتيمالا':'Guatemala City','تيغوسيغالبا':'Tegucigalpa','سان سلفادور':'San Salvador','ماناغوا':'Managua','سان خوسيه':'San José','بنما':'Panama City','بورت أوف سبين':'Port of Spain','باراماريبو':'Paramaribo','أسونسيون':'Asunción','سانتوريني':'Santorini','مراكش':'Marrakesh','كيوتو':'Kyoto','البندقية':'Venice','ميونخ':'Munich','فلورنسا':'Florence','سان بطرسبرغ':'Saint Petersburg','كيب تاون':'Cape Town','سيشل':'Seychelles','جزر المالديف':'Maldives','أنطاليا':'Antalya','أدنبرة':'Edinburgh','كراكوف':'Krakow','بورصة':'Bursa','إزمير':'Izmir','تيانجين':'Tianjin','تشنغدو':'Chengdu','هانغتشو':'Hangzhou','هامبورغ':'Hamburg','كولونيا':'Cologne','ميلانو':'Milan','تورينو':'Turin','ليون':'Lyon','مرسيليا':'Marseille','مانشستر':'Manchester','برمنغهام':'Birmingham','غلاسكو':'Glasgow','روتردام':'Rotterdam','أنتويرب':'Antwerp','بورت هاركورت':'Port Harcourt','ديربان':'Durban','عنابة':'Annaba','وهران':'Oran','صفاقس':'Sfax','بنغازي':'Benghazi','كالياري':'Cagliari','مونبلييه':'Montpellier','باليرمو':'Palermo','نابولي':'Naples','فالنسيا':'Valencia','حيدر آباد':'Hyderabad','أحمد آباد':'Ahmedabad','فيصل آباد':'Faisalabad','بونة':'Pune','طشقند':'Tashkent','سمرقند':'Samarkand','الإسكندرية':'Alexandria','أنديجان':'Andijan','ريسيفي':'Recife','باندونغ':'Bandung','باتنا':'Patna','سيمارانغ':'Semarang','تل أبيب':'Tel Aviv','كانو':'Kano','إيبادان':'Ibadan','غوادالاخارا':'Guadalajara'};
-            const densitySpotRussian = {'طوكيو':'Токио','أوساكا':'Осака','سيول':'Сеул','بوسان':'Пусан','شنغهاي':'Шанхай','بكين':'Пекин','غوانزو':'Гуанчжоу','شنتشن':'Шэньчжэнь','تايبيه':'Тайбэй','هونغ كونغ':'Гонконг','نانجينغ':'Нанкин','تشينغداو':'Циндао','تشانغشا':'Чанша','ووهان':'Ухань','سنغافورة':'Сингапур','دلهي':'Дели','مومباي':'Мумбаи','كلكتا':'Калькутта','بنغالور':'Бангалор','تشيناي':'Ченнаи','حيدر أباد':'Хайдарабад','أحمد أباد':'Ахмадабад','بونه':'Пуна','كراتشي':'Карачи','لاهور':'Лахор','داكا':'Дакка','كاتماندو':'Катманду','إسلام أباد':'Исламабад','فيصل أباد':'Фейсалабад','جاكرتا':'Джакарта','مانيلا':'Манила','بانكوك':'Бангкок','هوشي منه':'Хошимин','هانوي':'Ханой','يانغون':'Янгон','القاهرة':'Каир','طهران':'Тегеран','بغداد':'Багдад','الرياض':'Эр-Рияд','إسطنبول':'Стамбул','دبي':'Дубай','القدس':'Иерусалим','جدة':'Джидда','أبو ظبي':'Абу-Даби','لاغوس':'Лагос','كينشاسا':'Киншаса','نيروبي':'Найроби','جوهانسبرغ':'Йоханнесбург','أديس أبابا':'Аддис-Абеба','دار السلام':'Дар-эс-Салам','أبيدجان':'Абиджан','داكار':'Дакар','لواندا':'Луанда','الخرطوم':'Хартум','مقديشو':'Могадишо','أكرا':'Аккра','لندن':'Лондон','باريس':'Париж','موسكو':'Москва','مدريد':'Мадрид','برلين':'Берлин','روما':'Рим','برشلونة':'Барселона','أثينا':'Афины','وارسو':'Варшава','فيينا':'Вена','نيويورк':'Нью-Йорк','لوس أنجلوس':'Лос-Анджелес','مكسيكو':'Мехико','شيكاغو':'Чикаго','تورنتو':'Торонто','فانكوفر':'Ванкувер','ميامي':'Майами','هيوستن':'Хьюстон','ساو باولو':'Сан-Паулу','ريو دي جانيرو':'Рио-де-Жанейро','ليما':'Лима','بوغوتا':'Богота','بوينس آيرس':'Буэнос-Айрес','سانتياغو':'Сантьяго','سيدني':'Сидней','ملبورн':'Мельбурн','بريزبن':'Брисбен','أوكلاند':'Окленд','كوالالمبور':'Куала-Лумпур','عمان':'Амман','الكويت':'Эль-Кувейт','الدوحة':'Доха','مسقط':'Маскат','صنعاء':'Сана','دمشق':'Дамаск','بيروت':'Бейрут','الشارقة':'Шарджа','سورات':'Сурат','جايبور':'Джайпур','لكناو':'Лакхнау','كانبور':'Канпур','ناغبور':'Нагпур','إندور':'Индор','بوبال':'Бхопал','راولبندي':'Равалпинди','غوجرانوالا':'Гуджранвала','بيشاور':'Пешавар','كويته':'Кветта','تشيتاغونغ':'Читтагонг','ماندالاي':'Мандалай','بنوم بنه':'Пномпень','فيينتيان':'Вьентьян','جورج تاون':'Джорджтаун','سورابايا':'Сурабая','ميدان':'Медан','ماكاسار':'Макасар','مانادو':'Манадо','بالي':'Бали','كييف':'Киев','بودابست':'Будапешт','براغ':'Прага','صوفيا':'София','بلغراد':'Белград','زيورخ':'Цюрих','أمستردам':'Амстердам','بروكسل':'Брюссель','ستوكهولم':'Стокгольм','كوبنهاغن':'Копенгаген','أوسلو':'Осло','هلسنكي':'Хельсинки','دبلن':'Дублин','لشبونة':'Лиссабон','نيقوسيا':'Никосия','فاليتا':'Валлетта','واشنطن':'Вашингтон','سان فرانسيسكو':'Сан-Франциско','مونتريال':'Монреаль','دالاس':'Даллас','أتلانتا':'Атланта','بوسطن':'Бостон','فينيكс':'Финикс','ريفرسايد':'Риверсайд','ديترويت':'Детройт','سياتل':'Сиэтл','مينيابوليس':'Миннеаполис','دنفر':'Денвер','سان دييغو':'Сан-Диего','تامبا':'Тампа','أورلاندو':'Орландо','برازيليا':'Бразилиа','بيلو هوريزونتي':'Белу-Оризонти','كاراكاس':'Каракас','ميديلين':'Медельин','كيتو':'Кито','كالي':'Кали','لاباز':'Ла-Пас','مونتفيدو':'Монтевидео','الدار البيضاء':'Касабланка','الجزائر':'Алжир','تونس':'Тунис','طرابلس':'Триполи','هرجيسا':'Харгейса','هراري':'Хараре','لوساكا':'Лусака','كمبالا':'Кампала','كيغالي':'Кигали','بوجومبورا':'Бужумбура','باماكو':'Бамако','أبوجا':'Абуджа','ياوندي':'Яунде','دوالا':'Дуала','بيرث':'Перт','ويلينغتون':'Веллингтон','سوفا':'Сува','بورت مورسبي':'Порт-Морсби','أبيا':'Апиа','نوك':'Нуук','ريكيافيك':'Рейкьявик','تيرانا':'Тирана','سراييفو':'Сараево','بريشتينا':'Приштина','بودغوريتسا':'Подгорица','سكوبيه':'Скопье','بوخارست':'Бухарест','تشيسيناو':'Кишинёв','مينسك':'Минск','فيلنيوس':'Вильнюс','ريغا':'Рига','تالين':'Таллин','أولان باتور':'Улан-Батор','بيونغ يانغ':'Пхеньян','بورت لويس':'Порт-Луи','فيكتوريا':'Виктория','ناساو':'Нассау','كينغستон':'Кингстон','بورت أو برانس':'Порт-о-Пренс','سانتو دومينغو':'Санто-Доминго','سان خوان':'Сан-Хуан','بلموبان':'Бельмопан','غواتيمالا':'Гватемала','تيغوسيغالبا':'Тегусигальпа','سان سلفادور':'Сан-Сальвадор','ماناغوا':'Манагуа','سان خوسيه':'Сан-Хосе','بنما':'Панама','بورت أوف سبين':'Порт-оф-Спейн','باراماريبو':'Парамарибо','أسونسيون':'Асунсьон','سانتوريني':'Санторини','مراكش':'Марракеш','كيوتو':'Киото','البندقية':'Венеция','ميونخ':'Мюнхен','فلورنسا':'Флоренция','سان بطرسبرغ':'Санкт-Петербург','كيب تاون':'Кейптаун','سيشل':'Сейшелы','جزر المالديف':'Мальдивы','أنطاليا':'Анталия','أدنبرة':'Эдинбург','كراكوف':'Краков','بورصة':'Бурса','إزمير':'Измир','تيانجين':'Тяньцзинь','تشنغدو':'Чэнду','هانغتشو':'Ханчжоу','هامبورغ':'Гамбург','كولونيا':'Кёльн','ميلانو':'Милан','تورينو':'Турин','ليون':'Лион','مرسيليا':'Марсель','مانشستر':'Манчестер','برمنغهام':'Бирмингем','غلاسكو':'Глазго','روتردام':'Роттердам','أنتويرب':'Антверпен','بورت هاركورت':'Порт-Харкорт','ديربان':'Дурбан','عنابة':'Аннаба','وهران':'Оран','صفاقس':'Сфакс','بنغازي':'Бенгази','كالياري':'Кальяри','مونبلييه':'Монпелье','باليرمو':'Палермо','نابولي':'Неаполь','فالنسيا':'Валенсия','حيدر آباد':'Хайдарабад','أحمد آباد':'Ахмадабад','فيصل آباد':'Фейсалабад','بونة':'Пуна','طشقند':'Ташкент','سمرقند':'Самарканд','الإسكندرية':'Александрия','أنديجان':'Андижан','ريسيفي':'Ресифи','باندونغ':'Бандунг'};
+            const densitySpotRussian = {'طوكيو':'Токио','أوساكا':'Осака','سيول':'Сеул','بوسان':'Пусан','شنغهاي':'Шанхай','بكين':'Пекин','غوانزو':'Гуанчжоу','شنتشن':'Шэньчжэнь','تايبيه':'Тайбэй','هونغ كونغ':'Гонконг','نانجينغ':'Нанкин','تشينغداو':'Циндао','تشانغشا':'Чанша','ووهان':'Ухань','سنغافورة':'Сингапур','دلهي':'Дели','مومباي':'Мумбаи','كلكتا':'Калькутта','بنغالور':'Бангалор','تشيناي':'Ченнаи','حيدر أباد':'Хайдарабад','أحمد أباد':'Ахмадабад','بونه':'Пуна','كراتشي':'Карачи','لاهور':'Лахор','داكا':'Дакка','كاتماندو':'Катманду','إسلام أباد':'Исламабад','فيصل أباد':'Фейсалабад','جاكرتا':'Джакарта','مانيلا':'Манила','بانكوك':'Бангкок','هوشي منه':'Хошимин','هانوي':'Ханой','يانغون':'Янгон','القاهرة':'Каир','طهران':'Тегеран','بغداد':'Багдад','الرياض':'Эр-Рияд','إسطنبول':'Стамбул','دبي':'Дубай','القدس':'Иерусалим','جدة':'Джидда','أبو ظبي':'Абу-Даби','لاغوس':'Лагос','كينشاسا':'Киншаса','نيروبي':'Найроби','جوهانسبرغ':'Йоханнесбург','أديس أبابا':'Аддис-Абеба','دار السلام':'Дар-эс-Салам','أبيدجان':'Абиджан','داكار':'Дакар','لواندا':'Луанда','الخرطوم':'Хартум','مقديشو':'Могадишо','أكرا':'Аккра','لندن':'Лондон','باريس':'Париж','موسكو':'Москва','مدريد':'Мадрид','برلين':'Берлин','روما':'Рим','برشلونة':'Барселона','أثينا':'Афины','وارسو':'Варшава','فيينا':'Вена','نيويورك':'Нью-Йорк','لوس أنجلوس':'Лос-Анджелес','مكسيكو':'Мехико','شيكاغو':'Чикаго','تورنتو':'Торонто','فانكوفر':'Ванкувер','ميامي':'Майами','هيوستن':'Хьюстон','ساو باولو':'Сан-Паулу','ريو دي جانيرو':'Рио-де-Жанейро','ليما':'Лима','بوغوتا':'Богота','بوينس آيرس':'Буэнос-Айрес','سانتياغو':'Сантьяго','سيدني':'Сидней','ملبورن':'Мельбурн','بريزبن':'Брисбен','أوكلاند':'Окленд','كوالالمبور':'Куала-Лумпур','عمان':'Амман','الكويت':'Эль-Кувейт','الدوحة':'Доха','مسقط':'Маскат','صنعاء':'Сана','دمشق':'Дамаск','بيروت':'Бейрут','الشارقة':'Шарджа','سورات':'Сурат','جايبور':'Джайпур','لكناو':'Лакхнау','كانبور':'Канпур','ناغبور':'Нагпур','إندور':'Индор','بوبال':'Бхопал','راولبندي':'Равалпинди','غوجرانوالا':'Гуджранвала','بيشاور':'Пешавар','كويته':'Кветта','تشيتاغونغ':'Читтагонг','ماندالاي':'Мандалай','بنوم بنه':'Пномпень','فيينتيان':'Вьентьян','جورج تاون':'Джорджтаун','سورابايا':'Сурабая','ميدان':'Медан','ماكاسار':'Макасар','مانادو':'Манадо','بالي':'Бали','كييف':'Киев','بودابست':'Будапешт','براغ':'Прага','صوفيا':'София','بلغراد':'Белград','زيورخ':'Цюрих','أمستردام':'Амстердам','بروكسل':'Брюссель','ستوكهولم':'Стокгольм','كوبنهاغن':'Копенгаген','أوسلو':'Осло','هلسنكي':'Хельсинки','دبلن':'Дублин','لشبونة':'Лиссабон','نيقوسيا':'Никосия','فاليتا':'Валлетта','واشنطن':'Вашингтон','سان فرانسيسكو':'Сан-Франциско','مونتريال':'Монреаль','دالاس':'Даллас','أتلانتا':'Атланта','بوسطن':'Бостон','فينيكس':'Финикс','ريفرسايد':'Риверсайд','ديترويت':'Детройт','سياتل':'Сиэтл','مينيابوليس':'Миннеаполис','دنفر':'Денвер','سان دييغو':'Сан-Диего','تامبا':'Тампа','أورلاندو':'Орландо','برازيليا':'Бразилиа','بيلو هوريزونتي':'Белу-Оризонти','كاراكاس':'Каракас','ميديلين':'Медельин','كيتو':'Кито','كالي':'Кали','لاباز':'Ла-Пас','مونتفيدو':'Монтевидео','الدار البيضاء':'Касабланка','الجزائر':'Алжир','تونس':'Тунис','طرابلس':'Триполи','هرجيسا':'Харгейса','هراري':'Хараре','لوساكا':'Лусака','كمبالا':'Кампала','كيغالي':'Кигали','بوجومبورا':'Бужумбура','باماكو':'Бамако','أبوجا':'Абуджа','ياوندي':'Яунде','دوالا':'Дуала','بيرث':'Перт','ويلينغتون':'Веллингтон','سوفا':'Сува','بورت مورسبي':'Порт-Морсби','أبيا':'Апиа','نوك':'Нуук','ريكيافيك':'Рейкьявик','تيرانا':'Тирана','سراييفو':'Сараево','بريشتينا':'Приштина','بودغوريتسا':'Подгорица','سكوبيه':'Скопье','بوخارست':'Бухарест','تشيسيناو':'Кишинёв','مينسك':'Минск','فيلنيوس':'Вильнюс','ريغا':'Рига','تالين':'Таллин','أولان باتور':'Улан-Батор','بيونغ يانغ':'Пхеньян','بورت لويس':'Порт-Луи','فيكتوريا':'Виктория','ناساو':'Нассау','كينغستون':'Кингстон','بورت أو برانس':'Порт-о-Пренс','سانتو دومينغو':'Санто-Доминго','سان خوان':'Сан-Хуан','بلموبان':'Бельмопан','غواتيمالا':'Гватемала','تيغوسيغالبا':'Тегусигальпа','سان سلفادور':'Сан-Сальвадор','ماناغوا':'Манагуа','سان خوسيه':'Сан-Хосе','بنما':'Панама','بورت أوف سبين':'Порт-оф-Спейн','باراماريبو':'Парамарибо','أسونسيون':'Асунсьон','سانتوريني':'Санторини','مراكش':'Марракеш','كيوتو':'Киото','البندقية':'Венеция','ميونخ':'Мюнхен','فلورنسا':'Флоренция','سان بطرسبرغ':'Санкт-Петербург','كيب تاون':'Кейптаун','سيشل':'Сейшелы','جزر المالديف':'Мальдивы','أنطاليا':'Анталия','أدنبرة':'Эдинбург','كراكوف':'Краков','بورصة':'Бурса','إزمير':'Измир','تيانجين':'Тяньцзинь','تشنغدو':'Чэнду','هانغتشو':'Ханчжоу','هامبورغ':'Гамбург','كولونيا':'Кёльн','ميلانو':'Милан','تورينو':'Турин','ليون':'Лион','مرسيليا':'Марсель','مانشستر':'Манчестер','برمنغهام':'Бирмингем','غلاسكو':'Глазго','روتردام':'Роттердам','أنتويرب':'Антверпен','بورت هاركورت':'Порт-Харкорт','ديربان':'Дурбан','عنابة':'Аннаба','وهران':'Оран','صفاقس':'Сфакс','بنغازي':'Бенгази','كالياري':'Кальяри','مونبلييه':'Монпелье','باليرمو':'Палермо','نابولي':'Неаполь','فالنسيا':'Валенсия','حيدر آباد':'Хайдарабад','أحمد آباد':'Ахмадабад','فيصل آباد':'Фейсалабад','بونة':'Пуна','طشقند':'Ташкент','سمرقند':'Самарканд','الإسكندرية':'Александрия','أنديجان':'Андижан','ريسيفي':'Ресифи','باندونغ':'Бандунг'};
             const densitySpotUzbek = {'طوكيو':'Tokio','أوساكا':'Osaka','سيول':'Seul','بوسان':'Pusan','شنغهاي':'Shanxay','بكين':'Pekin','غوانزو':'Guanchjou','شنتشن':'Shenchen','تايبيه':'Taybey','هونغ كونغ':'Gonkong','نانجينغ':'Nanjing','تشينغداو':'Tsindao','تشانغشا':'Chansha','ووهان':'Uxan','سنغافورة':'Singapur','دلهي':'Dehli','مومباي':'Mumbai','كلكتا':'Kolkata','بنغالور':'Bengaluru','تشيناي':'Chennai','حيدر أباد':'Xaydarobod','أحمد أباد':'Ahmadobod','بونه':'Pune','كراتشي':'Karachi','لاهور':'Laxor','داكا':'Dakka','كاتماندو':'Katmandu','إسلام أباد':'Islamobod','فيصل أباد':'Faysalobod','جاكرتا':'Djokarta','مانيلا':'Manila','بانكوك':'Bangkok','هوشي منه':'Xoshimin','هانوي':'Xanoy','يانغون':'Yangon','القاهرة':'Qohira','طهران':'Tehron','بغداد':'Bag\'dad','الرياض':'Er-Riyod','إسطنبول':'Stambul','دبي':'Dubay','القدس':'Yerushalayim','جدة':'Jidda','أبو ظبي':'Abu-Dabi','لاغوس':'Lagos','كينشاسا':'Kinshasa','نيروبي':'Nairobi','جوهانسبرغ':'Yoxannesburg','أديس أبابا':'Addis-Abeba','دار السلام':'Dar-es-Salam','أبيدجان':'Abidjan','داكار':'Dakar','لواندا':'Luanda','الخرطوم':'Xartum','مقديشو':'Mogadishu','أكرا':'Akra','لندن':'London','باريس':'Parij','موسكو':'Moskva','مدريد':'Madrid','برلين':'Berlin','روما':'Rim','برشلونة':'Barselona','أثينا':'Afina','وارسو':'Varshava','فيينا':'Vena','نيويورك':'Nyuyork','لوس أنجلوس':'Los-Anjeles','مكسيكو':'Mexiko','شيكاغو':'Chicago','تورنتو':'Toronto','فانكوفر':'Vankuver','ميامي':'Miami','هيوستن':'Houston','ساو باولو':'San-Paulu','ريو دي جانيرو':'Rio-de-Janeiro','ليما':'Lima','بوغوتا':'Bogota','بوينس آيرس':'Buenos-Ayres','سانتياغو':'Santyago','سيدني':'Sydney','ملبورن':'Melburn','بريزبن':'Brisben','أوكلاند':'Aukland','كوالالمبور':'Kuala-Lumpur','عمان':'Amman','الكويت':'Kuveyt','الدوحة':'Doxa','مسقط':'Maskat','صنعاء':'Sana','دمشق':'Dimashq','بيروت':'Bayrut','الشارقة':'Sharja','سورات':'Surat','جايبور':'Jaypur','لكناو':'Lucknow','كانبور':'Kanpur','ناغبور':'Nagpur','إندور':'Indore','بوبال':'Bhopal','راولبندي':'Rawalpindi','غوجرانوالا':'Gudjranvala','بيشاور':'Peshavar','طشقند':'Toshkent','سمرقند':'Samarqand','الإسكندرية':'Aleksandriya','أنديجان':'Andijon','ريسيفي':'Resife','باندونغ':'Bandung','كمبالا':'Kampala','دوالا':'Duala','سورابايا':'Surabaya','تيانجين':'Tyanjin','تشنغدو':'Chendu','بورت أو برانس':'Port-o-Prens','ميديلين':'Medelin','تشيتاغونغ':'Chittagong','باتنا':'Patna','سيمارانغ':'Semarang','تل أبيب':'Tel-Aviv','ميدان':'Medan','كانو':'Kano','إيبادان':'Ibadan','بورت هاركورت':'Port Harcourt','غوادالاخارا':'Gvadalaxara','كيتو':'Kito','كاراكاس':'Karakas','كالي':'Kali','كويته':'Kvetta','ماندالاي':'Mandalay','بنوم بنه':'Pnompen','فيينتيان':'Vyentyan','جورج تاون':'Jorjtaun','ماكاسار':'Makassar','مانادو':'Manado','بالي':'Bali','كييف':'Kiyev','بودابست':'Budapesht','براغ':'Praga','صوفيا':'Sofiya','بلغراد':'Belgrad','زيورخ':'Syurix','أمستردام':'Amsterdam','بروكسل':'Bryussel','ستوكهولم':'Stokgolm','كوبنهاغن':'Kopengagen','أوسلو':'Oslo','هلسنكي':'Xelsinki','دبلن':'Dublin','لشبونة':'Lissabon','نيقوسيا':'Nikosiya','فاليتا':'Valletta','واشنطن':'Vashington','سان فرانسيسكو':'San-Fransisko','مونتريال':'Monreal','دالاس':'Dallas','أتلانتا':'Atlanta','بوسطن':'Boston','فينيكس':'Feniks','ريفرسايد':'Riversayd','ديترويت':'Detroyt','سياتل':'Sietl','مينيابوليس':'Minneapolis','دنفر':'Denver','سان دييغو':'San-Diyego','تامبا':'Tampa','أورلاندو':'Orlando','برازيليا':'Braziliya','بيلو هوريزونتي':'Belu-Orizonti','لاباز':'La-Pas','مونتفيدو':'Montevideo','الدار البيضاء':'Kasablanka','الجزائر':'Aljir','تونس':'Tunis','طرابلس':'Tripoli','هرجيسا':'Xargeysa','هراري':'Xarare','لوساكا':'Lusaka','كيغالي':'Kigali','بوجومبورا':'Bujumbura','باماكو':'Bamako','أبوجا':'Abuja','ياوندي':'Yaunde','بيرث':'Pert','ويلينغتون':'Vellington','سوفا':'Suva','بورت مورسبي':'Port-Morsbi','أبيا':'Apiya','نوك':'Nuuk','ريكيافيك':'Reykyavik','تيرانا':'Tirana','سراييفو':'Sarayevo','بريشتينا':'Prishtina','بودغوريتسا':'Podgoritsa','سكوبيه':'Skopye','بوخارست':'Buxarest','تشيسيناو':'Kishinyov','مينسك':'Minsk','فيلنيوس':'Vilnyus','ريغا':'Riga','تالين':'Tallin','أولان باتور':'Ulanbotor','بيونغ يانغ':'Pxenyan','بورت لويس':'Port-Lui','فيكتوريا':'Viktoriya','ناساو':'Nassau','كينغستون':'Kingston','سانتو دومينغو':'Santo-Domingo','سان خوان':'San-Xuan','بلموبان':'Belmopan','غواتيمالا':'Gvatemala','تيغوسيغالبا':'Tegusigalpa','سان سلفادور':'San-Salvador','ماناغوا':'Managua','سان خوسيه':'San-Xose','بنما':'Panama','بورت أوف سبين':'Port-of-Speyn','باراماريبو':'Paramaribo','أسونسيون':'Asunsyon','سانتوريني':'Santorini','مراكش':'Marrakesh','كيوتو':'Kioto','البندقية':'Venetsiya','ميونخ':'Myunxen','فلورنسا':'Florensiya','سان بطرسبرغ':'Sankt-Peterburg','كيب تاون':'Keyptaun','سيشل':'Seyshel orollari','جزر المالديف':'Maldiv orollari','أنطاليا':'Antaliya','أدنبرة':'Edinburg','كراكوف':'Krakov','بورصة':'Bursa','إزمير':'Izmir','هانغتشو':'Xanchjou','هامبورغ':'Gamburg','كولونيا':'Kyoln','ميلانو':'Milan','تورينو':'Turin','ليون':'Lion','مرسيليا':'Marsel','مانشستر':'Manchester','برمنغهام':'Birmingem','غلاسكو':'Glazgo','روتردام':'Rotterdam','أنتويرب':'Antverpen','ديربان':'Durban','عنابة':'Annaba','وهران':'Oran','صفاقس':'Sfaks','بنغازي':'Bengazi','كالياري':'Kalyari','مونبلييه':'Monpelye','باليرمو':'Palermo','نابولي':'Neapol','فالنسيا':'Valensiya','حيدر آباد':'Xaydarobod','أحمد آباد':'Ahmadobod','فيصل آباد':'Faysalobod','بونة':'Pune'};
             const featureRussian = {
                 corridors: {
                     'Strait of Hormuz':'Ормузский пролив','Silk Road':'Шёлковый путь','Suez Canal':'Суэцкий канал','Panama Canal':'Панамский канал','Gibraltar':'Гибралтар','Malacca':'Малакка','Bab el-Mandeb':'Баб-эль-Мандеб','Bosphorus':'Босфор','Dardanelles':'Дарданеллы','Danish Straits':'Датские проливы','Torres Strait':'Торресов пролив','Mozambique Channel':'Мозамбикский пролив','Kiel Canal':'Кильский канал','English Channel':'Ла-Манш','Baltic Sea':'Балтийское море'
                 },
                 mountains: {
+                    'Pamir Mountains': 'Памир',
+                    'Kunlun Mountains': 'Куньлунь',
+                    'Altai Mountains': 'Алтайские горы',
+                    'Carpathian Mountains': 'Карпаты',
+                    'Caucasus Mountains': 'Кавказские горы',
+                    'Zagros Mountains': 'Загрос',
+                    'Alborz': 'Эльбурс',
+                    'Scandinavian Mountains': 'Скандинавские горы',
+                    'Western Ghats': 'Западные Гаты',
+                    'Eastern Ghats': 'Восточные Гаты',
+                    'Appalachian Mountains': 'Аппалачи',
+                    'Verkhoyansk Range': 'Верхоянский хребет',
+                    'Chersky Range': 'Хребет Черского',
+                    'Stanovoy Range': 'Становой хребет',
+                    'Sayan Mountains': 'Саяны',
+                    'Columbia Mountains': 'Горы Колумбия',
+                    'Brooks Range': 'Хребет Брукс',
+                    'Sierra Nevada de Santa Marta': 'Сьерра-Невада-де-Санта-Марта',
+                    'Cameroon Line': 'Камерунская линия',
+                    'New Guinea Highlands': 'Новогвинейское нагорье',
+                    'Japanese Alps': 'Японские Альпы',
+                    'Tenasserim Hills': 'Хребет Тенассерим',
+                    'Sulawesi Highlands': 'Нагорье Сулавеси',
+                    'Central Bulgarian Mountains': 'Балканские горы (Стара-Планина)',
+
                     'Himalayas':'Гималаи','Andes':'Анды','Alps':'Альпы','Rocky Mountains':'Скалистые горы','Hindu Kush':'Гиндукуш','Tian Shan':'Тянь-Шань','Kunlun':'Куньлунь','Altai':'Алтай','Ural Mountains':'Уральские горы','Caucasus':'Кавказ','Atlas Mountains':'Атлас','Appalachians':'Аппалачи','Great Dividing Range':'Большой Водораздельный хребет','Hengduan':'Хэндуань','Karakoram':'Каракорум','Pamir':'Памир','Ethiopian Highlands':'Эфиопское нагорье','Zagros':'Загрос','Taurus':'Тавр','Pontic':'Понтийские горы','Drakensberg':'Драконовы горы','Pyrenees':'Пиренеи','Carpathians':'Карпаты','Scandinavian':'Скандинавские горы','Horn of Africa':'Африканский Рог','Tibetan Plateau':'Тибетское нагорье','Anatolian Plateau':'Анатолийское плоскогорье','Iranian Plateau':'Иранское нагорье','Deccan Plateau':'Декан','Patagonian Plateau':'Патагонское плато','Great Plains':'Великие равнины','Siberian Traps':'Сибирские траппы','Central Siberian Plateau':'Среднесибирское плоскогорье','Arabian Peninsula':'Аравийский полуостров','Indian Peninsula':'Индостан','Indochina':'Индокитай','Southeast Asia':'Юго-Восточная Азия','Balkan Mountains':'Балканские горы','Apennines':'Апеннины','Sierra Nevada':'Сьерра-Невада','Sierra Madre':'Сьерра-Мадре'
                 },
                 rivers: {
+                    'Blue Nile': 'Голубой Нил',
+                    'Paraguay-Paraná': 'Парагвай-Парана',
+                    'Missouri': 'Миссури',
+                    'Mackenzie': 'Маккензи',
+                    'St. Lawrence': 'Река Святого Лаврентия',
+                    'Amu Darya-Syr Darya': 'Амударья и Сырдарья',
+                    'Yenisey': 'Енисей',
+                    'Senegal': 'Сенегал',
+                    'Murray-Darling': 'Муррей-Дарлинг',
+                    'Colorado': 'Колорадо',
+                    'Volta': 'Вольта',
+                    'Neva': 'Нева',
+                    'Dvina': 'Северная Двина',
+                    'Elbe': 'Эльба',
+                    'Vistula': 'Висла',
+                    'Tagus': 'Тахо',
+                    'Loire': 'Луара',
+                    'Essequibo': 'Эссекибо',
+                    'Rio Negro': 'Риу-Негру',
+                    'Krishna': 'Кришна',
+                    'Pearl River': 'Чжуцзян (Жемчужная)',
+
                     'Nile':'Нил','Amazon':'Амазонка','Yangtze':'Янцзы','Mississippi':'Миссисипи','Yenisei':'Енисей','Yellow River':'Хуанхэ','Ob':'Обь','Paraná':'Парана','Congo':'Конго','Amur':'Амур','Lena':'Лена','Mekong':'Меконг','Niger':'Нигер','Volga':'Волга','Madeira':'Мадейра','Purús':'Пурус','São Francisco':'Сан-Франсиску','Yukon':'Юкон','Indus':'Инд','Shatt al-Arab':'Шатт-эль-Араб','Brahmaputra':'Брахмапутра','Salween':'Салуин','Danube':'Дунай','Euphrates':'Евфрат','Tigris':'Тигр','Orinoco':'Ориноко','Ganges':'Ганг','Godavari':'Годавари','Murray':'Марри','Dnieper':'Днепр','Rhine':'Рейн','Rhône':'Рона','Po':'По','Seine':'Сена','Thames':'Темза','Don':'Дон','Ural':'Урал','Zambezi':'Замбези','Limpopo':'Лимпопо','Orange':'Оранжевая','Okavango':'Окаванго','Tocantins':'Токантинс','Negro':'Негру','Xingu':'Шингу','Irrawaddy':'Иравади','Kolyma':'Колыма','Syr Darya':'Сырдарья','Amu Darya':'Амударья','Ubangi':'Убанги','Kasai':'Касаи'
                 },
                 resources: {
+                    'Oil': 'Нефть',
+                    'Natural Gas': 'Природный газ',
+                    'Coal': 'Уголь',
+                    'Copper': 'Медь',
+                    'Gold': 'Золото',
+                    'Iron Ore': 'Железная руда',
+                    'Diamonds': 'Алмазы',
+                    'Phosphates': 'Фосфаты',
+                    'Uranium': 'Уран',
+                    'Offshore Oil': 'Морская нефть',
+                    'Lithium': 'Литий',
+                    'Cobalt': 'Кобальт',
+                    'Rare Earths': 'Редкоземельные металлы',
+                    'Silver': 'Серебро',
+                    'Platinum': 'Платина',
+                    'Bauxite': 'Бокситы',
+                    'Nickel': 'Никель',
+                    'Tin': 'Олово',
+                    'Zinc': 'Цинк',
+                    'Potash': 'Поташ',
+                    'Solar Energy': 'Солнечная энергия',
+                    'Wind Energy': 'Ветровая энергия',
+                    'Wind Energy (China)': 'Ветровая энергия (Китай)',
+                    'Hydro Power': 'Гидроэнергия',
+                    'Hydro Power (China)': 'Гидроэнергия (Китай)',
+                    'Water Resources': 'Водные ресурсы',
+                    'Timber': 'Древесина',
+                    'Uranium (Kazakhstan)': 'Уран (Казахстан)',
+                    'Copper (Chile)': 'Медь (Чили)',
+                    'Iron Ore (Australia)': 'Железная руда (Австралия)',
+                    'Cobalt (DRC)': 'Кобальт (ДР Конго)',
+                    'Lithium (Chile)': 'Литий (Чили)',
+                    'Diamonds (Botswana)': 'Алмазы (Ботсвана)',
+                    'Oil (Venezuela)': 'Нефть (Венесуэла)',
+                    'Oil (Iraq)': 'Нефть (Ирак)',
+                    'Oil (Kuwait)': 'Нефть (Кувейт)',
+                    'Gas (Iran)': 'Газ (Иран)',
+                    'Gas (Qatar)': 'Газ (Катар)',
+                    'Gold (China)': 'Золото (Китай)',
+                    'Oil (Egypt)': 'Нефть (Египет)',
+                    'Gas (Egypt)': 'Газ (Египет)',
+                    'Gold (Egypt)': 'Золото (Египет)',
+                    'Phosphates (Egypt)': 'Фосфаты (Египет)',
+                    'Iron Ore (Egypt)': 'Железная руда (Египет)',
+                    'Copper (Peru)': 'Медь (Перу)',
+                    'Silver (Mexico)': 'Серебро (Мексика)',
+                    'Uranium (Niger)': 'Уран (Нигер)',
+                    'Oil (Saudi Arabia)': 'Нефть (Саудовская Аравия)',
+                    'Oil (UAE)': 'Нефть (ОАЭ)',
+                    'Copper (DRC)': 'Медь (ДР Конго)',
+                    'Diamonds (Russia)': 'Алмазы (Россия)',
+                    'Coal (Indonesia)': 'Уголь (Индонезия)',
+                    'Tin (Indonesia)': 'Олово (Индонезия)',
+                    'Tin (China)': 'Олово (Китай)',
+                    'Bauxite (Guinea)': 'Бокситы (Гвинея)',
+                    'Water Resources (Egypt)': 'Водные ресурсы (Египет)',
+                    'Solar (Egypt)': 'Солнечная энергия (Египет)',
+                    'Solar Energy (China)': 'Солнечная энергия (Китай)',
+                    'Oil (Qatar)': 'Нефть (Катар)',
+                    'Oil (Iran)': 'Нефть (Иран)',
+                    'Oil (Nigeria)': 'Нефть (Нигерия)',
+                    'Oil (USA)': 'Нефть (США)',
+                    'Oil (Russia)': 'Нефть (Россия)',
+                    'Oil (Libya)': 'Нефть (Ливия)',
+                    'Oil (Algeria)': 'Нефть (Алжир)',
+                    'Oil (Angola)': 'Нефть (Ангола)',
+                    'Oil (Kazakhstan)': 'Нефть (Казахстан)',
+                    'Oil (Norway)': 'Нефть (Норвегия)',
+                    'Oil (Mexico)': 'Нефть (Мексика)',
+                    'Oil (Oman)': 'Нефть (Оман)',
+                    'Oil (Argentina)': 'Нефть (Аргентина)',
+                    'Oil (Indonesia)': 'Нефть (Индонезия)',
+                    'Oil (Ecuador)': 'Нефть (Эквадор)',
+                    'Oil (Colombia)': 'Нефть (Колумбия)',
+                    'Gas (USA)': 'Газ (США)',
+                    'Gas (Russia)': 'Газ (Россия)',
+                    'Gas (Turkmenistan)': 'Газ (Туркменистан)',
+                    'Gas (China)': 'Газ (Китай)',
+                    'Gas (Saudi Arabia)': 'Газ (Саудовская Аравия)',
+                    'Gas (Algeria)': 'Газ (Алжир)',
+                    'Gas (Australia)': 'Газ (Австралия)',
+                    'Coal (China)': 'Уголь (Китай)',
+                    'Coal (India)': 'Уголь (Индия)',
+                    'Coal (Australia)': 'Уголь (Австралия)',
+                    'Coal (Russia)': 'Уголь (Россия)',
+                    'Coal (USA)': 'Уголь (США)',
+                    'Coal (South Africa)': 'Уголь (ЮАР)',
+                    'Copper (China)': 'Медь (Китай)',
+                    'Copper (Australia)': 'Медь (Австралия)',
+                    'Copper (Zambia)': 'Медь (Замбия)',
+                    'Gold (Australia)': 'Золото (Австралия)',
+                    'Gold (Russia)': 'Золото (Россия)',
+                    'Gold (USA)': 'Золото (США)',
+                    'Gold (Canada)': 'Золото (Канада)',
+                    'Gold (South Africa)': 'Золото (ЮАР)',
+                    'Gold (Ghana)': 'Золото (Гана)',
+                    'Gold (Peru)': 'Золото (Перу)',
+                    'Iron (Australia)': 'Железо (Австралия)',
+                    'Iron (Brazil)': 'Железо (Бразилия)',
+                    'Iron (China)': 'Железо (Китай)',
+                    'Iron (Russia)': 'Железо (Россия)',
+                    'Iron Ore (India)': 'Железная руда (Индия)',
+                    'Diamond (Russia)': 'Алмазы (Россия)',
+                    'Diamond (Botswana)': 'Алмазы (Ботсвана)',
+                    'Diamond (DRC)': 'Алмазы (ДР Конго)',
+                    'Diamond (South Africa)': 'Алмазы (ЮАР)',
+                    'Lithium (Australia)': 'Литий (Австралия)',
+                    'Lithium (China)': 'Литий (Китай)',
+                    'Phosphate (Morocco)': 'Фосфаты (Марокко)',
+                    'Phosphate (China)': 'Фосфаты (Китай)',
+                    'Uranium (Canada)': 'Уран (Канада)',
+                    'Uranium (Australia)': 'Уран (Австралия)',
+                    'Bauxite (Australia)': 'Бокситы (Австралия)',
+                    'Nickel (Indonesia)': 'Никель (Индонезия)',
+                    'Zinc (China)': 'Цинк (Китай)',
+                    'Potash (Canada)': 'Поташ (Канада)',
+
                     'Oil':'Нефть','Natural Gas':'Природный газ','Coal':'Уголь','Iron Ore':'Железная руда','Copper':'Медь','Gold':'Золото','Diamonds':'Алмазы','Uranium':'Уран','Bauxite':'Бокситы','Phosphates':'Фосфаты','Lithium':'Литий','Rare Earths':'Редкоземельные металлы','Cobalt':'Кобальт','Nickel':'Никель','Silver':'Серебро','Platinum':'Платина','Tin':'Олово','Zinc':'Цинк','Lead':'Свинец','Manganese':'Марганец','Chromium':'Хром','Tungsten':'Вольфрам','Molybdenum':'Молибден','Titanium':'Титан','Potash':'Поташ','Sulfur':'Сера','Salt':'Соль','Limestone':'Известняк','Sand':'Песок','Gravel':'Гравий','Clays':'Глина','Timber':'Древесина','Water':'Вода','Fish':'Рыба','Hydroelectric':'Гидроэнергия','Solar':'Солнечная энергия','Wind':'Ветровая энергия','Natural Gas (LNG)':'Сжиженный природный газ','Oil Sands':'Нефтеносные пески','Oil Shale':'Горючий сланец','Shale Gas':'Сланцевый газ','Coalbed Methane':'Метан угольных пластов','Geothermal':'Геотермальная энергия','Hydroelectric Power':'Гидроэлектроэнергия','Biofuels':'Биотопливо','Nuclear':'Ядерное топливо','Peat':'Торф','Cobalt (Battery-grade)':'Кобальт (аккумуляторный)','Rare Earth Elements':'Редкоземельные элементы','Graphite':'Графит','Vanadium':'Ванадий','Cadmium':'Кадмий','Antimony':'Сурьма','Mercury':'Ртуть','Beryllium':'Бериллий','Tantalum':'Тантал'
                 },
                 ethnicGroups: {
+                    'Indo-Aryans': 'Индоарийцы',
+                    'Dravidians': 'Дравиды',
+                    'Caucasians': 'Кавказские народы',
+                    'Turkic': 'Тюрки',
+                    'Slavs': 'Славяне',
+                    'Thai': 'Тайцы',
+                    'Burmese': 'Бирманцы',
+                    'Indonesians': 'Индонезийцы',
+                    'Melanesians': 'Меланезийцы',
+                    'Polynesians': 'Полинезийцы',
+                    'Aboriginal Australians': 'Австралийские аборигены',
+                    'Amazigh': 'Амазиги',
+                    'Swahili': 'Суахили',
+                    'Native Americans': 'Коренные американцы',
+                    'Nahua (Aztecs)': 'Науа (Ацтеки)',
+                    'Amazonian Indigenous': 'Коренные народы Амазонии',
+
                     'Han Chinese':'Хань','Arabs':'Арабы','Bengalis':'Бенгальцы','Japanese':'Японцы','Punjabis':'Пенджабцы','Germans':'Немцы','French':'Французы','Italians':'Итальянцы','Spanish':'Испанцы','Portuguese':'Португальцы','British':'Британцы','Russian':'Русские','Ukrainians':'Украинцы','Poles':'Поляки','Romanians':'Румыны','Dutch':'Нидерландцы','Greeks':'Греки','Hungarians':'Венгры','Czechs':'Чехи','Swedes':'Шведы','Serbs':'Сербы','Bulgarians':'Болгары','Croats':'Хорваты','Lithuanians':'Литовцы','Finns':'Финны','Norwegians':'Норвежцы','Danes':'Датчане','Slovaks':'Словаки','Irish':'Ирландцы','Turks':'Турки','Persians':'Персы','Kurds':'Курды','Pashtuns':'Пуштуны','Sindhis':'Синдхи','Balochis':'Белуджи','Berbers':'Берберы','Amhara':'Амхара','Oromo':'Оромо','Yoruba':'Йоруба','Igbo':'Игбо','Hausa':'Хауса','Zulu':'Зулусы','Xhosa':'Коса','Afrikaners':'Африканеры','Somalis':'Сомалийцы','Bantu':'Банту','Maasai':'Масаи','Berbers (Tuareg)':'Туареги','Hmong':'Хмонги','Tibetans':'Тибетцы','Uyghurs':'Уйгуры','Mongols':'Монголы','Koreans':'Корейцы','Vietnamese':'Вьетнамцы','Filipinos':'Филиппинцы','Malays':'Малайцы','Javanese':'Яванцы','Sundanese':'Сунданцы','Batak':'Батаки','Bugis':'Бугисы','Minangkabau':'Минангкабау','Balinese':'Балийцы','Dayak':'Даяки','Papuans':'Папуасы','Aboriginals':'Аборигены','Maori':'Маори','Inuit':'Инуиты','Navajo':'Навахо','Cherokee':'Чероки','Maya':'Майя','Quechua':'Кечуа','Aymara':'Аймара','Guarani':'Гуарани','Mapuche':'Мапуче'
                 },
                 currents: {
+                    'Humboldt Current': 'Течение Гумбольдта (Перуанское)',
+                    'North Atlantic Drift': 'Северо-Атлантическое течение',
+                    'Antarctic Circumpolar': 'Антарктическое циркумполярное течение',
+                    'Alaska Current': 'Аляскинское течение',
+                    'West Australian Current': 'Западно-Австралийское течение',
+                    'Philippine Trench': 'Филиппинский жёлоб',
+                    'Japan Trench': 'Японский жёлоб',
+
                     'Gulf Stream':'Гольфстрим','North Atlantic Current':'Северо-Атлантическое течение','Canary Current':'Канарское течение','Kuroshio Current':'Куросио','North Pacific Current':'Северо-Тихоокеанское течение','California Current':'Калифорнийское течение','Labrador Current':'Лабрадорское течение','Benguela Current':'Бенгельское течение','Brazil Current':'Бразильское течение','Peru (Humboldt) Current':'Перуанское течение','Antarctic Circumpolar Current':'Течение Западных Ветров','South Equatorial Current':'Южное Пассатное течение','North Equatorial Current':'Северное Пассатное течение','Equatorial Counter Current':'Межпассатное противотечение','Oyashio Current':'Оясио','Agulhas Current':'Течение Агульяс','Somali Current':'Сомалийское течение','Indian Monsoon Current':'Индийское муссонное течение','East Australian Current':'Восточно-Австралийское течение','North Atlantic Gyre':'Северо-Атлантический круговорот','South Atlantic Gyre':'Южно-Атлантический круговорот','Indian Ocean Gyre':'Индийский океанический круговорот','North Pacific Gyre':'Северо-Тихоокеанский круговорот','South Pacific Gyre':'Южно-Тихоокеанский круговорот','Mariana Trench':'Марианская впадина','Tonga Trench':'Тонга','Java Trench':'Зондский жёлоб','Puerto Rico Trench':'Жёлоб Пуэрто-Рико','Peru-Chile Trench':'Перуанско-Чилийский жёлоб'
                 },
                 winds: {
+                    'Monsoon Winds': 'Муссонные ветры',
+                    'Sirocco': 'Сирокко',
+
                     'NE Trade Winds':'Северо-восточные пассаты','SE Trade Winds':'Юго-восточные пассаты','Westerlies':'Западные ветры','Polar Easterlies':'Полярные восточные ветры','Indian Monsoon':'Индийский муссон','East Asian Monsoon':'Восточно-азиатский муссон'
                 },
                 earthquakes: {
+                    'North Anatolian Fault': 'Северо-Анатолийский разлом',
+                    'Chilean Fault': 'Чилийский разлом',
+                    'Himalayan Fault': 'Гималайский разлом',
+                    'San Ramón Fault': 'Разлом Сан-Рамон',
+                    'San Juan Fault': 'Разлом Сан-Хуан',
+                    'Alaska Fault': 'Аляскинский разлом',
+                    'Mexican Fault': 'Мексиканский разлом',
+
                     'Ring of Fire':'Огненное кольцо','Pacific Ring':'Тихоокеанское огненное кольцо','Himalayan Zone':'Гималайская зона','Alpine-Himalayan Belt':'Альпийско-Гималайский пояс','East African Rift':'Восточно-Африканский рифт','San Andreas Fault':'Разлом Сан-Андреас','Japan Trench':'Японский жёлоб','Sumatra Fault':'Суматранский разлом','Andean Zone':'Андийская зона','Mid-Atlantic Ridge':'Срединно-Атлантический хребет','Anatolian Fault':'Анатолийский разлом','Iranian Plateau':'Иранское нагорье'
                 },
                 volcanoes: {
+                    'Mount Kerinci': 'Керинчи',
+                    'Mount Nyiragongo': 'Ньирагонго',
+                    'Pico de Orizaba': 'Пико-де-Орисаба',
+                    'Osorno': 'Осорно',
+                    'Volcán de Fuego': 'Фуэго',
+
                     'Mount Fuji':'Фудзияма','Krakatoa':'Кракатау','Mount Vesuvius':'Везувий','Mount Etna':'Этна','Mauna Loa':'Мауна-Лоа','Mount St. Helens':'Сент-Хеленс','Mount Pinatubo':'Пинатубо','Mount Tambora':'Тамбора','Mount Rainier':'Рейнир','Sakurajima':'Сакурадзима','Mount Merapi':'Мерапи','Eyjafjallajökull':'Эйяфьядлайёкюдль','Mount Kilimanjaro':'Килиманджаро','Cotopaxi':'Котопахи','Popocatépetl':'Попокатепетль'
                 },
                 plates: {
+                    'Indo-Australian Plate': 'Индо-Австралийская плита',
+                    'Arabian Plate': 'Аравийская плита',
+
                     'Pacific Plate':'Тихоокеанская плита','North American Plate':'Северо-Американская плита','South American Plate':'Южно-Американская плита','Eurasian Plate':'Евразийская плита','African Plate':'Африканская плита','Australian Plate':'Австралийская плита','Antarctic Plate':'Антарктическая плита','Nazca Plate':'Плита Наска','Philippine Sea Plate':'Филиппинская плита'
                 },
                 deserts: {
@@ -8415,12 +9341,176 @@
                     'Strait of Hormuz':'Hormuz bo\'g\'ozi','Silk Road':'Ipak yo\'li','Suez Canal':'Suez kanali','Panama Canal':'Panama kanali','Gibraltar':'Gibraltar','Malacca':'Malakka','Bab el-Mandeb':'Bab al-Mandab','Bosphorus':'Bosfor','Dardanelles':'Dardanellar','Danish Straits':'Daniya bo\'g\'ozlari','Torres Strait':'Torres bo\'g\'ozi','Mozambique Channel':'Mozambik kanali','Kiel Canal':'Kil kanali','English Channel':'La-Mansh','Baltic Sea':'Baltika dengizi'
                 },
                 mountains: {
+                    'Pamir Mountains': 'Pomir tog‘lari',
+                    'Kunlun Mountains': 'Kunlun tog‘lari',
+                    'Altai Mountains': 'Oltoy tog‘lari',
+                    'Carpathian Mountains': 'Karpat tog‘lari',
+                    'Caucasus Mountains': 'Kavkaz tog‘lari',
+                    'Zagros Mountains': 'Zagros tog‘lari',
+                    'Alborz': 'Alborz',
+                    'Scandinavian Mountains': 'Skandinaviya tog‘lari',
+                    'Western Ghats': 'G‘arbiy Gatlar',
+                    'Eastern Ghats': 'Sharqiy Gatlar',
+                    'Appalachian Mountains': 'Appalachi tog‘lari',
+                    'Verkhoyansk Range': 'Verxoyansk tizmasi',
+                    'Chersky Range': 'Cherskiy tizmasi',
+                    'Stanovoy Range': 'Stanovoy tizmasi',
+                    'Sayan Mountains': 'Sayan tog‘lari',
+                    'Columbia Mountains': 'Kolumbiya tog‘lari',
+                    'Brooks Range': 'Bruks tizmasi',
+                    'Sierra Nevada de Santa Marta': 'Sierra-Nevada-de-Santa-Marta',
+                    'Cameroon Line': 'Kamerun chizig‘i tog‘lari',
+                    'New Guinea Highlands': 'Yangi Gvineya tog‘lari',
+                    'Japanese Alps': 'Yaponiya Alplari',
+                    'Tenasserim Hills': 'Tenasserim tepaliklari',
+                    'Sulawesi Highlands': 'Sulavesi tog‘lari',
+                    'Central Bulgarian Mountains': 'Markaziy Bolgariya tog‘lari',
+
                     'Himalayas':'Himalay','Andes':'And','Alps':'Alp','Rocky Mountains':'Toshli tog\'lar','Hindu Kush':'Hindu Kush','Tian Shan':'Tyan-Shan','Kunlun':'Kunlun','Altay':'Altay','Ural Mountains':'Ural tog\'lari','Caucasus':'Kavkaz','Atlas Mountains':'Atlas','Appalachians':'Apalach','Great Dividing Range':'Buyuk Vodirazdelniy xrebet','Hengduan':'Xenduan','Karakoram':'Karakoram','Pamir':'Pomir','Ethiopian Highlands':'Efiopiya tog\'ligi','Zagros':'Zagros','Taurus':'Tavr','Pontic':'Pont tog\'lari','Drakensberg':'Drakensberg','Pyrenees':'Pireney','Carpathians':'Karpat','Scandinavian':'Skandinaviya tog\'lari','Horn of Africa':'Afrika Rogi','Tibetan Plateau':'Tibet platosi','Anatolian Plateau':'Anatoliya platosi','Iranian Plateau':'Eron platosi','Deccan Plateau':'Dekan platosi','Patagonian Plateau':'Patagoniya platosi','Great Plains':'Buyuk tekisliklar','Siberian Traps':'Sibir trappalari','Central Siberian Plateau':'Markaziy Sibir platosi','Arabian Peninsula':'Arabiston yarim oroli','Indian Peninsula':'Hindiston yarim oroli','Indochina':'Indoxitay','Southeast Asia':'Janubi-sharqiy Osiyo','Balkan Mountains':'Balkan tog\'lari','Apennines':'Apennin','Sierra Nevada':'Sierra-Nevada','Sierra Madre':'Sierra-Madre'
                 },
                 rivers: {
+                    'Blue Nile': 'Moviy Nil',
+                    'Paraguay-Paraná': 'Paragvay-Parana',
+                    'Missouri': 'Missuri',
+                    'Mackenzie': 'Makkenzi',
+                    'St. Lawrence': 'Muqaddas Lavrentiy daryosi',
+                    'Amu Darya-Syr Darya': 'Amudaryo va Sirdaryo',
+                    'Yenisey': 'Yenisey',
+                    'Senegal': 'Senegal',
+                    'Murray-Darling': 'Marrey-Darling',
+                    'Colorado': 'Kolorado',
+                    'Volta': 'Volta',
+                    'Neva': 'Neva',
+                    'Dvina': 'Dvina',
+                    'Elbe': 'Elba',
+                    'Vistula': 'Visla',
+                    'Tagus': 'Taxo',
+                    'Loire': 'Luara',
+                    'Essequibo': 'Essekibo',
+                    'Rio Negro': 'Riu-Negru',
+                    'Krishna': 'Krishna',
+                    'Pearl River': 'Marvarid daryosi (Chjutszyan)',
+
                     'Nile':'Nil','Amazon':'Amazonka','Yangtze':'Yantszi','Mississippi':'Missisipi','Yenisei':'Yenisey','Yellow River':'Xuanxe','Ob':'Ob','Paraná':'Parana','Congo':'Kongo','Amur':'Amur','Lena':'Lena','Mekong':'Mekong','Niger':'Niger','Volga':'Volga','Madeira':'Madeyra','Purús':'Purus','São Francisco':'San-Fransisku','Yukon':'Yukon','Indus':'Ind','Shatt al-Arab':'Shatt al-Arab','Brahmaputra':'Bramaputra','Salween':'Saluin','Danube':'Dunay','Euphrates':'Frat','Tigris':'Tigr','Orinoco':'Orinoko','Ganges':'Gang','Godavari':'Godavari','Murray':'Merri','Dnieper':'Dnepr','Rhine':'Rn','Rhône':'Rona','Po':'Po','Seine':'Sena','Thames':'Temza','Don':'Don','Ural':'Ural','Zambezi':'Zambezi','Limpopo':'Limpopo','Orange':'Oranjeya','Okavango':'Okavango','Tocantins':'Tokantins','Negro':'Negru','Xingu':'Shingu','Irrawaddy':'Iravadi','Kolyma':'Kolima','Syr Darya':'Sirdaryo','Amu Darya':'Amudaryo','Ubangi':'Ubangi','Kasai':'Kasay'
                 },
                 resources: {
+                    'Oil': 'Neft',
+                    'Natural Gas': 'Tabiiy gaz',
+                    'Coal': 'Ko\'mir',
+                    'Copper': 'Mis',
+                    'Gold': 'Oltin',
+                    'Iron Ore': 'Temir rudasi',
+                    'Diamonds': 'Olmos',
+                    'Phosphates': 'Fosfat',
+                    'Uranium': 'Uran',
+                    'Offshore Oil': 'Dengiz nefti',
+                    'Lithium': 'Litiy',
+                    'Cobalt': 'Kobalt',
+                    'Rare Earths': 'Noyob yer elementlari',
+                    'Silver': 'Kumush',
+                    'Platinum': 'Platina',
+                    'Bauxite': 'Boksit',
+                    'Nickel': 'Nikel',
+                    'Tin': 'Qalay',
+                    'Zinc': 'Rux',
+                    'Potash': 'Potash',
+                    'Solar Energy': 'Quyosh energiyasi',
+                    'Wind Energy': 'Shamol energiyasi',
+                    'Wind Energy (China)': 'Shamol energiyasi (Xitoy)',
+                    'Hydro Power': 'Gidroenergiya',
+                    'Hydro Power (China)': 'Gidroenergiya (Xitoy)',
+                    'Water Resources': 'Suv resurslari',
+                    'Timber': 'Yog‘och',
+                    'Uranium (Kazakhstan)': 'Uran (Qozog‘iston)',
+                    'Copper (Chile)': 'Mis (Chili)',
+                    'Iron Ore (Australia)': 'Temir rudasi (Avstraliya)',
+                    'Cobalt (DRC)': 'Kobalt (KDR)',
+                    'Lithium (Chile)': 'Litiy (Chili)',
+                    'Diamonds (Botswana)': 'Olmos (Botsvana)',
+                    'Oil (Venezuela)': 'Neft (Venesuela)',
+                    'Oil (Iraq)': 'Neft (Iroq)',
+                    'Oil (Kuwait)': 'Neft (Quvayt)',
+                    'Gas (Iran)': 'Gaz (Eron)',
+                    'Gas (Qatar)': 'Gaz (Qatar)',
+                    'Gold (China)': 'Oltin (Xitoy)',
+                    'Oil (Egypt)': 'Neft (Misr)',
+                    'Gas (Egypt)': 'Gaz (Misr)',
+                    'Gold (Egypt)': 'Oltin (Misr)',
+                    'Phosphates (Egypt)': 'Fosfat (Misr)',
+                    'Iron Ore (Egypt)': 'Temir rudasi (Misr)',
+                    'Copper (Peru)': 'Mis (Peru)',
+                    'Silver (Mexico)': 'Kumush (Meksika)',
+                    'Uranium (Niger)': 'Uran (Niger)',
+                    'Oil (Saudi Arabia)': 'Neft (Saudiya Arabistoni)',
+                    'Oil (UAE)': 'Neft (BAA)',
+                    'Copper (DRC)': 'Mis (KDR)',
+                    'Diamonds (Russia)': 'Olmos (Rossiya)',
+                    'Coal (Indonesia)': 'Ko\'mir (Indoneziya)',
+                    'Tin (Indonesia)': 'Qalay (Indoneziya)',
+                    'Tin (China)': 'Qalay (Xitoy)',
+                    'Bauxite (Guinea)': 'Boksit (Gvineya)',
+                    'Water Resources (Egypt)': 'Suv resurslari (Misr)',
+                    'Solar (Egypt)': 'Quyosh energiyasi (Misr)',
+                    'Solar Energy (China)': 'Quyosh energiyasi (Xitoy)',
+                    'Oil (Qatar)': 'Neft (Qatar)',
+                    'Oil (Iran)': 'Neft (Eron)',
+                    'Oil (Nigeria)': 'Neft (Nigeriya)',
+                    'Oil (USA)': 'Neft (AQSH)',
+                    'Oil (Russia)': 'Neft (Rossiya)',
+                    'Oil (Libya)': 'Neft (Liviya)',
+                    'Oil (Algeria)': 'Neft (Jazoir)',
+                    'Oil (Angola)': 'Neft (Angola)',
+                    'Oil (Kazakhstan)': 'Neft (Qozog‘iston)',
+                    'Oil (Norway)': 'Neft (Norvegiya)',
+                    'Oil (Mexico)': 'Neft (Meksika)',
+                    'Oil (Oman)': 'Neft (Ummon)',
+                    'Oil (Argentina)': 'Neft (Argentina)',
+                    'Oil (Indonesia)': 'Neft (Indoneziya)',
+                    'Oil (Ecuador)': 'Neft (Ekvador)',
+                    'Oil (Colombia)': 'Neft (Kolumbiya)',
+                    'Gas (USA)': 'Gaz (AQSH)',
+                    'Gas (Russia)': 'Gaz (Rossiya)',
+                    'Gas (Turkmenistan)': 'Gaz (Turkmaniston)',
+                    'Gas (China)': 'Gaz (Xitoy)',
+                    'Gas (Saudi Arabia)': 'Gaz (Saudiya Arabistoni)',
+                    'Gas (Algeria)': 'Gaz (Jazoir)',
+                    'Gas (Australia)': 'Gaz (Avstraliya)',
+                    'Coal (China)': 'Ko\'mir (Xitoy)',
+                    'Coal (India)': 'Ko\'mir (Hindiston)',
+                    'Coal (Australia)': 'Ko\'mir (Avstraliya)',
+                    'Coal (Russia)': 'Ko\'mir (Rossiya)',
+                    'Coal (USA)': 'Ko\'mir (AQSH)',
+                    'Coal (South Africa)': 'Ko\'mir (Janubiy Afrika)',
+                    'Copper (China)': 'Mis (Xitoy)',
+                    'Copper (Australia)': 'Mis (Avstraliya)',
+                    'Copper (Zambia)': 'Mis (Zambiya)',
+                    'Gold (Australia)': 'Oltin (Avstraliya)',
+                    'Gold (Russia)': 'Oltin (Rossiya)',
+                    'Gold (USA)': 'Oltin (AQSH)',
+                    'Gold (Canada)': 'Oltin (Kanada)',
+                    'Gold (South Africa)': 'Oltin (Janubiy Afrika)',
+                    'Gold (Ghana)': 'Oltin (Gana)',
+                    'Gold (Peru)': 'Oltin (Peru)',
+                    'Iron (Australia)': 'Temir (Avstraliya)',
+                    'Iron (Brazil)': 'Temir (Braziliya)',
+                    'Iron (China)': 'Temir (Xitoy)',
+                    'Iron (Russia)': 'Temir (Rossiya)',
+                    'Iron Ore (India)': 'Temir rudasi (Hindiston)',
+                    'Diamond (Russia)': 'Olmos (Rossiya)',
+                    'Diamond (Botswana)': 'Olmos (Botsvana)',
+                    'Diamond (DRC)': 'Olmos (KDR)',
+                    'Diamond (South Africa)': 'Olmos (Janubiy Afrika)',
+                    'Lithium (Australia)': 'Litiy (Avstraliya)',
+                    'Lithium (China)': 'Litiy (Xitoy)',
+                    'Phosphate (Morocco)': 'Fosfat (Marokash)',
+                    'Phosphate (China)': 'Fosfat (Xitoy)',
+                    'Uranium (Canada)': 'Uran (Kanada)',
+                    'Uranium (Australia)': 'Uran (Avstraliya)',
+                    'Bauxite (Australia)': 'Boksit (Avstraliya)',
+                    'Nickel (Indonesia)': 'Nikel (Indoneziya)',
+                    'Zinc (China)': 'Rux (Xitoy)',
+                    'Potash (Canada)': 'Potash (Kanada)',
+
                     'Oil':'Neft','Natural Gas':'Tabiiy gaz','Coal':'Ko\'mir','Iron Ore':'Temir rudası','Copper':'Mis','Gold':'Oltin','Diamonds':'Olmos','Uranium':'Uran','Bauxite':'Boksit','Phosphates':'Fosfat','Lithium':'Litiy','Rare Earths':'Noyob metallar','Cobalt':'Kobalt','Nickel':'Nikel','Silver':'Kumush','Platinum':'Platina','Tin':'Qalay','Zinc':'Sink','Lead':'Qo\'rg\'oshin','Manganese':'Marganets','Chromium':'Xrom','Tungsten':'Volfram','Molybdenum':'Molibden','Titanium':'Titan','Potash':'Kaliy tuzi','Sulfur':'Kükürto','Salt':'Tuz','Limestone':'Ohaktosh','Sand':'Qum','Gravel':'Shag\'al','Clays':'G\'isht','Timber':'Yog\'och','Water':'Suv','Fish':'Baliq','Hydroelectric':'Gidroenergiya','Solar':'Quyosh energiyasi','Wind':'Shamol energiyasi','Natural Gas (LNG)':'Suyultirilgan tabiiy gaz','Oil Sands':'Neft qumlari','Oil Shale':'Yonuvchi slanets','Shale Gas':'Slanets gazi','Coalbed Methane':'Ko\'mir plitalar metani','Geothermal':'Geotermik energiya','Hydroelectric Power':'Gidroelektroenergiya','Biofuels':'Biyo Yoqilg\'i','Nuclear':'Yadro yoqilg\'isi','Peat':'Torf','Cobalt (Battery-grade)':'Kobalt (akkumulyator)','Rare Earth Elements':'Noyob elementlar','Graphite':'Grafit','Vanadium':'Vanadiy','Cadmium':'Kadmiy','Antimony':'Surma','Mercury':'Simob','Beryllium':'Berilliy','Tantalum':'Tantal',
                     'Offshore Oil':'Offshore neft','Solar Energy':'Quyosh energiyasi','Wind Energy':'Shamol energiyasi','Hydro Power':'Gidroenergiya','Water Resources':'Suv resurslari',
                     'Uranium (Kazakhstan)':'Uran (Qozog\'iston)','Copper (Chile)':'Mis (Chili)','Iron Ore (Australia)':'Temir rudası (Avstraliya)','Cobalt (DRC)':'Kobalt (DR Kongo)','Lithium (Chile)':'Litiy (Chili)','Diamonds (Botswana)':'Olmos (Botsvana)','Oil (Venezuela)':'Neft (Venezuela)','Oil (Iraq)':'Neft (Iroq)','Oil (Kuwait)':'Neft (Kuveyt)','Oil (UAE)':'Neft (BAA)','Oil (Qatar)':'Neft (Qatar)','Oil (Iran)':'Neft (Eron)','Gas (Iran)':'Gaz (Eron)','Gas (Qatar)':'Gaz (Qatar)','Gold (China)':'Oltin (Xitoy)','Oil (Egypt)':'Neft (Misr)','Gas (Egypt)':'Gaz (Misr)','Gold (Egypt)':'Oltin (Misr)','Phosphates (Egypt)':'Fosfat (Misr)','Iron Ore (Egypt)':'Temir rudası (Misr)','Copper (Peru)':'Mis (Peru)','Silver (Mexico)':'Kumush (Meksika)','Uranium (Niger)':'Uran (Niger)','Oil (Saudi Arabia)':'Neft (Saudiya Arabistoni)','Oil (Nigeria)':'Neft (Nigeriya)','Oil (Libya)':'Neft (Liviya)','Oil (Algeria)':'Neft (Jazoir)','Oil (Angola)':'Neft (Angola)','Oil (Kazakhstan)':'Neft (Qozog\'iston)','Oil (Norway)':'Neft (Norvegiya)','Oil (Mexico)':'Neft (Meksika)','Oil (Oman)':'Neft (Ummon)','Oil (Argentina)':'Neft (Argentina)','Oil (Indonesia)':'Neft (Indoneziya)','Oil (Ecuador)':'Neft (Ekvador)','Oil (Colombia)':'Neft (Kolumbiya)','Gas (USA)':'Gaz (AQSH)','Gas (Russia)':'Gaz (Rossiya)','Gas (Turkmenistan)':'Gaz (Turkmaniston)','Gas (China)':'Gaz (Xitoy)','Gas (Saudi Arabia)':'Gaz (Saudiya Arabistoni)','Gas (Algeria)':'Gaz (Jazoir)','Gas (Australia)':'Gaz (Avstraliya)','Coal (China)':'Ko\'mir (Xitoy)','Coal (India)':'Ko\'mir (Hindiston)','Coal (Australia)':'Ko\'mir (Avstraliya)','Coal (Russia)':'Ko\'mir (Rossiya)','Coal (USA)':'Ko\'mir (AQSH)','Coal (South Africa)':'Ko\'mir (Janubiy Afrika)','Coal (Indonesia)':'Ko\'mir (Indoneziya)','Copper (China)':'Mis (Xitoy)','Copper (Australia)':'Mis (Avstraliya)','Copper (DRC)':'Mis (DR Kongo)','Gold (Australia)':'Oltin (Avstraliya)','Gold (Russia)':'Oltin (Rossiya)','Gold (USA)':'Oltin (AQSH)','Gold (Canada)':'Oltin (Kanada)','Gold (South Africa)':'Oltin (Janubiy Afrika)','Iron (Australia)':'Temir (Avstraliya)','Iron (Brazil)':'Temir (Braziliya)','Iron (China)':'Temir (Xitoy)','Iron (Russia)':'Temir (Rossiya)','Diamond (Russia)':'Olmos (Rossiya)','Diamond (Botswana)':'Olmos (Botsvana)','Diamonds (Russia)':'Olmos (Rossiya)','Diamonds (Botswana)':'Olmos (Botsvana)','Diamond (DRC)':'Olmos (DR Kongo)','Diamond (South Africa)':'Olmos (Janubiy Afrika)','Diamonds (DRC)':'Olmos (DR Kongo)','Diamonds (South Africa)':'Olmos (Janubiy Afrika)','Lithium (Australia)':'Litiy (Avstraliya)','Lithium (China)':'Litiy (Xitoy)','Phosphate (Morocco)':'Fosfat (Marokash)','Phosphate (China)':'Fosfat (Xitoy)','Uranium (Canada)':'Uran (Kanada)','Uranium (Australia)':'Uran (Avstraliya)','Bauxite (Australia)':'Boksit (Avstraliya)','Bauxite (Guinea)':'Boksit (Gvineya)','Nickel (Indonesia)':'Nikel (Indoneziya)','Tin (Indonesia)':'Qalay (Indoneziya)','Zinc (China)':'Sink (Xitoy)','Potash (Canada)':'Kaliy tuzi (Kanada)','Water Resources (Egypt)':'Suv resurslari (Misr)','Solar (Egypt)':'Quyosh (Misr)'
@@ -8808,6 +9898,31 @@ const featureSpanish = {
         'Baltic Sea': 'Mar Báltico'
     },
     mountains: {
+                    'Pamir Mountains': 'Montes Pamir',
+                    'Kunlun Mountains': 'Montes Kunlun',
+                    'Altai Mountains': 'Montes Altái',
+                    'Carpathian Mountains': 'Montes Cárpatos',
+                    'Caucasus Mountains': 'Montes Cáucaso',
+                    'Zagros Mountains': 'Montes Zagros',
+                    'Alborz': 'Elburz',
+                    'Scandinavian Mountains': 'Montes Escandinavos',
+                    'Western Ghats': 'Ghats occidentales',
+                    'Eastern Ghats': 'Ghats orientales',
+                    'Appalachian Mountains': 'Montes Apalaches',
+                    'Verkhoyansk Range': 'Cordillera Verjoyansk',
+                    'Chersky Range': 'Cordillera Cherski',
+                    'Stanovoy Range': 'Cordillera Stanovoi',
+                    'Sayan Mountains': 'Montes Sayanes',
+                    'Columbia Mountains': 'Montañas Columbia',
+                    'Brooks Range': 'Cordillera Brooks',
+                    'Sierra Nevada de Santa Marta': 'Sierra Nevada de Santa Marta',
+                    'Cameroon Line': 'Línea de Camerún',
+                    'New Guinea Highlands': 'Tierras Altas de Nueva Guinea',
+                    'Japanese Alps': 'Alpes japoneses',
+                    'Tenasserim Hills': 'Colinas de Tenasserim',
+                    'Sulawesi Highlands': 'Tierras Altas de Célebes',
+                    'Central Bulgarian Mountains': 'Montes Balcanes (Stara Planina)',
+
         'Himalayas': 'Himalaya',
         'Andes': 'Andes',
         'Alps': 'Alpes',
@@ -8851,6 +9966,28 @@ const featureSpanish = {
         'Sierra Madre': 'Sierra Madre'
     },
     rivers: {
+                    'Blue Nile': 'Nilo Azul',
+                    'Paraguay-Paraná': 'Paraguay-Paraná',
+                    'Missouri': 'Misuri',
+                    'Mackenzie': 'Mackenzie',
+                    'St. Lawrence': 'Río San Lorenzo',
+                    'Amu Darya-Syr Darya': 'Amu Daria y Sir Daria',
+                    'Yenisey': 'Yeniséi',
+                    'Senegal': 'Senegal',
+                    'Murray-Darling': 'Murray-Darling',
+                    'Colorado': 'Colorado',
+                    'Volta': 'Volta',
+                    'Neva': 'Neva',
+                    'Dvina': 'Dvina',
+                    'Elbe': 'Elba',
+                    'Vistula': 'Vístula',
+                    'Tagus': 'Tajo',
+                    'Loire': 'Loira',
+                    'Essequibo': 'Esequibo',
+                    'Rio Negro': 'Río Negro',
+                    'Krishna': 'Krishna',
+                    'Pearl River': 'Río de las Perlas',
+
         'Nile': 'Nilo',
         'Amazon': 'Amazonas',
         'Yangtze': 'Yangtsé',
@@ -8903,6 +10040,123 @@ const featureSpanish = {
         'Kasai': 'Kasai'
     },
     resources: {
+                    'Oil': 'Petróleo',
+                    'Natural Gas': 'Gas natural',
+                    'Coal': 'Carbón',
+                    'Copper': 'Cobre',
+                    'Gold': 'Oro',
+                    'Iron Ore': 'Mineral de hierro',
+                    'Diamonds': 'Diamantes',
+                    'Phosphates': 'Fosfatos',
+                    'Uranium': 'Uranio',
+                    'Offshore Oil': 'Petróleo en alta mar',
+                    'Lithium': 'Litio',
+                    'Cobalt': 'Cobalto',
+                    'Rare Earths': 'Tierras raras',
+                    'Silver': 'Plata',
+                    'Platinum': 'Platino',
+                    'Bauxite': 'Bauxita',
+                    'Nickel': 'Níquel',
+                    'Tin': 'Estaño',
+                    'Zinc': 'Zinc',
+                    'Potash': 'Potasa',
+                    'Solar Energy': 'Energía solar',
+                    'Wind Energy': 'Energía eólica',
+                    'Wind Energy (China)': 'Energía eólica (China)',
+                    'Hydro Power': 'Energía hidroeléctrica',
+                    'Hydro Power (China)': 'Energía hidroeléctrica (China)',
+                    'Water Resources': 'Recursos hídricos',
+                    'Timber': 'Madera',
+                    'Uranium (Kazakhstan)': 'Uranio (Kazajistán)',
+                    'Copper (Chile)': 'Cobre (Chile)',
+                    'Iron Ore (Australia)': 'Mineral de hierro (Australia)',
+                    'Cobalt (DRC)': 'Cobalto (RDC)',
+                    'Lithium (Chile)': 'Litio (Chile)',
+                    'Diamonds (Botswana)': 'Diamantes (Botsuana)',
+                    'Oil (Venezuela)': 'Petróleo (Venezuela)',
+                    'Oil (Iraq)': 'Petróleo (Irak)',
+                    'Oil (Kuwait)': 'Petróleo (Kuwait)',
+                    'Gas (Iran)': 'Gas (Irán)',
+                    'Gas (Qatar)': 'Gas (Catar)',
+                    'Gold (China)': 'Oro (China)',
+                    'Oil (Egypt)': 'Petróleo (Egipto)',
+                    'Gas (Egypt)': 'Gas (Egipto)',
+                    'Gold (Egypt)': 'Oro (Egipto)',
+                    'Phosphates (Egypt)': 'Fosfatos (Egipto)',
+                    'Iron Ore (Egypt)': 'Mineral de hierro (Egipto)',
+                    'Copper (Peru)': 'Cobre (Perú)',
+                    'Silver (Mexico)': 'Plata (México)',
+                    'Uranium (Niger)': 'Uranio (Níger)',
+                    'Oil (Saudi Arabia)': 'Petróleo (Arabia Saudita)',
+                    'Oil (UAE)': 'Petróleo (EAU)',
+                    'Copper (DRC)': 'Cobre (RDC)',
+                    'Diamonds (Russia)': 'Diamantes (Rusia)',
+                    'Coal (Indonesia)': 'Carbón (Indonesia)',
+                    'Tin (Indonesia)': 'Estaño (Indonesia)',
+                    'Tin (China)': 'Estaño (China)',
+                    'Bauxite (Guinea)': 'Bauxita (Guinea)',
+                    'Water Resources (Egypt)': 'Recursos hídricos (Egipto)',
+                    'Solar (Egypt)': 'Energía solar (Egipto)',
+                    'Solar Energy (China)': 'Energía solar (China)',
+                    'Oil (Qatar)': 'Petróleo (Catar)',
+                    'Oil (Iran)': 'Petróleo (Irán)',
+                    'Oil (Nigeria)': 'Petróleo (Nigeria)',
+                    'Oil (USA)': 'Petróleo (EE. UU.)',
+                    'Oil (Russia)': 'Petróleo (Rusia)',
+                    'Oil (Libya)': 'Petróleo (Libia)',
+                    'Oil (Algeria)': 'Petróleo (Argelia)',
+                    'Oil (Angola)': 'Petróleo (Angola)',
+                    'Oil (Kazakhstan)': 'Petróleo (Kazajistán)',
+                    'Oil (Norway)': 'Petróleo (Noruega)',
+                    'Oil (Mexico)': 'Petróleo (México)',
+                    'Oil (Oman)': 'Petróleo (Omán)',
+                    'Oil (Argentina)': 'Petróleo (Argentina)',
+                    'Oil (Indonesia)': 'Petróleo (Indonesia)',
+                    'Oil (Ecuador)': 'Petróleo (Ecuador)',
+                    'Oil (Colombia)': 'Petróleo (Colombia)',
+                    'Gas (USA)': 'Gas (EE. UU.)',
+                    'Gas (Russia)': 'Gas (Rusia)',
+                    'Gas (Turkmenistan)': 'Gas (Turkmenistán)',
+                    'Gas (China)': 'Gas (China)',
+                    'Gas (Saudi Arabia)': 'Gas (Arabia Saudita)',
+                    'Gas (Algeria)': 'Gas (Argelia)',
+                    'Gas (Australia)': 'Gas (Australia)',
+                    'Coal (China)': 'Carbón (China)',
+                    'Coal (India)': 'Carbón (India)',
+                    'Coal (Australia)': 'Carbón (Australia)',
+                    'Coal (Russia)': 'Carbón (Rusia)',
+                    'Coal (USA)': 'Carbón (EE. UU.)',
+                    'Coal (South Africa)': 'Carbón (Sudáfrica)',
+                    'Copper (China)': 'Cobre (China)',
+                    'Copper (Australia)': 'Cobre (Australia)',
+                    'Copper (Zambia)': 'Cobre (Zambia)',
+                    'Gold (Australia)': 'Oro (Australia)',
+                    'Gold (Russia)': 'Oro (Rusia)',
+                    'Gold (USA)': 'Oro (EE. UU.)',
+                    'Gold (Canada)': 'Oro (Canadá)',
+                    'Gold (South Africa)': 'Oro (Sudáfrica)',
+                    'Gold (Ghana)': 'Oro (Ghana)',
+                    'Gold (Peru)': 'Oro (Perú)',
+                    'Iron (Australia)': 'Hierro (Australia)',
+                    'Iron (Brazil)': 'Hierro (Brasil)',
+                    'Iron (China)': 'Hierro (China)',
+                    'Iron (Russia)': 'Hierro (Rusia)',
+                    'Iron Ore (India)': 'Mineral de hierro (India)',
+                    'Diamond (Russia)': 'Diamante (Rusia)',
+                    'Diamond (Botswana)': 'Diamante (Botsuana)',
+                    'Diamond (DRC)': 'Diamante (RDC)',
+                    'Diamond (South Africa)': 'Diamante (Sudáfrica)',
+                    'Lithium (Australia)': 'Litio (Australia)',
+                    'Lithium (China)': 'Litio (China)',
+                    'Phosphate (Morocco)': 'Fosfatos (Marruecos)',
+                    'Phosphate (China)': 'Fosfatos (China)',
+                    'Uranium (Canada)': 'Uranio (Canadá)',
+                    'Uranium (Australia)': 'Uranio (Australia)',
+                    'Bauxite (Australia)': 'Bauxita (Australia)',
+                    'Nickel (Indonesia)': 'Níquel (Indonesia)',
+                    'Zinc (China)': 'Zinc (China)',
+                    'Potash (Canada)': 'Potasa (Canadá)',
+
         'Oil': 'Petróleo',
         'Natural Gas': 'Gas natural',
         'Coal': 'Carbón',
@@ -10108,7 +11362,7 @@ const featureSpanish = {
                 'Azores': 'Azores',
                 'Canary Is.': 'Islas Canarias'
             };
-            const densitySpotSpanish = {
+            const densitySpotSpanish = {'حيدر آباد':'Hyderabad','أحمد آباد':'Ahmedabad','بونة':'Pune','فيصل آباد':'Faisalabad','كويته':'Quetta','تشيتاغونغ':'Chittagong','ماندالاي':'Mandalay','بنوم بنه':'Nom Pen','فيينتيان':'Vientián','جورج تاون':'George Town','ميدان':'Medan','ماكاسار':'Makassar','مانادو':'Manado','بالي':'Bali','كييف':'Kiev','بودابست':'Budapest','براغ':'Praga','صوفيا':'Sofía','بلغراد':'Belgrado','بروكسل':'Bruselas','ستوكهولم':'Estocolmo','كوبنهاغن':'Copenhague','أوسلو':'Oslo','هلسنكي':'Helsinki','لشبونة':'Lisboa','نيقوسيا':'Nicosia','فاليتا':'La Valeta','واشنطن':'Washington D. C.','سان فرانسيسكو':'San Francisco','مونتريال':'Montreal','دالاس':'Dallas','أتلانتا':'Atlanta','بوسطن':'Boston','فينيكس':'Phoenix','ريفرسايد':'Riverside','ديترويت':'Detroit','سياتل':'Seattle','مينيابوليس':'Mineápolis','دنفر':'Denver','سان دييغو':'San Diego','تامبا':'Tampa','أورلاندو':'Orlando','برازيليا':'Brasilia','بيلو هوريزونتي':'Belo Horizonte','كاراكاس':'Caracas','كيتو':'Quito','كالي':'Cali','لاباز':'La Paz','مونتفيدو':'Montevideo','الدار البيضاء':'Casablanca','الجزائر':'Argel','تونس':'Túnez','طرابلس':'Trípoli','هرجيسا':'Hargeisa','هراري':'Harare','لوساكا':'Lusaka','كيغالي':'Kigali','بوجومبورا':'Buyumbura','باماكو':'Bamako','أبوجا':'Abuya','ياوندي':'Yaundé','بيرث':'Perth','ويلينغتون':'Wellington','سوفا':'Suva','بورت مورسبي':'Port Moresby','أبيا':'Apia','نوك':'Nuuk','ريكيافيك':'Reikiavik','تيرانا':'Tirana','سراييفو':'Sarajevo','بريشتينا':'Pristina','سكوبيه':'Skopie','بوخارست':'Bucarest','تشيسيناو':'Chisináu','مينسك':'Minsk','فيلنيوس':'Vilna','ريغا':'Riga','تالين':'Tallin','أولان باتور':'Ulán Bator','بيونغ يانغ':'Pionyang','بورت لويس':'Port Louis','فيكتوريا':'Victoria','ناساو':'Nasáu','كينغستون':'Kingston','سانتو دومينغو':'Santo Domingo','سان خوان':'San Juan','بلموبان':'Belmopán','غواتيمالا':'Ciudad de Guatemala','تيغوسيغالبا':'Tegucigalpa','سان سلفادور':'San Salvador','ماناغوا':'Managua','سان خوسيه':'San José','بنما':'Ciudad de Panamá','بورت أوف سبين':'Puerto España','باراماريبو':'Paramaribo','أسونسيون':'Asunción','سانتوريني':'Santorini','مراكش':'Marrakech','كيوتو':'Kioto','البندقية':'Venecia','ميونخ':'Múnich','فلورنسا':'Florencia','أمستردام':'Ámsterdam','سان بطرسبرغ':'San Petersburgo','كيب تاون':'Ciudad del Cabo','سيشل':'Seychelles','جزر المالديف':'Maldivas','أنطاليا':'Antalya','دبلن':'Dublín','أدنبرة':'Edimburgo','زيورخ':'Zúrich','كراكوف':'Cracovia','بودغوريتسا':'Podgorica','بورصة':'Bursa','إزمير':'Esmirna','هانغتشو':'Hangzhou','هامبورغ':'Hamburgo','كولونيا':'Colonia','ميلانو':'Milán','تورينو':'Turín','ليون':'Lyon','مرسيليا':'Marsella','مانشستر':'Mánchester','برمنغهام':'Birmingham','غلاسكو':'Glasgow','روتردام':'Róterdam','أنتويرب':'Amberes','بورت هاركورت':'Port Harcourt','ديربان':'Durban','عنابة':'Annaba','وهران':'Orán','صفاقس':'Sfax','بنغازي':'Bengasi','كالياري':'Cagliari','مونبلييه':'Montpellier','باليرمو':'Palermo','نابولي':'Nápoles','فالنسيا':'Valencia',
                 'طوكيو': 'Tokio',
                 'أوساكا': 'Osaka',
                 'سيول': 'Seúl',

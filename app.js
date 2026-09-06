@@ -1702,7 +1702,10 @@
                         .style('cursor', 'pointer')
                         .on('mouseenter', function(e) {
                             mainPath.attr('stroke-width', isMobile ? 2 : 3);
-                            tooltip.textContent = tz.label + ' — ' + tz.places;
+                            var tzPlacesStr = (typeof timezoneTranslations !== 'undefined' && timezoneTranslations[tz.places])
+                                ? locField(timezoneTranslations[tz.places], 'places')
+                                : tz.places;
+                            tooltip.textContent = tz.label + ' — ' + tzPlacesStr;
                             tooltip.classList.add('visible');
                         })
                         .on('mousemove', function(e) {
@@ -6798,8 +6801,15 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
 
                 // Patch name_ru onto features from lookup maps
                 if (typeof featureRussian !== 'undefined') {
+                    var normalizeFeatureKey = function(dict, key) {
+                        if (!dict || !key) return undefined;
+                        if (dict[key]) return dict[key];
+                        var stripped = key.replace(/\s+(Mountains|Mountain|Range|Highlands|Hills|Alps)$/i, '').trim();
+                        if (dict[stripped]) return dict[stripped];
+                        return undefined;
+                    };
                     corridorsData.forEach(function(d) { d.name_ru = d.name_ru || featureRussian.corridors[d.name_en]; });
-                    mountainRanges.forEach(function(d) { d.name_ru = d.name_ru || featureRussian.mountains[d.name_en]; });
+                    mountainRanges.forEach(function(d) { d.name_ru = d.name_ru || normalizeFeatureKey(featureRussian.mountains, d.name_en); });
                     rivers.forEach(function(d) { d.name_ru = d.name_ru || featureRussian.rivers[d.name_en]; });
                     naturalResourcesData.forEach(function(d) { d.name_ru = d.name_ru || featureRussian.resources[d.name_en]; });
                     ethnicGroupsData.forEach(function(d) { d.name_ru = d.name_ru || featureRussian.ethnicGroups[d.name_en]; });
@@ -6810,6 +6820,16 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     tectonicPlatesData.forEach(function(d) { d.name_ru = d.name_ru || featureRussian.plates[d.name_en]; });
                     desertsForestsData.forEach(function(d) { d.name_ru = d.name_ru || featureRussian.deserts[d.name_en]; });
                     borderDisputesData.forEach(function(d) { d.name_ru = d.name_ru || featureRussian.disputes[d.name_en]; });
+                    if (typeof russianNames !== 'undefined') {
+                        var ruCMap = russianNames;
+                        var translateRuCountries = function(str) {
+                            if (!str) return str;
+                            return str.split(',').map(function(s) { return (ruCMap[s.trim()] || s.trim()); }).join(', ');
+                        };
+                        ethnicGroupsData.forEach(function(d) { d.countries_ru = d.countries_ru || translateRuCountries(d.countries_en); });
+                        mountainRanges.forEach(function(d) { d.countries_ru = d.countries_ru || translateRuCountries(d.countries_en); });
+                        rivers.forEach(function(d) { d.countries_ru = d.countries_ru || translateRuCountries(d.countries_en); });
+                    }
                 }
                 if (typeof featureUzbek !== 'undefined') {
                     corridorsData.forEach(function(d) { d.name_uz = d.name_uz || featureUzbek.corridors[d.name_en]; });
@@ -8038,8 +8058,14 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 phase: 'start',
                                 title_ar: 'المرحلة الأولى: اندلاع الحرب واغتيال الأرشيدوق (1914 م)',
                                 title_en: 'Outbreak Phase: Declarations of War (1914)',
+                                title_ru: 'Первый этап: Начало войны и сараевское убийство (1914 г.)',
+                                title_uz: 'Birinchi bosqich: Urush boshlanishi va Saraevo suiqasdi (1914-y.)',
+                                title_es: 'Primera fase: Estallido de la guerra y asesinato de Sarajevo (1914)',
                                 desc_ar: 'اندلاع الحرب إثر اغتيال الأرشيدوق فرانز فرديناند؛ النمسا-المجر وألمانيا تعلنان الحرب على صربيا وروسيا وفرنسا، وبريطانيا تتدخل بعد غزو بلجيكا.',
                                 desc_en: 'Outbreak of WWI following the Sarajevo assassination; Germany and Austria-Hungary vs Serbia, Russia, France, Belgium, and Britain.',
+                                desc_ru: 'Начало Первой мировой войны после убийства эрцгерцога Франца Фердинанда: Австро-Венгрия и Германия против Сербии, России, Франции, Бельгии и Великобритании.',
+                                desc_uz: 'Ertsgersog Frans Ferdinand suiqasdidan so‘ng Birinchi jahon urushining boshlanishi: Avstriya-Vengriya va Germaniya Serbiya, Rossiya va Fransiyaga urush e’lon qildi.',
+                                desc_es: 'Estallido de la Primera Guerra Mundial tras el magnicidio de Sarajevo: Austria-Hungría y Alemania contra Serbia, Rusia, Francia, Bélgica y Gran Bretaña.',
                                 participants: [
                                     { c: 'Austria', side: 'central', role: 'major' },
                                     { c: 'Hungary', side: 'central', role: 'major' },
@@ -8063,8 +8089,14 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 phase: 'end',
                                 title_ar: 'المرحلة الثالثة: الهدنة ومعاهدة فرساي وتفكك الإمبراطوريات (1919 م)',
                                 title_en: 'Final Phase: Armistice, Versailles & Fall of Empires (1919)',
+                                title_ru: 'Третий этап: Перемирие, Версальский мир и распад империй (1919 г.)',
+                                title_uz: 'Uchinchi bosqich: Sulh, Versal shartnomasi va imperiyalarning qulashi (1919-y.)',
+                                title_es: 'Tercera fase: Armisticio, Tratado de Versalles y caída de imperios (1919)',
                                 desc_ar: 'انهيار دول المركز واستسلام ألمانيا والنمسا؛ توقيع معاهدة فرساي، تفكك إمبراطورية هابسبورغ والدولة العثمانية، ونشأة دول جديدة في أوروبا والشرق.',
                                 desc_en: 'Armistice and Treaty of Versailles: Collapse and partition of Austro-Hungarian, Ottoman, and Russian empires.',
+                                desc_ru: 'Крах Центральных держав и капитуляция Германии и Австро-Венгрии; Версальский мир, распад империй и возникновение новых государств.',
+                                desc_uz: 'Markaziy davlatlarning mag‘lubiyati, Germaniya va Avstriyaning taslim bo‘lishi; Versal tinchlik shartnomasi, imperiyalarning parchalanishi.',
+                                desc_es: 'Capitulación de las Potencias Centrales y firma del Tratado de Versalles: partición de los imperios austrohúngaro y otomano.',
                                 participants: [
                                     { c: 'United States', side: 'allies', role: 'major' },
                                     { c: 'United Kingdom', side: 'allies', role: 'major' },
@@ -8089,8 +8121,14 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 phase: 'start',
                                 title_ar: 'المرحلة الأولى: غزو بولندا واندلاع الحرب في أوروبا (1939 م)',
                                 title_en: 'Outbreak Phase: Invasion of Poland (1939)',
+                                title_ru: 'Первый этап: Вторжение в Польшу и начало войны в Европе (1939 г.)',
+                                title_uz: 'Birinchi bosqich: Polshaga bostirib kirish va Yevropada urush boshlanishi (1939-y.)',
+                                title_es: 'Primera fase: Invasión de Polonia y estallido en Europa (1939)',
                                 desc_ar: 'ألمانيا تشن هجوم البليتزكريغ (الحرب الخاطفة) على بولندا في سبتمبر 1939؛ بريطانيا وفرنسا تعلنان الحرب دعماً لبولندا، بينما بقيت الولايات المتحدة والاتحاد السوفيتي على الحياد.',
                                 desc_en: 'German Blitzkrieg invasion of Poland; Britain and France declare war while the US and USSR remain neutral.',
+                                desc_ru: 'Германия начинает блицкриг против Польши; Великобритания и Франция объявляют войну Германии в поддержку Польши.',
+                                desc_uz: 'Germaniyaning Polshaga qarshi blitskrigi; Buyuk Britaniya va Fransiya Polshani himoya qilib urush e’lon qiladi.',
+                                desc_es: 'Invasión alemana de Polonia mediante guerra relámpago; Gran Bretaña y Francia declaran la guerra en apoyo a Polonia.',
                                 participants: [
                                     { c: 'Germany', side: 'axis', role: 'major' },
                                     { c: 'Poland', side: 'allies', role: 'occupied' },
@@ -8110,8 +8148,14 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 phase: 'end',
                                 title_ar: 'المرحلة الثالثة: استسلام المحور وتأسيس النظام العالمي الجديد (1945 م)',
                                 title_en: 'Final Phase: Unconditional Surrender & New World Order (1945)',
+                                title_ru: 'Третий этап: Капитуляция стран Оси и новый мировой порядок (1945 г.)',
+                                title_uz: 'Uchinchi bosqich: O‘q davlatlarining taslim bo‘lishi va yangi dunyo tartibi (1945-y.)',
+                                title_es: 'Tercera fase: Rendición del Eje y nuevo orden mundial (1945)',
                                 desc_ar: 'استسلام ألمانيا في مايو واليابان في سبتمبر 1945 إثر القنبلتين النوويتين؛ تقسيم ألمانيا والنمسا لمناطق احتلال، وانتصار الحلفاء وتأسيس الأمم المتحدة.',
                                 desc_en: 'Unconditional surrender of Axis powers; Allied victory, partition of Germany into occupation zones, and founding of the UN.',
+                                desc_ru: 'Безоговорочная капитуляция Германии и Японии; раздел Германии на зоны оккупации, победа союзников и создание ООН.',
+                                desc_uz: 'Germaniya va Yaponiyaning so‘zsiz taslim bo‘lishi; Germaniyaning ishg‘ol zonalariga bo‘linishi, Ittifoqchilar g‘alabasi va BMT tashkil etilishi.',
+                                desc_es: 'Rendición incondicional de las potencias del Eje; victoria aliada, división de Alemania en zonas de ocupación y creación de la ONU.',
                                 participants: [
                                     { c: 'United States', side: 'allies', role: 'major' },
                                     { c: 'Russia', side: 'allies', role: 'major' },
@@ -8136,8 +8180,14 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 phase: 'start',
                                 title_ar: 'المرحلة الأولى: عبور الدردنيل ومعركة الغرانيكوس (334 ق.م)',
                                 title_en: 'Initial Phase: Crossing the Hellespont (334 BCE)',
+                                title_ru: 'Первый этап: Переправа через Геллеспонт и битва при Гранике (334 г. до н.э.)',
+                                title_uz: 'Birinchi bosqich: Dardanel bo‘g‘ozidan o‘tish va Granik jangi (mil. avv. 334-y.)',
+                                title_es: 'Primera fase: Cruce del Helesponto y batalla del Gránico (334 a.C.)',
                                 desc_ar: 'الإسكندر الأكبر يعبر مضيق الدردنيل بجيش مقدوني وإغريقي مشترك محققاً نصره الأول على السطارفة الفرس في معركة نهر الغرانيكوس غرب الأناضول.',
                                 desc_en: 'Alexander crosses into Asia Minor and wins the Battle of the Granicus against Persian satraps.',
+                                desc_ru: 'Александр Македонский переправляется через Геллеспонт и одерживает победу над персидскими сатрапами в битве при Гранике.',
+                                desc_uz: 'Iskandar Zulqarnayn birlashgan qo‘shini bilan Dardanel bo‘g‘ozidan o‘tib, Granik jangida forslarni mag‘lub etadi.',
+                                desc_es: 'Alejandro Magno cruza hacia Asia Menor con el ejército greco-macedonio y vence a los sátrapas persas en el Gránico.',
                                 participants: [
                                     { c: 'Greece', side: 'delian', role: 'major' },
                                     { c: 'North Macedonia', side: 'delian', role: 'major' },
@@ -8155,8 +8205,14 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 phase: 'end',
                                 title_ar: 'المرحلة الثالثة: وفاة الإسكندر وتقسيم ملوك الطوائف (323 ق.م)',
                                 title_en: 'Final Phase: Death in Babylon & Division of Diadochi (323 BCE)',
+                                title_ru: 'Третий этап: Смерть Александра и раздел диадохов (323 г. до н.э.)',
+                                title_uz: 'Uchinchi bosqich: Iskandarning vafoti va diodoxlar taqsimoti (mil. avv. 323-y.)',
+                                title_es: 'Tercera fase: Muerte de Alejandro y división de los diádocos (323 a.C.)',
                                 desc_ar: 'وفاة الإسكندر المفاجئة في قصر نبوخذ نصر ببابل دون وريث ناضج؛ قادته يقتسمون الإمبراطورية إلى ممالك هيلينستية (البطالمة في مصر، السلوقيون في الشام والعراق، والأنتيجونيون في مقدونيا).',
                                 desc_en: 'Alexander dies in Babylon; his generals (Diadochi) partition the vast empire into Ptolemaic, Seleucid, and Antigonid realms.',
+                                desc_ru: 'Смерть Александра в Вавилоне; его военачальники (диадохи) делят империю на царства Птолемеев, Селевкидов и Антигонидов.',
+                                desc_uz: 'Iskandarning Bobilda vafoti; lashkarboshilari imperiyani ellinistik saltanatlarga (Ptolemeylar, Salavkiylar, Antigoniylar) bo‘lib olishadi.',
+                                desc_es: 'Muerte repentina de Alejandro en Babilonia; sus generales (diádocos) dividen el imperio en reinos helenísticos.',
                                 participants: [
                                     { c: 'Egypt', side: 'delian', role: 'major' },
                                     { c: 'Syria', side: 'delian', role: 'major' },
@@ -8179,8 +8235,14 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             phase: 'peak',
                             title_ar: 'المرحلة الثانية: أوج الاتساع والاشتباك الشامل (' + (peakYrStr || base.year) + ')',
                             title_en: 'Peak Phase: Total Mobilization (' + (peakYrStr || base.year) + ')',
+                            title_ru: 'Второй этап: Наибольший размах и всеобщая мобилизация (' + (peakYrStr || base.year) + ')',
+                            title_uz: 'Ikkinchi bosqich: Eng kengaygan davr va umumiy safarbarlik (' + (peakYrStr || base.year) + ')',
+                            title_es: 'Segunda fase: Máxima extensión y movilización total (' + (peakYrStr || base.year) + ')',
                             desc_ar: (base.desc_ar ? base.desc_ar + ' — ' : '') + 'ذروة تصعيد العمليات الحربية واكتمال التحالفات والامتداد العسكري الأقصى.',
                             desc_en: (base.desc_en ? base.desc_en + ' — ' : '') + 'Peak escalation and maximum territorial involvement.',
+                            desc_ru: (base.desc_ru ? base.desc_ru + ' — ' : '') + 'Пик эскалации боевых действий и максимальный территориальный охват.',
+                            desc_uz: (base.desc_uz ? base.desc_uz + ' — ' : '') + 'Jangovar harakatlarning eng yuqori cho‘qqisi va maksimal hududiy kengayishi.',
+                            desc_es: (base.desc_es ? base.desc_es + ' — ' : '') + 'Punto álgido de las operaciones y máxima extensión territorial.',
                             participants: (base.participants || []).slice(),
                             empires: (base.empires || []).slice()
                         };
@@ -8205,8 +8267,14 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             phase: 'start',
                             title_ar: 'المرحلة الأولى: اندلاع الحرب والشرارة الأولى (' + (startYrStr || base.year) + ')',
                             title_en: 'Initial Phase: Outbreak (' + (startYrStr || base.year) + ')',
+                            title_ru: 'Первый этап: Начало войны (' + (startYrStr || base.year) + ')',
+                            title_uz: 'Birinchi bosqich: Urushning boshlanishi (' + (startYrStr || base.year) + ')',
+                            title_es: 'Primera fase: Estallido del conflicto (' + (startYrStr || base.year) + ')',
                             desc_ar: 'اندلاع الصراع بين الأطراف المفجرة للحرب وبدء أولى المواجهات العسكرية على الجبهات الحدودية في عام ' + (startYrStr || '') + '.',
                             desc_en: 'Outbreak of conflict between primary belligerents and initial frontier clashes.',
+                            desc_ru: 'Начало конфликта между противоборствующими сторонами и первые столкновения на фронтах.',
+                            desc_uz: 'Urushayotgan tomonlar o‘rtasidagi to‘qnashuvlarning boshlanishi va birinchi chegara janglari.',
+                            desc_es: 'Estallido del conflicto entre los beligerantes principales y primeros enfrentamientos bélicos.',
                             participants: startParts,
                             empires: startEmpires
                         };
@@ -8226,8 +8294,14 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             phase: 'end',
                             title_ar: 'المرحلة الثالثة: حسم الحرب ومعاهدات الصلح (' + (endYrStr || base.year) + ')',
                             title_en: 'Final Phase: Settlement & Aftermath (' + (endYrStr || base.year) + ')',
+                            title_ru: 'Третий этап: Исход войны и мирные договоры (' + (endYrStr || base.year) + ')',
+                            title_uz: 'Uchinchi bosqich: Urush yakuni va sulh shartnomalari (' + (endYrStr || base.year) + ')',
+                            title_es: 'Tercera fase: Conclusión y tratados de paz (' + (endYrStr || base.year) + ')',
                             desc_ar: 'حسم الصراع وتوقيع معاهدات السلام وإعادة ترسيم الحدود السياسية والنتائج الجيوسياسية في عام ' + (endYrStr || '') + '.',
                             desc_en: 'Conclusion, armistice, peace treaties and redrawn geopolitical borders.',
+                            desc_ru: 'Завершение конфликта, подписание мирных договоров и передел политических границ.',
+                            desc_uz: 'Mojaroning yakunlanishi, tinchlik shartnomalarining imzolanishi va chegaralarning qayta belgilanishi.',
+                            desc_es: 'Conclusión del conflicto, firma de tratados de paz y reconfiguración de fronteras políticas.',
                             participants: endParts,
                             empires: (base.empires || []).map(function(emp, idx) {
                                 var c = Object.assign({}, emp);

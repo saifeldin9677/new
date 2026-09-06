@@ -2113,6 +2113,19 @@ header,
     .lang-overlay-flag { font-size: 1.5em; }
 }
 
+/* Screen-reader-only utility class (WCAG AA accessible text) */
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
 /* Keyboard focus visibility (accessibility) — restores a visible indicator
    for keyboard users only, without adding a ring on mouse/touch clicks. */
 .btn:focus-visible,
@@ -2130,8 +2143,29 @@ header,
 .layers-modal-close:focus-visible,
 .mobile-mode-sheet-close:focus-visible,
 #searchInput:focus-visible,
-#mobileSearchInput:focus-visible {
-    outline: 2px solid var(--focus-ring);
+#mobileSearchInput:focus-visible,
+.history-timeline:focus-visible,
+.religions-timeline:focus-visible,
+.hist-traveler-timeline-track:focus-visible,
+.history-play-btn:focus-visible,
+.hist-traveler-step-btn:focus-visible,
+.hist-drawer-close-btn:focus-visible,
+.history-search-input:focus-visible,
+.history-region-select:focus-visible,
+.hist-traveler-item:focus-visible,
+.hist-traveler-wp-node:focus-visible,
+.hist-traveler-nav-arrow:focus-visible,
+.hist-traveler-close-btn:focus-visible,
+.hist-waypoint-popup-close:focus-visible,
+.hist-phase-btn:focus-visible,
+.hist-action-btn:focus-visible,
+.hist-station-pill:focus-visible,
+.quiz-input:focus-visible,
+.quiz-sidebar-close-btn:focus-visible,
+.hist-landmark-pin:focus-visible,
+.hist-polity-boundary:focus-visible,
+[tabindex="0"]:focus-visible {
+    outline: 2px solid var(--focus-ring, #60a5fa);
     outline-offset: 2px;
 }
 .layers-modal {

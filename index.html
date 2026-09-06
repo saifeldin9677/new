@@ -17,9 +17,11 @@
     <link rel="stylesheet" href="style.css?v=2026-09-05E">
 </head>
 <body>
+    <div id="srLiveAnnouncer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
     <a href="#controlsBar" class="skip-link" data-i18n="skipToControls">Skip to controls</a>
     <a href="#searchInput" class="skip-link" data-i18n="skipToSearch">Skip to search</a>
     <a href="#mapContainer" class="skip-link" data-i18n="skipToMap">Skip to map</a>
+    <a href="#historyBottomBar" class="skip-link hist-only" data-i18n="skipToHistory" style="display:none">Skip to history timeline</a>
     <div class="header top-header">
         <div class="header-right-group">
             <div class="title-group brand-logo">
@@ -29,7 +31,7 @@
             <div class="tools-row-start search-box-wrapper" id="toolsRowStart">
                 <div class="search-box">
                     <i data-lucide="search" class="lucide-icon search-box-icon"></i>
-                    <input type="text" id="searchInput" class="header-search-input" placeholder="بحث..." autocomplete="off" title="ابحث عن دولة" data-i18n-title="searchInput_title" data-i18n-placeholder="searchPlaceholder">
+                    <input type="text" id="searchInput" class="header-search-input" placeholder="بحث..." autocomplete="off" title="ابحث عن دولة" aria-label="ابحث عن دولة" data-i18n-title="searchInput_title" data-i18n-placeholder="searchPlaceholder" data-i18n-aria-label="searchInput_title">
                     <ul class="suggestions-list" id="suggestionsList"></ul>
                 </div>
             </div>
@@ -45,30 +47,30 @@
                     <i data-lucide="layers" class="lucide-icon"></i>
                     <span class="btn-text" data-i18n="histOpacity">الشفافية</span>
                 </label>
-                <input type="range" id="histOpacitySlider" min="0.1" max="1" step="0.05" value="0.55" class="hist-opacity-slider">
+                <input type="range" id="histOpacitySlider" min="0.1" max="1" step="0.05" value="0.55" class="hist-opacity-slider" aria-label="شفافية الحدود التاريخية" data-i18n-aria-label="histOpacityTip" aria-valuemin="10" aria-valuemax="100" aria-valuenow="55" aria-valuetext="55%">
                 <span class="hist-opacity-val" id="histOpacityVal">55%</span>
             </div>
             <div class="tools-dropdown tools-wrapper" id="toolsDropdown">
                 <button class="btn header-btn" id="toolsBtn" title="أدوات" aria-label="أدوات" data-i18n="sectionTools" data-i18n-title="sectionTools" data-i18n-aria-label="sectionTools" aria-haspopup="true" aria-expanded="false" aria-controls="toolsDropdownMenu"><i data-lucide="settings" class="lucide-icon"></i><span class="btn-text">أدوات</span></button>
-                <button class="btn header-btn" id="colorblindToggle" aria-pressed="false" title="إضافة نقش شكل لكل فئة لتكون قابلة للتمييز بدون لون" data-i18n="colorblindToggle" data-i18n-title="colorblindToggle_title"><i data-lucide="contrast" class="lucide-icon"></i><span class="btn-text">أنماط عمى الألوان</span></button>
+                <button class="btn header-btn" id="colorblindToggle" aria-pressed="false" title="إضافة نقش شكل لكل فئة لتكون قابلة للتمييز بدون لون" aria-label="أنماط عمى الألوان" data-i18n="colorblindToggle" data-i18n-title="colorblindToggle_title" data-i18n-aria-label="colorblindToggle"><i data-lucide="contrast" class="lucide-icon"></i><span class="btn-text">أنماط عمى الألوان</span></button>
                 <div class="tools-dropdown-menu" id="toolsDropdownMenu" role="menu" aria-label="أدوات" data-i18n-aria-label="sectionTools" hidden>
                     <div class="tools-grid">
-                        <button class="tool-card" id="measureToolBtn" data-i18n-title="measureToolLabel" role="menuitem"><i data-lucide="ruler" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="measureToolLabel"></span></button>
-                        <button class="tool-card" id="coordsToggle" data-i18n-title="coordsToggle_title" role="menuitem"><i data-lucide="map-pin" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="coordsToggle"></span></button>
-                        <button class="tool-card" id="dataTableBtn" data-i18n-title="dataTableBtn_title" role="menuitem"><i data-lucide="table" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="dataTableBtn"></span></button>
-                        <button class="tool-card" id="pdfExportBtn" data-i18n-title="pdfExportBtn_title" role="menuitem"><i data-lucide="file-text" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="pdfExport"></span></button>
-                        <button class="tool-card" id="shareBtn" data-i18n-title="shareBtn_title" role="menuitem"><i data-lucide="share-2" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="shareBtn"></span></button>
-                        <button class="tool-card" id="presentationModeBtn" data-i18n-title="presentationModeLabel" role="menuitem"><i data-lucide="maximize" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="presentationModeLabel"></span></button>
-                        <button class="tool-card" id="resetBtn" data-i18n-title="resetBtn_title" role="menuitem"><i data-lucide="rotate-ccw" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="resetBtn"></span></button>
-                        <button class="tool-card" id="shortcutsBtn" data-i18n-title="shortcutsBtn_title" role="menuitem"><i data-lucide="keyboard" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="shortcutsLabel"></span></button>
-                        <button class="tool-card" id="onboardBtn" data-i18n-title="onboardMapGuide" role="menuitem"><i data-lucide="book-open" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="onboardMapGuide"></span></button>
-                        <button class="tool-card hist-only" id="histSourcesBtn" style="display:none" data-i18n-title="histSourcesTitle" role="menuitem"><i data-lucide="book-marked" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="histSourcesBtn">المصادر</span></button>
+                        <button class="tool-card" id="measureToolBtn" title="أداة القياس" aria-label="أداة القياس" data-i18n-title="measureToolLabel" data-i18n-aria-label="measureToolLabel" role="menuitem"><i data-lucide="ruler" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="measureToolLabel"></span></button>
+                        <button class="tool-card" id="coordsToggle" title="إحداثيات" aria-label="إحداثيات" data-i18n-title="coordsToggle_title" data-i18n-aria-label="coordsToggle" role="menuitem"><i data-lucide="map-pin" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="coordsToggle"></span></button>
+                        <button class="tool-card" id="dataTableBtn" title="جدول البيانات" aria-label="جدول البيانات" data-i18n-title="dataTableBtn_title" data-i18n-aria-label="dataTableBtn" role="menuitem"><i data-lucide="table" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="dataTableBtn"></span></button>
+                        <button class="tool-card" id="pdfExportBtn" title="تصدير PDF" aria-label="تصدير PDF" data-i18n-title="pdfExportBtn_title" data-i18n-aria-label="pdfExport" role="menuitem"><i data-lucide="file-text" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="pdfExport"></span></button>
+                        <button class="tool-card" id="shareBtn" title="مشاركة" aria-label="مشاركة" data-i18n-title="shareBtn_title" data-i18n-aria-label="shareBtn" role="menuitem"><i data-lucide="share-2" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="shareBtn"></span></button>
+                        <button class="tool-card" id="presentationModeBtn" title="وضع العرض التقديمي" aria-label="وضع العرض التقديمي" data-i18n-title="presentationModeLabel" data-i18n-aria-label="presentationModeLabel" role="menuitem"><i data-lucide="maximize" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="presentationModeLabel"></span></button>
+                        <button class="tool-card" id="resetBtn" title="إعادة ضبط" aria-label="إعادة ضبط" data-i18n-title="resetBtn_title" data-i18n-aria-label="resetBtn" role="menuitem"><i data-lucide="rotate-ccw" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="resetBtn"></span></button>
+                        <button class="tool-card" id="shortcutsBtn" title="اختصارات لوحة المفاتيح" aria-label="اختصارات لوحة المفاتيح" data-i18n-title="shortcutsBtn_title" data-i18n-aria-label="shortcutsLabel" role="menuitem"><i data-lucide="keyboard" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="shortcutsLabel"></span></button>
+                        <button class="tool-card" id="onboardBtn" title="جولة تعليمية" aria-label="جولة تعليمية" data-i18n-title="onboardMapGuide" data-i18n-aria-label="onboardMapGuide" role="menuitem"><i data-lucide="book-open" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="onboardMapGuide"></span></button>
+                        <button class="tool-card hist-only" id="histSourcesBtn" style="display:none" title="المصادر التاريخية" aria-label="المصادر التاريخية" data-i18n-title="histSourcesTitle" data-i18n-aria-label="histSourcesTitle" role="menuitem"><i data-lucide="book-marked" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="histSourcesBtn">المصادر</span></button>
                     </div>
                 </div>
             </div>
             <div class="section-toggle" id="sectionToggle" role="group" aria-label="Section">
-                <button class="section-toggle-btn active" id="sectionGeoBtn" data-section="geo" type="button" data-i18n-title="sectionGeo_title"><i data-lucide="globe" class="lucide-icon"></i><span class="btn-text" data-i18n="sectionGeo">Geography</span></button>
-                <button class="section-toggle-btn" id="sectionHistoryBtn" data-section="history" type="button" data-i18n-title="sectionHistory_title"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text" data-i18n="sectionHistory">History</span></button>
+                <button class="section-toggle-btn active" id="sectionGeoBtn" data-section="geo" type="button" data-i18n-title="sectionGeo_title" aria-label="الخريطة الجغرافية المعاصرة" data-i18n-aria-label="sectionGeo"><i data-lucide="globe" class="lucide-icon"></i><span class="btn-text" data-i18n="sectionGeo">Geography</span></button>
+                <button class="section-toggle-btn" id="sectionHistoryBtn" data-section="history" type="button" data-i18n-title="sectionHistory_title" aria-label="الخريطة التاريخية" data-i18n-aria-label="sectionHistory"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text" data-i18n="sectionHistory">History</span></button>
             </div>
             <div class="lang-dropdown lang-selector-wrapper">
                 <button class="btn header-btn" id="langToggle" title="تبديل اللغة" aria-label="تبديل اللغة" data-i18n-title="langToggle_title" data-i18n-aria-label="langToggle_title"><i data-lucide="globe" class="lucide-icon"></i><span id="langToggleText" data-i18n="langButton">English</span><i data-lucide="chevron-down" class="lucide-icon dropdown-arrow"></i></button>
@@ -80,7 +82,7 @@
                     <button class="lang-option" data-lang="es" type="button">Español</button>
                 </div>
             </div>
-            <button class="btn header-icon-btn theme-toggle-btn" id="themeToggleBtn" data-i18n-title="themeToggleLabel">
+            <button class="btn header-icon-btn theme-toggle-btn" id="themeToggleBtn" title="تبديل المظهر" aria-label="تبديل المظهر" data-i18n-title="themeToggleLabel" data-i18n-aria-label="themeToggleLabel">
                 <i data-lucide="sun" class="lucide-icon theme-icon-light"></i>
                 <i data-lucide="moon" class="lucide-icon theme-icon-dark"></i>
             </button>
@@ -100,40 +102,40 @@
         <div class="legend" id="legend" role="region" aria-label="وسيلة الإيضاح" data-i18n-aria-label="legendLabel"></div>
         <div class="border-disputes-counter" id="borderDisputesCounter" style="display:none"></div>
         <div class="info-overlay" id="infoOverlay"></div>
-        <div class="history-sources-panel" id="histSourcesPanel" style="display:none" role="dialog" aria-label="مصادر تاريخية"></div>
+        <div class="history-sources-panel" id="histSourcesPanel" style="display:none" role="dialog" aria-modal="false" aria-label="مصادر تاريخية" data-i18n-aria-label="histSourcesTitle"></div>
 
         <!-- Dedicated Floating Bottom Timeline Bar for History Mode -->
-        <div class="history-bottom-bar" id="historyBottomBar" style="display:none" role="region" aria-label="Timeline Controls">
+        <div class="history-bottom-bar" id="historyBottomBar" style="display:none" role="region" aria-label="التحكم في الخط الزمني" data-i18n-aria-label="timelineControlsLabel">
             <div class="history-bottom-inner">
                 <!-- Era Timeline Content -->
                 <div class="history-era-timeline-wrap" id="historyEraTimelineWrap" style="display:none">
-                    <button type="button" class="history-play-btn" id="histPlayBtn" data-i18n-title="histPlayTip" aria-label="Play/Pause" aria-pressed="false">
+                    <button type="button" class="history-play-btn" id="histPlayBtn" data-i18n-title="histPlayTip" data-i18n-aria-label="histPlayTip" aria-label="تشغيل / إيقاف مؤقت" aria-pressed="false">
                         <i data-lucide="play" class="lucide-icon"></i>
                     </button>
-                    <div class="history-timeline" id="histTimeline" role="slider" aria-label="Eras timeline" aria-valuemin="-2500" aria-valuemax="1962"></div>
+                    <div class="history-timeline" id="histTimeline" role="slider" tabindex="0" aria-label="Eras timeline" aria-valuemin="-2500" aria-valuemax="1962"></div>
                     <span class="history-year-badge" id="histCurrentYearBadge"></span>
                 </div>
 
                 <!-- Religions/Faiths Timeline Content -->
                 <div class="history-faiths-timeline-wrap" id="historyFaithsTimelineWrap" style="display:none">
-                    <button type="button" class="history-play-btn" id="religionsPlayBtn" data-i18n-title="histPlayTip" aria-label="Play/Pause" aria-pressed="false">
+                    <button type="button" class="history-play-btn" id="religionsPlayBtn" data-i18n-title="histPlayTip" data-i18n-aria-label="histPlayTip" aria-label="تشغيل / إيقاف مؤقت" aria-pressed="false">
                         <i data-lucide="play" class="lucide-icon"></i>
                     </button>
-                    <div class="religions-timeline" id="religionsTimeline" role="slider" aria-label="Religions timeline" aria-valuemin="-2200" aria-valuemax="2000"></div>
+                    <div class="religions-timeline" id="religionsTimeline" role="slider" tabindex="0" aria-label="Religions timeline" aria-valuemin="-2200" aria-valuemax="2000"></div>
                     <span class="history-year-badge" id="religionsYearValue"></span>
                     <div class="religions-caption" id="religionsCaption"></div>
                 </div>
 
                 <!-- Travelers Journey Timeline Content -->
                 <div class="history-travelers-timeline-wrap" id="historyTravelersTimelineWrap" style="display:none">
-                    <button type="button" class="history-play-btn" id="histTravelerPlayBtn" data-i18n-title="histPlayTip" aria-label="Play/Pause" aria-pressed="false">
+                    <button type="button" class="history-play-btn" id="histTravelerPlayBtn" data-i18n-title="histPlayTip" data-i18n-aria-label="histPlayTip" aria-label="تشغيل / إيقاف مؤقت" aria-pressed="false">
                         <i data-lucide="play" class="lucide-icon"></i>
                     </button>
-                    <button type="button" class="btn hist-traveler-step-btn" id="histTravelerStepPrev" title="المحطة السابقة" aria-label="المحطة السابقة">
+                    <button type="button" class="btn hist-traveler-step-btn" id="histTravelerStepPrev" title="المحطة السابقة" aria-label="المحطة السابقة" data-i18n-title="prevWaypoint" data-i18n-aria-label="prevWaypoint">
                         <i data-lucide="chevron-right" class="lucide-icon"></i>
                     </button>
-                    <div class="hist-traveler-timeline-track" id="histTravelerTimeline" role="slider" aria-label="Traveler journey timeline"></div>
-                    <button type="button" class="btn hist-traveler-step-btn" id="histTravelerStepNext" title="المحطة التالية" aria-label="المحطة التالية">
+                    <div class="hist-traveler-timeline-track" id="histTravelerTimeline" role="slider" tabindex="0" aria-label="Traveler journey timeline"></div>
+                    <button type="button" class="btn hist-traveler-step-btn" id="histTravelerStepNext" title="المحطة التالية" aria-label="المحطة التالية" data-i18n-title="nextWaypoint" data-i18n-aria-label="nextWaypoint">
                         <i data-lucide="chevron-left" class="lucide-icon"></i>
                     </button>
                     <span class="history-year-badge hist-traveler-stage-badge" id="histTravelerStageBadge"></span>
@@ -204,10 +206,10 @@
                         <span class="control-label" id="sectionBaseMapLabel" data-i18n="sectionBaseMap"><i data-lucide="map" class="lucide-icon"></i><span class="btn-text">Base Map</span></span>
                         <div class="control-group history-mode-dock" id="historyModeDock" style="display:none">
                             <div class="history-mode-row">
-                                <button type="button" class="btn header-btn hist-popover-btn" id="histWarsPopoverBtn" aria-haspopup="true" aria-expanded="false" aria-controls="histWarsPopoverMenu"><i data-lucide="swords" class="lucide-icon"></i><span class="btn-text" data-i18n="histSegWars">Wars</span><i data-lucide="chevron-down" class="dropdown-arrow lucide-icon"></i></button>
-                                <button type="button" class="btn header-btn hist-popover-btn" id="histErasPopoverBtn" aria-haspopup="true" aria-expanded="false" aria-controls="histErasPopoverMenu"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text" data-i18n="histSegEras">Eras</span><i data-lucide="chevron-down" class="dropdown-arrow lucide-icon"></i></button>
-                                <button type="button" class="btn header-btn hist-popover-btn" id="histFaithsPopoverBtn" aria-haspopup="true" aria-expanded="false" aria-controls="histFaithsPopoverMenu"><i data-lucide="book-open" class="lucide-icon"></i><span class="btn-text" data-i18n="religionsListBtn">Religions</span><i data-lucide="chevron-down" class="dropdown-arrow lucide-icon"></i></button>
-                                <button type="button" class="btn header-btn hist-popover-btn" id="histTravelersPopoverBtn" aria-haspopup="true" aria-expanded="false" aria-controls="histTravelersPopoverMenu"><i data-lucide="compass" class="lucide-icon"></i><span class="btn-text" data-i18n="histSegTravelers">الرحالة</span><i data-lucide="chevron-down" class="dropdown-arrow lucide-icon"></i></button>
+                                <button type="button" class="btn header-btn hist-popover-btn" id="histWarsPopoverBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="histWarsPopoverMenu"><i data-lucide="swords" class="lucide-icon"></i><span class="btn-text" data-i18n="histSegWars">Wars</span><i data-lucide="chevron-down" class="dropdown-arrow lucide-icon"></i></button>
+                                <button type="button" class="btn header-btn hist-popover-btn" id="histErasPopoverBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="histErasPopoverMenu"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text" data-i18n="histSegEras">Eras</span><i data-lucide="chevron-down" class="dropdown-arrow lucide-icon"></i></button>
+                                <button type="button" class="btn header-btn hist-popover-btn" id="histFaithsPopoverBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="histFaithsPopoverMenu"><i data-lucide="book-open" class="lucide-icon"></i><span class="btn-text" data-i18n="religionsListBtn">Religions</span><i data-lucide="chevron-down" class="dropdown-arrow lucide-icon"></i></button>
+                                <button type="button" class="btn header-btn hist-popover-btn" id="histTravelersPopoverBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="histTravelersPopoverMenu"><i data-lucide="compass" class="lucide-icon"></i><span class="btn-text" data-i18n="histSegTravelers">الرحالة</span><i data-lucide="chevron-down" class="dropdown-arrow lucide-icon"></i></button>
                             </div>
                         </div>
                         <div class="control-group" id="modeButtons">
@@ -239,10 +241,10 @@
              to body level so they escape the dock-unified-wrap ancestor whose
              drop-shadow filter would otherwise become the containing block for
              our position:fixed menus (shifting them off-screen in RTL). -->
-        <div class="hist-popover-menu" id="histWarsPopoverMenu" role="menu" hidden>
+        <div class="hist-popover-menu" id="histWarsPopoverMenu" role="dialog" aria-modal="false" aria-label="الحروب والمعارك" data-i18n-aria-label="histSegWars" hidden>
             <div class="hist-popover-header">
                 <div class="hist-drawer-title"><i data-lucide="swords" class="lucide-icon"></i> <span data-i18n="histSegWars">الحروب والمعارك</span></div>
-                <button type="button" class="hist-drawer-close-btn" aria-label="إغلاق">&times;</button>
+                <button type="button" class="hist-drawer-close-btn" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
             </div>
             <div class="hist-popover-body">
                 <!-- بطاقة الحرب المختارة المثبتة في أعلى القائمة -->
@@ -286,17 +288,17 @@
                     <button type="button" class="btn war-epoch-tab" data-epoch="modern" data-i18n="warEpochModern">القرن العشرون والمعاصر</button>
                 </div>
                 <div class="history-filter-row" id="historyFilterRow">
-                    <input type="text" class="history-search-input" id="histSearchInput" data-i18n-placeholder="histSearchPlaceholder" autocomplete="off" />
-                    <select class="history-region-select" id="histFilterRegion"></select>
-                    <select class="history-region-select" id="histFilterReligion"></select>
+                    <input type="text" class="history-search-input" id="histSearchInput" aria-label="بحث في الحروب والمعارك" data-i18n-aria-label="histSearchPlaceholder" data-i18n-placeholder="histSearchPlaceholder" autocomplete="off" />
+                    <select class="history-region-select" id="histFilterRegion" aria-label="تصفية حسب المنطقة" data-i18n-aria-label="histFilterRegionLabel"></select>
+                    <select class="history-region-select" id="histFilterReligion" aria-label="تصفية حسب الديانة" data-i18n-aria-label="histFilterReligionLabel"></select>
                 </div>
                 <div class="history-war-tabs hist-epoch-grid" id="histWarTabs" role="tablist"></div>
             </div>
         </div>
-        <div class="hist-popover-menu" id="histErasPopoverMenu" role="menu" hidden>
+        <div class="hist-popover-menu" id="histErasPopoverMenu" role="dialog" aria-modal="false" aria-label="الحقب التاريخية" data-i18n-aria-label="histSegEras" hidden>
             <div class="hist-popover-header">
                 <div class="hist-drawer-title"><i data-lucide="landmark" class="lucide-icon"></i> <span data-i18n="histSegEras">الحقب التاريخية</span></div>
-                <button type="button" class="hist-drawer-close-btn" aria-label="إغلاق">&times;</button>
+                <button type="button" class="hist-drawer-close-btn" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
             </div>
             <div class="hist-popover-body">
                 <!-- بطاقة الحقبة المختارة المثبتة في أعلى القائمة -->
@@ -343,62 +345,62 @@
                     <button type="button" class="btn era-epoch-tab" data-epoch="modern" data-i18n="warEpochModern">القرن العشرون والمعاصر</button>
                 </div>
                 <div class="history-era-pop-filter-row" id="histErasFilterRow">
-                    <input type="text" class="history-search-input" id="histErasSearchInput" data-i18n-placeholder="histSearchPlaceholder" autocomplete="off" />
-                    <select class="history-region-select" id="histErasFilterRegion"></select>
+                    <input type="text" class="history-search-input" id="histErasSearchInput" aria-label="بحث في الحقب التاريخية" data-i18n-aria-label="histSearchPlaceholder" data-i18n-placeholder="histSearchPlaceholder" autocomplete="off" />
+                    <select class="history-region-select" id="histErasFilterRegion" aria-label="تصفية حسب المنطقة" data-i18n-aria-label="histFilterRegionLabel"></select>
                 </div>
                 <div class="history-era-group hist-epoch-grid" id="historyEraGroup" style="display:none"></div>
             </div>
         </div>
-        <div class="hist-popover-menu" id="histFaithsPopoverMenu" role="menu" hidden>
+        <div class="hist-popover-menu" id="histFaithsPopoverMenu" role="dialog" aria-modal="false" aria-label="الأديان والمعتقدات" data-i18n-aria-label="religionsListBtn" hidden>
             <div class="hist-popover-header">
                 <div class="hist-drawer-title"><i data-lucide="book-open" class="lucide-icon"></i> <span data-i18n="religionsListBtn">الأديان والمعتقدات</span></div>
-                <button type="button" class="hist-drawer-close-btn" aria-label="إغلاق">&times;</button>
+                <button type="button" class="hist-drawer-close-btn" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
             </div>
             <div class="hist-popover-body">
                 <div class="history-faiths-list" id="histFaithsList"></div>
             </div>
         </div>
 
-        <div class="hist-popover-menu" id="histTravelersPopoverMenu" role="menu" hidden>
+        <div class="hist-popover-menu" id="histTravelersPopoverMenu" role="dialog" aria-modal="false" aria-label="الرحالة والمستكشفون" data-i18n-aria-label="histSegTravelers" hidden>
             <div class="hist-popover-header">
                 <div class="hist-drawer-title"><i data-lucide="compass" class="lucide-icon"></i> <span data-i18n="histSegTravelers">الرحالة والمستكشفون</span></div>
-                <button type="button" class="hist-drawer-close-btn" aria-label="إغلاق">&times;</button>
+                <button type="button" class="hist-drawer-close-btn" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
             </div>
             <div class="hist-popover-body">
                 <div class="history-filter-row" style="margin-bottom:8px">
-                    <input type="text" class="history-search-input" id="histTravelersSearchInput" data-i18n-placeholder="histSearchPlaceholder" autocomplete="off" />
-                    <button type="button" class="btn btn-sm" id="histTravelersClearBtn" style="white-space:nowrap">إلغاء التحديد</button>
+                    <input type="text" class="history-search-input" id="histTravelersSearchInput" aria-label="بحث في الرحالة والمستكشفين" data-i18n-aria-label="histSearchPlaceholder" data-i18n-placeholder="histSearchPlaceholder" autocomplete="off" />
+                    <button type="button" class="btn btn-sm" id="histTravelersClearBtn" style="white-space:nowrap" data-i18n="histTravelersClear">إلغاء التحديد</button>
                 </div>
                 <div class="history-travelers-list" id="histTravelersList"></div>
             </div>
         </div>
 
         <!-- Floating Traveler Details Card on Map -->
-        <div class="hist-traveler-card" id="histTravelerCard" style="display:none" role="region" aria-label="Traveler Details">
+        <div class="hist-traveler-card" id="histTravelerCard" style="display:none" role="dialog" aria-modal="false" aria-label="معلومات الرحالة" data-i18n-aria-label="histSegTravelers">
             <div class="hist-traveler-card-header">
-                <button type="button" class="hist-traveler-nav-arrow" id="histTravelerPrevBtn" title="الرحالة السابق" aria-label="السابق" data-i18n-title="histTravelerPrev">
+                <button type="button" class="hist-traveler-nav-arrow" id="histTravelerPrevBtn" title="الرحالة السابق" aria-label="الرحالة السابق" data-i18n-title="histTravelerPrev" data-i18n-aria-label="histTravelerPrev">
                     <i data-lucide="chevron-right" class="lucide-icon"></i>
                 </button>
                 <div class="hist-traveler-nav-title-wrap">
                     <span class="hist-traveler-nav-name" id="histTravelerNavName"></span>
                     <span class="hist-traveler-nav-counter" id="histTravelerNavCounter"></span>
                 </div>
-                <button type="button" class="hist-traveler-nav-arrow" id="histTravelerNextBtn" title="الرحالة التالي" aria-label="التالي" data-i18n-title="histTravelerNext">
+                <button type="button" class="hist-traveler-nav-arrow" id="histTravelerNextBtn" title="الرحالة التالي" aria-label="الرحالة التالي" data-i18n-title="histTravelerNext" data-i18n-aria-label="histTravelerNext">
                     <i data-lucide="chevron-left" class="lucide-icon"></i>
                 </button>
-                <button type="button" class="hist-traveler-close-btn" id="histTravelerCardClose" aria-label="إغلاق">&times;</button>
+                <button type="button" class="hist-traveler-close-btn" id="histTravelerCardClose" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
             </div>
             <div class="hist-traveler-card-body" id="histTravelerCardBody"></div>
         </div>
 
         <!-- Floating Waypoint Details Popup on Map -->
-        <div class="hist-waypoint-popup" id="histWaypointPopup" style="display:none" role="dialog" aria-modal="false" aria-label="تفاصيل المحطة">
+        <div class="hist-waypoint-popup" id="histWaypointPopup" style="display:none" role="dialog" aria-modal="false" aria-label="تفاصيل المحطة" data-i18n-aria-label="travelerJourneyStations">
             <div class="hist-waypoint-popup-header">
                 <div class="hist-waypoint-popup-title-wrap">
                     <span class="hist-waypoint-popup-step" id="histWpStepNum"></span>
                     <h4 class="hist-waypoint-popup-title" id="histWpTitle"></h4>
                 </div>
-                <button type="button" class="hist-waypoint-popup-close" id="histWpCloseBtn" aria-label="إغلاق">&times;</button>
+                <button type="button" class="hist-waypoint-popup-close" id="histWpCloseBtn" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
             </div>
             <div class="hist-waypoint-popup-body">
                 <div class="hist-waypoint-meta">
@@ -432,11 +434,11 @@
                 </div>
             </div>
             <div class="hist-waypoint-popup-footer">
-                <button type="button" class="btn btn-sm hist-wp-nav-btn" id="histWpPrevBtn">
+                <button type="button" class="btn btn-sm hist-wp-nav-btn" id="histWpPrevBtn" data-i18n-title="prevWaypoint" data-i18n-aria-label="prevWaypoint">
                     <i data-lucide="chevron-right" class="lucide-icon"></i> <span data-i18n="prevWaypoint">المحطة السابقة</span>
                 </button>
                 <span class="hist-wp-stage-indicator" id="histWpStageIndicator"></span>
-                <button type="button" class="btn btn-sm hist-wp-nav-btn" id="histWpNextBtn">
+                <button type="button" class="btn btn-sm hist-wp-nav-btn" id="histWpNextBtn" data-i18n-title="nextWaypoint" data-i18n-aria-label="nextWaypoint">
                     <span data-i18n="nextWaypoint">المحطة التالية</span> <i data-lucide="chevron-left" class="lucide-icon"></i>
                 </button>
             </div>
@@ -447,18 +449,18 @@
             <div class="hist-compare-modal-content">
                 <div class="hist-compare-modal-header">
                     <h3 id="histCompareModalTitle"><i data-lucide="git-compare" class="lucide-icon"></i> <span data-i18n="histCompareTitle">مقارنة القوى التاريخية المتزامنة</span></h3>
-                    <button class="close-btn" id="histCompareModalClose" aria-label="إغلاق">&times;</button>
+                    <button class="close-btn" id="histCompareModalClose" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
                 </div>
                 <div class="hist-compare-modal-body">
                     <div class="hist-compare-selectors">
                         <div class="hist-compare-col-select">
-                            <label for="histComparePolity1Select">القوة الأولى:</label>
-                            <select id="histComparePolity1Select" class="history-region-select"></select>
+                            <label for="histComparePolity1Select" data-i18n="histComparePower1">القوة الأولى:</label>
+                            <select id="histComparePolity1Select" class="history-region-select" aria-label="القوة الأولى" data-i18n-aria-label="histComparePower1"></select>
                         </div>
-                        <div class="hist-compare-vs-badge">VS</div>
+                        <div class="hist-compare-vs-badge" aria-hidden="true">VS</div>
                         <div class="hist-compare-col-select">
-                            <label for="histComparePolity2Select">القوة الثانية:</label>
-                            <select id="histComparePolity2Select" class="history-region-select"></select>
+                            <label for="histComparePolity2Select" data-i18n="histComparePower2">القوة الثانية:</label>
+                            <select id="histComparePolity2Select" class="history-region-select" aria-label="القوة الثانية" data-i18n-aria-label="histComparePower2"></select>
                         </div>
                     </div>
                     <div class="hist-compare-grid" id="histCompareGrid"></div>
@@ -488,7 +490,7 @@
                     <button class="btn geo-layer" id="earthquakesToggle" aria-pressed="false" title="إظهار/إخفاء الزلازل" data-i18n="earthquakes" data-i18n-title="earthquakesToggle_title"><i data-lucide="triangle-alert" class="lucide-icon"></i><span class="btn-text">زلازل</span></button>
                     <button class="btn geo-layer" id="volcanoesToggle" aria-pressed="false" title="إظهار/إخفاء البراكين" data-i18n="volcanoes" data-i18n-title="volcanoesToggle_title"><i data-lucide="flame" class="lucide-icon"></i><span class="btn-text">براكين</span></button>
                     <button class="btn geo-layer" id="geopoliticalBlocsToggle" aria-pressed="false" title="إظهار/إخفاء التكتلات الجيوسياسية" data-i18n="geopoliticalBlocs" data-i18n-title="geopoliticalBlocsToggle_title"><i data-lucide="flag" class="lucide-icon"></i><span class="btn-text">تكتلات</span></button>
-                    <select id="blocSelect" class="bloc-select geo-layer" data-i18n-title="blocSelect_title"><option value="all">جميع التكتلات</option></select>
+                    <select id="blocSelect" class="bloc-select geo-layer" aria-label="التكتلات الجيوسياسية" data-i18n-aria-label="geopoliticalBlocs" data-i18n-title="blocSelect_title"><option value="all">جميع التكتلات</option></select>
                     <button class="btn geo-layer" id="desertsForestsToggle" aria-pressed="false" title="إظهار/إخفاء الصحاري والغابات" data-i18n="desertsForests" data-i18n-title="desertsForestsToggle_title"><i data-lucide="sun" class="lucide-icon"></i><span class="btn-text">صحاري</span></button>
                     <button class="btn geo-layer" id="borderDisputesToggle" aria-pressed="false" title="إظهار/إخفاء النزاعات الحدودية" data-i18n="borderDisputes" data-i18n-title="borderDisputesToggle_title"><i data-lucide="swords" class="lucide-icon"></i><span class="btn-text">نزاعات</span></button>
                     <button class="btn hist-layer" id="historicalRoutesToggle" aria-pressed="false" title="إظهار/إخفاء الطرق التاريخية" data-i18n="historicalRoutes" data-i18n-title="historicalRoutesToggle_title"><i data-lucide="route" class="lucide-icon"></i><span class="btn-text" data-i18n="historicalRoutes">طرق تاريخية</span></button>
@@ -608,7 +610,7 @@
                     </div>
                 </div>
                 <div class="mobile-search-box">
-                    <input type="text" id="mobileSearchInput" placeholder="بحث عن دولة..." autocomplete="off" data-i18n-placeholder="searchPlaceholder">
+                    <input type="text" id="mobileSearchInput" placeholder="بحث عن دولة..." autocomplete="off" aria-label="بحث عن دولة" data-i18n-aria-label="searchPlaceholder" data-i18n-placeholder="searchPlaceholder">
                     <ul class="suggestions-list" id="mobileSuggestionsList"></ul>
                 </div>
                 <div class="mobile-tools-dropdown">
@@ -638,7 +640,7 @@
             <div class="mobile-mode-sheet-content">
                 <div class="mobile-mode-sheet-header">
                     <h3 id="mobileModeSheetTitle" data-i18n="mobileModeSheetTitle"><i data-lucide="palette" class="lucide-icon"></i><span class="btn-text">وضع الخريطة</span></h3>
-                    <button class="mobile-mode-sheet-close" id="mobileModeSheetClose">&times;</button>
+                    <button class="mobile-mode-sheet-close" id="mobileModeSheetClose" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
                 </div>
                 <div class="mobile-mode-sheet-body" id="mobileModeSheetBody">
                     <div class="mobile-mode-group" id="mobileModeButtons">
@@ -686,7 +688,7 @@
                 <div class="shortcut-row"><span class="shortcut-key">+  /  −</span><span class="shortcut-desc" data-i18n="shortcut_zoom"></span></div>
                 <div class="shortcut-row"><span class="shortcut-key">Esc</span><span class="shortcut-desc" data-i18n="shortcut_Esc"></span></div>
                 <div class="shortcut-row"><span class="shortcut-key">Shift</span><span class="shortcut-desc" data-i18n="shortcut_Shift"></span></div>
-                <button class="shortcuts-close" id="shortcutsClose" data-i18n="closeLabel"></button>
+                <button class="shortcuts-close" id="shortcutsClose" aria-label="إغلاق" data-i18n-aria-label="closeLabel" data-i18n="closeLabel"></button>
             </div>
         </div>
 
@@ -695,8 +697,8 @@
             <div class="data-table-box">
                 <div class="data-table-header">
                     <h3 id="dataTableOverlayTitle" data-i18n="dataTableBtn"></h3>
-                    <input type="text" id="dataTableSearch" data-i18n-placeholder="dataTableSearchPlaceholder" autocomplete="off">
-                    <button class="data-table-close" id="dataTableClose" data-i18n="closeLabel"></button>
+                    <input type="text" id="dataTableSearch" aria-label="بحث في جدول البيانات" data-i18n-aria-label="dataTableSearchPlaceholder" data-i18n-placeholder="dataTableSearchPlaceholder" autocomplete="off">
+                    <button class="data-table-close" id="dataTableClose" aria-label="إغلاق" data-i18n-aria-label="closeLabel" data-i18n="closeLabel"></button>
                 </div>
                 <div class="data-table-scroll">
                     <table class="quiz-results-table" id="dataTableEl">
@@ -779,7 +781,7 @@
                 <div class="projection-body" id="projectionBody"></div>
                 <div class="onboard-card-actions">
                     <span></span>
-                    <button class="onboard-btn onboard-next" id="projectionContinue"></button>
+                    <button class="onboard-btn onboard-next" id="projectionContinue" data-i18n="onboardNext" aria-label="متابعة" data-i18n-aria-label="onboardNext"></button>
                 </div>
             </div>
         </div>
@@ -811,8 +813,8 @@
                 <div class="quiz-form-row">
                     <label class="quiz-label" data-i18n="quizSessionLabel">جلسة</label>
                     <div class="quiz-session-inputs">
-                        <input type="text" id="quizStudentNameInput" class="quiz-input" placeholder="اسمك..." maxlength="50" data-i18n-placeholder="quizStudentNamePlaceholder">
-                        <input type="text" id="quizSessionCodeInput" class="quiz-input" placeholder="رمز الجلسة..." maxlength="6" style="text-transform:uppercase" data-i18n-placeholder="quizSessionCodePlaceholder">
+                        <input type="text" id="quizStudentNameInput" class="quiz-input" placeholder="اسمك..." maxlength="50" aria-label="اسمك" data-i18n-aria-label="quizStudentNamePlaceholder" data-i18n-placeholder="quizStudentNamePlaceholder">
+                        <input type="text" id="quizSessionCodeInput" class="quiz-input" placeholder="رمز الجلسة..." maxlength="6" style="text-transform:uppercase" aria-label="رمز الجلسة" data-i18n-aria-label="quizSessionCodePlaceholder" data-i18n-placeholder="quizSessionCodePlaceholder">
                     </div>
                 </div>
                 <div class="quiz-form-row" id="quizCreateSessionRow">
@@ -833,7 +835,7 @@
                         </div>
                         <div class="quiz-scope-list quiz-scope-continents" id="quizContinentsList"></div>
                         <div class="quiz-scope-list quiz-scope-countries" id="quizCountriesList" style="display:none">
-                            <input type="text" id="quizCountrySearch" class="quiz-input" data-i18n-placeholder="quizSearchCountry">
+                            <input type="text" id="quizCountrySearch" class="quiz-input" aria-label="بحث عن دولة" data-i18n-aria-label="quizSearchCountry" data-i18n-placeholder="quizSearchCountry">
                             <div class="quiz-country-checklist" id="quizCountryChecklist"></div>
                         </div>
                         <div class="quiz-scope-list quiz-scope-blocs" id="quizBlocsList" style="display:none"></div>
@@ -845,14 +847,14 @@
                 </div>
                 <div class="quiz-form-row">
                     <label class="quiz-label" id="quizNumLabel" data-i18n="quizNumQuestions"></label>
-                    <input type="number" id="quizNumInput" class="quiz-input" min="5" max="30" value="10">
+                    <input type="number" id="quizNumInput" class="quiz-input" min="5" max="30" value="10" aria-label="عدد الأسئلة" data-i18n-aria-label="quizNumQuestions">
                 </div>
                 <div class="quiz-form-row">
                     <label class="quiz-label" id="quizTimeLabel" data-i18n="quizTimeLimit"></label>
                     <label class="quiz-radio-label"><input type="radio" name="quizTimeMode" id="quizTimeModeNone" checked> <span id="quizNoLimitText" data-i18n="quizNoLimit"></span></label>
                     <label class="quiz-radio-label"><input type="radio" name="quizTimeMode" id="quizTimeModeSet"> <span id="quizSetLimitText" data-i18n="quizSetLimitText"></span></label>
                     <div class="quiz-time-input-wrap" id="quizTimeInputWrap" style="display:none">
-                        <input type="number" id="quizTimeInput" class="quiz-input" min="1" max="30" value="5">
+                        <input type="number" id="quizTimeInput" class="quiz-input" min="1" max="30" value="5" aria-label="المدة بالدقائق" data-i18n-aria-label="quizMinutes">
                         <span id="quizMinutesText" data-i18n="quizMinutes"></span>
                     </div>
                 </div>
@@ -875,13 +877,13 @@
                 <button class="btn quiz-tf-btn quiz-tf-false" id="quizTFFalseBtn" data-i18n="quizFalse">خطأ</button>
             </div>
             <div class="quiz-hud-written-row" id="quizHudWrittenRow" style="display:none">
-                <input type="text" id="quizWrittenInput" class="quiz-input" data-i18n-placeholder="quizWrittenAnswerPlaceholder" maxlength="200">
+                <input type="text" id="quizWrittenInput" class="quiz-input" aria-label="إجابتك" data-i18n-aria-label="quizWrittenAnswerPlaceholder" data-i18n-placeholder="quizWrittenAnswerPlaceholder" maxlength="200">
                 <button class="btn quiz-start-btn" id="quizWrittenSubmitBtn" data-i18n="quizTypedAnswerSubmit"></button>
             </div>
             <div class="quiz-hud-mc-row" id="quizHudMCRow" style="display:none"></div>
             <div class="quiz-hud-typed-row" id="quizHudTypedRow">
-                <input type="text" id="quizTypedAnswerInput" class="quiz-input" maxlength="100">
-                <button class="btn quiz-start-btn" id="quizTypedSubmitBtn"></button>
+                <input type="text" id="quizTypedAnswerInput" class="quiz-input" aria-label="إجابتك" data-i18n-aria-label="quizWrittenAnswerPlaceholder" maxlength="100">
+                <button class="btn quiz-start-btn" id="quizTypedSubmitBtn" data-i18n="quizTypedAnswerSubmit" aria-label="إرسال الإجابة" data-i18n-aria-label="quizTypedAnswerSubmit"></button>
             </div>
             <button class="btn quiz-end-early-btn" id="quizEndEarlyBtn" data-i18n="quizEndEarlyBtn"></button>
         </div>
@@ -929,14 +931,14 @@
             <div class="quiz-custom-main">
                 <div class="quiz-custom-main-header">
                     <h3 class="quiz-custom-main-title" id="quizCustomSetupTitle" data-i18n="quizCustomSetup"></h3>
-                    <button class="btn quiz-sidebar-close-btn" id="quizCustomCloseBtn">&times;</button>
+                    <button class="btn quiz-sidebar-close-btn" id="quizCustomCloseBtn" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
                 </div>
                 <div class="quiz-custom-main-body">
                     <div class="quiz-form-row">
                         <label class="quiz-label" data-i18n="quizSessionLabel">جلسة</label>
                         <div class="quiz-session-inputs">
-                            <input type="text" id="quizCustomStudentNameInput" class="quiz-input" placeholder="اسمك..." maxlength="50" data-i18n-placeholder="quizStudentNamePlaceholder">
-                            <input type="text" id="quizCustomSessionCodeInput" class="quiz-input" placeholder="رمز الجلسة..." maxlength="6" style="text-transform:uppercase" data-i18n-placeholder="quizSessionCodePlaceholder">
+                            <input type="text" id="quizCustomStudentNameInput" class="quiz-input" placeholder="اسمك..." maxlength="50" aria-label="اسمك" data-i18n-aria-label="quizStudentNamePlaceholder" data-i18n-placeholder="quizStudentNamePlaceholder">
+                            <input type="text" id="quizCustomSessionCodeInput" class="quiz-input" placeholder="رمز الجلسة..." maxlength="6" style="text-transform:uppercase" aria-label="رمز الجلسة" data-i18n-aria-label="quizSessionCodePlaceholder" data-i18n-placeholder="quizSessionCodePlaceholder">
                         </div>
                     </div>
                     <div class="quiz-form-row" id="quizCustomCreateSessionRow">
@@ -956,7 +958,7 @@
                         <label class="quiz-radio-label"><input type="radio" name="quizCustomTimeMode" id="quizCustomTimeNone" checked> <span id="quizNoLimitText2" data-i18n="quizNoLimit"></span></label>
                         <label class="quiz-radio-label"><input type="radio" name="quizCustomTimeMode" id="quizCustomTimeSet"> <span id="quizSetLimitText2" data-i18n="quizSetLimitText"></span></label>
                         <div class="quiz-time-input-wrap" id="quizCustomTimeInputWrap" style="display:none">
-                            <input type="number" id="quizCustomTimeInput" class="quiz-input" min="1" max="30" value="5">
+                            <input type="number" id="quizCustomTimeInput" class="quiz-input" min="1" max="30" value="5" aria-label="المدة بالدقائق" data-i18n-aria-label="quizMinutes">
                             <span id="quizMinutesText2" data-i18n="quizMinutes"></span>
                         </div>
                     </div>
@@ -977,7 +979,7 @@
                 </div>
                 <div class="quiz-custom-sidebar-body">
                     <div class="quiz-form-row">
-                        <input type="text" id="quizCustomSearch" class="quiz-input" data-i18n-placeholder="quizSearchQuestions">
+                        <input type="text" id="quizCustomSearch" class="quiz-input" aria-label="بحث في الأسئلة" data-i18n-aria-label="quizSearchQuestions" data-i18n-placeholder="quizSearchQuestions">
                     </div>
                     <div class="quiz-form-row">
                         <button class="btn quiz-clear-all-btn" id="quizClearAllBtn" style="display:none" data-i18n="quizClearAll"></button>
@@ -1012,7 +1014,7 @@
                 </div>
                 <div class="quiz-form-row" id="quizAuthoringFormFields" style="display:none">
                     <label class="quiz-label" id="quizPromptLabel" data-i18n="quizPromptLabel"></label>
-                    <input type="text" id="quizPromptInput" class="quiz-input" data-i18n-placeholder="quizPromptPlaceholder" maxlength="200">
+                    <input type="text" id="quizPromptInput" class="quiz-input" aria-label="نص السؤال" data-i18n-aria-label="quizPromptPlaceholder" data-i18n-placeholder="quizPromptPlaceholder" maxlength="200">
                 </div>
                 <div class="quiz-form-row" id="quizAuthoringAnswerFormatRow" style="display:none">
                     <label class="quiz-label" id="quizAnswerFormatLabel" data-i18n="quizAnswerFormat"></label>

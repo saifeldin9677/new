@@ -227,7 +227,10 @@
             ]
           ]
         }
-      ]
+      ],
+      "originLabel_ru": "Большой Иран / Центральная Азия",
+      "originLabel_uz": "Katta Eron / Markaziy Osiyo",
+      "originLabel_es": "Gran Irán / Asia Central"
     },
     {
       "id": "judaism",
@@ -469,7 +472,10 @@
             ]
           ]
         }
-      ]
+      ],
+      "originLabel_ru": "Ханаан / Левант",
+      "originLabel_uz": "Kanon / Levant",
+      "originLabel_es": "Canaán / Levante"
     },
     {
       "id": "hinduism",
@@ -655,7 +661,10 @@
             ]
           ]
         }
-      ]
+      ],
+      "originLabel_ru": "Бассейны Инда и Ганга",
+      "originLabel_uz": "Hind va Gang havzalari",
+      "originLabel_es": "Cuencas del Indo y del Ganges"
     },
     {
       "id": "buddhism",
@@ -912,7 +921,10 @@
             ]
           ]
         }
-      ]
+      ],
+      "originLabel_ru": "Магадха / Лумбини",
+      "originLabel_uz": "Magadxa / Lumbini",
+      "originLabel_es": "Magadha / Lumbini"
     },
     {
       "id": "jainism",
@@ -1047,7 +1059,10 @@
             ]
           ]
         }
-      ]
+      ],
+      "originLabel_ru": "Магадха (долина Ганга)",
+      "originLabel_uz": "Magadxa (Gang vodiysi)",
+      "originLabel_es": "Magadha (Valle del Ganges)"
     },
     {
       "id": "christianity",
@@ -1389,7 +1404,10 @@
             ]
           ]
         }
-      ]
+      ],
+      "originLabel_ru": "Иудея / Иерусалим",
+      "originLabel_uz": "Yahudiya / Quddus",
+      "originLabel_es": "Judea / Jerusalén"
     },
     {
       "id": "islam",
@@ -1703,7 +1721,10 @@
             ]
           ]
         }
-      ]
+      ],
+      "originLabel_ru": "Мекка / Аравийский полуостров",
+      "originLabel_uz": "Makka / Arabiston yarim oroli",
+      "originLabel_es": "La Meca / Península Arábiga"
     },
     {
       "id": "sikhism",
@@ -1803,7 +1824,10 @@
             ]
           ]
         }
-      ]
+      ],
+      "originLabel_ru": "Пенджаб (Амритсар)",
+      "originLabel_uz": "Panjob (Amritsar)",
+      "originLabel_es": "Punyab (Amritsar)"
     },
     {
       "id": "chinese-beliefs",
@@ -1942,7 +1966,10 @@
             ]
           ]
         }
-      ]
+      ],
+      "originLabel_ru": "Равнины Хуанхэ / Шаньдун",
+      "originLabel_uz": "Xuanxe tekisliklari / Shandun",
+      "originLabel_es": "Llanuras del Río Amarillo / Shandong"
     },
     {
       "id": "tengrism",
@@ -2150,7 +2177,10 @@
             ]
           ]
         }
-      ]
+      ],
+      "originLabel_ru": "Алтайские и Орхонские степи",
+      "originLabel_uz": "Oltoy va O‘rxun dashtlari",
+      "originLabel_es": "Estepas de Altái y Orjón"
     },
     {
       "id": "shinto",
@@ -2301,7 +2331,10 @@
             ]
           ]
         }
-      ]
+      ],
+      "originLabel_ru": "Японский архипелаг",
+      "originLabel_uz": "Yaponiya arxipelagi",
+      "originLabel_es": "Archipiélago japonés"
     },
     {
       "id": "manichaeism",
@@ -2466,7 +2499,13 @@
             ]
           ]
         }
-      ]
+      ],
+      "originLabel_ru": "Ктесифон, Месопотамия",
+      "originLabel_uz": "Ktesifon, Mesopotamiya",
+      "originLabel_es": "Ctesifonte, Mesopotamia"
     }
-  ]
+  ],
+  "note_ru": "Репрезентативные географические макрорегионы основных мировых религий, древних верований и духовных традиций сквозь века. Временные срезы носят историко-приблизительный характер для образовательной визуализации.",
+  "note_uz": "Tarix davomida dunyoning asosiy dinlari, qadimiy eʼtiqodlari va maʼnaviy anʼanalarining reprezentativ geografik makrohududlari. Vaqt kesimlari taʼlimiy vizualizatsiya uchun tarixiy taxminlardir.",
+  "note_es": "Macrorregiones geográficas representativas de las principales religiones mundiales, creencias antiguas y tradiciones espirituales a lo largo de la historia. Los cortes temporales son aproximaciones históricas con fines educativos."
 }

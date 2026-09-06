@@ -1,1 +1,1059 @@
-{"capitals": [{"id": "babylon", "name_ar": "بابل", "name_en": "Babylon", "name_ru": "Вавилон", "name_uz": "Bobil", "name_es": "Babilonia", "coords": [44.42, 32.54], "founded": "نحو 2300 ق.م", "founder_ar": "السومريون والأكاديون، ثم عظمت في عهد الملك الأموري حمورابي", "founder_en": "Sumerians/Akkadians; expanded by Amorite King Hammurabi", "empires_ar": ["الإمبراطورية البابلية القديمة", "الإمبراطورية البابلية الحديثة (الكلدانية)", "الإمبراطورية الأخمينية (عاصمة شتوية)", "إمبراطورية الإسكندر الأكبر"], "empires_en": ["Old Babylonian Empire", "Neo-Babylonian Empire", "Achaemenid Empire", "Empire of Alexander the Great"], "significance_ar": "حاضرة بلاد الرافدين العظمى ومركز أول شريعة قانونية مدونة (شريعة حمورابي)، وموقع جنائن بابل وبوابة عشتار وشارع الموكب، توفي فيها الإسكندر الأكبر سنة 323 ق.م.", "significance_en": "Mesopotamian metropolis, site of Hammurabi's Code, the Ishtar Gate, and the Hanging Gardens; death site of Alexander the Great."}, {"id": "thebes-luxor", "name_ar": "طيبة (الأقصر / واجيت)", "name_en": "Thebes (Luxor)", "name_ru": "Фивы (Луксор)", "name_uz": "Fiva (Luqsor)", "name_es": "Tebas (Lúxor)", "coords": [32.64, 25.68], "founded": "نحو 3200 ق.م", "founder_ar": "فراعنة مصر القديمة منذ عصر ما قبل الأسرات وعصر الدولة الوسطى", "founder_en": "Ancient Egyptian Pharaohs of the Early Dynastic & Middle Kingdom", "empires_ar": ["الدولة المصرية الوسطى", "الدولة المصرية الحديثة (الإمبراطورية)"], "empires_en": ["Middle Kingdom of Egypt", "New Kingdom of Egypt"], "significance_ar": "عاصمة الفراعنة الدينية والسياسية في عصر المجد الإمبراطوري (الأسرات 18-20)، موطن مجمع معابد الكرنك والأقصر ووادي الملوك ومقبرة توت عنخ آمون.", "significance_en": "Religious and royal heart of Egypt's Golden Age (New Kingdom), home to Karnak, Luxor Temple, and the Valley of the Kings."}, {"id": "memphis", "name_ar": "منف (إنب حج / ممفيس)", "name_en": "Memphis", "name_ru": "Мемфис", "name_uz": "Memfis", "name_es": "Menfis", "coords": [31.25, 29.85], "founded": "نحو 3100 ق.م", "founder_ar": "الملك مينا (نعرمر) موحد القطرين المصريين", "founder_en": "Pharaoh Narmer (Menes), unifier of Upper and Lower Egypt", "empires_ar": ["الدولة المصرية القديمة (عصر بناة الأهرام)"], "empires_en": ["Old Kingdom of Egypt (Pyramid Age)"], "significance_ar": "أول عاصمة مركزية لمصر الموحدة، قاعدة عصر بناة الأهرام العظام وموقع مقابر سقارة وهرم زوسر المدرج وتمثال رمسيس الثاني العملاق.", "significance_en": "The first capital of unified Ancient Egypt, administrative hub of the Pyramid Age and Saqqara necropolis."}, {"id": "alexandria", "name_ar": "الإسكندرية", "name_en": "Alexandria", "name_ru": "Александрия", "name_uz": "Iskandariya", "name_es": "Alejandría", "coords": [29.92, 31.2], "founded": "331 ق.م", "founder_ar": "الإسكندر الأكبر المقدوني والمهندس دينوقراطيس", "founder_en": "Alexander the Great & architect Dinocrates", "empires_ar": ["المملكة البطلمية في مصر", "الإمبراطورية الرومانية (العاصمة الثانية)", "الإمبراطورية البيزنطية"], "empires_en": ["Ptolemaic Kingdom", "Roman Empire (Second City)", "Byzantine Empire"], "significance_ar": "منارة الفكر الهلنستي وعاصمة العلوم القديمة، موطن مكتبة الإسكندرية الشهيرة ومنارة فاروس إحدى عجائب الدنيا، ومركز كليوباترا السابعة.", "significance_en": "Crown jewel of the Hellenistic Mediterranean, home to the Great Library, the Pharos Lighthouse, and Queen Cleopatra."}, {"id": "athens", "name_ar": "أثينا", "name_en": "Athens", "name_ru": "Афины", "name_uz": "Afina", "name_es": "Atenas", "coords": [23.72, 37.98], "founded": "نحو 3000 ق.م (ازدهرت في القرن 5 ق.م)", "founder_ar": "الملك الأسطوري ثيسيوس؛ صاغ دستورها سولون وكليسثينيس", "founder_en": "Legendary King Theseus; constitution by Solon & Cleisthenes", "empires_ar": ["الحلف الديلي (الإمبراطورية الأثينية)"], "empires_en": ["Delian League (Athenian Empire)"], "significance_ar": "مهد الديمقراطية والفلسفة الغربية، عاصمة العصر الذهبي الإغريقي في عهد بريكليس، وموطن معبد البارثينون في الأكروبوليس ومدارس سقراط وأفلاطون وأرسطو.", "significance_en": "Cradle of Western democracy and philosophy, home of the Parthenon on the Acropolis and the academies of Plato and Aristotle."}, {"id": "rome", "name_ar": "روما (المدينة الخالدة)", "name_en": "Rome", "name_ru": "Рим", "name_uz": "Rim", "name_es": "Roma", "coords": [12.49, 41.9], "founded": "753 ق.م", "founder_ar": "رومولوس وريموس وفق الأسطورة الرومانية", "founder_en": "Romulus and Remus according to Roman tradition", "empires_ar": ["المملكة الرومانية", "الجمهورية الرومانية", "الإمبراطورية الرومانية الغربية"], "empires_en": ["Roman Kingdom", "Roman Republic", "Western Roman Empire"], "significance_ar": "عاصمة أعظم إمبراطوريات البحر الأبيض المتوسط ومصدر القانون الروماني واللغة اللاتينية والهندسة المعمارية (الكولوسيوم، البانثيون، شبكة الطرق والقنوات).", "significance_en": "Capital of the Roman Empire, birthplace of Roman Law, Latin language, the Colosseum, and roads connecting three continents."}, {"id": "constantinople", "name_ar": "القسطنطينية (إسطنبول / بيزنطة)", "name_en": "Constantinople (Istanbul)", "name_ru": "Константинополь", "name_uz": "Konstantinopol", "name_es": "Constantinopla", "coords": [28.98, 41.01], "founded": "330 م (أسست كبيزنطة في 657 ق.م)", "founder_ar": "الإمبراطور قسطنطين العظيم (نقل العاصمة من روما)", "founder_en": "Emperor Constantine the Great (refounded Byzantium)", "empires_ar": ["الإمبراطورية الرومانية الشرقية (البيزنطية)", "الدولة العثمانية (1453–1922م)"], "empires_en": ["Byzantine Empire", "Ottoman Empire (1453–1922)"], "significance_ar": "عاصمة الإمبراطوريتين البيزنطية والعثمانية على مدار 16 قرناً، ملتقى الشرق والغرب وموقع كاتدرائية آيا صوفيا وأسوار ثيودوسيوس المنيعة.", "significance_en": "Capital of the Byzantine and Ottoman empires for 1,600 years, bridge between Europe and Asia, home of Hagia Sophia."}, {"id": "carthage", "name_ar": "قرطاج", "name_en": "Carthage", "name_ru": "Карфаген", "name_uz": "Karfagen", "name_es": "Cartago", "coords": [10.33, 36.85], "founded": "814 ق.م", "founder_ar": "الأميرة الفينيقية عليسة (ديدو) وتجار صور", "founder_en": "Phoenician Princess Elissa (Dido) of Tyre", "empires_ar": ["الإمبراطورية القرطاجية (البونية)"], "empires_en": ["Carthaginian Republic / Empire"], "significance_ar": "سيدة التجارة البحرية في غرب البحر المتوسط ومنافسة روما الكبرى في الحروب البونية الثلاث، ومسقط رأس القائد العسكري الأسطوري حنبعل برقا.", "significance_en": "Dominant maritime superpower of the western Mediterranean, rival of Rome in the Punic Wars, homeland of Hannibal Barca."}, {"id": "nineveh", "name_ar": "نينوى", "name_en": "Nineveh", "name_ru": "Ниневия", "name_uz": "Nineviya", "name_es": "Nínive", "coords": [43.15, 36.36], "founded": "نحو 6000 ق.م (عاصمة كبرى في 705 ق.م)", "founder_ar": "الملك الآشوري سنحاريب (جعلها عاصمة عظمى)", "founder_en": "King Sennacherib of the Neo-Assyrian Empire", "empires_ar": ["الإمبراطورية الآشورية الحديثة"], "empires_en": ["Neo-Assyrian Empire"], "significance_ar": "أكبر مدن العالم في القرن السابع قبل الميلاد، عاصمة الإمبراطورية الآشورية وموقع مكتبة آشوربانيبال الطينية التي حفظت ملحمة جلجامش.", "significance_en": "Largest city in the world in the 7th c. BCE, imperial seat of Assyria, home to the Library of Ashurbanipal with the Epic of Gilgamesh."}, {"id": "persepolis", "name_ar": "برسيبوليس (تخت جمشيد)", "name_en": "Persepolis", "name_ru": "Персеполь", "name_uz": "Persepol", "name_es": "Persépolis", "coords": [52.89, 29.93], "founded": "518 ق.م", "founder_ar": "داريوس الأول الكبير واستكملها خشايارشا وأردشير", "founder_en": "Darius the Great, expanded by Xerxes I and Artaxerxes", "empires_ar": ["الإمبراطورية الفارسية الأخمينية"], "empires_en": ["Achaemenid Persian Empire"], "significance_ar": "العاصمة الاحتفالية لإمبراطورية الفرس الأخمينيين ومقر احتفالات النوروز، تميزت بقصر أبادانا ومدرجات الوفود الحجرية، أحرقها الإسكندر الأكبر سنة 330 ق.م.", "significance_en": "Ceremonial capital of the Achaemenid Empire, famous for the Apadana Palace and Gate of All Nations; burned by Alexander in 330 BCE."}, {"id": "ctesiphon", "name_ar": "المدائن (طيسفون / إيوان كسرى)", "name_en": "Ctesiphon", "name_ru": "Ктесифон", "name_uz": "Ktesifon", "name_es": "Ctesifonte", "coords": [44.58, 33.09], "founded": "نحو 120 ق.م", "founder_ar": "الإمبراطورية الفرثية (الأشكانية)، ثم طورها الساسانيون", "founder_en": "Parthian Arsacid Empire, greatly expanded by the Sasanians", "empires_ar": ["الإمبراطورية الفرثية", "الإمبراطورية الساسانية"], "empires_en": ["Parthian Empire", "Sasanian Empire"], "significance_ar": "عاصمة الإمبراطوريتين الفرثية والساسانية لأكثر من ثمانية قرون، وموقع طاق كسرى (أضخم قبو مبني من الآجر بغير ركائز في العالم)، فتحها المسلمون سنة 637 م.", "significance_en": "Imperial capital of the Parthians and Sasanians, featuring the Arch of Ctesiphon (Taq Kasra), conquered during the Islamic conquest in 637 CE."}, {"id": "damascus", "name_ar": "دمشق (حاضرة بني أمية)", "name_en": "Damascus", "name_ru": "Дамаск", "name_uz": "Damashq", "name_es": "Damasco", "coords": [36.29, 33.51], "founded": "الألفية الثالثة ق.م (أقدم عاصمة مأهولة باستمرار)", "founder_ar": "الآراميون والكنعانيون القدماء، عاصمة الخلافة عام 661 م", "founder_en": "Ancient Arameans/Canaanites; made caliphal capital by Muawiya I", "empires_ar": ["مملكة آرام دمشق", "الدولة الأموية (عاصمة الخلافة الكبرى)", "الدولة النورية والأيوبية"], "empires_en": ["Aram-Damascus", "Umayyad Caliphate", "Zangid & Ayyubid Dynasties"], "significance_ar": "أقدم عاصمة مأهولة بالسكان دون انقطاع في التاريخ، عاصمة الدولة الأموية التي امتدت من حدود الصين إلى جبال البرانس بفرنسا، موطن الجامع الأموي الكبير.", "significance_en": "Oldest continuously inhabited capital in the world, seat of the Umayyad Caliphate stretching from France to the borders of China."}, {"id": "baghdad", "name_ar": "بغداد (مدينة السلام / العاصمة المدورة)", "name_en": "Baghdad (City of Peace)", "name_ru": "Багдад", "name_uz": "Bog'dod", "name_es": "Bagdad", "coords": [44.36, 33.31], "founded": "762 م", "founder_ar": "الخليفة العباسي الثاني أبو جعفر المنصور", "founder_en": "Second Abbasid Caliph Abu Ja'far al-Mansur", "empires_ar": ["الدولة العباسية (العصر الذهبي للحضارة الإسلامية)"], "empires_en": ["Abbasid Caliphate (Islamic Golden Age)"], "significance_ar": "عاصمة العصر الذهبي الإسلامي وحاضرة العلم العالمية، موطن بيت الحكمة الذي تُرجمت فيه علوم الإغريق والهند وفارس، وأكبر مدن العالم سكاناً في القرنين 8-10م.", "significance_en": "Epicenter of the Islamic Golden Age, home of the House of Wisdom (Bayt al-Hikma), and the world's most populous city in the 9th century."}, {"id": "cordoba", "name_ar": "قرطبة (عروس الأندلس)", "name_en": "Cordoba", "name_ru": "Кордова", "name_uz": "Kordova", "name_es": "Córdoba", "coords": [-4.78, 37.88], "founded": "القرن الثاني ق.م (رومان)، عاصمة الأندلس عام 716 م", "founder_ar": "الرومان، ثم جعلها عبد الرحمن الداخل عاصمة إمارة وخلافة الأندلس", "founder_en": "Romans; made Andalusian capital by Abd al-Rahman I", "empires_ar": ["إمارة وخلافة قرطبة الأندلسية (الأمويون)"], "empires_en": ["Emirate & Caliphate of Cordoba"], "significance_ar": "منارة أوروبا في العصور الوسطى وأكبر وأرقى مدنها في القرن العاشر، احتوت على أكثر من 70 مكتبة وجامع قرطبة الكبير وقصر الزهراء وموطن ابن رشد وابن حزم.", "significance_en": "Leading intellectual center of medieval Europe, site of the Great Mosque of Cordoba, Madinat al-Zahra, and home of Averroes."}, {"id": "cairo", "name_ar": "القاهرة (قاهرة المعز)", "name_en": "Cairo", "name_ru": "Каир", "name_uz": "Qohira", "name_es": "El Cairo", "coords": [31.23, 30.04], "founded": "969 م", "founder_ar": "القائد الفاطمي جوهر الصقلي بأمر الخليفة المعز لدين الله", "founder_en": "Fatimid general Jawhar al-Siqilli under Caliph Al-Mu'izz", "empires_ar": ["الدولة الفاطمية", "الدولة الأيوبية", "دولة المماليك"], "empires_en": ["Fatimid Caliphate", "Ayyubid Sultanate", "Mamluk Sultanate"], "significance_ar": "حاضرة مصر الإسلامية ومقر الجامع الأزهر الشريف وقلعة الجبل، قادت العالم الإسلامي في التصدي للمغول والصليبيين في عهدي قطز والظاهر بيبرس.", "significance_en": "Capital of the Fatimids, Ayyubids, and Mamluks, home of Al-Azhar Mosque-University and Citadel of Saladin."}, {"id": "samarkand", "name_ar": "سمرقند (ياقوتة الشرق)", "name_en": "Samarkand", "name_ru": "Самарканд", "name_uz": "Samarqand", "name_es": "Samarcanda", "coords": [66.97, 39.65], "founded": "نحو 700 ق.م (أفرسياب القديمة)", "founder_ar": "الصغديون على طريق الحرير، ثم أعاد بناءها تيمورلنك كعاصمة عظمى", "founder_en": "Ancient Sogdians on Silk Road; rebuilt by Timur (Tamerlane)", "empires_ar": ["الصغد القديمة", "الدولة السامانية", "الدولة التيمورية"], "empires_en": ["Sogdiana", "Samanid Empire", "Timurid Empire"], "significance_ar": "جوهرة طريق الحرير وعاصمة إمبراطورية تيمورلنك الكبرى، موقع ساحة ريجستان ومدارسها وقبة بيبي خانوم ومرصد ألوغ بيك الفلكي العالمي.", "significance_en": "Silk Road crossroad, imperial capital of Timur, featuring the stunning Registan Square, Bibi-Khanym Mosque, and Ulugh Beg's Observatory."}, {"id": "changan-xian", "name_ar": "تشانغآن (شيان)", "name_en": "Chang'an (Xi'an)", "name_ru": "Чанъань (Сиань)", "name_uz": "Chan'an (Sian)", "name_es": "Chang'an (Xi'an)", "coords": [108.94, 34.34], "founded": "نحو 202 ق.م (عاصمة هان)", "founder_ar": "الإمبراطور ليو بانغ (مؤسس سلالة هان)", "founder_en": "Emperor Gaozu (Liu Bang) of the Han Dynasty", "empires_ar": ["سلالة هان الغربية", "سلالة سوي", "سلالة تانغ (العصر الذهبي الصيني)"], "empires_en": ["Western Han Dynasty", "Sui Dynasty", "Tang Dynasty"], "significance_ar": "نقطة البداية الشرقية لطريق الحرير، وأكبر مدن العالم سكاناً في عهد سلالة تانغ (أكثر من مليون نسمة)، موقع جيش التيراكوتا للإمبراطور الأول تشين شي هوانغ.", "significance_en": "Eastern terminal of the Silk Road, cosmopolitan metropolis of over a million people under the Tang Dynasty; site of the Terracotta Army."}, {"id": "beijing-khanbaliq", "name_ar": "بكين (خان بالق / دادو)", "name_en": "Beijing (Khanbaliq / Dadu)", "name_ru": "Пекин (Ханбалык)", "name_uz": "Pekin (Xonbaliq)", "name_es": "Pekín (Janbalic)", "coords": [116.4, 39.9], "founded": "1267 م (كعاصمة إمبراطورية كبرى دادو)", "founder_ar": "قبيلاي خان (سلالة يوان)، ثم أعاد بناءها الإمبراطور يونغلي (مينغ)", "founder_en": "Kublai Khan (Yuan Dynasty); transformed by Yongle (Ming)", "empires_ar": ["سلالة يوان المنغولية", "سلالة مينغ", "سلالة تشينغ"], "empires_en": ["Yuan Dynasty", "Ming Dynasty", "Qing Dynasty"], "significance_ar": "حاضرة الصين الإمبراطورية الكبرى ومقر المدينة المحرمة ومعبد السماء، عاصمة إمبراطوريات يوان ومينغ وتشينغ التي زارها ماركو بولو ووصف عجائبها.", "significance_en": "Imperial capital of China, home to the Forbidden City and Temple of Heaven; described in wonder by Marco Polo as Kublai Khan's capital."}, {"id": "kyoto-heian", "name_ar": "كيوتو (هيان-كيو)", "name_en": "Kyoto (Heian-kyo)", "name_ru": "Киото (Хэйан-кё)", "name_uz": "Kioto", "name_es": "Kioto", "coords": [135.76, 35.01], "founded": "794 م", "founder_ar": "الإمبراطور كانمو (نقل العاصمة من نارا)", "founder_en": "Emperor Kanmu of Japan", "empires_ar": ["اليابان الإمبراطورية (عصر هيان، موروماتشي، وتوكوغاوا اسمياً)"], "empires_en": ["Imperial Japan (Heian to Edo periods)"], "significance_ar": "عاصمة الأباطرة اليابانيين لأكثر من ألف عام (794–1868 م)، منبع الثقافة والأدب والحدائق الصخرية الكلاسيكية وموطن قصر غوشو والمعبد الذهبي كينكاكو-جي.", "significance_en": "Imperial capital of Japan for over a millennium, cultural capital of classical arts, zen gardens, and the Golden Pavilion (Kinkaku-ji)."}, {"id": "delhi", "name_ar": "دلهي", "name_en": "Delhi", "name_ru": "Дели", "name_uz": "Dehli", "name_es": "Delhi", "coords": [77.21, 28.61], "founded": "القرن السادس ق.م (إندرابراستا الأسطورية)، كعاصمة إسلامية 1206 م", "founder_ar": "سلاطين المماليك الغوريين (قطب الدين أيبك)", "founder_en": "Sultan Qutb ud-Din Aibak of the Delhi Sultanate", "empires_ar": ["سلطنة دلهي (بمماليكها وخلجيتها وتغلقها)", "إمبراطورية مغول الهند"], "empires_en": ["Delhi Sultanate", "Mughal Empire"], "significance_ar": "قلب شبه القارة الهندية السياسي ومركز السلطنات الإسلامية ومغول الهند، موقع منارة قطب مينار الشاهقة والقلعة الحمراء ومسجد جاما ماسجد.", "significance_en": "Political seat of northern India for centuries, capital of the Delhi Sultanate and Mughals, featuring the Qutb Minar and Red Fort."}, {"id": "angkor", "name_ar": "أنغكور (ياسودهارابورا)", "name_en": "Angkor", "name_ru": "Ангкор", "name_uz": "Angkor", "name_es": "Angkor", "coords": [103.86, 13.41], "founded": "802 م", "founder_ar": "الملك جيافارمان الثاني (مؤسس إمبراطورية الخمير)", "founder_en": "King Jayavarman II of the Khmer Empire", "empires_ar": ["إمبراطورية الخمير (كمبوديا)"], "empires_en": ["Khmer Empire"], "significance_ar": "أضخم مجمع مدني وديني ما قبل العصر الصناعي في العالم، عاصمة إمبراطورية الخمير وموطن معبد أنغكور وات العملاق وشبكات الري الهيدروليكية الفائقة.", "significance_en": "Largest pre-industrial urban complex in the world, capital of the Khmer Empire, and site of the monumental Angkor Wat temple."}, {"id": "tenochtitlan", "name_ar": "تينوشتيتلان (مكسيكو سيتي)", "name_en": "Tenochtitlan", "name_ru": "Теночтитлан", "name_uz": "Tenochtitlan", "name_es": "Tenochtitlán", "coords": [-99.13, 19.43], "founded": "1325 م", "founder_ar": "شعب الأزتيك (المكسيكا) وسط بحيرة تيكسكوكو", "founder_en": "The Mexica (Aztec) people on Lake Texcoco", "empires_ar": ["إمبراطورية الأزتيك"], "empires_en": ["Aztec Empire"], "significance_ar": "حاضرة الأزتيك المائية العائمة وسط البحيرة، ربطتها الجسور الحجرية باليابسة وبلغ سكانها 200 ألف نسمة قبل أن يحاصرها الغازي الإسباني كورتيس سنة 1521.", "significance_en": "Floating island capital of the Aztec Empire on Lake Texcoco, featuring the Templo Mayor, before its conquest by Cortés in 1521."}, {"id": "cusco", "name_ar": "كوسكو (صرة العالم)", "name_en": "Cusco", "name_ru": "Куско", "name_uz": "Kusko", "name_es": "Cusco", "coords": [-71.97, -13.53], "founded": "نحو 1200 م (طوّرها باتشاكوتي في 1438 م)", "founder_ar": "مانكو كاباك وباتشاكوتي إنكا يوبانكي", "founder_en": "Manco Cápac; transformed by Pachacuti Inca Yupanqui", "empires_ar": ["إمبراطورية الإنكا (تاوانتينسويو)"], "empires_en": ["Inca Empire (Tawantinsuyu)"], "significance_ar": "عاصمة إمبراطورية الإنكا في جبال الأنديز، صُممت على هيئة حيوان البوما وشهدت تقنيات البناء الحجري المعجز المقاوم للزلازل دون استخدام ملاط (ساكسايهوامان).", "significance_en": "Imperial capital of the Inca Empire in the Andes, laid out in the shape of a puma, famed for interlocking cyclopean stonework."}, {"id": "mohenjo-daro", "name_ar": "موهينجو-دارو", "name_en": "Mohenjo-daro", "name_ru": "Мохенджо-Даро", "name_uz": "Moxenjo-Daro", "name_es": "Mohenjo-Daro", "coords": [68.14, 27.33], "founded": "نحو 2500 ق.م", "founder_ar": "حضارة وادي السند (شعب السند القديم)", "founder_en": "Indus Valley Civilization", "empires_ar": ["حضارة وادي السند"], "empires_en": ["Indus Valley Civilization"], "significance_ar": "أول حاضرة مدنية مخططة هندسياً بشوارع متعامدة في التاريخ البشري، احتوت على أول شبكة صرف صحي مغطاة في العالم وحمام الاغتسال الكبير ومبانٍ من الآجر المحروق.", "significance_en": "One of the world's earliest major urban centers, featuring advanced grid planning, covered sewers, and the Great Bath."}, {"id": "ur", "name_ar": "أور (أور الكلدانية)", "name_en": "Ur", "name_ru": "Ур", "name_uz": "Ur", "name_es": "Ur", "coords": [46.1, 30.96], "founded": "نحو 3800 ق.م", "founder_ar": "السومريون القدماء في جنوب العراق", "founder_en": "Ancient Sumerians in southern Mesopotamia", "empires_ar": ["الحضارة السومرية (سلالة أور الثالثة)"], "empires_en": ["Sumerian Civilization (Third Dynasty of Ur)"], "significance_ar": "حاضرة سومر العظمى ومهد الكتابة المسمارية، وموطن زقورة أور الشهيرة، وقانون أور-نامو أقدم نص تشريعي معروف في التاريخ.", "significance_en": "Major Sumerian city-state, site of the Great Ziggurat of Ur and the Code of Ur-Nammu, the oldest surviving law code."}]}
+{
+  "capitals": [
+    {
+      "id": "babylon",
+      "name_ar": "بابل",
+      "name_en": "Babylon",
+      "name_ru": "Вавилон",
+      "name_uz": "Bobil",
+      "name_es": "Babilonia",
+      "coords": [
+        44.42,
+        32.54
+      ],
+      "founded": "نحو 2300 ق.م",
+      "founder_ar": "السومريون والأكاديون، ثم عظمت في عهد الملك الأموري حمورابي",
+      "founder_en": "Sumerians/Akkadians; expanded by Amorite King Hammurabi",
+      "empires_ar": [
+        "الإمبراطورية البابلية القديمة",
+        "الإمبراطورية البابلية الحديثة (الكلدانية)",
+        "الإمبراطورية الأخمينية (عاصمة شتوية)",
+        "إمبراطورية الإسكندر الأكبر"
+      ],
+      "empires_en": [
+        "Old Babylonian Empire",
+        "Neo-Babylonian Empire",
+        "Achaemenid Empire",
+        "Empire of Alexander the Great"
+      ],
+      "significance_ar": "حاضرة بلاد الرافدين العظمى ومركز أول شريعة قانونية مدونة (شريعة حمورابي)، وموقع جنائن بابل وبوابة عشتار وشارع الموكب، توفي فيها الإسكندر الأكبر سنة 323 ق.م.",
+      "significance_en": "Mesopotamian metropolis, site of Hammurabi's Code, the Ishtar Gate, and the Hanging Gardens; death site of Alexander the Great.",
+      "founder_ru": "Шумеры и аккадцы; расширен аморейским царем Хаммурапи",
+      "founder_uz": "Shumerlar va akkadlar; amoriylar shohi Xammurapi davrida yuksalgan",
+      "founder_es": "Sumerios y acadios; engrandecida por el rey amorreo Hammurabi",
+      "empires_ru": [
+        "Старовавилонское царство",
+        "Нововавилонское царство (Халдейское)",
+        "Держава Ахеменидов",
+        "Империя Александра Македонского"
+      ],
+      "empires_uz": [
+        "Qadimgi Bobil podsholigi",
+        "Yangi Bobil podsholigi (Xaldey)",
+        "Ahamoniylar davlati",
+        "Iskandar Zulqarnayn imperiyasi"
+      ],
+      "empires_es": [
+        "Imperio Paleobabilónico",
+        "Imperio Neobabilónico (Caldeo)",
+        "Imperio Aqueménida",
+        "Imperio de Alejandro Magno"
+      ],
+      "significance_ru": "Крупнейший мегаполис Древнего Междуречья, родина свода законов Хаммурапи, Висячих садов и Ворот Иштар; место смерти Александра Македонского в 323 г. до н.э.",
+      "significance_uz": "Mesopotamiyaning buyuk poytaxti, Xammurapi qonunlari, Bobil osma bog‘lari va Ishtar darvozasi makoni; Iskandar Zulqarnayn mil. av. 323 yilda shu yerda vafot etgan.",
+      "significance_es": "Metrópolis mesopotámica y sede del Código de Hammurabi, la Puerta de Ishtar y los Jardines Colgantes; lugar de la muerte de Alejandro Magno en 323 a.C."
+    },
+    {
+      "id": "thebes-luxor",
+      "name_ar": "طيبة (الأقصر / واجيت)",
+      "name_en": "Thebes (Luxor)",
+      "name_ru": "Фивы (Луксор)",
+      "name_uz": "Fiva (Luqsor)",
+      "name_es": "Tebas (Lúxor)",
+      "coords": [
+        32.64,
+        25.68
+      ],
+      "founded": "نحو 3200 ق.م",
+      "founder_ar": "فراعنة مصر القديمة منذ عصر ما قبل الأسرات وعصر الدولة الوسطى",
+      "founder_en": "Ancient Egyptian Pharaohs of the Early Dynastic & Middle Kingdom",
+      "empires_ar": [
+        "الدولة المصرية الوسطى",
+        "الدولة المصرية الحديثة (الإمبراطورية)"
+      ],
+      "empires_en": [
+        "Middle Kingdom of Egypt",
+        "New Kingdom of Egypt"
+      ],
+      "significance_ar": "عاصمة الفراعنة الدينية والسياسية في عصر المجد الإمبراطوري (الأسرات 18-20)، موطن مجمع معابد الكرنك والأقصر ووادي الملوك ومقبرة توت عنخ آمون.",
+      "significance_en": "Religious and royal heart of Egypt's Golden Age (New Kingdom), home to Karnak, Luxor Temple, and the Valley of the Kings.",
+      "founder_ru": "Древнеегипетские фараоны Раннего и Среднего царств",
+      "founder_uz": "Ilk sulolalar va O‘rta podsholik davri qadimgi Misr fir’avnlari",
+      "founder_es": "Faraones del Antiguo Egipto desde las primeras dinastías y el Imperio Medio",
+      "empires_ru": [
+        "Среднее царство Египта",
+        "Новое царство Египта (Империя)"
+      ],
+      "empires_uz": [
+        "Qadimgi Misr O‘rta podsholigi",
+        "Yangi Misr podsholigi (Imperiya)"
+      ],
+      "empires_es": [
+        "Imperio Medio de Egipto",
+        "Imperio Nuevo de Egipto"
+      ],
+      "significance_ru": "Религиозный и политический центр Египта в эпоху расцвета (XVIII–XX династии), родина Карнакского и Луксорского храмов, Долины Царей и гробницы Тутанхамона.",
+      "significance_uz": "Misrning oltin davridagi (XVIII–XX sulolalar) diniy va siyosiy markazi; Karnak, Luqsor ibodatxonalari, Shohlar vodiysi va Tutanxamon maqbarasi joylashgan maskan.",
+      "significance_es": "Corazón religioso y político de la Edad de Oro egipcia (Imperio Nuevo), sede de los templos de Karnak y Lúxor, el Valle de los Reyes y la tumba de Tutankamón."
+    },
+    {
+      "id": "memphis",
+      "name_ar": "منف (إنب حج / ممفيس)",
+      "name_en": "Memphis",
+      "name_ru": "Мемфис",
+      "name_uz": "Memfis",
+      "name_es": "Menfis",
+      "coords": [
+        31.25,
+        29.85
+      ],
+      "founded": "نحو 3100 ق.م",
+      "founder_ar": "الملك مينا (نعرمر) موحد القطرين المصريين",
+      "founder_en": "Pharaoh Narmer (Menes), unifier of Upper and Lower Egypt",
+      "empires_ar": [
+        "الدولة المصرية القديمة (عصر بناة الأهرام)"
+      ],
+      "empires_en": [
+        "Old Kingdom of Egypt (Pyramid Age)"
+      ],
+      "significance_ar": "أول عاصمة مركزية لمصر الموحدة، قاعدة عصر بناة الأهرام العظام وموقع مقابر سقارة وهرم زوسر المدرج وتمثال رمسيس الثاني العملاق.",
+      "significance_en": "The first capital of unified Ancient Egypt, administrative hub of the Pyramid Age and Saqqara necropolis.",
+      "founder_ru": "Фараон Менес (Нармер), объединитель Верхнего и Нижнего Египта",
+      "founder_uz": "Yuqori va Quyi Misrni birlashtirgan fir’avn Menes (Narmer)",
+      "founder_es": "Faraón Narmer (Menes), unificador del Alto y Bajo Egipto",
+      "empires_ru": [
+        "Древнее царство Египта (эпоха строителей пирамид)"
+      ],
+      "empires_uz": [
+        "Qadimgi Misr podsholigi (Ehromlar davri)"
+      ],
+      "empires_es": [
+        "Imperio Antiguo de Egipto (Era de las Pirámides)"
+      ],
+      "significance_ru": "Первая столица единого Египта, административный центр строителей великих пирамид и некрополя Саккары со ступенчатой пирамидой Джосера.",
+      "significance_uz": "Birlashgan Qadimgi Misrning ilk poytaxti; buyuk ehromlar davrining ma’muriy markazi va Jo‘ser pog‘onali ehromi joylashgan Saqqara majmuasi.",
+      "significance_es": "Primera capital centralizada del Egipto unificado, sede administrativa de la Era de las Pirámides y de la necrópolis de Saqqara con la pirámide de Zoser."
+    },
+    {
+      "id": "alexandria",
+      "name_ar": "الإسكندرية",
+      "name_en": "Alexandria",
+      "name_ru": "Александрия",
+      "name_uz": "Iskandariya",
+      "name_es": "Alejandría",
+      "coords": [
+        29.92,
+        31.2
+      ],
+      "founded": "331 ق.م",
+      "founder_ar": "الإسكندر الأكبر المقدوني والمهندس دينوقراطيس",
+      "founder_en": "Alexander the Great & architect Dinocrates",
+      "empires_ar": [
+        "المملكة البطلمية في مصر",
+        "الإمبراطورية الرومانية (العاصمة الثانية)",
+        "الإمبراطورية البيزنطية"
+      ],
+      "empires_en": [
+        "Ptolemaic Kingdom",
+        "Roman Empire (Second City)",
+        "Byzantine Empire"
+      ],
+      "significance_ar": "منارة الفكر الهلنستي وعاصمة العلوم القديمة، موطن مكتبة الإسكندرية الشهيرة ومنارة فاروس إحدى عجائب الدنيا، ومركز كليوباترا السابعة.",
+      "significance_en": "Crown jewel of the Hellenistic Mediterranean, home to the Great Library, the Pharos Lighthouse, and Queen Cleopatra.",
+      "founder_ru": "Александр Македонский и архитектор Динократ",
+      "founder_uz": "Iskandar Zulqarnayn va me’mor Dinokrat",
+      "founder_es": "Alejandro Magno y el arquitecto Dinócrates",
+      "empires_ru": [
+        "Эллинистический Египет Птолемеев",
+        "Римская империя (вторая столица)",
+        "Византийская империя"
+      ],
+      "empires_uz": [
+        "Ptolemeylar podsholigi",
+        "Rim imperiyasi (ikkinchi poytaxt)",
+        "Vizantiya imperiyasi"
+      ],
+      "empires_es": [
+        "Reino Ptolemaico de Egipto",
+        "Imperio Romano (Segunda Capital)",
+        "Imperio Bizantino"
+      ],
+      "significance_ru": "Жемчужина эллинистического мира и древней науки, родина Александрийской библиотеки, Фаросского маяка и царицы Клеопатры VII.",
+      "significance_uz": "Ellinizm madaniyati va qadimgi fan markazi; mashhur Iskandariya kutubxonasi, Faros mayog‘i va malika Kleopatra VII maskani.",
+      "significance_es": "Faro de la sabiduría helenística y capital científica del mundo antiguo, sede de la Gran Biblioteca, el Faro de Alejandría y la reina Cleopatra VII."
+    },
+    {
+      "id": "athens",
+      "name_ar": "أثينا",
+      "name_en": "Athens",
+      "name_ru": "Афины",
+      "name_uz": "Afina",
+      "name_es": "Atenas",
+      "coords": [
+        23.72,
+        37.98
+      ],
+      "founded": "نحو 3000 ق.م (ازدهرت في القرن 5 ق.م)",
+      "founder_ar": "الملك الأسطوري ثيسيوس؛ صاغ دستورها سولون وكليسثينيس",
+      "founder_en": "Legendary King Theseus; constitution by Solon & Cleisthenes",
+      "empires_ar": [
+        "الحلف الديلي (الإمبراطورية الأثينية)"
+      ],
+      "empires_en": [
+        "Delian League (Athenian Empire)"
+      ],
+      "significance_ar": "مهد الديمقراطية والفلسفة الغربية، عاصمة العصر الذهبي الإغريقي في عهد بريكليس، وموطن معبد البارثينون في الأكروبوليس ومدارس سقراط وأفلاطون وأرسطو.",
+      "significance_en": "Cradle of Western democracy and philosophy, home of the Parthenon on the Acropolis and the academies of Plato and Aristotle.",
+      "founder_ru": "Легендарный царь Тесей; законы Солона и Клисфена",
+      "founder_uz": "Afsonaviy shoh Tesey; qonunlari Solon va Klisfen tomonidan joriy qilingan",
+      "founder_es": "Rey mítico Teseo; constituciones de Solón y Clístenes",
+      "empires_ru": [
+        "Делосский союз (Афинская морская держава)"
+      ],
+      "empires_uz": [
+        "Delos ittifoqi (Afina dengiz davlati)"
+      ],
+      "empires_es": [
+        "Liga de Delos (Imperio Ateniense)"
+      ],
+      "significance_ru": "Колыбель западной демократии и философии, золотой век Перикла, Парфенон на Акрополе, философские школы Сократа, Платона и Аристотеля.",
+      "significance_uz": "G‘arb demokratiyasi va falsafasining beshigi; Perikl davridagi Afina oltin asri, Akropol Parfenoni hamda Suqrot, Aflotun va Arastu maktablari vatani.",
+      "significance_es": "Cuna de la democracia occidental y la filosofía, cumbre del Siglo de Oro de Pericles, hogar del Partenón en la Acrópolis y las escuelas de Sócrates, Platón y Aristóteles."
+    },
+    {
+      "id": "rome",
+      "name_ar": "روما (المدينة الخالدة)",
+      "name_en": "Rome",
+      "name_ru": "Рим",
+      "name_uz": "Rim",
+      "name_es": "Roma",
+      "coords": [
+        12.49,
+        41.9
+      ],
+      "founded": "753 ق.م",
+      "founder_ar": "رومولوس وريموس وفق الأسطورة الرومانية",
+      "founder_en": "Romulus and Remus according to Roman tradition",
+      "empires_ar": [
+        "المملكة الرومانية",
+        "الجمهورية الرومانية",
+        "الإمبراطورية الرومانية الغربية"
+      ],
+      "empires_en": [
+        "Roman Kingdom",
+        "Roman Republic",
+        "Western Roman Empire"
+      ],
+      "significance_ar": "عاصمة أعظم إمبراطوريات البحر الأبيض المتوسط ومصدر القانون الروماني واللغة اللاتينية والهندسة المعمارية (الكولوسيوم، البانثيون، شبكة الطرق والقنوات).",
+      "significance_en": "Capital of the Roman Empire, birthplace of Roman Law, Latin language, the Colosseum, and roads connecting three continents.",
+      "founder_ru": "Ромул и Рем согласно римскому преданию",
+      "founder_uz": "Rim afsonasiga ko‘ra aka-uka Romul va Rem",
+      "founder_es": "Rómulo y Remo según la tradición romana",
+      "empires_ru": [
+        "Римское царство",
+        "Римская республика",
+        "Западная Римская империя"
+      ],
+      "empires_uz": [
+        "Rim podsholigi",
+        "Rim respublikasi",
+        "G‘arbiy Rim imperiyasi"
+      ],
+      "empires_es": [
+        "Monarquía Romana",
+        "República Romana",
+        "Imperio Romano de Occidente"
+      ],
+      "significance_ru": "Столица величайшей средиземноморской империи, колыбель римского права, латинского языка, Колизея, Пантеона и сети дорог через три континента.",
+      "significance_uz": "O‘rtayer dengizidagi eng qudratli imperiya poytaxti; Rim huquqi, lotin tili, Kolizey, Panteon va uch qit’ani bog‘lagan yo‘llar beshigi.",
+      "significance_es": "Capital del mayor imperio del Mediterráneo y cuna del derecho romano, la lengua latina, el Coliseo, el Panteón y las calzadas que unieron tres continentes."
+    },
+    {
+      "id": "constantinople",
+      "name_ar": "القسطنطينية (إسطنبول / بيزنطة)",
+      "name_en": "Constantinople (Istanbul)",
+      "name_ru": "Константинополь",
+      "name_uz": "Konstantinopol",
+      "name_es": "Constantinopla",
+      "coords": [
+        28.98,
+        41.01
+      ],
+      "founded": "330 م (أسست كبيزنطة في 657 ق.م)",
+      "founder_ar": "الإمبراطور قسطنطين العظيم (نقل العاصمة من روما)",
+      "founder_en": "Emperor Constantine the Great (refounded Byzantium)",
+      "empires_ar": [
+        "الإمبراطورية الرومانية الشرقية (البيزنطية)",
+        "الدولة العثمانية (1453–1922م)"
+      ],
+      "empires_en": [
+        "Byzantine Empire",
+        "Ottoman Empire (1453–1922)"
+      ],
+      "significance_ar": "عاصمة الإمبراطوريتين البيزنطية والعثمانية على مدار 16 قرناً، ملتقى الشرق والغرب وموقع كاتدرائية آيا صوفيا وأسوار ثيودوسيوس المنيعة.",
+      "significance_en": "Capital of the Byzantine and Ottoman empires for 1,600 years, bridge between Europe and Asia, home of Hagia Sophia.",
+      "founder_ru": "Император Константин Великий (основана как Византий в 657 до н.э.)",
+      "founder_uz": "Imperator Buyuk Konstantin (mil. av. 657 yilda Vizantiy sifatida asos solingan)",
+      "founder_es": "Emperador Constantino el Grande (refundó Bizancio)",
+      "empires_ru": [
+        "Восточная Римская (Византийская) империя",
+        "Османская империя (1453–1922)"
+      ],
+      "empires_uz": [
+        "Sharqiy Rim (Vizantiya) imperiyasi",
+        "Usmoniylar davlati (1453–1922)"
+      ],
+      "empires_es": [
+        "Imperio Romano de Oriente (Bizantino)",
+        "Imperio Otomano (1453–1922)"
+      ],
+      "significance_ru": "Столица Византийской и Османской империй на протяжении 16 веков, мост между Европой и Азией, собор Святой Софии и неприступные Стены Феодосия.",
+      "significance_uz": "16 asr davomida Vizantiya va Usmoniylar imperiyalari poytaxti; Sharq va G‘arb chorrahasi, Ayo Sofiya ibodatxonasi va Teodosiy mudofaa devorlari maskani.",
+      "significance_es": "Capital de los imperios bizantino y otomano durante 16 siglos, puente entre Oriente y Occidente y sede de Santa Sofía y las murallas de Teodosio."
+    },
+    {
+      "id": "carthage",
+      "name_ar": "قرطاج",
+      "name_en": "Carthage",
+      "name_ru": "Карфаген",
+      "name_uz": "Karfagen",
+      "name_es": "Cartago",
+      "coords": [
+        10.33,
+        36.85
+      ],
+      "founded": "814 ق.م",
+      "founder_ar": "الأميرة الفينيقية عليسة (ديدو) وتجار صور",
+      "founder_en": "Phoenician Princess Elissa (Dido) of Tyre",
+      "empires_ar": [
+        "الإمبراطورية القرطاجية (البونية)"
+      ],
+      "empires_en": [
+        "Carthaginian Republic / Empire"
+      ],
+      "significance_ar": "سيدة التجارة البحرية في غرب البحر المتوسط ومنافسة روما الكبرى في الحروب البونية الثلاث، ومسقط رأس القائد العسكري الأسطوري حنبعل برقا.",
+      "significance_en": "Dominant maritime superpower of the western Mediterranean, rival of Rome in the Punic Wars, homeland of Hannibal Barca.",
+      "founder_ru": "Финикийская царевна Элисса (Дидона) из Тира",
+      "founder_uz": "Finikiyalik malika Elissa (Didona) va Tir savdogarlari",
+      "founder_es": "Princesa fenicia Elisa (Dido) de Tiro",
+      "empires_ru": [
+        "Карфагенская морская держава"
+      ],
+      "empires_uz": [
+        "Karfagen dengiz davlati"
+      ],
+      "empires_es": [
+        "República / Imperio Cartaginés (Púnico)"
+      ],
+      "significance_ru": "Владычица морской торговли Западного Средиземноморья, грозная соперница Рима в Пунических войнах и родина полководца Ганнибала Барки.",
+      "significance_uz": "G‘arbiy O‘rtayer dengizining qudratli dengiz davlati; Rimning uchta Puniya urushidagi asosiy raqibi va buyuk sarkarda Gannibal Barka yurti.",
+      "significance_es": "Señora indiscutible del comercio marítimo del Mediterráneo occidental, gran rival de Roma en las Guerras Púnicas y cuna del general Aníbal Barca."
+    },
+    {
+      "id": "nineveh",
+      "name_ar": "نينوى",
+      "name_en": "Nineveh",
+      "name_ru": "Ниневия",
+      "name_uz": "Nineviya",
+      "name_es": "Nínive",
+      "coords": [
+        43.15,
+        36.36
+      ],
+      "founded": "نحو 6000 ق.م (عاصمة كبرى في 705 ق.م)",
+      "founder_ar": "الملك الآشوري سنحاريب (جعلها عاصمة عظمى)",
+      "founder_en": "King Sennacherib of the Neo-Assyrian Empire",
+      "empires_ar": [
+        "الإمبراطورية الآشورية الحديثة"
+      ],
+      "empires_en": [
+        "Neo-Assyrian Empire"
+      ],
+      "significance_ar": "أكبر مدن العالم في القرن السابع قبل الميلاد، عاصمة الإمبراطورية الآشورية وموقع مكتبة آشوربانيبال الطينية التي حفظت ملحمة جلجامش.",
+      "significance_en": "Largest city in the world in the 7th c. BCE, imperial seat of Assyria, home to the Library of Ashurbanipal with the Epic of Gilgamesh.",
+      "founder_ru": "Ассирийский царь Синаххериб (сделал великой столицей)",
+      "founder_uz": "Ossuriya shohi Sinaxerib (uni bosh poytaxtga aylantirgan)",
+      "founder_es": "Rey asirio Senaquerib (la erigió en gran capital)",
+      "empires_ru": [
+        "Новоассирийская империя"
+      ],
+      "empires_uz": [
+        "Yangi Ossuriya imperiyasi"
+      ],
+      "empires_es": [
+        "Imperio Neoasirio"
+      ],
+      "significance_ru": "Крупнейший город мира в VII в. до н.э., столица Ассирии, местонахождение глиняной библиотеки Ашшурбанипала с Эпосом о Гильгамеше.",
+      "significance_uz": "Mil. av. VII asrda dunyoning eng yirik shahri; Ossuriya poytaxti hamda Gilgamish dostoni saqlangan Ashshurbanipal kutubxonasi joylashgan shahar.",
+      "significance_es": "La urbe más poblada del mundo en el siglo VII a.C., capital asiria y sede de la biblioteca de tablillas de Asurbanipal con el Poema de Gilgamesh."
+    },
+    {
+      "id": "persepolis",
+      "name_ar": "برسيبوليس (تخت جمشيد)",
+      "name_en": "Persepolis",
+      "name_ru": "Персеполь",
+      "name_uz": "Persepol",
+      "name_es": "Persépolis",
+      "coords": [
+        52.89,
+        29.93
+      ],
+      "founded": "518 ق.م",
+      "founder_ar": "داريوس الأول الكبير واستكملها خشايارشا وأردشير",
+      "founder_en": "Darius the Great, expanded by Xerxes I and Artaxerxes",
+      "empires_ar": [
+        "الإمبراطورية الفارسية الأخمينية"
+      ],
+      "empires_en": [
+        "Achaemenid Persian Empire"
+      ],
+      "significance_ar": "العاصمة الاحتفالية لإمبراطورية الفرس الأخمينيين ومقر احتفالات النوروز، تميزت بقصر أبادانا ومدرجات الوفود الحجرية، أحرقها الإسكندر الأكبر سنة 330 ق.م.",
+      "significance_en": "Ceremonial capital of the Achaemenid Empire, famous for the Apadana Palace and Gate of All Nations; burned by Alexander in 330 BCE.",
+      "founder_ru": "Дарий I Великий; расширен Ксерксом I и Артаксерксом",
+      "founder_uz": "Buyuk Doro I; Kserks I va Artakserks tomonidan kengaytirilgan",
+      "founder_es": "Darío I el Grande; continuada por Jerjes I y Artajerjes",
+      "empires_ru": [
+        "Персидская империя Ахеменидов"
+      ],
+      "empires_uz": [
+        "Ahamoniylar Fors imperiyasi"
+      ],
+      "empires_es": [
+        "Imperio Persa Aqueménida"
+      ],
+      "significance_ru": "Церемониальная столица державы Ахеменидов и празднований Навруза, дворец Ападана и Ворота всех наций; сожжена Александром в 330 г. до н.э.",
+      "significance_uz": "Ahamoniylar davlatining tantanali poytaxti va Navro‘z bayrami markazi; Apadana saroyi va Xalqlar darvozasi bilan mashhur bo‘lgan, mil. av. 330 yilda Iskandar tomonidan yoqilgan.",
+      "significance_es": "Capital ceremonial del Imperio Aqueménida y sede del Nouruz, célebre por el Palacio de Apadana y la Puerta de Todas las Naciones; incendiada por Alejandro en 330 a.C."
+    },
+    {
+      "id": "ctesiphon",
+      "name_ar": "المدائن (طيسفون / إيوان كسرى)",
+      "name_en": "Ctesiphon",
+      "name_ru": "Ктесифон",
+      "name_uz": "Ktesifon",
+      "name_es": "Ctesifonte",
+      "coords": [
+        44.58,
+        33.09
+      ],
+      "founded": "نحو 120 ق.م",
+      "founder_ar": "الإمبراطورية الفرثية (الأشكانية)، ثم طورها الساسانيون",
+      "founder_en": "Parthian Arsacid Empire, greatly expanded by the Sasanians",
+      "empires_ar": [
+        "الإمبراطورية الفرثية",
+        "الإمبراطورية الساسانية"
+      ],
+      "empires_en": [
+        "Parthian Empire",
+        "Sasanian Empire"
+      ],
+      "significance_ar": "عاصمة الإمبراطوريتين الفرثية والساسانية لأكثر من ثمانية قرون، وموقع طاق كسرى (أضخم قبو مبني من الآجر بغير ركائز في العالم)، فتحها المسلمون سنة 637 م.",
+      "significance_en": "Imperial capital of the Parthians and Sasanians, featuring the Arch of Ctesiphon (Taq Kasra), conquered during the Islamic conquest in 637 CE.",
+      "founder_ru": "Парфянские Аршакиды; значительно расширен Сасанидами",
+      "founder_uz": "Parfiya Ashkoniylari; Sosoniylar tomonidan buyuk darajada rivojlantirilgan",
+      "founder_es": "Imperio Parto Arsácida, ampliamente expandida por los Sasánidas",
+      "empires_ru": [
+        "Парфянское царство",
+        "Государство Сасанидов"
+      ],
+      "empires_uz": [
+        "Parfiya podsholigi",
+        "Sosoniylar imperiyasi"
+      ],
+      "empires_es": [
+        "Imperio Parto",
+        "Imperio Sasánida"
+      ],
+      "significance_ru": "Столица Парфии и державы Сасанидов более 800 лет, местоположение Таки-Кисры (крупнейший в мире кирпичный свод без опор); взят арабами в 637 г.",
+      "significance_uz": "800 yildan ortiq vaqt davomida Parfiya va Sosoniylar poytaxti; dunyodagi eng yirik ustunsiz g‘ishtli gumbaz Toqi Kisro joylashgan, 637 yilda musulmonlar tomonidan fath etilgan.",
+      "significance_es": "Capital imperial de partos y sasánidas durante ocho siglos, sede del Taq-i Kisra (el mayor arco de ladrillo no sostenido del mundo antiguo), conquistada en 637 d.C."
+    },
+    {
+      "id": "damascus",
+      "name_ar": "دمشق (حاضرة بني أمية)",
+      "name_en": "Damascus",
+      "name_ru": "Дамаск",
+      "name_uz": "Damashq",
+      "name_es": "Damasco",
+      "coords": [
+        36.29,
+        33.51
+      ],
+      "founded": "الألفية الثالثة ق.م (أقدم عاصمة مأهولة باستمرار)",
+      "founder_ar": "الآراميون والكنعانيون القدماء، عاصمة الخلافة عام 661 م",
+      "founder_en": "Ancient Arameans/Canaanites; made caliphal capital by Muawiya I",
+      "empires_ar": [
+        "مملكة آرام دمشق",
+        "الدولة الأموية (عاصمة الخلافة الكبرى)",
+        "الدولة النورية والأيوبية"
+      ],
+      "empires_en": [
+        "Aram-Damascus",
+        "Umayyad Caliphate",
+        "Zangid & Ayyubid Dynasties"
+      ],
+      "significance_ar": "أقدم عاصمة مأهولة بالسكان دون انقطاع في التاريخ، عاصمة الدولة الأموية التي امتدت من حدود الصين إلى جبال البرانس بفرنسا، موطن الجامع الأموي الكبير.",
+      "significance_en": "Oldest continuously inhabited capital in the world, seat of the Umayyad Caliphate stretching from France to the borders of China.",
+      "founder_ru": "Древние арамеи и ханаанеи; Муавия I сделал столицей халифата",
+      "founder_uz": "Qadimgi oromiylar va kan’oniylar; Muoviya I davrida xalifalik poytaxtiga aylangan",
+      "founder_es": "Arameos y cananeos; convertida en capital califal por Muawiya I",
+      "empires_ru": [
+        "Арамейское царство Дамаск",
+        "Омейядский халифат",
+        "Государство Зангидов и Айюбидов"
+      ],
+      "empires_uz": [
+        "Oromiy Damashq podsholigi",
+        "Umaviylar xalifaligi",
+        "Zangiylar va Ayyubiylar davlati"
+      ],
+      "empires_es": [
+        "Reino de Aram-Damasco",
+        "Califato Omeya",
+        "Dinastías Zengí y Ayubí"
+      ],
+      "significance_ru": "Древнейшая непрерывно заселенная столица мира, центр Омейядского халифата от границ Китая до Пиренеев во Франции, Большая мечеть Омейядов.",
+      "significance_uz": "Dunyodagi eng qadimiy uzluksiz yashab kelinayotgan poytaxt; Xitoy chegaralaridan Fransiyagacha cho‘zilgan Umaviylar xalifaligi markazi va Buyuk Umaviylar masjidi makoni.",
+      "significance_es": "La capital habitada de forma ininterrumpida más antigua del mundo, sede del Califato Omeya desde China hasta los Pirineos, hogar de la Gran Mezquita de los Omeyas."
+    },
+    {
+      "id": "baghdad",
+      "name_ar": "بغداد (مدينة السلام / العاصمة المدورة)",
+      "name_en": "Baghdad (City of Peace)",
+      "name_ru": "Багдад",
+      "name_uz": "Bog'dod",
+      "name_es": "Bagdad",
+      "coords": [
+        44.36,
+        33.31
+      ],
+      "founded": "762 م",
+      "founder_ar": "الخليفة العباسي الثاني أبو جعفر المنصور",
+      "founder_en": "Second Abbasid Caliph Abu Ja'far al-Mansur",
+      "empires_ar": [
+        "الدولة العباسية (العصر الذهبي للحضارة الإسلامية)"
+      ],
+      "empires_en": [
+        "Abbasid Caliphate (Islamic Golden Age)"
+      ],
+      "significance_ar": "عاصمة العصر الذهبي الإسلامي وحاضرة العلم العالمية، موطن بيت الحكمة الذي تُرجمت فيه علوم الإغريق والهند وفارس، وأكبر مدن العالم سكاناً في القرنين 8-10م.",
+      "significance_en": "Epicenter of the Islamic Golden Age, home of the House of Wisdom (Bayt al-Hikma), and the world's most populous city in the 9th century.",
+      "founder_ru": "Второй аббасидский халиф Абу Джафар аль-Мансур",
+      "founder_uz": "Ikkinchi Abbosiy xalifa Abu Ja’far al-Mansur",
+      "founder_es": "Segundo califa abasí Abu Yafar al-Mansur",
+      "empires_ru": [
+        "Аббасидский халифат (Золотой век ислама)"
+      ],
+      "empires_uz": [
+        "Abbosiylar xalifaligi (Islom oltin davri)"
+      ],
+      "empires_es": [
+        "Califato Abasí (Edad de Oro del Islam)"
+      ],
+      "significance_ru": "Центр Золотого века ислама и мировой науки, Дом мудрости (Байт аль-Хикма), самый густонаселенный город мира в VIII–X веках.",
+      "significance_uz": "Islom oltin davrining ilmiy va madaniy markazi; yunon, fors va hind ilmlari tarjima qilingan Hikmatlar uyi (Bayt ul-hikma) va IX asrda dunyoning eng yirik shahri.",
+      "significance_es": "Epicentro de la Edad de Oro del Islam y urbe global del saber, sede de la Casa de la Sabiduría (Bayt al-Hikma) y la ciudad más poblada del planeta en el siglo IX."
+    },
+    {
+      "id": "cordoba",
+      "name_ar": "قرطبة (عروس الأندلس)",
+      "name_en": "Cordoba",
+      "name_ru": "Кордова",
+      "name_uz": "Kordova",
+      "name_es": "Córdoba",
+      "coords": [
+        -4.78,
+        37.88
+      ],
+      "founded": "القرن الثاني ق.م (رومان)، عاصمة الأندلس عام 716 م",
+      "founder_ar": "الرومان، ثم جعلها عبد الرحمن الداخل عاصمة إمارة وخلافة الأندلس",
+      "founder_en": "Romans; made Andalusian capital by Abd al-Rahman I",
+      "empires_ar": [
+        "إمارة وخلافة قرطبة الأندلسية (الأمويون)"
+      ],
+      "empires_en": [
+        "Emirate & Caliphate of Cordoba"
+      ],
+      "significance_ar": "منارة أوروبا في العصور الوسطى وأكبر وأرقى مدنها في القرن العاشر، احتوت على أكثر من 70 مكتبة وجامع قرطبة الكبير وقصر الزهراء وموطن ابن رشد وابن حزم.",
+      "significance_en": "Leading intellectual center of medieval Europe, site of the Great Mosque of Cordoba, Madinat al-Zahra, and home of Averroes.",
+      "founder_ru": "Основана римлянами; сделана столицей аль-Андалуса Абд ар-Рахманом I",
+      "founder_uz": "Rimliklar tomonidan asos solingan; Abdurahmon I ad-Doxil uni Andalus poytaxtiga aylantirgan",
+      "founder_es": "Romanos; convertida en capital andalusí por Abderramán I",
+      "empires_ru": [
+        "Кордовский эмират и халифат (Омейяды аль-Андалуса)"
+      ],
+      "empires_uz": [
+        "Kordova amirligi va xalifaligi (Andalus Umaviylari)"
+      ],
+      "empires_es": [
+        "Emirato y Califato de Córdoba"
+      ],
+      "significance_ru": "Интеллектуальный маяк средневековой Европы X века, Великая мечеть (Мескита), дворец Мадинат аз-Захра, родина философов Ибн Рушда (Аверроэса) и Ибн Хазма.",
+      "significance_uz": "O‘rta asrlar Yevropasining eng yirik ilmiy nuri; Kordova jome masjidi, Madinat az-Zahro saroyi hamda Ibn Rushd va Ibn Hazm vatani.",
+      "significance_es": "Faro intelectual de la Europa medieval y la ciudad más refinada del siglo X, sede de la Mezquita-Catedral, Medina Azahara y cuna de Averroes e Ibn Hazm."
+    },
+    {
+      "id": "cairo",
+      "name_ar": "القاهرة (قاهرة المعز)",
+      "name_en": "Cairo",
+      "name_ru": "Каир",
+      "name_uz": "Qohira",
+      "name_es": "El Cairo",
+      "coords": [
+        31.23,
+        30.04
+      ],
+      "founded": "969 م",
+      "founder_ar": "القائد الفاطمي جوهر الصقلي بأمر الخليفة المعز لدين الله",
+      "founder_en": "Fatimid general Jawhar al-Siqilli under Caliph Al-Mu'izz",
+      "empires_ar": [
+        "الدولة الفاطمية",
+        "الدولة الأيوبية",
+        "دولة المماليك"
+      ],
+      "empires_en": [
+        "Fatimid Caliphate",
+        "Ayyubid Sultanate",
+        "Mamluk Sultanate"
+      ],
+      "significance_ar": "حاضرة مصر الإسلامية ومقر الجامع الأزهر الشريف وقلعة الجبل، قادت العالم الإسلامي في التصدي للمغول والصليبيين في عهدي قطز والظاهر بيبرس.",
+      "significance_en": "Capital of the Fatimids, Ayyubids, and Mamluks, home of Al-Azhar Mosque-University and Citadel of Saladin.",
+      "founder_ru": "Фатимидский полководец Джаухар ас-Сикилли по приказу халифа аль-Муизза",
+      "founder_uz": "Fotimiy sarkarda Javhar as-Siqilliy xalifa al-Muizz amri bilan",
+      "founder_es": "General fatimí Chawhar al-Siqilli por orden del califa Al-Mu'izz",
+      "empires_ru": [
+        "Фатимидский халифат",
+        "Айюбидский султанат",
+        "Мамлюкский султанат"
+      ],
+      "empires_uz": [
+        "Fotimiylar xalifaligi",
+        "Ayyubiylar sultonligi",
+        "Mamluklar sultonligi"
+      ],
+      "empires_es": [
+        "Califato Fatimí",
+        "Sultanato Ayubí",
+        "Sultanato Mameluco"
+      ],
+      "significance_ru": "Сердце исламского Египта, мечеть-университет аль-Азхар, Цитадель Саладина; центр сопротивления монголам и крестоносцам при Кутузе и Бейбарсе.",
+      "significance_uz": "Islomiy Misr poytaxti; Al-Azhar jome masjidi va Qohira qal’asi maskani, Qutuz va Boybars davrida mo‘g‘ullar va salibchilarga qarshi kurash markazi.",
+      "significance_es": "Capital del Egipto islámico, sede de la Mezquita-Universidad de Al-Azhar y la Ciudadela de Saladino; baluarte frente a cruzados y mongoles con Qutuz y Baibars."
+    },
+    {
+      "id": "samarkand",
+      "name_ar": "سمرقند (ياقوتة الشرق)",
+      "name_en": "Samarkand",
+      "name_ru": "Самарканд",
+      "name_uz": "Samarqand",
+      "name_es": "Samarcanda",
+      "coords": [
+        66.97,
+        39.65
+      ],
+      "founded": "نحو 700 ق.م (أفرسياب القديمة)",
+      "founder_ar": "الصغديون على طريق الحرير، ثم أعاد بناءها تيمورلنك كعاصمة عظمى",
+      "founder_en": "Ancient Sogdians on Silk Road; rebuilt by Timur (Tamerlane)",
+      "empires_ar": [
+        "الصغد القديمة",
+        "الدولة السامانية",
+        "الدولة التيمورية"
+      ],
+      "empires_en": [
+        "Sogdiana",
+        "Samanid Empire",
+        "Timurid Empire"
+      ],
+      "significance_ar": "جوهرة طريق الحرير وعاصمة إمبراطورية تيمورلنك الكبرى، موقع ساحة ريجستان ومدارسها وقبة بيبي خانوم ومرصد ألوغ بيك الفلكي العالمي.",
+      "significance_en": "Silk Road crossroad, imperial capital of Timur, featuring the stunning Registan Square, Bibi-Khanym Mosque, and Ulugh Beg's Observatory.",
+      "founder_ru": "Древние согдийцы (Афрасиаб); отстроен Тамерланом как столица империи",
+      "founder_uz": "Qadimgi so‘g‘dlar (Afrosiyob); Amir Temur tomonidan buyuk saltanat poytaxti sifatida qayta qurilgan",
+      "founder_es": "Sogdianos en la Ruta de la Seda; reconstruida por Tamerlán como gran capital",
+      "empires_ru": [
+        "Согдиана",
+        "Государство Саманидов",
+        "Империя Тимуридов"
+      ],
+      "empires_uz": [
+        "So‘g‘diyona",
+        "Somoniylar davlati",
+        "Temuriylar saltanati"
+      ],
+      "empires_es": [
+        "Sogdiana",
+        "Imperio Samánida",
+        "Imperio Timúrida"
+      ],
+      "significance_ru": "Жемчужина Шелкового пути и столица империи Тамерлана, площадь Регистан с ее медресе, мечеть Биби-Ханым и всемирно известная обсерватория Улугбека.",
+      "significance_uz": "Buyuk ipak yo‘lining gavhari va Sohibqiron Amir Temur saltanatining poytaxti; Registon maydoni, Bibi Xonim masjidi va Mirzo Ulug‘bek rasadxonasi vatani.",
+      "significance_es": "Joya de la Ruta de la Seda y capital imperial de Tamerlán, famosa por la Plaza del Registán, la mezquita Bibi Janum y el observatorio astronómico de Ulugh Beg."
+    },
+    {
+      "id": "changan-xian",
+      "name_ar": "تشانغآن (شيان)",
+      "name_en": "Chang'an (Xi'an)",
+      "name_ru": "Чанъань (Сиань)",
+      "name_uz": "Chan'an (Sian)",
+      "name_es": "Chang'an (Xi'an)",
+      "coords": [
+        108.94,
+        34.34
+      ],
+      "founded": "نحو 202 ق.م (عاصمة هان)",
+      "founder_ar": "الإمبراطور ليو بانغ (مؤسس سلالة هان)",
+      "founder_en": "Emperor Gaozu (Liu Bang) of the Han Dynasty",
+      "empires_ar": [
+        "سلالة هان الغربية",
+        "سلالة سوي",
+        "سلالة تانغ (العصر الذهبي الصيني)"
+      ],
+      "empires_en": [
+        "Western Han Dynasty",
+        "Sui Dynasty",
+        "Tang Dynasty"
+      ],
+      "significance_ar": "نقطة البداية الشرقية لطريق الحرير، وأكبر مدن العالم سكاناً في عهد سلالة تانغ (أكثر من مليون نسمة)، موقع جيش التيراكوتا للإمبراطور الأول تشين شي هوانغ.",
+      "significance_en": "Eastern terminal of the Silk Road, cosmopolitan metropolis of over a million people under the Tang Dynasty; site of the Terracotta Army.",
+      "founder_ru": "Император Гао-цзу (Лю Бан), основатель династии Хань",
+      "founder_uz": "Xan sulolasi asoschisi imperator Gao-tszu (Lyu Ban)",
+      "founder_es": "Emperador Gaozu (Liu Bang) de la dinastía Han",
+      "empires_ru": [
+        "Западная Хань",
+        "Династия Суй",
+        "Династия Тан (Золотой век Китая)"
+      ],
+      "empires_uz": [
+        "G‘arbiy Xan sulolasi",
+        "Suy sulolasi",
+        "Tan sulolasi (Xitoy oltin davri)"
+      ],
+      "empires_es": [
+        "Dinastía Han Occidental",
+        "Dinastía Sui",
+        "Dinastía Tang (Edad de Oro)"
+      ],
+      "significance_ru": "Восточная отправная точка Шелкового пути, крупнейший мегаполис эпохи Тан (более 1 миллиона жителей), Терракотовая армия императора Цинь Шихуанди.",
+      "significance_uz": "Buyuk ipak yo‘lining sharqiy boshlang‘ich nuqtasi; Tan sulolasi davrida 1 milliondan ortiq aholiga ega jahon megapolisi va Terrakota armiyasi joylashgan manzil.",
+      "significance_es": "Punto de partida oriental de la Ruta de la Seda, metrópolis de más de un millón de habitantes bajo la dinastía Tang y yacimiento del Ejército de Terracota."
+    },
+    {
+      "id": "beijing-khanbaliq",
+      "name_ar": "بكين (خان بالق / دادو)",
+      "name_en": "Beijing (Khanbaliq / Dadu)",
+      "name_ru": "Пекин (Ханбалык)",
+      "name_uz": "Pekin (Xonbaliq)",
+      "name_es": "Pekín (Janbalic)",
+      "coords": [
+        116.4,
+        39.9
+      ],
+      "founded": "1267 م (كعاصمة إمبراطورية كبرى دادو)",
+      "founder_ar": "قبيلاي خان (سلالة يوان)، ثم أعاد بناءها الإمبراطور يونغلي (مينغ)",
+      "founder_en": "Kublai Khan (Yuan Dynasty); transformed by Yongle (Ming)",
+      "empires_ar": [
+        "سلالة يوان المنغولية",
+        "سلالة مينغ",
+        "سلالة تشينغ"
+      ],
+      "empires_en": [
+        "Yuan Dynasty",
+        "Ming Dynasty",
+        "Qing Dynasty"
+      ],
+      "significance_ar": "حاضرة الصين الإمبراطورية الكبرى ومقر المدينة المحرمة ومعبد السماء، عاصمة إمبراطوريات يوان ومينغ وتشينغ التي زارها ماركو بولو ووصف عجائبها.",
+      "significance_en": "Imperial capital of China, home to the Forbidden City and Temple of Heaven; described in wonder by Marco Polo as Kublai Khan's capital.",
+      "founder_ru": "Хубилай-хан (династия Юань); перестроен императором Юнлэ (Мин)",
+      "founder_uz": "Xubilayxon (Yuan sulolasi); Min sulolasi imperatori Yunle tomonidan qayta qurilgan",
+      "founder_es": "Kublai Kan (dinastía Yuan); transformada por el emperador Yongle (Ming)",
+      "empires_ru": [
+        "Монгольская династия Юань",
+        "Династия Мин",
+        "Династия Цин"
+      ],
+      "empires_uz": [
+        "Mo‘g‘ul Yuan sulolasi",
+        "Min sulolasi",
+        "Sin sulolasi"
+      ],
+      "empires_es": [
+        "Dinastía Yuan mongola",
+        "Dinastía Ming",
+        "Dinastía Qing"
+      ],
+      "significance_ru": "Столица императорского Китая, Запретный город и Храм Неба, столица династий Юань, Мин и Цин, поразившая Марко Поло своим величием.",
+      "significance_uz": "Xitoy imperiyasining bosh poytaxti; Taqiqlangan shahar va Osmon ibodatxonasi maskani, Marko Polo o‘z sayohatnomasida hayrat bilan tasvirlagan shahar.",
+      "significance_es": "Sede del poder imperial chino y hogar de la Ciudad Prohibida y el Templo del Cielo; capital de las dinastías Yuan, Ming y Qing descrita con asombro por Marco Polo."
+    },
+    {
+      "id": "kyoto-heian",
+      "name_ar": "كيوتو (هيان-كيو)",
+      "name_en": "Kyoto (Heian-kyo)",
+      "name_ru": "Киото (Хэйан-кё)",
+      "name_uz": "Kioto",
+      "name_es": "Kioto",
+      "coords": [
+        135.76,
+        35.01
+      ],
+      "founded": "794 م",
+      "founder_ar": "الإمبراطور كانمو (نقل العاصمة من نارا)",
+      "founder_en": "Emperor Kanmu of Japan",
+      "empires_ar": [
+        "اليابان الإمبراطورية (عصر هيان، موروماتشي، وتوكوغاوا اسمياً)"
+      ],
+      "empires_en": [
+        "Imperial Japan (Heian to Edo periods)"
+      ],
+      "significance_ar": "عاصمة الأباطرة اليابانيين لأكثر من ألف عام (794–1868 م)، منبع الثقافة والأدب والحدائق الصخرية الكلاسيكية وموطن قصر غوشو والمعبد الذهبي كينكاكو-جي.",
+      "significance_en": "Imperial capital of Japan for over a millennium, cultural capital of classical arts, zen gardens, and the Golden Pavilion (Kinkaku-ji).",
+      "founder_ru": "Император Камму (перенес столицу из Нары)",
+      "founder_uz": "Imperator Kammu (poytaxtni Naradan ko‘chirgan)",
+      "founder_es": "Emperador Kanmu de Japón",
+      "empires_ru": [
+        "Императорская Япония (эпохи Хэйан, Муромати и Эдо номинально)"
+      ],
+      "empires_uz": [
+        "Yaponiya imperiyasi (Xeyan, Muromati va Edo davrlari)"
+      ],
+      "empires_es": [
+        "Japón Imperial (períodos Heian, Muromachi y Edo nominalmente)"
+      ],
+      "significance_ru": "Столица японских императоров более тысячи лет (794–1868 гг.), исток классической культуры, садов камней, императорского дворца Госё и Золотого павильона (Кинкаку-дзи).",
+      "significance_uz": "Ming yildan ortiq vaqt (794–1868 yy.) davomida Yaponiya imperatorlari poytaxti; mumtoz yapon madaniyati, zen bog‘lari va Oltin pavilon (Kinkaku-dzi) maskani.",
+      "significance_es": "Capital imperial de Japón durante más de mil años (794–1868 d.C.), manantial de las artes clásicas, jardines zen y el Pabellón Dorado (Kinkaku-ji)."
+    },
+    {
+      "id": "delhi",
+      "name_ar": "دلهي",
+      "name_en": "Delhi",
+      "name_ru": "Дели",
+      "name_uz": "Dehli",
+      "name_es": "Delhi",
+      "coords": [
+        77.21,
+        28.61
+      ],
+      "founded": "القرن السادس ق.م (إندرابراستا الأسطورية)، كعاصمة إسلامية 1206 م",
+      "founder_ar": "سلاطين المماليك الغوريين (قطب الدين أيبك)",
+      "founder_en": "Sultan Qutb ud-Din Aibak of the Delhi Sultanate",
+      "empires_ar": [
+        "سلطنة دلهي (بمماليكها وخلجيتها وتغلقها)",
+        "إمبراطورية مغول الهند"
+      ],
+      "empires_en": [
+        "Delhi Sultanate",
+        "Mughal Empire"
+      ],
+      "significance_ar": "قلب شبه القارة الهندية السياسي ومركز السلطنات الإسلامية ومغول الهند، موقع منارة قطب مينار الشاهقة والقلعة الحمراء ومسجد جاما ماسجد.",
+      "significance_en": "Political seat of northern India for centuries, capital of the Delhi Sultanate and Mughals, featuring the Qutb Minar and Red Fort.",
+      "founder_ru": "Султаны Гуридского мамелюкского султаната (Кутб ад-Дин Айбак)",
+      "founder_uz": "G‘uriylar davlati mamluk sultonlari (Qutbiddin Oybek)",
+      "founder_es": "Sultán Qutb al-Din Aibak del Sultanato de Delhi",
+      "empires_ru": [
+        "Делийский султанат",
+        "Империя Великих Моголов"
+      ],
+      "empires_uz": [
+        "Dehli sultonligi",
+        "Boburiylar (Buyuk Mo‘g‘ullar) imperiyasi"
+      ],
+      "empires_es": [
+        "Sultanato de Delhi",
+        "Imperio Mogol de la India"
+      ],
+      "significance_ru": "Политическое сердце Индии, центр мусульманских султанатов и державы Великих Моголов, минарет Кутб-Минар, Красный форт и Соборная мечеть Джама-Масджид.",
+      "significance_uz": "Hindiston yarimorolining ko‘p asrlik siyosiy yuragi; Dehli sultonligi va Boburiylar markazi, baland Qutb Minor minorasi va Qizil qal’a maskani.",
+      "significance_es": "Corazón político del subcontinente indio y sede de los sultanatos islámicos y los Grandes Mogoles, hogar del alminar Qutb Minar y el Fuerte Rojo."
+    },
+    {
+      "id": "angkor",
+      "name_ar": "أنغكور (ياسودهارابورا)",
+      "name_en": "Angkor",
+      "name_ru": "Ангкор",
+      "name_uz": "Angkor",
+      "name_es": "Angkor",
+      "coords": [
+        103.86,
+        13.41
+      ],
+      "founded": "802 م",
+      "founder_ar": "الملك جيافارمان الثاني (مؤسس إمبراطورية الخمير)",
+      "founder_en": "King Jayavarman II of the Khmer Empire",
+      "empires_ar": [
+        "إمبراطورية الخمير (كمبوديا)"
+      ],
+      "empires_en": [
+        "Khmer Empire"
+      ],
+      "significance_ar": "أضخم مجمع مدني وديني ما قبل العصر الصناعي في العالم، عاصمة إمبراطورية الخمير وموطن معبد أنغكور وات العملاق وشبكات الري الهيدروليكية الفائقة.",
+      "significance_en": "Largest pre-industrial urban complex in the world, capital of the Khmer Empire, and site of the monumental Angkor Wat temple.",
+      "founder_ru": "Король Джаяварман II, основатель Кхмерской империи",
+      "founder_uz": "Kxmer imperiyasi asoschisi qirol Jayavarman II",
+      "founder_es": "Rey Jayavarman II del Imperio Jemer",
+      "empires_ru": [
+        "Кхмерская империя (Камбоджа)"
+      ],
+      "empires_uz": [
+        "Kxmer imperiyasi (Kambodja)"
+      ],
+      "empires_es": [
+        "Imperio Jemer (Camboya)"
+      ],
+      "significance_ru": "Крупнейший доиндустриальный храмово-городской комплекс мира, столица кхмеров, гигантский храм Ангкор-Ват и уникальная гидротехническая система.",
+      "significance_uz": "Sanoat davrigacha bo‘lgan dunyodagi eng yirik shahar-ibodatxona majmuasi; Kxmer poytaxti, ulkan Angkor-Vat ibodatxonasi va murakkab gidravlik sug‘orish tarmog‘i.",
+      "significance_es": "El mayor complejo urbano y religioso preindustrial del mundo, capital del Imperio Jemer y sede del monumental templo de Angkor Wat y sus redes hidráulicas."
+    },
+    {
+      "id": "tenochtitlan",
+      "name_ar": "تينوشتيتلان (مكسيكو سيتي)",
+      "name_en": "Tenochtitlan",
+      "name_ru": "Теночтитлан",
+      "name_uz": "Tenochtitlan",
+      "name_es": "Tenochtitlán",
+      "coords": [
+        -99.13,
+        19.43
+      ],
+      "founded": "1325 م",
+      "founder_ar": "شعب الأزتيك (المكسيكا) وسط بحيرة تيكسكوكو",
+      "founder_en": "The Mexica (Aztec) people on Lake Texcoco",
+      "empires_ar": [
+        "إمبراطورية الأزتيك"
+      ],
+      "empires_en": [
+        "Aztec Empire"
+      ],
+      "significance_ar": "حاضرة الأزتيك المائية العائمة وسط البحيرة، ربطتها الجسور الحجرية باليابسة وبلغ سكانها 200 ألف نسمة قبل أن يحاصرها الغازي الإسباني كورتيس سنة 1521.",
+      "significance_en": "Floating island capital of the Aztec Empire on Lake Texcoco, featuring the Templo Mayor, before its conquest by Cortés in 1521.",
+      "founder_ru": "Народ мешика (ацтеки) посреди озера Тескоко",
+      "founder_uz": "Tesxoko ko‘li o‘rtasida atsteklar (meshika xalqi)",
+      "founder_es": "El pueblo mexica (azteca) en medio del lago de Texcoco",
+      "empires_ru": [
+        "Империя ацтеков"
+      ],
+      "empires_uz": [
+        "Atsteklar imperiyasi"
+      ],
+      "empires_es": [
+        "Imperio Azteca (Mexica)"
+      ],
+      "significance_ru": "Островная плавучая столица ацтеков на озере Тескоко, соединенная с сушей дамбами, с населением 200 000 человек до завоевания Кортесом в 1521 г.",
+      "significance_uz": "Tesxoko ko‘li o‘rtasida barpo etilgan afsonaviy suzuvchi atsteklar poytaxti; Kortes 1521 yilda bosib olgunga qadar 200 ming aholiga ega yirik markaz bo‘lgan.",
+      "significance_es": "Fascinante capital flotante de los aztecas levantada sobre el lago Texcoco, comunicada por calzadas de piedra y con 200.000 habitantes antes de su caída ante Cortés en 1521."
+    },
+    {
+      "id": "cusco",
+      "name_ar": "كوسكو (صرة العالم)",
+      "name_en": "Cusco",
+      "name_ru": "Куско",
+      "name_uz": "Kusko",
+      "name_es": "Cusco",
+      "coords": [
+        -71.97,
+        -13.53
+      ],
+      "founded": "نحو 1200 م (طوّرها باتشاكوتي في 1438 م)",
+      "founder_ar": "مانكو كاباك وباتشاكوتي إنكا يوبانكي",
+      "founder_en": "Manco Cápac; transformed by Pachacuti Inca Yupanqui",
+      "empires_ar": [
+        "إمبراطورية الإنكا (تاوانتينسويو)"
+      ],
+      "empires_en": [
+        "Inca Empire (Tawantinsuyu)"
+      ],
+      "significance_ar": "عاصمة إمبراطورية الإنكا في جبال الأنديز، صُممت على هيئة حيوان البوما وشهدت تقنيات البناء الحجري المعجز المقاوم للزلازل دون استخدام ملاط (ساكسايهوامان).",
+      "significance_en": "Imperial capital of the Inca Empire in the Andes, laid out in the shape of a puma, famed for interlocking cyclopean stonework.",
+      "founder_ru": "Манко Капак; перестроен Инкой Пачакути",
+      "founder_uz": "Manko Kapak; Pachakuti Inka Yupanki tomonidan tubdan rivojlantirilgan",
+      "founder_es": "Manco Cápac; transformada por Pachacútec Inca Yupanqui",
+      "empires_ru": [
+        "Империя Инков (Тауантинсуйу)"
+      ],
+      "empires_uz": [
+        "Inklar imperiyasi (Tavantinsuyu)"
+      ],
+      "empires_es": [
+        "Imperio Inca (Tawantinsuyu)"
+      ],
+      "significance_ru": "Столица империи инков в Андах («пуп земли»), построенная в форме пумы, известная совершенной сейсмостойкой полигональной кладкой без раствора (Саксайуаман).",
+      "significance_uz": "And tog‘laridagi Inka imperiyasining poytaxti; puma shaklida loyihalashtirilgan va qorishmasiz birlashtirilgan zilzilabardosh tosh me’morchiligi (Saksayuaman) bilan mashhur.",
+      "significance_es": "Capital imperial del Tahuantinsuyo inca en los Andes ('el ombligo del mundo'), trazada con forma de puma y célebre por su mampostería ciclópea antisísmica sin mortero."
+    },
+    {
+      "id": "mohenjo-daro",
+      "name_ar": "موهينجو-دارو",
+      "name_en": "Mohenjo-daro",
+      "name_ru": "Мохенджо-Даро",
+      "name_uz": "Moxenjo-Daro",
+      "name_es": "Mohenjo-Daro",
+      "coords": [
+        68.14,
+        27.33
+      ],
+      "founded": "نحو 2500 ق.م",
+      "founder_ar": "حضارة وادي السند (شعب السند القديم)",
+      "founder_en": "Indus Valley Civilization",
+      "empires_ar": [
+        "حضارة وادي السند"
+      ],
+      "empires_en": [
+        "Indus Valley Civilization"
+      ],
+      "significance_ar": "أول حاضرة مدنية مخططة هندسياً بشوارع متعامدة في التاريخ البشري، احتوت على أول شبكة صرف صحي مغطاة في العالم وحمام الاغتسال الكبير ومبانٍ من الآجر المحروق.",
+      "significance_en": "One of the world's earliest major urban centers, featuring advanced grid planning, covered sewers, and the Great Bath.",
+      "founder_ru": "Индская (Хараппская) цивилизация",
+      "founder_uz": "Hind vodiysi (Xarappa) sivilizatsiyasi",
+      "founder_es": "Civilización del Valle del Indo",
+      "empires_ru": [
+        "Индская цивилизация"
+      ],
+      "empires_uz": [
+        "Hind vodiysi sivilizatsiyasi"
+      ],
+      "empires_es": [
+        "Civilización del Valle del Indo"
+      ],
+      "significance_ru": "Один из первых геометрически спланированных городов в истории человечества: регулярная сетка улиц, закрытая канализация, Большая купальня и дома из обожженного кирпича.",
+      "significance_uz": "Insoniyat tarixidagi to‘g‘ri burchakli ko‘chalar bilan rejalashtirilgan ilk shahar; dunyodagi birinchi yopiq kanalizatsiya tarmog‘i va Katta cho‘milish havzasi joylashgan manzil.",
+      "significance_es": "Uno de los centros urbanos planificados más antiguos de la historia: trazado hipodámico en cuadrícula, primer alcantarillado cubierto del mundo y Gran Baño ritual."
+    },
+    {
+      "id": "ur",
+      "name_ar": "أور (أور الكلدانية)",
+      "name_en": "Ur",
+      "name_ru": "Ур",
+      "name_uz": "Ur",
+      "name_es": "Ur",
+      "coords": [
+        46.1,
+        30.96
+      ],
+      "founded": "نحو 3800 ق.م",
+      "founder_ar": "السومريون القدماء في جنوب العراق",
+      "founder_en": "Ancient Sumerians in southern Mesopotamia",
+      "empires_ar": [
+        "الحضارة السومرية (سلالة أور الثالثة)"
+      ],
+      "empires_en": [
+        "Sumerian Civilization (Third Dynasty of Ur)"
+      ],
+      "significance_ar": "حاضرة سومر العظمى ومهد الكتابة المسمارية، وموطن زقورة أور الشهيرة، وقانون أور-نامو أقدم نص تشريعي معروف في التاريخ.",
+      "significance_en": "Major Sumerian city-state, site of the Great Ziggurat of Ur and the Code of Ur-Nammu, the oldest surviving law code.",
+      "founder_ru": "Древние шумеры на юге Месопотамии",
+      "founder_uz": "Janubiy Mesopotamiyadagi qadimgi shumerlar",
+      "founder_es": "Antiguos sumerios en el sur de Mesopotamia",
+      "empires_ru": [
+        "Шумерская цивилизация (III династия Ура)"
+      ],
+      "empires_uz": [
+        "Shumer sivilizatsiyasi (Urning III sulolasi)"
+      ],
+      "empires_es": [
+        "Civilización Sumeria (Tercera Dinastía de Ur)"
+      ],
+      "significance_ru": "Крупнейший шумерский город-государство, родина клинописи, знаменитый Великий зиккурат Ура и Законы Ур-Намму — древнейший дошедший до нас правовой кодекс.",
+      "significance_uz": "Qadimgi Shumerning eng yirik shahar-davlati va mixxat yozuvi beshigi; mashhur Ur zikkurati hamda tarixdagi eng qadimiy Ur-Nammu qonunlari makoni.",
+      "significance_es": "Gran ciudad-estado sumeria y cuna de la escritura cuneiforme, sede del Gran Zigurat de Ur y del Código de Ur-Nammu, el texto legislativo más antiguo conservado."
+    }
+  ]
+}

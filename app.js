@@ -196,31 +196,85 @@
                     }
                 };
             }
+            function announceToScreenReader(message) {
+                var el = document.getElementById('srLiveAnnouncer');
+                if (!el || !message) return;
+                el.textContent = '';
+                setTimeout(function() {
+                    if (el) el.textContent = message;
+                }, 50);
+            }
+            window.announceToScreenReader = announceToScreenReader;
+
             function watchDialogFocusTrap(dialogEl) {
                 if (!dialogEl) return;
                 var releaseFn = null;
                 new MutationObserver(function() {
-                    var visible = dialogEl.classList.contains('visible');
+                    var visible = dialogEl.classList.contains('visible') ||
+                        dialogEl.classList.contains('open') ||
+                        (!dialogEl.hasAttribute('hidden') && dialogEl.style.display !== 'none' && (dialogEl.offsetWidth > 0 || dialogEl.offsetHeight > 0));
                     if (visible && !releaseFn) {
                         releaseFn = trapFocus(dialogEl);
                     } else if (!visible && releaseFn) {
                         releaseFn();
                         releaseFn = null;
                     }
-                }).observe(dialogEl, { attributes: true, attributeFilter: ['class', 'style'] });
+                }).observe(dialogEl, { attributes: true, attributeFilter: ['class', 'style', 'hidden'] });
             }
             [
                 'countryPanel', 'layersModal', 'divisionPopover', 'annotationsModal',
-                'annotationLabelModal', 'annotationPlaceModal', 'mobileModeSheet', 'shortcutsOverlay', 'dataTableOverlay'
+                'annotationLabelModal', 'annotationPlaceModal', 'mobileModeSheet', 'shortcutsOverlay', 'dataTableOverlay',
+                'histPolityCompareModal', 'histSourcesPanel', 'histWaypointPopup', 'histTravelerCard',
+                'eraQuizModal', 'eraCompareModal'
             ].forEach(function(id) { watchDialogFocusTrap(document.getElementById(id)); });
             document.addEventListener('keydown', function(e) {
                 if (e.key !== 'Escape') return;
                 function isVisible(id) {
                     var el = document.getElementById(id);
-                    return !!(el && el.classList.contains('visible'));
+                    if (!el) return false;
+                    return el.classList.contains('visible') ||
+                        el.classList.contains('open') ||
+                        (!el.hasAttribute('hidden') && el.style.display !== 'none' && el.offsetParent !== null);
                 }
                 var higherOverlay = isVisible('layersModal') || isVisible('divisionPopover') ||
                     isVisible('annotationsModal') || isVisible('annotationLabelModal');
+
+                if (isVisible('histPolityCompareModal')) {
+                    e.stopImmediatePropagation();
+                    var cmpModal = document.getElementById('histPolityCompareModal');
+                    if (cmpModal) { cmpModal.setAttribute('hidden', ''); cmpModal.style.display = 'none'; cmpModal.classList.remove('visible'); }
+                    return;
+                }
+                if (isVisible('histWaypointPopup')) {
+                    e.stopImmediatePropagation();
+                    if (typeof closeWaypointPopup === 'function') closeWaypointPopup();
+                    else { var wpEl = document.getElementById('histWaypointPopup'); if (wpEl) wpEl.style.display = 'none'; }
+                    return;
+                }
+                if (isVisible('histTravelerCard')) {
+                    e.stopImmediatePropagation();
+                    var trCard = document.getElementById('histTravelerCard');
+                    if (trCard) trCard.style.display = 'none';
+                    return;
+                }
+                if (isVisible('histSourcesPanel')) {
+                    e.stopImmediatePropagation();
+                    var sp = document.getElementById('histSourcesPanel');
+                    if (sp) sp.style.display = 'none';
+                    return;
+                }
+                if (isVisible('eraQuizModal')) {
+                    e.stopImmediatePropagation();
+                    var eqm = document.getElementById('eraQuizModal');
+                    if (eqm) { eqm.style.display = 'none'; eqm.classList.remove('visible'); }
+                    return;
+                }
+                if (isVisible('eraCompareModal')) {
+                    e.stopImmediatePropagation();
+                    var ecm = document.getElementById('eraCompareModal');
+                    if (ecm) { ecm.style.display = 'none'; ecm.classList.remove('visible'); }
+                    return;
+                }
                 if (!higherOverlay && isVisible('dataTableOverlay')) {
                     e.stopImmediatePropagation();
                     document.getElementById('dataTableOverlay').classList.remove('visible');
@@ -253,6 +307,10 @@
                 if (!higherOverlay && isVisible('mobileModeSheet')) {
                     e.stopImmediatePropagation();
                     document.getElementById('mobileModeSheet').classList.remove('visible');
+                    return;
+                }
+                if (typeof closeAllHistPopovers === 'function') {
+                    closeAllHistPopovers(true);
                 }
             }, true);
             const densityCanvas = document.getElementById('densityCanvas');
@@ -535,6 +593,16 @@
                 if (v === undefined || v === null) v = obj[base + '_ar'];
                 if (v === undefined || v === null) v = '';
                 return String(v);
+            }
+
+            function getHistSide(war, sideKey) {
+                if (!war || !sideKey) return '';
+                var l = (typeof lang !== 'undefined' ? lang : (typeof currentLang !== 'undefined' ? currentLang : 'ar'));
+                var lSides = war['sides_' + l];
+                if (lSides && lSides[sideKey]) return lSides[sideKey];
+                if (l !== 'ar' && war.sides_en && war.sides_en[sideKey]) return war.sides_en[sideKey];
+                if (war.sides && war.sides[sideKey]) return t(war.sides[sideKey]);
+                return '';
             }
 
             // ── Name resolution & localization helpers ──
@@ -1547,23 +1615,12 @@
                 var routeNodeR = (isMob ? 3.0 : 4.0) / zoom;
                 var routeNodeSw = 1.0 / zoom;
 
-                var histYear = null;
-                if (historyActive) {
-                    if (historyTab === 'eras') {
-                        var _he = (typeof getHistEra === 'function') ? getHistEra() : null;
-                        if (_he) histYear = _he.sort;
-                    } else if (historyTab === 'wars') {
-                        var _hw = historyWarData.find(function(x) { return x.id === historyWarId; });
-                        if (_hw) {
-                            var _hs = _hw.scenarios.find(function(x) { return x.id === historyScenarioId; }) || _hw.scenarios[0];
-                            if (_hs) { var _hn = parseInt(_hs.year, 10); if (!isNaN(_hn)) histYear = _hn; }
-                        }
-                    }
-                }
-                historicalRoutesData.forEach(function(r) {
-                    if (histYear !== null && ((r.from !== undefined && histYear < r.from) || (r.to !== undefined && r.to !== null && histYear > r.to))) return;
+                var routes = (typeof historicalRoutesData !== 'undefined' && Array.isArray(historicalRoutesData)) ? historicalRoutesData : (typeof window !== 'undefined' && Array.isArray(window.historicalRoutesData) ? window.historicalRoutesData : null);
+                if (!routes) return;
+                routes.forEach(function(r) {
                     var points = r.coords;
-                    var halo = gHistoricalRoutes.append('path').datum({type:'LineString', coordinates:points}).attr('d',pathGen).attr('fill','none').attr('stroke',r.color).attr('stroke-width',isMob?8:11).attr('stroke-opacity',0.22).attr('vector-effect','non-scaling-stroke').style('cursor','pointer').on('click',function(){showHistoricalRouteDetail(r);});
+                    var routeClean = cleanHistoricalName(locField(r, 'name'));
+                    var halo = gHistoricalRoutes.append('path').datum({type:'LineString', coordinates:points}).attr('d',pathGen).attr('fill','none').attr('stroke',r.color).attr('stroke-width',isMob?8:11).attr('stroke-opacity',0.22).attr('vector-effect','non-scaling-stroke').attr('class', 'hist-route-path').attr('role', 'button').attr('tabindex', '0').attr('aria-label', (t('histRoutePinLabel') || 'طريق تاريخي') + ': ' + routeClean).style('cursor','pointer').on('click',function(){showHistoricalRouteDetail(r);}).on('keydown', function(e) { if (e.key === 'Enter' || e.key === ' ') { if (e.preventDefault) e.preventDefault(); showHistoricalRouteDetail(r); } });
                     var line = gHistoricalRoutes.append('path').datum({type:'LineString', coordinates:points}).attr('d',pathGen).attr('fill','none').attr('stroke',r.color).attr('stroke-width',isMob?2.5:3).attr('stroke-dasharray','10,6').attr('vector-effect','non-scaling-stroke').style('pointer-events','none');
                     var first = points[0], last = points[points.length-1];
                     [first,last].forEach(function(p){
@@ -3669,6 +3726,10 @@
                 try { localStorage.setItem('mapLang', l); } catch(e) {}
                 applyLanguage();
             }
+            window.setLanguage = setLanguage;
+            window.getLang = function() { return lang; };
+            window.locField = locField;
+
 
             function setBtnText(el, text) {
                 if (!el) return;
@@ -4107,8 +4168,8 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 let population = info ? info.population_2026 : null;
                 let area = info ? info.area : null;
                 let density = getDensity(name);
-                let capital = info ? (lang === 'ar' ? info.capital_ar : lang === 'ru' ? (info.capital_ru || info.capital_en) : lang === 'uz' ?(info.capital_uz || info.capital_en): lang === 'es' ?(info.capital_es || info.capital_en) : info.capital_en) : t('unknown');
-                let language = info ? (lang === 'ar' ? info.lang_ar : lang === 'ru' ? (info.lang_ru || info.lang_en) : lang === 'uz' ?(info.lang_uz || info.lang_en): lang === 'es' ?(info.lang_es || info.lang_en) : info.lang_en) : t('unknown');
+                let capital = info ? (locField(info, 'capital') || info.capital_en) : t('unknown');
+                let language = info ? (locField(info, 'lang') || info.lang_en) : t('unknown');
 
                 let localTimeStr = t('unknown');
                 if (info && info.capital_coords) {
@@ -8243,6 +8304,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     (sc.empires || []).forEach(function(emp) {
                         var col = histColorFor(emp) || '#7b8794';
                         var sx = 0, sy = 0, sw = 0, found = false;
+                        var empName = cleanHistoricalName(locField(histEmpireNames[emp.id], 'name'));
                         emp.members.forEach(function(m) {
                             var f = allCountryFeatures.find(function(ff) { return histMatchName(getCleanName(ff.properties && ff.properties.name), m); });
                             if (!f) return;
@@ -8253,6 +8315,9 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                     .style('fill-opacity', historyLayerOpacity)
                                     .attr('stroke', '#ffffff').attr('stroke-width', 1.2).attr('stroke-dasharray', '5,3')
                                     .attr('vector-effect', 'non-scaling-stroke')
+                                    .attr('role', 'button')
+                                    .attr('tabindex', '0')
+                                    .attr('aria-label', empName || (f.properties && f.properties.name) || '')
                                     .style('cursor', 'pointer').style('pointer-events', 'auto');
                                 var _wpDownX = 0, _wpDownY = 0, _wpDownT = 0;
                                 s.on('pointerdown', function(ev) {
@@ -8267,6 +8332,11 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                     }
                                 }).on('click', function() {
                                     openHistoryPanel(f);
+                                }).on('keydown', function(ev) {
+                                    if (ev.key === 'Enter' || ev.key === ' ') {
+                                        if (ev.preventDefault) ev.preventDefault();
+                                        openHistoryPanel(f);
+                                    }
                                 });
                                 if (skipFadeIn) s.attr('opacity', 1).style('opacity', 1); else s.attr('opacity', 0).style('opacity', 0).transition().duration(dur).attr('opacity', 1).style('opacity', 1);
                             }
@@ -8278,7 +8348,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             } catch (err) {}
                         });
                         if (found) {
-                            var nm = cleanHistoricalName(locField(histEmpireNames[emp.id], 'name'));
+                            var nm = empName;
                             var suffix = emp.joinYr ? ' (' + emp.joinYr + ')' : (emp.endYr ? ' (†' + emp.endYr + ')' : '');
                             var lbl = gHistoryOverlay.append('text')
                                 .attr('class', 'hist-war-label')
@@ -8294,17 +8364,22 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     sc.participants.forEach(function(p) {
                         var col = histColorFor(p);
                         if (!col) return;
+                        var partName = (typeof histCountryNames !== 'undefined' && histCountryNames[p.c] && locField(histCountryNames[p.c], 'name')) || p.c || '';
                         allCountryFeatures.forEach(function(f) {
                             var cn = getCleanName((f.properties && f.properties.name) || '');
                             if (!histMatchName(cn, p.c)) return;
                             var pd = pathGen(f);
                             if (!pd) return;
                             var isSoft = (p.role === 'protectorate' || p.role === 'colony' || p.role === 'dominion');
+                            var fName = (f.properties && f.properties.name) || partName;
                             var s = gHistoryOverlay.append('path').attr('d', pd).attr('fill', col)
                                 .attr('fill-opacity', historyLayerOpacity)
                                 .style('fill-opacity', historyLayerOpacity)
                                 .attr('stroke', col).attr('stroke-width', isSoft ? 2.2 : 1.2)
                                 .attr('vector-effect', 'non-scaling-stroke')
+                                .attr('role', 'button')
+                                .attr('tabindex', '0')
+                                .attr('aria-label', fName)
                                 .style('cursor', 'pointer').style('pointer-events', 'auto');
                             var _ppDownX = 0, _ppDownY = 0, _ppDownT = 0;
                             s.on('pointerdown', function(ev) {
@@ -8319,6 +8394,11 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 }
                             }).on('click', function() {
                                 openHistoryPanel(f);
+                            }).on('keydown', function(ev) {
+                                if (ev.key === 'Enter' || ev.key === ' ') {
+                                    if (ev.preventDefault) ev.preventDefault();
+                                    openHistoryPanel(f);
+                                }
                             });
                             if (skipFadeIn) s.attr('opacity', 1).style('opacity', 1); else s.attr('opacity', 0).style('opacity', 0).transition().duration(dur).attr('opacity', 1).style('opacity', 1);
                         });
@@ -8759,7 +8839,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
 
                     var html = '<div class="hist-profile-card">';
                     html += '<div class="hist-profile-header">';
-                    html += '<h3 class="hist-profile-title">' + (flag || '📜') + ' ' + htmlEscape((profile && profile.name_ar) || dispName) + '</h3>';
+                    html += '<h3 class="hist-profile-title">' + (flag || '📜') + ' ' + htmlEscape((profile && locField(profile, 'name')) || dispName) + '</h3>';
                     if (war) {
                         html += '<p class="hist-profile-subtitle"><strong>' + htmlEscape(locField(war, 'name')) + '</strong> — ' + (sc ? sc.year + ' · ' + htmlEscape(locField(sc, 'title')) : '') + '</p>';
                     }
@@ -8769,7 +8849,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (p) {
                         var col = histColorFor(p) || '#9aa5b1';
                         var roleLbl = t(histRoleKey(p.role));
-                        var sideLbl = p.side !== 'neutral' && war && war.sides && war.sides[p.side] ? t(war.sides[p.side]) : '';
+                        var sideLbl = p.side !== 'neutral' && war ? getHistSide(war, p.side) : '';
                         html += '<div class="hist-status-block" style="border-inline-start-color:' + col + '; margin-bottom: 8px;">' +
                             '<div class="hist-status-role"><span class="hist-chip-swatch" style="background:' + col + '"></span> <strong>' + htmlEscape(roleLbl) + '</strong></div>' +
                             (sideLbl ? '<div class="hist-status-side">' + htmlEscape(sideLbl) + (p.yr ? ' · ' + htmlEscape(p.yr) : '') + '</div>' : '') +
@@ -8793,42 +8873,42 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
 
                     // البطاقة التعريفية التاريخية المتكاملة
                     if (profile) {
-                        var founderVal = profile.founder_ar || '';
-                        var capVal = profile.capital_ar || '';
-                        var religionVal = profile.religion_ar || '';
-                        var langVal = profile.language_ar || '';
-                        var ethVal = profile.ethnicity_ar || '';
-                        var originVal = profile.origin_ar || '';
-                        var fallVal = profile.fall_ar || '';
+                        var founderVal = locField(profile, 'founder');
+                        var capVal = locField(profile, 'capital');
+                        var religionVal = locField(profile, 'religion');
+                        var langVal = locField(profile, 'language');
+                        var ethVal = locField(profile, 'ethnicity');
+                        var originVal = locField(profile, 'origin');
+                        var fallVal = locField(profile, 'fall');
 
                         html += '<div class="hist-profile-grid">';
                         if (founderVal) {
-                            html += '<div class="hist-profile-item"><div class="hist-profile-item-label">👑 اسم المؤسس</div><div class="hist-profile-item-val">' + htmlEscape(founderVal) + '</div></div>';
+                            html += '<div class="hist-profile-item"><div class="hist-profile-item-label">' + htmlEscape(t('histFounderTitle')) + '</div><div class="hist-profile-item-val">' + htmlEscape(founderVal) + '</div></div>';
                         }
                         if (capVal) {
-                            html += '<div class="hist-profile-item"><div class="hist-profile-item-label">🏛️ العاصمة</div><div class="hist-profile-item-val">' + htmlEscape(capVal) + '</div></div>';
+                            html += '<div class="hist-profile-item"><div class="hist-profile-item-label">' + htmlEscape(t('histCapitalTitle')) + '</div><div class="hist-profile-item-val">' + htmlEscape(capVal) + '</div></div>';
                         }
                         if (religionVal) {
-                            html += '<div class="hist-profile-item full-width"><div class="hist-profile-item-label">🕊️ الديانة والتحولات الدينية</div><div class="hist-profile-item-val">' + htmlEscape(religionVal) + '</div></div>';
+                            html += '<div class="hist-profile-item full-width"><div class="hist-profile-item-label">' + htmlEscape(t('histReligionTitle')) + '</div><div class="hist-profile-item-val">' + htmlEscape(religionVal) + '</div></div>';
                         }
                         if (langVal) {
-                            html += '<div class="hist-profile-item"><div class="hist-profile-item-label">🗣️ اللغة الرسمية</div><div class="hist-profile-item-val">' + htmlEscape(langVal) + '</div></div>';
+                            html += '<div class="hist-profile-item"><div class="hist-profile-item-label">' + htmlEscape(t('histLanguageTitle')) + '</div><div class="hist-profile-item-val">' + htmlEscape(langVal) + '</div></div>';
                         }
                         if (ethVal) {
-                            html += '<div class="hist-profile-item"><div class="hist-profile-item-label">🌍 العرق والهوية الثقافية</div><div class="hist-profile-item-val">' + htmlEscape(ethVal) + '</div></div>';
+                            html += '<div class="hist-profile-item"><div class="hist-profile-item-label">' + htmlEscape(t('histEthnicityTitle')) + '</div><div class="hist-profile-item-val">' + htmlEscape(ethVal) + '</div></div>';
                         }
                         html += '</div>';
 
                         if (originVal) {
                             html += '<div class="hist-narrative-box origin-box">' +
-                                '<div class="hist-narrative-title">🌱 كيف وأين بدأت؟</div>' +
+                                '<div class="hist-narrative-title">' + htmlEscape(t('histHowStartedTitle')) + '</div>' +
                                 '<p class="hist-narrative-text">' + htmlEscape(originVal) + '</p>' +
                                 '</div>';
                         }
 
                         if (fallVal) {
                             html += '<div class="hist-narrative-box fall-box">' +
-                                '<div class="hist-narrative-title">⚔️ كيف ومتى ولماذا انتهت؟</div>' +
+                                '<div class="hist-narrative-title">' + htmlEscape(t('histHowEndedTitle')) + '</div>' +
                                 '<p class="hist-narrative-text">' + htmlEscape(fallVal) + '</p>' +
                                 '</div>';
                         }
@@ -9496,13 +9576,18 @@ function buildEraFeature(p, phase) {
                         var feature = buildEraFeature(p, historyEraPhase);
                         var pd = pathGen(feature);
                         if (pd) {
-                            var isSel = selectedHistoryPolity === p || (selectedHistoryPolity && p && selectedHistoryPolity.id && p.id && selectedHistoryPolity.id === p.id);
+                            var pName = cleanHistoricalName(locField(p, 'name'));
+                            var isSel = (selectedHistoryPolity === p || (selectedHistoryPolity && p && selectedHistoryPolity.id && p.id && selectedHistoryPolity.id === p.id));
                             var s = gHistoryOverlay.append('path').attr('d', pd).attr('fill', p.color)
                                 .attr('fill-opacity', historyLayerOpacity)
                                 .style('fill-opacity', historyLayerOpacity)
                                 .attr('stroke', isSel ? '#ffffff' : p.color).attr('stroke-width', isSel ? 3 : 1.8)
                                 .attr('stroke-dasharray', isSel ? 'none' : '7,4')
                                 .attr('vector-effect', 'non-scaling-stroke')
+                                .attr('class', 'hist-polity-boundary')
+                                .attr('role', 'button')
+                                .attr('tabindex', '0')
+                                .attr('aria-label', pName)
                                 .style('cursor', 'pointer').style('pointer-events', 'auto');
                             var _epDownX = 0, _epDownY = 0, _epDownT = 0;
                             s.on('pointerdown', function(ev) {
@@ -9527,6 +9612,15 @@ function buildEraFeature(p, phase) {
                                     deselectHistoryPolity();
                                 } else {
                                     showEraPolityPanel(p, era);
+                                }
+                            }).on('keydown', function(ev) {
+                                if (ev.key === 'Enter' || ev.key === ' ') {
+                                    if (ev.preventDefault) ev.preventDefault();
+                                    if (selectedHistoryPolity === p || (selectedHistoryPolity && p && selectedHistoryPolity.id && p.id && selectedHistoryPolity.id === p.id)) {
+                                        deselectHistoryPolity();
+                                    } else {
+                                        showEraPolityPanel(p, era);
+                                    }
                                 }
                             });
                             if (skipFadeIn) s.attr('opacity', 1).style('opacity', 1); else s.attr('opacity', 0).style('opacity', 0).transition().duration(dur).attr('opacity', 1).style('opacity', 1);
@@ -9570,43 +9664,43 @@ function buildEraFeature(p, phase) {
                     selectedFeatureType = 'history';
                     drawEraScene(true);
                     var profile = (typeof getHistoricalPolityProfile === 'function') ? getHistoricalPolityProfile(p.id || locField(p, 'name') || (era && era.id)) : null;
-                    var founderVal = (profile && profile.founder_ar) || p.founder || p.foundingYear || '';
-                    var religionVal = (profile && profile.religion_ar) || p.religion || '';
-                    var langVal = (profile && profile.language_ar) || p.language || '';
-                    var ethVal = (profile && profile.ethnicity_ar) || p.ethnicity || '';
-                    var capVal = (profile && profile.capital_ar) || p.capital || '';
-                    var originVal = (profile && profile.origin_ar) || p.origin || '';
-                    var fallVal = (profile && profile.fall_ar) || p.fall || p.endYear || '';
+                    var founderVal = (profile && locField(profile, 'founder')) || locField(p, 'founder') || p.foundingYear || '';
+                    var religionVal = (profile && locField(profile, 'religion')) || locField(p, 'religion') || '';
+                    var langVal = (profile && locField(profile, 'language')) || locField(p, 'language') || '';
+                    var ethVal = (profile && locField(profile, 'ethnicity')) || locField(p, 'ethnicity') || '';
+                    var capVal = (profile && locField(profile, 'capital')) || locField(p, 'capital') || '';
+                    var originVal = (profile && locField(profile, 'origin')) || locField(p, 'origin') || '';
+                    var fallVal = (profile && locField(profile, 'fall')) || locField(p, 'fall') || p.endYear || '';
 
                     var html = '<div class="hist-profile-card">' +
                         '<div class="hist-profile-header">' +
-                        '<h3 class="hist-profile-title">🏛️ ' + htmlEscape(cleanHistoricalName((profile && profile.name_ar) || locField(p, 'name'))) + '</h3>' +
+                        '<h3 class="hist-profile-title">🏛️ ' + htmlEscape(cleanHistoricalName((profile && locField(profile, 'name')) || locField(p, 'name'))) + '</h3>' +
                         '<p class="hist-profile-subtitle"><strong>' + htmlEscape(cleanHistoricalName(locField(era, 'title'))) + '</strong> — ' + htmlEscape(era.yearLabel || '') + '</p>' +
                         '</div>';
 
                     // Grid of key metadata
                     html += '<div class="hist-profile-grid">';
                     if (founderVal) {
-                        html += '<div class="hist-profile-item"><div class="hist-profile-item-label">👑 اسم المؤسس</div><div class="hist-profile-item-val">' + htmlEscape(founderVal) + '</div></div>';
+                        html += '<div class="hist-profile-item"><div class="hist-profile-item-label">' + htmlEscape(t('histFounderTitle')) + '</div><div class="hist-profile-item-val">' + htmlEscape(founderVal) + '</div></div>';
                     }
                     if (capVal) {
-                        html += '<div class="hist-profile-item"><div class="hist-profile-item-label">🏛️ العاصمة</div><div class="hist-profile-item-val">' + htmlEscape(capVal) + '</div></div>';
+                        html += '<div class="hist-profile-item"><div class="hist-profile-item-label">' + htmlEscape(t('histCapitalTitle')) + '</div><div class="hist-profile-item-val">' + htmlEscape(capVal) + '</div></div>';
                     }
                     if (religionVal) {
-                        html += '<div class="hist-profile-item full-width"><div class="hist-profile-item-label">🕊️ الديانة والتحولات الدينية</div><div class="hist-profile-item-val">' + htmlEscape(religionVal) + '</div></div>';
+                        html += '<div class="hist-profile-item full-width"><div class="hist-profile-item-label">' + htmlEscape(t('histReligionTitle')) + '</div><div class="hist-profile-item-val">' + htmlEscape(religionVal) + '</div></div>';
                     }
                     if (langVal) {
-                        html += '<div class="hist-profile-item"><div class="hist-profile-item-label">🗣️ اللغة الرسمية</div><div class="hist-profile-item-val">' + htmlEscape(langVal) + '</div></div>';
+                        html += '<div class="hist-profile-item"><div class="hist-profile-item-label">' + htmlEscape(t('histLanguageTitle')) + '</div><div class="hist-profile-item-val">' + htmlEscape(langVal) + '</div></div>';
                     }
                     if (ethVal) {
-                        html += '<div class="hist-profile-item"><div class="hist-profile-item-label">🌍 العرق والهوية الثقافية</div><div class="hist-profile-item-val">' + htmlEscape(ethVal) + '</div></div>';
+                        html += '<div class="hist-profile-item"><div class="hist-profile-item-label">' + htmlEscape(t('histEthnicityTitle')) + '</div><div class="hist-profile-item-val">' + htmlEscape(ethVal) + '</div></div>';
                     }
                     html += '</div>';
 
                     // How and where it started
                     if (originVal) {
                         html += '<div class="hist-narrative-box origin-box">' +
-                            '<div class="hist-narrative-title">🌱 كيف وأين بدأت؟</div>' +
+                            '<div class="hist-narrative-title">' + htmlEscape(t('histHowStartedTitle')) + '</div>' +
                             '<p class="hist-narrative-text">' + htmlEscape(originVal) + '</p>' +
                             '</div>';
                     }
@@ -9614,7 +9708,7 @@ function buildEraFeature(p, phase) {
                     // How and why it ended
                     if (fallVal) {
                         html += '<div class="hist-narrative-box fall-box">' +
-                            '<div class="hist-narrative-title">⚔️ كيف ومتى ولماذا انتهت؟</div>' +
+                            '<div class="hist-narrative-title">' + htmlEscape(t('histHowEndedTitle')) + '</div>' +
                             '<p class="hist-narrative-text">' + htmlEscape(fallVal) + '</p>' +
                             '</div>';
                     }
@@ -9622,11 +9716,11 @@ function buildEraFeature(p, phase) {
                     var desc = locField(era, 'desc');
                     if (desc && !originVal) html += '<p class="hist-note">' + htmlEscape(desc) + '</p>';
 
-                    var btnGeoText = (t('exportGeoJSONBtn') !== 'exportGeoJSONBtn') ? t('exportGeoJSONBtn') : (lang === 'ar' ? 'تصدير GeoJSON' : 'Export GeoJSON');
-                    var btnStudyText = (t('histEraStudyBtn') !== 'histEraStudyBtn') ? t('histEraStudyBtn') : (lang === 'ar' ? 'ورقة دراسية' : 'Study Sheet');
-                    var btnQuizText = (t('histEraQuizBtn') !== 'histEraQuizBtn') ? t('histEraQuizBtn') : (lang === 'ar' ? 'اختبر فهمك' : 'Quiz');
-                    var btnCmpText = (t('histEraCompareBtn') !== 'histEraCompareBtn') ? t('histEraCompareBtn') : (lang === 'ar' ? 'مقارنة' : 'Compare');
-                    var btnCopyText = (t('histEraCopyLink') !== 'histEraCopyLink') ? t('histEraCopyLink') : (lang === 'ar' ? 'نسخ الرابط' : 'Copy Link');
+                    var btnGeoText = t('exportGeoJSONBtn');
+                    var btnStudyText = t('histEraStudyBtn');
+                    var btnQuizText = t('histEraQuizBtn');
+                    var btnCmpText = t('histEraCompareBtn');
+                    var btnCopyText = t('histEraCopyLink');
                     html += '<div class="history-actions">' +
                         '<button type="button" class="btn history-action-btn" id="eraActStudy">' + htmlEscape(btnStudyText) + '</button>' +
                         '<button type="button" class="btn history-action-btn" id="eraActQuiz">' + htmlEscape(btnQuizText) + '</button>' +
@@ -9723,10 +9817,18 @@ function buildEraFeature(p, phase) {
                         if (typeof getHistoricalPolityProfile === 'function') {
                             profile = getHistoricalPolityProfile(era.id) || (era.polities && era.polities[0] && getHistoricalPolityProfile(era.polities[0].id || locField(era.polities[0], 'name')));
                         }
-                        if (profile && profile.phases && profile.phases[historyEraPhase]) {
+                        var activePhaseData = (era && era.phases && era.phases[historyEraPhase]) ? era.phases[historyEraPhase] : null;
+                        if (activePhaseData) {
+                            if (badge) badge.textContent = activePhaseData.yearLabel || era.yearLabel || '';
+                            var phTitle = locField(activePhaseData, 'title');
+                            var phDesc = locField(activePhaseData, 'desc');
+                            if (cap) cap.textContent = (phTitle ? phTitle + ' — ' : '') + phDesc;
+                        } else if (profile && profile.phases && profile.phases[historyEraPhase]) {
                             var ph = profile.phases[historyEraPhase];
                             if (badge) badge.textContent = ph.year;
-                            if (cap) cap.textContent = (ph.title_ar ? ph.title_ar + ' — ' : '') + ph.desc_ar;
+                            var pTitle = locField(ph, 'title');
+                            var pDesc = locField(ph, 'desc');
+                            if (cap) cap.textContent = (pTitle ? pTitle + ' — ' : '') + pDesc;
                         } else {
                             if (badge) badge.textContent = era.yearLabel || '';
                             if (cap) cap.textContent = locField(era, 'desc') || locField(era, 'title') || '';
@@ -9737,6 +9839,10 @@ function buildEraFeature(p, phase) {
                             var max = Math.max.apply(null, allSorts) + 50;
                             var pct = Math.max(0, Math.min(100, (era.sort - min) / (max - min) * 100));
                             tl.style.setProperty('--era-pct', pct + '%');
+                            tl.setAttribute('aria-valuenow', era.sort || 0);
+                            tl.setAttribute('aria-valuemin', min);
+                            tl.setAttribute('aria-valuemax', max);
+                            tl.setAttribute('aria-valuetext', (era.yearLabel ? era.yearLabel + ' - ' : '') + locField(era, 'title'));
                         }
                     } else {
                         if (badge) badge.textContent = '';
@@ -9769,17 +9875,28 @@ function buildEraFeature(p, phase) {
                 };
                 window.setHistEraPhase = setHistEraPhase;
                 window.selectHistEra = function(id) {
+                    function applyEra(found) {
+                        if (!found) return;
+                        if (typeof stopHistPlay === 'function') stopHistPlay();
+                        historyTab = 'eras';
+                        historyEraId = found.id;
+                        selectedHistoryPolity = null;
+                        if (typeof closeFeatureDetail === 'function') closeFeatureDetail();
+                        var panel = document.getElementById('countryPanel');
+                        if (panel) { panel.classList.remove('visible'); panel.style.display = 'none'; }
+                        renderHistoryBar();
+                        drawEraScene();
+                    }
+                    if (!historicalErasData || !historicalErasData.length) {
+                        return fetchHistoricalEras().then(function() {
+                            var found = (historicalErasData || []).find(function(x) { return x.id === id; });
+                            applyEra(found);
+                            return found;
+                        });
+                    }
                     var found = (historicalErasData || []).find(function(x) { return x.id === id; });
-                    if (!found) return;
-                    if (typeof stopHistPlay === 'function') stopHistPlay();
-                    historyTab = 'eras';
-                    historyEraId = found.id;
-                    selectedHistoryPolity = null;
-                    if (typeof closeFeatureDetail === 'function') closeFeatureDetail();
-                    var panel = document.getElementById('countryPanel');
-                    if (panel) { panel.classList.remove('visible'); panel.style.display = 'none'; }
-                    renderHistoryBar();
-                    drawEraScene();
+                    applyEra(found);
+                    return Promise.resolve(found);
                 };
 
                 function updateEraTopCard(era) {
@@ -10024,6 +10141,33 @@ function buildEraFeature(p, phase) {
                         tl.addEventListener('pointercancel', function() {
                             tlDrag = false;
                         });
+                        tl.addEventListener('keydown', function(e) {
+                            var order = (histPlayOrder && histPlayOrder.length) ? histPlayOrder : (historicalErasData || []);
+                            if (!order.length) return;
+                            var curIdx = order.findIndex(function(x) { return x.id === historyEraId; });
+                            var targetEra = null;
+                            if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+                                e.preventDefault();
+                                var nextIdx = (curIdx === -1) ? 0 : Math.min(order.length - 1, curIdx + 1);
+                                targetEra = order[nextIdx];
+                            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+                                e.preventDefault();
+                                var prevIdx = (curIdx === -1) ? 0 : Math.max(0, curIdx - 1);
+                                targetEra = order[prevIdx];
+                            } else if (e.key === 'Home') {
+                                e.preventDefault();
+                                targetEra = order[0];
+                            } else if (e.key === 'End') {
+                                e.preventDefault();
+                                targetEra = order[order.length - 1];
+                            }
+                            if (targetEra) {
+                                window.selectHistEra(targetEra.id);
+                                if (typeof announceToScreenReader === 'function') {
+                                    announceToScreenReader((targetEra.yearLabel ? targetEra.yearLabel + ' - ' : '') + locField(targetEra, 'title'));
+                                }
+                            }
+                        });
                     }
                     renderHistoryLegend();
                     if (sp) {
@@ -10069,7 +10213,7 @@ function buildEraFeature(p, phase) {
                         seen2[key] = true;
                         var item = document.createElement('div');
                         item.className = 'legend-item';
-                        var fullSide = (war.sides && war.sides[p.side]) ? t(war.sides[p.side]) : '';
+                        var fullSide = getHistSide(war, p.side);
                         var shortSide = fullSide ? fullSide.split('—')[0].trim() : '';
                         item.title = shortSide ? (shortSide + ' — ' + t(histRoleKey(p.role))) : t(histRoleKey(p.role));
                         var sw = document.createElement('span');
@@ -10086,7 +10230,7 @@ function buildEraFeature(p, phase) {
                         seen2[key] = true;
                         var item = document.createElement('div');
                         item.className = 'legend-item';
-                        var fullSide = (war.sides && war.sides[emp.side]) ? t(war.sides[emp.side]) : '';
+                        var fullSide = getHistSide(war, emp.side);
                         var shortSide = fullSide ? fullSide.split('—')[0].trim() : '';
                         item.title = shortSide ? (shortSide + ' — ' + t(histRoleKey(emp.role))) : t(histRoleKey(emp.role));
                         var sw = document.createElement('span');
@@ -12412,13 +12556,22 @@ function buildEraFeature(p, phase) {
                 { btnId: 'histFaithsPopoverBtn', menuId: 'histFaithsPopoverMenu', tab: 'faiths' },
                 { btnId: 'histTravelersPopoverBtn', menuId: 'histTravelersPopoverMenu', tab: 'travelers' }
             ];
-            function closeAllHistPopovers() {
+            var _lastActiveHistPopoverBtn = null;
+            function closeAllHistPopovers(restoreFocus) {
+                var btnToRestore = _lastActiveHistPopoverBtn;
                 histPopoverDefs.forEach(function(d) {
                     var btn = document.getElementById(d.btnId);
                     var menu = document.getElementById(d.menuId);
+                    if (btn && btn.getAttribute('aria-expanded') === 'true') {
+                        btnToRestore = btn;
+                    }
                     if (btn) btn.setAttribute('aria-expanded', 'false');
                     if (menu) { menu.classList.remove('visible'); menu.setAttribute('hidden', ''); }
                 });
+                if (restoreFocus && btnToRestore && typeof btnToRestore.focus === 'function') {
+                    btnToRestore.focus();
+                }
+                _lastActiveHistPopoverBtn = null;
                 if (!historyWarId && !historyEraId && (!window.religionsStillActive || !window.religionsStillActive()) && (!selectedTravelerIds || !selectedTravelerIds.length)) {
                     historyTab = null;
                     if (typeof updateHistSubmodeVis === 'function') updateHistSubmodeVis();
@@ -12436,6 +12589,7 @@ function buildEraFeature(p, phase) {
                     var isOpen = menu.classList.contains('visible');
                     closeAllHistPopovers();
                     if (isOpen) return;
+                    _lastActiveHistPopoverBtn = btn;
                     // Ensure the active sub-mode matches this popover so its
                     // content renders into the right menu.
                     if (historyTab !== d.tab && window.selectHistoryTab) {
@@ -12450,6 +12604,10 @@ function buildEraFeature(p, phase) {
                     else if (d.tab === 'faiths') { if (window.renderFaithsPopoverList) renderFaithsPopoverList(); }
                     else if (d.tab === 'travelers') { if (window.renderTravelersPopoverList) renderTravelersPopoverList(); }
                     positionPopover(menu, btn);
+                    setTimeout(function() {
+                        var focusables = menu.querySelectorAll('input:not([disabled]), select:not([disabled]), button:not([disabled]), [tabindex="0"]');
+                        if (focusables.length) focusables[0].focus();
+                    }, 60);
                 });
                 menu.addEventListener('click', function(e) { e.stopPropagation(); });
                 var cBtn = menu.querySelector('.hist-drawer-close-btn');
@@ -12457,7 +12615,7 @@ function buildEraFeature(p, phase) {
                     cBtn.dataset.bound = '1';
                     cBtn.addEventListener('click', function(e) {
                         e.stopPropagation();
-                        closeAllHistPopovers();
+                        closeAllHistPopovers(true);
                     });
                 }
             });
@@ -12484,7 +12642,7 @@ function buildEraFeature(p, phase) {
             // إغلاق القوائم عند الضغط على Escape
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
-                    closeAllHistPopovers();
+                    closeAllHistPopovers(true);
                 }
             });
             // سجّل وقت أي تفاعل مع شريط الزمن حتى لا تُغلق القوائم المفتوحة أثناء
@@ -12766,6 +12924,10 @@ function getReligionSlice(religion, year) {
                 if (rgTimelineEl) {
                     var pct = (year - YEAR_MIN) / (YEAR_MAX - YEAR_MIN) * 100;
                     rgTimelineEl.style.setProperty('--religions-pct', pct + '%');
+                    rgTimelineEl.setAttribute('aria-valuenow', year);
+                    rgTimelineEl.setAttribute('aria-valuemin', YEAR_MIN);
+                    rgTimelineEl.setAttribute('aria-valuemax', YEAR_MAX);
+                    rgTimelineEl.setAttribute('aria-valuetext', religionsYearLabelFor(year));
                 }
                 drawReligionsScene(year, true);
             }
@@ -12876,6 +13038,26 @@ function getReligionSlice(religion, year) {
                     rgTlPick(e.clientX);
                 });
                 document.addEventListener('pointerup', function() { rgTlDrag = false; });
+                rgTimelineEl.addEventListener('keydown', function(e) {
+                    var step = (e.shiftKey ? 100 : 20);
+                    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        setReligionsYear(religionsYear + step);
+                        if (typeof announceToScreenReader === 'function') announceToScreenReader(religionsYearLabelFor(religionsYear));
+                    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        setReligionsYear(religionsYear - step);
+                        if (typeof announceToScreenReader === 'function') announceToScreenReader(religionsYearLabelFor(religionsYear));
+                    } else if (e.key === 'Home') {
+                        e.preventDefault();
+                        setReligionsYear(YEAR_MIN);
+                        if (typeof announceToScreenReader === 'function') announceToScreenReader(religionsYearLabelFor(YEAR_MIN));
+                    } else if (e.key === 'End') {
+                        e.preventDefault();
+                        setReligionsYear(YEAR_MAX);
+                        if (typeof announceToScreenReader === 'function') announceToScreenReader(religionsYearLabelFor(YEAR_MAX));
+                    }
+                });
             }
             window.renderFaithsMode = activateReligionsMode;
             window.deactivateFaithsMode = deactivateReligionsMode;
@@ -13065,7 +13247,7 @@ function getReligionSlice(religion, year) {
 
                 if (stepNumEl) stepNumEl.textContent = (wpIndex + 1);
                 if (titleEl) titleEl.textContent = cleanHistoricalName(locField(wp, 'name'));
-                if (yearEl) yearEl.textContent = wp.year ? (wp.year + ' م') : '';
+                if (yearEl) yearEl.textContent = wp.year ? (wp.year + ' ' + t('ceYearSuffix')) : '';
                 var dur = locField(wp, 'duration');
                 if (durationEl) {
                     durationEl.textContent = dur ? dur : '';
@@ -13176,8 +13358,8 @@ function getReligionSlice(religion, year) {
                 // Update bottom stage badge
                 var badge = document.getElementById('histTravelerStageBadge');
                 if (badge) {
-                    var yr = wp.year ? (wp.year + ' م · ') : '';
-                    var stepTxt = (getCurrentLang() === 'ar' ? 'محطة ' : 'Station ') + (wpIndex + 1) + ' / ' + tr.waypoints.length;
+                    var yr = wp.year ? (wp.year + ' ' + t('ceYearSuffix') + ' · ') : '';
+                    var stepTxt = t('histStationWord') + ' ' + (wpIndex + 1) + ' / ' + tr.waypoints.length;
                     badge.textContent = yr + stepTxt;
                 }
 
@@ -13286,31 +13468,36 @@ function getReligionSlice(religion, year) {
                 list.innerHTML = filtered.map(function(tr) {
                     var isChecked = selectedTravelerIds.indexOf(tr.id) !== -1;
                     var datesStr = locField(tr, 'period') || tr.dates || '';
-                    return '<div class="hist-traveler-item' + (isChecked ? ' selected' : '') + '" data-traveler-id="' + tr.id + '">' +
+                    var trName = locField(tr, 'name');
+                    return '<div class="hist-traveler-item' + (isChecked ? ' selected' : '') + '" data-traveler-id="' + tr.id + '" role="checkbox" aria-checked="' + isChecked + '" tabindex="0" aria-label="' + htmlEscape(trName) + '">' +
                         '<div class="hist-traveler-color-bar" style="background:' + tr.color + '"></div>' +
                         '<div class="hist-traveler-info">' +
                             '<div class="hist-traveler-title-row">' +
-                                '<span class="hist-traveler-name">' + htmlEscape(locField(tr, 'name')) + '</span>' +
+                                '<span class="hist-traveler-name">' + htmlEscape(trName) + '</span>' +
                                 '<span class="hist-traveler-dates">' + htmlEscape(datesStr) + '</span>' +
                             '</div>' +
                             '<div class="hist-traveler-desc-line">' + htmlEscape(locField(tr, 'title') || locField(tr, 'bio') || '') + '</div>' +
                         '</div>' +
-                        '<input type="checkbox" class="hist-traveler-checkbox" ' + (isChecked ? 'checked' : '') + ' tabindex="-1" />' +
+                        '<input type="checkbox" class="hist-traveler-checkbox" ' + (isChecked ? 'checked' : '') + ' tabindex="-1" aria-hidden="true" />' +
                     '</div>';
                 }).join('');
 
                 list.querySelectorAll('.hist-traveler-item').forEach(function(item) {
-                    item.addEventListener('click', function(e) {
-                        var id = this.getAttribute('data-traveler-id');
+                    function toggleItem() {
+                        var id = item.getAttribute('data-traveler-id');
+                        var trObj = (historicalTravelersData || []).find(function(x) { return x.id === id; });
+                        var trName = trObj ? locField(trObj, 'name') : id;
                         var idx = selectedTravelerIds.indexOf(id);
                         if (idx === -1) {
                             selectedTravelerIds.push(id);
                             activeTravelerCarouselIndex = selectedTravelerIds.length - 1;
+                            if (typeof announceToScreenReader === 'function') announceToScreenReader(t('histSelectedAnnounce', { name: trName }));
                         } else {
                             selectedTravelerIds.splice(idx, 1);
                             if (activeTravelerCarouselIndex >= selectedTravelerIds.length) {
                                 activeTravelerCarouselIndex = Math.max(0, selectedTravelerIds.length - 1);
                             }
+                            if (typeof announceToScreenReader === 'function') announceToScreenReader(t('histDeselectedAnnounce', { name: trName }));
                         }
                         activeWaypointIndex = null;
                         closeWaypointPopup();
@@ -13319,6 +13506,15 @@ function getReligionSlice(religion, year) {
                         drawTravelerRoutes();
                         updateTravelerCard();
                         if (window.updateHistSubmodeVis) window.updateHistSubmodeVis();
+                    }
+                    item.addEventListener('click', function(e) {
+                        toggleItem();
+                    });
+                    item.addEventListener('keydown', function(e) {
+                        if (e.key === ' ' || e.key === 'Enter') {
+                            e.preventDefault();
+                            toggleItem();
+                        }
                     });
                 });
             }
@@ -13388,7 +13584,7 @@ function getReligionSlice(religion, year) {
                     var isAct = (activeWaypointIndex === wIdx);
                     var cleanName = cleanHistoricalName(locField(wp, 'name'));
                     var fullTitle = locField(wp, 'name') + (wp.year ? ' (' + wp.year + ')' : '');
-                    return '<button type="button" class="hist-traveler-wp-node' + (isAct ? ' active' : '') + '" data-wp-idx="' + wIdx + '" title="' + htmlEscape(fullTitle) + '">' +
+                    return '<button type="button" class="hist-traveler-wp-node' + (isAct ? ' active' : '') + '" data-wp-idx="' + wIdx + '" title="' + htmlEscape(fullTitle) + '" aria-label="' + htmlEscape(fullTitle) + '" aria-pressed="' + isAct + '">' +
                         '<span class="hist-traveler-node-dot"></span>' +
                         '<span class="hist-traveler-node-label">' + (wIdx + 1) + '. ' + htmlEscape(cleanName) + '</span>' +
                     '</button>';
@@ -13399,13 +13595,18 @@ function getReligionSlice(religion, year) {
                 if (stageBadge) {
                     if (activeWaypointIndex !== null && tr.waypoints[activeWaypointIndex]) {
                         var cWp = tr.waypoints[activeWaypointIndex];
-                        var yr = cWp.year ? (cWp.year + ' م · ') : '';
-                        stageBadge.textContent = yr + (getCurrentLang() === 'ar' ? 'محطة ' : 'Station ') + (activeWaypointIndex + 1) + ' / ' + tr.waypoints.length;
+                        var yr = cWp.year ? (cWp.year + ' ' + t('ceYearSuffix') + ' · ') : '';
+                        stageBadge.textContent = yr + t('histStationWord') + ' ' + (activeWaypointIndex + 1) + ' / ' + tr.waypoints.length;
                     } else {
                         var datesStr = locField(tr, 'period') || tr.dates || '';
                         stageBadge.textContent = tr.waypoints.length + ' ' + (t('travelerStations') || 'محطات') + (datesStr ? ' · ' + datesStr : '');
                     }
                 }
+
+                timelineTrack.setAttribute('aria-valuemin', '1');
+                timelineTrack.setAttribute('aria-valuemax', tr.waypoints.length);
+                timelineTrack.setAttribute('aria-valuenow', (activeWaypointIndex !== null ? (activeWaypointIndex + 1) : 0));
+                timelineTrack.setAttribute('aria-valuetext', stageBadge ? stageBadge.textContent : '');
 
                 timelineTrack.querySelectorAll('.hist-traveler-wp-node').forEach(function(node) {
                     node.addEventListener('click', function() {
@@ -13413,6 +13614,30 @@ function getReligionSlice(religion, year) {
                         goToWaypoint(tr, wIdx, true);
                     });
                 });
+
+                if (!timelineTrack._kbBound) {
+                    timelineTrack._kbBound = true;
+                    timelineTrack.addEventListener('keydown', function(e) {
+                        var curTr = getActiveTraveler();
+                        if (!curTr || !curTr.waypoints || !curTr.waypoints.length) return;
+                        var cur = (activeWaypointIndex === null) ? -1 : activeWaypointIndex;
+                        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                            e.preventDefault();
+                            var nxt = Math.min(curTr.waypoints.length - 1, cur + 1);
+                            goToWaypoint(curTr, nxt, true);
+                        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                            e.preventDefault();
+                            var prv = Math.max(0, cur - 1);
+                            goToWaypoint(curTr, prv, true);
+                        } else if (e.key === 'Home') {
+                            e.preventDefault();
+                            goToWaypoint(curTr, 0, true);
+                        } else if (e.key === 'End') {
+                            e.preventDefault();
+                            goToWaypoint(curTr, curTr.waypoints.length - 1, true);
+                        }
+                    });
+                }
             }
             window.renderTravelersBottomBar = renderTravelersBottomBar;
 
@@ -13752,28 +13977,28 @@ function getReligionSlice(religion, year) {
                     var relType = '';
                     var relDesc = '';
                     if (pA.id === pB.id) {
-                        relType = t('histCompareSame') || 'الكيان نفسه';
-                        relDesc = t('histCompareSameDesc') || 'يرجى اختيار قوتين مختلفتين للمقارنة الموضوعية.';
+                        relType = t('histCompareSame');
+                        relDesc = t('histCompareSameDesc');
                     } else if ((pA.id === 'abbasid' && pB.id === 'tang') || (pA.id === 'tang' && pB.id === 'abbasid')) {
-                        relType = 'تبادل تجاري ودبلوماسي مع صدام محلي حاسم (معركة طلاس 751 م)';
-                        relDesc = 'تواصلت القوتان عبر قوافل طريق الحرير والسفن البحرية في المحيط الهندي. ورغم الصدام الوحيد في طلاس عام 751 م (الذي انتقلت بسببه صناعة الورق من الصين إلى العالم الإسلامي)، سادت بعده علاقات تجارية ودبلوماسية نشطة وتبادل للسفارات.';
+                        relType = t('histRelTradeDiplomacy');
+                        relDesc = t('histRelTradeDiplomacyDesc');
                     } else if ((pA.id === 'abbasid' && pB.id === 'byzantine') || (pA.id === 'byzantine' && pB.id === 'abbasid')) {
-                        relType = 'صراع جيوسياسي ومذهبي حدودي مباشر مع تبادل ثقافي';
-                        relDesc = 'حالة تنافس عسكري مستمر على الثغور الشامية والأناضولية والسيطرة على البحر المتوسط، تخللتها فترات هدنة وافتداء أسرى وتبادل للمخطوطات الفلسفية واليونانية التي تُرجمت في بيت الحكمة ببغداد.';
+                        relType = t('histRelGeopoliticalClash');
+                        relDesc = t('histRelGeopoliticalClashDesc');
                     } else if (pA.id === 'maya' || pB.id === 'maya') {
-                        relType = 'تعايش حضاري متباعد دون أي اتصال مباشر';
-                        relDesc = 'عاشت الحضارتان في نفس القرون الزمنية لكن في نصفي كرة أرضية مختلفين تماماً دون أي معرفة بوجود الأخرى. توضح المقارنة الفوارق في مسار التطور الإنساني، والرياضيات، والعمران دون احتكاك جغرافي.';
+                        relType = t('histRelDistantCoexistence');
+                        relDesc = t('histRelDistantCoexistenceDesc');
                     } else {
-                        relType = 'تزامن حضاري عبر شبكات التجارة غير المباشرة وطرق التوابل والحرير';
-                        relDesc = 'عاصرت كل قوة واقع عصرها من خلال مراكز ثقلها الإقليمية، وتدفقت السلع والأفكار بينهما عبر وسطاء تجاريين بريين وبحريين دون اصطدام عسكري شامل.';
+                        relType = t('histRelIndirectTrade');
+                        relDesc = t('histRelIndirectTradeDesc');
                     }
 
                     var rows = [
-                        { title: t('histCompareTrajectory') || 'الواقع والمسار الحضاري', valA: locField(pA, 'vitality'), valB: locField(pB, 'vitality') },
-                        { title: t('capitalsToggle') || 'العاصمة ومركز الثقل', valA: locField(pA, 'capital'), valB: locField(pB, 'capital') },
-                        { title: 'نظام الحكم والإدارة', valA: locField(pA, 'system'), valB: locField(pB, 'system') },
-                        { title: t('religionsListBtn') || 'الديانة والثقافة السائدة', valA: locField(pA, 'religion'), valB: locField(pB, 'religion') },
-                        { title: 'الطابع العسكري والجيوسياسي', valA: locField(pA, 'military'), valB: locField(pB, 'military') }
+                        { title: t('histCompareTrajectory'), valA: locField(pA, 'vitality'), valB: locField(pB, 'vitality') },
+                        { title: t('capitalsToggle'), valA: locField(pA, 'capital'), valB: locField(pB, 'capital') },
+                        { title: t('histGovernmentTitle'), valA: locField(pA, 'system'), valB: locField(pB, 'system') },
+                        { title: t('religionsListBtn'), valA: locField(pA, 'religion'), valB: locField(pB, 'religion') },
+                        { title: t('histMilitaryTitle'), valA: locField(pA, 'military'), valB: locField(pB, 'military') }
                     ];
 
                     var gridHtml = '';
@@ -13802,6 +14027,9 @@ function getReligionSlice(religion, year) {
 
                 modal.removeAttribute('hidden');
                 modal.style.display = 'block';
+                modal.classList.add('visible');
+                if (typeof announceToScreenReader === 'function') announceToScreenReader(t('histCompareTitle') || 'مقارنة القوى التاريخية المتزامنة');
+                setTimeout(function() { if (p1Select) p1Select.focus(); }, 60);
             }
             window.openContemporaryPolityCompare = openContemporaryPolityCompare;
 
@@ -13809,7 +14037,9 @@ function getReligionSlice(religion, year) {
             if (cmpModalClose) {
                 cmpModalClose.addEventListener('click', function() {
                     var modal = document.getElementById('histPolityCompareModal');
-                    if (modal) { modal.setAttribute('hidden', ''); modal.style.display = 'none'; }
+                    if (modal) { modal.setAttribute('hidden', ''); modal.style.display = 'none'; modal.classList.remove('visible'); }
+                    var cmpBtn = document.getElementById('histComparePolitiesBtn');
+                    if (cmpBtn && typeof cmpBtn.focus === 'function') cmpBtn.focus();
                 });
             }
             var cmpPolitiesBtn = document.getElementById('histComparePolitiesBtn');
@@ -13863,12 +14093,11 @@ function getReligionSlice(religion, year) {
                 var html = '<h3>🏛️ ' + htmlEscape(name) + (ancName && ancName !== name ? ' (' + htmlEscape(ancName) + ')' : '') + '</h3>';
                 if (c.modern_location) html += '<p><strong>' + t('country') + ':</strong> ' + htmlEscape(locField(c, 'modern_location')) + '</p>';
                 var founder = locField(c, 'founder');
-                if (c.founded) html += '<p><strong>' + (getCurrentLang() === 'ar' ? 'التأسيس:' : 'Founded:') + '</strong> ' + htmlEscape(c.founded) + (founder ? ' — ' + htmlEscape(founder) : '') + '</p>';
-                var empires = (getCurrentLang() === 'ar' || !c.empires_en) ? c.empires_ar : c.empires_en;
-                if (!empires && Array.isArray(c.empires)) empires = c.empires;
+                if (c.founded) html += '<p><strong>' + htmlEscape(t('histFoundedLabel')) + ':</strong> ' + htmlEscape(c.founded) + (founder ? ' — ' + htmlEscape(founder) : '') + '</p>';
+                var empires = c['empires_' + getCurrentLang()] || c.empires_en || c.empires_ar || c.empires;
                 if (Array.isArray(empires) && empires.length) {
                     var empNames = empires.map(function(e) { return typeof e === 'object' ? locField(e, 'name') : e; }).join('، ');
-                    html += '<p><strong>' + (getCurrentLang() === 'ar' ? 'الإمبراطوريات والدول:' : 'Empires & States:') + '</strong> ' + htmlEscape(empNames) + '</p>';
+                    html += '<p><strong>' + htmlEscape(t('histEmpiresStatesLabel')) + ':</strong> ' + htmlEscape(empNames) + '</p>';
                 }
                 var sig = locField(c, 'significance');
                 if (sig) html += '<p>' + htmlEscape(sig) + '</p>';
@@ -13885,11 +14114,11 @@ function getReligionSlice(religion, year) {
                 var dateStr = locField(b, 'date_str') || b.year;
                 var html = '<h3>⚔️ ' + htmlEscape(name) + (dateStr ? ' (' + htmlEscape(dateStr) + ')' : '') + '</h3>';
                 var bell = locField(b, 'belligerents');
-                if (bell) html += '<p><strong>' + (getCurrentLang() === 'ar' ? 'أطراف المعركة:' : 'Belligerents:') + '</strong> ' + htmlEscape(bell) + '</p>';
+                if (bell) html += '<p><strong>' + htmlEscape(t('histBelligerentsLabel')) + ':</strong> ' + htmlEscape(bell) + '</p>';
                 var outcome = locField(b, 'outcome');
-                if (outcome) html += '<p><strong>النتيجة:</strong> ' + htmlEscape(outcome) + '</p>';
+                if (outcome) html += '<p><strong>' + htmlEscape(t('histOutcomeLabel')) + ':</strong> ' + htmlEscape(outcome) + '</p>';
                 var sig = locField(b, 'significance');
-                if (sig) html += '<p><strong>' + (getCurrentLang() === 'ar' ? 'الأثر والتحول الاستراتيجي:' : 'Strategic Impact:') + '</strong> ' + htmlEscape(sig) + '</p>';
+                if (sig) html += '<p><strong>' + htmlEscape(t('histStrategicImpactLabel')) + ':</strong> ' + htmlEscape(sig) + '</p>';
                 _lastPanelRenderTime = performance.now();
                 panelContent.innerHTML = html;
                 countryPanel.style.display = 'block';
@@ -13902,20 +14131,20 @@ function getReligionSlice(religion, year) {
                 var name = locField(w, 'name');
                 var html = '<h3>🏺 ' + htmlEscape(name) + '</h3>';
                 var cat = locField(w, 'category');
-                if (cat) html += '<p><strong>' + (getCurrentLang() === 'ar' ? 'التصنيف:' : 'Category:') + '</strong> ' + htmlEscape(cat) + '</p>';
+                if (cat) html += '<p><strong>' + htmlEscape(t('histCategoryLabel')) + ':</strong> ' + htmlEscape(cat) + '</p>';
                 var builder = locField(w, 'builder');
-                var built = w.date_built || w.built;
-                if (built) html += '<p><strong>' + (getCurrentLang() === 'ar' ? 'تاريخ الإنشاء:' : 'Date Built:') + '</strong> ' + htmlEscape(built) + (builder ? ' — ' + htmlEscape(builder) : '') + '</p>';
+                var built = locField(w, 'date_built') || locField(w, 'built') || w.date_built || w.built;
+                if (built) html += '<p><strong>' + htmlEscape(t('histDateBuiltLabel')) + ':</strong> ' + htmlEscape(built) + (builder ? ' — ' + htmlEscape(builder) : '') + '</p>';
                 var status = locField(w, 'status');
                 if (status) {
-                    html += '<p><strong>' + (getCurrentLang() === 'ar' ? 'الحالة:' : 'Status:') + '</strong> ' + htmlEscape(status) + '</p>';
+                    html += '<p><strong>' + htmlEscape(t('histStatusLabel')) + ':</strong> ' + htmlEscape(status) + '</p>';
                 } else if (w.extant !== undefined) {
-                    html += '<p><strong>' + (getCurrentLang() === 'ar' ? 'الحالة:' : 'Status:') + '</strong> ' + (w.extant ? '✅ قائم حتى اليوم' : '⚠️ أطلال / مدمّر') + '</p>';
+                    html += '<p><strong>' + htmlEscape(t('histStatusLabel')) + ':</strong> ' + (w.extant ? htmlEscape(t('histWonderExtant')) : htmlEscape(t('histWonderRuins'))) + '</p>';
                 }
                 var purpose = locField(w, 'purpose');
-                if (purpose) html += '<p><strong>' + (getCurrentLang() === 'ar' ? 'الهدف المعماري والحضاري:' : 'Purpose:') + '</strong> ' + htmlEscape(purpose) + '</p>';
+                if (purpose) html += '<p><strong>' + htmlEscape(t('histPurposeLabel')) + ':</strong> ' + htmlEscape(purpose) + '</p>';
                 var disputes = locField(w, 'disputes');
-                if (disputes) html += '<p><strong>' + (getCurrentLang() === 'ar' ? 'حقائق وملاحظات تاريخية:' : 'Historical Notes:') + '</strong> ' + htmlEscape(disputes) + '</p>';
+                if (disputes) html += '<p><strong>' + htmlEscape(t('histNotesLabel')) + ':</strong> ' + htmlEscape(disputes) + '</p>';
                 var sig = locField(w, 'significance');
                 if (sig) html += '<p>' + htmlEscape(sig) + '</p>';
                 _lastPanelRenderTime = performance.now();
@@ -13942,11 +14171,20 @@ function getReligionSlice(religion, year) {
                     if (!xy || isNaN(xy[0])) return;
                     var capName = cleanHistoricalName(locField(c, 'name'));
                     var g = gHistCapitals.append('g')
-                        .attr('class', 'hist-capital-pin')
+                        .attr('class', 'hist-capital-pin hist-landmark-pin')
+                        .attr('role', 'button')
+                        .attr('tabindex', '0')
+                        .attr('aria-label', (t('histCapitalPinLabel') || 'عاصمة تاريخية') + ': ' + capName)
                         .style('cursor', 'pointer')
                         .on('click', function(e) {
                             if (e && e.stopPropagation) e.stopPropagation();
                             showHistoricalCapitalDetail(c);
+                        })
+                        .on('keydown', function(e) {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                if (e.preventDefault) e.preventDefault();
+                                showHistoricalCapitalDetail(c);
+                            }
                         });
                     var minCapPx = isMob ? 11.5 : 13.5;
                     var maxCapPx = isMob ? 13.5 : 15.5;
@@ -13995,11 +14233,20 @@ function getReligionSlice(religion, year) {
                     if (!xy || isNaN(xy[0])) return;
                     var batName = cleanHistoricalName(locField(b, 'name'));
                     var g = gHistBattles.append('g')
-                        .attr('class', 'hist-battle-pin')
+                        .attr('class', 'hist-battle-pin hist-landmark-pin')
+                        .attr('role', 'button')
+                        .attr('tabindex', '0')
+                        .attr('aria-label', (t('histBattlePinLabel') || 'معركة فاصلة') + ': ' + batName)
                         .style('cursor', 'pointer')
                         .on('click', function(e) {
                             if (e && e.stopPropagation) e.stopPropagation();
                             showHistoricalBattleDetail(b);
+                        })
+                        .on('keydown', function(e) {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                if (e.preventDefault) e.preventDefault();
+                                showHistoricalBattleDetail(b);
+                            }
                         });
                     var minBatPx = isMob ? 11.5 : 13.5;
                     var maxBatPx = isMob ? 13.5 : 15.5;
@@ -14058,11 +14305,20 @@ function getReligionSlice(religion, year) {
                     if (!xy || isNaN(xy[0])) return;
                     var wonderName = cleanHistoricalName(locField(w, 'name'));
                     var g = gHistWonders.append('g')
-                        .attr('class', 'hist-wonder-pin')
+                        .attr('class', 'hist-wonder-pin hist-landmark-pin')
+                        .attr('role', 'button')
+                        .attr('tabindex', '0')
+                        .attr('aria-label', (t('histWonderPinLabel') || 'معلم تاريخي') + ': ' + wonderName)
                         .style('cursor', 'pointer')
                         .on('click', function(e) {
                             if (e && e.stopPropagation) e.stopPropagation();
                             showHistoricalWonderDetail(w);
+                        })
+                        .on('keydown', function(e) {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                if (e.preventDefault) e.preventDefault();
+                                showHistoricalWonderDetail(w);
+                            }
                         });
                     var minWonPx = isMob ? 11.5 : 13.5;
                     var maxWonPx = isMob ? 13.5 : 15.5;

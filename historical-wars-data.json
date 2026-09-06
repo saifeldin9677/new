@@ -72,9 +72,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Гавгамелах и падение Персии",
+          "title_uz": "Gavgamela jangi va Forsning qulashi",
+          "title_es": "Batalla de Gaugamela y caída de Persia",
+          "desc_ru": "Александр наносит сокрушительное поражение Дарию III при Гавгамелах, захватывает Вавилон, Сузы и Персеполь.",
+          "desc_uz": "Iskandar Gavgamelada Doro III ni tor-mor etib, Bobil, Suza va Persepolni egallaydi hamda Hindistonga yoʻl oladi.",
+          "desc_es": "Alejandro derrota a Darío III en Gaugamela, tomando Babilonia, Susa y Persépolis."
         }
-      ]
+      ],
+      "sides_en": {
+        "delian": "Kingdom of Macedon & Allies",
+        "persia": "Persian Empire (Darius III)"
+      },
+      "sides_ru": {
+        "delian": "Македонское царство и союзники",
+        "persia": "Персидская империя (Дарий III)"
+      },
+      "sides_uz": {
+        "delian": "Makedoniya qirolligi va ittifoqchilari",
+        "persia": "Fors imperiyasi (Doro III)"
+      },
+      "sides_es": {
+        "delian": "Reino de Macedonia y aliados",
+        "persia": "Imperio persa (Darío III)"
+      }
     },
     {
       "id": "algerian-rev-1954",
@@ -120,9 +142,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва за Алжир, Эвианские соглашения и независимость",
+          "title_uz": "Jazoir jangi, Evian bitimlari va mustaqillik",
+          "title_es": "Batalla de Argel y Acuerdos de Évian",
+          "desc_ru": "Восьмилетняя национально-освободительная война приводит к Эвианским соглашениям и признанию независимости Алжира.",
+          "desc_uz": "Sakkiz yillik partizanlik kurashi Evian bitimlari va Jazoirning suveren mustaqilligi bilan yakunlanadi.",
+          "desc_es": "Ocho años de resistencia culminan en los Acuerdos de Évian y la independencia soberana de Argelia."
         }
-      ]
+      ],
+      "sides_en": {
+        "fln": "National Liberation Front & ALN",
+        "france": "French Republic & Settlers"
+      },
+      "sides_ru": {
+        "fln": "Фронт национального освобождения и АНО",
+        "france": "Французская Республика и поселенцы"
+      },
+      "sides_uz": {
+        "fln": "Milliy ozodlik fronti va Jazoir ozodlik armiyasi",
+        "france": "Fransiya Respublikasi va mustamlakachilar"
+      },
+      "sides_es": {
+        "fln": "Frente de Liberación Nacional y ELN",
+        "france": "República Francesa y colonos"
+      }
     },
     {
       "id": "almohad-marrakesh-1147",
@@ -168,9 +212,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Взятие Марракеша и провозглашение империи Альмохадов",
+          "title_uz": "Marokashning egallanishi va Muvahhidlar imperiyasi",
+          "title_es": "Toma de Marrakech y proclamación del imperio almohade",
+          "desc_ru": "Абд аль-Мумин штурмует Марракеш после длительной осады, объединяя Магриб и мусульманскую Испанию под властью Альмохадов.",
+          "desc_uz": "Abd al-Moʻmin uzoq qamaldan soʻng Marokashni egallab, Shimoliy Afrika va Andalusni birlashtirgan Muvahhidlar xalifaligiga asos soladi.",
+          "desc_es": "Abd al-Mumin toma Marrakech tras un largo asedio, estableciendo el Califato almohade en el Magreb e Hispania."
         }
-      ]
+      ],
+      "sides_en": {
+        "almohad": "Almohad Movement (Abd al-Mumin)",
+        "almoravid": "Almoravid State (Ishaq ibn Ali)"
+      },
+      "sides_ru": {
+        "almohad": "Альмохадское движение (Абд аль-Мумин)",
+        "almoravid": "Государство Альморавидов (Исхак ибн Али)"
+      },
+      "sides_uz": {
+        "almohad": "Muvahhidlar harakati (Abd al-Moʻmin)",
+        "almoravid": "Murobitlar davlati (Ishoq ibn Ali)"
+      },
+      "sides_es": {
+        "almohad": "Movimiento almohade (Abd al-Mumin)",
+        "almoravid": "Estado almorávide (Ishaq ibn Ali)"
+      }
     },
     {
       "id": "american-civil-1861",
@@ -205,9 +271,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Геттисберге — переломный момент войны",
+          "title_uz": "Gettisberg jangi va burilish nuqtasi",
+          "title_es": "Batalla de Gettysburg y punto de inflexión",
+          "desc_ru": "Разгром армии конфедератов генерала Ли при Геттисберге и прокламация Линкольна об освобождении рабов.",
+          "desc_uz": "Gettisbergdagi general Li qoʻshinlarining magʻlubiyati Ittifoq gʻalabasiga yoʻl ochdi.",
+          "desc_es": "La derrota confederada en Gettysburg marca el punto de inflexión decisivo hacia la victoria de la Unión."
         }
-      ]
+      ],
+      "sides_en": {
+        "union": "The Union (Northern States)",
+        "confederacy": "The Confederacy (Southern States)"
+      },
+      "sides_ru": {
+        "union": "Союз (Северные штаты)",
+        "confederacy": "Конфедерация (Южные штаты)"
+      },
+      "sides_uz": {
+        "union": "Ittifoq (Shimoliy shtatlar)",
+        "confederacy": "Konfederatsiya (Janubiy shtatlar)"
+      },
+      "sides_es": {
+        "union": "La Unión (Estados del Norte)",
+        "confederacy": "La Confederación (Estados del Sur)"
+      }
     },
     {
       "id": "american-rev-1775",
@@ -263,9 +351,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Осада Йорктауна и капитуляция Корнуоллиса",
+          "title_uz": "Yorktaun qamali va mustaqillik",
+          "title_es": "Asedio de Yorktown",
+          "desc_ru": "Объединенные франко-американские силы вынуждают армию Корнуоллиса капитулировать, обеспечивая независимость США.",
+          "desc_uz": "Vashington boshchiligidagi Amerika va Fransiya kuchlari Britaniya armiyasini taslim etishga majbur qiladi.",
+          "desc_es": "Las fuerzas combinadas franco-estadounidenses obligan a Cornwallis a rendirse en Yorktown, asegurando la independencia."
         }
-      ]
+      ],
+      "sides_en": {
+        "union": "United States, France & Spain",
+        "england": "British Empire"
+      },
+      "sides_ru": {
+        "union": "США, Франция и Испания",
+        "england": "Британская империя"
+      },
+      "sides_uz": {
+        "union": "AQSh, Fransiya va Ispaniya",
+        "england": "Britaniya imperiyasi"
+      },
+      "sides_es": {
+        "union": "Estados Unidos, Francia y España",
+        "england": "Imperio británico"
+      }
     },
     {
       "id": "an-lushan-755",
@@ -306,9 +416,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Падение Лояна и Чанъаня (мятеж Ань Лушаня)",
+          "title_uz": "Loyan va Changan qulashi (An Lushan qoʻzgʻoloni)",
+          "title_es": "Caída de Luoyang y Chang'an",
+          "desc_ru": "Опустошительный мятеж Ань Лушаня приводит к падению обеих имперских столиц и тяжелейшему кризису династии Тан.",
+          "desc_uz": "An Lushan qoʻzgʻoloni har ikki poytaxtning talon-toroj qilinishiga va Tan Xitoyida chuqur inqirozga olib keladi.",
+          "desc_es": "Devastadora rebelión que provoca el saqueo de ambas capitales y una gran contracción económica en la China Tang."
         }
-      ]
+      ],
+      "sides_en": {
+        "tang": "Tang Dynasty & Uyghur Allies",
+        "rebels": "Yan Rebel Army (An Lushan)"
+      },
+      "sides_ru": {
+        "tang": "Династия Тан и уйгурские союзники",
+        "rebels": "Повстанческая армия Янь (Ань Лушань)"
+      },
+      "sides_uz": {
+        "tang": "Tan sulolasi va uygʻur ittifoqchilari",
+        "rebels": "Yan isyonkor qoʻshini (An Lushan)"
+      },
+      "sides_es": {
+        "tang": "Dinastía Tang y aliados uigures",
+        "rebels": "Ejército rebelde Yan (An Lushan)"
+      }
     },
     {
       "id": "andalus-conquest-711",
@@ -364,9 +496,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Гвадалете и мусульманское завоевание Испании",
+          "title_uz": "Gvadalete jangi va Andalus fathi",
+          "title_es": "Batalla de Guadalete",
+          "desc_ru": "Тарик ибн Зияд переправляется через пролив и наносит поражение королю Родериху, положив конец королевству вестготов.",
+          "desc_uz": "Toriq ibn Ziyod boʻgʻozdan oʻtib, vestgotlar qiroli Roderikni magʻlub etadi va Andalus fathi boshlanadi.",
+          "desc_es": "Táriq ibn Ziyad cruza el estrecho y derrota al rey Rodrigo, precipitando el fin del reino visigodo."
         }
-      ]
+      ],
+      "sides_en": {
+        "muslim": "Umayyad Caliphate (Tariq & Musa)",
+        "visigoth": "Visigothic Kingdom & Franks"
+      },
+      "sides_ru": {
+        "muslim": "Омейядский халифат (Тарик и Муса)",
+        "visigoth": "Королевство вестготов и франки"
+      },
+      "sides_uz": {
+        "muslim": "Umaviylar xalifaligi (Toriq va Muso)",
+        "visigoth": "Vestgotlar qirolligi va franklar"
+      },
+      "sides_es": {
+        "muslim": "Califato omeya (Táriq y Musa)",
+        "visigoth": "Reino visigodo y francos"
+      }
     },
     {
       "id": "arab-israeli-1948",
@@ -432,9 +586,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Линии перемирия и палестинская Накба",
+          "title_uz": "Sulh chiziqlari va Falastin Nakbasi",
+          "title_es": "Líneas de armisticio y la Nakba palestina",
+          "desc_ru": "Окончание британского мандата приводит к войне, изгнанию свыше 700 000 палестинцев и установлению линий перемирия 1949 года.",
+          "desc_uz": "Britaniya mandati tugashi urushga, 700 mingdan ortiq falastinlikning qochqin boʻlishiga va 1949 yilgi yashil sulh chizigʻiga sabab boʻladi.",
+          "desc_es": "El fin del mandato británico desencadena la guerra, el desplazamiento de más de 700.000 palestinos y las líneas de 1949."
         }
-      ]
+      ],
+      "sides_en": {
+        "arab": "Arab Armies (Egypt, Jordan, Syria, Iraq, Lebanon)",
+        "israel": "Israeli Forces (Haganah & Army)"
+      },
+      "sides_ru": {
+        "arab": "Арабские армии (Египет, Иордания, Сирия, Ирак, Ливан)",
+        "israel": "Израильские силы (Хагана и армия)"
+      },
+      "sides_uz": {
+        "arab": "Arab armiyalari (Misr, Iordaniya, Suriya, Iroq, Livan)",
+        "israel": "Isroil kuchlari (Xagana va armiya)"
+      },
+      "sides_es": {
+        "arab": "Ejércitos árabes (Egipto, Jordania, Siria, Irak, Líbano)",
+        "israel": "Fuerzas israelíes (Haganá y ejército)"
+      }
     },
     {
       "id": "attila-hun-451",
@@ -485,9 +661,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва на Каталаунских полях",
+          "title_uz": "Katalaun dalalari jangi",
+          "title_es": "Batalla de los Campos Catalaúnicos",
+          "desc_ru": "Полководец Аэций во главе римско-вестготского союза останавливает вторжение Аттилы в Галлию.",
+          "desc_uz": "Aetsiy boshchiligidagi Rim-vestgot ittifoqi Attila boshchiligidagi gunnlarning Gʻarbiy Yevropaga yurishini toʻxtatadi.",
+          "desc_es": "Flavio Aecio lidera la alianza romano-visigoda para detener a Atila en la Galia, frenando la expansión huna."
         }
-      ]
+      ],
+      "sides_en": {
+        "huns": "Hunnic Empire & Allies (Attila)",
+        "rome": "Roman & Visigothic Alliance (Aetius)"
+      },
+      "sides_ru": {
+        "huns": "Империя гуннов и союзники (Аттила)",
+        "rome": "Римско-вестготский союз (Аэций)"
+      },
+      "sides_uz": {
+        "huns": "Gunnlar imperiyasi va ittifoqchilari (Attila)",
+        "rome": "Rim va vestgotlar ittifoqi (Aetsiy)"
+      },
+      "sides_es": {
+        "huns": "Imperio huno y aliados (Atila)",
+        "rome": "Alianza romana y visigoda (Aecio)"
+      }
     },
     {
       "id": "balkan-wars-1912",
@@ -553,9 +751,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Крах османского владычества в Европе",
+          "title_uz": "Usmonlilar Yevropasining qulashi",
+          "title_es": "Colapso del dominio otomano en Europa",
+          "desc_ru": "Балканский союз вытесняет османов почти со всех европейских территорий, предвещая Первую мировую войну.",
+          "desc_uz": "Bolqon ittifoqi Usmonlilarni Yevropadagi deyarli barcha yerlaridan siqib chiqaradi va Birinchi jahon urushiga zamin yaratadi.",
+          "desc_es": "La Liga Balcánica expulsa a los otomanos de casi todos sus territorios europeos, preparando el escenario para la I Guerra Mundial."
         }
-      ]
+      ],
+      "sides_en": {
+        "coalition": "Balkan League (Serbia, Greece, Bulgaria, Montenegro)",
+        "ottoman": "Ottoman Empire"
+      },
+      "sides_ru": {
+        "coalition": "Балканский союз (Сербия, Греция, Болгария, Черногория)",
+        "ottoman": "Османская империя"
+      },
+      "sides_uz": {
+        "coalition": "Bolqon ittifoqi (Serbiya, Gretsiya, Bolgariya, Chernogoriya)",
+        "ottoman": "Usmonli imperiyasi"
+      },
+      "sides_es": {
+        "coalition": "Liga Balcánica (Serbia, Grecia, Bulgaria, Montenegro)",
+        "ottoman": "Imperio otomano"
+      }
     },
     {
       "id": "boer-war2-1899",
@@ -606,9 +826,31 @@
               "role": "dominion"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Партизанская война и тактика выжженной земли",
+          "title_uz": "Partizanlik bosqichi va kuydirilgan yer taktikasi",
+          "title_es": "Fase de guerrillas y tierra quemada",
+          "desc_ru": "Британская армия прибегает к тактике выжженной земли и концлагерям, чтобы сломить партизанское сопротивление буров.",
+          "desc_uz": "Britaniya qoʻshinlari burlarning partizanlik qarshiligini sindirish uchun kuydirilgan yer va kontslagerlar usulini qoʻllaydi.",
+          "desc_es": "Las fuerzas británicas recurren a la táctica de tierra quemada y campos de concentración para sofocar a los bóeres."
         }
-      ]
+      ],
+      "sides_en": {
+        "england": "British Empire & Dominions",
+        "boers": "Boer Republics (Transvaal & Orange Free State)"
+      },
+      "sides_ru": {
+        "england": "Британская империя и доминионы",
+        "boers": "Бурские республики (Трансвааль и Оранжевое Государство)"
+      },
+      "sides_uz": {
+        "england": "Britaniya imperiyasi va dominionlari",
+        "boers": "Bur respublikalari (Transvaal va Erkin Oranj davlati)"
+      },
+      "sides_es": {
+        "england": "Imperio británico y dominios",
+        "boers": "Repúblicas bóeres (Transvaal y Estado Libre de Orange)"
+      }
     },
     {
       "id": "byz-bulgar-968",
@@ -664,9 +906,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Клейдионе и византийская гегемония",
+          "title_uz": "Kleydion jangi va Vizantiya ustunligi",
+          "title_es": "Batalla de Kleidion y hegemonía bizantina",
+          "desc_ru": "Василий II Болгаробойца громит войско царя Самуила, что приводит к полному подчинению Болгарского царства.",
+          "desc_uz": "Vasiliy II podsho Samuil qoʻshinini tor-mor etadi va Birinchi Bolgariya podsholigi toʻliq Vizantiyaga boʻysundiriladi.",
+          "desc_es": "Basilio II derrota al zar Samuel en Kleidion, lo que conduce a la completa anexión del Primer Imperio búlgaro."
         }
-      ]
+      ],
+      "sides_en": {
+        "byzantine": "Byzantine Empire (Basil II)",
+        "coalition": "First Bulgarian Empire (Samuel)"
+      },
+      "sides_ru": {
+        "byzantine": "Византийская империя (Василий II)",
+        "coalition": "Первое Болгарское царство (Самуил)"
+      },
+      "sides_uz": {
+        "byzantine": "Vizantiya imperiyasi (Vasiliy II)",
+        "coalition": "Birinchi Bolgariya podsholigi (Samuil)"
+      },
+      "sides_es": {
+        "byzantine": "Imperio bizantino (Basilio II)",
+        "coalition": "Primer Imperio búlgaro (Samuel)"
+      }
     },
     {
       "id": "byz-sasanian-602",
@@ -732,9 +996,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Ниневии и крах Сасанидов",
+          "title_uz": "Ninaviya jangi va Sosoniylarning qulashi",
+          "title_es": "Batalla de Nínive y colapso sasánida",
+          "desc_ru": "Император Ираклий наносит решающее поражение персам у Ниневии, истощив обе империи накануне арабских завоеваний.",
+          "desc_uz": "Imperator Irakliy Ninaviya yonida forslarga hal qiluvchi zarba beradi va har ikki imperiya arab fathlari arafasida zaiflashadi.",
+          "desc_es": "Heraclio derrota decisivamente a los persas en Nínive, agotando a ambos imperios antes de la expansión islámica."
         }
-      ]
+      ],
+      "sides_en": {
+        "byzantine": "Byzantine Empire (Heraclius)",
+        "sasanian": "Sasanian Empire (Khosrow II)"
+      },
+      "sides_ru": {
+        "byzantine": "Византийская империя (Ираклий)",
+        "sasanian": "Сасанидская империя (Хосров II)"
+      },
+      "sides_uz": {
+        "byzantine": "Vizantiya imperiyasi (Irakliy)",
+        "sasanian": "Sosoniylar imperiyasi (Xusrav II)"
+      },
+      "sides_es": {
+        "byzantine": "Imperio bizantino (Heraclio)",
+        "sasanian": "Imperio sasánida (Cosroes II)"
+      }
     },
     {
       "id": "chaldiran-1514",
@@ -785,9 +1071,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Чалдыранская битва и превосходство артиллерии",
+          "title_uz": "Choldiron jangi va oʻtsochar qurollar ustunligi",
+          "title_es": "Batalla de Chaldirán y superioridad de la pólvora",
+          "desc_ru": "Султан Селим I разбивает войско шаха Исмаила благодаря артиллерии и ружьям, закрепляя Восточную Анатолию за османами.",
+          "desc_uz": "Sulton Salim I shoh Ismoil qoʻshinini toʻp va miltiqlar yordamida yengib, Sharqiy Onadoʻlini Usmonli tasarrufiga kiritadi.",
+          "desc_es": "El sultán Selim I derrota al sha Ismail gracias a la artillería otomana, asegurando el este de Anatolia."
         }
-      ]
+      ],
+      "sides_en": {
+        "ottoman": "Ottoman Empire (Selim I)",
+        "safavid": "Safavid Empire (Ismail I)"
+      },
+      "sides_ru": {
+        "ottoman": "Османская империя (Селим I)",
+        "safavid": "Сефевидское государство (Исмаил I)"
+      },
+      "sides_uz": {
+        "ottoman": "Usmonli imperiyasi (Salim I)",
+        "safavid": "Safaviylar davlati (Ismoil I)"
+      },
+      "sides_es": {
+        "ottoman": "Imperio otomano (Selim I)",
+        "safavid": "Imperio safávida (Ismail I)"
+      }
     },
     {
       "id": "charlemagne-saxons-772",
@@ -838,9 +1146,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Покорение Саксонии Карлом Великим",
+          "title_uz": "Karl Buyuk tomonidan Saksoniyaning boʻysundirilishi",
+          "title_es": "Sometimiento de Sajonia",
+          "desc_ru": "Многолетняя ожесточенная кампания Карла Великого приводит к подчинению и крещению саксонских племен.",
+          "desc_uz": "Karl Buyukning oʻttiz yillik yurishlari sakson qabilalarining boʻysundirilishi va Franklar imperiyasiga qoʻshilishi bilan tugaydi.",
+          "desc_es": "Las prolongadas campañas de Carlomagno logran la sumisión y cristianización forzada de las tribus sajonas."
         }
-      ]
+      ],
+      "sides_en": {
+        "allies": "Frankish Kingdom & Carolingian Empire",
+        "rebels": "Pagan Saxon Tribes (Widukind)"
+      },
+      "sides_ru": {
+        "allies": "Франкское королевство и Каролингская империя",
+        "rebels": "Языческие племена саксов (Видукинд)"
+      },
+      "sides_uz": {
+        "allies": "Franklar qirolligi va Karolinglar imperiyasi",
+        "rebels": "Butparast sakson qabilalari (Vidukind)"
+      },
+      "sides_es": {
+        "allies": "Reino franco e Imperio carolingio",
+        "rebels": "Tribus sajonas paganas (Widukind)"
+      }
     },
     {
       "id": "conquest-maghreb-647",
@@ -896,9 +1226,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Основание Кайруана и продвижение на запад",
+          "title_uz": "Qayravon asos solinishi va gʻarbiy yurish",
+          "title_es": "Fundación de Kairuán y avance hacia el oeste",
+          "desc_ru": "Укба ибн Нафи основывает Кайруан как военный и духовный центр для продвижения ислама в страны Магриба.",
+          "desc_uz": "Uqba ibn Nofe Qayravon shahriga asos solib, Shimoliy Afrika va Atlantika sohillari tomon fath yurishlarini olib boradi.",
+          "desc_es": "Uqba ibn Nafi funda Kairuán como base militar y centro espiritual para la expansión islámica en el Magreb."
         }
-      ]
+      ],
+      "sides_en": {
+        "muslim": "Muslim Conquest Armies (Uqba, Hassan, Musa)",
+        "byzantine": "Byzantine Empire & Local Tribes"
+      },
+      "sides_ru": {
+        "muslim": "Армии исламских завоеваний (Укба, Хасан, Муса)",
+        "byzantine": "Византийская империя и местные племена"
+      },
+      "sides_uz": {
+        "muslim": "Islom fathi armiyalari (Uqba, Hasan, Muso)",
+        "byzantine": "Vizantiya imperiyasi va mahalliy qabilalar"
+      },
+      "sides_es": {
+        "muslim": "Ejércitos de la conquista islámica (Uqba, Hasán, Musa)",
+        "byzantine": "Imperio bizantino y tribus locales"
+      }
     },
     {
       "id": "constantinople-1453",
@@ -944,9 +1296,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Падение Константинополя",
+          "title_uz": "Konstantinopolning fathi",
+          "title_es": "La caída de Constantinopla",
+          "desc_ru": "Султан Мехмед II Фатих штурмом берет Константинополь, положив конец тысячелетней Византийской империи.",
+          "desc_uz": "Sulton Mehmed II Fotih Konstantinopolni zabt etib, ming yillik Vizantiya imperiyasiga barham beradi.",
+          "desc_es": "El sultán Mehmed II conquista Constantinopla tras un asedio de 53 días, poniendo fin al Imperio bizantino."
         }
-      ]
+      ],
+      "sides_en": {
+        "ottoman": "Ottoman Empire",
+        "byzantine": "Byzantine Empire & Allies"
+      },
+      "sides_ru": {
+        "ottoman": "Османская империя",
+        "byzantine": "Византийская империя и союзники"
+      },
+      "sides_uz": {
+        "ottoman": "Usmonli imperiyasi",
+        "byzantine": "Vizantiya imperiyasi va ittifoqchilari"
+      },
+      "sides_es": {
+        "ottoman": "Imperio otomano",
+        "byzantine": "Imperio bizantino y aliados"
+      }
     },
     {
       "id": "crimean-1853",
@@ -1007,9 +1381,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Осада Севастополя",
+          "title_uz": "Sevastopol qamali",
+          "title_es": "Sitio de Sebastopol",
+          "desc_ru": "Одиннадцатимесячная осада крепости Севастополь союзными силами, решившая исход Крымской войны.",
+          "desc_uz": "Ittifoqchilarning 11 oylik Sevastopol qamali Qrim urushi taqdirini hal qiladi.",
+          "desc_es": "El asedio de once meses a la fortaleza de Sebastopol decide el resultado de la Guerra de Crimea."
         }
-      ]
+      ],
+      "sides_en": {
+        "allies": "Ottoman, British & French Alliance",
+        "russia": "Russian Empire"
+      },
+      "sides_ru": {
+        "allies": "Османский, британский и французский союз",
+        "russia": "Российская империя"
+      },
+      "sides_uz": {
+        "allies": "Usmonli, Britaniya va Fransiya ittifoqi",
+        "russia": "Rossiya imperiyasi"
+      },
+      "sides_es": {
+        "allies": "Alianza otomana, británica y francesa",
+        "russia": "Imperio ruso"
+      }
     },
     {
       "id": "crusade1-1096",
@@ -1075,9 +1471,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Взятие Иерусалима и основание государств крестоносцев",
+          "title_uz": "Quddusning olinishi va salibchilar davlatlari",
+          "title_es": "Toma de Jerusalén y Estados cruzados",
+          "desc_ru": "Крестоносцы штурмуют Иерусалим, устраивают резню жителей и основывают Иерусалимское королевство.",
+          "desc_uz": "Birinchi salib yurishi qatnashchilari Quddusni egallab, Yaqin Sharqda salibchilar qirolliklarini tuzadi.",
+          "desc_es": "Los cruzados capturan Jerusalén, masacran a sus habitantes y fundan los Estados latinos de Oriente."
         }
-      ]
+      ],
+      "sides_en": {
+        "crusaders": "Latin Crusader Armies",
+        "muslim": "Seljuks & Fatimids"
+      },
+      "sides_ru": {
+        "crusaders": "Латинские армии крестоносцев",
+        "muslim": "Сельджуки и Фатимиды"
+      },
+      "sides_uz": {
+        "crusaders": "Lotin salibchilar armiyasi",
+        "muslim": "Saljuqiylar va Fotimiylar"
+      },
+      "sides_es": {
+        "crusaders": "Ejércitos cruzados latinos",
+        "muslim": "Selyúcidas y fatimíes"
+      }
     },
     {
       "id": "crusade2-1147",
@@ -1138,9 +1556,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Осада Дамаска и провал Второго крестового похода",
+          "title_uz": "Damashq qamali va Ikkinchi salib yurishi barbod boʻlishi",
+          "title_es": "Sitio de Damasco y retirada cruzada",
+          "desc_ru": "Неудачная осада Дамаска войсками Людовика VII и Конрада III приводит к полному краху Второго крестового похода.",
+          "desc_uz": "Salibchilarning Damashqni qamal qilishi muvaffaqiyatsiz tugab, ular ortga chekinishga majbur boʻladi.",
+          "desc_es": "El fallido asedio a Damasco por Luis VII y Conrado III conduce al colapso total de la Segunda Cruzada."
         }
-      ]
+      ],
+      "sides_en": {
+        "crusaders": "Crusader Kings' Armies (Conrad III & Louis VII)",
+        "muslim": "Zengid State & Atabegs (Nur al-Din Zengi)"
+      },
+      "sides_ru": {
+        "crusaders": "Армии королей-крестоносцев (Конрад III и Людовик VII)",
+        "muslim": "Государство Зангидов и атабеки (Нур ад-Дин Занги)"
+      },
+      "sides_uz": {
+        "crusaders": "Salibchi qirollar armiyalari (Konrad III va Lyudovik VII)",
+        "muslim": "Zangiylar davlati va otalari (Nuriddin Zangiy)"
+      },
+      "sides_es": {
+        "crusaders": "Ejércitos de reyes cruzados (Conrado III y Luis VII)",
+        "muslim": "Estado zanguí y atabegs (Nur al-Din Zengi)"
+      }
     },
     {
       "id": "crusade3-1189",
@@ -1211,9 +1651,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Осада Акры и битва при Арсуфе",
+          "title_uz": "Akka qamali va Arsuf jangi",
+          "title_es": "Asedio de Acre y batalla de Arsuf",
+          "desc_ru": "Ричард Львиное Сердце отвоевывает Акру и побеждает Салах ад-Дина при Арсуфе, но Иерусалим остается мусульманским.",
+          "desc_uz": "Richard Sheryurak Akkani qaytarib oladi, ammo Salohiddin Ayyubiy Quddusni oʻz qoʻlida saqlab qoladi.",
+          "desc_es": "Ricardo Corazón de León toma Acre y derrota a Saladino en Arsuf, pero Jerusalén permanece bajo control musulmán."
         }
-      ]
+      ],
+      "sides_en": {
+        "muslim": "Ayyubid Sultanate",
+        "crusaders": "European Crusader Coalition"
+      },
+      "sides_ru": {
+        "muslim": "Айюбидский султанат",
+        "crusaders": "Европейская коалиция крестоносцев"
+      },
+      "sides_uz": {
+        "muslim": "Ayyubiylar sultonligi",
+        "crusaders": "Yevropa salibchilar koalitsiyasi"
+      },
+      "sides_es": {
+        "muslim": "Sultanato ayubí",
+        "crusaders": "Coalición cruzada europea"
+      }
     },
     {
       "id": "crusade4-1202",
@@ -1264,9 +1726,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Разграбление Константинополя крестоносцами",
+          "title_uz": "Konstantinopolning salibchilar tomonidan talon-toroj qilinishi",
+          "title_es": "El saqueo de Constantinopla",
+          "desc_ru": "Крестоносцы Четвертого похода захватывают и грабят христианский Константинополь, основывая Латинскую империю.",
+          "desc_uz": "Toʻrtinchi salib yurishi qatnashchilari Vizantiya poytaxtini talon-toroj qilib, Lotin imperiyasini tuzadi.",
+          "desc_es": "Los cruzados desvían su rumbo, saquean la capital bizantina y fundan el efímero Imperio Latino."
         }
-      ]
+      ],
+      "sides_en": {
+        "crusaders": "Latin Crusaders & Republic of Venice",
+        "byzantine": "Byzantine Empire"
+      },
+      "sides_ru": {
+        "crusaders": "Латинские крестоносцы и Венецианская республика",
+        "byzantine": "Византийская империя"
+      },
+      "sides_uz": {
+        "crusaders": "Lotin salibchilari va Venetsiya respublikasi",
+        "byzantine": "Vizantiya imperiyasi"
+      },
+      "sides_es": {
+        "crusaders": "Cruzados latinos y República de Venecia",
+        "byzantine": "Imperio bizantino"
+      }
     },
     {
       "id": "diadochi-322",
@@ -1327,9 +1811,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Ипсе и раздел империи Александра",
+          "title_uz": "Ips jangi va ellinistik boʻlinish",
+          "title_es": "Batalla de Ipso y partición helenística",
+          "desc_ru": "Коалиция диадохов побеждает Антигона Одноглазого, окончательно закрепляя раздел державы Александра Македонского.",
+          "desc_uz": "Ips jangi Iskandar saltanatining vorislari oʻrtasidagi boʻlinishni batamom mustahkamlaydi.",
+          "desc_es": "La coalición de diádocos vence a Antígono, sellando la división definitiva del imperio de Alejandro."
         }
-      ]
+      ],
+      "sides_en": {
+        "seleucid": "Seleucids & Ptolemies (East & Egypt)",
+        "antigonid": "Antigonus & Perdiccas (Macedon & Greece)"
+      },
+      "sides_ru": {
+        "seleucid": "Селевкиды и Птолемеи (Восток и Египет)",
+        "antigonid": "Антигон и Пердикка (Македония и Греция)"
+      },
+      "sides_uz": {
+        "seleucid": "Salavkiylar va Ptolemeylar (Sharq va Misr)",
+        "antigonid": "Antigon va Perdikka (Makedoniya va Gretsiya)"
+      },
+      "sides_es": {
+        "seleucid": "Seléucidas y ptolomeos (Oriente y Egipto)",
+        "antigonid": "Antígono y Pérdicas (Macedonia y Grecia)"
+      }
     },
     {
       "id": "dutch-revolt-1568",
@@ -1380,9 +1886,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Разгром Непобедимой армады",
+          "title_uz": "Yengilmas armadaning tor-mor etilishi",
+          "title_es": "Derrota de la Armada Invencible",
+          "desc_ru": "Английский флот и штормы уничтожают испанскую Армаду, сорвав планы Филиппа II по завоеванию Англии.",
+          "desc_uz": "Ingliz floti va boʻronlar Ispaniya armadasini yoʻq qilib, Filipp II ning Angliyani bosib olish rejasini puchga chiqaradi.",
+          "desc_es": "La flota inglesa y las tormentas destruyen la Gran Armada española, frustrando la invasión de Inglaterra."
         }
-      ]
+      ],
+      "sides_en": {
+        "anti-habsburg": "United Provinces of the Netherlands & Allies",
+        "habsburg": "Spanish Empire (Habsburgs)"
+      },
+      "sides_ru": {
+        "anti-habsburg": "Соединённые провинции Нидерландов и союзники",
+        "habsburg": "Испанская империя (Габсбурги)"
+      },
+      "sides_uz": {
+        "anti-habsburg": "Niderlandiya Birlashgan provinsiyalari va ittifoqchilari",
+        "habsburg": "Ispaniya imperiyasi (Gabsburglar)"
+      },
+      "sides_es": {
+        "anti-habsburg": "Provincias Unidas de los Países Bajos y aliados",
+        "habsburg": "Imperio español (Habsburgo)"
+      }
     },
     {
       "id": "egypt-ottoman-1831",
@@ -1443,9 +1971,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Конье и поход на Стамбул",
+          "title_uz": "Koʻniya jangi va Konstantinopolga xavf",
+          "title_es": "Batalla de Konya y amenaza a Constantinopla",
+          "desc_ru": "Ибрагим-паша громит османскую армию при Конье, открывая путь на Стамбул и вызывая вмешательство великих держав.",
+          "desc_uz": "Ibrohim posho boshchiligidagi Misr qoʻshini Usmonlilarni Koʻniyada yengib, poytaxtga xavf soladi.",
+          "desc_es": "Ibrahim Bajá aplasta al ejército otomano en Konya, amenazando la capital imperial e incitando la intervención extranjera."
         }
-      ]
+      ],
+      "sides_en": {
+        "arab": "Modern Egyptian Army (Muhammad Ali & Ibrahim Pasha)",
+        "ottoman": "Ottoman Empire & European Allies"
+      },
+      "sides_ru": {
+        "arab": "Модернизированная армия Египта (Мухаммед Али и Ибрагим-паша)",
+        "ottoman": "Османская империя и европейские союзники"
+      },
+      "sides_uz": {
+        "arab": "Zamonaviy Misr armiyasi (Muhammad Ali va Ibrohim posho)",
+        "ottoman": "Usmonli imperiyasi va Yevropa ittifoqchilari"
+      },
+      "sides_es": {
+        "arab": "Ejército egipcio moderno (Mehmet Alí e Ibrahim Bajá)",
+        "ottoman": "Imperio otomano y aliados europeos"
+      }
     },
     {
       "id": "english-civil-1642",
@@ -1486,9 +2036,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Нейзби и победа парламента",
+          "title_uz": "Neyzbi jangi va parlament gʻalabasi",
+          "title_es": "Batalla de Naseby y la Mancomunidad",
+          "desc_ru": "Армия нового образца Оливера Кромвеля наголову разбивает войска короля Карла I, открывая путь к республике.",
+          "desc_uz": "Oliver Kromvel boshchiligidagi parlament armiyasi qirol Karl I kuchlarini yengib, respublika oʻrnatadi.",
+          "desc_es": "El Ejército Nuevo Modelo de Cromwell destruye al ejército realista de Carlos I, sentando las bases de la república."
         }
-      ]
+      ],
+      "sides_en": {
+        "union": "Parliamentarians & New Model Army (Cromwell)",
+        "coalition": "Royalist Cavaliers (King Charles I)"
+      },
+      "sides_ru": {
+        "union": "Парламентарии и Армия нового образца (Кромвель)",
+        "coalition": "Роялисты-кавалеры (король Карл I)"
+      },
+      "sides_uz": {
+        "union": "Parlamentchilar va Yangi namunadagi armiya (Kromvel)",
+        "coalition": "Royalist-kavalerlar (qirol Karl I)"
+      },
+      "sides_es": {
+        "union": "Parlamentarios y el Nuevo Ejército Modelo (Cromwell)",
+        "coalition": "Realistas caballeros (Rey Carlos I)"
+      }
     },
     {
       "id": "franco-prussian-1870",
@@ -1529,9 +2101,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Седане и провозглашение Германской империи",
+          "title_uz": "Sedan jangi va Germaniya imperiyasi eʼlon qilinishi",
+          "title_es": "Batalla de Sedán y proclamación del Imperio alemán",
+          "desc_ru": "Прусская армия окружает войска Наполеона III при Седане, что приводит к падению Второй империи и объединению Германии.",
+          "desc_uz": "Prussiya armiyasi Napoleon III ni asir oladi, Fransiya imperiyasi qulaydi va birlashgan Germaniya imperiyasi tuziladi.",
+          "desc_es": "Prusia captura a Napoleón III en Sedán, precipitando la caída del Segundo Imperio y la unificación alemana."
         }
-      ]
+      ],
+      "sides_en": {
+        "prussia": "North German Confederation & Prussia (Bismarck)",
+        "france": "Second French Empire (Napoleon III)"
+      },
+      "sides_ru": {
+        "prussia": "Северогерманский союз и Пруссия (Бисмарк)",
+        "france": "Вторая Французская империя (Наполеон III)"
+      },
+      "sides_uz": {
+        "prussia": "Shimoliy Germaniya ittifoqi va Prussiya (Bismark)",
+        "france": "Ikkinchi Fransiya imperiyasi (Napoleon III)"
+      },
+      "sides_es": {
+        "prussia": "Confederación Alemana del Norte y Prusia (Bismarck)",
+        "france": "Segundo Imperio francés (Napoleón III)"
+      }
     },
     {
       "id": "french-egypt-1798",
@@ -1587,9 +2181,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва у пирамид и осада Акры",
+          "title_uz": "Ehromlar jangi va Akka qamali",
+          "title_es": "Batalla de las Pirámides y asedio de Acre",
+          "desc_ru": "Бонапарт громит мамлюков у пирамид в Гизе, но упорная оборона Акры заставляет французов покинуть Восток.",
+          "desc_uz": "Bonapart ehromlar yonida mamluklarni yengadi, biroq Akka qamalining muvaffaqiyatsizligi yurishni toʻxtatadi.",
+          "desc_es": "Bonaparte vence a los mamelucos junto a las pirámides, pero el asedio de Acre frustra su avance en Oriente."
         }
-      ]
+      ],
+      "sides_en": {
+        "france": "French Republic (Napoleon Bonaparte)",
+        "coalition": "Ottoman Empire, Britain & Mamluks"
+      },
+      "sides_ru": {
+        "france": "Французская Республика (Наполеон Бонапарт)",
+        "coalition": "Османская империя, Великобритания и мамлюки"
+      },
+      "sides_uz": {
+        "france": "Fransiya Respublikasi (Napoleon Bonapart)",
+        "coalition": "Usmonli imperiyasi, Britaniya va mamluklar"
+      },
+      "sides_es": {
+        "france": "República Francesa (Napoleón Bonaparte)",
+        "coalition": "Imperio otomano, Gran Bretaña y mamelucos"
+      }
     },
     {
       "id": "gallic-58",
@@ -1640,9 +2256,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Осада Алезии и покорение Галлии",
+          "title_uz": "Aleziya qamali va Galliya fathi",
+          "title_es": "Asedio de Alesia",
+          "desc_ru": "Юлий Цезарь окружает Верцингеторикса двойной линией укреплений в Алезии, окончательно подчиняя Галлию Риму.",
+          "desc_uz": "Yuliy Sezar Versingetoriksni Aleziyada qamal qilib, Galliyaning Rimga toʻliq boʻysundirilishini yakunlaydi.",
+          "desc_es": "Julio César sitia a Vercingétorix en Alesia con fortificaciones dobles, completando la conquista de la Galia."
         }
-      ]
+      ],
+      "sides_en": {
+        "rome": "Roman Republic",
+        "coalition": "Gallic Tribes (Vercingetorix)"
+      },
+      "sides_ru": {
+        "rome": "Римская республика",
+        "coalition": "Галльские племена (Верцингеторикс)"
+      },
+      "sides_uz": {
+        "rome": "Rim respublikasi",
+        "coalition": "Galliya qabilalari (Versingetoriks)"
+      },
+      "sides_es": {
+        "rome": "República romana",
+        "coalition": "Tribus galas (Vercingétorix)"
+      }
     },
     {
       "id": "ghaznavid-india-1001",
@@ -1688,9 +2326,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Поход на Сомнатх и присоединение Пенджаба",
+          "title_uz": "Somnat yurishi va Panjobning qoʻshib olinishi",
+          "title_es": "Expedición a Somnath y anexión del Punyab",
+          "desc_ru": "Махмуд Газневи совершает знаменитый поход на храм Сомнатх и включает Пенджаб в состав своего государства.",
+          "desc_uz": "Mahmud Gʻaznaviy Somnat ibodatxonasiga yurish qilib, Panjobni oʻz saltanati tarkibiga qoʻshib oladi.",
+          "desc_es": "Mahmud de Ghazni asalta el templo de Somnath y anexiona el Punyab a sus dominios."
         }
-      ]
+      ],
+      "sides_en": {
+        "ghaznavid": "Ghaznavid Empire (Mahmud of Ghazni)",
+        "hindu": "Alliance of Rajas & Shahi Kingdoms"
+      },
+      "sides_ru": {
+        "ghaznavid": "Государство Газневидов (Махмуд Газневи)",
+        "hindu": "Союз раджей и царств Шахи"
+      },
+      "sides_uz": {
+        "ghaznavid": "Gʻaznaviylar davlati (Mahmud Gʻaznaviy)",
+        "hindu": "Rojalar va Shohiyliklar ittifoqi"
+      },
+      "sides_es": {
+        "ghaznavid": "Imperio gaznávida (Mahmud de Ghazni)",
+        "hindu": "Alianza de rajás y reinos Shahi"
+      }
     },
     {
       "id": "granada-1482",
@@ -1731,9 +2391,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Падение Гранады и конец Реконкисты",
+          "title_uz": "Gʻarnata taslim boʻlishi va Rekonkista yakuni",
+          "title_es": "Rendición de la Alhambra",
+          "desc_ru": "Католические короли принимают капитуляцию последнего мусульманского эмира Гранады Абу Абдаллаха.",
+          "desc_uz": "Katolik qirollar Gʻarnataning soʻnggi amiri Abu Abdullohdan Al-Hamro kalitlarini qabul qilib oladi.",
+          "desc_es": "Los Reyes Católicos reciben la rendición de Boabdil en Granada, concluyendo casi ocho siglos de Reconquista."
         }
-      ]
+      ],
+      "sides_en": {
+        "coalition": "Unified Spanish Crown (Ferdinand & Isabella)",
+        "muslim": "Nasrid Kingdom of Granada (Boabdil)"
+      },
+      "sides_ru": {
+        "coalition": "Объединенная испанская корона (Фердинанд и Изабелла)",
+        "muslim": "Гранадский эмират Насридов (Боабдиль)"
+      },
+      "sides_uz": {
+        "coalition": "Birlashgan Ispaniya toji (Fernando va Izabella)",
+        "muslim": "Nasriylar Gʻarnata amirligi (Boabdil)"
+      },
+      "sides_es": {
+        "coalition": "Corona española unificada (Fernando e Isabel)",
+        "muslim": "Reino nazarí de Granada (Boabdil)"
+      }
     },
     {
       "id": "great-northern-1700",
@@ -1799,9 +2481,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Полтавская битва и рождение Российской империи",
+          "title_uz": "Poltava jangi va Rossiya imperiyasining yuksalishi",
+          "title_es": "Batalla de Poltava y auge del Imperio ruso",
+          "desc_ru": "Петр I наголову разбивает армию Карла XII под Полтавой, утверждая Россию как ведущую державу Европы.",
+          "desc_uz": "Pyotr I Poltava yonida Shvetsiya qiroli Karl XII ni magʻlub etib, Boltiqboʻyi va Yevropada ustunlikka erishadi.",
+          "desc_es": "Pedro el Grande aplasta al ejército de Carlos XII en Poltava, consolidando a Rusia como gran potencia europea."
         }
-      ]
+      ],
+      "sides_en": {
+        "russia": "Tsardom of Russia & Allies (Peter the Great)",
+        "sweden": "Swedish Empire (Charles XII)"
+      },
+      "sides_ru": {
+        "russia": "Русское царство и союзники (Петр Великий)",
+        "sweden": "Шведская империя (Карл XII)"
+      },
+      "sides_uz": {
+        "russia": "Rossiya podsholigi va ittifoqchilari (Pyotr I)",
+        "sweden": "Shvetsiya imperiyasi (Karl XII)"
+      },
+      "sides_es": {
+        "russia": "Zarato ruso y aliados (Pedro el Grande)",
+        "sweden": "Imperio sueco (Carlos XII)"
+      }
     },
     {
       "id": "greco-persian-499",
@@ -1852,9 +2556,31 @@
               "role": "colony"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Вторжение Ксеркса и битва при Саламине",
+          "title_uz": "Kserks bosqini va Salamin jangi",
+          "title_es": "Invasión de Jerjes y batalla de Salamina",
+          "desc_ru": "Греческий союзный флот под командованием Фемистокла уничтожает персидский флот Ксеркса в Саламинском проливе.",
+          "desc_uz": "Femistokl boshchiligidagi yunon floti forslarni Salamin boʻgʻozida tor-mor etadi.",
+          "desc_es": "La flota griega liderada por Temístocles destruye a la armada persa en los estrechos de Salamina."
         }
-      ]
+      ],
+      "sides_en": {
+        "delian": "Greek Coalition (Athens & Sparta)",
+        "persia": "Achaemenid Persian Empire"
+      },
+      "sides_ru": {
+        "delian": "Греческий союз (Афины и Спарта)",
+        "persia": "Персидская империя Ахеменидов"
+      },
+      "sides_uz": {
+        "delian": "Yunon ittifoqi (Afina va Sparta)",
+        "persia": "Ahamoniylar Fors imperiyasi"
+      },
+      "sides_es": {
+        "delian": "Coalición griega (Atenas y Esparta)",
+        "persia": "Imperio persa aqueménida"
+      }
     },
     {
       "id": "greek-indep-1821",
@@ -1915,9 +2641,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Наваринское сражение и независимость Греции",
+          "title_uz": "Navarin jangi va Gretsiya mustaqilligi",
+          "title_es": "Batalla de Navarino y nacimiento de la Grecia moderna",
+          "desc_ru": "Союзный флот Великобритании, Франции и России уничтожает османско-египетскую эскадру в бухте Наварино.",
+          "desc_uz": "Britaniya, Fransiya va Rossiya ittifoqchi floti Navarin qoʻltigʻida Usmonli-Misr flotini yoʻq qiladi.",
+          "desc_es": "La flota aliada anglo-franco-rusa destruye a la armada otomano-egipcia en Navarino, asegurando la independencia griega."
         }
-      ]
+      ],
+      "sides_en": {
+        "allies": "Greek Revolutionaries & Allies (Britain, France, Russia)",
+        "ottoman": "Ottoman Empire & Egyptian Army (Ibrahim Pasha)"
+      },
+      "sides_ru": {
+        "allies": "Греческие повстанцы и союзники (Великобритания, Франция, Россия)",
+        "ottoman": "Османская империя и египетская армия (Ибрагим-паша)"
+      },
+      "sides_uz": {
+        "allies": "Yunon isyonchilari va ittifoqchilari (Britaniya, Fransiya, Rossiya)",
+        "ottoman": "Usmonli imperiyasi va Misr armiyasi (Ibrohim posho)"
+      },
+      "sides_es": {
+        "allies": "Rebeldes griegos y aliados (Gran Bretaña, Francia y Rusia)",
+        "ottoman": "Imperio otomano y ejército egipcio (Ibrahim Bajá)"
+      }
     },
     {
       "id": "haitian-rev-1791",
@@ -1963,9 +2711,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Вертьере и независимость Гаити",
+          "title_uz": "Verter jangi va Gaiti mustaqilligi",
+          "title_es": "Batalla de Vertières e independencia de Haití",
+          "desc_ru": "Армия бывших рабов под командованием Дессалина наносит поражение наполеоновским войскам, провозглашая Гаити первой свободной черной республикой.",
+          "desc_uz": "Gaitilik qoʻzgʻolonchilar Napoleon armiyasini magʻlub etib, dunyodagi birinchi qora tanlilar respublikasini eʼlon qiladi.",
+          "desc_es": "Las fuerzas haitianas vencen a las tropas napoleónicas en Vertières, estableciendo la primera república negra independiente."
         }
-      ]
+      ],
+      "sides_en": {
+        "rebels": "Haitian Revolutionary Army (Toussaint & Dessalines)",
+        "france": "French Colonial Empire & Britain"
+      },
+      "sides_ru": {
+        "rebels": "Гаитянская революционная армия (Туссен и Дессалин)",
+        "france": "Французская колониальная империя и Великобритания"
+      },
+      "sides_uz": {
+        "rebels": "Gaiti inqilobiy armiyasi (Tussen va Dessalin)",
+        "france": "Fransiya mustamlaka imperiyasi va Britaniya"
+      },
+      "sides_es": {
+        "rebels": "Ejército revolucionario haitiano (Toussaint y Dessalines)",
+        "france": "Imperio colonial francés y Gran Bretaña"
+      }
     },
     {
       "id": "han-xiongnu-133",
@@ -2006,9 +2776,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Моэбэй (война Хань против Хунну)",
+          "title_uz": "Mobey jangi (Xan va Xunnu urushi)",
+          "title_es": "Batalla de Mobei",
+          "desc_ru": "Ханьские генералы Вэй Цин и Хо Цюйбин наносят сокрушительное поражение хунну в глубине пустыни Гоби.",
+          "desc_uz": "Xan lashkarboshilari Vey Tsin va Xo Tsyubin Gobi sahrosi qaʼrida Xunnularni tor-mor etadi.",
+          "desc_es": "Las fuerzas de la dinastía Han derrotan decisivamente a los Xiongnu en el desierto de Gobi."
         }
-      ]
+      ],
+      "sides_en": {
+        "han": "Han Empire of China",
+        "xiongnu": "Nomadic Xiongnu Confederation (Northern Steppe)"
+      },
+      "sides_ru": {
+        "han": "Китайская империя Хань",
+        "xiongnu": "Кочевая конфедерация хунну (Северная степь)"
+      },
+      "sides_uz": {
+        "han": "Xan imperiyasi (Xitoy)",
+        "xiongnu": "Xunnu koʻchmanchilar konfederatsiyasi (Shimoliy dasht)"
+      },
+      "sides_es": {
+        "han": "Imperio Han de China",
+        "xiongnu": "Confederación nómada Xiongnu (Estepa septentrional)"
+      }
     },
     {
       "id": "hattin-1187",
@@ -2074,9 +2866,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Хаттине и освобождение Иерусалима",
+          "title_uz": "Hittin jangi va Quddusning ozod qilinishi",
+          "title_es": "Los Cuernos de Hattin y liberación de Jerusalén",
+          "desc_ru": "Салах ад-Дин Аль-Айюби сокрушает армию крестоносцев у Хаттина и победоносно освобождает Иерусалим.",
+          "desc_uz": "Salohiddin Ayyubiy Hittin tepaliklarida salibchilar qoʻshinini tor-mor etib, Quddusni ozod qiladi.",
+          "desc_es": "Saladino destruye al ejército cruzado en los Cuernos de Hattin y recupera Jerusalén para el Islam."
         }
-      ]
+      ],
+      "sides_en": {
+        "ayyubid": "Unified Ayyubid Army (Saladin)",
+        "crusaders": "Kingdom of Jerusalem & Crusader Knights"
+      },
+      "sides_ru": {
+        "ayyubid": "Объединенная армия Айюбидов (Салах ад-Дин)",
+        "crusaders": "Иерусалимское королевство и рыцари-крестоносцы"
+      },
+      "sides_uz": {
+        "ayyubid": "Ayyubiylar birlashgan armiyasi (Salohiddin)",
+        "crusaders": "Quddus qirolligi va salibchi ritsarlar"
+      },
+      "sides_es": {
+        "ayyubid": "Ejército ayubí unificado (Saladino)",
+        "crusaders": "Reino de Jerusalén y caballeros cruzados"
+      }
     },
     {
       "id": "hundred-years-1337",
@@ -2127,9 +2941,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "От Азенкура до Жанны д’Арк",
+          "title_uz": "Azenkur jangidan Janna d'Arkka qadar",
+          "title_es": "De Azincourt a Juana de Arco",
+          "desc_ru": "Генрих V громит французских рыцарей при Азенкуре, но появление Жанны д'Арк переламывает ход войны в пользу Франции.",
+          "desc_uz": "Genrix V ingliz kamonchilari yordamida Azenkurda gʻalaba qozonadi, biroq Janna d'Ark Fransiyani ozodlikka boshlaydi.",
+          "desc_es": "Enrique V triunfa en Azincourt gracias a los arqueros ingleses, antes de que Juana de Arco cambie el rumbo de la guerra."
         }
-      ]
+      ],
+      "sides_en": {
+        "england": "England & Allies",
+        "france": "France & Allies"
+      },
+      "sides_ru": {
+        "england": "Англия и союзники",
+        "france": "Франция и союзники"
+      },
+      "sides_uz": {
+        "england": "Angliya va ittifoqchilari",
+        "france": "Fransiya va ittifoqchilari"
+      },
+      "sides_es": {
+        "england": "Inglaterra y aliados",
+        "france": "Francia y aliados"
+      }
     },
     {
       "id": "hussite-1419",
@@ -2180,9 +3016,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Оборона Виткова холма и вагенбург гуситов",
+          "title_uz": "Vitkov tepaligi mudofaasi va gusiylar vagenburgi",
+          "title_es": "Defensa de la colina Vítkov y táctica de wagenburg",
+          "desc_ru": "Ян Жижка во главе гуситов громит крестоносцев императора Сигизмунда с помощью боевых повозок (вагенбургов).",
+          "desc_uz": "Yan Jijka jangovar aravalar (vagenburg) taktikasi orqali salibchilar armiyasini tor-mor etadi.",
+          "desc_es": "Jan Žižka y los husitas derrotan a los cruzados imperiales empleando fortines de carros (wagenburg)."
         }
-      ]
+      ],
+      "sides_en": {
+        "hussite": "Bohemian Hussites (Jan Žižka)",
+        "coalition": "Papal Alliance & Holy Roman Empire"
+      },
+      "sides_ru": {
+        "hussite": "Богемские гуситы (Ян Жижка)",
+        "coalition": "Папский союз и Священная Римская империя"
+      },
+      "sides_uz": {
+        "hussite": "Bogemiya gusiylari (Yan Jizka)",
+        "coalition": "Papa ittifoqi va Muqaddas Rim imperiyasi"
+      },
+      "sides_es": {
+        "hussite": "Husitas bohemios (Jan Žižka)",
+        "coalition": "Alianza papal y Sacro Imperio Romano Germánico"
+      }
     },
     {
       "id": "imjin-1592",
@@ -2233,9 +3091,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Адмирал Ли Сунсин и корабли-черепахи",
+          "title_uz": "Admiral Li Sunsin va toshbaqa-kemalar",
+          "title_es": "El almirante Yi y los barcos tortuga",
+          "desc_ru": "Адмирал Ли Сунсин громит японский флот Тоётоми Хидэёси благодаря бронированным кораблям-черепахам (кобуксонам).",
+          "desc_uz": "Admiral Li Sunsin zirhli toshbaqa-kemalar (kobukson) bilan yapon flotini tor-mor etib, Koreyani qutqaradi.",
+          "desc_es": "El almirante Yi Sun-sin destruye a la flota japonesa con sus famosos barcos tortuga blindados (Geobukseon)."
         }
-      ]
+      ],
+      "sides_en": {
+        "korea-ming": "Korean Joseon Kingdom & Ming Empire",
+        "japan": "Japan (Toyotomi Hideyoshi)"
+      },
+      "sides_ru": {
+        "korea-ming": "Корейское королевство Чосон и империя Мин",
+        "japan": "Япония (Тоётоми Хидэёси)"
+      },
+      "sides_uz": {
+        "korea-ming": "Koreya Choson qirolligi va Min imperiyasi",
+        "japan": "Yaponiya (Toyotomi Xideyoshi)"
+      },
+      "sides_es": {
+        "korea-ming": "Reino coreano de Joseon e Imperio Ming",
+        "japan": "Japón (Toyotomi Hideyoshi)"
+      }
     },
     {
       "id": "indian-rebellion-1857",
@@ -2281,9 +3161,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Осада Дели и установление прямого британского правления",
+          "title_uz": "Dehli qamali va toʻgʻridan-toʻgʻri Britaniya boshqaruvi",
+          "title_es": "Asedio de Delhi y gobierno directo británico",
+          "desc_ru": "Подавление восстания сипаев приводит к ликвидации Ост-Индской компании и началу прямого правления британской короны (Радж).",
+          "desc_uz": "Sipohiylar qoʻzgʻoloni bostirilgach, Ost-Indiya kompaniyasi tugatilib, Britaniya toji bevosita boshqaruvni qoʻlga oladi.",
+          "desc_es": "La represión de la rebelión sepoy pone fin a la Compañía de las Indias Orientales e instaura el Raj británico directo."
         }
-      ]
+      ],
+      "sides_en": {
+        "rebels": "Indian Rebels & Sepoys (Bahadur Shah II)",
+        "england": "East India Company & British Crown"
+      },
+      "sides_ru": {
+        "rebels": "Индийские повстанцы и сипаи (Бахадур Шах II)",
+        "england": "Ост-Индская компания и британская корона"
+      },
+      "sides_uz": {
+        "rebels": "Hind isyonchilari va sipohiylari (Bahodirshoh II)",
+        "england": "Ost-Indiya kompaniyasi va Britaniya toji"
+      },
+      "sides_es": {
+        "rebels": "Rebeldes y cipayos indios (Bahadur Shah II)",
+        "england": "Compañía de las Indias Orientales y Corona Británica"
+      }
     },
     {
       "id": "italian-wars-1494",
@@ -2339,9 +3241,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Павии и испанская гегемония в Италии",
+          "title_uz": "Paviya jangi va Italiyada Ispaniya gegemonligi",
+          "title_es": "Batalla de Pavía y hegemonía española",
+          "desc_ru": "Имперско-испанские войска берут в плен французского короля Франциска I, закрепив контроль Габсбургов над Италией.",
+          "desc_uz": "Gabsburglar qoʻshini Fransiya qiroli Fransisk I ni asir oladi va Italiyada Ispaniya hukmronligini oʻrnatadi.",
+          "desc_es": "Las fuerzas de Carlos I capturan al rey francés Francisco I en Pavía, consolidando la hegemonía española en Italia."
         }
-      ]
+      ],
+      "sides_en": {
+        "france": "Kingdom of France & Allies",
+        "habsburg": "Spanish Empire & Habsburgs"
+      },
+      "sides_ru": {
+        "france": "Королевство Франция и союзники",
+        "habsburg": "Испанская империя и Габсбурги"
+      },
+      "sides_uz": {
+        "france": "Fransiya qirolligi va ittifoqchilari",
+        "habsburg": "Ispaniya imperiyasi va Gabsburglar"
+      },
+      "sides_es": {
+        "france": "Reino de Francia y aliados",
+        "habsburg": "Imperio español y los Habsburgo"
+      }
     },
     {
       "id": "jewish-roman-66",
@@ -2397,9 +3321,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Осада Иерусалима и разрушение Второго Храма",
+          "title_uz": "Quddus qamali va Ikkinchi maʼbadning vayron qilinishi",
+          "title_es": "Asedio de Jerusalén y destrucción del Templo",
+          "desc_ru": "Римские легионы под командованием Тита штурмуют Иерусалим, сжигают Второй Храм и рассеивают еврейский народ.",
+          "desc_uz": "Tit boshchiligidagi Rim legionlari Quddusni egallab, Ikkinchi maʼbadni butunlay vayron qiladi.",
+          "desc_es": "Tito sofoca la rebelión judía, destruyendo el Templo de Jerusalén e iniciando la gran diáspora."
         }
-      ]
+      ],
+      "sides_en": {
+        "rome": "Roman Empire (Titus)",
+        "rebels": "Jewish Rebels & Zealots"
+      },
+      "sides_ru": {
+        "rome": "Римская империя (Тит)",
+        "rebels": "Еврейские повстанцы и зилоты"
+      },
+      "sides_uz": {
+        "rome": "Rim imperiyasi (Tit)",
+        "rebels": "Yahudiy isyonchilari va zelotlar"
+      },
+      "sides_es": {
+        "rome": "Imperio romano (Tito)",
+        "rebels": "Rebeldes judíos y celotes"
+      }
     },
     {
       "id": "kadesh-1274",
@@ -2455,9 +3401,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Кадеше на реке Оронт",
+          "title_uz": "Qodash jangi (Oront daryosi boʻyida)",
+          "title_es": "Batalla de Qadesh junto al Orontes",
+          "desc_ru": "Грандиозная битва на колесницах между Рамсесом II и хеттским царем Муватали II, завершившаяся первым в истории мирным договором.",
+          "desc_uz": "Ramzes II va xettlar oʻrtasidagi jang tarixdagi eng mashhur jang aravasi toʻqnashuvi boʻlib, tinchlik sulhi bilan tugaydi.",
+          "desc_es": "Masiva batalla de carros entre Ramsés II y Muwatalli II que concluyó en el primer tratado de paz documentado."
         }
-      ]
+      ],
+      "sides_en": {
+        "egypt": "Egyptian Coalition",
+        "hittite": "Hittite Coalition"
+      },
+      "sides_ru": {
+        "egypt": "Египетская коалиция",
+        "hittite": "Хеттский союз"
+      },
+      "sides_uz": {
+        "egypt": "Misr koalitsiyasi",
+        "hittite": "Xett ittifoqi"
+      },
+      "sides_es": {
+        "egypt": "Coalición egipcia",
+        "hittite": "Coalición hitita"
+      }
     },
     {
       "id": "kalinga-261",
@@ -2503,9 +3471,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Война в Калинге и обращение Ашоки к буддизму",
+          "title_uz": "Kalinga urushi va Ashokaning buddizmga oʻtishi",
+          "title_es": "Guerra de Kalinga y la conversión de Ashoka",
+          "desc_ru": "Кровопролитное завоевание Калинги заставляет императора Ашоку раскаяться, принять буддизм и провозгласить ненасилие (ахимсу).",
+          "desc_uz": "Kalinga urushidagi qirgʻin imperator Ashokani chuqur qaygʻuga solib, uni zoʻravonliksizlik va buddizm yoʻliga kiritadi.",
+          "desc_es": "La sangrienta conquista de Kalinga conmueve a Ashoka, quien renuncia a la guerra y abraza el budismo y la no violencia."
         }
-      ]
+      ],
+      "sides_en": {
+        "maurya": "Maurya Empire (Ashoka the Great)",
+        "kalinga": "Independent Republic of Kalinga"
+      },
+      "sides_ru": {
+        "maurya": "Империя Маурьев (Ашока)",
+        "kalinga": "Независимая республика Калинга"
+      },
+      "sides_uz": {
+        "maurya": "Mavriyalar imperiyasi (Ashoka)",
+        "kalinga": "Mustaqil Kalinga respublikasi"
+      },
+      "sides_es": {
+        "maurya": "Imperio Maurya (Ashoka)",
+        "kalinga": "República independiente de Kalinga"
+      }
     },
     {
       "id": "khazar-arab-652",
@@ -2561,9 +3551,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Северный поход Марвана против Хазар",
+          "title_uz": "Marvonning shimoliy yurishi va Xazarlar",
+          "title_es": "Expedición norteña de Marwán contra los jázaros",
+          "desc_ru": "Полководец Марван ибн Мухаммад вторгается на Северный Кавказ и Поволжье, принуждая хазарского кагана к миру.",
+          "desc_uz": "Marvon ibn Muhammad boshchiligidagi umaviy qoʻshinlari Kavkaz ortiga yurish qilib, Xazar xoqonini sulhga majbur etadi.",
+          "desc_es": "Marwán ibn Muhámmad lidera una profunda incursión a través del Cáucaso, forzando la sumisión temporal del jaganato jázaro."
         }
-      ]
+      ],
+      "sides_en": {
+        "muslim": "Umayyad Caliphate & Rashidun Caliphate",
+        "coalition": "Khazar Khaganate & Allies"
+      },
+      "sides_ru": {
+        "muslim": "Омейядский и Праведный халифаты",
+        "coalition": "Хазарский каганат и союзники"
+      },
+      "sides_uz": {
+        "muslim": "Umaviylar va Roshidun xalifaligi",
+        "coalition": "Xazar xoqonligi va ittifoqchilari"
+      },
+      "sides_es": {
+        "muslim": "Califato omeya y Califato Rashidun",
+        "coalition": "Jaganato jázaro y aliados"
+      }
     },
     {
       "id": "korean-war-1950",
@@ -2629,9 +3641,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Высадка в Инчхоне и китайское контрнаступление",
+          "title_uz": "Inchon desanti va Xitoy qarshi hujumi",
+          "title_es": "Desembarco de Incheon y contraofensiva china",
+          "desc_ru": "Высадка генерала Макартура в Инчхоне спасает Южную Корею, но вступление китайских добровольцев приводит к затяжной войне.",
+          "desc_uz": "General Makarturning Inchon desanti frontni oʻzgartiradi, biroq Xitoy koʻngillilarining kirishi urushni choʻzadi.",
+          "desc_es": "El audaz desembarco de MacArthur en Incheon revierte la guerra antes de que la intervención china estabilice el frente."
         }
-      ]
+      ],
+      "sides_en": {
+        "un-south": "United Nations, South Korea & United States",
+        "communist": "North Korea, China & Soviet Union"
+      },
+      "sides_ru": {
+        "un-south": "ООН, Южная Корея и США",
+        "communist": "Северная Корея, Китай и СССР"
+      },
+      "sides_uz": {
+        "un-south": "BMT, Janubiy Koreya va AQSh",
+        "communist": "Shimoliy Koreya, Xitoy va SSSR"
+      },
+      "sides_es": {
+        "un-south": "Naciones Unidas, Corea del Sur y Estados Unidos",
+        "communist": "Corea del Norte, China y la Unión Soviética"
+      }
     },
     {
       "id": "las-navas-1212",
@@ -2682,9 +3716,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Лас-Навас-де-Толоса",
+          "title_uz": "Las-Navas-de-Tolosa jangi",
+          "title_es": "Batalla de Las Navas de Tolosa",
+          "desc_ru": "Христианская коалиция Испании наносит сокрушительное поражение Альмохадам, решив судьбу мусульманской Андалусии.",
+          "desc_uz": "Ispaniya nasroniy qirolliklari ittifoqi Muvahhidlar qoʻshinini yengib, Rekonkisraning hal qiluvchi burilishini yasaydi.",
+          "desc_es": "La alianza cristiana aplasta al ejército almohade en 1212, abriendo Andalucía a la conquista castellana."
         }
-      ]
+      ],
+      "sides_en": {
+        "coalition": "Christian Iberian Alliance (Castile, Aragon & Navarre)",
+        "muslim": "Almohad Caliphate (al-Nasir)"
+      },
+      "sides_ru": {
+        "coalition": "Христианский иберийский союз (Кастилия, Арагон и Наварра)",
+        "muslim": "Альмохадский халифат (ан-Насир)"
+      },
+      "sides_uz": {
+        "coalition": "Iberiya nasroniy ittifoqi (Kastiliya, Aragon va Navarra)",
+        "muslim": "Muvahhidlar xalifaligi (an-Nosir)"
+      },
+      "sides_es": {
+        "coalition": "Alianza cristiana ibérica (Castilla, Aragón y Navarra)",
+        "muslim": "Califato almohade (al-Nasir)"
+      }
     },
     {
       "id": "latin-indep-1808",
@@ -2750,9 +3806,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Аякучо и освобождение Южной Америки",
+          "title_uz": "Ayakucho jangi va Janubiy Amerika mustaqilligi",
+          "title_es": "Batalla de Ayacucho y fin del dominio español",
+          "desc_ru": "Генерал Сукре громит королевские войска в Аякучо, окончательно завершая испанское колониальное господство в Южной Америке.",
+          "desc_uz": "General Sukre Ayakuchoda Ispaniya qoʻshinlarini magʻlub etib, Janubiy Amerikaning mustaqilligini toʻliq taʼminlaydi.",
+          "desc_es": "Antonio José de Sucre sella la independencia de América del Sur al derrotar al último ejército virreinal español en Ayacucho."
         }
-      ]
+      ],
+      "sides_en": {
+        "patriots": "Liberation Armies (Simón Bolívar & San Martín)",
+        "royalists": "Spanish Monarchy & Colonial Army"
+      },
+      "sides_ru": {
+        "patriots": "Освободительные армии (Симон Боливар и Сан-Мартин)",
+        "royalists": "Испанская монархия и колониальная армия"
+      },
+      "sides_uz": {
+        "patriots": "Ozodlik armiyalari (Simon Bolivar va San-Martin)",
+        "royalists": "Ispaniya monarxiyasi va mustamlaka armiyasi"
+      },
+      "sides_es": {
+        "patriots": "Ejércitos libertadores (Simón Bolívar y San Martín)",
+        "royalists": "Monarquía española y ejército virreinal"
+      }
     },
     {
       "id": "lepanto-1571",
@@ -2803,9 +3881,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Лепанто в Патрасском заливе",
+          "title_uz": "Lepanto jangi (Patras qoʻltigʻida)",
+          "title_es": "Batalla de Lepanto",
+          "desc_ru": "Флот Священной лиги под командованием дона Хуана Австрийского разбивает османский галерный флот.",
+          "desc_uz": "Muqaddas liga floti Lepanto yonida Usmonli eskadrasini magʻlub etib, Oʻrtayer dengizida kuchlar muvozanatini oʻzgartiradi.",
+          "desc_es": "La Santa Liga liderada por Don Juan de Austria inflige una severa derrota naval a la armada otomana en el golfo de Patras."
         }
-      ]
+      ],
+      "sides_en": {
+        "coalition": "Holy League (Spain, Venice & Papacy)",
+        "ottoman": "Imperial Ottoman Fleet"
+      },
+      "sides_ru": {
+        "coalition": "Священная лига (Испания, Венеция и Папство)",
+        "ottoman": "Императорский османский флот"
+      },
+      "sides_uz": {
+        "coalition": "Muqaddas liga (Ispaniya, Venetsiya va Papalik)",
+        "ottoman": "Usmonli imperatorlik floti"
+      },
+      "sides_es": {
+        "coalition": "Liga Santa cristiana (España, Venecia y Papado)",
+        "ottoman": "Flota imperial otomana"
+      }
     },
     {
       "id": "mahdiyya-sudan-1881",
@@ -2851,9 +3951,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Падение Хартума и битва при Омдурмане",
+          "title_uz": "Xartumning qulashi va Omdurman jangi",
+          "title_es": "Caída de Jartum y batalla de Omdurmán",
+          "desc_ru": "Британские пулеметы «Максим» генерала Китченера уничтожают войско махдистов под Омдурманом, подчиняя Судан.",
+          "desc_uz": "General Kitchener boshchiligidagi Britaniya qoʻshinlari Omdurman yonida mahdiylar davlatini yengib, Sudanni egallaydi.",
+          "desc_es": "Kitchener emplea ametralladoras modernas en Omdurmán para aplastar al Estado mahdista y vengar la caída de Jartum."
         }
-      ]
+      ],
+      "sides_en": {
+        "muslim": "Sudanese Mahdist State (Muhammad Ahmad al-Mahdi)",
+        "england": "British Empire & Khedivate of Egypt"
+      },
+      "sides_ru": {
+        "muslim": "Суданское махдистское государство (Мухаммад аль-Махди)",
+        "england": "Британская империя и Хедиват Египет"
+      },
+      "sides_uz": {
+        "muslim": "Sudan Mahdiy davlati (Muhammad Ahmad al-Mahdiy)",
+        "england": "Britaniya imperiyasi va Misr Xidivligi"
+      },
+      "sides_es": {
+        "muslim": "Estado mahdista de Sudán (Muhammad Ahmad al-Mahdi)",
+        "england": "Imperio británico y Jedivato de Egipto"
+      }
     },
     {
       "id": "mamluk-ottoman-1516",
@@ -2904,9 +4026,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Ридании и падение Каира",
+          "title_uz": "Ridoniya jangi va Qohiraning egallanishi",
+          "title_es": "Batalla de Ridaniya y anexión imperial",
+          "desc_ru": "Султан Селим I побеждает последнего мамлюкского султана Туман-бая, присоединяя Египет и священные города к Османской империи.",
+          "desc_uz": "Sulton Salim I Tumanboyni yengib, Qohirani egallaydi va Misr hamda Hijozni Usmonlilar imperiyasiga qoʻshib oladi.",
+          "desc_es": "Selim I derrota a los mamelucos en Ridaniya y toma El Cairo, convirtiendo a los sultanes otomanos en custodios del Islam."
         }
-      ]
+      ],
+      "sides_en": {
+        "ottoman": "Ottoman Empire (Selim I)",
+        "mamluk": "Mamluk Sultanate (Qansuh al-Ghawri & Tuman Bay)"
+      },
+      "sides_ru": {
+        "ottoman": "Османская империя (Селим I)",
+        "mamluk": "Мамлюкский султанат (Кансух аль-Гури и Туман-бай)"
+      },
+      "sides_uz": {
+        "ottoman": "Usmonli imperiyasi (Salim I)",
+        "mamluk": "Mamluklar sultonligi (Qansuh al-Gʻuriy va Tumanboy)"
+      },
+      "sides_es": {
+        "ottoman": "Imperio otomano (Selim I)",
+        "mamluk": "Sultanato mameluco (Qansuh al-Ghawri y Tuman Bay)"
+      }
     },
     {
       "id": "manchu-conquest-1618",
@@ -2947,9 +4091,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Прорыв Великой стены у Шаньхайгуаньского прохода",
+          "title_uz": "Shanxayguan darvozasining ochilishi va manjurlar fathi",
+          "title_es": "Paso de Shanhai y caída de la dinastía Ming",
+          "desc_ru": "Маньчжурские знамена объединяются с генералом У Саньгуем, входят в Пекин и основывают династию Цин.",
+          "desc_uz": "Manjurlar Shanxayguan darvozasidan Buyuk devorni kesib oʻtib, Pekinni egallaydi va Sin sulolasini oʻrnatadi.",
+          "desc_es": "Las fuerzas manchúes cruzan la Gran Muralla con la ayuda de Wu Sangui, toman Pekín y fundan la dinastía Qing."
         }
-      ]
+      ],
+      "sides_en": {
+        "qing": "Manchu Tribes & Qing State",
+        "ming": "Ming Dynasty of China & Resistance"
+      },
+      "sides_ru": {
+        "qing": "Маньчжурские племена и государство Цин",
+        "ming": "Династия Мин и сопротивление"
+      },
+      "sides_uz": {
+        "qing": "Manchjur qabilalari va Sin davlati",
+        "ming": "Xitoy Min sulolasi va qarshilik harakati"
+      },
+      "sides_es": {
+        "qing": "Tribus manchúes y estado Qing",
+        "ming": "Dinastía Ming de China y leales"
+      }
     },
     {
       "id": "manzikert-1071",
@@ -3000,9 +4166,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Манцикерте и открытие Анатолии",
+          "title_uz": "Malazgirt jangi va Onadoʻli eshiklarining ochilishi",
+          "title_es": "Batalla de Manzikert y apertura de Anatolia",
+          "desc_ru": "Султан сельджуков Альп-Арслан громит византийскую армию и берет в плен императора Романа IV Диогена.",
+          "desc_uz": "Saljuqiylar sultoni Alp Arslon Vizantiya imperatori Roman IV Diogenni asir olib, turkiy xalqlarga Onadoʻli yoʻlini ochadi.",
+          "desc_es": "Alp Arslan inflige una derrota histórica al emperador Romano IV, abriendo Anatolia a la colonización turca."
         }
-      ]
+      ],
+      "sides_en": {
+        "seljuk": "Seljuk Empire (Alp Arslan)",
+        "byzantine": "Byzantine Empire (Romanos IV)"
+      },
+      "sides_ru": {
+        "seljuk": "Сельджукская империя (Алп-Арслан)",
+        "byzantine": "Византийская империя (Роман IV)"
+      },
+      "sides_uz": {
+        "seljuk": "Saljuqiylar imperiyasi (Alp Arslon)",
+        "byzantine": "Vizantiya imperiyasi (Roman IV)"
+      },
+      "sides_es": {
+        "seljuk": "Imperio selyúcida (Alp Arslan)",
+        "byzantine": "Imperio bizantino (Romano IV)"
+      }
     },
     {
       "id": "maratha-mughal-1680",
@@ -3043,9 +4231,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Войны в Декане и истощение империи Моголов",
+          "title_uz": "Dakan urushlari va Boburiylar zaiflashuvi",
+          "title_es": "Guerras del Decán y guerra de desgaste",
+          "desc_ru": "Двадцатипятилетняя партизанская война маратхов истощает финансовые и военные ресурсы императора Аурангзеба.",
+          "desc_uz": "Marathalarning partizanlik urushlari imperator Avrangzebning ulkan resurslarini yemirib, Boburiylar saltanatini inqirozga boshlaydi.",
+          "desc_es": "Las prolongadas campañas de Aurangzeb en el Decán contra los marathas desangran militar y financieramente al Imperio mogol."
         }
-      ]
+      ],
+      "sides_en": {
+        "mughal": "Mughal Empire (Aurangzeb Alamgir)",
+        "maratha": "Maratha Empire Confederation (Shivaji)"
+      },
+      "sides_ru": {
+        "mughal": "Империя Великих Моголов (Аурангзеб Аламгир)",
+        "maratha": "Конфедерация маратхов (Шиваджи)"
+      },
+      "sides_uz": {
+        "mughal": "Boburiylar imperiyasi (Avrangzeb Olamgir)",
+        "maratha": "Maratxa imperiyasi konfederatsiyasi (Shivaji)"
+      },
+      "sides_es": {
+        "mughal": "Imperio mogol (Aurangzeb)",
+        "maratha": "Imperio maratha (Shivaji)"
+      }
     },
     {
       "id": "marcomannic-166",
@@ -3106,9 +4316,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Маркоманские войны на дунайском лимесе",
+          "title_uz": "Markoman urushlari (Dunay chegarasida)",
+          "title_es": "Campañas en el limes del Danubio",
+          "desc_ru": "Император-философ Марк Аврелий отбивает вторжение маркоманов и квадов через Дунай, защищая границы Рима.",
+          "desc_uz": "Imperator Mark Avreliy Dunay chegarasida german va sarmat qabilalari hujumlarini qaytaradi.",
+          "desc_es": "Marco Aurelio defiende la frontera norte del Imperio frente a las invasiones de marcomanos, cuados y sármatas."
         }
-      ]
+      ],
+      "sides_en": {
+        "rome": "Roman Empire",
+        "coalition": "Germanic & Sarmatian Coalition (Marcomannic)"
+      },
+      "sides_ru": {
+        "rome": "Римская империя",
+        "coalition": "Германо-сарматский союз (Маркоманнский)"
+      },
+      "sides_uz": {
+        "rome": "Rim imperiyasi",
+        "coalition": "German va Sarmat ittifoqi (Markomanlar)"
+      },
+      "sides_es": {
+        "rome": "Imperio romano",
+        "coalition": "Coalición germánica y sármata (Marcomana)"
+      }
     },
     {
       "id": "mexican-american-1846",
@@ -3149,9 +4381,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Штурм Чапультепека и падение Мехико",
+          "title_uz": "Chapultepek qamali va Mexiko qulashi",
+          "title_es": "Toma de la Ciudad de México y cesión territorial",
+          "desc_ru": "Американские войска занимают замок Чапультепек и Мехико, вынуждая Мексику уступить половину своей территории.",
+          "desc_uz": "Amerika qoʻshinlari Mexiko shahrini egallab, Meksikani Kaliforniya va Nyu-Meksiko yerlarini topshirishga majbur qiladi.",
+          "desc_es": "Las fuerzas estadounidenses toman el castillo de Chapultepec y la capital, forzando la cesión de más de la mitad del territorio mexicano."
         }
-      ]
+      ],
+      "sides_en": {
+        "union": "United States of America",
+        "mexico": "Mexican Republic"
+      },
+      "sides_ru": {
+        "union": "Соединенные Штаты Америки",
+        "mexico": "Мексиканская Республика"
+      },
+      "sides_uz": {
+        "union": "Amerika Qoʻshma Shtatlari",
+        "mexico": "Meksika Respublikasi"
+      },
+      "sides_es": {
+        "union": "Estados Unidos de América",
+        "mexico": "República Mexicana"
+      }
     },
     {
       "id": "mongol-1258",
@@ -3217,9 +4471,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Айн-Джалуте и падение Багдада",
+          "title_uz": "Ayn Jolut jangi va Bagʻdod fojiasi",
+          "title_es": "Batalla de Ain Yalut y caída de Bagdad",
+          "desc_ru": "Мамлюкские султаны Кутуз и Бейбарс наносят первое поражение монгольской армии Хулагу при Айн-Джалуте, спасая исламский мир.",
+          "desc_uz": "Sayfiddin Qutuz va Boybars Ayn Jolutda moʻgʻul qoʻshinini toʻxtatib, Misr va Shomni vayronagarchilikdan saqlab qoladi.",
+          "desc_es": "Los mamelucos liderados por Qutuz y Baibars detienen el avance mongol en Ain Yalut, salvando a El Cairo y al Islam."
         }
-      ]
+      ],
+      "sides_en": {
+        "mongol": "Mongol Empire",
+        "islamic": "Abbasid Caliphate & Mamluks"
+      },
+      "sides_ru": {
+        "mongol": "Монгольская империя",
+        "islamic": "Аббасидский халифат и мамлюки"
+      },
+      "sides_uz": {
+        "mongol": "Moʻgʻul imperiyasi",
+        "islamic": "Abbosiylar xalifaligi va mamluklar"
+      },
+      "sides_es": {
+        "mongol": "Imperio mongol",
+        "islamic": "Califato abasí y mamelucos"
+      }
     },
     {
       "id": "mongol-rus-1237",
@@ -3275,9 +4551,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Падение Киева и монгольское нашествие на Русь",
+          "title_uz": "Kiyevning qulashi va Moʻgʻullar bosqini",
+          "title_es": "Caída de Kiev e invasión de Europa central",
+          "desc_ru": "Хан Батый штурмом берет Киев и вторгается в Центральную Европу, утверждая власть Золотой Орды.",
+          "desc_uz": "Botuxon Kiyevni egallab, Rus knyazliklari ustidan Oltin Oʻrda hukmronligini oʻrnatadi hamda Markaziy Yevropaga bostirib kiradi.",
+          "desc_es": "Batú Kan asalta y destruye Kiev, sometiendo a los principados rusos e invadiendo Polonia y Hungría."
         }
-      ]
+      ],
+      "sides_en": {
+        "mongol": "Mongol Empire & Golden Horde (Batu Khan)",
+        "rus": "Kievan Rus Principalities & Eastern European Kingdoms"
+      },
+      "sides_ru": {
+        "mongol": "Монгольская империя и Золотая Орда (Батый)",
+        "rus": "Княжества Киевской Руси и восточноевропейские королевства"
+      },
+      "sides_uz": {
+        "mongol": "Moʻgʻul imperiyasi va Oltin Oʻrda (Botuxon)",
+        "rus": "Kiyev Rusi knyazliklari va Sharqiy Yevropa qirolliklari"
+      },
+      "sides_es": {
+        "mongol": "Imperio mongol y la Horda de Oro (Batú Kan)",
+        "rus": "Principados del Rus de Kiev y reinos de Europa Oriental"
+      }
     },
     {
       "id": "napoleonic-1803",
@@ -3343,7 +4641,13 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Аустерлице — зенит Наполеона",
+          "title_uz": "Austerlits jangi — Napoleon choʻqqisi",
+          "title_es": "Batalla de Austerlitz y apogeo imperial",
+          "desc_ru": "«Битва трех императоров»: Наполеон громит объединенные русско-австрийские войска, уничтожая Священную Римскую империю.",
+          "desc_uz": "Uch imperator jangi: Napoleon rus va avstriya armiyalarini yengib, Yevropada fransuz hukmronligini mustahkamlaydi.",
+          "desc_es": "La obra maestra táctica de Napoleón contra los ejércitos combinados ruso y austriaco desintegra la Tercera Coalición."
         },
         {
           "id": "waterloo-1815",
@@ -3389,9 +4693,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Ватерлоо",
+          "title_uz": "Vaterloo jangi",
+          "title_es": "Batalla de Waterloo",
+          "desc_ru": "Герцог Веллингтон и прусский фельдмаршал Блюхер окончательно разбивают Наполеона при Ватерлоо.",
+          "desc_uz": "Vellington va Blyuxer boshchiligidagi ittifoqchilar armiyasi Napoleonni batamom yengib, uning hukmronligiga nuqta qoʻyadi.",
+          "desc_es": "Wellington y Blücher derrotan definitivamente a Napoleón en Waterloo, poniendo fin a la era napoleónica."
         }
-      ]
+      ],
+      "sides_en": {
+        "france": "First French Empire & Allies",
+        "coalition": "European Anti-Coalition"
+      },
+      "sides_ru": {
+        "france": "Первая Французская империя и союзники",
+        "coalition": "Европейская антикоалиция"
+      },
+      "sides_uz": {
+        "france": "Birinchi Fransiya imperiyasi va ittifoqchilari",
+        "coalition": "Yevropa antikoalitsiyasi"
+      },
+      "sides_es": {
+        "france": "Primer Imperio francés y aliados",
+        "coalition": "Coalición europea opositora"
+      }
     },
     {
       "id": "nineveh-612",
@@ -3442,9 +4768,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Падение Ниневии",
+          "title_uz": "Ninaviya qulashi",
+          "title_es": "El saqueo de Nínive",
+          "desc_ru": "Союз вавилонян и мидийцев штурмует и разрушает Ниневию, сокрушая великую Ассирийскую империю.",
+          "desc_uz": "Bobil va Midiya ittifoqchilari Ninaviyani vayron qilib, qudratli Ossuriya imperiyasiga chek qoʻyadi.",
+          "desc_es": "La alianza de medos y babilonios toma y destruye Nínive, marcando el fin del Imperio neoasirio."
         }
-      ]
+      ],
+      "sides_en": {
+        "coalition": "Babylonian, Median & Chaldean Coalition",
+        "assyria": "Neo-Assyrian Empire & Allies"
+      },
+      "sides_ru": {
+        "coalition": "Вавилонский, мидийский и халдейский союз",
+        "assyria": "Новоассирийская империя и союзники"
+      },
+      "sides_uz": {
+        "coalition": "Bobil, Midiya va Xaldey ittifoqi",
+        "assyria": "Yangi Ossuriya imperiyasi va ittifoqchilari"
+      },
+      "sides_es": {
+        "coalition": "Alianza babilónica, meda y caldea",
+        "assyria": "Imperio neoasirio y aliados"
+      }
     },
     {
       "id": "norman-1066",
@@ -3490,9 +4838,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Гастингсе",
+          "title_uz": "Gastings jangi",
+          "title_es": "Batalla de Hastings",
+          "desc_ru": "Вильгельм Завоеватель разбивает короля Гарольда II при Гастингсе, подчиняя Англию норманнам.",
+          "desc_uz": "Vilgelm Bosqinchi qirol Garold II ni yengib, Angliya taxtini va normannlar sulolasini oʻrnatadi.",
+          "desc_es": "Guillermo el Conquistador derrota y mata al rey sajón Haroldo en Hastings, iniciando la conquista normanda de Inglaterra."
         }
-      ]
+      ],
+      "sides_en": {
+        "norman": "Duchy of Normandy (William the Conqueror)",
+        "anglo-saxon": "Anglo-Saxon Kingdom (Harold Godwinson)"
+      },
+      "sides_ru": {
+        "norman": "Герцогство Нормандия (Вильгельм Завоеватель)",
+        "anglo-saxon": "Англосаксонское королевство (Гарольд Годвинсон)"
+      },
+      "sides_uz": {
+        "norman": "Normandiya gersogligi (Vilgelm Bosqinchi)",
+        "anglo-saxon": "Anglosakson qirolligi (Garold Godvinson)"
+      },
+      "sides_es": {
+        "norman": "Ducado de Normandía (Guillermo el Conquistador)",
+        "anglo-saxon": "Reino anglosajón (Haroldo Godwinson)"
+      }
     },
     {
       "id": "october-1973",
@@ -3558,9 +4928,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Операция «Бадр» и форсирование Суэцкого канала",
+          "title_uz": "Badr operatsiyasi va Suvaysh kanali kechuvi",
+          "title_es": "Operación Badr y cruce del canal de Suez",
+          "desc_ru": "Египетская армия успешно форсирует Суэцкий канал и разрушает линию Бар-Лева, а сирийские войска наступают на Голанах.",
+          "desc_uz": "Misr armiyasi Bar-Lev chizigʻini yorib oʻtib Suvaysh kanalidan kechadi, Suriya qoʻshinlari Joʻlon tepaliklarida jang olib boradi.",
+          "desc_es": "Egipto cruza el canal de Suez y supera la línea Bar Lev mientras Siria ataca en los altos del Golán."
         }
-      ]
+      ],
+      "sides_en": {
+        "arab": "Arab Coalition (Egypt & Syria)",
+        "israel": "Israel"
+      },
+      "sides_ru": {
+        "arab": "Арабская коалиция (Египет и Сирия)",
+        "israel": "Израиль"
+      },
+      "sides_uz": {
+        "arab": "Arab koalitsiyasi (Misr va Suriya)",
+        "israel": "Isroil"
+      },
+      "sides_es": {
+        "arab": "Coalición árabe (Egipto y Siria)",
+        "israel": "Israel"
+      }
     },
     {
       "id": "opium-war-1839",
@@ -3606,9 +4998,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Нанкинский договор и уступка Гонконга",
+          "title_uz": "Nankin shartnomasi va Gonkongning topshirilishi",
+          "title_es": "Tratado de Nankín y cesión de Hong Kong",
+          "desc_ru": "Британский флот принуждает империю Цин подписать Нанкинский договор, открыть порты и уступить Гонконг.",
+          "desc_uz": "Britaniya imperiyasi Sin Xitoyini Nankin shartnomasini imzolashga, dengiz portlarini ochishga va Gonkongni berishga majbur qiladi.",
+          "desc_es": "Gran Bretaña impone el Tratado de Nankín a la dinastía Qing, forzando la apertura de puertos y la cesión de Hong Kong."
         }
-      ]
+      ],
+      "sides_en": {
+        "england": "British Empire",
+        "qing": "Qing Dynasty of China"
+      },
+      "sides_ru": {
+        "england": "Британская империя",
+        "qing": "Династия Цин (Китай)"
+      },
+      "sides_uz": {
+        "england": "Britaniya imperiyasi",
+        "qing": "Xitoy Sin sulolasi"
+      },
+      "sides_es": {
+        "england": "Imperio británico",
+        "qing": "Dinastía Qing de China"
+      }
     },
     {
       "id": "panipat1-1526",
@@ -3659,9 +5073,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Первая битва при Панипате и артиллерийский прорыв Бабура",
+          "title_uz": "Birinchi Panipat jangi va Boburning artilleriya yutugʻi",
+          "title_es": "Primera batalla de Panipat y táctica artillera de Babur",
+          "desc_ru": "Бабур побеждает султана Ибрагима Лоди благодаря полевой артиллерии и тактике тулгама, основывая империю Великих Моголов.",
+          "desc_uz": "Zahiriddin Muhammad Bobur toʻplar va toʻlgʻama usuli bilan Ibrohim Loʻdiyni yengib, Boburiylar saltanatiga asos soladi.",
+          "desc_es": "Babur emplea artillería de campaña y tácticas de emboscada para derrotar al sultanato de Delhi y fundar el Imperio mogol."
         }
-      ]
+      ],
+      "sides_en": {
+        "mughal": "Army of Zahir al-Din Babur (Mughal India)",
+        "delhi": "Delhi Sultanate (Ibrahim Lodi)"
+      },
+      "sides_ru": {
+        "mughal": "Армия Захир ад-Дина Бабура (Могольская Индия)",
+        "delhi": "Делийский султанат (Ибрахим Лоди)"
+      },
+      "sides_uz": {
+        "mughal": "Zahiriddin Muhammad Bobur armiyasi (Boburiylar)",
+        "delhi": "Dehli sultonligi (Ibrohim Loʻdiy)"
+      },
+      "sides_es": {
+        "mughal": "Ejército de Babur (India mogola)",
+        "delhi": "Sultanato de Delhi (Ibrahim Lodi)"
+      }
     },
     {
       "id": "panipat2-1556",
@@ -3702,9 +5138,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Вторая битва при Панипате и возрождение Моголов",
+          "title_uz": "Ikkinchi Panipat jangi va Boburiylar qayta tiklanishi",
+          "title_es": "Segunda batalla de Panipat y restauración mogola",
+          "desc_ru": "Юный Акбар и Байрам-хан разбивают армию Хему при Панипате, восстанавливая власть династии Бабура в Дели.",
+          "desc_uz": "Yosh Akbar va Bayramxon Hemu qoʻshinini yengib, Dehli va shimoliy Hindistonda Boburiylar hokimiyatini mustahkamlaydi.",
+          "desc_es": "El joven Akbar y Bairam Khan vencen al general Hemu en Panipat, restaurando el dominio mogol sobre el norte de la India."
         }
-      ]
+      ],
+      "sides_en": {
+        "mughal": "Mughal Empire (Bairam Khan & Akbar the Great)",
+        "suri": "Army of Hemu & Suri Dynasty"
+      },
+      "sides_ru": {
+        "mughal": "Империя Великих Моголов (Байрам-хан и Акбар Великий)",
+        "suri": "Армия Хему и династии Сури"
+      },
+      "sides_uz": {
+        "mughal": "Boburiylar imperiyasi (Bayramxon va Jaloliddin Akbar)",
+        "suri": "Hemu va Suriylar armiyasi"
+      },
+      "sides_es": {
+        "mughal": "Imperio mogol (Bairam Khan y Akbar el Grande)",
+        "suri": "Ejército de Hemu y la dinastía Suri"
+      }
     },
     {
       "id": "paraguayan-war-1864",
@@ -3755,9 +5213,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Падение Асунсьона и тотальная война Тройственного союза",
+          "title_uz": "Asunson qulashi va Uchlar ittifoqi urushi",
+          "title_es": "Caída de Asunción y guerra total",
+          "desc_ru": "Бразилия, Аргентина и Уругвай сокрушают парагвайское сопротивление, уничтожив большую часть мужского населения страны.",
+          "desc_uz": "Braziliya, Argentina va Urugvay ittifoqi Paragvay qarshiligini sindiradi va dahshatli demografik talafot keltiradi.",
+          "desc_es": "La Triple Alianza ocupa Asunción tras una guerra devastadora que diezmó a la población paraguaya."
         }
-      ]
+      ],
+      "sides_en": {
+        "paraguay": "Republic of Paraguay (Francisco Solano López)",
+        "coalition": "Triple Alliance (Brazil, Argentina & Uruguay)"
+      },
+      "sides_ru": {
+        "paraguay": "Республика Парагвай (Франсиско Солано Лопес)",
+        "coalition": "Тройственный союз (Бразилия, Аргентина и Уругвай)"
+      },
+      "sides_uz": {
+        "paraguay": "Paragvay Respublikasi (Fransisko Solano Lopes)",
+        "coalition": "Uchlar ittifoqi (Braziliya, Argentina va Urugvay)"
+      },
+      "sides_es": {
+        "paraguay": "República del Paraguay (Francisco Solano López)",
+        "coalition": "Triple Alianza (Brasil, Argentina y Uruguay)"
+      }
     },
     {
       "id": "peloponnesian-431",
@@ -3808,9 +5288,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Пелопоннесская война и борьба за гегемонию в Греции",
+          "title_uz": "Peloponnes urushi va Yunoniston gegemonligi uchun kurash",
+          "title_es": "Guerra del Peloponeso y lucha por la hegemonía",
+          "desc_ru": "Спартанский союз бросает вызов Афинской морской империи в длительной войне, истощившей греческие полисы.",
+          "desc_uz": "Sparta boshchiligidagi Peloponnes ittifoqi Afina dengiz imperiyasiga qarshi 27 yillik halokatli urush olib boradi.",
+          "desc_es": "Esparta y sus aliados desafían al imperio ateniense en un prolongado conflicto que agotó a las ciudades griegas."
         }
-      ]
+      ],
+      "sides_en": {
+        "delian": "Delian League (Athens)",
+        "peloponnesian": "Peloponnesian League (Sparta)"
+      },
+      "sides_ru": {
+        "delian": "Делосский союз (Афины)",
+        "peloponnesian": "Пелопоннесский союз (Спарта)"
+      },
+      "sides_uz": {
+        "delian": "Delos ittifoqi (Afina)",
+        "peloponnesian": "Peloponnes ittifoqi (Sparta)"
+      },
+      "sides_es": {
+        "delian": "Liga de Delos (Atenas)",
+        "peloponnesian": "Liga del Peloponeso (Esparta)"
+      }
     },
     {
       "id": "punic1-264",
@@ -3856,9 +5358,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Эгатских островах (Первая Пуническая война)",
+          "title_uz": "Egat orollari jangi (Birinchi Puni urushi)",
+          "title_es": "Batalla de las islas Egadas",
+          "desc_ru": "Римский флот наносит решительное поражение Карфагену, вынудив его уступить Сицилию и выплатить контрибуцию.",
+          "desc_uz": "Rim floti Karfagenni yengib, Sitsiliya orolini egallaydi va uni oʻzining birinchi provinsiyasiga aylantiradi.",
+          "desc_es": "La victoria naval romana en las islas Egadas fuerza a Cartago a evacuar Sicilia y pagar cuantiosas indemnizaciones."
         }
-      ]
+      ],
+      "sides_en": {
+        "carthage": "Carthaginian Empire",
+        "rome": "Roman Republic"
+      },
+      "sides_ru": {
+        "carthage": "Карфагенская империя",
+        "rome": "Римская республика"
+      },
+      "sides_uz": {
+        "carthage": "Karfagen imperiyasi",
+        "rome": "Rim respublikasi"
+      },
+      "sides_es": {
+        "carthage": "Imperio cartaginés",
+        "rome": "República romana"
+      }
     },
     {
       "id": "punic2-218",
@@ -3914,9 +5438,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Каннах и итальянский поход Ганнибала",
+          "title_uz": "Kanna jangi va Gannibalning Italiya yurishi",
+          "title_es": "Batalla de Cannas y campaña italiana",
+          "desc_ru": "Ганнибал Барка блестящим окружением уничтожает 70 000 римских легионеров в величайшей тактической победе древности.",
+          "desc_uz": "Gannibal Barka ikki tomonlama qanot qurshovi bilan Kannada 70 ming rimlikni tor-mor etadi.",
+          "desc_es": "Aníbal logra una obra maestra del cerco táctico al destruir al ejército romano en Cannas."
         }
-      ]
+      ],
+      "sides_en": {
+        "carthage": "Carthage & Allies",
+        "rome": "Roman Republic"
+      },
+      "sides_ru": {
+        "carthage": "Карфаген и союзники",
+        "rome": "Римская республика"
+      },
+      "sides_uz": {
+        "carthage": "Karfagen va ittifoqchilari",
+        "rome": "Rim respublikasi"
+      },
+      "sides_es": {
+        "carthage": "Cartago y aliados",
+        "rome": "República romana"
+      }
     },
     {
       "id": "punic3-149",
@@ -3962,9 +5508,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Разрушение Карфагена (Третья Пуническая война)",
+          "title_uz": "Karfagenning butunlay vayron qilinishi",
+          "title_es": "La destrucción de Cartago",
+          "desc_ru": "Сципион Эмилиан после жестокой трехлетней осады сжигает Карфаген дотла, превращая его земли в римскую провинцию Африка.",
+          "desc_uz": "Rim legionlari uch yillik qamaldan soʻng Karfagenni yer bilan yakson qiladi va tirik qolganlarni qul qiladi.",
+          "desc_es": "Escipión Emiliano arrasa la ciudad de Cartago tras un brutal asedio, convirtiendo su territorio en la provincia romana de África."
         }
-      ]
+      ],
+      "sides_en": {
+        "rome": "Roman Republic & Allies",
+        "carthage": "City of Carthage"
+      },
+      "sides_ru": {
+        "rome": "Римская республика и союзники",
+        "carthage": "Город Карфаген"
+      },
+      "sides_uz": {
+        "rome": "Rim respublikasi va ittifoqchilari",
+        "carthage": "Karfagen shahri"
+      },
+      "sides_es": {
+        "rome": "República romana y aliados",
+        "carthage": "Ciudad de Cartago"
+      }
     },
     {
       "id": "qin-unification-230",
@@ -4000,9 +5568,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Падение Ци и объединение Китая династией Цинь",
+          "title_uz": "Tsi qulashi va Sin Shixuandining Xitoyni birlashtirishi",
+          "title_es": "Caída de Qi y unificación imperial de China",
+          "desc_ru": "Цинь Шихуанди покоряет последнее враждующее царство Ци, основывая первую централизованную империю Китая.",
+          "desc_uz": "Tsin Shixuandi soʻnggi Tsi podsholigini boʻysundirib, Xitoy tarixidagi birinchi markazlashgan imperiyani tuzadi.",
+          "desc_es": "Qin Shi Huang somete al último reino combatiente (Qi), proclamándose el primer emperador de una China unificada."
         }
-      ]
+      ],
+      "sides_en": {
+        "qin": "State of Qin (Qin Shi Huang)",
+        "six-states": "Alliance of the Six Rival States"
+      },
+      "sides_ru": {
+        "qin": "Царство Цинь (Цинь Шихуанди)",
+        "six-states": "Союз шести соперничающих царств"
+      },
+      "sides_uz": {
+        "qin": "Sin podsholigi (Sin Shixuandi)",
+        "six-states": "Olti raqib podsholik ittifoqi"
+      },
+      "sides_es": {
+        "qin": "Estado de Qin (Qin Shi Huang)",
+        "six-states": "Alianza de los seis estados rivales"
+      }
     },
     {
       "id": "ridda-632",
@@ -4048,9 +5638,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Ямаме и войны с вероотступниками (Ридда)",
+          "title_uz": "Yamoma jangi va Ridda urushlari",
+          "title_es": "Batalla de Yamama y guerras Ridda",
+          "desc_ru": "Халид ибн аль-Валид побеждает лжепророка Мусейлиму при Ямаме, завершая объединение Аравии под властью халифата.",
+          "desc_uz": "Xolid ibn Valid Yamomada Musaylamani tor-mor etib, Arabiston yarimorolini Abu Bakr xalifaligi ostida birlashtiradi.",
+          "desc_es": "Jálid ibn al-Walid derrota a Musaylima en Yamama, asegurando la unificación de Arabia bajo el califato de Abu Bakr."
         }
-      ]
+      ],
+      "sides_en": {
+        "rashidun": "Rashidun Caliphate at Medina (Abu Bakr al-Siddiq)",
+        "rebels": "Apostate Tribes & False Prophets"
+      },
+      "sides_ru": {
+        "rashidun": "Праведный халифат в Медине (Абу Бакр ас-Сиддик)",
+        "rebels": "Племена вероотступников и лжепророки"
+      },
+      "sides_uz": {
+        "rashidun": "Madinadagi Roshidun xalifaligi (Abu Bakr as-Siddiq)",
+        "rebels": "Riddat qabilalari va soxta paygʻambarlar"
+      },
+      "sides_es": {
+        "rashidun": "Califato Rashidun en Medina (Abu Bakr)",
+        "rebels": "Tribus apóstatas y falsos profetas"
+      }
     },
     {
       "id": "rif-war-1921",
@@ -4096,9 +5708,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Анвале и Рифская республика",
+          "title_uz": "Anval jangi va Rif respublikasi",
+          "title_es": "Batalla de Annual y guerra anticolonial",
+          "desc_ru": "Абд аль-Крим аль-Хаттаби громит испанскую армию при Анвале, провозглашая антиколониальную Республику Риф.",
+          "desc_uz": "Abdulkarim al-Xattobiy Anval yonida Ispaniya armiyasini yengib, mustamlakachilikka qarshi Rif respublikasini tuzadi.",
+          "desc_es": "Abdelkrim al-Jattabi aplasta al ejército español en Annual, fundando la República del Rif y liderando la resistencia."
         }
-      ]
+      ],
+      "sides_en": {
+        "morocco": "Rif Republic (Abd el-Krim)",
+        "coalition": "Spanish & French Colonial Alliance"
+      },
+      "sides_ru": {
+        "morocco": "Рифская республика (Абд аль-Крим)",
+        "coalition": "Испано-французский колониальный союз"
+      },
+      "sides_uz": {
+        "morocco": "Rif Respublikasi (Abd al-Karim al-Xattobiy)",
+        "coalition": "Ispaniya va Fransiya mustamlaka ittifoqi"
+      },
+      "sides_es": {
+        "morocco": "República del Rif (Abd el-Krim)",
+        "coalition": "Alianza colonial hispano-francesa"
+      }
     },
     {
       "id": "rome-civil-49",
@@ -4154,9 +5788,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Фарсале и триумф Цезаря",
+          "title_uz": "Farsal jangi va Sezarning gʻalabasi",
+          "title_es": "Batalla de Farsalia y huida a Egipto",
+          "desc_ru": "Юлий Цезарь разбивает сенаторскую армию Помпея Великого при Фарсале, становясь единовластным диктатором Рима.",
+          "desc_uz": "Yuliy Sezar Farsalda Pompey qoʻshinini yengib, Rimda mutlaq hokimiyatni qoʻlga oladi.",
+          "desc_es": "Julio César vence a Pompeyo Magno en Farsalia, consolidando su control supremo sobre la República romana."
         }
-      ]
+      ],
+      "sides_en": {
+        "union": "Julius Caesar's Popular Factions",
+        "coalition": "Roman Senate & Pompey the Great"
+      },
+      "sides_ru": {
+        "union": "Популярные фракции Юлия Цезаря",
+        "coalition": "Римский сенат и Помпей Великий"
+      },
+      "sides_uz": {
+        "union": "Yuliy Sezarning xalq fraktsiyalari",
+        "coalition": "Rim senati va Pompey Buyuk"
+      },
+      "sides_es": {
+        "union": "Facciones populares de Julio César",
+        "coalition": "Senado romano y Pompeyo el Grande"
+      }
     },
     {
       "id": "russo-japanese-1904",
@@ -4207,9 +5863,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Цусимское сражение и Портсмутский мир",
+          "title_uz": "Tsusima jangi va Portsmut sulhi",
+          "title_es": "Batalla de Tsushima y Tratado de Portsmouth",
+          "desc_ru": "Адмирал Того уничтожает 2-ю Тихоокеанскую эскадру России при Цусиме, утверждая Японию великой мировой державой.",
+          "desc_uz": "Admiral Togo Tsusima boʻgʻozida Rossiya flotini tor-mor etadi va Yaponiya jahonning qudratli davlatiga aylanadi.",
+          "desc_es": "El almirante Togo destruye a la flota báltica rusa en Tsushima, marcando la primera victoria moderna asiática sobre una potencia europea."
         }
-      ]
+      ],
+      "sides_en": {
+        "japan": "Empire of Japan",
+        "russia": "Russian Tsardom / Empire"
+      },
+      "sides_ru": {
+        "japan": "Японская империя",
+        "russia": "Российская империя"
+      },
+      "sides_uz": {
+        "japan": "Yaponiya imperiyasi",
+        "russia": "Rossiya chor imperiyasi"
+      },
+      "sides_es": {
+        "japan": "Imperio de Japón",
+        "russia": "Imperio ruso zarista"
+      }
     },
     {
       "id": "russo-turkish-1877",
@@ -4265,9 +5943,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Осада Плевны и Сан-Стефанский мир",
+          "title_uz": "Plevna qamali va San-Stefano sulhi",
+          "title_es": "Sitio de Plevna y Tratado de San Stefano",
+          "desc_ru": "После упорной осады Плевны русские и румынские войска прорываются к Стамбулу, принося свободу Болгарии.",
+          "desc_uz": "Plevna qamalidan soʻng rus qoʻshinlari Bolqon orqali oʻtib, Bolgariyaning mustaqilligiga yoʻl ochadi.",
+          "desc_es": "Tras el sangriento asedio de Plevna, las fuerzas ruso-rumanas avanzan sobre Estambul, dando paso a la liberación de Bulgaria."
         }
-      ]
+      ],
+      "sides_en": {
+        "russia": "Russian Empire & Balkan States",
+        "ottoman": "Ottoman Empire"
+      },
+      "sides_ru": {
+        "russia": "Российская империя и балканские государства",
+        "ottoman": "Османская империя"
+      },
+      "sides_uz": {
+        "russia": "Rossiya imperiyasi va Bolqon davlatlari",
+        "ottoman": "Usmonli imperiyasi"
+      },
+      "sides_es": {
+        "russia": "Imperio ruso y Estados balcánicos",
+        "ottoman": "Imperio otomano"
+      }
     },
     {
       "id": "sasanian-rome-240",
@@ -4323,9 +6023,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Эдессе и пленение императора Валериана",
+          "title_uz": "Edessa jangi va imperator Valerianning asir olinishi",
+          "title_es": "Batalla de Edesa y captura de Valeriano",
+          "desc_ru": "Сасанидский шахиншах Шапур I берет в плен римского императора Валериана — беспрецедентный удар по престижу Рима.",
+          "desc_uz": "Sosoniylar shohi Shopur I Edessa yonida Rim imperatori Valerianni asir oladi.",
+          "desc_es": "Sapor I captura vivo al emperador romano Valeriano en Edesa, asestando un golpe sin precedentes a Roma."
         }
-      ]
+      ],
+      "sides_en": {
+        "sasanian": "Sasanian Empire (Shapur I)",
+        "rome": "Roman Empire (Valerian & Gordian)"
+      },
+      "sides_ru": {
+        "sasanian": "Сасанидская империя (Шапур I)",
+        "rome": "Римская империя (Валериан и Гордиан)"
+      },
+      "sides_uz": {
+        "sasanian": "Sosoniylar imperiyasi (Shopur I)",
+        "rome": "Rim imperiyasi (Valerian va Gordian)"
+      },
+      "sides_es": {
+        "sasanian": "Imperio sasánida (Sapor I)",
+        "rome": "Imperio romano (Valeriano y Gordiano)"
+      }
     },
     {
       "id": "scottish-indep-1296",
@@ -4371,9 +6093,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Бэннокберне и независимость Шотландии",
+          "title_uz": "Bannokbern jangi va Shotlandiya mustaqilligi",
+          "title_es": "Batalla de Bannockburn",
+          "desc_ru": "Роберт Брюс наносит сокрушительное поражение превосходящей английской армии Эдуарда II при Бэннокберне.",
+          "desc_uz": "Robert Bryus Bannokbernda Angliya qiroli Eduard II qoʻshinini yengib, Shotlandiya mustaqilligini saqlab qoladi.",
+          "desc_es": "Robert the Bruce derrota decisivamente al ejército inglés de Eduardo II, restaurando la soberanía escocesa."
         }
-      ]
+      ],
+      "sides_en": {
+        "scotland": "Kingdom of Scotland & French Allies",
+        "england": "Kingdom of England (Edward I & Edward II)"
+      },
+      "sides_ru": {
+        "scotland": "Королевство Шотландия и французские союзники",
+        "england": "Королевство Англия (Эдуард I и Эдуард II)"
+      },
+      "sides_uz": {
+        "scotland": "Shotlandiya qirolligi va fransuz ittifoqchilari",
+        "england": "Angliya qirolligi (Eduard I va Eduard II)"
+      },
+      "sides_es": {
+        "scotland": "Reino de Escocia y aliados franceses",
+        "england": "Reino de Inglaterra (Eduardo I y Eduardo II)"
+      }
     },
     {
       "id": "sengoku-sekigahara-1600",
@@ -4409,9 +6153,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Сэкигахаре — день, решивший судьбу Японии",
+          "title_uz": "Sekigaxara jangi — Yaponiya taqdirini hal qilgan kun",
+          "title_es": "Batalla de Sekigahara y unificación de Japón",
+          "desc_ru": "Токугава Иэясу сокрушает коалицию западных даймё, объединяя Японию и устанавливая сёгунат Токугава на 250 лет.",
+          "desc_uz": "Tokugava Ieyasu Sekigaxarada raqiblarini yengib, Yaponiyani birlashtiradi va 250 yillik syogunatni oʻrnatadi.",
+          "desc_es": "Tokugawa Ieyasu vence a la facción occidental en Sekigahara, unificando Japón e instaurando el shogunato."
         }
-      ]
+      ],
+      "sides_en": {
+        "tokugawa": "Eastern Army (Tokugawa Ieyasu)",
+        "toyotomi": "Western Army (Ishida Mitsunari)"
+      },
+      "sides_ru": {
+        "tokugawa": "Восточная армия (Токугава Иэясу)",
+        "toyotomi": "Западная армия (Исида Мицунари)"
+      },
+      "sides_uz": {
+        "tokugawa": "Sharqiy armiya (Tokugava Ieyasu)",
+        "toyotomi": "Gʻarbiy armiya (Ishida Mitsunari)"
+      },
+      "sides_es": {
+        "tokugawa": "Ejército Oriental (Tokugawa Ieyasu)",
+        "toyotomi": "Ejército Occidental (Ishida Mitsunari)"
+      }
     },
     {
       "id": "seven-years-1756",
@@ -4487,9 +6253,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Семилетняя война — битва на трех континентах",
+          "title_uz": "Yetti yillik urush — uch qitʼadagi gʻalaba",
+          "title_es": "Guerra de los Siete Años y conflicto global",
+          "desc_ru": "Глобальный конфликт в Европе, Индии и Америке завершается победой Великобритании и утверждением Пруссии Фридриха II.",
+          "desc_uz": "Yetti yillik urush Britaniyaning Hindiston va Shimoliy Amerikada hukmron boʻlishi hamda Prussiya yuksalishi bilan tugaydi.",
+          "desc_es": "Gran Bretaña emerge como potencia colonial hegemónica en América e India mientras Prusia se consolida en Europa."
         }
-      ]
+      ],
+      "sides_en": {
+        "anglo-prussian": "Britain, Prussia & Portugal",
+        "coalition": "France, Austria, Russia & Spain"
+      },
+      "sides_ru": {
+        "anglo-prussian": "Великобритания, Пруссия и Португалия",
+        "coalition": "Франция, Австрия, Россия и Испания"
+      },
+      "sides_uz": {
+        "anglo-prussian": "Britaniya, Prussiya va Portugaliya",
+        "coalition": "Fransiya, Avstriya, Rossiya va Ispaniya"
+      },
+      "sides_es": {
+        "anglo-prussian": "Gran Bretaña, Prusia y Portugal",
+        "coalition": "Francia, Austria, Rusia y España"
+      }
     },
     {
       "id": "sindh-transoxiana-705",
@@ -4540,9 +6328,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Завоевание Самарканда, Бухары и Мультана",
+          "title_uz": "Samarqand, Buxoro va Moʻlton fathi",
+          "title_es": "Conquista de Samarcanda, Bujará y Multán",
+          "desc_ru": "Кутейба ибн Муслим покоряет Трансоксиану, а Мухаммад ибн аль-Касим завоевывает Синд, открывая исламский Восток.",
+          "desc_uz": "Qutayba ibn Muslim Movarounnahrni, Muhammad ibn Qosim esa Sind va Moʻltonni fath etib, islom madaniyatini yoyadi.",
+          "desc_es": "Qutaiba ibn Muslim conquista Transoxiana mientras Muhámmad ibn al-Qásim avanza por el Indo hacia Multán."
         }
-      ]
+      ],
+      "sides_en": {
+        "muslim": "Umayyad Caliphate (Qutayba & Muhammad ibn al-Qasim)",
+        "eastern": "Sogdian Kingdoms & Indian Rajas"
+      },
+      "sides_ru": {
+        "muslim": "Омейядский халифат (Кутейба и Мухаммад ибн аль-Касим)",
+        "eastern": "Согдийские княжества и индийские раджи"
+      },
+      "sides_uz": {
+        "muslim": "Umaviylar xalifaligi (Qutayba va Muhammad ibn Qosim)",
+        "eastern": "Sugʻd podsholiklari va Hindiston rojalari"
+      },
+      "sides_es": {
+        "muslim": "Califato omeya (Qutayba y Muhammad ibn al-Qasim)",
+        "eastern": "Reinos sogdianos y rajás de la India"
+      }
     },
     {
       "id": "sino-japanese1-1894",
@@ -4593,9 +6403,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва на реке Ялу и Симоносекский договор",
+          "title_uz": "Yalu daryosi jangi va Simonoseki shartnomasi",
+          "title_es": "Batalla del río Yalu y Tratado de Shimonoseki",
+          "desc_ru": "Модернизированная японская армия громит цинские войска, вынуждая Китай уступить Тайвань и признать независимость Кореи.",
+          "desc_uz": "Yaponiya floti Sin armiyasini yengib, Tayvanni egallaydi va Xitoyni Simonoseki shartnomasiga majbur qiladi.",
+          "desc_es": "Japón derrota a las fuerzas Qing, obteniendo Taiwán y poniendo fin a la soberanía china sobre Corea."
         }
-      ]
+      ],
+      "sides_en": {
+        "japan": "Empire of Modern Japan (Meiji Era)",
+        "qing": "Qing Dynasty of China"
+      },
+      "sides_ru": {
+        "japan": "Японская империя (эпоха Мэйдзи)",
+        "qing": "Династия Цин (Китай)"
+      },
+      "sides_uz": {
+        "japan": "Zamonaviy Yaponiya imperiyasi (Meydzi davri)",
+        "qing": "Xitoy Sin sulolasi"
+      },
+      "sides_es": {
+        "japan": "Imperio de Japón moderno (Era Meiji)",
+        "qing": "Dinastía Qing de China"
+      }
     },
     {
       "id": "spanish-american-1898",
@@ -4646,9 +6478,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битвы в Манильской бухте и при Сантьяго-де-Куба",
+          "title_uz": "Manila va Santyago-de-Kuba janglari",
+          "title_es": "Manila, Santiago de Cuba y el fin del imperio español",
+          "desc_ru": "ВМС США уничтожают испанские эскадры на Филиппинах и Кубе; Испания уступает Пуэрто-Рико, Гуам и Филиппины.",
+          "desc_uz": "AQSh floti Ispaniya eskadralarini yoʻq qilib, Kuba, Puerto-Riko va Filippinni oʻz taʼsiriga oladi.",
+          "desc_es": "Las victorias navales de EE. UU. en Manila y Santiago marcan el colapso final del imperio colonial español de ultramar."
         }
-      ]
+      ],
+      "sides_en": {
+        "union": "United States, Cuban & Filipino Rebels",
+        "royalists": "Colonial Kingdom of Spain"
+      },
+      "sides_ru": {
+        "union": "США, кубинские и филиппинские повстанцы",
+        "royalists": "Колониальное королевство Испания"
+      },
+      "sides_uz": {
+        "union": "AQSh, Kuba va Filippin isyonchilari",
+        "royalists": "Ispaniya mustamlaka qirolligi"
+      },
+      "sides_es": {
+        "union": "Estados Unidos, rebeldes cubanos y filipinos",
+        "royalists": "Reino colonial de España"
+      }
     },
     {
       "id": "spanish-aztec-1519",
@@ -4689,9 +6543,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Падение Теночтитлана и гибель империи ацтеков",
+          "title_uz": "Tenochtitlanning qulashi va atsteklar saltanati tugashi",
+          "title_es": "Caída de Tenochtitlan",
+          "desc_ru": "Эрнан Кортес при поддержке тлашкальцев берет штурмом Теночтитлан, основывая вице-королевство Новая Испания.",
+          "desc_uz": "Ernan Kortes mahalliy ittifoqchilar bilan birga Tenochtitlanni zabt etib, Yangi Ispaniya mustamlakasini tuzadi.",
+          "desc_es": "Hernán Cortés y sus aliados indígenas capturan Tenochtitlan tras un sangriento asedio, fundando la Nueva España."
         }
-      ]
+      ],
+      "sides_en": {
+        "coalition": "Spanish Conquistadors & Tlaxcalan Allies",
+        "aztec": "Aztec Empire (Cuauhtémoc & Montezuma)"
+      },
+      "sides_ru": {
+        "coalition": "Испанские конкистадоры и союзники-тлашкаланцы",
+        "aztec": "Империя ацтеков (Куаутемок и Монтесума)"
+      },
+      "sides_uz": {
+        "coalition": "Ispan konkistadorlari va Tlaskala ittifoqi",
+        "aztec": "Atsteklar imperiyasi (Kuautemok va Montesuma)"
+      },
+      "sides_es": {
+        "coalition": "Conquistadores españoles y aliados tlaxcaltecas",
+        "aztec": "Imperio azteca (Cuauhtémoc y Moctezuma)"
+      }
     },
     {
       "id": "spanish-civil-1936",
@@ -4742,9 +6618,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Бомбардировка Герники и оборона Мадрида",
+          "title_uz": "Gernika bombardimoni va Madrid mudofaasi",
+          "title_es": "Bombardeo de Guernica y batalla de Madrid",
+          "desc_ru": "Гражданская война в Испании: немецкий легион «Кондор» бомбит Гернику; националисты Франко ведут осаду республиканского Мадрида.",
+          "desc_uz": "Ispaniya fuqarolar urushi: Gernika vayron qilinadi va Franko armiyasi Madridni qamal qiladi.",
+          "desc_es": "La aviación alemana e italiana arrasa Guernica mientras los republicanos resisten heroicamente en Madrid."
         }
-      ]
+      ],
+      "sides_en": {
+        "republicans": "Spanish Republic, International Brigades & USSR",
+        "nationalists": "Nationalist Factions (Franco, backed by Hitler & Mussolini)"
+      },
+      "sides_ru": {
+        "republicans": "Испанская Республика, Интернациональные бригады и СССР",
+        "nationalists": "Националисты (Франко при поддержке Гитлера и Муссолини)"
+      },
+      "sides_uz": {
+        "republicans": "Ispaniya Respublikasi, Xalqaro brigadalar va SSSR",
+        "nationalists": "Millatchi fraktsiyalar (Franko, Gitler va Mussolini koʻmagi)"
+      },
+      "sides_es": {
+        "republicans": "Segunda República Española, Brigadas Internacionales y URSS",
+        "nationalists": "Nacionalistas sublevados (Franco, con apoyo del Eje)"
+      }
     },
     {
       "id": "spanish-inca-1532",
@@ -4795,9 +6693,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Засада в Кахамарке и падение империи инков",
+          "title_uz": "Kaxamarka pistirmasi va inklar imperiyasining qulashi",
+          "title_es": "Emboscada de Cajamarca y captura de Atahualpa",
+          "desc_ru": "Франсиско Писарро с отрядом конкистадоров берет в плен верховного инку Атауальпу в Кахамарке.",
+          "desc_uz": "Fransisko Pisarro Kaxamarkada Ataualpani asir olib, ulkan Inklari imperiyasini boʻysundiradi.",
+          "desc_es": "Pizarro captura al emperador inca Atahualpa en Cajamarca, iniciando el colapso del Tahuantinsuyo."
         }
-      ]
+      ],
+      "sides_en": {
+        "coalition": "Spanish Conquistadors (Pizarro)",
+        "inca": "Inca Empire (Atahualpa & Manco Inca)"
+      },
+      "sides_ru": {
+        "coalition": "Испанские конкистадоры (Писарро)",
+        "inca": "Империя инков (Атауальпа и Манко Инка)"
+      },
+      "sides_uz": {
+        "coalition": "Ispan konkistadorlari (Pisarro)",
+        "inca": "Inka imperiyasi (Ataualpa va Manko Inka)"
+      },
+      "sides_es": {
+        "coalition": "Conquistadores españoles (Pizarro)",
+        "inca": "Imperio inca (Atahualpa y Manco Inca)"
+      }
     },
     {
       "id": "spanish-succ-1701",
@@ -4858,9 +6778,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Бленхейме и Утрехтский мир",
+          "title_uz": "Blenxeym jangi va Utrext sulhi",
+          "title_es": "Batalla de Blenheim y Tratado de Utrecht",
+          "desc_ru": "Герцог Мальборо и принц Евгений Савойский громят франко-баварские войска при Бленхейме, предотвратив гегемонию Людовика XIV.",
+          "desc_uz": "Gersog Malboro va Yevgeniy Savoyskiy Fransiya qoʻshinini yengib, Lyudovik XIV ning Yevropadagi gegemonligini toʻxtatadi.",
+          "desc_es": "Marlborough y el príncipe Eugenio salvan Viena en Blenheim, conduciendo al equilibrio de poder de Utrecht."
         }
-      ]
+      ],
+      "sides_en": {
+        "france": "France & Spain (Louis XIV & Philip V)",
+        "allies": "Grand Alliance (Britain, Austria & Netherlands)"
+      },
+      "sides_ru": {
+        "france": "Франция и Испания (Людовик XIV и Филипп V)",
+        "allies": "Великий союз (Великобритания, Австрия и Нидерланды)"
+      },
+      "sides_uz": {
+        "france": "Fransiya va Ispaniya (Lyudovik XIV va Filipp V)",
+        "allies": "Buyuk ittifoq (Britaniya, Avstriya va Niderlandiya)"
+      },
+      "sides_es": {
+        "france": "Francia y España (Luis XIV y Felipe V)",
+        "allies": "Gran Alianza (Gran Bretaña, Austria y Países Bajos)"
+      }
     },
     {
       "id": "suez-crisis-1956",
@@ -4911,9 +6853,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Национализация Суэцкого канала и исход кризиса",
+          "title_uz": "Suvaysh kanali milliylashtirilishi va ittifoqchilar chekinishi",
+          "title_es": "Nacionalización del canal de Suez y retirada aliada",
+          "desc_ru": "Президент Насер национализирует Суэцкий канал; тройственная агрессия терпит политическое поражение под международным давлением.",
+          "desc_uz": "Prezident Nosir Suvaysh kanalini milliylashtiradi; xalqaro bosim ostida Britaniya, Fransiya va Isroil chekinadi.",
+          "desc_es": "Gamal Abdel Nasser nacionaliza el canal de Suez; la presión diplomática fuerza la retirada británica, francesa e israelí."
         }
-      ]
+      ],
+      "sides_en": {
+        "egypt": "Republic of Egypt (Gamal Abdel Nasser)",
+        "coalition": "Tripartite Coalition (Britain, France & Israel)"
+      },
+      "sides_ru": {
+        "egypt": "Республика Египет (Гамаль Абдель Насер)",
+        "coalition": "Тройственный союз (Великобритания, Франция и Израиль)"
+      },
+      "sides_uz": {
+        "egypt": "Misr Respublikasi (Jamol Abdul Nosir)",
+        "coalition": "Uch tomonlama ittifoq (Britaniya, Fransiya va Isroil)"
+      },
+      "sides_es": {
+        "egypt": "República de Egipto (Gamal Abdel Nasser)",
+        "coalition": "Alianza tripartita (Gran Bretaña, Francia e Israel)"
+      }
     },
     {
       "id": "taiping-1850",
@@ -4959,9 +6923,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Основание Небесного царства в Нанкине (восстание тайпинов)",
+          "title_uz": "Nankinda Samoviy saltanat barpo etilishi (Taypinlar qoʻzgʻoloni)",
+          "title_es": "Establecimiento de la capital celestial de Taiping",
+          "desc_ru": "Хун Сюцюань берет Нанкин и объявляет его «Небесной столицей», ведя самое кровопролитное восстание XIX века против Цин.",
+          "desc_uz": "Taypinlar Nankinni egallab, uni Samoviy poytaxt deb eʼlon qiladi va Sin sulolasiga qarshi ulkan qoʻzgʻolon boshlaydi.",
+          "desc_es": "Hong Xiuquan proclama el Reino Celestial en Nankín, desatando una de las guerras civiles más mortíferas de la historia."
         }
-      ]
+      ],
+      "sides_en": {
+        "qing": "Qing Dynasty of China & Western Powers",
+        "taiping": "Taiping Heavenly Kingdom (Hong Xiuquan)"
+      },
+      "sides_ru": {
+        "qing": "Цинская династия Китая и западные державы",
+        "taiping": "Тайпинское небесное царство (Хун Сюцюань)"
+      },
+      "sides_uz": {
+        "qing": "Xitoy Sin sulolasi va Gʻarb kuchlari",
+        "taiping": "Taypin samoviy podsholigi (Xun Syutsyuan)"
+      },
+      "sides_es": {
+        "qing": "Dinastía Qing de China y potencias occidentales",
+        "taiping": "Reino Celestial Taiping (Hong Xiuquan)"
+      }
     },
     {
       "id": "talas-751",
@@ -5012,9 +6998,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва на реке Талас",
+          "title_uz": "Talas daryosi jangi",
+          "title_es": "Batalla del río Talas",
+          "desc_ru": "Аббасидский халифат и тюрки-карлуки наносят поражение танской армии генерала Гао Сяньчжи, открыв путь исламу в Центральную Азию.",
+          "desc_uz": "Abbosiylar va qarluqlar Talas daryosi boʻyida Tan Xitoyi qoʻshinini yengib, Markaziy Osiyo taraqqiyot yoʻlini belgilaydi.",
+          "desc_es": "El califato abasí y los túrquicos karlukos vencen al ejército Tang en el río Talas, deteniendo la expansión china en Asia Central."
         }
-      ]
+      ],
+      "sides_en": {
+        "islamic": "Abbasid Caliphate & Allies",
+        "tang": "Tang Empire of China"
+      },
+      "sides_ru": {
+        "islamic": "Аббасидский халифат и союзники",
+        "tang": "Китайская империя Тан"
+      },
+      "sides_uz": {
+        "islamic": "Abbosiylar xalifaligi va ittifoqchilari",
+        "tang": "Xitoy Tan imperiyasi"
+      },
+      "sides_es": {
+        "islamic": "Califato abasí y aliados",
+        "tang": "Imperio Tang de China"
+      }
     },
     {
       "id": "tamerlane-ankara-1402",
@@ -5065,9 +7073,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Ангорская битва и междуцарствие в Османской империи",
+          "title_uz": "Anqara jangi va Usmonli imperiyasi parchalanishi",
+          "title_es": "Batalla de Ankara y crisis otomana",
+          "desc_ru": "Амир Тимур громит армию Баязида I Молниеносного при Анкаре и берет султана в плен, вызвав одиннадцатилетнее османское междуцарствие.",
+          "desc_uz": "Amir Temur Anqara jangida Boyazid Yildirimni magʻlub etib asir oladi va Usmonli saltanatida oʻn yillik parokandalik davri boshlanadi.",
+          "desc_es": "Tamerlán derrota y captura al sultán Bayezid I en Ankara, sumiendo al Imperio otomano en un interregno civil."
         }
-      ]
+      ],
+      "sides_en": {
+        "mongol": "Timurid Empire (Tamerlane)",
+        "ottoman": "Ottoman Empire & Serbian Allies (Bayezid I)"
+      },
+      "sides_ru": {
+        "mongol": "Империя Тимуридов (Тамерлан)",
+        "ottoman": "Османская империя и сербские союзники (Баязид I)"
+      },
+      "sides_uz": {
+        "mongol": "Temuriylar imperiyasi (Amir Temur)",
+        "ottoman": "Usmonli imperiyasi va serb ittifoqchilari (Boyazid I)"
+      },
+      "sides_es": {
+        "mongol": "Imperio timúrida (Tamerlán)",
+        "ottoman": "Imperio otomano y aliados serbios (Bayezid I)"
+      }
     },
     {
       "id": "thirty-years-1618",
@@ -5133,9 +7163,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Вмешательство Франции и Швеции (Тридцатилетняя война)",
+          "title_uz": "Fransiya va Shvetsiya aralashuvi (Oʻttiz yillik urush)",
+          "title_es": "Intervención sueca y francesa y Paz de Westfalia",
+          "desc_ru": "Шведские войска Густава Адольфа и французские армии кардинала Ришелье ломают мощь Габсбургов, приводя к Вестфальскому миру.",
+          "desc_uz": "Shvetsiya va Fransiya aralashuvi Gabsburglar qudratini yengib, 1648 yilgi Vestfaliya tinchlik tizimiga olib keladi.",
+          "desc_es": "La intervención de Gustavo Adolfo y la Francia de Richelieu inclina la balanza contra los Habsburgo hacia la Paz de Westfalia."
         }
-      ]
+      ],
+      "sides_en": {
+        "habsburg": "Catholic Habsburg League",
+        "anti-habsburg": "Protestant & French Alliance"
+      },
+      "sides_ru": {
+        "habsburg": "Католическая лига Габсбургов",
+        "anti-habsburg": "Протестантский и французский союз"
+      },
+      "sides_uz": {
+        "habsburg": "Katolik Gabsburglar ligasi",
+        "anti-habsburg": "Protestant va Fransiya ittifoqi"
+      },
+      "sides_es": {
+        "habsburg": "Liga católica de los Habsburgo",
+        "anti-habsburg": "Alianza protestante y francesa"
+      }
     },
     {
       "id": "three-kingdoms-220",
@@ -5171,9 +7223,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва у Красных утесов и раздел империи Хань",
+          "title_uz": "Qizil qoyalar jangi va Xan imperiyasi boʻlinishi",
+          "title_es": "Batalla de los Acantilados Rojos",
+          "desc_ru": "Сунь Цюань и Лю Бэй сжигают флот Цао Цао при Чиби (Красных утесах), открывая эпоху Троецарствия в Китае.",
+          "desc_uz": "Lyu Bey va Sun Tsyuan Chibi yonida Tsao Tsao flotini yondirib yuborib, Xitoyda Uch podsholik davrini boshlab beradi.",
+          "desc_es": "Liu Bei y Sun Quan derrotan la vasta flota de Cao Cao en los Acantilados Rojos, inaugurando el período de los Tres Reinos."
         }
-      ]
+      ],
+      "sides_en": {
+        "wei": "Kingdom of Wei (Cao Cao)",
+        "allies": "Shu-Wu Coalition (Liu Bei & Sun Quan)"
+      },
+      "sides_ru": {
+        "wei": "Царство Вэй (Цао Цао)",
+        "allies": "Союз Шу и У (Лю Бэй и Сунь Цюань)"
+      },
+      "sides_uz": {
+        "wei": "Vey podsholigi (Tsao Tsao)",
+        "allies": "Shu va U ittifoqi (Lyu Bey va Sun Tsyuan)"
+      },
+      "sides_es": {
+        "wei": "Reino de Wei (Cao Cao)",
+        "allies": "Alianza Shu-Wu (Liu Bei y Sun Quan)"
+      }
     },
     {
       "id": "vienna-1683",
@@ -5229,9 +7303,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Осада Вены и атака польских гусар Яна Собеского",
+          "title_uz": "Vena qamali va Yan Sobeskiy qutqaruv yurishi",
+          "title_es": "Socorro de Viena por Juan III Sobieski",
+          "desc_ru": "Король Ян Собеский во главе знаменитой конницы крылатых гусар спасает Вену и обращает в бегство армию великого визиря Кара-Мустафы.",
+          "desc_uz": "Polsha qiroli Yan Sobeskiy boshchiligidagi qanotli gussarlar Venani qutqarib, Usmonlilarning Yevropa ichkarisiga yurishiga nuqta qoʻyadi.",
+          "desc_es": "La carga de la caballería de Juan Sobieski rescata a Viena del asedio otomano, marcando el repliegue definitivo turco de Europa Central."
         }
-      ]
+      ],
+      "sides_en": {
+        "ottoman": "Ottoman Empire & Allies",
+        "coalition": "Holy League (Poland, Austria, Germany)"
+      },
+      "sides_ru": {
+        "ottoman": "Османская империя и союзники",
+        "coalition": "Священная лига (Польша, Австрия, Германия)"
+      },
+      "sides_uz": {
+        "ottoman": "Usmonli imperiyasi va ittifoqchilari",
+        "coalition": "Muqaddas liga (Polsha, Avstriya, Germaniya)"
+      },
+      "sides_es": {
+        "ottoman": "Imperio otomano y aliados",
+        "coalition": "Liga Santa (Polonia, Austria, Alemania)"
+      }
     },
     {
       "id": "vienna-siege-1529",
@@ -5287,9 +7383,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Осада Вены Сулейманом Великолепным",
+          "title_uz": "Sulaymon Qonuniy tomonidan Vena qamali",
+          "title_es": "Sitio de Viena por Solimán el Magnífico",
+          "desc_ru": "Султан Сулейман осаждает Вену во главе огромной армии, но мужество защитников и суровая погода вынуждают турок отступить.",
+          "desc_uz": "Sulton Sulaymon Qonuniy Venani qamal qiladi, biroq qattiq qish va qarshilik tufayli chekinishga majbur boʻladi.",
+          "desc_es": "Solimán el Magnífico llega a las puertas de Viena en 1529, pero la tenaz defensa y el clima obligan a levantar el sitio."
         }
-      ]
+      ],
+      "sides_en": {
+        "ottoman": "Ottoman Empire (Suleiman the Magnificent)",
+        "habsburg": "Habsburg Monarchy & Holy Roman Empire"
+      },
+      "sides_ru": {
+        "ottoman": "Османская империя (Сулейман Великолепный)",
+        "habsburg": "Габсбургская монархия и Священная Римская империя"
+      },
+      "sides_uz": {
+        "ottoman": "Usmonli imperiyasi (Sulaymon Qonuniy)",
+        "habsburg": "Gabsburglar monarxiyasi va Muqaddas Rim imperiyasi"
+      },
+      "sides_es": {
+        "ottoman": "Imperio otomano (Solimán el Magnífico)",
+        "habsburg": "Monarquía de los Habsburgo y Sacro Imperio"
+      }
     },
     {
       "id": "vietnam-1955",
@@ -5360,9 +7478,31 @@
               "role": "occupied"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Тетское наступление — переломный момент войны во Вьетнаме",
+          "title_uz": "Tet hujumi — Vetnam urushidagi burilish nuqtasi",
+          "title_es": "Ofensiva del Tet y punto de inflexión",
+          "desc_ru": "Внезапное масштабное наступление Вьетконга разрушает уверенность США в победе и приводит к началу вывода войск.",
+          "desc_uz": "Vetkongning kutilmagan Tet hujumi AQSh jamoatchiligida norozilikni kuchaytirib, qoʻshinlarni olib chiqishga majbur qiladi.",
+          "desc_es": "La ofensiva general del Tet conmociona a la opinión pública estadounidense y acelera la retirada de tropas de Vietnam."
         }
-      ]
+      ],
+      "sides_en": {
+        "un-south": "United States, South Vietnam & Allies",
+        "communist": "North Vietnam, Viet Cong, USSR & China"
+      },
+      "sides_ru": {
+        "un-south": "США, Южный Вьетнам и союзники",
+        "communist": "Северный Вьетнам, Вьетконг, СССР и Китай"
+      },
+      "sides_uz": {
+        "un-south": "AQSh, Janubiy Vetnam va ittifoqchilari",
+        "communist": "Shimoliy Vetnam, Vetkong, SSSR va Xitoy"
+      },
+      "sides_es": {
+        "un-south": "Estados Unidos, Vietnam del Sur y aliados",
+        "communist": "Vietnam del Norte, Viet Cong, URSS y China"
+      }
     },
     {
       "id": "viking-england-865",
@@ -5408,9 +7548,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Эдингтоне и установление Денло",
+          "title_uz": "Edington jangi va Denlo tuzilishi",
+          "title_es": "Batalla de Edington y creación del Danelaw",
+          "desc_ru": "Король Уэссекса Альфред Великий побеждает датчан короля Гутрума, спасая англосаксонскую Англию и очерчивая границы Денло.",
+          "desc_uz": "Alfred Buyuk vikinglarni Edington yonida magʻlub etib, Angliyaning mustaqilligini saqlab qoladi va Denlo sulhini tuzadi.",
+          "desc_es": "Alfredo el Grande derrota a los vikingos de Guthrum en Edington, salvando a Wessex y delimitando el Danelaw."
         }
-      ]
+      ],
+      "sides_en": {
+        "norse": "Great Heathen Army (Vikings)",
+        "anglo-saxon": "Anglo-Saxon Kingdoms (Alfred the Great)"
+      },
+      "sides_ru": {
+        "norse": "Великая языческая армия (викинги)",
+        "anglo-saxon": "Англосаксонские королевства (Альфред Великий)"
+      },
+      "sides_uz": {
+        "norse": "Buyuk butparast armiya (vikinglar)",
+        "anglo-saxon": "Anglosakson qirolliklari (Alfred Buyuk)"
+      },
+      "sides_es": {
+        "norse": "Gran ejército pagano (vikingos)",
+        "anglo-saxon": "Reinos anglosajones (Alfredo el Grande)"
+      }
     },
     {
       "id": "wars-of-roses-1455",
@@ -5451,9 +7613,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Босворте и воцарение Тюдоров",
+          "title_uz": "Bosvort jangi va Tyudorlar sulolasi",
+          "title_es": "Batalla de Bosworth y advenimiento Tudor",
+          "desc_ru": "Генрих Тюдор побеждает и убивает Ричарда III при Босворте, завершая Войну Алой и Белой розы и восходя на престол как Генрих VII.",
+          "desc_uz": "Genrix Tyudor Bosvortda Richard III ni yengib, Oq va Qizil atirgullar urushiga chek qoʻyadi hamda taxtga oʻtiradi.",
+          "desc_es": "Enrique Tudor derrota a Ricardo III en Bosworth, poniendo fin a la Guerra de las Rosas e inaugurando la dinastía Tudor."
         }
-      ]
+      ],
+      "sides_en": {
+        "lancaster": "House of Lancaster (Red Rose)",
+        "york": "House of York (White Rose)"
+      },
+      "sides_ru": {
+        "lancaster": "Дом Ланкастеров (Красная роза)",
+        "york": "Дом Йорков (Белая роза)"
+      },
+      "sides_uz": {
+        "lancaster": "Lankasterlar xonadoni (Qizil atirgul)",
+        "york": "Yorklar xonadoni (Oq atirgul)"
+      },
+      "sides_es": {
+        "lancaster": "Casa de Lancaster (Rosa Roja)",
+        "york": "Casa de York (Rosa Blanca)"
+      }
     },
     {
       "id": "wwi",
@@ -5465,8 +7649,8 @@
       "years_ar": "1914–1918",
       "years_en": "1914–1918",
       "sides": {
-        "entente": "histSideEntente",
-        "central": "histSideCentral"
+        "entente": "الحلفاء (الوفاق الثلاثي)",
+        "central": "دول المركز"
       },
       "sources": [
         "Tucker, Spencer C. (ed.), \"World War I: The Definitive Encyclopedia and Document Collection\", ABC-CLIO, 2014.",
@@ -5723,7 +7907,10 @@
               "partial_ar": "السعودية (الحجاز)",
               "partial_en": "Saudi Arabia (Hejaz)"
             }
-          ]
+          ],
+          "desc_ru": "August 1914: alliances drag the continent into war.",
+          "desc_uz": "August 1914: alliances drag the continent into war.",
+          "desc_es": "August 1914: alliances drag the continent into war."
         },
         {
           "id": "wwi-1917",
@@ -5991,7 +8178,10 @@
               "partial_ar": "السعودية (الحجاز)",
               "partial_en": "Saudi Arabia (Hejaz)"
             }
-          ]
+          ],
+          "desc_ru": "April 1917: America enters as Russia nears collapse.",
+          "desc_uz": "April 1917: America enters as Russia nears collapse.",
+          "desc_es": "April 1917: America enters as Russia nears collapse."
         },
         {
           "id": "wwi-1918",
@@ -6296,11 +8486,30 @@
               "partial_ar": "السعودية (الحجاز)",
               "partial_en": "Saudi Arabia (Hejaz)"
             }
-          ]
+          ],
+          "desc_ru": "November 1918: four empires fall and a new world is born.",
+          "desc_uz": "November 1918: four empires fall and a new world is born.",
+          "desc_es": "November 1918: four empires fall and a new world is born."
         }
       ],
       "epoch": "modern",
-      "region": "world"
+      "region": "world",
+      "sides_en": {
+        "entente": "Allies (Triple Entente)",
+        "central": "Central Powers"
+      },
+      "sides_ru": {
+        "entente": "Союзники (Антанта)",
+        "central": "Центральные державы"
+      },
+      "sides_uz": {
+        "entente": "Ittifoqchilar (Antanta)",
+        "central": "Markaziy davlatlar"
+      },
+      "sides_es": {
+        "entente": "Aliados (Triple Entente)",
+        "central": "Potencias Centrales"
+      }
     },
     {
       "id": "wwii",
@@ -6312,8 +8521,8 @@
       "years_ar": "1939–1945",
       "years_en": "1939–1945",
       "sides": {
-        "allies": "histSideAllies",
-        "axis": "histSideAxis"
+        "allies": "قوات الحلفاء",
+        "axis": "دول المحور"
       },
       "sources": [
         "Dear, I.C.B. & Foot, M.R.D. (eds.), \"The Oxford Companion to World War II\", Oxford University Press, 2005.",
@@ -6590,7 +8799,10 @@
               "role": "neutral"
             }
           ],
-          "empires": []
+          "empires": [],
+          "desc_ru": "September 1939: Poland invaded; Britain and France declare war.",
+          "desc_uz": "September 1939: Poland invaded; Britain and France declare war.",
+          "desc_es": "September 1939: Poland invaded; Britain and France declare war."
         },
         {
           "id": "wwii-1942",
@@ -7018,7 +9230,10 @@
               "role": "neutral"
             }
           ],
-          "empires": []
+          "empires": [],
+          "desc_ru": "November 1942: Axis power peaks from France to Burma.",
+          "desc_uz": "November 1942: Axis power peaks from France to Burma.",
+          "desc_es": "November 1942: Axis power peaks from France to Burma."
         },
         {
           "id": "wwii-1945",
@@ -7343,11 +9558,30 @@
               "role": "neutral"
             }
           ],
-          "empires": []
+          "empires": [],
+          "desc_ru": "September 1945: the Axis surrenders; a new world order begins.",
+          "desc_uz": "September 1945: the Axis surrenders; a new world order begins.",
+          "desc_es": "September 1945: the Axis surrenders; a new world order begins."
         }
       ],
       "epoch": "modern",
-      "region": "world"
+      "region": "world",
+      "sides_en": {
+        "allies": "Allied Forces",
+        "axis": "Axis Powers"
+      },
+      "sides_ru": {
+        "allies": "Союзные войска",
+        "axis": "Страны оси"
+      },
+      "sides_uz": {
+        "allies": "Ittifoqchi kuchlar",
+        "axis": "Osi davlatlari"
+      },
+      "sides_es": {
+        "allies": "Fuerzas aliadas",
+        "axis": "Potencias del Eje"
+      }
     },
     {
       "id": "yarmouk-636",
@@ -7413,9 +9647,31 @@
               "role": "major"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битвы при Ярмуке и Кадисии — крушение двух империй",
+          "title_uz": "Yarmuk va Qodisiya janglari — ikki imperiyaning qulashi",
+          "title_es": "Batallas decisivas de Yarmuk y al-Qadisiyya",
+          "desc_ru": "Халид ибн аль-Валид громит византийцев при Ярмуке, а Саад ибн Аби Ваккас побеждает персов при Кадисии, открывая Шам и Ирак.",
+          "desc_uz": "Xolid ibn Valid Yarmukda Vizantiya armiyasini, Saʼd ibn Abu Vaqqos Qodisiyada Fors qoʻshinini yengib, Islom fathlarini kengaytiradi.",
+          "desc_es": "Jálid ibn al-Walid derrota a los bizantinos en Yarmuk y Saad ibn Abi Waqqas vence a los persas en al-Qadisiyya."
         }
-      ]
+      ],
+      "sides_en": {
+        "rashidun": "Rashidun Caliphate",
+        "empires": "Byzantines & Sasanians"
+      },
+      "sides_ru": {
+        "rashidun": "Праведный халифат",
+        "empires": "Византийцы и Сасаниды"
+      },
+      "sides_uz": {
+        "rashidun": "Roshidun xalifaligi",
+        "empires": "Vizantiyaliklar va Sosoniylar"
+      },
+      "sides_es": {
+        "rashidun": "Califato Rashidun",
+        "empires": "Bizantinos y sasánidas"
+      }
     },
     {
       "id": "zallaqa-1086",
@@ -7461,9 +9717,31 @@
               "role": "ally"
             }
           ],
-          "empires": []
+          "empires": [],
+          "title_ru": "Битва при Заллаке и спасение Андалусии Альморавидами",
+          "title_uz": "Zalloqa jangi va Murobitlarning Andalusga yordami",
+          "title_es": "Batalla de Sagrajas (Zallaqa)",
+          "desc_ru": "Юсуф ибн Ташфин во главе войска Альморавидов громит короля Кастилии Альфонсо VI при Заллаке, продлив власть мусульман в Испании.",
+          "desc_uz": "Yusuf ibn Toshfin Zalloqa jangida Kastiliya qiroli Alfonso VI ni magʻlub etib, Andalusiyani nasroniylar bosqinidan saqlaydi.",
+          "desc_es": "Yusuf ibn Tashfin cruza a la península y aplasta a Alfonso VI en Sagrajas, frenando la Reconquista por más de un siglo."
         }
-      ]
+      ],
+      "sides_en": {
+        "muslim": "Almoravid State & Taifas (Ibn Tashfin & al-Mu'tamid)",
+        "castile": "Kingdom of Castile & Allies (Alfonso VI)"
+      },
+      "sides_ru": {
+        "muslim": "Альморавиды и тайфы (Ибн Ташфин и аль-Мутамид)",
+        "castile": "Королевство Кастилия и союзники (Альфонсо VI)"
+      },
+      "sides_uz": {
+        "muslim": "Murobitlar davlati va toifalar (Ibn Toshfin va Moʻtamid)",
+        "castile": "Kastiliya qirolligi va ittifoqchilari (Alfonso VI)"
+      },
+      "sides_es": {
+        "muslim": "Estado almorávide y taifas (Ibn Tashfin y al-Mu'tamid)",
+        "castile": "Reino de Castilla y aliados (Alfonso VI)"
+      }
     }
   ]
 }

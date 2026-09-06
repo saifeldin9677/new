@@ -479,7 +479,7 @@
             let gCapitals, gTimezones, gMajorCities, gNaturalResources, gEthnicGroups, gOceanCurrents, gWinds, gEarthquakes, gVolcanoes, gBorderDisputes, gAdminBoundaries, gGlaciatedAreas, gGeopoliticalBlocs, gDesertsForests, gHistoryOverlay, gHistoryCompareOverlay, gHistoricalRoutes, gHistTravelers, gHistCapitals, gHistBattles, gHistWonders, gHistSacredSites;
             let historicalTravelersData = null, historicalCapitalsData = null, historicalBattlesData = null, historicalWondersData = null, historicalSacredSitesData = null;
             let selectedTravelerIds = [], activeTravelerCarouselIndex = 0, activeWaypointIndex = null;
-            let histCapitalsVisible = false, histBattlesVisible = false, histWondersVisible = false, histSacredSitesVisible = false, histModernBordersVisible = false;
+            let histCapitalsVisible = false, histBattlesVisible = false, histWondersVisible = false, histSacredSitesVisible = false, histModernBordersVisible = false, histModernLabelsVisible = false;
             let projection, pathGen;
             let svg, gMap, gCountries, gCountryLabels, gHistoryLand, gGraticule, gIceCap, gOcean, gCorridors, gPhysical, gTemperature, gAuthoringMarkers, gQuizMarkers;
             let currentTransform = d3.zoomIdentity;
@@ -522,7 +522,7 @@
             //    skip    – (optional) if true, generic toggleLayer skips this;
             //              its toggle function is hand-written (labels, sect,
             //              routes, densitySpots, coords)
-            const HIST_LAYER_KEYS = ['historicalRoutes', 'histCapitals', 'histBattles', 'histWonders', 'histSacredSites', 'histModernBorders'];
+            const HIST_LAYER_KEYS = ['historicalRoutes', 'histCapitals', 'histBattles', 'histWonders', 'histSacredSites', 'histModernBorders', 'histModernLabels'];
             const GEO_LAYER_KEYS = [
                 'labels', 'sect', 'corridors', 'riversAndGlaciers', 'densitySpots',
                 'capitals', 'timezones', 'majorCities', 'naturalResources', 'ethnicGroups',
@@ -534,7 +534,7 @@
                 labels:              { getFlag: function(){ return showLabels; },              setFlag: function(v){ showLabels = v; },              btnId: 'labelsToggle',              drawFn: null, hashKey: 'labels', skip: true },
                 sect:                { getFlag: function(){ return sectMode; },                setFlag: function(v){ sectMode = v; },                btnId: 'sectToggle',                drawFn: null, hashKey: 'sect', skip: true },
                 corridors:           { getFlag: function(){ return corridorsVisible; },        setFlag: function(v){ corridorsVisible = v; },        btnId: 'corridorsToggle',           drawFn: null, hashKey: 'corridors', skip: true },
-                historicalRoutes:    { getFlag: function(){ return historicalRoutesVisible; }, setFlag: function(v){ historicalRoutesVisible = v; }, btnId: 'historicalRoutesToggle',    drawFn: drawHistoricalRoutes, hashKey: 'histroutes', setNorm: true },
+                historicalRoutes:    { getFlag: function(){ return historicalRoutesVisible; }, setFlag: function(v){ historicalRoutesVisible = v; }, btnId: 'historicalRoutesToggle',    drawFn: drawHistoricalRoutes, hashKey: 'histroutes', setNorm: false },
                 riversAndGlaciers:   { getFlag: function(){ return riversGlaciersVisible; },  setFlag: function(v){ riversGlaciersVisible = v; },  btnId: 'riversGlaciersToggle',      drawFn: function() { drawPhysicalFeatures(); drawGlaciatedAreas(); }, hashKey: 'riversglaciers', setNorm: true },
                 densitySpots:        { getFlag: function(){ return densitySpotsMode; },        setFlag: function(v){ densitySpotsMode = v; },        btnId: 'densitySpotsToggle',        drawFn: null, hashKey: 'spots', skip: true },
                 capitals:            { getFlag: function(){ return capitalsVisible; },         setFlag: function(v){ capitalsVisible = v; },         btnId: 'capitalsToggle',            drawFn: drawCapitals, postDrawFn: drawPointLayersCanvas, hashKey: 'capitals' },
@@ -551,11 +551,48 @@
                 desertsForests:      { getFlag: function(){ return desertsForestsVisible; },   setFlag: function(v){ desertsForestsVisible = v; },   btnId: 'desertsForestsToggle',      drawFn: drawDesertsForests, hashKey: 'deserts', setNorm: true },
                 borderDisputes:      { getFlag: function(){ return borderDisputesVisible; },   setFlag: function(v){ borderDisputesVisible = v; },   btnId: 'borderDisputesToggle',      drawFn: drawBorderDisputes, hashKey: 'borderdisputes', setNorm: true },
                 adminBoundaries:    { getFlag: function(){ return adminBoundariesVisible; }, setFlag: function(v){ adminBoundariesVisible = v; }, btnId: 'adminBoundariesToggle',    drawFn: drawAdminBoundaries, hashKey: 'adminbounds' },
-                histCapitals:        { getFlag: function(){ return histCapitalsVisible; },     setFlag: function(v){ histCapitalsVisible = v; },     btnId: 'histCapitalsToggle',        drawFn: function() { if (window.drawHistCapitals) drawHistCapitals(); }, hashKey: 'histcaps', setNorm: true },
-                histBattles:         { getFlag: function(){ return histBattlesVisible; },      setFlag: function(v){ histBattlesVisible = v; },      btnId: 'histBattlesToggle',         drawFn: function() { if (window.drawHistBattles) drawHistBattles(); },   hashKey: 'histbattles', setNorm: true },
-                histWonders:         { getFlag: function(){ return histWondersVisible; },      setFlag: function(v){ histWondersVisible = v; },      btnId: 'histWondersToggle',         drawFn: function() { if (window.drawHistWonders) drawHistWonders(); },   hashKey: 'histwonders', setNorm: true },
-                histSacredSites:     { getFlag: function(){ return histSacredSitesVisible; },  setFlag: function(v){ histSacredSitesVisible = v; },  btnId: 'histSacredSitesToggle',     drawFn: function() { if (window.drawHistSacredSites) drawHistSacredSites(); }, hashKey: 'histsacred', setNorm: true },
-                histModernBorders:   { getFlag: function(){ return histModernBordersVisible; },setFlag: function(v){ histModernBordersVisible = v; },btnId: 'histModernBordersToggle',   drawFn: function() { if (window.updateHistModernBorders) window.updateHistModernBorders(); }, hashKey: 'histmodern', setNorm: false },
+                histCapitals:        { getFlag: function(){ return histCapitalsVisible; },     setFlag: function(v){ histCapitalsVisible = v; },     btnId: 'histCapitalsToggle',        drawFn: function() { if (window.drawHistCapitals) drawHistCapitals(); }, hashKey: 'histcaps', setNorm: false },
+                histBattles:         { getFlag: function(){ return histBattlesVisible; },      setFlag: function(v){ histBattlesVisible = v; },      btnId: 'histBattlesToggle',         drawFn: function() { if (window.drawHistBattles) drawHistBattles(); },   hashKey: 'histbattles', setNorm: false },
+                histWonders:         { getFlag: function(){ return histWondersVisible; },      setFlag: function(v){ histWondersVisible = v; },      btnId: 'histWondersToggle',         drawFn: function() { if (window.drawHistWonders) drawHistWonders(); },   hashKey: 'histwonders', setNorm: false },
+                histSacredSites:     { getFlag: function(){ return histSacredSitesVisible; },  setFlag: function(v){ histSacredSitesVisible = v; },  btnId: 'histSacredSitesToggle',     drawFn: function() { if (window.drawHistSacredSites) drawHistSacredSites(); }, hashKey: 'histsacred', setNorm: false },
+                histModernBorders:   { getFlag: function(){ return histModernBordersVisible; },setFlag: function(v){ histModernBordersVisible = v; },btnId: 'histModernBordersToggle',   drawFn: function() { if (window.updateHistModernBorders) window.updateHistModernBorders(); }, hashKey: 'histmodern', setNorm: false,
+                    on: function(state) {
+                        if (!state) {
+                            histModernLabelsVisible = false;
+                            var mlBtn = document.getElementById('histModernLabelsToggle');
+                            if (mlBtn) {
+                                mlBtn.classList.remove('toggle-on');
+                                mlBtn.setAttribute('aria-pressed', 'false');
+                                mlBtn.style.display = 'none';
+                            }
+                            if (gCountryLabels) {
+                                gCountryLabels.style('display', 'none');
+                                if (countryLabelSelection) {
+                                    countryLabelSelection.remove();
+                                    countryLabelSelection = null;
+                                }
+                            }
+                        } else {
+                            var mlBtn = document.getElementById('histModernLabelsToggle');
+                            if (mlBtn) mlBtn.style.display = '';
+                        }
+                    }
+                },
+                histModernLabels:    {
+                    getFlag: function(){ return histModernLabelsVisible; },
+                    setFlag: function(v){
+                        histModernLabelsVisible = v;
+                        if (v && !histModernBordersVisible) {
+                            histModernBordersVisible = true;
+                            var mb = document.getElementById('histModernBordersToggle');
+                            if (mb) { mb.classList.add('toggle-on'); mb.setAttribute('aria-pressed', 'true'); }
+                        }
+                    },
+                    btnId: 'histModernLabelsToggle',
+                    drawFn: function() { if (window.updateHistModernBorders) window.updateHistModernBorders(); },
+                    hashKey: 'histmodernlabels',
+                    setNorm: false
+                },
                 coords:              { getFlag: function(){ return coordsVisible; },          setFlag: function(v){ coordsVisible = v; },           btnId: 'coordsToggle',              drawFn: null, hashKey: 'coords', skip: true,
                     on: function(state) { var cd = document.getElementById('coordinatesDisplay'); if (cd) cd.classList.toggle('hidden', !state); } }
             };
@@ -587,7 +624,7 @@
                 var isHistLayer = HIST_LAYER_KEYS.includes(name);
                 var inHistMode = (typeof currentSection !== 'undefined' && currentSection === 'history') || (typeof historyActive !== 'undefined' && historyActive);
                 if (isHistLayer && !inHistMode) return;
-                if (!isHistLayer && inHistMode && name !== 'labels') return;
+                if (!isHistLayer && inHistMode) return;
                 var state = !def.getFlag();
                 def.setFlag(state);
                 var btn = document.getElementById(def.btnId);
@@ -595,7 +632,7 @@
                     btn.classList.toggle('toggle-on', state);
                     btn.setAttribute('aria-pressed', state ? 'true' : 'false');
                 }
-                if (state && def.setNorm) setMode('normal');
+                if (state && def.setNorm && !inHistMode) setMode('normal');
                 if (def.drawFn) def.drawFn();
                 if (def.postDrawFn) def.postDrawFn();
                 if (def.on) def.on(state, btn);
@@ -1004,21 +1041,85 @@
             function updateHistModernBorders() {
                 var inHist = (typeof historyActive !== 'undefined' && historyActive) || (typeof currentSection !== 'undefined' && currentSection === 'history');
                 if (!inHist) return;
-                if (gHistoryLand) gHistoryLand.style('display', null);
-                if (countryPaths && gCountries) {
-                    if (histModernBordersVisible) {
-                        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-                        var ghostColor = isDark ? 'rgba(255,255,255,0.4)' : 'rgba(90,65,35,0.45)';
-                        gCountries.style('display', null);
+
+                var isTerrain = (colorMode === 'terrain');
+                var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                var ghostColor = isDark ? 'rgba(255,255,255,0.4)' : 'rgba(90,65,35,0.45)';
+
+                var mbBtn = document.getElementById('histModernBordersToggle');
+                if (mbBtn) {
+                    mbBtn.classList.toggle('toggle-on', histModernBordersVisible);
+                    mbBtn.setAttribute('aria-pressed', histModernBordersVisible ? 'true' : 'false');
+                }
+
+                var mlBtn = document.getElementById('histModernLabelsToggle');
+                if (mlBtn) {
+                    mlBtn.style.display = histModernBordersVisible ? '' : 'none';
+                    mlBtn.classList.toggle('toggle-on', histModernBordersVisible && histModernLabelsVisible);
+                    mlBtn.setAttribute('aria-pressed', (histModernBordersVisible && histModernLabelsVisible) ? 'true' : 'false');
+                }
+
+                if (isTerrain) {
+                    if (gHistoryLand) gHistoryLand.style('display', 'none');
+                    if (gCountries) gCountries.style('display', null);
+                    if (countryPaths) {
                         countryPaths
-                            .attr('fill', 'none')
-                            .attr('stroke', ghostColor)
-                            .attr('stroke-width', 0.7)
-                            .attr('stroke-dasharray', '2,2')
+                            .attr('fill', function(d) { return getCountryFill(d); })
+                            .attr('opacity', 1)
                             .attr('filter', null)
-                            .style('pointer-events', 'none');
+                            .style('pointer-events', histModernBordersVisible ? null : 'none');
+
+                        if (histModernBordersVisible) {
+                            countryPaths
+                                .attr('stroke', ghostColor)
+                                .attr('stroke-width', 0.7)
+                                .attr('stroke-dasharray', '2,2');
+                        } else {
+                            countryPaths
+                                .attr('stroke', 'none')
+                                .attr('stroke-width', 0)
+                                .attr('stroke-dasharray', 'none');
+                        }
+                    }
+                    if (gPhysical) {
+                        gPhysical.style('display', null);
+                        drawPhysicalFeatures();
+                    }
+                } else {
+                    if (gHistoryLand) {
+                        gHistoryLand.style('display', null);
+                        renderHistoryLand();
+                    }
+                    if (countryPaths && gCountries) {
+                        if (histModernBordersVisible) {
+                            gCountries.style('display', null);
+                            countryPaths
+                                .attr('fill', 'none')
+                                .attr('stroke', ghostColor)
+                                .attr('stroke-width', 0.7)
+                                .attr('stroke-dasharray', '2,2')
+                                .attr('filter', null)
+                                .style('pointer-events', 'none');
+                        } else {
+                            gCountries.style('display', 'none');
+                        }
+                    }
+                    if (gPhysical) {
+                        gPhysical.style('display', riversGlaciersVisible ? null : 'none');
+                        if (riversGlaciersVisible) drawPhysicalFeatures();
+                    }
+                }
+
+                if (gCountryLabels) {
+                    if (histModernBordersVisible && histModernLabelsVisible) {
+                        gCountryLabels.style('display', null);
+                        drawCountryLabels(allCountryFeatures);
                     } else {
-                        gCountries.style('display', 'none');
+                        gCountryLabels.style('display', 'none');
+                        if (countryLabelSelection) {
+                            countryLabelSelection.remove();
+                            countryLabelSelection = null;
+                        }
                     }
                 }
             }
@@ -1912,6 +2013,7 @@
                             if (i % step !== 0) return;
                             const pr = proj(coord);
                             if (!pr || isNaN(pr[0])) return;
+                            const px = pr[0], py = pr[1];
                             const k = Math.max(0.4, currentTransform.k);
                             const s = (w * (isMobile ? 1.5 : 2.2)) / k;
                             grp.append('path')
@@ -3081,7 +3183,9 @@
                     countryLabelSelection.remove();
                     countryLabelSelection = null;
                 }
-                if (!showLabels) return;
+                var inHist = (typeof historyActive !== 'undefined' && historyActive) || (typeof currentSection !== 'undefined' && currentSection === 'history');
+                var shouldShowLabels = inHist ? (histModernBordersVisible && histModernLabelsVisible) : showLabels;
+                if (!shouldShowLabels) return;
 
                 const threshold = getAreaThreshold();
                 const fontSize = getLabelFontSize();
@@ -3136,7 +3240,9 @@
                     updateHistoricalLandmarkLabels(currentTransform && currentTransform.k);
                 }
                 if (!countryLabelSelection) return;
-                if (!showLabels) {
+                var inHist = (typeof historyActive !== 'undefined' && historyActive) || (typeof currentSection !== 'undefined' && currentSection === 'history');
+                var shouldShowLabels = inHist ? (histModernBordersVisible && histModernLabelsVisible) : showLabels;
+                if (!shouldShowLabels) {
                     countryLabelSelection.style('opacity', 0);
                     return;
                 }
@@ -3241,19 +3347,21 @@
             // ── Style update & legend rendering ──
             function updateAllStyles() {
                 if (!countryPaths) return;
-                countryPaths.transition().duration(prefersReducedMotion() ? 0 : 400)
-                    .attr('fill', d => getCountryFill(d))
-                    .attr('opacity', d => getOpacity(d));
-                countryPaths.attr('stroke', d => getStroke(d))
-                    .attr('stroke-width', d => getStrokeWidth(d))
-                    .attr('filter', getCountryFilterAttr)
-                    .attr('aria-label', d => getDisplayName(d.properties?.name || ''));
-                if (countryLabelSelection) {
-                    countryLabelSelection.remove();
-                    countryLabelSelection = null;
-                }
                 var isHist = (typeof historyActive !== 'undefined' && historyActive) || (typeof currentSection !== 'undefined' && currentSection === 'history');
                 if (!isHist) {
+                    countryPaths.transition().duration(prefersReducedMotion() ? 0 : 400)
+                        .attr('fill', d => getCountryFill(d))
+                        .attr('opacity', d => getOpacity(d));
+                    countryPaths.attr('stroke', d => getStroke(d))
+                        .attr('stroke-width', d => getStrokeWidth(d))
+                        .attr('stroke-dasharray', 'none')
+                        .attr('filter', getCountryFilterAttr)
+                        .attr('aria-label', d => getDisplayName(d.properties?.name || ''))
+                        .style('pointer-events', null);
+                    if (countryLabelSelection) {
+                        countryLabelSelection.remove();
+                        countryLabelSelection = null;
+                    }
                     drawCountryLabels(allCountryFeatures);
                     drawColorblindOverlay();
                     drawPhysicalFeatures();
@@ -3273,12 +3381,12 @@
                     drawDesertsForests();
                     drawBorderDisputes();
                 } else {
-                    renderHistoryLand();
                     updateHistModernBorders();
                     if (window.drawHistoricalTravelers) window.drawHistoricalTravelers();
                     if (window.drawHistCapitals) window.drawHistCapitals();
                     if (window.drawHistBattles) window.drawHistBattles();
                     if (window.drawHistWonders) window.drawHistWonders();
+                    if (window.drawHistSacredSites) window.drawHistSacredSites();
                 }
                 if (!(_annotStrokePoints && _annotStrokePoints.length)) {
                     try { redrawAnnotations(); if (annotateKind === 'region' && annotatePoints && annotatePoints.length > 0) redrawAnnotationDrawing(); } catch (e) {}
@@ -3289,7 +3397,7 @@
                 if (selectedFeature && countryPanel.style.display === 'block' && !selectedCountry && !compareCountry) {
                     showFeatureDetail(selectedFeatureType, selectedFeature);
                 }
-                if (selectedCountry) highlightSelectedCountry(selectedCountry);
+                if (selectedCountry && !isHist) highlightSelectedCountry(selectedCountry);
                 updateHash();
             }
 
@@ -3477,9 +3585,16 @@
                     if (densityCtx) densityCtx.clearRect(0, 0, densityCanvas.width, densityCanvas.height);
                 }
                 setActiveByAttr(modeButtons, `.mode-btn[data-mode="${mode}"]`);
+                var htb = document.getElementById('histTerrainBtn');
+                if (htb) {
+                    htb.classList.toggle('toggle-on', colorMode === 'terrain');
+                    htb.setAttribute('aria-pressed', colorMode === 'terrain' ? 'true' : 'false');
+                }
                 requestAnimationFrame(function() { updateAllStyles(); });
                 updateCoordinatesDisplay({ clientX: 0, clientY: 0 });
             }
+            window.getColorMode = function() { return colorMode; };
+            window.setMode = setMode;
 
             // ── Additional toggle functions ──
             function toggleSect() {
@@ -4716,7 +4831,11 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     gHistSacredSites.selectAll('text.hist-sacred-site-label').each(function() {
                         var t = d3.select(this);
                         var cy = parseFloat(t.attr('data-cy') || 0);
-                        if (cy) t.attr('y', cy - sacOffY);
+                        var dir = t.attr('data-dir') || 'above';
+                        if (cy) {
+                            var y = (dir === 'below') ? (cy + sacOffY + sacFs * 0.75) : (cy - sacOffY);
+                            t.attr('y', y);
+                        }
                         t.attr('font-size', sacFs + 'px');
                     });
                 }
@@ -4885,7 +5004,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             [!isHist && (corridorsVisible || additionalWaterwaysVisible), function() { drawRoutes(true); }],
                             [!isHist && borderDisputesVisible, function() { drawBorderDisputes(true); }],
                             [!isHist && desertsForestsVisible, function() { drawDesertsForests(true); }],
-                            [!isHist && riversGlaciersVisible, function() { drawPhysicalFeatures(); drawGlaciatedAreas(true); }],
+                            [(isHist ? (colorMode === 'terrain' || riversGlaciersVisible) : (riversGlaciersVisible || colorMode === 'terrain')), function() { drawPhysicalFeatures(); if (!isHist) drawGlaciatedAreas(true); }],
                             [!isHist && cbPatternsVisible, function() { drawColorblindOverlay(); }],
                             [!isHist && geopoliticalBlocsVisible, function() { drawGeopoliticalBlocs(true); }],
                             [!isHist && oceanCurrentsVisible, function() { drawOceanCurrents(true); }],
@@ -4896,7 +5015,8 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             [!isHist && naturalResourcesVisible, function() { if (typeof drawNaturalResources === 'function') drawNaturalResources(); }],
                             [!isHist && ethnicGroupsVisible, function() { if (typeof drawEthnicGroups === 'function') drawEthnicGroups(); }],
                             [isHist && historicalRoutesVisible, function() { drawHistoricalRoutes(true); }],
-                            [isHist && histSacredSitesVisible, function() { drawHistSacredSites(true); }]
+                            [isHist && histSacredSitesVisible, function() { drawHistSacredSites(true); }],
+                            [isHist && histModernBordersVisible && histModernLabelsVisible, function() { drawCountryLabels(allCountryFeatures); }]
                         ].filter(function(p) { return p[0]; });
                         var _li = 0;
                         (function runNextLayer() {
@@ -6425,9 +6545,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
 
             function renderHistoryLand() {
                 if (!gHistoryLand || !allLandFeatures || !allLandFeatures.length) return;
-                var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-                var landFill = isDark ? '#263342' : MAP_COLORS.country.normal;
-                var landStroke = isDark ? 'rgba(255,255,255,0.2)' : MAP_COLORS.country.normalStroke;
+                var landFill = (MAP_COLORS && MAP_COLORS.country && MAP_COLORS.country.normal) || '#d4c5a0';
                 gHistoryLand.selectAll('*').remove();
                 gHistoryLand.selectAll('path')
                     .data(allLandFeatures)
@@ -6435,9 +6553,9 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     .attr('class', 'history-land-path')
                     .attr('d', pathGen)
                     .attr('fill', landFill)
-                    .attr('stroke', landStroke)
-                    .attr('stroke-width', 0.8)
-                    .attr('filter', 'url(#countryShadow)')
+                    .attr('stroke', 'none')
+                    .attr('stroke-width', 0)
+                    .attr('filter', null)
                     .style('pointer-events', 'none');
             }
             window.renderHistoryLand = renderHistoryLand;
@@ -13204,6 +13322,8 @@ function buildEraFeature(p, phase) {
             if (histSacredSitesToggleBtn) histSacredSitesToggleBtn.addEventListener('click', function() { toggleLayerByName('histSacredSites'); });
             const histModernBordersToggleBtn = document.getElementById('histModernBordersToggle');
             if (histModernBordersToggleBtn) histModernBordersToggleBtn.addEventListener('click', function() { toggleLayerByName('histModernBorders'); });
+            const histModernLabelsToggleBtn = document.getElementById('histModernLabelsToggle');
+            if (histModernLabelsToggleBtn) histModernLabelsToggleBtn.addEventListener('click', function() { toggleLayerByName('histModernLabels'); });
             if (adminBoundariesToggle) adminBoundariesToggle.addEventListener('click', toggleAdminBoundaries);
             if (globeViewBtn) globeViewBtn.addEventListener('click', function() {
                 if (quizActive) return;
@@ -15151,16 +15271,16 @@ function getReligionSlice(religion, year) {
                 };
 
                 if (faithKeys.length) {
-                    html += '<div style="margin-top: 6px;">' +
-                        '<div class="hist-profile-item-label" style="font-size: 0.76rem; color: var(--teal-600, #0d9488); margin-bottom: 6px;">🕊️ ' + htmlEscape(t('histSacredParties') || 'الأديان والمعتقدات المرتبطة') + '</div>' +
-                        '<div style="display: flex; flex-direction: column; gap: 6px;">';
+                    html += '<div style="margin-top: 8px;">' +
+                        '<div class="hist-profile-item-label" style="font-size: 0.78rem; color: #f59e0b; margin-bottom: 6px;">🕊️ ' + htmlEscape(t('histSacredParties') || 'الأديان والمعتقدات المرتبطة') + '</div>' +
+                        '<div class="hist-sacred-faiths-grid">';
                     faithKeys.forEach(function(fKey) {
                         var fName = (lang === 'ar' ? faithNamesAr[fKey] : faithNamesEn[fKey]) || fKey;
                         var color = faithColors[fKey] || '#14b8a6';
                         var fSig = sigObj[fKey + '_' + lang] || sigObj[fKey + '_en'] || sigObj[fKey + '_ar'] || (typeof sigObj[fKey] === 'string' ? sigObj[fKey] : (sigObj[fKey] && (sigObj[fKey][lang] || sigObj[fKey].en || sigObj[fKey].ar))) || '';
-                        html += '<div class="hist-profile-item full-width" style="border-inline-start: 3px solid ' + color + '; padding: 6px 10px;">' +
-                            '<div class="hist-profile-item-label" style="color: ' + color + '; font-weight: 700; margin-bottom: 3px;">' + htmlEscape(fName) + '</div>' +
-                            (fSig ? '<div class="hist-profile-item-val" style="font-size: 0.78rem; line-height: 1.45;">' + htmlEscape(fSig) + '</div>' : '') +
+                        html += '<div class="hist-profile-item" style="border-inline-start: 3px solid ' + color + '; padding: 8px 10px; background: rgba(0,0,0,0.18); border-radius: 8px;">' +
+                            '<div class="hist-profile-item-label" style="color: ' + color + '; font-weight: 700; margin-bottom: 4px; font-size: 0.8rem;">' + htmlEscape(fName) + '</div>' +
+                            (fSig ? '<div class="hist-profile-item-val" style="font-size: 0.78rem; line-height: 1.45; color: var(--text);">' + htmlEscape(fSig) + '</div>' : '') +
                             '</div>';
                     });
                     html += '</div></div>';
@@ -15168,19 +15288,19 @@ function getReligionSlice(religion, year) {
 
                 // Historical Transitions Timeline
                 if (timeline.length) {
-                    html += '<div style="margin-top: 8px;">' +
-                        '<div class="hist-profile-item-label" style="font-size: 0.76rem; color: var(--teal-600, #0d9488); margin-bottom: 6px;">⏳ ' + htmlEscape(t('histSacredTimeline') || 'التسلسل الزمني للتحولات والنزاعات') + '</div>' +
-                        '<div style="display: flex; flex-direction: column; gap: 5px;">';
+                    html += '<div style="margin-top: 10px;">' +
+                        '<div class="hist-profile-item-label" style="font-size: 0.78rem; color: #0d9488; margin-bottom: 6px;">⏳ ' + htmlEscape(t('histSacredTimeline') || 'التسلسل الزمني للتحولات والنزاعات') + '</div>' +
+                        '<div class="hist-sacred-timeline-grid">';
                     timeline.forEach(function(item) {
                         var era = locField(item, 'era');
                         var yr = item.year_label || '';
                         var ev = locField(item, 'desc') || locField(item, 'event');
-                        html += '<div style="background: var(--bg-hover, rgba(0,0,0,0.03)); border: 1px solid var(--border, rgba(0,0,0,0.08)); border-radius: 6px; padding: 6px 8px;">' +
-                            '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">' +
-                            '<span style="font-weight: 700; font-size: 0.74rem; color: var(--teal-600, #0d9488);">' + htmlEscape(era) + '</span>' +
-                            (yr ? '<span style="font-size: 0.7rem; color: var(--text-muted, #64748b); font-weight: 600;">' + htmlEscape(yr) + '</span>' : '') +
+                        html += '<div style="background: rgba(0,0,0,0.14); border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: 8px; padding: 7px 10px;">' +
+                            '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;">' +
+                            '<span style="font-weight: 700; font-size: 0.76rem; color: #14b8a6;">' + htmlEscape(era) + '</span>' +
+                            (yr ? '<span style="font-size: 0.7rem; color: var(--text-muted, #94a3b8); font-weight: 600;">' + htmlEscape(yr) + '</span>' : '') +
                             '</div>' +
-                            '<div style="font-size: 0.77rem; color: var(--text, #1e293b); line-height: 1.4;">' + htmlEscape(ev) + '</div>' +
+                            '<div style="font-size: 0.77rem; color: var(--text, #e2e8f0); line-height: 1.42;">' + htmlEscape(ev) + '</div>' +
                             '</div>';
                     });
                     html += '</div></div>';
@@ -15188,16 +15308,16 @@ function getReligionSlice(religion, year) {
 
                 // Current Status & Administration
                 if (currentStatus) {
-                    html += '<div class="hist-narrative-box" style="border-inline-start-color: #3b82f6; background: rgba(59, 130, 246, 0.08); border-color: rgba(59, 130, 246, 0.22); margin-top: 8px;">' +
-                        '<div class="hist-narrative-title" style="color: #2563eb;">⚖️ ' + htmlEscape(t('histSacredCurrentStatus') || 'الوضع الراهن وإدارته اليوم') + '</div>' +
-                        '<p class="hist-narrative-text">' + htmlEscape(currentStatus) + '</p>' +
+                    html += '<div class="hist-narrative-box" style="border-inline-start-color: #3b82f6; background: rgba(59, 130, 246, 0.08); border-color: rgba(59, 130, 246, 0.22); margin-top: 10px;">' +
+                        '<div class="hist-narrative-title" style="color: #60a5fa;">⚖️ ' + htmlEscape(t('histSacredCurrentStatus') || 'الوضع الراهن وإدارته اليوم') + '</div>' +
+                        '<p class="hist-narrative-text" style="font-size: 0.79rem; line-height: 1.45;">' + htmlEscape(currentStatus) + '</p>' +
                         '</div>';
                 }
 
                 // Center on Map Button
                 if (site.coords && site.coords.length === 2) {
-                    html += '<div class="history-actions" style="margin-top: 10px;">' +
-                        '<button type="button" class="btn history-action-btn" id="sacredSiteCenterBtn" style="width: 100%; justify-content: center; background: #f59e0b; color: #ffffff; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 700; cursor: pointer;">' +
+                    html += '<div class="history-actions" style="margin-top: 12px; margin-bottom: 6px;">' +
+                        '<button type="button" class="btn history-action-btn" id="sacredSiteCenterBtn" style="width: 100%; justify-content: center; background: #f59e0b; color: #ffffff; border: none; padding: 9px 14px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem;">' +
                         '📍 ' + htmlEscape(lang === 'ar' ? 'التركيز على الموقع في الخريطة' : 'Center on Map') +
                         '</button>' +
                         '</div>';
@@ -15516,9 +15636,18 @@ function getReligionSlice(religion, year) {
                     if (!coords) return;
                     var xy = proj(coords);
                     if (!xy || isNaN(xy[0])) return;
-                    var siteName = cleanHistoricalName(locField(site, 'name'));
+                    var rawName = locField(site, 'name');
+                    var siteName = cleanHistoricalName(rawName);
+                    if (site.id === 'jerusalem-holy-esplanade') {
+                        siteName = (lang === 'ar' ? 'القدس الشريف' : lang === 'ru' ? 'Иерусалим' : lang === 'uz' ? 'Quddus' : lang === 'es' ? 'Jerusalén' : 'Jerusalem');
+                    } else if (site.id === 'cave-of-the-patriarchs') {
+                        siteName = (lang === 'ar' ? 'الحرم الإبراهيمي' : lang === 'ru' ? 'Мечеть Ибрахима' : lang === 'uz' ? 'Ibrohim masjidi' : lang === 'es' ? 'Mezquita de Ibrahimi' : 'Ibrahimi Mosque');
+                    }
+                    var isBelow = (site.id === 'cave-of-the-patriarchs');
+
                     var g = gHistSacredSites.append('g')
                         .attr('class', 'hist-sacred-site-pin hist-landmark-pin')
+                        .attr('data-site-id', site.id)
                         .attr('role', 'button')
                         .attr('tabindex', '0')
                         .attr('aria-label', (t('histSacredSiteTitle') || 'مكان مقدس مشترك') + ': ' + siteName)
@@ -15544,6 +15673,7 @@ function getReligionSlice(religion, year) {
                     var sacOffY = ((isMob ? 6.5 : 7.5) + sacScreenPx * 0.7) / zoom;
                     var sacIconOffY = 3.0 / zoom;
                     var sacSw = 1.4 / zoom;
+                    var labelY = isBelow ? (xy[1] + sacOffY + sacFs * 0.75) : (xy[1] - sacOffY);
 
                     g.append('circle')
                         .attr('class', 'hist-sacred-site-ring')
@@ -15579,8 +15709,9 @@ function getReligionSlice(religion, year) {
                     g.append('text')
                         .attr('class', 'hist-sacred-site-label')
                         .attr('data-cy', xy[1])
+                        .attr('data-dir', isBelow ? 'below' : 'above')
                         .attr('x', xy[0])
-                        .attr('y', xy[1] - sacOffY)
+                        .attr('y', labelY)
                         .text(siteName)
                         .attr('fill', '#fef3c7')
                         .attr('font-size', sacFs + 'px')

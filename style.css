@@ -6195,11 +6195,38 @@ body.section-history #modeRow {
 .hist-phase-dot.dot-end { background: #ef4444; box-shadow: 0 0 6px #ef4444; }
 
 .country-panel:has(.hist-profile-card) {
-    max-width: 460px !important;
+    max-width: 580px !important;
     min-width: 320px !important;
-    max-height: calc(100vh - 100px) !important;
+    top: 36px !important;
+    max-height: calc(100vh - 190px) !important;
+    box-sizing: border-box !important;
     overflow-y: auto !important;
     overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+    padding-bottom: 16px !important;
+}
+@media (max-width: 768px) {
+    .country-panel:has(.hist-profile-card) {
+        max-width: 95vw !important;
+        top: 20px !important;
+        max-height: calc(100vh - 110px) !important;
+    }
+}
+.hist-sacred-faiths-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 8px;
+}
+.hist-sacred-timeline-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 6px;
+}
+#histModernLabelsToggle {
+    border-inline-start: 3px solid #f59e0b !important;
+    font-size: 0.85em;
+    opacity: 0.92;
 }
 .hist-profile-card {
     text-align: start;

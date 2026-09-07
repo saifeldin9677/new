@@ -141,6 +141,15 @@
                     <span class="history-year-badge hist-traveler-stage-badge" id="histTravelerStageBadge"></span>
                     <div class="hist-travelers-chips" id="histTravelersChips" style="display:none"></div>
                 </div>
+
+                <!-- Historical Terrain & Hydrography Timeline Content -->
+                <div class="history-terrain-timeline-wrap" id="historyTerrainTimelineWrap" style="display:none">
+                    <button type="button" class="history-play-btn" id="histTerrainPlayBtn" data-i18n-title="histPlayTip" data-i18n-aria-label="histPlayTip" aria-label="تشغيل / إيقاف مؤقت" aria-pressed="false">
+                        <i data-lucide="play" class="lucide-icon"></i>
+                    </button>
+                    <div class="hist-terrain-timeline-track" id="histTerrainTimeline" role="slider" tabindex="0" aria-label="Historical terrain timeline" aria-valuemin="-3000" aria-valuemax="2000"></div>
+                    <span class="history-year-badge" id="histTerrainYearBadge">-3000</span>
+                </div>
             </div>
             <!-- Active Caption / Context Line -->
             <div class="history-timeline-caption" id="histTimelineCaption"></div>

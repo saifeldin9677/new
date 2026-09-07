@@ -1,0 +1,868 @@
+{
+  "version": 1,
+  "epochs": [
+    {
+      "year": -3000,
+      "label_ar": "3000 ق.م",
+      "label_en": "3000 BCE",
+      "title_ar": "فجر عصر السلالات المبكرة وبدايات الحضارات الكبرى",
+      "title_en": "Dawn of Early Dynasties & Primary Civilizations",
+      "summary_ar": "دلتا النيل تضم سبعة أفرع نشطة في أقصى تدفقها وبحيرة قارون ممتلئة. مياه الخليج العربي تتوغل شمالاً حتى أور وإريدو. النهر الأصفر يجري شمالاً نحو خليج بوهاي، ونهر الساراسفاتي يتدفق موازياً للسند.",
+      "summary_en": "Nile Delta features 7 active branches at maximum discharge; Persian Gulf shoreline extends inland near Ur & Eridu; Yellow River flows north to Bohai; Sarasvati flows parallel to Indus."
+    },
+    {
+      "year": -2500,
+      "label_ar": "2500 ق.م",
+      "label_en": "2500 BCE",
+      "title_ar": "عصر بناة الأهرامات والإمبراطورية الأكدية",
+      "title_en": "Age of the Pyramids & the Akkadian Empire",
+      "summary_ar": "فروع النيل السبعة تنقل أحجار الأهرام، والفرات يمر مباشرة عبر حواضر سومر وأكد. تجارة دلمون ومجان البحرية تزدهر عند موانئ الخليج المتوغلة شمالاً.",
+      "summary_en": "Seven Nile branches transport pyramid stone; Euphrates directly borders Sumerian-Akkadian cities; Dilmun/Magan maritime trade flourishes in the deep Gulf."
+    },
+    {
+      "year": -2000,
+      "label_ar": "2000 ق.م",
+      "label_en": "2000 BCE",
+      "title_ar": "عصر أور الثالثة والدولة المصرية الوسطى",
+      "title_en": "Ur III Renaissance & Egyptian Middle Kingdom",
+      "summary_ar": "استصلاح واحة الفيوم وبحر يوسف عبر ملوك الأسرة الثانية عشرة. بدايات جفاف حوض نهر الساراسفاتي في شبه القارة الهندية، وتغيرات طميية في أهوار الرافدين.",
+      "summary_en": "Reclamation of the Fayum basin via Bahr Yussef under 12th Dynasty; onset of Sarasvati desiccation; siltation changes in Mesopotamian marshlands."
+    },
+    {
+      "year": -1500,
+      "label_ar": "1500 ق.م",
+      "label_en": "1500 BCE",
+      "title_ar": "العصر البرونزي المتأخر والإمبراطورية المصرية الحديثة",
+      "title_en": "Late Bronze Age & Egyptian New Kingdom",
+      "summary_ar": "الفرع البيلوزي يشكل خط الدفاع الحدودي الشرقي لمصر وطريق حورس الحربي. نهرا دجلة والفرات يفصلان بابل الكاشية عن آشور وميتاني. ممر بوابات قيليقية معبر جيوش الحثيين والمصريين.",
+      "summary_en": "Pelusiac branch forms Egypt's fortified eastern frontier and Ways of Horus; Tigris/Euphrates divide Kassite Babylon, Assyria, Mitanni; Cilician Gates channel Hittite-Egyptian campaigns."
+    },
+    {
+      "year": -1000,
+      "label_ar": "1000 ق.م",
+      "label_en": "1000 BCE",
+      "title_ar": "العصر الحديدي المبكر وممالك الشام وفينيقيا",
+      "title_en": "Early Iron Age & Levantine Kingdoms",
+      "summary_ar": "أفرع دلتا النيل لا تزال سبعة، عاصمة تانس تزدهر على الفرع التانيتي. الفرات ينحرف تدريجياً عن مجراه القديم قرب أور. نهر الأردن ووادي اليرموك حدود طبيعية لممالك آرام وعمون ومؤاب وإسرائيل.",
+      "summary_en": "Nile delta sustains 7 branches, Tanis thrives on Tanitic branch; Euphrates gradually avulses away from Ur; Jordan/Yarmouk define borders of Aram, Ammon, Moab, Israel."
+    },
+    {
+      "year": -500,
+      "label_ar": "500 ق.م",
+      "label_en": "500 BCE",
+      "title_ar": "العصر الكلاسيكي، الإمبراطورية الأخمينية واليونان",
+      "title_en": "Classical Antiquity, Achaemenid Persia & Greece",
+      "summary_ar": "ممر ترموبيل الساحلي يشهد ملحمة الـ 300 إسبرطي ضد الفرس. داريوس الأول يعيد حفر قناة تربط النيل بالبحر الأحمر. نهر جيحون (الأوكسوس) يتدفق عبر قناة أوزبوي نحو بحر قزوين.",
+      "summary_en": "Thermopylae coastal pass witnesses Spartan stand; Darius I restores Nile-Red Sea canal; Oxus flows through Uzboy channel into Caspian Sea."
+    },
+    {
+      "year": 1,
+      "label_ar": "1 م",
+      "label_en": "1 CE",
+      "title_ar": "عصر الإمبراطورية الرومانية وبداية العصر الميلادي وسلالة هان",
+      "title_en": "Pax Romana, Early Han Dynasty & Dawn of Common Era",
+      "summary_ar": "يوليوس قيصر يعبر نهر الروبيكون الفاصل. الراين والدانوب يشكلان حدود روما المحصنة (Limes). سترابو وهيرودوت يوثقان الأفرع السبعة للنيل، وبداية ضعف الفرع البيلوزي.",
+      "summary_en": "Julius Caesar crosses Rubicon; Rhine & Danube define fortified Roman Limes; Strabo records 7 Nile branches with early silting of the Pelusiac distributary."
+    },
+    {
+      "year": 500,
+      "label_ar": "500 م",
+      "label_en": "500 CE",
+      "title_ar": "أواخر العصور القديمة، الساسانيون والبيزنطيون",
+      "title_en": "Late Antiquity, Sasanian-Byzantine Era",
+      "summary_ar": "ترسب الطمي الشديد يطمر الفرع البيلوزي والفرع الكانوبي. هور البطائح يتعاظم في جنوب العراق بفعل فيضانات دجلة والفرات وتداعي سدود الري الساسانية.",
+      "summary_en": "Severe alluvial siltation chokes Pelusiac and Canopic branches; massive Great Swamps (Al-Bata'ih) expand in southern Mesopotamia following dyke failures."
+    },
+    {
+      "year": 1000,
+      "label_ar": "1000 م",
+      "label_en": "1000 CE",
+      "title_ar": "العصر الذهبي الإسلامي وحقبة الحروب الصليبية",
+      "title_en": "Islamic Golden Age & Crusader Era",
+      "summary_ar": "دلتا النيل تستقر حول فرعين رئيسيين: دمياط ورشيد مع انحسار تام للفروع القديمة. معركة اليرموك وواديها الصخري الفاصل. النهر الأصفر لا يزال في مساره الشمالي قبل تحوله الكبير.",
+      "summary_en": "Nile Delta stabilizes around two primary branches (Damietta & Rosetta); Yarmouk River gorge anchors historic battles; Yellow River flows north prior to 1194 avulsion."
+    },
+    {
+      "year": 1500,
+      "label_ar": "1500 م",
+      "label_en": "1500 CE",
+      "title_ar": "عصر النهضة، الدولة العثمانية وعصر الاستكشاف",
+      "title_en": "Early Modern Era, Ottoman Empire & Age of Discovery",
+      "summary_ar": "النهر الأصفر يغير مساره جذرياً جنوب شبه جزيرة شاندونغ ليصب في البحر الأصفر ونهر هواي. نهرا دجلة والفرات يلتقيان في شط العرب. نهر جيحون يتحول بالكامل ليصب في بحر آرال.",
+      "summary_en": "Yellow River avulses catastrophically south of Shandong into Huai River & Yellow Sea; Tigris & Euphrates converge into Shatt al-Arab; Oxus shifts to Aral Sea."
+    },
+    {
+      "year": 2000,
+      "label_ar": "2000 م",
+      "label_en": "2000 CE",
+      "title_ar": "العصر المعاصر، السدود العملاقة والتحولات البيئية الحديثة",
+      "title_en": "Contemporary Era, Mega-Dams & Modern Landscape",
+      "summary_ar": "بناء السد العالي وبحيرة ناصر ينظم فيضان النيل. النهر الأصفر يستقر في مساره الشمالي مع سد الممرات الثلاثة على اليانغتسي. تراجع حاد لبحر آرال وتجفيف أهوار جنوب العراق.",
+      "summary_en": "Aswan High Dam & Lake Nasser regulate Nile; Yellow River stabilized north; Aral Sea desiccation and post-1990s drainage of Mesopotamian marshes."
+    }
+  ],
+  "rivers": [
+    {
+      "id": "nile-river-system",
+      "type": "river",
+      "name_ar": "نهر النيل ودلتاه التاريخية",
+      "name_en": "Nile River & Ancient Delta",
+      "icon": "🌊",
+      "weight": 3,
+      "category_ar": "شريان الحضارة المصرية والري الإمبراطوري",
+      "category_en": "Cradle of Egyptian Civilization & Imperial Artery",
+      "region_ar": "شمال وشرق أفريقيا (مصر، النوبة، السودان)",
+      "region_en": "North & East Africa (Egypt, Nubia, Sudan)",
+      "names_by_era": [
+        { "era_ar": "المصرية القديمة (الهيروغليفية)", "name": "إيترو عا (Iteru Aa)", "meaning_ar": "النهر العظيم / الإله حابي" },
+        { "era_ar": "القبطية القديمة", "name": "بيارو (Piaro / Phiaro)", "meaning_ar": "النهر / المجرى" },
+        { "era_ar": "اليونانية الكلاسيكية واللاتينية", "name": "نيلوس (Neilos / Nilus)", "meaning_ar": "وادي النهر / الأزرق" },
+        { "era_ar": "العربية الكلاسيكية والإسلامية", "name": "بحر النيل / نيل مصر المبارك", "meaning_ar": "سيد الأنهار ونهر الجنة" },
+        { "era_ar": "الأفرع السبعة القديمة (اليونانية)", "name": "Pelusiac, Tanitic, Mendesian, Phatnitic, Sebennytic, Bolbitic, Canopic", "meaning_ar": "البيلوزي، التانيتي، المنديسي، الفاتنيتي، السبنيتي، البولبيتي، الكانوبي" }
+      ],
+      "strategic_importance_ar": "كان النيل أعظم مانع دفاعي طبيعي وشريان إمداد لوجستي في العالم القديم. مكنت فيضاناته الدورية (موسم أخت) من نشوء أقدم دولة مركزية موحدة. مثلت دلتاه بحصونها المائية وأفرعها السبعة حاجزاً هيدرولوجياً عاتياً حطم غزوات شعوب البحر والآشوريين، بينما شكل الفرع البيلوزي وشرق الدلتا حائط الصد الاستراتيجي الأول (طريق حورس وقلعة ثارو) ضد أي غزو بري قادم من آسيا.",
+      "strategic_importance_en": "The Nile was the world's foremost natural barrier and logistical waterway. Its seasonal inundation birthed the first centralized territorial state. The seven delta branches formed an impregnable watery moat defeating the Sea Peoples and invaders, with the Pelusiac branch guarding the Horus Military Way against Asian armies.",
+      "historical_events": [
+        {
+          "year": -1177,
+          "year_label": "1177 ق.م",
+          "title_ar": "معركة دلتا النيل البحرية الكبرى",
+          "title_en": "Battle of the Delta",
+          "desc_ar": "رمسيس الثالث يكمن لأسطول شعوب البحر الغازي في مصبات فروع الدلتا ويدمر سفنهم بالرماة والخطاطيف محققاً نصراً تاريخياً أنقذ مصر والشرق الأدنى.",
+          "desc_en": "Ramesses III ambushed and destroyed the Sea Peoples' fleet in the Nile distributary mouths, saving Egypt from Bronze Age collapse."
+        },
+        {
+          "year": -525,
+          "year_label": "525 ق.م",
+          "title_ar": "معركة الفرما (بيلوسيوم)",
+          "title_en": "Battle of Pelusium",
+          "desc_ar": "الفرس بقيادة قمبيز الثاني يخترقون البوابة الشرقية للنيل عند الفرع البيلوزي ويسقطون الأسرة السادسة والعشرين.",
+          "desc_en": "Achaemenid Persian forces under Cambyses II breached the Pelusiac frontier fortress, ending the 26th Dynasty."
+        },
+        {
+          "year": 640,
+          "year_label": "640–641 م",
+          "title_ar": "الفتح الإسلامي وحصار حصن بابليون",
+          "title_en": "Muslim Conquest & Siege of Babylon Fortress",
+          "desc_ar": "عمرو بن العاص يفتح حصن بابليون على ضفاف النيل ويؤسس الفسطاط، ثم يعيد حفر 'خليج أمير المؤمنين' لربط مياه النيل بالبحر الأحمر لدعم الحجاز بالمؤن.",
+          "desc_en": "Amr ibn al-Aas captured Babylon Fortress on the Nile, founded Fustat, and reopened Trajan's Canal linking the Nile to the Red Sea."
+        },
+        {
+          "year": 1250,
+          "year_label": "1250 م",
+          "title_ar": "معركة المنصورة على فرع دمياط",
+          "title_en": "Battle of Al-Mansurah",
+          "desc_ar": "المماليك والصالحية يهزمون الحملة الصليبية السابعة بقيادة الملك لويس التاسع في الدلتا ويأسرونه في دار ابن لقمان.",
+          "desc_en": "Mamluk forces defeated King Louis IX's Seventh Crusade along the Damietta branch of the Nile, capturing the French king."
+        },
+        {
+          "year": 1970,
+          "year_label": "1970 م",
+          "title_ar": "تدشين السد العالي وبحيرة ناصر",
+          "title_en": "Inauguration of the Aswan High Dam",
+          "desc_ar": "اكتمال بناء السد العالي في أسوان لترويض الفيضان التاريخي تماماً وتوليد الطاقة، مشكلاً بحيرة ناصر كأكبر بحيرة صناعية.",
+          "desc_en": "Completion of the High Dam in Aswan, terminating millenia of natural flooding and creating the massive Lake Nasser reservoir."
+        }
+      ],
+      "quotes": [
+        {
+          "author_ar": "هيرودوت (أبو التاريخ، القرن 5 ق.م)",
+          "text_ar": "«مصر هبة النيل؛ فالأرض التي يزرعها المصريون هي أرض اكتسبوها من النهر ومن هدايا فيضانه السنوي العظيم.»",
+          "author_en": "Herodotus (Histories, 5th C. BCE)",
+          "text_en": "\"Egypt is the gift of the Nile; the land cultivated by the Egyptians was acquired from the river and its beneficent annual flood.\""
+        },
+        {
+          "author_ar": "الإدريسي (نزهة المشتاق، 1154 م)",
+          "text_ar": "«ونيل مصر يمد في الصيف حين تنقص الأنهار كلها، ولا يوجد في الدنيا نهر يعظم نفعه كعظم نفع النيل وسيلانه على بلاد مصر.»",
+          "author_en": "Al-Idrisi (1154 CE)",
+          "text_en": "\"The Nile swells in high summer when all other rivers diminish; nowhere on Earth does a river bring such fertility as the Nile to Egypt.\""
+        }
+      ],
+      "courses_by_epoch": {
+        "-3000": [
+          { "name_ar": "المجرى الصعيدي والنوبي الرئيسي", "name_en": "Main Nile Valley", "weight": 3, "coords": [[31.5,22.0],[32.8,24.1],[32.6,25.7],[32.0,26.5],[31.2,28.0],[31.2,29.8],[31.25,30.1]] },
+          { "name_ar": "الفرع الكانوبي (أقصى الغرب)", "name_en": "Canopic Branch", "weight": 2, "coords": [[31.25,30.1],[30.8,30.6],[30.4,31.0],[30.1,31.3]] },
+          { "name_ar": "الفرع البولبيتي (رشيد القديم)", "name_en": "Bolbitic Branch", "weight": 2, "coords": [[31.25,30.1],[30.9,30.7],[30.5,31.2],[30.4,31.42]] },
+          { "name_ar": "الفرع السبنيتي (الأوسط العظيم)", "name_en": "Sebennytic Branch", "weight": 3, "coords": [[31.25,30.1],[31.15,30.6],[31.0,31.1],[31.0,31.55]] },
+          { "name_ar": "الفرع الفاتنيتي (دمياط القديم)", "name_en": "Phatnitic Branch", "weight": 2, "coords": [[31.25,30.1],[31.4,30.6],[31.6,31.0],[31.82,31.45]] },
+          { "name_ar": "الفرع المنديسي", "name_en": "Mendesian Branch", "weight": 2, "coords": [[31.25,30.1],[31.5,30.5],[31.7,30.85],[31.9,31.35]] },
+          { "name_ar": "الفرع التانيتي (صان الحجر)", "name_en": "Tanitic Branch", "weight": 2, "coords": [[31.25,30.1],[31.65,30.5],[31.9,30.9],[32.1,31.3]] },
+          { "name_ar": "الفرع البيلوزي (الفرما - أقصى الشرق)", "name_en": "Pelusiac Branch", "weight": 3, "coords": [[31.25,30.1],[31.8,30.4],[32.2,30.7],[32.55,31.05]] },
+          { "name_ar": "بحر يوسف وبحيرة موريس (قارون)", "name_en": "Bahr Yussef & Lake Moeris", "weight": 2, "coords": [[31.0,27.5],[30.8,28.5],[30.8,29.3],[30.6,29.5]] }
+        ],
+        "-1500": [
+          { "name_ar": "المجرى الصعيدي والنوبي الرئيسي", "name_en": "Main Nile Valley", "weight": 3, "coords": [[31.5,22.0],[32.8,24.1],[32.6,25.7],[32.0,26.5],[31.2,28.0],[31.2,29.8],[31.25,30.1]] },
+          { "name_ar": "الفرع الكانوبي", "name_en": "Canopic Branch", "weight": 2, "coords": [[31.25,30.1],[30.8,30.6],[30.4,31.0],[30.1,31.3]] },
+          { "name_ar": "الفرع البولبيتي", "name_en": "Bolbitic Branch", "weight": 2, "coords": [[31.25,30.1],[30.9,30.7],[30.5,31.2],[30.4,31.42]] },
+          { "name_ar": "الفرع السبنيتي", "name_en": "Sebennytic Branch", "weight": 3, "coords": [[31.25,30.1],[31.15,30.6],[31.0,31.1],[31.0,31.55]] },
+          { "name_ar": "الفرع الفاتنيتي", "name_en": "Phatnitic Branch", "weight": 2, "coords": [[31.25,30.1],[31.4,30.6],[31.6,31.0],[31.82,31.45]] },
+          { "name_ar": "الفرع التانيتي (عاصمة الرعامسة)", "name_en": "Tanitic Branch (Pi-Ramesses)", "weight": 3, "coords": [[31.25,30.1],[31.65,30.5],[31.9,30.9],[32.1,31.3]] },
+          { "name_ar": "الفرع البيلوزي (حائط طريق حورس)", "name_en": "Pelusiac Branch", "weight": 3, "coords": [[31.25,30.1],[31.8,30.4],[32.2,30.7],[32.55,31.05]] },
+          { "name_ar": "بحر يوسف والفيوم", "name_en": "Bahr Yussef & Fayum", "weight": 2, "coords": [[31.0,27.5],[30.8,28.5],[30.8,29.3],[30.6,29.5]] }
+        ],
+        "-500": [
+          { "name_ar": "المجرى الصعيدي والنوبي الرئيسي", "name_en": "Main Nile Valley", "weight": 3, "coords": [[31.5,22.0],[32.8,24.1],[32.6,25.7],[32.0,26.5],[31.2,28.0],[31.2,29.8],[31.25,30.1]] },
+          { "name_ar": "الفرع الكانوبي", "name_en": "Canopic Branch", "weight": 2, "coords": [[31.25,30.1],[30.8,30.6],[30.4,31.0],[30.1,31.3]] },
+          { "name_ar": "الفرع البولبيتي", "name_en": "Bolbitic Branch", "weight": 2, "coords": [[31.25,30.1],[30.9,30.7],[30.5,31.2],[30.4,31.42]] },
+          { "name_ar": "الفرع السبنيتي", "name_en": "Sebennytic Branch", "weight": 3, "coords": [[31.25,30.1],[31.15,30.6],[31.0,31.1],[31.0,31.55]] },
+          { "name_ar": "الفرع الفاتنيتي", "name_en": "Phatnitic Branch", "weight": 2, "coords": [[31.25,30.1],[31.4,30.6],[31.6,31.0],[31.82,31.45]] },
+          { "name_ar": "الفرع البيلوزي (قلعة بيلوسيوم)", "name_en": "Pelusiac Branch", "weight": 2, "coords": [[31.25,30.1],[31.8,30.4],[32.2,30.7],[32.55,31.05]] },
+          { "name_ar": "قناة داريوس الأول (نيل-سويس)", "name_en": "Darius Canal to Red Sea", "weight": 1, "coords": [[31.7,30.5],[32.1,30.5],[32.5,30.4],[32.55,29.95]] }
+        ],
+        "1": [
+          { "name_ar": "المجرى الرئيسي", "name_en": "Main Nile Valley", "weight": 3, "coords": [[31.5,22.0],[32.8,24.1],[32.6,25.7],[32.0,26.5],[31.2,28.0],[31.2,29.8],[31.25,30.1]] },
+          { "name_ar": "الفرع الكانوبي (بداية الضعف)", "name_en": "Canopic Branch", "weight": 2, "coords": [[31.25,30.1],[30.8,30.6],[30.4,31.0],[30.1,31.3]] },
+          { "name_ar": "الفرع البولبيتي (رشيد)", "name_en": "Bolbitic Branch", "weight": 2, "coords": [[31.25,30.1],[30.9,30.7],[30.5,31.2],[30.4,31.42]] },
+          { "name_ar": "الفرع السبنيتي", "name_en": "Sebennytic Branch", "weight": 2, "coords": [[31.25,30.1],[31.15,30.6],[31.0,31.1],[31.0,31.55]] },
+          { "name_ar": "الفرع الفاتنيتي (دمياط)", "name_en": "Phatnitic Branch", "weight": 3, "coords": [[31.25,30.1],[31.4,30.6],[31.6,31.0],[31.82,31.45]] },
+          { "name_ar": "الفرع البيلوزي (انحسار طميي)", "name_en": "Pelusiac Branch (Silting)", "weight": 1, "coords": [[31.25,30.1],[31.8,30.4],[32.2,30.7],[32.55,31.05]] }
+        ],
+        "1000": [
+          { "name_ar": "المجرى الرئيسي الفاطمي", "name_en": "Main Nile Valley", "weight": 3, "coords": [[31.5,22.0],[32.8,24.1],[32.6,25.7],[32.0,26.5],[31.2,28.0],[31.2,29.8],[31.25,30.1]] },
+          { "name_ar": "فرع رشيد (البولبيتي المتطور)", "name_en": "Rosetta Branch", "weight": 3, "coords": [[31.25,30.1],[30.8,30.5],[30.6,31.0],[30.42,31.45]] },
+          { "name_ar": "فرع دمياط (الفاتنيتي المتطور)", "name_en": "Damietta Branch", "weight": 3, "coords": [[31.25,30.1],[31.35,30.5],[31.6,31.0],[31.82,31.5]] },
+          { "name_ar": "بقايا الفرع البيلوزي والسبنيتي", "name_en": "Traces of Eastern Distributaries", "weight": 1, "coords": [[31.25,30.1],[31.6,30.4],[32.0,30.8]] }
+        ],
+        "2000": [
+          { "name_ar": "بحيرة ناصر والسد العالي", "name_en": "Lake Nasser Reservoir", "weight": 3, "coords": [[31.5,22.0],[32.0,22.8],[32.5,23.5],[32.88,23.97]] },
+          { "name_ar": "المجرى المنظم الحديث", "name_en": "Regulated Nile River", "weight": 3, "coords": [[32.88,23.97],[32.6,25.7],[32.0,26.5],[31.2,28.0],[31.2,29.8],[31.25,30.1]] },
+          { "name_ar": "فرع رشيد الحديث", "name_en": "Rosetta Branch", "weight": 3, "coords": [[31.25,30.1],[30.8,30.5],[30.6,31.0],[30.42,31.45]] },
+          { "name_ar": "فرع دمياط الحديث", "name_en": "Damietta Branch", "weight": 3, "coords": [[31.25,30.1],[31.35,30.5],[31.6,31.0],[31.82,31.5]] }
+        ]
+      }
+    },
+    {
+      "id": "tigris-euphrates-system",
+      "type": "river",
+      "name_ar": "نهرا دجلة والفرات وميزوبوتاميا",
+      "name_en": "Tigris & Euphrates River System",
+      "icon": "🌊",
+      "weight": 3,
+      "category_ar": "مهد الحضارة الرافدينية والمدن السومرية",
+      "category_en": "Cradle of Mesopotamian Civilization & Sumerian Cities",
+      "region_ar": "الهلال الخصيب (العراق، سوريا، جنوب الأناضول)",
+      "region_en": "Fertile Crescent (Iraq, Syria, Anatolia)",
+      "names_by_era": [
+        { "era_ar": "السومرية القديمة", "name": "إيديغنا وإيدبورانون (Idigna & Idurangu)", "meaning_ar": "النهر السريع الجريء ونهر الأنهار العريض" },
+        { "era_ar": "الأكدية والبابلية", "name": "إيديكلات وبوراتو (Idiqlat & Purattu)", "meaning_ar": "دجلة والفرات" },
+        { "era_ar": "اليونانية واللاتينية", "name": "تيغريس وإوفراتيس (Tigris & Euphrates)", "meaning_ar": "السهم المتدفق والنهر الخصيب" },
+        { "era_ar": "العربية الكلاسيكية والإسلامية", "name": "دِجْلة الفيحاء والفُرات العذب وشط العرب", "meaning_ar": "الرافدان العظيمان وملتقى دجلة والفرات" }
+      ],
+      "strategic_importance_ar": "شكل دجلة والفرات العمود الفقري للحضارة في الهلال الخصيب. في الألفية الثالثة ق.م، كان ساحل الخليج العربي متوغلاً شمالاً بنحو 200 كم، وكانت مدن أور وإريدو ولاغاش موانئ بحرية ومصبات مائية مباشرة. مع ترسب مئات الملايين من أطنان الطمي، انحسرت مياه الخليج جنوباً، وتشكلت أهوار البطائح التاريخية كأعظم ملاذ مائي طبيعي ثائر ضد الإمبراطوريات العباسية والأموية والعثمانية، قبل أن يلتقي النهران في شط العرب.",
+      "strategic_importance_en": "Tigris and Euphrates formed the backbone of Near Eastern civilization. In 3000 BCE, the Persian Gulf coastline reached 200 km farther inland, rendering Ur and Eridu coastal ports. Millennia of siltation pushed the shoreline south, creating the vast Mesopotamian marshes (Al-Bata'ih) which served as unassailable insurgent sanctuaries before merging into the Shatt al-Arab.",
+      "historical_events": [
+        {
+          "year": -2334,
+          "year_label": "2334 ق.م",
+          "title_ar": "توحيد بلاد الرافدين على يد سرجون الأكدي",
+          "title_en": "Sargon of Akkad Mesopotamian Unification",
+          "desc_ar": "سرجون الأكدي يوحد مدن حوض الفرات ودجلة في أول إمبراطورية في التاريخ ويغسل أسلحته في 'البحر الأسفل' (الخليج العربي).",
+          "desc_en": "Sargon of Akkad united the Tigris-Euphrates basin creating the world's first empire, washing his weapons in the Lower Sea (Persian Gulf)."
+        },
+        {
+          "year": 636,
+          "year_label": "636 م",
+          "title_ar": "معركة القادسية الفاصلة",
+          "title_en": "Battle of al-Qadisiyyah",
+          "desc_ar": "جيش المسلمين بقيادة سعد بن أبي وقاص ينتصر على الإمبراطورية الساسانية عند حافة أهوار الفرات، فاتحاً أبواب بلاد الرافدين والمدائن.",
+          "desc_en": "Muslim army under Sa'd ibn Abi Waqqas crushed the Sasanian forces along the Euphrates marshes, capturing Ctesiphon."
+        },
+        {
+          "year": 680,
+          "year_label": "680 م",
+          "title_ar": "واقعة كربلاء على ضفاف الفرات",
+          "title_en": "Battle of Karbala",
+          "desc_ar": "استشهاد الحسين بن علي بن أبي طالب وآل بيته في ملحمة تاريخية خالدة عند وادي طف كربلاء بجوار الفرات بعد منع الماء عنهم.",
+          "desc_en": "Martyrdom of Husayn ibn Ali and companions at Karbala beside the Euphrates, a watershed moment in Islamic history."
+        },
+        {
+          "year": 1258,
+          "year_label": "1258 م",
+          "title_ar": "سقوط بغداد واجتياح المغول",
+          "title_en": "Siege & Fall of Baghdad",
+          "desc_ar": "هولاكو يجتاح بغداد عاصمة الخلافة العباسية، ومياه دجلة تسود بحبر المخطوطات وتتحول إلى بركة دماء منهية العصر الذهبي.",
+          "desc_en": "Hulagu Khan besieged and sacked Baghdad, darkening the Tigris with ink of burned libraries and destroying ancient canal networks."
+        }
+      ],
+      "quotes": [
+        {
+          "author_ar": "ابن حوقل (صورة الأرض، 977 م)",
+          "text_ar": "«وليس في معمور الأرض نهر أعم نفعاً ولا أعظم عمارة من دجلة والفرات، تقسم منهما الأنهار والخلجان العظيمة فتسقي سواد العراق.»",
+          "author_en": "Ibn Hawqal (977 CE)",
+          "text_en": "\"No rivers in the inhabited world bring greater abundance or civil prosperity than Tigris and Euphrates, feeding vast canals throughout Iraq.\""
+        }
+      ],
+      "courses_by_epoch": {
+        "-3000": [
+          { "name_ar": "دجلة القديم (المجرى العلوي والأوسط)", "name_en": "Ancient Tigris", "weight": 2, "coords": [[38.5,38.0],[41.0,36.5],[43.5,33.5],[44.5,32.5],[46.0,31.8]] },
+          { "name_ar": "الفرات السومري القديم (يمر بمحاذاة أور)", "name_en": "Ancient Sumerian Euphrates (Passing Ur)", "weight": 3, "coords": [[37.5,37.0],[39.0,35.8],[41.5,34.5],[43.5,33.0],[44.5,32.0],[45.5,31.4],[46.0,30.9]] },
+          { "name_ar": "ساحل الخليج العربي القديم المتوغل شمالاً", "name_en": "Ancient Transgressed Gulf Coastline", "weight": 2, "coords": [[46.2,30.8],[46.8,31.2],[47.5,30.8],[48.5,30.0]] }
+        ],
+        "-500": [
+          { "name_ar": "دجلة الأخميني البابلي", "name_en": "Achaemenid Tigris", "weight": 2, "coords": [[38.5,38.0],[41.0,36.5],[43.5,33.5],[44.4,33.3],[45.5,32.0],[46.8,31.3]] },
+          { "name_ar": "الفرات البابلي", "name_en": "Babylonian Euphrates", "weight": 3, "coords": [[37.5,37.0],[39.0,35.8],[41.5,34.5],[43.5,33.0],[44.4,32.5],[45.2,31.7],[46.5,31.0]] },
+          { "name_ar": "أهوار جنوب العراق والمصبات المستقلة", "name_en": "Southern Estuary Lagoons", "weight": 2, "coords": [[46.8,31.3],[47.3,31.0],[47.8,30.5],[48.4,30.0]] }
+        ],
+        "1000": [
+          { "name_ar": "دجلة العباسي (يمر ببغداد دار السلام)", "name_en": "Abbasid Tigris through Baghdad", "weight": 3, "coords": [[38.5,38.0],[41.0,36.5],[43.5,33.5],[44.4,33.3],[45.0,32.5],[46.5,31.8],[47.5,31.0]] },
+          { "name_ar": "الفرات العباسي وأهوار البطائح", "name_en": "Abbasid Euphrates & The Great Swamps", "weight": 3, "coords": [[37.5,37.0],[39.0,35.8],[41.5,34.5],[43.5,33.0],[44.4,32.0],[45.5,31.5],[47.0,31.0]] },
+          { "name_ar": "بدايات تشكل شط العرب", "name_en": "Emergence of Shatt al-Arab", "weight": 2, "coords": [[47.5,31.0],[47.8,30.5],[48.2,30.3],[48.5,29.9]] }
+        ],
+        "2000": [
+          { "name_ar": "نهر دجلة الحديث", "name_en": "Modern Tigris", "weight": 2, "coords": [[38.5,38.0],[41.0,36.5],[43.5,33.5],[44.4,33.3],[45.0,32.5],[46.5,31.8],[47.5,31.0]] },
+          { "name_ar": "نهر الفرات الحديث", "name_en": "Modern Euphrates", "weight": 2, "coords": [[37.5,37.0],[39.0,35.8],[41.5,34.5],[43.5,33.0],[44.4,32.0],[45.5,31.5],[47.5,31.0]] },
+          { "name_ar": "شط العرب ومصب الخليج", "name_en": "Shatt al-Arab Confluence", "weight": 3, "coords": [[47.5,31.0],[47.8,30.5],[48.2,30.3],[48.6,29.8]] }
+        ]
+      }
+    },
+    {
+      "id": "yellow-river-system",
+      "type": "river",
+      "name_ar": "النهر الأصفر (هوانغ هي) وتحولاته التاريخية الكبرى",
+      "name_en": "Yellow River (Huang He) Historic Avulsions",
+      "icon": "🌊",
+      "weight": 3,
+      "category_ar": "مهد الحضارة الصينية والنهر الأكثر تقلباً في التاريخ",
+      "category_en": "Cradle of Chinese Civilization & World's Most Volatile River",
+      "region_ar": "شرق آسيا (شمال الصين)",
+      "region_en": "East Asia (Northern China)",
+      "names_by_era": [
+        { "era_ar": "الصينية القديمة (عهد زو وتشن)", "name": "هي (He - 河)", "meaning_ar": "النهر المطلق / شريان الأرض" },
+        { "era_ar": "سلالة هان وسونغ", "name": "هوانغ هي (Huang He - 黄河)", "meaning_ar": "النهر الأصفر المحمل بالطمي الذهبي" },
+        { "era_ar": "التسمية التاريخية الشهيرة", "name": "حزن الصين (China's Sorrow)", "meaning_ar": "لكثرة فيضاناته وتغير مجاريه التي غيرت مسار الأسر الحاكمة" }
+      ],
+      "strategic_importance_ar": "لُقب النهر الأصفر بـ 'حزن الصين' نظراً لآلاف الفيضانات الكارثية وانتقال مصبه الجغرافي مئات الكيلومترات شمال وجنوب شبه جزيرة شاندونغ. في عام 1194 م، حطمت الجيوش والفيضانات السدود ليتخذ النهر مجرى جنوبياً كاسحاً اندمج مع نهر هواي ليصب في البحر الأصفر لأكثر من 650 عاماً، مما شكل حدوداً عسكرية دفاعية عاتية بين سلالة جين وسلالة سونغ الجنوبية، قبل أن يكسر سدوده ويعود شمالاً إلى خليج بوهاي عام 1853 م.",
+      "strategic_importance_en": "Known as 'China's Sorrow', the Yellow River drastically shifted course multiple times across hundreds of kilometers north and south of Shandong Peninsula. The catastrophic 1194 CE avulsion captured the Huai River basin, flowing south of Shandong into the Yellow Sea for 660 years, acting as a military frontier between the Jin and Song dynasties before breaking north to Bohai in 1853.",
+      "historical_events": [
+        {
+          "year": -2200,
+          "year_label": "2200 ق.م",
+          "title_ar": "يو العظيم وترويض الفيضان",
+          "title_en": "Yu the Great Controls the Floods",
+          "desc_ar": "يو العظيم يؤسس سلالة شيا الأسطورية بعد نجاحه في شق القنوات وتصريف فيضانات النهر الأصفر بدلاً من بناء السدود البسيطة.",
+          "desc_en": "Legendary ruler Yu the Great established the Xia dynasty by dredging channels to manage the Yellow River's torrential floods."
+        },
+        {
+          "year": 1194,
+          "year_label": "1194 م",
+          "title_ar": "انعطاف النهر الأصفر الكارثي نحو الجنوب",
+          "title_en": "The Great 1194 Avulsion to the South",
+          "desc_ar": "فيضان هائل وتدمير للسدود يحول مجرى النهر الأصفر بالكامل جنوب شبه جزيرة شاندونغ ليلتهم نهر هواي ويصب في البحر الأصفر.",
+          "desc_en": "A catastrophic breach diverted the entire Yellow River south of Shandong Peninsula into the Huai River, shifting its mouth hundreds of kilometers."
+        },
+        {
+          "year": 1938,
+          "year_label": "1938 م",
+          "title_ar": "تفجير سدود هوانغ هي لوقف الغزو الياباني",
+          "title_en": "1938 Yellow River Flood Disaster",
+          "desc_ar": "الحكومة القومية الصينية تفجر السدود الترابية لإغراق المنطقة ووقف تقدم القوات اليابانية الغازية، مسببة أحد أكبر الفيضانات العسكرية.",
+          "desc_en": "Chinese Nationalist forces breached dykes to halt Japanese advance, creating massive military inundations."
+        }
+      ],
+      "quotes": [
+        {
+          "author_ar": "كتاب الأغاني الصيني (القرن 7 ق.م)",
+          "text_ar": "«من يستطيع تهدئة مياه النهر الهادرة، يستطيع أن يملك قلوب الناس ويحكم بلاد تحت السماء.»",
+          "author_en": "Classic of Poetry (Shijing, 7th C. BCE)",
+          "text_en": "\"He who can govern the raging waters of the Yellow River can command the Mandate of Heaven and unite the realm.\""
+        }
+      ],
+      "courses_by_epoch": {
+        "-3000": [
+          { "name_ar": "المجرى الشمالي التاريخي لخليج بوهاي", "name_en": "Ancient Northern Course to Bohai", "weight": 3, "coords": [[96.0,35.0],[101.0,36.5],[104.0,36.0],[108.5,39.5],[111.0,40.5],[111.5,36.0],[114.5,34.8],[117.0,37.5],[118.5,38.8]] }
+        ],
+        "1000": [
+          { "name_ar": "مجرى عهد سلالة سونغ الشمالي", "name_en": "Northern Song Course to Bohai", "weight": 3, "coords": [[96.0,35.0],[101.0,36.5],[104.0,36.0],[108.5,39.5],[111.0,40.5],[111.5,36.0],[114.5,34.8],[116.5,37.0],[118.0,38.5]] }
+        ],
+        "1500": [
+          { "name_ar": "المجرى الجنوبي التاريخي (عبر نهر هواي إلى البحر الأصفر)", "name_en": "Southern Course (via Huai River to Yellow Sea)", "weight": 3, "coords": [[96.0,35.0],[101.0,36.5],[104.0,36.0],[108.5,39.5],[111.0,40.5],[111.5,36.0],[114.0,34.8],[116.5,33.8],[119.5,34.2],[120.5,33.9]] }
+        ],
+        "2000": [
+          { "name_ar": "المجرى الشمالي الحديث المحمي بالسدود", "name_en": "Modern Regulated Course to Bohai Gulf", "weight": 3, "coords": [[96.0,35.0],[101.0,36.5],[104.0,36.0],[108.5,39.5],[111.0,40.5],[111.5,36.0],[114.5,34.8],[116.0,35.5],[118.5,37.8]] }
+        ]
+      }
+    },
+    {
+      "id": "oxus-amu-darya",
+      "type": "river",
+      "name_ar": "نهر جيحون (الأوكسوس / آموداريا) وقناة أوزبوي",
+      "name_en": "Oxus River (Amu Darya) & Ancient Uzboy Channel",
+      "icon": "🌊",
+      "weight": 2,
+      "category_ar": "شريان بلاد ما وراء النهر والحد الفاصل بين إيران وطوران",
+      "category_en": "Transoxiana Artery & Iranian-Turanian Frontier",
+      "region_ar": "آسيا الوسطى (أوزبكستان، تركمانستان، طاجيكستان)",
+      "region_en": "Central Asia (Uzbekistan, Turkmenistan, Tajikistan)",
+      "names_by_era": [
+        { "era_ar": "الفارسية القديمة والآفستية", "name": "فاخشو / فاخش (Vakhsh)", "meaning_ar": "المتدفق المتعاظم" },
+        { "era_ar": "اليونانية القديمة", "name": "أوكسوس (Oxus)", "meaning_ar": "نهر الأوكسوس التاريخي" },
+        { "era_ar": "العربية الكلاسيكية والإسلامية", "name": "نهر جَيْحُون", "meaning_ar": "أحد أنهار الجنة الأربعة في التراث الإسلامي" },
+        { "era_ar": "التركية والحديثة", "name": "آموداريا (Amu Darya)", "meaning_ar": "نهر مدينة آمول" }
+      ],
+      "strategic_importance_ar": "مثل نهر جيحون عبر التاريخ الحد الطبيعي والحضاري الفاصل بين الحضارة الفارسية المستقرة في الهضبة الإيرانية وقبائل السهوب البدوية في آسيا الوسطى (طوران). الميزة الهيدرولوجية الخارقة لجيحون هي أنه في العصور القديمة وبدايات العصر الإسلامي كان يتدفق غرباً عبر قناة أوزبوي عبر صحراء قره قوم ليصب مباشرة في بحر قزوين، قبل أن يتحول مساره نهائياً ليغذي بحر آرال، مما شكل إمبراطورية خوارزم العظيمة.",
+      "strategic_importance_en": "The Oxus formed the ancient boundary between sedentary Iranian civilization and nomadic Turanian steppe tribes. Geomorphologically, the river historically discharged into the Caspian Sea via the ancient Uzboy channel across the Karakum Desert, before shifting inland to feed the Aral Sea, nurturing the rich oasis of Khwarazm.",
+      "historical_events": [
+        {
+          "year": -329,
+          "year_label": "329 ق.م",
+          "title_ar": "عبور الإسكندر الأكبر لنهر الأوكسوس",
+          "title_en": "Alexander the Great Crosses the Oxus",
+          "desc_ar": "الإسكندر يعبر نهر جيحون الهادر مستخدماً عوامات محشوة بالقش والجلود خلال مطاردته لـ بيسوس في بلاد الصغد وباكتريا.",
+          "desc_en": "Alexander the Great crossed the raging Oxus using hide-floats stuffed with straw while pursuing Bessus into Bactria."
+        },
+        {
+          "year": 705,
+          "year_label": "705–715 م",
+          "title_ar": "فتوح قتيبة بن مسلم الباهلي لبلاد ما وراء النهر",
+          "title_en": "Qutayba ibn Muslim Transoxiana Campaigns",
+          "desc_ar": "قتيبة بن مسلم يعبر جيحون ويفتح بخارى وسمرقند وخوارزم مؤسساً الوجود الإسلامي في قلب آسيا الوسطى.",
+          "desc_en": "Qutayba ibn Muslim crossed the Jayhun to conquer Bukhara, Samarkand, and Khwarazm, securing Central Asia for the Umayyad Caliphate."
+        }
+      ],
+      "quotes": [
+        {
+          "author_ar": "أبو الفداء (تقويم البلدان، 1321 م)",
+          "text_ar": "«وجيحون نهر عظيم يخرج من جبال بدخشان ويمر بأطراف خوارزم وله مجرى قديم كان يصب في بحر الخزر (قزوين).»",
+          "author_en": "Abu al-Fida (1321 CE)",
+          "text_en": "\"The Jayhun is a mighty river emerging from Badakhshan; in ancient times it held a channel discharging into the Caspian Sea.\""
+        }
+      ],
+      "courses_by_epoch": {
+        "-3000": [
+          { "name_ar": "جيحون العلوي وقناة أوزبوي نحو بحر قزوين", "name_en": "Oxus discharging via Uzboy Channel to Caspian", "weight": 2, "coords": [[71.0,37.0],[68.0,37.5],[64.0,39.0],[60.0,41.0],[56.0,40.2],[53.5,39.8]] }
+        ],
+        "-500": [
+          { "name_ar": "مجرى أوزبوي الكلاسيكي وقزوين", "name_en": "Classical Oxus Uzboy Channel to Caspian", "weight": 2, "coords": [[71.0,37.0],[68.0,37.5],[64.0,39.0],[60.0,41.0],[56.5,40.3],[53.8,40.0]] }
+        ],
+        "1000": [
+          { "name_ar": "جيحون المتفرع بين خوارزم وبحر آرال", "name_en": "Medieval Jayhun towards Aral Sea", "weight": 2, "coords": [[71.0,37.0],[68.0,37.5],[64.0,39.0],[61.0,41.5],[59.0,43.5]] }
+        ],
+        "2000": [
+          { "name_ar": "المجرى الحديث وتجفيف مياه دلتا بحر آرال", "name_en": "Modern Amu Darya (Desiccated Aral Basin)", "weight": 2, "coords": [[71.0,37.0],[68.0,37.5],[64.0,39.0],[61.0,41.5],[59.5,43.8]] }
+        ]
+      }
+    },
+    {
+      "id": "jordan-yarmouk-system",
+      "type": "river",
+      "name_ar": "نهر الأردن ووادي اليرموك والصدع التاريخي",
+      "name_en": "Jordan River & Yarmouk Gorge System",
+      "icon": "🌊",
+      "weight": 2,
+      "category_ar": "النهر المقدس والخوانق البركانية الفاصلة",
+      "category_en": "Sacred Waterway & Decisive Volcanic Gorges",
+      "region_ar": "بلاد الشام (فلسطين، الأردن، سوريا)",
+      "region_en": "Levant (Palestine, Jordan, Syria)",
+      "names_by_era": [
+        { "era_ar": "الكنعانية والعبرية", "name": "يارديين (Yarden)", "meaning_ar": "الهابط المنحدر إلى أعماق الغور" },
+        { "era_ar": "اليونانية واللاتينية", "name": "يوردانيس وهيروماكس (Iordanes & Hieromax)", "meaning_ar": "نهر الأردن ونهر اليرموك" },
+        { "era_ar": "العربية الكلاسيكية", "name": "نهر الأردن ونهر الشريعة ووادي اليرموك", "meaning_ar": "شريعة الماء العظيم وموقع معركة اليرموك الخالدة" }
+      ],
+      "strategic_importance_ar": "يجري نهر الأردن في أعمق صدع جيولوجي على سطح اليابسة، حاملاً مياهه من جبل الشيخ وبحيرة طبريا إلى البحر الميت. شكل هذا الأخدود حاجزاً عسكرياً وروحياً فاصلاً بين ضفتي النهر. أما وادي اليرموك الرافد الرئيسي بروافده البركانية العميقة والمنحدرات البازلتية الوعرة، فقد كان المسرح الطبيعي العبقري الذي استغله خالد بن الوليد لحصار وتدمير الجيش البيزنطي عام 636 م.",
+      "strategic_importance_en": "The Jordan flows through the deepest continental rift on Earth, connecting the Sea of Galilee to the Dead Sea. Its tributary, the Yarmouk, carves a formidable basalt canyon that served as the defensive perimeter where Khalid ibn al-Walid trapped and decisively annihilated the Byzantine army in 636 CE.",
+      "historical_events": [
+        {
+          "year": 636,
+          "year_label": "636 م",
+          "title_ar": "معركة اليرموك الفاصلة",
+          "title_en": "Battle of Yarmouk",
+          "desc_ar": "خالد بن الوليد يستغل وعورة خوانق اليرموك ويحاصر جيش الإمبراطور هرقل محققاً أعظم انتصارات التاريخ الإسلامي التي فتحت بلاد الشام قاطبة.",
+          "desc_en": "Khalid ibn al-Walid utilized the sheer gorges of the Yarmouk River to trap and destroy the Byzantine forces, permanently liberating the Levant."
+        }
+      ],
+      "quotes": [
+        {
+          "author_ar": "ياقوت الحموي (معجم البلدان، 1224 م)",
+          "text_ar": "«اليرموك: وادٍ عظيم بناحية الشام يُفضي إلى الغور، وعنده كانت الوقعة العظمى بين المسلمين والروم.»",
+          "author_en": "Yaqut al-Hamawi (1224 CE)",
+          "text_en": "\"Yarmouk: a great ravine in the Levant descending into the Rift Valley, where the monumental battle between Muslims and Byzantines occurred.\""
+        }
+      ],
+      "courses_by_epoch": {
+        "-3000": [
+          { "name_ar": "نهر الأردن وبحيرة طبريا والبحر الميت التاريخي", "name_en": "Jordan River & Dead Sea (High Water Level)", "weight": 2, "coords": [[35.6,33.2],[35.6,32.8],[35.55,32.4],[35.5,31.8],[35.5,31.4]] },
+          { "name_ar": "وادي اليرموك المنحدر من حوران", "name_en": "Yarmouk River Gorge", "weight": 2, "coords": [[36.2,32.7],[35.9,32.7],[35.6,32.65]] }
+        ],
+        "1000": [
+          { "name_ar": "نهر الأردن واليرموك في العهد الإسلامي", "name_en": "Medieval Jordan & Yarmouk", "weight": 2, "coords": [[35.6,33.2],[35.6,32.8],[35.55,32.4],[35.5,31.8],[35.5,31.4]] },
+          { "name_ar": "وادي اليرموك", "name_en": "Yarmouk River Gorge", "weight": 2, "coords": [[36.2,32.7],[35.9,32.7],[35.6,32.65]] }
+        ],
+        "2000": [
+          { "name_ar": "نهر الأردن الحديث (منسوب منخفض)", "name_en": "Modern Jordan River", "weight": 2, "coords": [[35.6,33.2],[35.6,32.8],[35.55,32.4],[35.5,31.8],[35.45,31.5]] },
+          { "name_ar": "وادي اليرموك وسد الوحدة", "name_en": "Yarmouk River", "weight": 2, "coords": [[36.2,32.7],[35.9,32.7],[35.6,32.65]] }
+        ]
+      }
+    },
+    {
+      "id": "rubicon-river",
+      "type": "river",
+      "name_ar": "نهر الروبيكون والحد الجمهوري لروما",
+      "name_en": "Rubicon River & Roman Frontier",
+      "icon": "🌊",
+      "weight": 1,
+      "category_ar": "الخط الأحمر الدستوري والعسكري لروما القديمة",
+      "category_en": "Constitutional Boundary of the Roman Republic",
+      "region_ar": "جنوب أوروبا (إيطاليا)",
+      "region_en": "Southern Europe (Italy)",
+      "names_by_era": [
+        { "era_ar": "اللاتينية الكلاسيكية", "name": "روبيكو (Rubico / Rubicon)", "meaning_ar": "النهر المحمر بنسبة الطين الأحمر" },
+        { "era_ar": "الإيطالية الحديثة", "name": "روبيكوني (Rubicone)", "meaning_ar": "نهر الروبيكون في رومانيا" }
+      ],
+      "strategic_importance_ar": "كان نهر الروبيكون الضحل في شمال إيطاليا يشكل الحد الدستوري والقانوني المقدس بين مقاطعة غاليا كيسالبينا وإقليم إيطاليا الخاص بروما. كان القانون الروماني يعتبر عبور أي قائد عسكري للنهر بجيشه تمرداً وخيانة عظمى تستوجب الإعدام. عندما عبره يوليوس قيصر عام 49 ق.م أطلق مقولته الشهيرة 'Alea iacta est' (لقد أُلقي النرد)، مدشناً الحرب الأهلية التي أنهت الجمهورية وأسست الإمبراطورية.",
+      "strategic_importance_en": "The shallow Rubicon River marked the constitutional border between Cisalpine Gaul and Roman Italy. Proconsuls were forbidden under penalty of treason from leading armed legions across it. Julius Caesar's crossing in 49 BCE ('The die is cast') launched the civil war that destroyed the Republic and birthed the Roman Empire.",
+      "historical_events": [
+        {
+          "year": -49,
+          "year_label": "49 ق.م",
+          "title_ar": "عبور قيصر لنهر الروبيكون (أُلقي النرد)",
+          "title_en": "Caesar Crosses the Rubicon",
+          "desc_ar": "يوليوس قيصر يقود الفيلق الثالث عشر عبر نهر الروبيكون متحدياً مجلس الشيوخ وبومبيوس، مغيراً مصير روما إلى الأبد.",
+          "desc_en": "Julius Caesar led Legio XIII across the Rubicon in defiance of the Senate, uttering 'Alea iacta est'."
+        }
+      ],
+      "quotes": [
+        {
+          "author_ar": "سويتونيوس (حياة القياصرة، 121 م)",
+          "text_ar": "«عندما وصل قيصر إلى نهر الروبيكون توقف لحظة ثم هتف: فلنلق النرد! وقاد الفيلق عبر المياه إلى روما.»",
+          "author_en": "Suetonius (Lives of the Twelve Caesars, 121 CE)",
+          "text_en": "\"Halting at the Rubicon, Caesar cried: 'Let the die be cast!' and marched his legion across into Italy.\""
+        }
+      ],
+      "courses_by_epoch": {
+        "-500": [
+          { "name_ar": "مجرى الروبيكون الكلاسيكي", "name_en": "Classical Rubicon Stream to Adriatic", "weight": 1, "coords": [[12.2,44.0],[12.35,44.1],[12.45,44.18]] }
+        ],
+        "1": [
+          { "name_ar": "نهر الروبيكون (الحد الجمهوري لقيصر)", "name_en": "Caesar's Rubicon Frontier", "weight": 1, "coords": [[12.2,44.0],[12.35,44.1],[12.45,44.18]] }
+        ],
+        "2000": [
+          { "name_ar": "مجرى الروبيكون المعاصر", "name_en": "Modern Rubicone River", "weight": 1, "coords": [[12.2,44.0],[12.35,44.1],[12.45,44.18]] }
+        ]
+      }
+    }
+  ],
+  "mountains_and_passes": [
+    {
+      "id": "thermopylae-pass",
+      "type": "pass",
+      "name_ar": "ممر ترموبيل (البوابات الساخنة)",
+      "name_en": "Thermopylae Pass (Hot Gates)",
+      "icon": "⛰️",
+      "coords": [22.53, 38.79],
+      "elevation": 15,
+      "region_ar": "اليونان (بين جبل أويتا وخليج مالياك)",
+      "region_en": "Greece (Malian Gulf & Mt Oeta)",
+      "names_by_era": [
+        { "era_ar": "اليونانية القديمة", "name": "ترموبيلاي (Thermopylai - Θερμοπύλαι)", "meaning_ar": "البوابات الساخنة (نسبة للينابيع الكبريتية الحارة)" },
+        { "era_ar": "العربية الكلاسيكية", "name": "مضيق ترموبيل / البوابات الحارة", "meaning_ar": "الممر الساحلي الضيق بين الجبل والبحر" }
+      ],
+      "strategic_importance_ar": "كان ممر ترموبيل أضيق عنق زجاجة ساحلي استراتيجي في اليونان القديمة، حيث كان عرضه في بعض النقاط لا يتجاوز 15 متراً بين المنحدرات الشاهقة لجبل أويتا ومياه البحر في خليج مالياك. مكنت هذه التضاريس القوات الصغيرة من صد جيوش غازية هائلة العدد وإبطال تفوق سلاح الفرسان المعادي.",
+      "strategic_importance_en": "Thermopylae was ancient Greece's vital coastal chokepoint, narrowing to barely 15 meters between the sheer cliffs of Mount Oeta and the Malian Gulf, neutralizing overwhelming Persian numerical superiority.",
+      "historical_events": [
+        {
+          "year": -480,
+          "year_label": "480 ق.م",
+          "title_ar": "ملحمة الـ 300 إسبرطي ضد الفرس",
+          "title_en": "Battle of Thermopylae",
+          "desc_ar": "الملك ليونيداس و300 من محاربي إسبرطة وحلفاؤهم يصدون جيش خشايارشا الفارسي لثلاثة أيام في أروع ملاحم الدفاع التكتيكي في التاريخ.",
+          "desc_en": "King Leonidas with 300 Spartans and Greek allies held off Xerxes' massive Persian host for three days."
+        },
+        {
+          "year": -191,
+          "year_label": "191 ق.م",
+          "title_ar": "معركة ترموبيل الرومانية-السلوقية",
+          "title_en": "Roman Battle of Thermopylae",
+          "desc_ar": "الرومان بقيادة مانيوس أسيليوس غلابريو يهزمون الملك السلوقي أنطيوخوس الثالث ويطردونه من اليونان.",
+          "desc_en": "Roman legions routed Seleucid King Antiochus III, expelling his forces from Greece."
+        }
+      ],
+      "quotes": [
+        {
+          "author_ar": "نقش سيمونيدس الشهير على نصب الممر (480 ق.م)",
+          "text_ar": "«اذهب أيها الغريب وأخبر أهل إسبرطة: أننا نرقد هنا في هذا الممر طاعةً لعهودنا وقوانيننا الدستورية المقدسة.»",
+          "author_en": "Simonides of Ceos (480 BCE)",
+          "text_en": "\"Go tell the Spartans, stranger passing by, that here, obedient to their laws, we lie.\""
+        }
+      ]
+    },
+    {
+      "id": "cilician-gates",
+      "type": "pass",
+      "name_ar": "بوابات قيليقية (مضيق كولك)",
+      "name_en": "Cilician Gates (Gülek Pass)",
+      "icon": "⛰️",
+      "coords": [34.79, 37.28],
+      "elevation": 1050,
+      "region_ar": "جبال طوروس (تركيا، جنوب الأناضول)",
+      "region_en": "Taurus Mountains (Southern Anatolia)",
+      "names_by_era": [
+        { "era_ar": "اليونانية واللاتينية", "name": "بيلاي كيليكياس (Pylae Ciliciae)", "meaning_ar": "بوابات قيليقية الصخرية" },
+        { "era_ar": "العربية الإسلامية (عصر الثغور)", "name": "درب السلامة / باب قِلِيقية", "meaning_ar": "الممر الأعظم بين بلاد الشام والثغور الشامية وبلاد الروم" },
+        { "era_ar": "التركية العثمانية", "name": "مضيق كولك (Gülek Boğazı)", "meaning_ar": "ممر كولك الجبلي" }
+      ],
+      "strategic_importance_ar": "البوابات القيليقية هي أضيق وأعظم ممر طبيعي يخترق سلسلة جبال طوروس الشاهقة، ويربط هضبة الأناضول الوسطى بسهول قيليقية وبلاد الشام. كان الممر ممراً إلزامياً للجيوش الإمبراطورية عبر آلاف السنين؛ اجتازه كورش الأصغر والإسكندر الأكبر عام 333 ق.م، وشهد صراع الثغور العنيف بين العباسيين والبيزنطيين، وحملات الصليبيين، وزحف إبراهيم باشا عام 1832 م.",
+      "strategic_importance_en": "The Cilician Gates form the primary gorge through the precipitous Taurus Mountains, connecting the Anatolian plateau to Cilicia and the Levant. Traversed by Cyrus the Younger, Alexander the Great (333 BCE), the Crusades, and Ibrahim Pasha (1832).",
+      "historical_events": [
+        {
+          "year": -333,
+          "year_label": "333 ق.م",
+          "title_ar": "اجتياز الإسكندر الأكبر لجبال طوروس",
+          "title_en": "Alexander Traverses the Cilician Gates",
+          "desc_ar": "الإسكندر الأكبر يقود جيشه في حركة مباغتة سريعة عبر المضيق الوعر قبل أن يغلقه الفرس، ممهداً لمعركة إيسوس الفاصلة.",
+          "desc_en": "Alexander outpaced Persian defenders through the treacherous defile, paving the way for his decisive triumph at Issus."
+        },
+        {
+          "year": 1832,
+          "year_label": "1832 م",
+          "title_ar": "زحف إبراهيم باشا والجيش المصري نحو الأناضول",
+          "title_en": "Ibrahim Pasha Advances into Anatolia",
+          "desc_ar": "إبراهيم باشا يجتاز بوابات قيليقية بعد فتح الشام ويسحق الجيش العثماني في معركة قونية مهدداً القسطنطينية.",
+          "desc_en": "Ibrahim Pasha forced the Cilician Gates with the Egyptian army, crushing the Ottomans at Konya and threatening Istanbul."
+        }
+      ],
+      "quotes": [
+        {
+          "author_ar": "زينوفون (أناباسيس / صعود العشرة آلاف، 401 ق.م)",
+          "text_ar": "«كان المضيق شديد الانحدار والضيق، بحيث أن عربة واحدة بالكاد تمر فيه، ولو وقفت قوة يسيرة في أعلاه لصدت أعظم الجيوش.»",
+          "author_en": "Xenophon (Anabasis, 401 BCE)",
+          "text_en": "\"The pass was exceedingly steep and narrow, barely admitting a single wagon, defensible by a handful against an entire host.\""
+        }
+      ]
+    },
+    {
+      "id": "khyber-pass",
+      "type": "pass",
+      "name_ar": "ممر خيبر التاريخي",
+      "name_en": "Khyber Pass",
+      "icon": "⛰️",
+      "coords": [71.15, 34.1],
+      "elevation": 1070,
+      "region_ar": "جبال هندوكوش وسلسلة سبين غار (بين باكستان وأفغانستان)",
+      "region_en": "Hindu Kush / Spin Ghar (Pakistan-Afghanistan)",
+      "names_by_era": [
+        { "era_ar": "السنسكريتية القديمة", "name": "كايبر درا (Khaibar)", "meaning_ar": "ممر الجبال الشمالية الغربية" },
+        { "era_ar": "الفارسية والبشتونية", "name": "د خیبر دره (Khyber Pass)", "meaning_ar": "بوابة الهند وخراسان" }
+      ],
+      "strategic_importance_ar": "ممر خيبر هو أشهر معبر عسكري وتجاري في تاريخ قارة آسيا؛ فهو حلقة الوصل الاستراتيجية الحاكمة بين سهول شبه القارة الهندية وهضاب آسيا الوسطى وخراسان. عبر هذا الشريان الجبلي الضيق اجتاحت كبرى الإمبراطوريات الهند، بدءاً من داريوس الأول والإسكندر الأكبر، مروراً بمحمود الغزنوي، ومحمد الغوري، وتيمورلنك، وبابُر مؤسس إمبراطورية مغول الهند، وصولاً إلى الحروب الأفغانية البريطانية.",
+      "strategic_importance_en": "The Khyber Pass is the most celebrated invasion gateway in Asian history, linking Central Asia and Afghanistan to the fertile plains of the Indian subcontinent. Traversed by Alexander, Mahmud of Ghazni, Timur, Babur, and British imperial armies.",
+      "historical_events": [
+        {
+          "year": 1526,
+          "year_label": "1526 م",
+          "title_ar": "عبور بابُر وتأسيس إمبراطورية مغول الهند",
+          "title_en": "Babur Invades India via Khyber",
+          "desc_ar": "ظهير الدين بابُر يجتاز ممر خيبر بجيشه ومدفعيته الحديثة وينتصر في معركة باني بت ليؤسس أعظم إمبراطورية إسلامية في الهند.",
+          "desc_en": "Babur crossed the Khyber Pass to defeat Ibrahim Lodi at Panipat, founding the Mughal Empire."
+        },
+        {
+          "year": 1842,
+          "year_label": "1842 م",
+          "title_ar": "كارثة الجيش البريطاني في الحرب الأفغانية الأولى",
+          "title_en": "Retreat from Kabul / Khyber Battle",
+          "desc_ar": "قبائل البشتون الأفغانية تبيد فيالق الجيش البريطاني المنسحب عبر المضائق الجبلية الوعرة المؤدية لممر خيبر.",
+          "desc_en": "Afghan tribesmen annihilated an entire retreating British-Indian army in the jagged gorges approaching Khyber."
+        }
+      ],
+      "quotes": [
+        {
+          "author_ar": "روديارد كبلينغ (1890 م)",
+          "text_ar": "«كل حجر في ممر خيبر قد غُسل بدماء المحاربين عبر القرون؛ إنه ممر الإمبراطوريات ومقبرة الغزاة.»",
+          "author_en": "Rudyard Kipling",
+          "text_en": "\"Every stone in the Khyber has been drenched in blood; it is the pathway of empires and the forge of frontiers.\""
+        }
+      ]
+    },
+    {
+      "id": "great-st-bernard-pass",
+      "type": "pass",
+      "name_ar": "ممر سان برنار الكبير (جبال الألب)",
+      "name_en": "Great St Bernard Pass (Alps)",
+      "icon": "⛰️",
+      "coords": [7.17, 45.87],
+      "elevation": 2469,
+      "region_ar": "جبال الألب (بين سويسرا وإيطاليا)",
+      "region_en": "Pennine Alps (Switzerland-Italy)",
+      "names_by_era": [
+        { "era_ar": "اللاتينية القديمة", "name": "مونس بويينوس (Mons Poeninus)", "meaning_ar": "جبل بويينوس الإلهي / طريق الألب" },
+        { "era_ar": "الفرنسية والإيطالية", "name": "Col du Grand-Saint-Bernard", "meaning_ar": "ممر القديس برنارد الكبير" }
+      ],
+      "strategic_importance_ar": "أعلى وأخطر ممر جبلي استراتيجي يربط شمال أوروبا الغربية بإيطاليا وحوض البحر المتوسط. مثل عبوره في الشتاء تحدياً لوجستياً خارقاً للعادة؛ خلد التاريخ عبور حنبعل القرطاجي للألب بأفياله وجيوشه عام 218 ق.م لمباغتة روما، وكرر نابليون بونابرت الإنجاز نفسه عام 1800 م ليفاجئ النمساويين في معركة مارينغو.",
+      "strategic_importance_en": "A monumental high alpine pass at 2,469 m linking Western Europe to Italy. Famously crossed in high-risk campaigns: Hannibal Barca with his war elephants in 218 BCE, and Napoleon Bonaparte in May 1800 to outflank Austrian armies at Marengo.",
+      "historical_events": [
+        {
+          "year": -218,
+          "year_label": "218 ق.م",
+          "title_ar": "عبور حنبعل للألب وحربه ضد روما",
+          "title_en": "Hannibal Crosses the Alps",
+          "desc_ar": "القائد القرطاجي حنبعل باركا يقود جيشه وأفياله الحربية عبر ثلوج الألب الشاهقة ليضرب روما في عقر دارها في مفاجأة استراتيجية خالدة.",
+          "desc_en": "Hannibal led his Carthaginian army and war elephants across frozen alpine passes, taking the war into the heart of Roman Italy."
+        },
+        {
+          "year": 1800,
+          "year_label": "1800 م",
+          "title_ar": "عبور نابليون بونابرت لممر سان برنار",
+          "title_en": "Napoleon's Alpine Crossing",
+          "desc_ar": "نابليون يقود 40 ألف جندي مع مدافعهم المسحوبة في جذوع الأشجار عبر ثلوج الممر لينقض على إيطاليا وينتصر في مارينغو.",
+          "desc_en": "Napoleon transported 40,000 troops and artillery strapped to sleds across the icy pass, crushing the Austrians at Marengo."
+        }
+      ],
+      "quotes": [
+        {
+          "author_ar": "بوليبيوس (تاريخ روما، القرن 2 ق.م)",
+          "text_ar": "«وقف حنبعل على قمة الألب وأشار لجنوده نحو سهول إيطاليا الخضراء قائلاً: ها هي ذي روما أمامكم، لم يبق إلا ضربة واحدة لنيل النصر!»",
+          "author_en": "Polybius (Histories, 2nd C. BCE)",
+          "text_en": "\"Pointing down at the Italian plains, Hannibal cried: 'There lies Italy, and there lies Rome! One battle more, and all is won.'\""
+        }
+      ]
+    },
+    {
+      "id": "mount-uhud",
+      "type": "mountain",
+      "name_ar": "جبل أُحُد وممر الرماة",
+      "name_en": "Mount Uhud & Archers' Pass",
+      "icon": "⛰️",
+      "coords": [39.61, 24.50],
+      "elevation": 1077,
+      "region_ar": "شبه الجزيرة العربية (شمال المدينة المنورة)",
+      "region_en": "Arabian Peninsula (Medina)",
+      "names_by_era": [
+        { "era_ar": "العربية الكلاسيكية والإسلامية", "name": "جبل أُحُد وجبل الرماة (عينين)", "meaning_ar": "الجبل الفرد المتوحد الذي يحب المسلمين ويحبونه" }
+      ],
+      "strategic_importance_ar": "جبل بركاني أحمر ضخم يمتد شمال المدينة المنورة كجدار دفاعي طبيعي منيع بطول 7 كم. في ظلاله دارت معركة أحد الخالدة عام 625 م، حيث وضع النبي محمد ﷺ خمسين رامياً على هضبة 'جبل الرماة' للتحكم في الممر التكتيكي الوحيد وحماية ظهر جيش المسلمين من التفاف فرسان قريش بقيادة خالد بن الوليد.",
+      "strategic_importance_en": "A 7-km long volcanic massif north of Medina serving as a natural northern bastion. Site of the decisive Battle of Uhud (625 CE), where Prophet Muhammad positioned archers on a strategic outcrop to seal the flank against cavalry encirclement.",
+      "historical_events": [
+        {
+          "year": 625,
+          "year_label": "625 م / 3 هـ",
+          "title_ar": "غزوة أُحُد الكبرى",
+          "title_en": "Battle of Uhud",
+          "desc_ar": "ملحمة عسكرية كبرى واستشهاد حمزة بن عبد المطلب؛ تحول مجرى المعركة عندما نزل الرماة من مواقعهم التكتيكية في الممر الجبلي فالتف فرسان قريش من الخلف.",
+          "desc_en": "Pivotal early Islamic battle; the departure of archers from their defensive pass enabled a flank attack by Quraish cavalry."
+        }
+      ],
+      "quotes": [
+        {
+          "author_ar": "النبي محمد ﷺ (صحيح البخاري)",
+          "text_ar": "«إِنَّ أُحُداً جَبَلٌ يُحِبُّنَا وَنُحِبُّهُ، وَهُوَ عَلَى تُرْعَةٍ مِنْ تُرَعِ الْجَنَّةِ.»",
+          "author_en": "Prophet Muhammad (Sahih al-Bukhari)",
+          "text_en": "\"Uhud is a mountain that loves us and we love it; it stands upon one of the gates of Paradise.\""
+        }
+      ]
+    },
+    {
+      "id": "mount-gilboa-ain-jalut",
+      "type": "mountain",
+      "name_ar": "جبال فقوعة (جلبوع) وسهل عين جالوت",
+      "name_en": "Mount Gilboa & Plain of Ain Jalut",
+      "icon": "⛰️",
+      "coords": [35.37, 32.55],
+      "elevation": 536,
+      "region_ar": "فلسطين (مرج ابن عامر وسهل زرعين)",
+      "region_en": "Palestine (Jezreel Valley)",
+      "names_by_era": [
+        { "era_ar": "الكنعانية والعبرية القديمة", "name": "هار هَجِلْبُوع (Har HaGilboa)", "meaning_ar": "جبل الينابيع الفائرة" },
+        { "era_ar": "العربية الكلاسيكية", "name": "جبال فَقُّوعة ونبع عين جالوت", "meaning_ar": "الموقع الحاسم الذي أوقف المد المغولي" }
+      ],
+      "strategic_importance_ar": "تشكل سلسلة جبال جلبوع الطرف الجنوبي لمرج ابن عامر الاستراتيجي. استغل القائد المملوكي سيف الدين قطز والظاهر بيبرس انحدارات الجبل وأشجاره الكثيفة لإخفاء قلب الجيش المملوكي في كمين تكتيكي عبقري، واستدراج جيش المغول بقيادة كتبغا إلى قاع الوادي الضيق عند نبع عين جالوت حيث تم تطويقهم وسحقهم.",
+      "strategic_importance_en": "Mount Gilboa flanks the strategic Jezreel Valley. Sultan Qutuz and Baybars hid their main Mamluk army in the forested ridges of Gilboa, luring the Mongol army of Kitbuqa into the narrow valley before launching an all-encompassing downhill ambush.",
+      "historical_events": [
+        {
+          "year": 1260,
+          "year_label": "1260 م",
+          "title_ar": "معركة عين جالوت الفاصلة",
+          "title_en": "Battle of Ain Jalut",
+          "desc_ar": "المماليك بقيادة قطز وبيبرس يسحقون الجيش المغولي عند سفوح جبال جلبوع، منقذين العالم الإسلامي وموقفين زحف التتار نحو مصر والشام للأبد.",
+          "desc_en": "Mamluk forces under Qutuz shattered the Mongol army at the foot of Mount Gilboa, halting the westward Mongol expansion permanently."
+        }
+      ],
+      "quotes": [
+        {
+          "author_ar": "ابن كثير (البداية والنهاية، 1373 م)",
+          "text_ar": "«ولما التقى الجمعان بعين جالوت وثبت قطز ونادى بأعلى صوته: وا إسلاماه! فأنزل الله نصره على المسلمين وهُزمت التتار هزيمة شنعاء.»",
+          "author_en": "Ibn Kathir (Al-Bidaya wa'n-Nihaya)",
+          "text_en": "\"When the armies met at Ain Jalut, Qutuz shouted: 'O Islam!' and God granted victory, delivering a crushing blow to the Mongols.\""
+        }
+      ]
+    },
+    {
+      "id": "mount-sinai-horeb",
+      "type": "mountain",
+      "name_ar": "جبل موسى (جبل الطور وسانت كاترين)",
+      "name_en": "Mount Sinai (Mount Horeb & Saint Catherine)",
+      "icon": "⛰️",
+      "coords": [33.97, 28.54],
+      "elevation": 2285,
+      "region_ar": "شبه جزيرة سيناء (مصر)",
+      "region_en": "Sinai Peninsula (Egypt)",
+      "names_by_era": [
+        { "era_ar": "المصرية القديمة والسينائية", "name": "با خاسيت مَفْكات", "meaning_ar": "أرض الفيروز والجبال المقدسة" },
+        { "era_ar": "العبرية القديمة والعهد القديم", "name": "هار سيناي / حوريب (Horeb)", "meaning_ar": "جبل الرب وشريعة الوصايا العشر" },
+        { "era_ar": "العربية الكلاسيكية والإسلامية", "name": "جبل الطور / جبل المناجاة", "meaning_ar": "طور سينين والوادي المقدس طوى المذكور في القرآن الكريم" }
+      ],
+      "strategic_importance_ar": "يمثل مجمع جبال جنوب سيناء الغرانيتية الشاهقة قلعة طبيعية عاتية في قلب الصحراء. كان محوراً لأقدس الرحلات والتحولات الروحية في تاريخ البشرية؛ حيث كلم الله نبيه موسى عليه السلام وتلقى الوصايا العشر. في العصر البيزنطي شيد الإمبراطور جستنيان دير سانت كاترين المحصن عند سفحه، ليكون قلعة حصينة تحمي الرهبان وحجاج درب الطور التاريخي.",
+      "strategic_importance_en": "The towering granite massifs of southern Sinai form an awe-inspiring natural citadel. Revered as the holy mountain where Prophet Moses spoke with God and received the Ten Commandments. Fortified by Emperor Justinian with Saint Catherine's Monastery.",
+      "historical_events": [
+        {
+          "year": -1300,
+          "year_label": "القرن 13 ق.م",
+          "title_ar": "مناجاة نبي الله موسى والوصايا العشر",
+          "title_en": "Moses Receives the Ten Commandments",
+          "desc_ar": "كليم الله موسى عليه السلام يناجي ربه في الوادي المقدس طوى عند جبل الطور ويتلقى ألواح الشريعة والوصايا العشر.",
+          "desc_en": "Prophet Moses received divine revelation and the Tablets of Law atop Mount Sinai."
+        },
+        {
+          "year": 548,
+          "year_label": "548–565 م",
+          "title_ar": "تشييد دير القديسة كاترين المحصن",
+          "title_en": "Justinian Builds St. Catherine's Fortress",
+          "desc_ar": "الإمبراطور جستنيان يأمر ببناء دير محصن بأسوار غرانيتية ضخمة لحماية الرهبان ومخطوطات التوراة والإنجيل عند سفح الجبل.",
+          "desc_en": "Emperor Justinian fortified the monastery beneath Mount Sinai with monumental granite walls protecting ancient manuscripts."
+        }
+      ],
+      "quotes": [
+        {
+          "author_ar": "القرآن الكريم (سورة التين والقصص)",
+          "text_ar": "«وَالتِّينِ وَالزَّيْتُونِ * وَطُورِ سِينِينَ * وَهَذَا الْبَلَدِ الْأَمِينِ» — «فَلَمَّا أَتَاهَا نُودِيَ مِن شَاطِئِ الْوَادِ الْأَيْمَنِ فِي الْبُقْعَةِ الْمُبَارَكَةِ مِنَ الشَّجَرَةِ»",
+          "author_en": "The Holy Qur'an",
+          "text_en": "\"By the Fig and the Olive, and Mount Sinai, and this City of Security.\" (Surah At-Tin)"
+        }
+      ]
+    },
+    {
+      "id": "darial-gorge",
+      "type": "pass",
+      "name_ar": "مضيق داريال (أبواب القوقاز والآلان)",
+      "name_en": "Darial Gorge (Gates of the Alans)",
+      "icon": "⛰️",
+      "coords": [44.62, 42.74],
+      "elevation": 1447,
+      "region_ar": "جبال القوقاز الكبرى (بين جورجيا وروسيا)",
+      "region_en": "Greater Caucasus (Georgia-Russia)",
+      "names_by_era": [
+        { "era_ar": "الفارسية القديمة والساسانية", "name": "دار-إي آلان (Dar-e Alan)", "meaning_ar": "بوابة الآلان / أبواب بحر الخزر" },
+        { "era_ar": "اليونانية واللاتينية", "name": "بوابات القوقاز (Portae Caucasiae)", "meaning_ar": "بوابات القوقاز الحصينة ضد الغزاة" },
+        { "era_ar": "العربية الإسلامية", "name": "باب اللان / مضيق جبل القبق", "meaning_ar": "الحصن الجبلي المنيع ضد قبائل الشمال" }
+      ],
+      "strategic_importance_ar": "مضيق داريال هو الشق الصخري الوحيد الصالح لمرور الجيوش عبر السلسلة الرئيسية لجبال القوقاز الكبرى. اعتبرته الإمبراطوريات الرومانية والساسانية ثم الخلافة الإسلامية أهم خط دفاع استراتيجي لحماية الشرق الأدنى والعالم المستقر من اجتياح قبائل السهوب البدوية الشمالية (مثل الخزر والسكيثيين والآلان). كانت تحصيناته وبواباته الحديدية تُحرس بشكل مشترك وتدفع روما أموالاً لبلاد فارس للمشاركة في نفقات حراستها.",
+      "strategic_importance_en": "Darial Gorge is the sole traversable ravine piercing the Greater Caucasus crest. Both Roman and Sasanian empires regarded it as their supreme frontier fortification against northern steppe nomad invasions, jointly funding its garrisoned iron gates.",
+      "historical_events": [
+        {
+          "year": 500,
+          "year_label": "عصر كسرى أنوشروان",
+          "title_ar": "تحصين أبواب القوقاز ضد قبائل السهوب",
+          "title_en": "Fortification of the Gates of the Alans",
+          "desc_ar": "الساسانيون يشيدون قلاعاً صخرية وبوابات حديدية هائلة لمنع غارات قبائل الآلان والخزر من النزول إلى القوقاز وإيران.",
+          "desc_en": "Sasanian king Khosrow I reinforced the fortified defile with iron-clad gates and battlements against northern invaders."
+        }
+      ],
+      "quotes": [
+        {
+          "author_ar": "بليني الأكبر (التاريخ الطبيعي، القرن 1 م)",
+          "text_ar": "«بوابات القوقاز معجزة طبيعية هائلة، شق صخري عظيم سدت مدخله بوابات حديدية وعوارض ضخمة تمنع عبور الفرسان.»",
+          "author_en": "Pliny the Elder (Natural History)",
+          "text_en": "\"The Caucasian Gates are a stupendous marvel of nature, a sheer breach closed by beams and iron-plated gates against invasion.\""
+        }
+      ]
+    }
+  ]
+}

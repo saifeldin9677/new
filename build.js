@@ -49,6 +49,7 @@ const dataJsonFiles = [
     'historical-battles-data.json',
     'historical-wonders-data.json',
     'historical-sacred-sites-data.json',
+    'historical-terrain-data.json',
     'microstates-data.json'
 ];
 dataJsonFiles.forEach(function(f) {

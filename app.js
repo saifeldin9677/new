@@ -769,6 +769,111 @@
                 return name;
             }
 
+            // ── Smart Multilingual Search Engine ──
+            function smartNormalizeSearch(s) {
+                if (!s) return '';
+                return String(s)
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '') // remove Latin diacritics / accents
+                    .toLowerCase()
+                    .replace(/[\u064B-\u065F\u0670\u0640]/g, '') // strip Arabic diacritics & tatweel
+                    .replace(/[أإآٱ]/g, 'ا')
+                    .replace(/ة/g, 'ه')
+                    .replace(/[ىي]/g, 'ي')
+                    .replace(/ؤ/g, 'و')
+                    .replace(/ئ/g, 'ي')
+                    .replace(/ё/g, 'е') // Cyrillic yo -> ye
+                    .replace(/['`’‘ʻ]/g, '') // Uzbek modifier letters & quotes
+                    .replace(/[.,;:!?()\[\]{}\-_/\\|،؛؟]/g, ' ')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+            }
+
+            function smartSearchScore(haystack, needle) {
+                var hay = smartNormalizeSearch(haystack);
+                var nd = smartNormalizeSearch(needle);
+                if (!nd) return 100;
+                if (!hay) return 0;
+                if (hay === nd) return 100;
+                if (hay.indexOf(nd) === 0) return 90;
+                if (hay.indexOf(' ' + nd) !== -1) return 85;
+                if (hay.indexOf(nd) !== -1) return 75;
+                var terms = nd.split(' ').filter(Boolean);
+                if (terms.length > 1) {
+                    var allFound = true;
+                    for (var ti = 0; ti < terms.length; ti++) {
+                        if (hay.indexOf(terms[ti]) === -1) { allFound = false; break; }
+                    }
+                    if (allFound) return 60;
+                }
+                return 0;
+            }
+            window.smartSearchScore = smartSearchScore;
+
+            function smartFuzzyMatch(haystack, needle) {
+                return smartSearchScore(haystack, needle) > 0;
+            }
+
+            function getAllCountrySearchTokens(countryName) {
+                if (!countryName) return [];
+                var tokens = [
+                    countryName,
+                    getCleanName(countryName),
+                    getArabicName(countryName),
+                    getRussianName(countryName),
+                    getUzbekName(countryName),
+                    getSpanishName(countryName)
+                ];
+                var info = typeof getCountryInfo === 'function' ? getCountryInfo(countryName) : null;
+                if (info && info.capital) {
+                    tokens.push(info.capital);
+                    if (info.capital_ar) tokens.push(info.capital_ar);
+                    if (info.capital_ru) tokens.push(info.capital_ru);
+                    if (info.capital_uz) tokens.push(info.capital_uz);
+                    if (info.capital_es) tokens.push(info.capital_es);
+                }
+                return tokens;
+            }
+
+            function getCountryMatchScore(countryName, query) {
+                if (!query) return 100;
+                var tokens = getAllCountrySearchTokens(countryName);
+                var best = 0;
+                for (var i = 0; i < tokens.length; i++) {
+                    if (!tokens[i]) continue;
+                    var s = smartSearchScore(tokens[i], query);
+                    if (s > best) best = s;
+                }
+                return best;
+            }
+            window.getCountryMatchScore = getCountryMatchScore;
+
+            function matchCountryMultilingual(countryName, query) {
+                return getCountryMatchScore(countryName, query) > 0;
+            }
+
+            function showHistoricalPolityDetail(polity) {
+                if (!polity) return;
+                var f = { properties: { name: polity.name_en || polity.name_ar || polity.id }, _polity: polity };
+                if (polity.origin_coords && Array.isArray(polity.origin_coords)) {
+                    var proj = getActiveProjection();
+                    var xy = proj(polity.origin_coords);
+                    if (xy && !isNaN(xy[0])) {
+                        var svgEl = d3.select('#mapSvg');
+                        var dim = getContainerDimensions();
+                        var targetScale = 3.5;
+                        var transform = d3.zoomIdentity.translate(dim.width / 2 - xy[0] * targetScale, dim.height / 2 - xy[1] * targetScale).scale(targetScale);
+                        svgEl.transition().duration(prefersReducedMotion() ? 0 : 750).call(zoomBehavior.transform, transform);
+                    }
+                }
+                if (typeof openHistoryPanel === 'function') {
+                    openHistoryPanel(f);
+                }
+            }
+            window.showHistoricalPolityDetail = showHistoricalPolityDetail;
+            window.smartNormalizeSearch = smartNormalizeSearch;
+            window.smartFuzzyMatch = smartFuzzyMatch;
+
             function getAdminDisplayName(enName) {
                 if (!enName) return '';
                 if (adminNameTranslations && adminNameTranslations[lang]) {
@@ -2098,9 +2203,9 @@
                 var k = Math.max(0.4, currentTransform.k);
                 var resourceColorMap = MAP_COLORS.naturalResources;
                 var isMob = isMobile;
-                var rBase = isMob ? 2.6 : 3.6;
+                var rBase = isMob ? 5.5 : 7.0;
                 var r = rBase / k;
-                var fontSize = (isMob ? 8.5 : 10.5) / k;
+                var fontSize = (isMob ? 12.0 : 14.0) / k;
                 if (!gNaturalResources.on('click')) {
                     gNaturalResources.on('click', function(e) {
                         if (e.target.tagName === 'circle') {
@@ -2114,9 +2219,9 @@
                     var xy = proj(Array.isArray(d.coords[0]) ? d.coords[0] : d.coords);
                     if (!xy || isNaN(xy[0])) return;
                     var color = resourceColorMap[d.type] || MAP_COLORS.naturalResources.default;
-                    gNaturalResources.append('circle').attr('cx',xy[0]).attr('cy',xy[1]).attr('r',r*1.5).attr('fill',color).style('pointer-events','none').attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.18);
-                    gNaturalResources.append('circle').datum(d).attr('cx',xy[0]).attr('cy',xy[1]).attr('r',r).attr('fill',color).attr('stroke','#fff').attr('stroke-width',0.8/k).style('cursor','pointer').attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.85);
-                    gNaturalResources.append('text').attr('x',xy[0]+r+2.5/k).attr('y',xy[1]+2.5/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill','#fff').attr('font-size',fontSize+'px').attr('font-weight','bold').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.95), 0 0 4px rgba(0,0,0,0.85)');
+                    gNaturalResources.append('circle').attr('cx',xy[0]).attr('cy',xy[1]).attr('r',r*1.5).attr('fill',color).style('pointer-events','none').attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.2);
+                    gNaturalResources.append('circle').datum(d).attr('cx',xy[0]).attr('cy',xy[1]).attr('r',r).attr('fill',color).attr('stroke','#fff').attr('stroke-width',1.2/k).style('cursor','pointer').attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.88);
+                    gNaturalResources.append('text').attr('x',xy[0]+r+5.0/k).attr('y',xy[1]+4.5/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill','#fff').attr('font-size',fontSize+'px').attr('font-weight','bold').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.95), 0 0 4px rgba(0,0,0,0.85)');
                 });
             }
             window.drawNaturalResources = drawNaturalResources;
@@ -2126,9 +2231,9 @@
                 var ethnicColors = MAP_COLORS.ethnicGroups;
                 var isMob = isMobile;
                 var k = Math.max(0.4, currentTransform.k);
-                var rBase = isMob ? 2.6 : 3.6;
+                var rBase = isMob ? 5.5 : 7.0;
                 var r = rBase / k;
-                var fs = (isMob ? 8.5 : 10.5) / k;
+                var fs = (isMob ? 12.0 : 14.0) / k;
                 if (!gEthnicGroups.on('click')) {
                     gEthnicGroups.on('click', function(e) {
                         if (e.target.tagName === 'circle') {
@@ -2142,9 +2247,9 @@
                     var xy = proj(Array.isArray(d.coords[0]) ? d.coords[0] : d.coords);
                     if (!xy || isNaN(xy[0])) return;
                     var color = ethnicColors[i%ethnicColors.length];
-                    gEthnicGroups.append('circle').attr('cx',xy[0]).attr('cy',xy[1]).attr('r',r*1.5).attr('fill',color).style('pointer-events','none').attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.18);
-                    gEthnicGroups.append('circle').datum(d).attr('cx',xy[0]).attr('cy',xy[1]).attr('r',r).attr('fill',color).attr('stroke','#fff').attr('stroke-width',0.8/k).style('cursor','pointer').attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.6);
-                    gEthnicGroups.append('text').attr('x',xy[0]+r+2.5/k).attr('y',xy[1]+2.5/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill','#fff').attr('font-size',fs+'px').attr('font-weight','bold').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.95), 0 0 4px rgba(0,0,0,0.85)');
+                    gEthnicGroups.append('circle').attr('cx',xy[0]).attr('cy',xy[1]).attr('r',r*1.5).attr('fill',color).style('pointer-events','none').attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.2);
+                    gEthnicGroups.append('circle').datum(d).attr('cx',xy[0]).attr('cy',xy[1]).attr('r',r).attr('fill',color).attr('stroke','#fff').attr('stroke-width',1.2/k).style('cursor','pointer').attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.7);
+                    gEthnicGroups.append('text').attr('x',xy[0]+r+5.0/k).attr('y',xy[1]+4.5/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill','#fff').attr('font-size',fs+'px').attr('font-weight','bold').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.95), 0 0 4px rgba(0,0,0,0.85)');
                 });
             }
             function showOceanCurrentDetail(d) {
@@ -2182,7 +2287,7 @@
                         gOceanCurrents.append('rect').attr('x',xy[0]-s-4/k).attr('y',xy[1]-s-4/k).attr('width',(s+4/k)*2).attr('height',(s+4/k)*2).attr('fill','transparent').style('cursor','pointer').on('click',function(){showOceanCurrentDetail(d);});
                         var _sel = gOceanCurrents.append('path').attr('d','M'+(xy[0]-s)+','+(xy[1]-s)+' L'+(xy[0]+s)+','+(xy[1]+s)+' M'+(xy[0]-s)+','+(xy[1]+s)+' L'+(xy[0]+s)+','+(xy[1]-s)).attr('stroke',MAP_COLORS.oceanCurrents.trench).attr('stroke-width',(isMobile?1.5:2.0)/k).style('pointer-events','none');
                         if (skipFadeIn) _sel.attr('opacity',0.9); else _sel.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.9);
-                        _sel = gOceanCurrents.append('text').attr('x',xy[0]+s+3/k).attr('y',xy[1]+2/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill',MAP_COLORS.oceanCurrents.trench).attr('font-size',(isMobile?7.5:9.5)/k+'px').attr('font-weight','bold').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.9)');
+                        _sel = gOceanCurrents.append('text').attr('x',xy[0]+s+3/k).attr('y',xy[1]+2/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill',MAP_COLORS.oceanCurrents.trench).attr('font-size',(isMobile?11.5:13.5)/k+'px').attr('font-weight','bold').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.9)');
                         if (skipFadeIn) _sel.attr('opacity',1); else _sel.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',1);
                         return;
                     }
@@ -2196,7 +2301,7 @@
                         var mid = d.coords[Math.floor(d.coords.length/2)];
                         var mxy = proj(mid);
                         if (mxy&&!isNaN(mxy[0])) {
-                            var _sel2 = gOceanCurrents.append('text').attr('x',mxy[0]).attr('y',mxy[1]-6/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill',color).attr('font-size',(isMobile?7.5:9.5)/k+'px').attr('font-weight','bold').attr('text-anchor','middle').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.9)');
+                            var _sel2 = gOceanCurrents.append('text').attr('x',mxy[0]).attr('y',mxy[1]-6/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill',color).attr('font-size',(isMobile?11.5:13.5)/k+'px').attr('font-weight','bold').attr('text-anchor','middle').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.9)');
                             if (skipFadeIn) _sel2.attr('opacity',1); else _sel2.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',1);
                         }
                         return;
@@ -2217,7 +2322,7 @@
                             var mid = d.coords[Math.floor(d.coords.length/2)];
                             var mxy = proj(mid);
                             if (mxy && !isNaN(mxy[0])) {
-                                var _sel4 = gOceanCurrents.append('text').attr('x',mxy[0]-6/k).attr('y',mxy[1]-4/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill','#fff').attr('font-size',(isMobile?7.5:9.5)/k+'px').attr('font-weight','bold').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.9)');
+                                var _sel4 = gOceanCurrents.append('text').attr('x',mxy[0]-6/k).attr('y',mxy[1]-4/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill','#fff').attr('font-size',(isMobile?11.5:13.5)/k+'px').attr('font-weight','bold').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.9)');
                                 if (skipFadeIn) _sel4.attr('opacity',0.95); else _sel4.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.95);
                             }
                         }
@@ -2243,7 +2348,7 @@
                     var mid = d.coords[Math.floor(d.coords.length/2)];
                     var mxy = proj(mid);
                     if (mxy && !isNaN(mxy[0])) {
-                        var _sel2 = gWinds.append('text').attr('x',mxy[0]).attr('y',mxy[1]-5/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill','#fff').attr('font-size',(isMobile?7.5:9.5)/k+'px').attr('font-weight','bold').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.95), 0 0 5px rgba(0,0,0,0.85)');
+                        var _sel2 = gWinds.append('text').attr('x',mxy[0]).attr('y',mxy[1]-5/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill','#fff').attr('font-size',(isMobile?11.5:13.5)/k+'px').attr('font-weight','bold').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.95), 0 0 5px rgba(0,0,0,0.85)');
                         if (skipFadeIn) _sel2.attr('opacity',0.95); else _sel2.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.95);
                     }
                 });
@@ -2287,7 +2392,7 @@
                         var mid = p.coords[Math.floor(p.coords.length/2)];
                         var mxy = proj(mid);
                         if (mxy&&!isNaN(mxy[0])) {
-                            var _sel2 = gEarthquakes.append('text').attr('x',mxy[0]).attr('y',mxy[1]).text(function(){return lang==='ar'?p.name:lang==='ru'?(p.name_ru||p.name_en):lang==='uz'?(p.name_uz||p.name_en):lang==='es'?(p.name_es||p.name_en):p.name_en;}).attr('fill','#fff').attr('font-size',(isMobile?7.5:9.5)/k+'px').attr('text-anchor','middle').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.9)');
+                            var _sel2 = gEarthquakes.append('text').attr('x',mxy[0]).attr('y',mxy[1]).text(function(){return lang==='ar'?p.name:lang==='ru'?(p.name_ru||p.name_en):lang==='uz'?(p.name_uz||p.name_en):lang==='es'?(p.name_es||p.name_en):p.name_en;}).attr('fill','#fff').attr('font-size',(isMobile?11.5:13.5)/k+'px').attr('text-anchor','middle').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.9)');
                             if (skipFadeIn) _sel2.attr('opacity',0.7); else _sel2.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.7);
                         }
                     }
@@ -2333,7 +2438,7 @@
                     if (skipFadeIn) _sel.attr('opacity',0.9); else _sel.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.9);
                     _sel = group.append('circle').attr('cx',px).attr('cy',py-s*0.2).attr('r',(isMobile?1.5:2.2)/k).attr('fill',MAP_COLORS.volcanoes.glow);
                     if (skipFadeIn) _sel.attr('opacity',0.8); else _sel.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.8);
-                    group.append('text').attr('x',px+s+2.5/k).attr('y',py+2/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill',MAP_COLORS.volcanoes.fill).attr('font-size',(isMobile?7.5:9.5)/k+'px').attr('font-weight','bold').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.9)');
+                    group.append('text').attr('x',px+s+2.5/k).attr('y',py+2/k).text(function(){return lang==='ar'?d.name:lang==='ru'?(d.name_ru||d.name_en):lang==='uz'?(d.name_uz||d.name_en):lang==='es'?(d.name_es||d.name_en):d.name_en;}).attr('fill',MAP_COLORS.volcanoes.fill).attr('font-size',(isMobile?11.5:13.5)/k+'px').attr('font-weight','bold').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.9)');
                 });
             }
             function drawGeopoliticalBlocs(skipFadeIn) {
@@ -2437,7 +2542,7 @@
                         var mxy = proj(mid);
                         if (mxy && !isNaN(mxy[0])) {
                             var labelText = lang === 'ar' ? d.name : lang === 'ru' ? (d.name_ru || d.name_en) : lang === 'uz' ?(d.name_uz || d.name_en): lang === 'es' ?(d.name_es || d.name_en) : d.name_en;
-                            var fontSize = Math.max(3, Math.min(13, (isMobile ? 7.5 : 10.0) / k));
+                            var fontSize = Math.max(3, Math.min(16, (isMobile ? 10.5 : 13.5) / k));
                             var _sel = gDesertsForests.append('text').attr('x',mxy[0]).attr('y',mxy[1]).text(labelText).attr('fill','#fff').attr('font-size',fontSize+'px').attr('font-weight','bold').attr('text-anchor','middle').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.95), 0 0 5px rgba(0,0,0,0.85)');
                             if (skipFadeIn) _sel.attr('opacity',0.95); else _sel.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.95);
                             gDesertsForests.append('circle').datum(d).attr('cx',mxy[0]).attr('cy',mxy[1]).attr('r',(isMobile?10:15)/k).attr('fill','transparent').style('cursor','pointer').on('click',function(e,dd){showDesertForestDetail(dd);});
@@ -2467,7 +2572,7 @@
                     _sel = gBorderDisputes.append('circle').attr('cx',x).attr('cy',y).attr('r',r*2.6).attr('fill','transparent').attr('stroke',color).attr('stroke-width',(isMobile?0.6:0.9)/k).style('pointer-events','none');
                     if (skipFadeIn) _sel.attr('opacity',0.25); else _sel.attr('opacity',0).transition().duration(prefersReducedMotion() ? 0 : 300).attr('opacity',0.25);
                     var labelText = lang === 'ar' ? d.name_ar : lang === 'ru' ? (d.name_ru || d.name_en) : lang === 'uz' ?(d.name_uz || d.name_en): lang === 'es' ?(d.name_es || d.name_en) : d.name_en;
-                    var fs = (isMobile ? 7.5 : 9.5) / k;
+                    var fs = (isMobile ? 10.5 : 12.5) / k;
                     gBorderDisputes.append('text').attr('x',x).attr('y',y-r-2.5/k).text(labelText).attr('fill',color).attr('font-size',fs+'px').attr('font-weight','bold').attr('text-anchor','middle').style('pointer-events','none').style('text-shadow','0 1px 3px rgba(0,0,0,0.95), 0 0 4px rgba(0,0,0,0.85)');
                 });
                 var activeCount = borderDisputesData.filter(function(d){return d.type==='active';}).length;
@@ -4064,22 +4169,54 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
             // ── Search & autocomplete ──
             function setupSearch() {
                 searchInput.addEventListener('input', function() {
-                    const val = this.value.trim().toLowerCase();
+                    const val = this.value.trim();
                     suggestionsList.innerHTML = '';
                     if (!val) { suggestionsList.style.display = 'none'; return; }
-                    const matches = countryNamesList.filter(n => {
-                        const localized = getDisplayName(n).toLowerCase();
-                        return n.toLowerCase().includes(val) || localized.includes(val);
-                    }).slice(0, isMobile ? 6 : 8);
+
+                    var isHist = (typeof currentSection !== 'undefined' && currentSection === 'history') || (typeof historyActive !== 'undefined' && historyActive);
+                    var items = [];
+
+                    if (isHist) {
+                        var hData = (typeof window !== 'undefined' && (window.HISTORICAL_POLITIES_DATA || window.historicalPolitiesData)) || (typeof HISTORICAL_POLITIES_DATA !== 'undefined' ? HISTORICAL_POLITIES_DATA : null);
+                        if (hData) {
+                            for (var pid in hData) {
+                                var p = hData[pid];
+                                var pTokens = [p.id, p.name_ar, p.name_en, p.name_ru, p.name_uz, p.name_es, p.founder, p.founder_en, p.capital, p.capital_en].filter(Boolean);
+                                var maxScore = 0;
+                                for (var ti = 0; ti < pTokens.length; ti++) {
+                                    var sc = smartSearchScore(pTokens[ti], val);
+                                    if (sc > maxScore) maxScore = sc;
+                                }
+                                if (maxScore > 0) {
+                                    items.push({ type: 'polity', polity: p, name: locField(p, 'name') || p.name_ar || p.name_en, score: maxScore });
+                                }
+                            }
+                        }
+                    }
+
+                    countryNamesList.forEach(function(n) {
+                        var cScore = getCountryMatchScore(n, val);
+                        if (cScore > 0) {
+                            items.push({ type: 'country', country: n, name: getDisplayName(n), score: cScore });
+                        }
+                    });
+
+                    items.sort(function(a, b) { return b.score - a.score; });
+                    const matches = items.slice(0, isMobile ? 6 : 8);
                     if (matches.length) {
-                        matches.forEach(m => {
+                        matches.forEach(item => {
                             const li = document.createElement('li');
-                            const flag = getCountryFlag(m);
                             const span = document.createElement('span');
                             span.className = 'flag-icon';
-                            span.textContent = flag;
-                            li.appendChild(span);
-                            li.appendChild(document.createTextNode(' ' + getDisplayName(m)));
+                            if (item.type === 'polity') {
+                                span.textContent = '📜';
+                                li.appendChild(span);
+                                li.appendChild(document.createTextNode(' ' + item.name));
+                            } else {
+                                span.textContent = getCountryFlag(item.country);
+                                li.appendChild(span);
+                                li.appendChild(document.createTextNode(' ' + item.name));
+                            }
 
                             // دالة موحّدة للتنفيذ
                             const doSelect = (e) => {
@@ -4088,7 +4225,11 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                                 searchInput.value = '';
                                 suggestionsList.style.display = 'none';
                                 searchInput.blur();
-                                flyToCountry(m);
+                                if (item.type === 'polity') {
+                                    showHistoricalPolityDetail(item.polity);
+                                } else {
+                                    flyToCountry(item.country);
+                                }
                             };
 
                             // mousedown: يُطلق قبل blur على الحاسوب فلا تختفي القائمة قبل الأوان
@@ -4930,7 +5071,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 for (var i = 0; i < circleNodes.length; i++) {
                     var isHalo = (i % 2 === 0);
                     circleNodes[i].setAttribute('r', isHalo ? rVal * 1.5 : rVal);
-                    if (!isHalo) circleNodes[i].setAttribute('stroke-width', 0.8 / k);
+                    if (!isHalo) circleNodes[i].setAttribute('stroke-width', 1.2 / k);
                 }
                 for (var i = 0; i < textNodes.length; i++) {
                     var t = textNodes[i];
@@ -4952,16 +5093,16 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     updateHistoricalLandmarkLabels(k);
                 }
                 if (naturalResourcesVisible && gNaturalResources) {
-                    const rBase = isMobile ? 2.6 : 3.6;
+                    const rBase = isMobile ? 5.5 : 7.0;
                     const r2 = rBase / k;
-                    const fs2 = (isMobile ? 8.5 : 10.5) / k;
-                    fastUpdateLabels(gNaturalResources, gNaturalResources.selectAll('circle'), k, r2, fs2, 2.5, 2.5);
+                    const fs2 = (isMobile ? 12.0 : 14.0) / k;
+                    fastUpdateLabels(gNaturalResources, gNaturalResources.selectAll('circle'), k, r2, fs2, 5.0, 4.5);
                 }
                 if (ethnicGroupsVisible && gEthnicGroups) {
-                    const rBase = isMobile ? 2.6 : 3.6;
+                    const rBase = isMobile ? 5.5 : 7.0;
                     const r3 = rBase / k;
-                    const fs3 = (isMobile ? 8.5 : 10.5) / k;
-                    fastUpdateLabels(gEthnicGroups, gEthnicGroups.selectAll('circle'), k, r3, fs3, 2.5, 2.5);
+                    const fs3 = (isMobile ? 12.0 : 14.0) / k;
+                    fastUpdateLabels(gEthnicGroups, gEthnicGroups.selectAll('circle'), k, r3, fs3, 5.0, 4.5);
                 }
             }
 
@@ -6858,13 +6999,13 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
 
             function renderDataTable() {
                 if (!dataTableBody) return;
-                const searchTerm = dataTableSearch ? dataTableSearch.value.trim().toLowerCase() : '';
+                const searchTerm = dataTableSearch ? dataTableSearch.value.trim() : '';
                 let rows = [];
                 countryNamesList.forEach(function(name) {
                     const info = getCountryInfo(name);
                     if (!info) return;
                     const displayName = getDisplayName(name);
-                    if (searchTerm && !displayName.toLowerCase().includes(searchTerm)) return;
+                    if (searchTerm && !matchCountryMultilingual(name, searchTerm)) return;
                     const population = info ? info.population_2026 : null;
                     const area = info ? info.area : null;
                     const density = getDensity(name);
@@ -7518,23 +7659,80 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         }, icon: '✏️', titleKey: 'onboardStep13Title', textKey: 'onboardStep13Text' }
                     ];
                     var histSteps = [
-                        { getEl: function() {
-                            return document.querySelector('#historyModeDock') || document.querySelector('#histErasPopoverBtn');
-                        }, icon: '📜', titleKey: 'histOnboard1Title', textKey: 'histOnboard1Text' },
-                        { getEl: function() {
-                            var op = document.getElementById('histOpacityControl');
-                            if (op && getComputedStyle(op).display !== 'none') return op;
-                            return document.getElementById('histTerrainBtn') || document.querySelector('#filterRow');
-                        }, icon: '🎚️', titleKey: 'histOnboard3Title', textKey: 'histOnboard3Text' },
-                        { getEl: function() {
-                            return document.querySelector('#mapSvg');
-                        }, icon: '🖱️', titleKey: 'histOnboard4Title', textKey: 'histOnboard4Text' },
-                        { getEl: function() {
-                            return document.getElementById('legend');
-                        }, icon: '🎨', titleKey: 'histOnboard5Title', textKey: 'histOnboard5Text' },
-                        { getEl: function() {
-                            return document.getElementById('toolsBtn') || document.getElementById('histSourcesBtn');
-                        }, icon: '📚', titleKey: 'histOnboard6Title', textKey: 'histOnboard6Text' }
+                        {
+                            getEl: function() {
+                                var mb = window.innerWidth <= 768;
+                                return document.querySelector('#historyModeDock') || document.querySelector('#histErasPopoverBtn');
+                            },
+                            icon: '📜',
+                            titleKey: 'histOnboard1Title',
+                            textKey: 'histOnboard1Text'
+                        },
+                        {
+                            getEl: function() {
+                                return document.querySelector('#historyBottomBar') || document.querySelector('#histErasTimelineWrap') || document.querySelector('#historySliderWrap');
+                            },
+                            icon: '⏳',
+                            titleKey: 'histOnboard2Title',
+                            textKey: 'histOnboard2Text'
+                        },
+                        {
+                            getEl: function() {
+                                return document.getElementById('histTerrainBtn') || document.getElementById('histModernBordersToggle') || document.getElementById('histOpacityControl');
+                            },
+                            icon: '🏔️',
+                            titleKey: 'histOnboard3Title',
+                            textKey: 'histOnboard3Text'
+                        },
+                        {
+                            getEl: function() {
+                                var mb = window.innerWidth <= 768;
+                                return document.querySelector(mb ? '#mobileSearchInput' : '#searchInput') || document.querySelector('.search-box');
+                            },
+                            icon: '🔍',
+                            titleKey: 'histOnboard4Title',
+                            textKey: 'histOnboard4Text'
+                        },
+                        {
+                            getEl: function() {
+                                var cp = document.querySelector('#countryPanel');
+                                if (cp && cp.classList.contains('visible') && getComputedStyle(cp).display !== 'none') return cp;
+                                var ez = document.getElementById('onboardHistExploreZone');
+                                if (!ez) {
+                                    ez = document.createElement('div');
+                                    ez.id = 'onboardHistExploreZone';
+                                    ez.style.cssText = 'position:fixed;pointer-events:none;z-index:-1;';
+                                    document.body.appendChild(ez);
+                                }
+                                var vw = window.innerWidth, vh = window.innerHeight;
+                                var w = Math.min(vw * 0.5, 480), h = Math.min(vh * 0.4, 320);
+                                ez.style.left = (vw / 2 - w / 2) + 'px';
+                                ez.style.top = (vh / 2 - h / 2) + 'px';
+                                ez.style.width = w + 'px';
+                                ez.style.height = h + 'px';
+                                return ez;
+                            },
+                            icon: '🏛️',
+                            titleKey: 'histOnboard5Title',
+                            textKey: 'histOnboard5Text'
+                        },
+                        {
+                            getEl: function() {
+                                return document.getElementById('legend');
+                            },
+                            icon: '🎨',
+                            titleKey: 'histOnboard6Title',
+                            textKey: 'histOnboard6Text'
+                        },
+                        {
+                            getEl: function() {
+                                var mb = window.innerWidth <= 768;
+                                return document.getElementById('histSourcesBtn') || (mb ? document.querySelector('#mobileToolsBtn') : document.querySelector('#toolsBtn'));
+                            },
+                            icon: '📚',
+                            titleKey: 'histOnboard7Title',
+                            textKey: 'histOnboard7Text'
+                        }
                     ];
                     function activeSteps() {
                         return (typeof currentSection !== 'undefined' && currentSection === 'history') ? histSteps : geoSteps;
@@ -8056,10 +8254,17 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     });
 
                     quizCountrySearch.addEventListener('input', function(e) {
-                        var query = e.target.value.trim().toLowerCase();
+                        var query = e.target.value.trim();
                         quizCountryChecklist.querySelectorAll('.quiz-scope-item').forEach(function(label) {
-                            var text = label.textContent.trim().toLowerCase();
-                            label.style.display = (query === '' || text.indexOf(query) !== -1) ? '' : 'none';
+                            if (!query) { label.style.display = ''; return; }
+                            var inp = label.querySelector('input');
+                            var countryName = inp ? inp.value : '';
+                            var matches = countryName ? matchCountryMultilingual(countryName, query) : false;
+                            if (!matches) {
+                                var text = label.textContent.trim();
+                                matches = smartFuzzyMatch(text, query);
+                            }
+                            label.style.display = matches ? '' : 'none';
                         });
                     });
                 }
@@ -9139,63 +9344,63 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 // the many Arabic letter variants onto a single base form, then
                 // drop punctuation and collapse repeated whitespace.
                 function histNormSearch(s) {
-                    return (s || '').toLowerCase()
-                        .replace(/[\u064B-\u0652\u0670\u0640]/g, '')
-                        .replace(/[أإآ]/g, 'ا')
-                        .replace(/ة/g, 'ه')
-                        .replace(/ى/g, 'ي')
-                        .replace(/ؤ/g, 'و')
-                        .replace(/ئ/g, 'ي')
-                        .replace(/[.,;:!?()\[\]{}\-_'"‘’“”،؛؟()/\\|]/g, ' ')
-                        .replace(/\s+/g, ' ')
-                        .trim();
+                    return smartNormalizeSearch(s);
                 }
-                // Match a normalized needle against a normalized haystack. Returns
-                // true when every whitespace-separated term in the needle is found
-                // (as a substring OR as an ordered subsequence to tolerate typos/word
-                // order). Substring wins; fuzzy subsequence is the fallback.
                 function histFuzzyMatch(haystack, needle) {
-                    var hay = histNormSearch(haystack),
-                        nd = histNormSearch(needle);
-                    if (!nd) return true;
-                    if (!hay) return false;
-                    var terms = nd.split(' ');
-                    for (var ti = 0; ti < terms.length; ti++) {
-                        var term = terms[ti];
-                        if (!term) continue;
-                        if (hay.indexOf(term) !== -1) continue;
-                        var i = 0;
-                        for (var j = 0; j < hay.length && i < term.length; j++) {
-                            if (hay[j] === term[i]) i++;
-                        }
-                        if (i < term.length) return false;
-                    }
-                    return true;
+                    return smartFuzzyMatch(haystack, needle);
                 }
-                // Build a compact textual search blob for an era that also includes
-                // every internal polity so searching "Carthage" surfaces the era that
-                // contains Carthage.
                 function eraSearchBlob(e) {
-                    var parts = [(e.yearLabel || ''), String(e.sort !== undefined && e.sort !== null ? e.sort : ''), locField(e, 'title'), locField(e, 'desc')];
+                    if (!e) return '';
+                    var parts = [e.id || '', (e.yearLabel || ''), String(e.sort !== undefined && e.sort !== null ? e.sort : '')];
+                    ['title', 'desc'].forEach(function(k) {
+                        ['', '_ar', '_en', '_ru', '_uz', '_es'].forEach(function(suf) {
+                            var v = e[k + suf];
+                            if (v && typeof v === 'string') parts.push(v);
+                        });
+                    });
                     (e.polities || []).forEach(function(p) {
-                        parts.push(locField(p, 'name'));
-                        if (p.founder) parts.push(p.founder);
-                        if (p.capital) parts.push(p.capital);
-                        if (p.religion) parts.push(p.religion);
+                        ['name', 'founder', 'capital', 'religion', 'language', 'ethnicity'].forEach(function(k) {
+                            ['', '_ar', '_en', '_ru', '_uz', '_es'].forEach(function(suf) {
+                                var v = p[k + suf];
+                                if (v && typeof v === 'string') parts.push(v);
+                            });
+                        });
                     });
                     return parts.join(' ');
                 }
-                // Search blob for a war: its own fields plus scenario titles,
-                // participant names, and empire members.
                 function warSearchBlob(w) {
-                    var parts = [locField(w, 'name'), locField(w, 'years')];
+                    if (!w) return '';
+                    var parts = [w.id || '', locField(w, 'years')];
+                    ['name', 'years', 'desc'].forEach(function(k) {
+                        ['', '_ar', '_en', '_ru', '_uz', '_es'].forEach(function(suf) {
+                            var v = w[k + suf];
+                            if (v && typeof v === 'string') parts.push(v);
+                        });
+                    });
                     (w.scenarios || []).forEach(function(sc) {
-                        parts.push(locField(sc, 'title'));
+                        ['title', 'desc'].forEach(function(k) {
+                            ['', '_ar', '_en', '_ru', '_uz', '_es'].forEach(function(suf) {
+                                var v = sc[k + suf];
+                                if (v && typeof v === 'string') parts.push(v);
+                            });
+                        });
                         if (sc.year !== undefined && sc.year !== null) parts.push(String(sc.year));
-                        (sc.participants || []).forEach(function(p) { if (p && p.c) parts.push(p.c); });
+                        (sc.participants || []).forEach(function(p) {
+                            if (p && p.c) {
+                                parts.push(p.c);
+                                getAllCountrySearchTokens(p.c).forEach(function(tk) { parts.push(tk); });
+                            }
+                        });
                         (sc.empires || []).forEach(function(emp) {
                             if (emp.name) parts.push(emp.name);
-                            (emp.members || []).forEach(function(m) { parts.push(m); });
+                            ['', '_ar', '_en', '_ru', '_uz', '_es'].forEach(function(suf) {
+                                var v = emp['name' + suf];
+                                if (v && typeof v === 'string') parts.push(v);
+                            });
+                            (emp.members || []).forEach(function(m) {
+                                parts.push(m);
+                                getAllCountrySearchTokens(m).forEach(function(tk) { parts.push(tk); });
+                            });
                         });
                     });
                     return parts.join(' ');
@@ -11961,10 +12166,10 @@ function buildEraFeature(p, phase) {
                 });
 
                 quizCustomSearch.addEventListener('input', function(e) {
-                    var query = e.target.value.trim().toLowerCase();
+                    var query = e.target.value.trim();
                     quizCustomList.querySelectorAll('.quiz-custom-item').forEach(function(item) {
-                        var text = item.querySelector('.quiz-custom-item-text').textContent.toLowerCase();
-                        item.style.display = (query === '' || text.indexOf(query) !== -1) ? '' : 'none';
+                        var text = item.querySelector('.quiz-custom-item-text').textContent;
+                        item.style.display = (query === '' || smartFuzzyMatch(text, query)) ? '' : 'none';
                     });
                 });
 
@@ -14442,6 +14647,42 @@ function getReligionSlice(religion, year) {
                 if (prevBtn) prevBtn.disabled = (wpIndex <= 0);
                 if (nextBtn) nextBtn.disabled = (wpIndex >= tr.waypoints.length - 1);
 
+                // Climate & Monsoon tag
+                var climateEl = document.getElementById('histWpClimate');
+                var climateTextEl = document.getElementById('histWpClimateText');
+                if (climateEl && climateTextEl) {
+                    if (wp.climate_context) {
+                        var clm = locField(wp.climate_context, '') || wp.climate_context[lang] || wp.climate_context.ar || wp.climate_context.en;
+                        climateTextEl.textContent = clm;
+                        climateEl.style.display = 'flex';
+                    } else {
+                        climateEl.style.display = 'none';
+                    }
+                }
+
+                // Civilizational Crossroads button
+                var crossroadsWrapEl = document.getElementById('histWpCrossroadsWrap');
+                var crossroadsBtnEl = document.getElementById('histWpCrossroadsBtn');
+                var crossroadsBtnTextEl = document.getElementById('histWpCrossroadsBtnText');
+                if (crossroadsWrapEl && crossroadsBtnEl) {
+                    if (wp.crossroad_hub_id) {
+                        var hubVisitors = getCrossroadHubTravelers(wp.crossroad_hub_id);
+                        if (hubVisitors && hubVisitors.length > 1) {
+                            if (crossroadsBtnTextEl) {
+                                crossroadsBtnTextEl.textContent = t('histCrossroadsBadge') + ' (' + hubVisitors.length + ' ' + (t('histSegTravelers') || 'رحالة') + ')';
+                            }
+                            crossroadsBtnEl.onclick = function() {
+                                openCrossroadsModal(wp.crossroad_hub_id, wp);
+                            };
+                            crossroadsWrapEl.style.display = 'block';
+                        } else {
+                            crossroadsWrapEl.style.display = 'none';
+                        }
+                    } else {
+                        crossroadsWrapEl.style.display = 'none';
+                    }
+                }
+
                 pop.style.display = 'block';
                 if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
 
@@ -14450,6 +14691,104 @@ function getReligionSlice(religion, year) {
                 positionWaypointPopup(coords);
             }
             window.openWaypointPopup = openWaypointPopup;
+
+            function getCrossroadHubTravelers(hubId) {
+                if (!hubId || !historicalTravelersData) return [];
+                var visitors = [];
+                historicalTravelersData.forEach(function(tr) {
+                    var matchingWps = (tr.waypoints || []).filter(function(w) { return w.crossroad_hub_id === hubId; });
+                    if (matchingWps.length) {
+                        matchingWps.forEach(function(w) {
+                            visitors.push({
+                                traveler: tr,
+                                waypoint: w,
+                                sortYear: parseInt(w.year, 10) || tr.birth_year || 0
+                            });
+                        });
+                    }
+                });
+                visitors.sort(function(a, b) { return a.sortYear - b.sortYear; });
+                return visitors;
+            }
+
+            function openCrossroadsModal(hubId, currentWp) {
+                var modal = document.getElementById('histCrossroadsModal');
+                var titleEl = document.getElementById('histCrossroadsTitle');
+                var subtitleEl = document.getElementById('histCrossroadsSubtitle');
+                var bodyEl = document.getElementById('histCrossroadsBody');
+                var closeBtn = document.getElementById('histCrossroadsCloseBtn');
+                var backdrop = document.getElementById('histCrossroadsBackdrop');
+                if (!modal || !bodyEl) return;
+
+                var visitors = getCrossroadHubTravelers(hubId);
+                var hubNames = {
+                    constantinople: { ar: 'القسطنطينية (بيزنطة / إسطنبول)', en: 'Constantinople (Byzantium / Istanbul)', ru: 'Константинополь (Византия / Стамбул)', uz: 'Konstantinopol (Vizantiya / Istanbul)', es: 'Constantinopla (Bizancio / Estambul)' },
+                    baghdad: { ar: 'بغداد (دار السلام وعاصمة الخلافة)', en: 'Baghdad (City of Peace)', ru: 'Багдад (Город мира)', uz: 'Bag\'dod (Tinchlik shahri)', es: 'Bagdad (Ciudad de la Paz)' },
+                    alexandria_cairo: { ar: 'القاهرة والإسكندرية (حاضرة وادي النيل)', en: 'Cairo & Alexandria', ru: 'Каир и Александрия', uz: 'Qohira va Iskandariya', es: 'El Cairo y Alejandría' },
+                    damascus_jerusalem: { ar: 'دمشق والقدس (قلب الشام وأرض المقدسات)', en: 'Damascus & Jerusalem', ru: 'Дамаск и Иерусалим', uz: 'Damashq va Quddus', es: 'Damasco y Jerusalén' },
+                    mecca_medina: { ar: 'مكة المكرمة والمدينة المنورة (الحرمان الشريفان)', en: 'Mecca & Medina', ru: 'Мекка и Медина', uz: 'Makka va Madina', es: 'La Meca y Medina' },
+                    samarkand_bukhara: { ar: 'سمرقند وبخارى (حواضر ما وراء النهر وسوغديانا)', en: 'Samarkand & Bukhara', ru: 'Самарканд и Бухара', uz: 'Samarqand va Buxoro', es: 'Samarcanda y Bujará' },
+                    kashgar: { ar: 'كاشغر (بوابة حوض تاريم ومفترق طريق الحرير)', en: 'Kashgar (Gateway to Tarim Basin)', ru: 'Кашгар', uz: 'Qashqar', es: 'Kashgar' },
+                    hormuz: { ar: 'هرمز (بوابة تجارة الخليج وبحر فارس)', en: 'Hormuz (Gateway of the Persian Gulf)', ru: 'Ормуз', uz: 'Hurmuz', es: 'Ormuz' },
+                    calicut: { ar: 'كاليكوت ومليبار (سوق التوابل وعاصمة الفلفل بالهند)', en: 'Calicut & Malabar', ru: 'Каликут и Малабар', uz: 'Kalikut va Malabar', es: 'Calicut y Malabar' },
+                    quanzhou: { ar: 'ميناء الزيتون / تشوانتشو (أعظم موانئ بحر الصين)', en: 'Quanzhou / Zaiton', ru: 'Цюаньчжоу / Зайтун', uz: 'Syuanjou / Zaytun', es: 'Quanzhou / Zaiton' },
+                    timbuktu: { ar: 'تمبكتو (حاضرة الذهب والعلم على نهر النيجر)', en: 'Timbuktu', ru: 'Тимбукту', uz: 'Timbuktu', es: 'Tombuctú' }
+                };
+
+                var hObj = hubNames[hubId] || {};
+                var hubTitle = hObj[lang] || hObj.ar || cleanHistoricalName(locField(currentWp, 'name'));
+                if (titleEl) titleEl.textContent = hubTitle;
+                if (subtitleEl) subtitleEl.textContent = t('histCrossroadsDesc') || 'تفاوت الرؤى وسجل التحول التاريخي للمدينة باختلاف العصور وخلفيات الرحالة';
+
+                var cardsHtml = visitors.map(function(item) {
+                    var tr = item.traveler;
+                    var wp = item.waypoint;
+                    var trName = locField(tr, 'name');
+                    var trTitle = locField(tr, 'title') || '';
+                    var wpYear = wp.year ? (wp.year + ' ' + t('ceYearSuffix')) : (locField(tr, 'period') || '');
+                    var ruler = locField(wp, 'ruler');
+                    var polity = locField(wp, 'polity');
+                    var quote = locField(wp, 'quote');
+                    var cond = locField(wp, 'condition');
+
+                    var html = '<div class="crossroads-traveler-card">';
+                    html += '<div class="crossroads-card-top">';
+                    html += '<div class="crossroads-tr-name-wrap">';
+                    html += '<span class="crossroads-tr-color-dot" style="background:' + tr.color + '"></span>';
+                    html += '<span class="crossroads-tr-name">' + htmlEscape(trName) + '</span>';
+                    if (trTitle) html += '<span class="crossroads-tr-role">(' + htmlEscape(trTitle) + ')</span>';
+                    html += '</div>';
+                    html += '<span class="crossroads-year-badge">' + htmlEscape(wpYear) + '</span>';
+                    html += '</div>';
+
+                    html += '<div class="crossroads-ctx-row">';
+                    if (ruler) html += '<span><strong>' + htmlEscape(t('histWpRuler') || 'الحاكم:') + '</strong> ' + htmlEscape(ruler) + '</span>';
+                    if (polity) html += '<span><strong>' + htmlEscape(t('histWpPolity') || 'الدولة:') + '</strong> ' + htmlEscape(polity) + '</span>';
+                    html += '</div>';
+
+                    if (cond) {
+                        html += '<div style="font-size:11.5px;color:#94a3b8;margin-bottom:6px;">' + htmlEscape(cond) + '</div>';
+                    }
+
+                    if (quote) {
+                        html += '<div class="crossroads-quote-box">«' + htmlEscape(quote) + '»</div>';
+                    }
+
+                    html += '</div>';
+                    return html;
+                }).join('');
+
+                bodyEl.innerHTML = cardsHtml;
+                modal.style.display = 'flex';
+                if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+
+                function closeModal() {
+                    modal.style.display = 'none';
+                }
+                if (closeBtn) closeBtn.onclick = closeModal;
+                if (backdrop) backdrop.onclick = closeModal;
+            }
+            window.openCrossroadsModal = openCrossroadsModal;
 
             function closeWaypointPopup() {
                 var pop = document.getElementById('histWaypointPopup');
@@ -14595,12 +14934,25 @@ function getReligionSlice(religion, year) {
                     return;
                 }
 
-                var q = (_histTravelersSearchText || '').trim().toLowerCase();
+                var q = (_histTravelersSearchText || '').trim();
                 var filtered = historicalTravelersData.filter(function(tr) {
                     if (!q) return true;
-                    var datesStr = locField(tr, 'period') || tr.dates || '';
-                    var blob = (locField(tr, 'name') + ' ' + (locField(tr, 'title') || '') + ' ' + datesStr + ' ' + (locField(tr, 'bio') || '')).toLowerCase();
-                    return blob.indexOf(q) !== -1;
+                    var parts = [tr.id || '', tr.dates || '', String(tr.birth_year || ''), String(tr.death_year || '')];
+                    ['name', 'title', 'bio', 'period', 'motive', 'religion', 'language', 'ethnicity', 'birth_place', 'death_place'].forEach(function(k) {
+                        ['', '_ar', '_en', '_ru', '_uz', '_es'].forEach(function(suf) {
+                            var val = tr[k + suf];
+                            if (val && typeof val === 'string') parts.push(val);
+                        });
+                    });
+                    (tr.waypoints || []).forEach(function(wp) {
+                        ['name', 'year', 'duration', 'events', 'quote', 'ruler', 'polity'].forEach(function(k) {
+                            ['', '_ar', '_en', '_ru', '_uz', '_es'].forEach(function(suf) {
+                                var val = wp[k + suf];
+                                if (val && typeof val === 'string') parts.push(val);
+                            });
+                        });
+                    });
+                    return smartFuzzyMatch(parts.join(' '), q);
                 });
 
                 if (!filtered.length) {
@@ -14843,6 +15195,44 @@ function getReligionSlice(religion, year) {
                 if (rSummary) {
                     html += '<div class="hist-traveler-section-title"><i data-lucide="route" class="lucide-icon"></i> ' + htmlEscape(t('corridorsToggle') || 'ملخص خط السير') + '</div>';
                     html += '<div class="hist-traveler-details" style="font-size:12px;margin-bottom:10px;">' + htmlEscape(rSummary) + '</div>';
+                }
+
+                var recep = tr.academic_reception;
+                if (recep) {
+                    html += '<div class="hist-reception-box">';
+                    html += '<div class="hist-reception-header">';
+                    html += '<span class="reception-icon"><i data-lucide="scale" class="lucide-icon"></i></span>';
+                    html += '<div class="reception-title-col">';
+                    html += '<strong>' + htmlEscape(t('histReceptionTitle') || 'النقد التاريخي والمصادر الأكاديمية') + '</strong>';
+                    var st = locField(recep, 'status');
+                    if (st) html += '<span class="reception-status-badge">' + htmlEscape(st) + '</span>';
+                    html += '</div>';
+                    html += '</div>';
+
+                    var verdict = locField(recep, 'contemporary_verdict');
+                    if (verdict) {
+                        html += '<div class="reception-item reception-verdict">';
+                        html += '<div class="reception-item-lbl"><strong><i data-lucide="users" class="lucide-icon"></i> ' + htmlEscape(t('histContemporaryVerdict') || 'رأي المعاصرين والمجتمع العلمي:') + '</strong></div>';
+                        html += '<div class="reception-item-desc">' + htmlEscape(verdict) + '</div>';
+                        html += '</div>';
+                    }
+
+                    var doubts = locField(recep, 'doubt_reasons');
+                    if (doubts) {
+                        html += '<div class="reception-item reception-doubts">';
+                        html += '<div class="reception-item-lbl"><strong><i data-lucide="help-circle" class="lucide-icon"></i> ' + htmlEscape(t('histDoubtReasons') || 'أسباب التشكيك أو الجدل:') + '</strong></div>';
+                        html += '<div class="reception-item-desc">' + htmlEscape(doubts) + '</div>';
+                        html += '</div>';
+                    }
+
+                    var arch = locField(recep, 'modern_archaeology');
+                    if (arch) {
+                        html += '<div class="reception-item reception-arch">';
+                        html += '<div class="reception-item-lbl"><strong><i data-lucide="check-circle-2" class="lucide-icon"></i> ' + htmlEscape(t('histModernCorroboration') || 'شهادة الآثار والتحقيق الحديث:') + '</strong></div>';
+                        html += '<div class="reception-item-desc">' + htmlEscape(arch) + '</div>';
+                        html += '</div>';
+                    }
+                    html += '</div>';
                 }
 
                 if (Array.isArray(tr.waypoints) && tr.waypoints.length) {
@@ -15798,6 +16188,9 @@ function getReligionSlice(religion, year) {
                         dot.style.left = pct + '%';
                         dot.setAttribute('data-year', yr);
                         dot.setAttribute('title', formatHistTerrainYear(yr));
+                        dot.addEventListener('pointerdown', function(e) {
+                            e.stopPropagation();
+                        });
                         dot.addEventListener('click', function(e) {
                             e.stopPropagation();
                             setHistTerrainYear(yr);
@@ -15805,13 +16198,10 @@ function getReligionSlice(religion, year) {
                         track.appendChild(dot);
                     });
 
-                    function handleTrackPointer(e) {
+                    function pickFromClientX(clientX) {
                         var rect = track.getBoundingClientRect();
-                        var clientX = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
-                        var fraction = (clientX - rect.left) / rect.width;
-                        var isRtl = (document.documentElement.dir === 'rtl' || document.body.dir === 'rtl');
-                        if (isRtl) fraction = 1 - fraction;
-                        fraction = Math.max(0, Math.min(1, fraction));
+                        if (!rect.width) return;
+                        var fraction = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
                         var targetIdx = Math.round(fraction * (HIST_TERRAIN_EPOCHS.length - 1));
                         setHistTerrainYear(HIST_TERRAIN_EPOCHS[targetIdx]);
                     }
@@ -15819,17 +16209,15 @@ function getReligionSlice(religion, year) {
                     var isDragging = false;
                     track.addEventListener('pointerdown', function(e) {
                         isDragging = true;
-                        track.setPointerCapture(e.pointerId);
-                        handleTrackPointer(e);
+                        pickFromClientX((e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX);
+                        e.preventDefault();
                     });
-                    track.addEventListener('pointermove', function(e) {
-                        if (isDragging) handleTrackPointer(e);
+                    document.addEventListener('pointermove', function(e) {
+                        if (!isDragging) return;
+                        pickFromClientX((e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX);
                     });
-                    track.addEventListener('pointerup', function(e) {
-                        if (isDragging) {
-                            isDragging = false;
-                            try { track.releasePointerCapture(e.pointerId); } catch(ex){}
-                        }
+                    document.addEventListener('pointerup', function() {
+                        isDragging = false;
                     });
 
                     track.addEventListener('keydown', function(e) {
@@ -16333,39 +16721,72 @@ function getReligionSlice(religion, year) {
                 if (mm) mm.classList.toggle('visible');
             });
             if (mobileSearchInput) mobileSearchInput.addEventListener('input', function() {
-                var val = this.value.trim().toLowerCase();
+                var val = this.value.trim();
                 var ms = document.getElementById('mobileSuggestionsList');
                 if (!ms) return;
                 ms.innerHTML = '';
                 if (!val) { ms.style.display = 'none'; return; }
-                var matches = countryNamesList.filter(function(n) {
-                    return n.toLowerCase().includes(val) || getDisplayName(n).toLowerCase().includes(val);
-                }).slice(0, 6);
+
+                var isHist = (typeof currentSection !== 'undefined' && currentSection === 'history') || (typeof historyActive !== 'undefined' && historyActive);
+                var items = [];
+
+                if (isHist) {
+                    var hData = (typeof window !== 'undefined' && (window.HISTORICAL_POLITIES_DATA || window.historicalPolitiesData)) || (typeof HISTORICAL_POLITIES_DATA !== 'undefined' ? HISTORICAL_POLITIES_DATA : null);
+                    if (hData) {
+                        for (var pid in hData) {
+                            var p = hData[pid];
+                            var pTokens = [p.id, p.name_ar, p.name_en, p.name_ru, p.name_uz, p.name_es, p.founder, p.founder_en, p.capital, p.capital_en].filter(Boolean);
+                            var maxScore = 0;
+                            for (var ti = 0; ti < pTokens.length; ti++) {
+                                var sc = smartSearchScore(pTokens[ti], val);
+                                if (sc > maxScore) maxScore = sc;
+                            }
+                            if (maxScore > 0) {
+                                items.push({ type: 'polity', polity: p, name: locField(p, 'name') || p.name_ar || p.name_en, score: maxScore });
+                            }
+                        }
+                    }
+                }
+
+                countryNamesList.forEach(function(n) {
+                    var cScore = getCountryMatchScore(n, val);
+                    if (cScore > 0) {
+                        items.push({ type: 'country', country: n, name: getDisplayName(n), score: cScore });
+                    }
+                });
+
+                items.sort(function(a, b) { return b.score - a.score; });
+                var matches = items.slice(0, 6);
                 if (matches.length) {
-                    matches.forEach(function(m) {
+                    matches.forEach(function(item) {
                         var li = document.createElement('li');
-                        var flag = getCountryFlag(m);
                         var span2 = document.createElement('span');
                         span2.className = 'flag-icon';
-                        span2.textContent = flag;
-                        li.appendChild(span2);
-                        li.appendChild(document.createTextNode(' ' + getDisplayName(m)));
-                        li.addEventListener('touchend', function(e) {
+                        if (item.type === 'polity') {
+                            span2.textContent = '📜';
+                            li.appendChild(span2);
+                            li.appendChild(document.createTextNode(' ' + item.name));
+                        } else {
+                            span2.textContent = getCountryFlag(item.country);
+                            li.appendChild(span2);
+                            li.appendChild(document.createTextNode(' ' + item.name));
+                        }
+
+                        var doSelectMobile = function(e) {
                             e.preventDefault();
                             e.stopPropagation();
                             mobileSearchInput.value = '';
                             ms.style.display = 'none';
                             mobileSearchInput.blur();
-                            flyToCountry(m);
-                        }, { passive: false });
-                        li.addEventListener('mousedown', function(e) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            mobileSearchInput.value = '';
-                            ms.style.display = 'none';
-                            mobileSearchInput.blur();
-                            flyToCountry(m);
-                        });
+                            if (item.type === 'polity') {
+                                showHistoricalPolityDetail(item.polity);
+                            } else {
+                                flyToCountry(item.country);
+                            }
+                        };
+
+                        li.addEventListener('touchend', doSelectMobile, { passive: false });
+                        li.addEventListener('mousedown', doSelectMobile);
                         ms.appendChild(li);
                     });
                     ms.style.display = 'block';

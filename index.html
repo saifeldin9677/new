@@ -443,6 +443,21 @@
                     </div>
                 </div>
                 <div class="hist-waypoint-events" id="histWpEvents"></div>
+                <!-- Climate & Environmental Logistics -->
+                <div class="hist-waypoint-climate" id="histWpClimate" style="display:none">
+                    <span class="hist-wp-climate-icon">🌬️</span>
+                    <div class="hist-wp-climate-content">
+                        <span class="hist-wp-climate-label" data-i18n="histClimateTerrain">البيئة والطقس والرياح الموسمية:</span>
+                        <span class="hist-wp-climate-text" id="histWpClimateText"></span>
+                    </div>
+                </div>
+                <!-- Civilizational Crossroads Multi-Perspective Trigger -->
+                <div class="hist-waypoint-crossroads-wrap" id="histWpCrossroadsWrap" style="display:none">
+                    <button type="button" class="btn btn-sm hist-crossroads-btn" id="histWpCrossroadsBtn">
+                        <i data-lucide="compass" class="lucide-icon"></i>
+                        <span id="histWpCrossroadsBtnText" data-i18n="histCrossroadsBadge">تقاطع حضاري عبر العصور</span>
+                    </button>
+                </div>
                 <div class="hist-waypoint-quote-wrap" id="histWpQuoteWrap" style="display:none">
                     <div class="hist-waypoint-quote-label"><i data-lucide="quote" class="lucide-icon"></i> <span data-i18n="travelerQuote">من نصوص الرحالة:</span></div>
                     <blockquote class="hist-waypoint-quote" id="histWpQuote"></blockquote>
@@ -456,6 +471,26 @@
                 <button type="button" class="btn btn-sm hist-wp-nav-btn" id="histWpNextBtn" data-i18n-title="nextWaypoint" data-i18n-aria-label="nextWaypoint">
                     <span data-i18n="nextWaypoint">المحطة التالية</span> <i data-lucide="chevron-left" class="lucide-icon"></i>
                 </button>
+            </div>
+        </div>
+
+        <!-- Civilizational Crossroads Multi-Perspective Modal -->
+        <div class="hist-crossroads-modal" id="histCrossroadsModal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="histCrossroadsTitle">
+            <div class="hist-crossroads-modal-backdrop" id="histCrossroadsBackdrop"></div>
+            <div class="hist-crossroads-modal-content">
+                <div class="hist-crossroads-modal-header">
+                    <div class="crossroads-header-title-wrap">
+                        <span class="crossroads-header-icon">🌟</span>
+                        <div>
+                            <h3 class="hist-crossroads-modal-title" id="histCrossroadsTitle"></h3>
+                            <p class="hist-crossroads-modal-subtitle" id="histCrossroadsSubtitle" data-i18n="histCrossroadsDesc">تفاوت الرؤى وسجل التحول التاريخي للمدينة باختلاف العصور وخلفيات الرحالة</p>
+                        </div>
+                    </div>
+                    <button type="button" class="hist-crossroads-modal-close" id="histCrossroadsCloseBtn" aria-label="إغلاق">&times;</button>
+                </div>
+                <div class="hist-crossroads-modal-body" id="histCrossroadsBody">
+                    <!-- Populated dynamically with traveler perspective cards -->
+                </div>
             </div>
         </div>
 

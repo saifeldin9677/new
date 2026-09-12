@@ -7551,3 +7551,313 @@ body.dark .hist-narrative-box.fall-box .hist-narrative-title {
     }
 }
 
+/* ── Historical Travelers: Academic Reception & Critical Analysis ── */
+.hist-reception-box {
+    margin: 14px 0 10px 0;
+    padding: 12px 14px;
+    background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9));
+    border: 1px solid rgba(217, 119, 6, 0.35);
+    border-radius: 10px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+.hist-reception-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.reception-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    background: rgba(217, 119, 6, 0.2);
+    border-radius: 6px;
+    color: #f59e0b;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+.reception-title-col {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+.reception-title-col strong {
+    font-size: 13px;
+    font-weight: 700;
+    color: #f8fafc;
+}
+.reception-status-badge {
+    display: inline-block;
+    font-size: 10.5px;
+    padding: 2px 8px;
+    background: rgba(16, 185, 129, 0.18);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    border-radius: 9999px;
+    font-weight: 600;
+    width: fit-content;
+}
+.reception-item {
+    margin-bottom: 10px;
+    padding: 8px 10px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    font-size: 11.5px;
+    line-height: 1.55;
+}
+.reception-item:last-child {
+    margin-bottom: 0;
+}
+.reception-verdict {
+    border-right: 3px solid #38bdf8;
+}
+[dir="ltr"] .reception-verdict {
+    border-right: none;
+    border-left: 3px solid #38bdf8;
+}
+.reception-doubts {
+    border-right: 3px solid #fbbf24;
+}
+[dir="ltr"] .reception-doubts {
+    border-right: none;
+    border-left: 3px solid #fbbf24;
+}
+.reception-arch {
+    border-right: 3px solid #10b981;
+}
+[dir="ltr"] .reception-arch {
+    border-right: none;
+    border-left: 3px solid #10b981;
+}
+.reception-item-lbl {
+    color: #cbd5e1;
+    margin-bottom: 4px;
+    font-size: 11.5px;
+}
+.reception-item-lbl strong {
+    color: #f1f5f9;
+}
+.reception-item-desc {
+    color: #94a3b8;
+    text-align: justify;
+}
+
+/* ── Climate & Monsoon tag in Waypoint Popup ── */
+.hist-waypoint-climate {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 8px 0;
+    padding: 7px 10px;
+    background: rgba(14, 165, 233, 0.12);
+    border: 1px solid rgba(14, 165, 233, 0.3);
+    border-radius: 6px;
+    font-size: 11.5px;
+    line-height: 1.45;
+}
+.hist-wp-climate-icon {
+    font-size: 14px;
+    flex-shrink: 0;
+}
+.hist-wp-climate-label {
+    display: block;
+    font-weight: 700;
+    color: #38bdf8;
+    margin-bottom: 2px;
+}
+.hist-wp-climate-text {
+    color: #e2e8f0;
+}
+
+/* ── Crossroads Multi-Perspective Button & Modal ── */
+.hist-waypoint-crossroads-wrap {
+    margin: 8px 0;
+}
+.hist-crossroads-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    justify-content: center;
+    background: linear-gradient(135deg, #d97706, #b45309);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 7px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(251, 191, 36, 0.4);
+    box-shadow: 0 2px 8px rgba(217, 119, 6, 0.35);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.hist-crossroads-btn:hover {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.45);
+    transform: translateY(-1px);
+}
+.hist-crossroads-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10005;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+.hist-crossroads-modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(5px);
+}
+.hist-crossroads-modal-content {
+    position: relative;
+    z-index: 1;
+    background: #0f172a;
+    border: 1px solid rgba(217, 119, 6, 0.4);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.65);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 760px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.hist-crossroads-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    background: linear-gradient(90deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.crossroads-header-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.crossroads-header-icon {
+    font-size: 22px;
+}
+.hist-crossroads-modal-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #f8fafc;
+}
+.hist-crossroads-modal-subtitle {
+    margin: 2px 0 0 0;
+    font-size: 11.5px;
+    color: #94a3b8;
+}
+.hist-crossroads-modal-close {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: color 0.15s ease;
+}
+.hist-crossroads-modal-close:hover {
+    color: #f8fafc;
+    background: rgba(255, 255, 255, 0.1);
+}
+.hist-crossroads-modal-body {
+    padding: 16px 18px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.crossroads-traveler-card {
+    background: rgba(30, 41, 59, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px 14px;
+    transition: border-color 0.2s ease;
+}
+.crossroads-traveler-card:hover {
+    border-color: rgba(217, 119, 6, 0.45);
+}
+.crossroads-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+.crossroads-tr-name-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.crossroads-tr-color-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.crossroads-tr-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #f1f5f9;
+}
+.crossroads-tr-role {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-inline-start: 4px;
+}
+.crossroads-year-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #38bdf8;
+    border-radius: 4px;
+}
+.crossroads-ctx-row {
+    font-size: 11.5px;
+    color: #cbd5e1;
+    margin-bottom: 6px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.crossroads-quote-box {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: rgba(15, 23, 42, 0.6);
+    border-right: 3px solid #f59e0b;
+    border-radius: 4px;
+    font-size: 12px;
+    font-style: italic;
+    color: #e2e8f0;
+    line-height: 1.5;
+}
+[dir="ltr"] .crossroads-quote-box {
+    border-right: none;
+    border-left: 3px solid #f59e0b;
+}
+.crossroads-pedagogical-takeaway {
+    margin-top: 6px;
+    font-size: 11px;
+    color: #fbbf24;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+

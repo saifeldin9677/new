@@ -121,7 +121,9 @@
                     <button type="button" class="history-play-btn" id="religionsPlayBtn" data-i18n-title="histPlayTip" data-i18n-aria-label="histPlayTip" aria-label="تشغيل / إيقاف مؤقت" aria-pressed="false">
                         <i data-lucide="play" class="lucide-icon"></i>
                     </button>
-                    <div class="religions-timeline" id="religionsTimeline" role="slider" tabindex="0" aria-label="Religions timeline" aria-valuemin="-2200" aria-valuemax="2000"></div>
+                    <div class="religions-timeline" id="religionsTimeline" role="slider" tabindex="0" aria-label="Religions timeline" aria-valuemin="-2200" aria-valuemax="2000">
+                        <div class="religions-timeline-dot" id="religionsTimelineDot"></div>
+                    </div>
                     <span class="history-year-badge" id="religionsYearValue"></span>
                     <div class="religions-caption" id="religionsCaption"></div>
                 </div>
@@ -366,6 +368,11 @@
                 <button type="button" class="hist-drawer-close-btn" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
             </div>
             <div class="hist-popover-body">
+                <div class="history-filter-row history-faiths-filter-row">
+                    <input type="text" class="history-search-input" id="histFaithsSearchInput" aria-label="بحث في الأديان والمعتقدات" data-i18n-aria-label="faithsSearchPlaceholder" data-i18n-placeholder="faithsSearchPlaceholder" placeholder="بحث في الأديان والمعتقدات..." autocomplete="off" style="flex:1; min-width:140px;" />
+                    <button type="button" class="btn btn-sm" id="histFaithsSelectAllBtn" style="white-space:nowrap" data-i18n="faithsSelectAll">عرض الكل</button>
+                    <button type="button" class="btn btn-sm" id="histFaithsClearBtn" style="white-space:nowrap" data-i18n="faithsClearAll">إلغاء التحديد</button>
+                </div>
                 <div class="history-faiths-list" id="histFaithsList"></div>
                 <div class="hist-scroll-cue" id="histFaithsScrollCue" aria-hidden="true" title="المزيد بالأسفل">
                     <i data-lucide="chevron-down" class="lucide-icon"></i>

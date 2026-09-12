@@ -10329,6 +10329,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                 window.historyWarSelected = historyWarSelectedFn;
                 function clearHistoryOverlay() {
                     if (gHistoryOverlay) gHistoryOverlay.selectAll('*').remove();
+                    if (historyTab !== 'faiths' && gReligionsOverlay) gReligionsOverlay.selectAll('*').remove();
                     var leg = document.getElementById('legend');
                     if (leg && historyActive) leg.innerHTML = '';
                 }
@@ -11462,13 +11463,23 @@ function buildEraFeature(p, phase) {
                 };
                 function selectHistoryTab(tab) {
                     stopHistPlay();
+                    stopReligionsPlay();
                     historyTab = tab;
                     selectedHistoryPolity = null;
                     // Clean teardown of the previous sub-mode before activating the new one.
-                    if (tab !== 'eras' && window.religionsStillActive && window.religionsStillActive()) {
+                    if (tab !== 'faiths') {
+                        if (typeof deactivateReligionsMode === 'function') deactivateReligionsMode();
                         if (window.deactivateFaithsMode) window.deactivateFaithsMode();
+                        clearReligionsOverlay();
+                        if (selectedFeatureType === 'histReligion' && typeof closeFeatureDetail === 'function') {
+                            closeFeatureDetail();
+                        }
                     }
-                    if (tab !== 'faiths' && gHistoryOverlay) {
+                    if (tab !== 'travelers') {
+                        if (window.deactivateTravelersMode) window.deactivateTravelersMode();
+                    }
+                    // Always clear history overlay on tab switch to prevent leftover era/war polygons leaking across tabs
+                    if (gHistoryOverlay) {
                         gHistoryOverlay.selectAll('*').interrupt().remove();
                     }
                     if (tab === 'faiths') {
@@ -13958,7 +13969,7 @@ function buildEraFeature(p, phase) {
             var religionsLoading = null;
             var religionsActive = false;
             var religionsYear = 0;
-            var selectedFaithId = null;
+            var selectedFaithIds = [];
             var religionsPlayActive = false;
             var religionsPlayTimer = null;
             var YEAR_MIN = -2200;
@@ -13971,10 +13982,41 @@ function buildEraFeature(p, phase) {
             var rgCaptionEl = document.getElementById('religionsCaption');
             var rgPlayBtnEl = document.getElementById('religionsPlayBtn');
             var rgDragging = false;
+            var _histFaithsSearchText = '';
+
+            function isFaithSelected(id) {
+                return selectedFaithIds.indexOf(id) !== -1;
+            }
+            function toggleFaithSelection(id) {
+                var idx = selectedFaithIds.indexOf(id);
+                if (idx !== -1) {
+                    selectedFaithIds.splice(idx, 1);
+                } else {
+                    selectedFaithIds.push(id);
+                }
+            }
+            function formatReligionsYear(year) {
+                if (year === null || year === undefined) return '';
+                var absY = Math.abs(year);
+                var lang = (window.currentLang || (typeof currentLanguage !== 'undefined' ? currentLanguage : 'ar'));
+                if (lang === 'ar') {
+                    return year < 0 ? (absY + ' ق.م') : (year === 0 ? '1 ق.م' : (year + ' م'));
+                } else if (lang === 'ru') {
+                    return year < 0 ? (absY + ' до н.э.') : (year === 0 ? '1 до н.э.' : (year + ' н.э.'));
+                } else if (lang === 'uz') {
+                    return year < 0 ? (absY + ' m.a.') : (year === 0 ? '1 m.a.' : (year + ' m.'));
+                } else if (lang === 'es') {
+                    return year < 0 ? (absY + ' a.C.') : (year === 0 ? '1 a.C.' : (year + ' d.C.'));
+                }
+                return year < 0 ? (absY + ' BCE') : (year === 0 ? '1 BCE' : (year + ' CE'));
+            }
+            function formatReligionsRange(startYear, endYear) {
+                var s = formatReligionsYear(startYear);
+                var e = (endYear === null || endYear === undefined) ? (t('faithsOngoing') || 'الحاضر') : formatReligionsYear(endYear);
+                return s + ' — ' + e;
+            }
             var religionsYearLabelFor = function(year) {
-                if (year < 0) return Math.abs(year) + ' BCE';
-                if (year === 0) return '1 BCE';
-                return year + ' CE';
+                return formatReligionsYear(year);
             };
             function fetchReligionsData() {
                 if (religionsData) return Promise.resolve(religionsData);
@@ -14025,26 +14067,33 @@ function getReligionSlice(religion, year) {
                 // redraws never leave orphaned polygons or stale fades.
                 g.selectAll('*').interrupt();
                 if (!skipFadeIn && prefersReducedMotion() === false) {
-                    g.selectAll('path,text')
+                    g.selectAll('path,text,g')
                         .transition().duration(220).style('opacity', '0')
                         .on('end', function() { d3.select(this).remove(); });
                 } else {
                     g.selectAll('*').remove();
                 }
-                if (!religionsActive) return;
-                var active = getActiveReligionsAtYear(year);
+                if (!religionsActive || !selectedFaithIds || selectedFaithIds.length === 0) {
+                    clearReligionsOverlay();
+                    renderReligionsLegend(year, []);
+                    renderReligionsCaption(year, []);
+                    return;
+                }
+                var active = getActiveReligionsAtYear(year).filter(function(r) {
+                    return selectedFaithIds.indexOf(r.id) !== -1;
+                });
                 var k = Math.max(0.4, currentTransform.k);
                 var fs = Math.max(3, Math.min(12, (isMobile ? 7 : 10) / k));
                 var dur = prefersReducedMotion() ? 0 : 300;
+                var isSingle = (selectedFaithIds.length === 1);
+
                 active.forEach(function(rel) {
                     var slice = getReligionSlice(rel, year);
                     if (!slice || !slice.rings || !slice.rings.length) return;
                     rel.rings = rel.rings || [];
                     var ringsData = slice.rings.map(function(ring) { return window.__normalizeEraRing(ring); });
-                    var isSelected = (selectedFaithId === rel.id);
-                    var fillOp = selectedFaithId ? (isSelected ? 0.55 : 0.12) : 0.35;
-                    var strokeW = selectedFaithId ? (isSelected ? 2.6 : 1.0) : 1.5;
-                    var strokeDash = (selectedFaithId && isSelected) ? 'none' : '6,3';
+                    var fillOp = isSingle ? 0.55 : 0.40;
+                    var strokeW = isSingle ? 2.6 : 1.8;
                     ringsData.forEach(function(ring) {
                         var feature;
                         try {
@@ -14055,8 +14104,7 @@ function getReligionSlice(religion, year) {
                         var s = g.append('path').attr('d', pd)
                             .attr('fill', rel.color).attr('fill-opacity', fillOp)
                             .attr('stroke', rel.color).attr('stroke-width', strokeW)
-                            .attr('stroke-dasharray', strokeDash)
-                            .attr('vector-effect', 'non-scaling-stage').attr('vector-effect', 'non-scaling-stroke')
+                            .attr('vector-effect', 'non-scaling-stroke')
                             .style('cursor', 'default').style('pointer-events', 'none');
                         if (skipFadeIn) s.attr('opacity', 1);
                         else s.attr('opacity', 0).transition().duration(dur).attr('opacity', 1);
@@ -14073,12 +14121,12 @@ function getReligionSlice(religion, year) {
                         }
                     });
                 });
+
                 active.forEach(function(rel) {
                     var xy = getActiveProjection()(rel.origin);
                     if (!xy || isNaN(xy[0])) return;
-                    var isSelected = (selectedFaithId === rel.id);
-                    var elemOp = selectedFaithId ? (isSelected ? 1.0 : 0.35) : 0.95;
-                    var circleR = isSelected ? Math.max(5, 8 / k) : Math.max(3.5, 6 / k);
+                    var elemOp = 1.0;
+                    var circleR = isSingle ? Math.max(5, 8 / k) : Math.max(4, 6.5 / k);
                     var pinG = g.append('g')
                         .attr('class', 'rel-origin-pin')
                         .attr('data-faith-id', rel.id)
@@ -14098,7 +14146,7 @@ function getReligionSlice(religion, year) {
                             }
                         });
 
-                    if (isSelected) {
+                    if (isSingle) {
                         pinG.append('circle')
                             .attr('cx', xy[0]).attr('cy', xy[1])
                             .attr('r', circleR + 3.5 / k)
@@ -14110,10 +14158,10 @@ function getReligionSlice(religion, year) {
                     pinG.append('circle')
                         .attr('cx', xy[0]).attr('cy', xy[1])
                         .attr('r', circleR).attr('fill', rel.color)
-                        .attr('stroke', '#ffffff').attr('stroke-width', (isSelected ? 2.2 : 1.5) / k)
+                        .attr('stroke', '#ffffff').attr('stroke-width', (isSingle ? 2.2 : 1.5) / k)
                         .attr('opacity', elemOp);
-                    pinG.append('text').attr('x', xy[0]).attr('y', xy[1] - (isSelected ? 9 : 7) / k)
-                        .text(locField(rel, 'name')).attr('fill', '#ffffff').attr('font-size', isSelected ? fs * 1.15 : fs)
+                    pinG.append('text').attr('x', xy[0]).attr('y', xy[1] - (isSingle ? 9 : 7) / k)
+                        .text(locField(rel, 'name')).attr('fill', '#ffffff').attr('font-size', isSingle ? fs * 1.15 : fs)
                         .attr('font-weight', 'bold').attr('text-anchor', 'middle')
                         .attr('opacity', elemOp)
                         .attr('style', 'text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 0 6px rgba(0,0,0,0.85); pointer-events: none;');
@@ -14121,6 +14169,7 @@ function getReligionSlice(religion, year) {
                         pinG.attr('opacity', 0).transition().duration(dur).attr('opacity', elemOp);
                     }
                 });
+
                 renderReligionsLegend(year, active);
                 renderReligionsCaption(year, active);
             }
@@ -14128,7 +14177,12 @@ function getReligionSlice(religion, year) {
                 var leg = document.getElementById('legend');
                 if (!leg) return;
                 if (historyTab !== 'faiths') return;
-                active = active || getActiveReligionsAtYear(year);
+                if (!selectedFaithIds || selectedFaithIds.length === 0) {
+                    leg.innerHTML = '<div class="legend-title">' + htmlEscape(t('religionsListBtn')) + '</div>' +
+                        '<div class="religions-legend-empty" style="font-size:12px;opacity:0.75;padding:4px 0;">' + htmlEscape(t('faithsSelectPrompt')) + '</div>';
+                    return;
+                }
+                active = active || getActiveReligionsAtYear(year).filter(function(r) { return selectedFaithIds.indexOf(r.id) !== -1; });
                 var html;
                 if (!active.length) {
                     html = '<div class="legend-title">' + htmlEscape(t('religionsListBtn')) + '</div>' +
@@ -14137,13 +14191,12 @@ function getReligionSlice(religion, year) {
                     html = '<div class="legend-title">' + htmlEscape(t('religionsListBtn')) + '</div>' +
                         '<div class="religions-legend">' +
                         active.map(function(rel, rIdx) {
-                            var isSelected = (selectedFaithId === rel.id);
                             var swatchHtml = cbPatternsVisible ?
                                 '<svg width="16" height="12" style="display:inline-block;vertical-align:middle;border-radius:2px;margin-inline-end:6px;"><rect width="16" height="12" fill="' + rel.color + '"/><rect width="16" height="12" fill="url(#cbpat-' + (rIdx % 8) + ')"/></svg>' :
                                 '<span class="religions-legend-swatch" style="background:' + rel.color + '"></span>';
-                            return '<div class="religions-legend-item' + (isSelected ? ' selected' : '') + '" data-faith-id="' + rel.id + '" style="cursor:pointer;' + (isSelected ? 'font-weight:bold;color:#14B8A6;' : '') + '" title="' + htmlEscape(locField(rel, 'name')) + '" role="button" tabindex="0">' +
+                            return '<div class="religions-legend-item selected" data-faith-id="' + rel.id + '" style="cursor:pointer; font-weight:bold; color:#14B8A6;" title="' + htmlEscape(locField(rel, 'name')) + '" role="button" tabindex="0">' +
                                 swatchHtml +
-                                '<span class="religions-legend-name">' + htmlEscape(locField(rel, 'name')) + (isSelected ? ' ✓' : '') + '</span>' +
+                                '<span class="religions-legend-name">' + htmlEscape(locField(rel, 'name')) + ' ✓</span>' +
                                 '</div>';
                         }).join('') +
                         '</div>';
@@ -14165,10 +14218,14 @@ function getReligionSlice(religion, year) {
             }
             function renderReligionsCaption(year, active) {
                 if (!rgCaptionEl) return;
-                active = active || getActiveReligionsAtYear(year);
+                if (!selectedFaithIds || selectedFaithIds.length === 0) {
+                    rgCaptionEl.textContent = t('faithsSelectPrompt');
+                    return;
+                }
+                active = active || getActiveReligionsAtYear(year).filter(function(r) { return selectedFaithIds.indexOf(r.id) !== -1; });
                 var parts = [];
                 if (!religionsData) { rgCaptionEl.textContent = ''; return; }
-                religionsData.forEach(function(rel) {
+                religionsData.filter(function(r) { return selectedFaithIds.indexOf(r.id) !== -1; }).forEach(function(rel) {
                     if (year === rel.startYear) {
                         parts.push(htmlEscape(locField(rel, 'name')) + ' ' + htmlEscape(t('religionsEmerged')));
                     }
@@ -14176,7 +14233,7 @@ function getReligionSlice(religion, year) {
                         parts.push(htmlEscape(locField(rel, 'name')) + ' ' + htmlEscape(t('religionsDisappeared')));
                     }
                 });
-                rgCaptionEl.innerHTML = parts.join(' &nbsp;·&nbsp; ');
+                rgCaptionEl.innerHTML = parts.length ? parts.join(' &nbsp;·&nbsp; ') : '';
             }
 
             function showReligionDetail(rel) {
@@ -14203,12 +14260,13 @@ function getReligionSlice(religion, year) {
                 var adherents = locField(rel, 'adherents') || '';
                 var distribution = locField(rel, 'modern_distribution') || '';
                 var summary = locField(rel, 'summary') || '';
-                var isSelected = (selectedFaithId === rel.id);
+                var isSelected = (selectedFaithIds.indexOf(rel.id) !== -1);
+                var dateRangeText = formatReligionsRange(rel.startYear, rel.endYear);
 
                 var html = '<div class="hist-profile-card">' +
                     '<div class="hist-profile-header" style="border-inline-start: 4px solid ' + rel.color + '; padding-inline-start: 10px;">' +
                     '<h3 class="hist-profile-title"><span style="color:' + rel.color + ';">' + htmlEscape(symbol) + '</span> ' + htmlEscape(relName) + '</h3>' +
-                    '<p class="hist-profile-subtitle"><strong>' + htmlEscape(t('religionsListBtn') || 'أديان ومعتقدات') + '</strong> &nbsp;·&nbsp; ' + htmlEscape(rel.startYear) + ' → ' + (rel.endYear === null || rel.endYear === undefined ? htmlEscape(t('faithsPresent') || 'الحاضر') : htmlEscape(rel.endYear)) + '</p>' +
+                    '<p class="hist-profile-subtitle"><strong>' + htmlEscape(t('religionsListBtn') || 'أديان ومعتقدات') + '</strong> &nbsp;·&nbsp; ' + htmlEscape(dateRangeText) + '</p>' +
                     '</div>';
 
                 // Summary narrative box
@@ -14248,7 +14306,7 @@ function getReligionSlice(religion, year) {
                 html += '</div>';
 
                 // Highlight / Filter button
-                var btnText = isSelected ? (t('reset') || 'إلغاء التحديد') : (t('histRelHighlight') || 'تسليط الضوء على الخريطة');
+                var btnText = isSelected ? (t('faithsClearAll') || 'إلغاء التحديد') : (t('histRelHighlight') || 'تسليط الضوء على الخريطة');
                 html += '<div class="history-actions" style="margin-top:10px;">' +
                     '<button type="button" class="btn history-action-btn" id="relActHighlight" style="width:100%; justify-content:center; background:' + (isSelected ? 'var(--card-bg, #1e293b)' : rel.color) + '; color:#ffffff; border:none; padding:8px 14px; border-radius:8px; font-weight:700; cursor:pointer;">' +
                     (isSelected ? '✕ ' : '🔍 ') + htmlEscape(btnText) +
@@ -14269,11 +14327,9 @@ function getReligionSlice(religion, year) {
                 var highlightBtn = panelContent.querySelector('#relActHighlight');
                 if (highlightBtn) {
                     highlightBtn.onclick = function() {
-                        if (selectedFaithId === rel.id) {
-                            selectedFaithId = null;
-                        } else {
-                            selectedFaithId = rel.id;
-                            if (window.setReligionsYear) {
+                        toggleFaithSelection(rel.id);
+                        if (selectedFaithIds.indexOf(rel.id) !== -1) {
+                            if (window.setReligionsYear && (religionsYear < rel.startYear || (rel.endYear && religionsYear > rel.endYear))) {
                                 setReligionsYear(rel.startYear);
                             }
                         }
@@ -14342,11 +14398,14 @@ function getReligionSlice(religion, year) {
                 if (bb) bb.style.display = 'flex';
                 var etw = document.getElementById('historyEraTimelineWrap');
                 if (etw) etw.style.display = 'none';
+                var trw = document.getElementById('historyTravelersTimelineWrap');
+                if (trw) trw.style.display = 'none';
                 ensureReligionsOverlay();
                 fetchReligionsData().then(function() {
                     if (!religionsActive) return;
-                    if (!religionsYear) religionsYear = religionsData.length ? religionsData[0].startYear : 0;
+                    if (!religionsYear) religionsYear = 0;
                     setReligionsYear(religionsYear);
+                    if (window.renderFaithsPopoverList) window.renderFaithsPopoverList();
                 }).catch(function(err) {
                     console.error('Religions load error:', err);
                     if (rgCaptionEl) rgCaptionEl.textContent = t('religionsLoadError');
@@ -14354,7 +14413,7 @@ function getReligionSlice(religion, year) {
             }
             function deactivateReligionsMode() {
                 religionsActive = false;
-                selectedFaithId = null;
+                selectedFaithIds = [];
                 stopReligionsPlay();
                 if (rgGroupEl) rgGroupEl.style.display = 'none';
                 clearReligionsOverlay();
@@ -14372,18 +14431,66 @@ function getReligionSlice(religion, year) {
                     });
                     return;
                 }
-                var active = getActiveReligionsAtYear(religionsYear);
-                var names = {};
-                (active || []).forEach(function(a) { names[a.id] = true; });
-                list.innerHTML = religionsData.map(function(rel) {
-                    var isSelected = (selectedFaithId === rel.id);
-                    var on = isSelected || (!selectedFaithId && !!names[rel.id]);
-                    return '<button type="button" class="faiths-popover-item' + (isSelected ? ' selected active' : (on ? ' in-year' : '')) + '" data-faith-id="' + rel.id + '" role="checkbox" aria-checked="' + isSelected + '">' +
+
+                // Wire up search input and action buttons once
+                var searchInp = document.getElementById('histFaithsSearchInput');
+                if (searchInp && !searchInp._bound) {
+                    searchInp._bound = true;
+                    searchInp.addEventListener('input', function() {
+                        _histFaithsSearchText = this.value.trim().toLowerCase();
+                        window.renderFaithsPopoverList();
+                    });
+                }
+                var selectAllBtn = document.getElementById('histFaithsSelectAllBtn');
+                if (selectAllBtn && !selectAllBtn._bound) {
+                    selectAllBtn._bound = true;
+                    selectAllBtn.addEventListener('click', function() {
+                        selectedFaithIds = (religionsData || []).map(function(r) { return r.id; });
+                        window.renderFaithsPopoverList();
+                        drawReligionsScene(religionsYear, true);
+                        renderReligionsLegend(religionsYear);
+                    });
+                }
+                var clearBtn = document.getElementById('histFaithsClearBtn');
+                if (clearBtn && !clearBtn._bound) {
+                    clearBtn._bound = true;
+                    clearBtn.addEventListener('click', function() {
+                        selectedFaithIds = [];
+                        window.renderFaithsPopoverList();
+                        drawReligionsScene(religionsYear, true);
+                        renderReligionsLegend(religionsYear);
+                    });
+                }
+
+                var filtered = religionsData.filter(function(rel) {
+                    if (!_histFaithsSearchText) return true;
+                    var name = (locField(rel, 'name') || '').toLowerCase();
+                    var cl = (locField(rel, 'classification') || '').toLowerCase();
+                    var f = (locField(rel, 'founder') || '').toLowerCase();
+                    var sum = (locField(rel, 'summary') || '').toLowerCase();
+                    return name.indexOf(_histFaithsSearchText) !== -1 ||
+                           cl.indexOf(_histFaithsSearchText) !== -1 ||
+                           f.indexOf(_histFaithsSearchText) !== -1 ||
+                           sum.indexOf(_histFaithsSearchText) !== -1;
+                });
+
+                if (!filtered.length) {
+                    list.innerHTML = '<div class="history-empty-state" style="padding:16px;text-align:center;opacity:0.7;">' +
+                        htmlEscape(t('noDataFound') || 'لا توجد نتائج مطابقة') + '</div>';
+                    return;
+                }
+
+                list.innerHTML = filtered.map(function(rel) {
+                    var isSelected = (selectedFaithIds.indexOf(rel.id) !== -1);
+                    var inYear = (religionsYear >= rel.startYear && (rel.endYear === null || rel.endYear === undefined || religionsYear <= rel.endYear));
+                    var rangeFormatted = formatReligionsRange(rel.startYear, rel.endYear);
+                    return '<div class="faiths-popover-item' + (isSelected ? ' selected active' : '') + '" data-faith-id="' + rel.id + '" role="checkbox" aria-checked="' + isSelected + '" tabindex="0">' +
                         '<span class="religions-legend-swatch" style="background:' + rel.color + '"></span>' +
-                        '<span class="faiths-popover-name">' + htmlEscape(locField(rel, 'name')) + '</span>' +
+                        '<span class="faiths-popover-name">' + htmlEscape(locField(rel, 'name')) + (inYear && isSelected ? ' <span style="font-size:10px;opacity:0.8;">●</span>' : '') + '</span>' +
                         (isSelected ? '<span class="faiths-selected-check">✓</span>' : '') +
-                        '<span class="faiths-popover-range">' + rel.startYear + '→' + (rel.endYear === null || rel.endYear === undefined ? t('faithsPresent') : rel.endYear) + '</span>' +
-                        '</button>';
+                        '<span class="faiths-popover-range" dir="ltr">' + htmlEscape(rangeFormatted) + '</span>' +
+                        '<span class="faiths-item-info-btn" role="button" tabindex="0" title="' + htmlEscape(locField(rel, 'name')) + '">ℹ</span>' +
+                        '</div>';
                 }).join('');
 
                 var scrollCue = document.getElementById('histFaithsScrollCue');
@@ -14395,33 +14502,61 @@ function getReligionSlice(religion, year) {
                 syncFaithsCue();
                 list.onscroll = syncFaithsCue;
 
-                list.querySelectorAll('.faiths-popover-item').forEach(function(btn) {
-                    btn.addEventListener('click', function() {
-                        var id = this.getAttribute('data-faith-id');
-                        var rel = (religionsData || []).find(function(r) { return r.id === id; });
-                        if (!rel) return;
-                        if (selectedFaithId === id) {
-                            selectedFaithId = null;
-                            if (typeof announceToScreenReader === 'function') {
-                                announceToScreenReader(t('all') || 'الكل');
+                list.querySelectorAll('.faiths-popover-item').forEach(function(item) {
+                    var id = item.getAttribute('data-faith-id');
+                    var rel = (religionsData || []).find(function(r) { return r.id === id; });
+                    if (!rel) return;
+
+                    var infoBtn = item.querySelector('.faiths-item-info-btn');
+                    if (infoBtn) {
+                        infoBtn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            showReligionDetail(rel);
+                        });
+                        infoBtn.addEventListener('keydown', function(e) {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.stopPropagation();
+                                if (e.preventDefault) e.preventDefault();
+                                showReligionDetail(rel);
                             }
-                            window.renderFaithsPopoverList();
-                            drawReligionsScene(religionsYear, true);
-                            renderReligionsLegend(religionsYear);
-                            return;
+                        });
+                    }
+
+                    function toggleItem() {
+                        toggleFaithSelection(id);
+                        var nowSelected = (selectedFaithIds.indexOf(id) !== -1);
+
+                        if (nowSelected) {
+                            if (typeof announceToScreenReader === 'function') {
+                                announceToScreenReader((t('histTabFaiths') || 'دين') + ': ' + locField(rel, 'name'));
+                            }
+                            if (religionsYear < rel.startYear || (rel.endYear && religionsYear > rel.endYear)) {
+                                if (window.setReligionsYear) {
+                                    setReligionsYear(rel.startYear);
+                                }
+                            }
+                        } else {
+                            if (typeof announceToScreenReader === 'function') {
+                                announceToScreenReader(t('faithsClearAll') || 'إلغاء التحديد');
+                            }
                         }
-                        selectedFaithId = id;
-                        if (typeof announceToScreenReader === 'function') {
-                            announceToScreenReader((t('histTabFaiths') || 'دين') + ': ' + locField(rel, 'name'));
-                        }
-                        if (window.setReligionsYear) {
-                            setReligionsYear(rel.startYear);
-                        }
+
                         if (historyTab !== 'faiths' && window.selectHistoryTab) selectHistoryTab('faiths');
                         window.renderFaithsPopoverList();
                         drawReligionsScene(religionsYear, true);
                         renderReligionsLegend(religionsYear);
-                        if (window.innerWidth <= 680 && typeof closeAllHistPopovers === 'function') closeAllHistPopovers();
+                    }
+
+                    item.addEventListener('click', function(e) {
+                        if (e.target && e.target.closest('.faiths-item-info-btn')) return;
+                        toggleItem();
+                    });
+                    item.addEventListener('keydown', function(e) {
+                        if (e.target && e.target.closest('.faiths-item-info-btn')) return;
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            if (e.preventDefault) e.preventDefault();
+                            toggleItem();
+                        }
                     });
                 });
             };
@@ -14478,7 +14613,15 @@ function getReligionSlice(religion, year) {
             window.toggleReligionsPlay = toggleReligionsPlay;
             window.getActiveReligionsAtYear = getActiveReligionsAtYear;
             window.religionsStillActive = function() { return religionsActive; };
+            window.fetchReligionsData = fetchReligionsData;
             window.drawReligionsSceneNow = function(skipFadeIn) { drawReligionsScene(religionsYear, skipFadeIn); };
+            window.getSelectedFaithIds = function() { return selectedFaithIds; };
+            window.setSelectedFaithIds = function(ids) {
+                selectedFaithIds = Array.isArray(ids) ? ids.slice() : [];
+                if (window.renderFaithsPopoverList) window.renderFaithsPopoverList();
+                drawReligionsScene(religionsYear, true);
+                renderReligionsLegend(religionsYear);
+            };
 
             // ══════════════════════════════════════════════════════════════════
             // ── Historical Travelers & Explorers Layer ──

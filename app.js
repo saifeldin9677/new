@@ -4796,12 +4796,33 @@
                     textKey: "onboardStep1Text"
                 }, {
                     getEl: function() {
+                        return document.querySelector("#sectionToggle") || document.querySelector("#sectionGeoBtn");
+                    },
+                    icon: "🗺️",
+                    titleKey: "onboardSectionToggleTitle",
+                    textKey: "onboardSectionToggleText"
+                }, {
+                    getEl: function() {
                         var e = window.innerWidth <= 768;
                         return document.querySelector(e ? "#mobileLangToggle" : "#langToggle");
                     },
                     icon: "🌐",
                     titleKey: "onboardStep2Title",
                     textKey: "onboardStep2Text"
+                }, {
+                    getEl: function() {
+                        return document.querySelector("#themeToggleBtn");
+                    },
+                    icon: "🌓",
+                    titleKey: "onboardThemeToggleTitle",
+                    textKey: "onboardThemeToggleText"
+                }, {
+                    getEl: function() {
+                        return document.querySelector("#colorblindToggle");
+                    },
+                    icon: "👁️",
+                    titleKey: "onboardColorblindTitle",
+                    textKey: "onboardColorblindText"
                 }, {
                     getEl: function() {
                         if (window.innerWidth <= 768) return document.querySelector("#mobileToolsBtn");
@@ -4927,6 +4948,27 @@
                     textKey: "histOnboard3Text"
                 }, {
                     getEl: function() {
+                        return window.innerWidth <= 768 ? document.querySelector("#mobileLayersBtn") : (document.querySelector("#barLayersBtn") || document.querySelector("#layersToggleBtn"));
+                    },
+                    icon: "🗂️",
+                    titleKey: "histOnboardLayersTitle",
+                    textKey: "histOnboardLayersText"
+                }, {
+                    getEl: function() {
+                        return window.innerWidth <= 768 ? document.querySelector("#mobileToolsBtn") : document.querySelector("#annotateBtn");
+                    },
+                    icon: "✏️",
+                    titleKey: "histOnboardAnnotateTitle",
+                    textKey: "histOnboardAnnotateText"
+                }, {
+                    getEl: function() {
+                        return window.innerWidth <= 768 ? document.querySelector("#mobileToolsBtn") : document.querySelector("#quizBtn");
+                    },
+                    icon: "🧠",
+                    titleKey: "histOnboardQuizTitle",
+                    textKey: "histOnboardQuizText"
+                }, {
+                    getEl: function() {
                         var e = window.innerWidth <= 768;
                         return document.querySelector(e ? "#mobileSearchInput" : "#searchInput") || document.querySelector(".search-box");
                     },
@@ -4955,6 +4997,35 @@
                     icon: "📚",
                     titleKey: "histOnboard7Title",
                     textKey: "histOnboard7Text"
+                }, {
+                    getEl: function() {
+                        return document.querySelector("#sectionToggle") || document.querySelector("#sectionHistoryBtn");
+                    },
+                    icon: "🗺️",
+                    titleKey: "onboardSectionToggleTitle",
+                    textKey: "onboardSectionToggleText"
+                }, {
+                    getEl: function() {
+                        var e = window.innerWidth <= 768;
+                        return document.querySelector(e ? "#mobileLangToggle" : "#langToggle");
+                    },
+                    icon: "🌐",
+                    titleKey: "histOnboardLangTitle",
+                    textKey: "histOnboardLangText"
+                }, {
+                    getEl: function() {
+                        return document.querySelector("#themeToggleBtn");
+                    },
+                    icon: "🌓",
+                    titleKey: "onboardThemeToggleTitle",
+                    textKey: "onboardThemeToggleText"
+                }, {
+                    getEl: function() {
+                        return document.querySelector("#colorblindToggle");
+                    },
+                    icon: "👁️",
+                    titleKey: "onboardColorblindTitle",
+                    textKey: "onboardColorblindText"
                 } ], u = 0, p = !1;
                 s.addEventListener("click", function() {
                     y ? B() : _();

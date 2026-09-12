@@ -7658,6 +7658,62 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                             return document.querySelector(mb ? '#mobileToolsBtn' : '#annotateBtn');
                         }, icon: '✏️', titleKey: 'onboardStep13Title', textKey: 'onboardStep13Text' }
                     ];
+                    function syncOnboardBottomBarState(stepIndex) {
+                        var bb = document.getElementById('historyBottomBar');
+                        if (!bb) return;
+                        var isHist = (typeof currentSection !== 'undefined' && currentSection === 'history');
+                        if (isHist && stepIndex === 1) {
+                            if (getComputedStyle(bb).display === 'none') {
+                                bb.style.display = 'flex';
+                                bb.setAttribute('data-onboard-forced', 'true');
+                                var etw = document.getElementById('historyEraTimelineWrap');
+                                if (etw && (!bb.querySelector('.history-bottom-inner > div:not([style*="none"])'))) {
+                                    etw.style.display = 'flex';
+                                    etw.setAttribute('data-onboard-forced', 'true');
+                                }
+                            }
+                            var tl = document.getElementById('histTimeline');
+                            if (tl && (getComputedStyle(tl).display === 'none' || !tl.children.length)) {
+                                tl.style.display = 'block';
+                                tl.innerHTML = '<div class="history-era-timeline-thumb" style="left:38%;"></div>' +
+                                    '<span class="history-tl-dot" style="left:12%;"></span>' +
+                                    '<span class="history-tl-dot active" style="left:38%;"></span>' +
+                                    '<span class="history-tl-dot" style="left:64%;"></span>' +
+                                    '<span class="history-tl-dot" style="left:88%;"></span>';
+                                tl.setAttribute('data-onboard-forced', 'true');
+                            }
+                            var badge = document.getElementById('histCurrentYearBadge');
+                            if (badge && !badge.textContent.trim()) {
+                                badge.textContent = (typeof lang !== 'undefined' && lang === 'ar') ? '1250 م' : '1250 CE';
+                                badge.setAttribute('data-onboard-forced', 'true');
+                            }
+                        } else {
+                            if (bb.getAttribute('data-onboard-forced') === 'true') {
+                                bb.removeAttribute('data-onboard-forced');
+                                var forcedEtw = bb.querySelector('#historyEraTimelineWrap[data-onboard-forced="true"]');
+                                if (forcedEtw) {
+                                    forcedEtw.removeAttribute('data-onboard-forced');
+                                    forcedEtw.style.display = 'none';
+                                }
+                                if (typeof renderHistoryBar === 'function') {
+                                    renderHistoryBar();
+                                } else {
+                                    bb.style.display = 'none';
+                                }
+                            }
+                            var forcedTl = document.querySelector('#histTimeline[data-onboard-forced="true"]');
+                            if (forcedTl) {
+                                forcedTl.removeAttribute('data-onboard-forced');
+                                forcedTl.innerHTML = '';
+                                if (!historyEraId) forcedTl.style.display = 'none';
+                            }
+                            var forcedBadge = document.querySelector('#histCurrentYearBadge[data-onboard-forced="true"]');
+                            if (forcedBadge) {
+                                forcedBadge.removeAttribute('data-onboard-forced');
+                                forcedBadge.textContent = '';
+                            }
+                        }
+                    }
                     var histSteps = [
                         {
                             getEl: function() {
@@ -7670,7 +7726,20 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         },
                         {
                             getEl: function() {
-                                return document.querySelector('#historyBottomBar') || document.querySelector('#histErasTimelineWrap') || document.querySelector('#historySliderWrap');
+                                var bb = document.getElementById('historyBottomBar');
+                                if (bb) {
+                                    if (getComputedStyle(bb).display === 'none') {
+                                        bb.style.display = 'flex';
+                                        bb.setAttribute('data-onboard-forced', 'true');
+                                        var etw = document.getElementById('historyEraTimelineWrap');
+                                        if (etw && (!bb.querySelector('.history-bottom-inner > div:not([style*="none"])'))) {
+                                            etw.style.display = 'flex';
+                                            etw.setAttribute('data-onboard-forced', 'true');
+                                        }
+                                    }
+                                    return bb;
+                                }
+                                return document.querySelector('#histErasTimelineWrap') || document.querySelector('#historySliderWrap');
                             },
                             icon: '⏳',
                             titleKey: 'histOnboard2Title',
@@ -7695,22 +7764,9 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         },
                         {
                             getEl: function() {
-                                var cp = document.querySelector('#countryPanel');
-                                if (cp && cp.classList.contains('visible') && getComputedStyle(cp).display !== 'none') return cp;
-                                var ez = document.getElementById('onboardHistExploreZone');
-                                if (!ez) {
-                                    ez = document.createElement('div');
-                                    ez.id = 'onboardHistExploreZone';
-                                    ez.style.cssText = 'position:fixed;pointer-events:none;z-index:-1;';
-                                    document.body.appendChild(ez);
-                                }
-                                var vw = window.innerWidth, vh = window.innerHeight;
-                                var w = Math.min(vw * 0.5, 480), h = Math.min(vh * 0.4, 320);
-                                ez.style.left = (vw / 2 - w / 2) + 'px';
-                                ez.style.top = (vh / 2 - h / 2) + 'px';
-                                ez.style.width = w + 'px';
-                                ez.style.height = h + 'px';
-                                return ez;
+                                var oldEz = document.getElementById('onboardHistExploreZone');
+                                if (oldEz && oldEz.parentNode) oldEz.parentNode.removeChild(oldEz);
+                                return document.getElementById('mapContainer') || document.getElementById('mapSvg') || document.querySelector('svg');
                             },
                             icon: '🏛️',
                             titleKey: 'histOnboard5Title',
@@ -7727,7 +7783,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                         {
                             getEl: function() {
                                 var mb = window.innerWidth <= 768;
-                                return document.getElementById('histSourcesBtn') || (mb ? document.querySelector('#mobileToolsBtn') : document.querySelector('#toolsBtn'));
+                                return (mb ? document.querySelector('#mobileToolsBtn') : document.querySelector('#toolsBtn')) || document.getElementById('toolsDropdown');
                             },
                             icon: '📚',
                             titleKey: 'histOnboard7Title',
@@ -7778,6 +7834,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     }
 
                     function renderStep() {
+                        syncOnboardBottomBarState(currentStep);
                         var step = activeSteps()[currentStep];
                         var el = step.getEl ? step.getEl() : null;
                         if (el) {
@@ -7828,6 +7885,7 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     }
 
                     function closeTutorial() {
+                        syncOnboardBottomBarState(-1);
                         overlay.classList.remove('active');
                         isOpen = false;
                         glow.style.width = '0';
@@ -7870,8 +7928,13 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     });
                     overlay.addEventListener('click', function(e) {
                         if (e.target === overlay) {
-                            if (annotationTutorialActive) closeAnnotationTutorial();
-                            closeTutorial();
+                            // Do not close the tutorial when clicking on the map or backdrop overlay.
+                            // The only way to stop the tutorial is by clicking the skip button (تخطي).
+                            if (card) {
+                                card.classList.remove('onboard-pulse-hint');
+                                void card.offsetWidth;
+                                card.classList.add('onboard-pulse-hint');
+                            }
                         }
                     });
 
@@ -9540,9 +9603,9 @@ opt.textContent = (lang === 'ar' ? b.name : lang === 'ru' ? (b.name_ru || b.name
                     if (wt) wt.style.setProperty('display', wars ? 'grid' : 'none', 'important');
                     if (sb) sb.style.setProperty('display', wars ? 'flex' : 'none', 'important');
                     if (eg) eg.style.setProperty('display', eras ? 'grid' : 'none', 'important');
-                    if (bb) bb.style.display = (histTerrainActive || eras || faiths || (travelers && selectedTravelerIds && selectedTravelerIds.length > 0)) ? 'flex' : 'none';
+                    if (bb && bb.getAttribute('data-onboard-forced') !== 'true') bb.style.display = (histTerrainActive || eras || faiths || (travelers && selectedTravelerIds && selectedTravelerIds.length > 0)) ? 'flex' : 'none';
                     if (htw) htw.style.display = histTerrainActive ? 'flex' : 'none';
-                    if (etw) etw.style.display = (!histTerrainActive && eras) ? 'flex' : 'none';
+                    if (etw && etw.getAttribute('data-onboard-forced') !== 'true') etw.style.display = (!histTerrainActive && eras) ? 'flex' : 'none';
                     if (ftw) ftw.style.display = (!histTerrainActive && faiths) ? 'flex' : 'none';
                     if (ttw) ttw.style.display = (!histTerrainActive && travelers) ? 'flex' : 'none';
                     if (mw) { mw.classList.toggle('active', wars); mw.setAttribute('aria-selected', wars ? 'true' : 'false'); }

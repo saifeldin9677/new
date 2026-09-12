@@ -2778,6 +2778,13 @@ header,
     from { opacity: 0; transform: translate(-50%, calc(-50% + 12px)) scale(0.96); }
     to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
+.onboard-card.onboard-pulse-hint {
+    animation: onboardCardHint 0.35s ease !important;
+}
+@keyframes onboardCardHint {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.04); box-shadow: var(--shadow-lg), 0 0 32px rgba(20, 184, 166, 0.85); }
+}
 .onboard-card-icon {
     font-size: 2em;
     margin-bottom: 6px;

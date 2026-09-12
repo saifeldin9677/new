@@ -28,44 +28,95 @@
         "judaism_ar": "جبل الهيكل (هار هابايت) أقدس موقع في الديانة اليهودية، وموضع هيكل سليمان والهيكل الثاني؛ وحائط البراق/المبكى يمثل الحائط الغربي المتبقي من ساحة الهيكل.",
         "judaism_en": "The Temple Mount (Har HaBayit), holiest site in Judaism, location of the First and Second Temples; the Western Wall is the surviving retaining wall of the complex.",
         "christianity_ar": "كنيسة القيامة وجبل الجلجثة؛ أقدس بقاع الأرض في الإيمان المسيحي حيث صلب السيد المسيح ودُفن وقام، وطريق الآلام ومحور الحج العالمي.",
-        "christianity_en": "Church of the Holy Sepulchre and Golgotha; Christianity's premier holy site commemorating the crucifixion, burial, and resurrection of Jesus Christ."
+        "christianity_en": "Church of the Holy Sepulchre and Golgotha; Christianity's premier holy site commemorating the crucifixion, burial, and resurrection of Jesus Christ.",
+        "islam_ru": "Мечеть Аль-Акса и Купол Скалы — третья святыня ислама, первая кибла и место вознесения Пророка Мухаммада (мир ему).",
+        "judaism_ru": "Храмовая гора (Хар ха-Байит) — святейшее место в иудаизме, место Первого и Второго храмов; Стена Плача — уцелевшая стена комплекса.",
+        "christianity_ru": "Храм Гроба Господня и Голгофа — главнейшая святыня христианства, место распятия, погребения и воскресения Иисуса Христа.",
+        "islam_uz": "Al-Aqso masjidi va Qubbat us-Saxra — Islomning uchinchi harami, birinchi qiblasi hamda Payg‘ambarimiz Muhammad (s.a.v.) me’rojga ko‘tarilgan muqaddas zamin.",
+        "judaism_uz": "Ma’bad tog‘i (Har ha-Bayit) — Yahudiylikdagi eng muqaddas joy, Sulaymon ma’badi va Ikkinchi ma’bad o‘rni; Yig‘i devori ma’bad majmuasidan saqlanib qolgan devordir.",
+        "christianity_uz": "Muqaddas Qabr ibodatxonasi va Golgofa — Xristianlikdagi eng oliy ziyoratgoh; Iso Masihning xochga mixlanishi, dafn etilishi va tirilishi e’tiqod qilingan joy.",
+        "islam_es": "Mezquita de Al-Aqsa y Cúpula de la Roca: tercer lugar más sagrado del islam, primera Qibla y meta del Viaje Nocturno y Ascensión del Profeta Mahoma.",
+        "judaism_es": "El Monte del Templo (Har HaBayit), lugar más sagrado del judaísmo, emplazamiento del Primer y Segundo Templo; el Muro Occidental es su vestigio conservado.",
+        "christianity_es": "Iglesia del Santo Sepulcro y Calvario: santuario supremo del cristianismo que conmemora la crucifixión, sepultura y resurrección de Jesucristo."
       },
       "timeline": [
         {
           "era_ar": "القرن 10 ق.م – 70 م",
           "era_en": "10th Century BCE – 70 CE",
           "desc_ar": "بناء هيكل سليمان ثم تدميره على يد بابل (586 ق.م)، ثم بناء الهيكل الثاني وهدمه على يد الرومان (70 م).",
-          "desc_en": "Construction of Solomon's Temple, Babylonian destruction (586 BCE), Second Temple rebuilt and razed by Rome (70 CE)."
+          "desc_en": "Construction of Solomon's Temple, Babylonian destruction (586 BCE), Second Temple rebuilt and razed by Rome (70 CE).",
+          "era_ru": "X в. до н.э. – 70 н.э.",
+          "desc_ru": "Строительство Первого Храма Соломона, разрушение Вавилоном (586 г. до н.э.), возведение Второго Храма и его разрушение Римом (70 г. н.э.).",
+          "era_uz": "Miloddan avvalgi X asr – milodiy 70 y.",
+          "desc_uz": "Sulaymon ma’badining qurilishi, Bobil tomonidan vayron etilishi (m.a. 586 y.), Ikkinchi ma’bad tiklanishi va Rim tomonidan buzib tashlanishi (m. 70 y.).",
+          "era_es": "Siglo X a.C. – 70 d.C.",
+          "desc_es": "Construcción del Templo de Salomón, destrucción babilónica (586 a.C.), reconstrucción del Segundo Templo y destrucción por Roma (70 d.C.)."
         },
         {
           "era_ar": "326–335 م",
           "era_en": "326–335 CE",
           "desc_ar": "الإمبراطورة هيلانة والإمبراطور قسطنطين يشيدان كنيسة القيامة، وتصبح القدس قطب المسيحية البيزنطية.",
-          "desc_en": "Empress Helena and Constantine construct the Holy Sepulchre, establishing Jerusalem as a Christian imperial center."
+          "desc_en": "Empress Helena and Constantine construct the Holy Sepulchre, establishing Jerusalem as a Christian imperial center.",
+          "era_ru": "325–335 н.э.",
+          "desc_ru": "Императрица Елена и Константин Великий основывают Храм Гроба Господня на месте Голгофы.",
+          "era_uz": "Milodiy 325–335 yillar",
+          "desc_uz": "Malika Yelena va Konstantin Buyuk tomonidan Golgofa tepaligida Muqaddas Qabr ibodatxonasiga asos solinishi.",
+          "era_es": "325–335 d.C.",
+          "desc_es": "Santa Elena y el emperador Constantino el Grande fundan la Basílica del Santo Sepulcro sobre el Gólgota."
         },
         {
           "era_ar": "638 م",
           "era_en": "638 CE",
           "desc_ar": "الفتح الإسلامي في عهد أمير المؤمنين عمر بن الخطاب وكتابة العهدة العمرية، وتشييد قبة الصخرة والأقصى في العهد الأموي.",
-          "desc_en": "Muslim conquest under Caliph Umar with the Umariyya Covenant; Umayyad construction of the Dome of the Rock and Al-Aqsa."
+          "desc_en": "Muslim conquest under Caliph Umar with the Umariyya Covenant; Umayyad construction of the Dome of the Rock and Al-Aqsa.",
+          "era_ru": "637–691 н.э.",
+          "desc_ru": "Мирный вход халифа Умара ибн аль-Хаттаба в Иерусалим; омейядские халифы возводят Купол Скалы и мечеть Аль-Акса.",
+          "era_uz": "Milodiy 637–691 yillar",
+          "desc_uz": "Xalifa Umar ibn al-Xattobning Quddusga tinch yo‘l bilan kirishi; Umaviylar tomonidan Qubbat us-Saxra va Al-Aqso masjidining bunyod etilishi.",
+          "era_es": "637–691 d.C.",
+          "desc_es": "Entrada pacífica del califa Umar ibn al-Jattab; los califas omeyas erigen la Cúpula de la Roca y la Mezquita de Al-Aqsa."
         },
         {
           "era_ar": "1099–1187 م",
           "era_en": "1099–1187 CE",
           "desc_ar": "الحروب الصليبية وتحويل قبة الصخرة لكنيسة 'معبد الرب'، حتى استعادها صلاح الدين الأيوبي عام 1187 م.",
-          "desc_en": "Crusader capture converting Dome of the Rock into 'Templum Domini', liberated by Saladin following the Battle of Hattin (1187 CE)."
+          "desc_en": "Crusader capture converting Dome of the Rock into 'Templum Domini', liberated by Saladin following the Battle of Hattin (1187 CE).",
+          "era_ru": "1099–1187 н.э.",
+          "desc_ru": "Крестоносцы превращают мечети в храмы; Салах ад-Дин освобождает город и восстанавливает исламские святыни.",
+          "era_uz": "Milodiy 1099–1187 yillar",
+          "desc_uz": "Salibchilar davrida masjidlarning cherkovga aylantirilishi; Salohiddin Ayyubiy tomonidan shahar ozod etilib, Islomiy ziyoratgohlarning tiklanishi.",
+          "era_es": "1099–1187 d.C.",
+          "desc_es": "Conversión de mezquitas en iglesias por los cruzados; Saladino reconquista la ciudad y restaura los lugares islámicos."
         },
         {
           "era_ar": "1967 م – الآن",
           "era_en": "1967 CE – Present",
           "desc_ar": "احتلال إسرائيل للقدس الشرقية، مع استمرار إدارة الأوقاف الإسلامية الأردنية وسط صراع يومي حاد على السيادة والهوية والوضع القائم.",
-          "desc_en": "Israeli military occupation of East Jerusalem (1967); Jordan-administered Islamic Waqf maintains guardianship amid ongoing sovereignty disputes."
+          "desc_en": "Israeli military occupation of East Jerusalem (1967); Jordan-administered Islamic Waqf maintains guardianship amid ongoing sovereignty disputes.",
+          "era_ru": "1852 – настоящее время",
+          "desc_ru": "Установление международного статуса-кво османским указом, подтвержденным международным правом.",
+          "era_uz": "1852 yildan hozirgacha",
+          "desc_uz": "Usmoniylar farmoni asosida xalqaro huquq bilan mustahkamlangan tarixiy status-kvo tartibi.",
+          "era_es": "1852 – presente",
+          "desc_es": "Fijación del status quo otomano ratificado por los acuerdos internacionales y el derecho consuetudinario."
         }
       ],
       "current_status_ar": "يخضع الموقع لإدارة دائرة الأوقاف الإسلامية الأردنية بموجب معاهدة الوضع القائم (Status Quo)، مع سيطرة أمنية إسرائيلية خانقة واقتحامات متكررة من المستوطنين، بينما تُدار كنيسة القيامة بميثاق وضع قائم عثماني صارم يوزع السيطرة بين الروم الأرثوذكس والفرنسيسكان والأرمن والسريان والأقباط والإثيوبيين.",
       "current_status_en": "Governed by the historic Status Quo agreement with the Jordan-appointed Islamic Waqf administering the Haram al-Sharif, amid tight Israeli security control, while the Church of the Holy Sepulchre is shared among six Christian denominations under an Ottoman decree.",
       "summary_ar": "أعقد وأقدس بقعة دينية وجغرافية في تاريخ البشرية، تختزل الذاكرة الروحية للديانات الإبراهيمية الثلاث عبر أكثر من ثلاثة آلاف عام من البناء والهدم والصراع والقداسة.",
-      "summary_en": "The world's most contested and spiritually resonant sacred precinct, condensing over three millennia of monotheistic worship, conflict, architecture, and shared Abrahamic memory."
+      "summary_en": "The world's most contested and spiritually resonant sacred precinct, condensing over three millennia of monotheistic worship, conflict, architecture, and shared Abrahamic memory.",
+      "name_ru": "Иерусалим (Аль-Акса, Храмовая гора и Храм Гроба Господня)",
+      "location_ru": "Иерусалим, Палестина",
+      "current_status_ru": "Статус-кво под надзором Иорданского вакфа: мусульмане молятся на территории комплекса Аль-Акса, евреи молятся у Стены Плача, а Храм Гроба Господня разделен шестью христианскими конфессиями.",
+      "summary_ru": "Самое священное и исторически насыщенное место в истории человечества, объединяющее память авраамических религий.",
+      "name_uz": "Quddusi Sharif (Al-Aqso, Ma’bad tog‘i va Muqaddas Qabr ibodatxonasi)",
+      "location_uz": "Quddus, Falastin",
+      "current_status_uz": "Iordaniya Vaqfi nazorati ostidagi status-kvo: musulmonlar Al-Aqso hududida, yahudiylar G‘arbiy devorda ibodat qiladi; Muqaddas Qabr ibodatxonasi 6 ta xristian konfessiyasi o‘rtasida bo‘lingan.",
+      "summary_uz": "Insoniyat tarixidagi eng muqaddas va ma’naviy merosga boy markaz; uchta samoviy dinning mushtarak xotirasini o‘zida jamlagan maskan.",
+      "name_es": "Jerusalén (Al-Aqsa, Monte del Templo y Santo Sepulcro)",
+      "location_es": "Jerusalén, Palestina",
+      "current_status_es": "Status quo histórico bajo custodia del Waqf jordano: los musulmanes oran en la Explanada de las Mezquitas, los judíos en el Muro de las Lamentaciones, y el Santo Sepulcro es compartido por seis confesiones cristianas.",
+      "summary_es": "El enclave sagrado más disputado y de mayor resonancia espiritual en la historia humana, confluencia de las tres religiones abrahámicas."
     },
     {
       "id": "cave-of-the-patriarchs",
@@ -90,38 +141,80 @@
         "islam_ar": "مسجد إسلامي تاريخي يضم مقامات أنبياء الله إبراهيم وإسحاق ويعقوب وزوجاتهم، ويُعد رابع الحرمين في التراث الشعبي الإسلامي.",
         "islam_en": "Historic Islamic sanctuary encompassing the tombs of Prophets Abraham, Isaac, Jacob, and their wives, revered as a core sanctuary.",
         "judaism_ar": "مغارة المكفيلا (Machpelah)، ثاني أقدس بقعة في اليهودية بعد جبل الهيكل؛ وهي الأرض الأولى التي اشتراها إبراهيم لدفن سارة بحسب سفر التكوين.",
-        "judaism_en": "Cave of Machpelah, Judaism's second holiest site after the Temple Mount; the first piece of land purchased by Abraham to bury Sarah (Genesis)."
+        "judaism_en": "Cave of Machpelah, Judaism's second holiest site after the Temple Mount; the first piece of land purchased by Abraham to bury Sarah (Genesis).",
+        "islam_ru": "Священное место захоронения пророка Ибрахима (Авраама) и его семьи; почитается как четвертая святыня ислама.",
+        "judaism_ru": "Второе по святости место в иудаизме (Меарат ха-Махпела), первая земля, купленная Авраамом в Ханаане.",
+        "islam_uz": "Ibrohim (a.s.) va uning oilasi dafn etilgan muqaddas ziyoratgoh; Islom olamidagi to‘rtinchi e’zozli qadamjo.",
+        "judaism_uz": "Yahudiylikdagi ikkinchi eng muqaddas joy (Mearat ha-Maxpela), Ibrohim tomonidan Kan’onda sotib olingan birinchi mulk.",
+        "islam_es": "Venerado recinto donde reposa el profeta Ibrahim (Abraham) y su linaje; considerado el cuarto lugar más sagrado del islam.",
+        "judaism_es": "Segundo lugar más sagrado del judaísmo (Me'arat HaMajpelá), primera posesión terrenal adquirida por Abraham en Canaán."
       },
       "timeline": [
         {
           "era_ar": "القرن 1 ق.م",
           "era_en": "1st Century BCE",
           "desc_ar": "هيرودس الكبير يشيد السور الحجري الضخم القائم حتى اليوم المحيط بالمغارة.",
-          "desc_en": "Herod the Great builds the massive megalithic stone enclosure surrounding the cave, which survives intact today."
+          "desc_en": "Herod the Great builds the massive megalithic stone enclosure surrounding the cave, which survives intact today.",
+          "era_ru": "ок. 20 г. до н.э.",
+          "desc_ru": "Ирод Великий возводит монументальное каменное ограждение вокруг пещеры.",
+          "era_uz": "Miloddan avvalgi 20 yillar",
+          "desc_uz": "Irod Buyuk tomonidan g‘or ustiga ulkan tosh me’moriy majmuaning qurilishi.",
+          "era_es": "c. 20 a.C.",
+          "desc_es": "Herodes el Grande levanta el monumental recinto de piedra sillar alrededor de la cueva."
         },
         {
           "era_ar": "637 م – العهد الإسلامي",
           "era_en": "637 CE – Islamic Era",
           "desc_ar": "تحويل الموقع إلى مسجد جامع وتشييد المقامات والأضرحة ووقف الأوقاف لإطعام الحجاج والفقراء (التكية الإبراهيمية).",
-          "desc_en": "Converted into a congregational mosque with cenotaphs and perpetual waqf hospitality endowments (Ibrahimi Takiyya)."
+          "desc_en": "Converted into a congregational mosque with cenotaphs and perpetual waqf hospitality endowments (Ibrahimi Takiyya).",
+          "era_ru": "VI–VII вв.",
+          "desc_ru": "Византийская базилика преобразована в мечеть после мусульманского завоевания.",
+          "era_uz": "VI–VII asrlar",
+          "desc_uz": "Vizantiya bazilikasining Islom fathidan so‘ng masjidga aylantirilishi.",
+          "era_es": "Siglos VI–VII",
+          "desc_es": "La basílica bizantina es transformada en mezquita tras la conquista musulmana."
         },
         {
           "era_ar": "1100–1187 م",
           "era_en": "1100–1187 CE",
           "desc_ar": "الصليبيون يحولونه إلى كنيسة القديس إبراهيم، ثم يعيده صلاح الدين الأيوبي مسجداً ويضع فيه منبر عسقلان الأثري الشهير.",
-          "desc_en": "Crusaders convert it into St. Abraham's church; restored as a mosque by Saladin, who installed the masterwork Ascalon Minbar."
+          "desc_en": "Crusaders convert it into St. Abraham's church; restored as a mosque by Saladin, who installed the masterwork Ascalon Minbar.",
+          "era_ru": "1100–1188 н.э.",
+          "desc_ru": "Превращение в церковь Святого Авраама крестоносцами, затем возврат статуса мечети Салах ад-Дином.",
+          "era_uz": "Milodiy 1100–1188 yillar",
+          "desc_uz": "Salibchilar davrida Muqaddas Avraam cherkovi bo‘lishi, so‘ng Salohiddin Ayyubiy tomonidan qayta masjid etilishi.",
+          "era_es": "1100–1188 d.C.",
+          "desc_es": "Conversión en iglesia de San Abraham por los cruzados y posterior restauración como mezquita por Saladino."
         },
         {
           "era_ar": "1994 م – الآن",
           "era_en": "1994 CE – Present",
           "desc_ar": "مجزرة الحرم الإبراهيمي على يد باروخ غولدشتاين؛ تلاها قيام سلطات الاحتلال بتقسيم الحرم قسرياً إلى قسم مسجد للمسلمين وقسم كنيس لليهود.",
-          "desc_en": "Following the 1994 massacre by a settler, Israeli occupation forces partitioned the sanctuary into separate mosque and synagogue sections."
+          "desc_en": "Following the 1994 massacre by a settler, Israeli occupation forces partitioned the sanctuary into separate mosque and synagogue sections.",
+          "era_ru": "1994 – настоящее время",
+          "desc_ru": "После трагедии 1994 года здание разделено израильскими властями на две отдельные зоны.",
+          "era_uz": "1994 yildan hozirgacha",
+          "desc_uz": "1994 yil fojiasidan so‘ng Isroil harbiy ma’muriyati tomonidan bino ichidan ikki qismga bo‘linishi.",
+          "era_es": "1994 – presente",
+          "desc_es": "Tras los acontecimientos de 1994, la mezquita es particionada internamente en dos áreas separadas."
         }
       ],
       "current_status_ar": "مقسم مادياً بجدران فولاذية ونقاط تفتيش عسكرية؛ حيث يسيطر اليهود على 60% من مساحته والمسلمون على 40%، مع إغلاقه بالكامل أمام المسلمين في أعياد اليهود والعكس في أعياد المسلمين.",
       "current_status_en": "Physically partitioned by security barriers and IDF checkpoints into a mosque (40%) and synagogue (60%), with exclusive alternating access during major religious holidays.",
       "summary_ar": "التجسيد الأكثر مأساوية وتوتراً للتقاسم القسري لموقع عبادة تاريخي يضم أضرحة الآباء الأوائل للأديان الإبراهيمية.",
-      "summary_en": "The most acutely partitioned sacred site in the world, embodying centuries of shared veneration for Abraham fractured by modern territorial conflict."
+      "summary_en": "The most acutely partitioned sacred site in the world, embodying centuries of shared veneration for Abraham fractured by modern territorial conflict.",
+      "name_ru": "Пещера Патриархов (Мечеть Ибрахима / Махпела)",
+      "location_ru": "Хеврон (Аль-Халиль), Палестина",
+      "current_status_ru": "Разделен барьерами безопасности и блокпостами на мечеть (40%) и синагогу (60%) с поочередным доступом во время религиозных праздников.",
+      "summary_ru": "Место упокоения патриархов и матерей монотеизма: Авраама, Сарры, Исаака, Ревекки, Иакова и Лии.",
+      "name_uz": "Ibrohim masjidi (Paxriylar g‘ori / Maxpela)",
+      "location_uz": "Xevron (Al-Xalil), Falastin",
+      "current_status_uz": "Xavfsizlik to‘siqlari va nazorat postlari orqali masjid (40%) va sinagogaga (60%) bo‘lingan; diniy bayramlarda navbat bilan to‘liq ajratiladi.",
+      "summary_uz": "Tavhid payg‘ambarlari dafn etilgan muqaddas maskan: Ibrohim (a.s.), Sora, Ishoq, Rafqa, Ya’qub va Liyaning qabrlari joylashgan.",
+      "name_es": "Tumba de los Patriarcas (Mezquita de Ibrahimi / Cueva de Macpela)",
+      "location_es": "Hebrón (Al-Jalil), Palestina",
+      "current_status_es": "Dividido físicamente por barreras militares en mezquita (40%) y sinagoga (60%), con alternancia exclusiva de accesos durante las festividades religiosas.",
+      "summary_es": "Lugar de enterramiento venerado de los patriarcas y matriarcas del monoteísmo: Abraham, Sara, Isaac, Rebeca, Jacob y Lea."
     },
     {
       "id": "ayodhya-ram-mandir",
@@ -146,38 +239,80 @@
         "hinduism_ar": "موقع 'رام جانبومي' أقدس بقعة في التراث الهندوسي الرامي؛ حيث يُعتقد أنه المسقط الدقيق لولادة الإله 'راما' المذكور في ملحمة الرامايانا.",
         "hinduism_en": "Ram Janmabhoomi, revered as the precise birthplace of Lord Rama, the 7th avatar of Vishnu celebrated in the epic Ramayana.",
         "islam_ar": "موقع مسجد بابري التاريخي الذي شيده القائد المغولي مير باقي بأمر الإمبراطور ظهير الدين بابر عام 1528م، وكان صرحاً معمارياً مغولياً عريقاً.",
-        "islam_en": "Site of the historic Babri Mosque constructed in 1528 CE under Mughal Emperor Babur, an enduring monument of early Mughal architecture."
+        "islam_en": "Site of the historic Babri Mosque constructed in 1528 CE under Mughal Emperor Babur, an enduring monument of early Mughal architecture.",
+        "hinduism_ru": "Священное место рождения (Джанмабхуми) бога Рамы, седьмого аватара Вишну, описанное в эпосе Рамаяна.",
+        "islam_ru": "Историческая мечеть Бабри, возведенная в 1528 году полководцем Бабура Мир Баки, памятник архитектуры Великих Моголов.",
+        "hinduism_uz": "Vishnuning yettinchi avatari bo‘lmish xudo Ramanning muqaddas tavallud maskani (Janmabxumi).",
+        "islam_uz": "Bobur Mirzo lashkarboshisi Mir Boqiy tomonidan 1528 yilda qurilgan tarixiy Boburiylar me’moriy yodgorligi.",
+        "hinduism_es": "Lugar sagrado de nacimiento (Janmabhoomi) del dios Rama, séptimo avatar de Vishnu según el Ramayana.",
+        "islam_es": "Histórica mezquita mogola construida en 1528 por Mir Baqi, general del emperador Babur."
       },
       "timeline": [
         {
           "era_ar": "القرون القديمة – 1528 م",
           "era_en": "Ancient Eras – 1528 CE",
           "desc_ar": "وجود معبد هندوسي تاريخي مكرس لراما بحسب الأبحاث الأثرية وروايات التراث الهندوسي.",
-          "desc_en": "Presence of earlier temple structures venerating Rama according to archaeological surveys and traditional accounts."
+          "desc_en": "Presence of earlier temple structures venerating Rama according to archaeological surveys and traditional accounts.",
+          "era_ru": "1528 н.э.",
+          "desc_ru": "Полководец императора Бабура Мир Баки строит мечеть Бабри в Айодхье.",
+          "era_uz": "Milodiy 1528 yil",
+          "desc_uz": "Bobur imperatori sarkardasi Mir Boqiy tomonidan Ayodxyada Boburiy masjidi qurilishi.",
+          "era_es": "1528 d.C.",
+          "desc_es": "El general Mir Baqi erige la mezquita de Babri en Ayodhya por orden de Babur."
         },
         {
           "era_ar": "1528 م",
           "era_en": "1528 CE",
           "desc_ar": "بناء مسجد بابري ذي القباب الثلاث في العصر المغولي الأول، واستخدامه للصلاة لعدة قرون.",
-          "desc_en": "Construction of the three-domed Babri Mosque during the initial years of the Mughal Empire."
+          "desc_en": "Construction of the three-domed Babri Mosque during the initial years of the Mughal Empire.",
+          "era_ru": "1853–1949 н.э.",
+          "desc_ru": "Первые столкновения; установка идолов внутри мечети в 1949 году и судебный арест здания.",
+          "era_uz": "1853–1949 yillar",
+          "desc_uz": "Ilk diniy to‘qnashuvlar; 1949 yilda masjid ichiga butlar qo‘yilishi va sud orqali yopilishi.",
+          "era_es": "1853–1949 d.C.",
+          "desc_es": "Primeros enfrentamientos comunitarios; colocación de ídolos en 1949 y clausura judicial del recinto."
         },
         {
           "era_ar": "1949–1992 م",
           "era_en": "1949–1992 CE",
           "desc_ar": "وضع أصنام لراما داخل المسجد ليلاً عام 1949 وإغلاقه؛ ثم هدم المسجد في 6 ديسمبر 1992 على يد حشود قومية هندوسية، مما أشعل اضطرابات دامية.",
-          "desc_en": "Installation of Rama idols in 1949; catastrophic demolition of the mosque by Hindu nationalist crowds on Dec 6, 1992, sparking nationwide unrest."
+          "desc_en": "Installation of Rama idols in 1949; catastrophic demolition of the mosque by Hindu nationalist crowds on Dec 6, 1992, sparking nationwide unrest.",
+          "era_ru": "6 декабря 1992 г.",
+          "desc_ru": "Снос исторической мечети Бабри толпой активистов, приведший к масштабным волнениям.",
+          "era_uz": "1992 yil 6 dekabr",
+          "desc_uz": "Tarixiy Boburiy masjidining radikal olomon tomonidan buzib tashlanishi va ommaviy tartibsizliklar.",
+          "era_es": "6 de diciembre de 1992",
+          "desc_es": "Demolición de la mezquita histórica de Babri por manifestantes, desencadenando graves disturbios."
         },
         {
           "era_ar": "2019–2024 م",
           "era_en": "2019–2024 CE",
           "desc_ar": "حكمت المحكمة العليا الهندية بمنح الأرض للهندوس لبناء المعبد وتخصيص أرض بديلة للمسلمين؛ وافتتح معبد راما الكبير رسمياً في يناير 2024.",
-          "desc_en": "Supreme Court of India awards the disputed land for a Hindu temple and allocates separate land for a mosque; Ram Mandir consecrated in January 2024."
+          "desc_en": "Supreme Court of India awards the disputed land for a Hindu temple and allocates separate land for a mosque; Ram Mandir consecrated in January 2024.",
+          "era_ru": "2019–2024 гг.",
+          "desc_ru": "Решение Верховного суда Индии о передаче участка под храм Рамы и освящение храма в 2024 году.",
+          "era_uz": "2019–2024 yillar",
+          "desc_uz": "Hindiston Oliy sudi qarori bilan yerning Ram ibodatxonasiga berilishi va 2024 yilda ochilishi.",
+          "era_es": "2019–2024",
+          "desc_es": "Fallo histórico del Tribunal Supremo de la India a favor del templo y consagración del Ram Mandir en 2024."
         }
       ],
       "current_status_ar": "بُني مكانه معبد راما الهندوسي الضخم من الحجر الرملي الوردي، وافتتحه رئيس وزراء الهند ناريندرا مودي في يناير 2024، بينما تم منح الوقف الإسلامي قطعة أرض على بعد 25 كم في قرية دنيبور لبناء مسجد جديد ومستشفى.",
       "current_status_en": "The newly constructed grand Ram Mandir temple stands upon the site following the 2019 verdict; a replacement parcel in Dhannipur was granted to the Sunni Waqf Board for a mosque complex.",
       "summary_ar": "أخطر بؤرة نزاع ديني-سياسي في تاريخ الهند الحديث؛ شكلت قضيته ملامح السياسة والهوية القومية والعلاقات الإسلامية-الهندوسية لعقود طويلة.",
-      "summary_en": "Modern India's most defining communal flashpoint, altering the trajectory of national politics, archaeology, and Hindu-Muslim relations."
+      "summary_en": "Modern India's most defining communal flashpoint, altering the trajectory of national politics, archaeology, and Hindu-Muslim relations.",
+      "name_ru": "Айодхья: Рам Джанмабхуми и Мечеть Бабри",
+      "location_ru": "Айодхья, штат Уттар-Прадеш, Индия",
+      "current_status_ru": "На месте разрушенной мечети возведен монументальный храм Рамы (открыт в 2024 г.); мусульманской общине выделен участок в Дханнипуре.",
+      "summary_ru": "Крупнейший религиозно-исторический спор в современной Индии, связанный с местом рождения Рамы и мечетью XVI века.",
+      "name_uz": "Ayodxya: Ram Janmabxumi va Boburiy masjidi",
+      "location_uz": "Ayodxya, Uttar-Pradesh shtati, Hindiston",
+      "current_status_uz": "Buzilgan masjid o‘rnida ulkan Ram Mandir ibodatxonasi qad ko‘tardi (2024 yilda ochildi); musulmon jamoasiga Dhannipurda yer ajratildi.",
+      "summary_uz": "Zamonaviy Hindiston tarixidagi eng yirik diniy-tarixiy baxs markazi; Rama tavallud topgan joy va XVI asr Boburiy masjidi o‘rni.",
+      "name_es": "Ayodhya: Ram Janmabhoomi y Mezquita de Babri",
+      "location_es": "Ayodhya, Uttar Pradesh, India",
+      "current_status_es": "Sobre el solar se erige el nuevo y monumental templo Ram Mandir (inaugurado en 2024); se otorgó a la comunidad musulmana una parcela alternativa en Dhannipur.",
+      "summary_es": "El epicentro de disputa comunal e histórico-religiosa más significativo de la India contemporánea."
     },
     {
       "id": "hagia-sophia",
@@ -202,44 +337,92 @@
         "christianity_ar": "كاتدرائية الحكمة الإلهية؛ الكاتدرائية البطريركية الكبرى للأرثوذكسية الشرقية ورمز الحضارة البيزنطية وقمة عمارة العصور الوسطى.",
         "christianity_en": "Cathedral of Holy Wisdom; supreme cathedral of the Eastern Orthodox Church, imperial coronation church, and apex of Byzantine civilization.",
         "islam_ar": "جامع الفتح الأعظم؛ رمز تحول القسطنطينية إلى حاضرة إسلامية على يد السلطان محمد الفاتح، ومسجد السلاطين العثمانيين لقرابة خمسة قرون.",
-        "islam_en": "The conquest mosque of Sultan Mehmed II, primary imperial mosque of the Ottoman Empire for nearly five centuries, and a paramount symbol of Ottoman glory."
+        "islam_en": "The conquest mosque of Sultan Mehmed II, primary imperial mosque of the Ottoman Empire for nearly five centuries, and a paramount symbol of Ottoman glory.",
+        "christianity_ru": "Главный собор Вселенского патриархата православия и византийского зодчества на протяжении 916 лет.",
+        "islam_ru": "Символ завоевания Константинополя султаном Мехмедом II Фатихом (1453) и образцовая имперская мечеть османов.",
+        "christianity_uz": "Vizantiya imperiyasining bosh sobori va 9 asr davomida pravoslav olamining eng muazzam ibodatxonasi.",
+        "islam_uz": "Sulton Mehmed Fotihiy tomonidan Qustantiniya (Istanbul) fathining bosh ramzi va Usmoniylarning eng ulug‘ masjidi.",
+        "christianity_es": "Catedral principal del Patriarcado Ecuménico de Constantinopla y cúspide de la cristiandad oriental durante 916 años.",
+        "islam_es": "Emblema supremo de la conquista otomana de Constantinopla por Mehmed II el Conquistador en 1453."
       },
       "timeline": [
         {
           "era_ar": "537 م",
           "era_en": "537 CE",
           "desc_ar": "الإمبراطور البيزنطي جستنيان الأول يفتتح الكاتدرائية بقبتها المعلقة الفريدة، معلناً 'يا سليمان، لقد تغلبتُ عليك'.",
-          "desc_en": "Byzantine Emperor Justinian I inaugurates the architectural marvel with its unprecedented dome: 'Solomon, I have surpassed thee!'"
+          "desc_en": "Byzantine Emperor Justinian I inaugurates the architectural marvel with its unprecedented dome: 'Solomon, I have surpassed thee!'",
+          "era_ru": "532–537 н.э.",
+          "desc_ru": "Император Юстиниан I строит грандиозный собор с инновационным куполом.",
+          "era_uz": "Milodiy 532–537 yillar",
+          "desc_uz": "Imperator Yustinian I tomonidan me’moriy mo‘jiza bo‘lmish ulkan gumbazli soborning qurilishi.",
+          "era_es": "532–537 d.C.",
+          "desc_es": "El emperador Justiniano I construye la majestuosa basílica con su innovadora cúpula."
         },
         {
           "era_ar": "1204–1261 م",
           "era_en": "1204–1261 CE",
           "desc_ar": "نهب الصليبيين اللاتين للمبنى في الحملة الصليبية الرابعة وتحويله إلى كاتدرائية رومانية كاثوليكية مؤقتاً.",
-          "desc_en": "Looted during the Fourth Crusade by Western Crusaders and temporarily converted into a Roman Catholic cathedral."
+          "desc_en": "Looted during the Fourth Crusade by Western Crusaders and temporarily converted into a Roman Catholic cathedral.",
+          "era_ru": "1204–1261 гг.",
+          "desc_ru": "Разграбление крестоносцами в ходе Четвертого крестового похода и обращение в католический собор.",
+          "era_uz": "1204–1261 yillar",
+          "desc_uz": "To‘rtinchi salib yurishida talon-toroj qilinishi va katolik soboriga aylantirilishi.",
+          "era_es": "1204–1261 d.C.",
+          "desc_es": "Saqueo por la Cuarta Cruzada y conversión temporal en catedral católica latina."
         },
         {
           "era_ar": "1453 م",
           "era_en": "1453 CE",
           "desc_ar": "السلطان محمد الثاني يفتح القسطنطينية ويحول الكاتدرائية إلى مسجد جامع ويقيم فيها أول صلاة جمعة، ويضيف مآذنها الشهيرة.",
-          "desc_en": "Mehmed the Conqueror takes Constantinople, converts Hagia Sophia into a mosque, prays the first Juma'ah, and commissions minarets."
+          "desc_en": "Mehmed the Conqueror takes Constantinople, converts Hagia Sophia into a mosque, prays the first Juma'ah, and commissions minarets.",
+          "era_ru": "1453 н.э.",
+          "desc_ru": "Взятие Константинополя Мехмедом Фатихом и преобразование здания в главную имперскую мечеть.",
+          "era_uz": "Milodiy 1453 yil",
+          "desc_uz": "Mehmed Fatih tomonidan Istanbul fathi va soborni jome masjidiga aylantirilishi.",
+          "era_es": "1453 d.C.",
+          "desc_es": "Toma de Constantinopla por Mehmed II y consagración inmediata como la mezquita imperial."
         },
         {
           "era_ar": "1934 م",
           "era_en": "1934 CE",
           "desc_ar": "مصطفى كمال أتاتورك ومجلس الوزراء التركي يقررون تحويل الصرح إلى متحف علماني مفتوح لكافة الإنسانية وكشف الفسيفساء البيزنطية.",
-          "desc_en": "Mustafa Kemal Atatürk and the secular Turkish cabinet transform the monument into a museum, uncovering historic Christian mosaics."
+          "desc_en": "Mustafa Kemal Atatürk and the secular Turkish cabinet transform the monument into a museum, uncovering historic Christian mosaics.",
+          "era_ru": "1934–1935 гг.",
+          "desc_ru": "Мустафа Кемаль Ататюрк секуляризирует Айя-Софию и открывает ее как музей.",
+          "era_uz": "1934–1935 yillar",
+          "desc_uz": "Mustafo Kamol Otaturk hukumati qarori bilan muzeyga aylantirilishi.",
+          "era_es": "1934–1935 d.C.",
+          "desc_es": "Mustafá Kemal Atatürk seculariza el monumento y lo abre al mundo como museo."
         },
         {
           "era_ar": "2020 م – الآن",
           "era_en": "2020 CE – Present",
           "desc_ar": "المحكمة الإدارية العليا في تركيا تلغي قرار 1934، والرئيس رجب طيب أردوغان يعيد فتحها مسجداً مع تخصيص ممر سياحي للزوار.",
-          "desc_en": "Council of State annuls the 1934 museum decree; officially reinstated as an active mosque with designated visitor galleries."
+          "desc_en": "Council of State annuls the 1934 museum decree; officially reinstated as an active mosque with designated visitor galleries.",
+          "era_ru": "2020 г. – наст. вр.",
+          "desc_ru": "Возвращение зданию статуса действующей мечети решением Государственного совета Турции.",
+          "era_uz": "2020 yildan hozirgacha",
+          "desc_uz": "Turkiya Davlat kengashi qarori bilan qayta jome masjidi maqomiga ega bo‘lishi.",
+          "era_es": "2020 – presente",
+          "desc_es": "Reversión del estatus a mezquita en activo mediante sentencia judicial del Consejo de Estado."
         }
       ],
       "current_status_ar": "مسجد جامع تقام فيه الصلوات الخمس وصلاة الجمعة مع تغطية الفسيفساء التصويرية أثناء الصلاة بستائر آلية، مع افتتاح الطابق العلوي للزيارة السياحية برسوم دخول للأجانب بإشراف وزارة الثقافة ورئاسة الشؤون الدينية التركية.",
       "current_status_en": "Active mosque for daily prayers under Diyanet administration, with mechanized drapes veiling figures during prayer, and upper galleries accessible to ticketed international tourists.",
       "summary_ar": "المعلم المعماري الأكثر دلالة على صعود وسقوط الإمبراطوريات والتبدلات الروحية الكبرى بين المسيحية والإسلام على مضيق البوسفور.",
-      "summary_en": "The definitive architectural fulcrum between East and West, encapsulating Byzantine imperial majesty and Ottoman Islamic sovereignty across 1,500 years."
+      "summary_en": "The definitive architectural fulcrum between East and West, encapsulating Byzantine imperial majesty and Ottoman Islamic sovereignty across 1,500 years.",
+      "name_ru": "Айя-София (Большая мечеть Айя-София)",
+      "location_ru": "Стамбул, Турция",
+      "current_status_ru": "Действующая мечеть под управлением Диянета; христианские мозаики экранируются во время молитв, верхняя галерея открыта для туристов.",
+      "name_uz": "Ayasofiya (Ayasofya-i Kabir Jome Masjidi)",
+      "location_uz": "Istanbul, Turkiya",
+      "current_status_uz": "Turkiya Diyonat ishlari boshqarmasi qoshidagi faol jome masjidi; namoz vaqtida tasvirlar pardalanadi, yuqori galereya sayyohlar uchun ochiq.",
+      "summary_uz": "Sharq va G‘arb o‘rtasidagi buyuk me’moriy ko‘prik: 916 yil xristian sobori, 481 yil Usmoniy jome masjidi va jahon durdonasi.",
+      "name_es": "Santa Sofía (Gran Mezquita de Santa Sofía)",
+      "location_es": "Estambul, Turquía",
+      "current_status_es": "Mezquita activa bajo la autoridad del Diyanet; los mosaicos figurativos se cubren durante la oración y las galerías superiores acogen turistas.",
+      "summary_es": "Eje arquitectónico cumbre entre Oriente y Occidente: catedral imperial bizantina, gran mezquita otomana y patrimonio universal.",
+      "summary_ru": "Архитектурный шедевр и символ смены империй: главный собор Византии, великая мечеть османов и памятник всемирного значения."
     },
     {
       "id": "mosque-cathedral-cordoba",
@@ -264,38 +447,80 @@
         "islam_ar": "درة العمارة الأندلسية الإسلامية وعنوان مجد الخلافة الأموية في قرطبة؛ بغابته من الأعمدة الرخامية والأقواس المزدوجة ومحرابه المذهب المعجز.",
         "islam_en": "Crown jewel of Andalusian Islamic civilization and the Umayyad Caliphate of Córdoba, famous for its hypnotic forest of 856 bi-color jasper and marble columns.",
         "christianity_ar": "كاتدرائية سيدة الانتقال؛ مكرسة بعد استرداد المدينة عام 1236م، وشُيد في قلبها صحن كاتدرائي قوطي ورينسانسي ضخم في القرن السادس عشر.",
-        "christianity_en": "Cathedral of Our Lady of the Assumption; consecrated in 1236 CE following the Christian Reconquista, hosting a soaring 16th-century Renaissance nave inside the prayer hall."
+        "christianity_en": "Cathedral of Our Lady of the Assumption; consecrated in 1236 CE following the Christian Reconquista, hosting a soaring 16th-century Renaissance nave inside the prayer hall.",
+        "islam_ru": "Главная мечеть столицы Омейядов в Андалусии, шедевр исламского искусства с 856 колоннами из яшмы и мрамора.",
+        "christianity_ru": "Кафедральный собор Успения Богородицы; место исторической вестготской базилики Святого Викентия.",
+        "islam_uz": "Andalus Umaviylar xalifaligining bosh masjidi; 856 dona marmar va yashma ustunli jahon Islom san’ati mo‘jizasi.",
+        "christianity_uz": "Bibi Maryam Me’roji kafedral sobori; qadimgi vestgot Avliyo Vikentiy bazilikasi o‘rni.",
+        "islam_es": "Gran mezquita capital del Califato de Córdoba; obra maestra del arte hispanomusulmán con su bosque de más de 850 columnas.",
+        "christianity_es": "Catedral de Nuestra Señora de la Asunción, emplazada sobre la primitiva basílica visigoda de San Vicente."
       },
       "timeline": [
         {
           "era_ar": "784–987 م",
           "era_en": "784–987 CE",
           "desc_ar": "عبد الرحمن الداخل يؤسس الجامع على أرض كنيسة سان فيسنتي، وتوسعات متتالية لعبد الرحمن الأوسط والحكم الثاني والمنصور.",
-          "desc_en": "Abd al-Rahman I begins construction of the Great Mosque, expanded by Abd al-Rahman II, al-Hakam II (Mihrab), and al-Mansur."
+          "desc_en": "Abd al-Rahman I begins construction of the Great Mosque, expanded by Abd al-Rahman II, al-Hakam II (Mihrab), and al-Mansur.",
+          "era_ru": "785–987 гг.",
+          "desc_ru": "Основание Абд ар-Рахманом I и расширение последующими эмирами и халифами Аль-Андалуса.",
+          "era_uz": "Milodiy 785–987 yillar",
+          "desc_uz": "Abdurrahmon I tomonidan asos solinishi va keyingi Andalus amirlari tomonidan kengaytirilishi.",
+          "era_es": "785–987 d.C.",
+          "desc_es": "Iniciada por Abderramán I y ampliada por sucesivos emires y califas de al-Ándalus."
         },
         {
           "era_ar": "1236 م",
           "era_en": "1236 CE",
           "desc_ar": "الملك فرناندو الثالث يستولي على قرطبة ويحول الجامع إلى كاتدرائية كاثوليكية، ويغلق المحراب ويحول المئذنة إلى برج أجراس.",
-          "desc_en": "King Ferdinand III captures Córdoba, consecrating the mosque into a Catholic cathedral and enclosing the minaret within a bell tower."
+          "desc_en": "King Ferdinand III captures Córdoba, consecrating the mosque into a Catholic cathedral and enclosing the minaret within a bell tower.",
+          "era_ru": "1236 н.э.",
+          "desc_ru": "Взятие Кордовы королем Фердинандом III Кастильским и освящение здания как собора.",
+          "era_uz": "Milodiy 1236 yil",
+          "desc_uz": "Kastiliya qiroli Ferdinand III tomonidan Qurtubaning egallanishi va binoni soborga aylantirilishi.",
+          "era_es": "1236 d.C.",
+          "desc_es": "Conquista de Córdoba por Fernando III el Santo y consagración cristiana del templo."
         },
         {
           "era_ar": "1523 م",
           "era_en": "1523 CE",
           "desc_ar": "بناء الكاتدرائية القوطية-الرينسانسية في قلب أعمدة المسجد، وهو ما علق عليه الإمبراطور شارل الخامس: 'لقد بنيتم ما يمكن بناؤه في أي مكان، وهدمتم ما كان فريداً في العالم'.",
-          "desc_en": "Bishop Alonso Manrique inserts a Renaissance nave into the hypostyle hall; Emperor Charles V lamented: 'You have destroyed something that was unique in the world.'"
+          "desc_en": "Bishop Alonso Manrique inserts a Renaissance nave into the hypostyle hall; Emperor Charles V lamented: 'You have destroyed something that was unique in the world.'",
+          "era_ru": "1523–1599 гг.",
+          "desc_ru": "Строительство соборного нефа внутри леса мусульманских колонн при Карле V.",
+          "era_uz": "1523–1599 yillar",
+          "desc_uz": "Musulmon ustunlari o‘rtasida imperator Karl V ruxsati bilan sobor binosining qurilishi.",
+          "era_es": "1523–1599 d.C.",
+          "desc_es": "Construcción del crucero catedralicio renacentista en el centro de las arquerías musulmanas."
         },
         {
           "era_ar": "العصر الحديث",
           "era_en": "Modern Era",
           "desc_ar": "إدراجه موقعاً للتراث العالمي لليونسكو؛ ومطالبات متكررة من المسلمين بالسماح بالصلاة فيه ترفضها الكنيسة الكاثوليكية بشكل قاطع.",
-          "desc_en": "Designated a UNESCO World Heritage site; appeals by Muslim organizations for shared prayer rights remain strictly denied by the Catholic diocese."
+          "desc_en": "Designated a UNESCO World Heritage site; appeals by Muslim organizations for shared prayer rights remain strictly denied by the Catholic diocese.",
+          "era_ru": "1984 г. – наст. вр.",
+          "desc_ru": "Включение в Список всемирного наследия ЮНЕСКО как уникальный пример синтеза культур.",
+          "era_uz": "1984 yildan hozirgacha",
+          "desc_uz": "Madaniyatlar tutashuvi sifatida YuNESKO Butunjahon merosi ro‘yxatiga kiritilishi.",
+          "era_es": "1984 – presente",
+          "desc_es": "Inscripción en la lista del Patrimonio Mundial de la UNESCO por su valor universal excepcional."
         }
       ],
       "current_status_ar": "تُدار البناية رسمياً ككاتدرائية كاثوليكية تابعة لأسقفية قرطبة؛ تُقام فيها القداسات الكاثوليكية وتُمنع فيها أي صلاة أو شعائر لغير الكاثوليك منعاً باتاً من قبل الحراس، وسط جدل ملكي وقانوني حول تسجيل ملكيتها باسم الكنيسة عام 2006 مقابل رمزيتها العامة.",
       "current_status_en": "Legally titled to the Catholic Diocese of Córdoba, serving as an active cathedral; non-Catholic prayers are strictly forbidden, alongside ongoing civil debates regarding its public heritage status.",
       "summary_ar": "التزاوج المعماري والرمزي الأكثر غرابة وتناقضاً بين عبقرية العمارة الإسلامية الأندلسية والسيطرة الكاثوليكية الأوروبية داخل فضاء واحد.",
-      "summary_en": "The most visually dramatic architectural palimpsest on Earth, fusing Moorish polylobed arches and a Christian Renaissance cathedral inside a single monumental space."
+      "summary_en": "The most visually dramatic architectural palimpsest on Earth, fusing Moorish polylobed arches and a Christian Renaissance cathedral inside a single monumental space.",
+      "name_ru": "Мескита Кордовы (Соборная мечеть – Кафедральный собор)",
+      "location_ru": "Кордова, Андалусия, Испания",
+      "current_status_ru": "Официально принадлежит католической епархии Кордовы; действующий собор, где запрещены немусульманские молитвы.",
+      "summary_ru": "Вершина архитектуры Кордовского халифата, внутри которой в XVI веке был воздвигнут ренессансный католический собор.",
+      "name_uz": "Qurtuba jome masjidi (Kordova sobori – Masjidi Kabiri)",
+      "location_uz": "Kordova (Qurtuba), Andalusiya, Ispaniya",
+      "current_status_uz": "Kordova katolik yepiskopligi tasarrufidagi faol sobor; g‘ayrikatolik ibodatlar taqiqlangan; umummeros maqomi bo‘yicha bahslar mavjud.",
+      "summary_uz": "Andalusiya Islom tamaddunining eng yuksak me’moriy cho‘qqisi; XVI asrda uning ichida renessans uslubidagi katolik sobori qurilgan.",
+      "name_es": "Mezquita-Catedral de Córdoba",
+      "location_es": "Córdoba, Andalucía, España",
+      "current_status_es": "De titularidad eclesiástica de la Diócesis de Córdoba como catedral; se prohíbe el rezo a otras confesiones en medio de debates sobre su estatus público.",
+      "summary_es": "El palimpsesto arquitectónico más deslumbrante del mundo, donde confluyen la mezquita califal omeya y la catedral renacentista."
     },
     {
       "id": "kashi-vishwanath-gyanvapi",
@@ -320,38 +545,80 @@
         "hinduism_ar": "معبد كاشي فيشواناث؛ أحد أقدس معابد الإله شيفا الاثني عشر (جيوتيرلينغا) في أقدس مدن الهندوسية على ضفاف نهر الغانج.",
         "hinduism_en": "Kashi Vishwanath Temple; one of the twelve sacred Jyotirlingas dedicated to Shiva, situated in the paramount holy city of Hinduism.",
         "islam_ar": "مسجد غيانفابي؛ مسجد تاريخي جامع شُيّد في عهد الإمبراطور المغولي أورنكزيب عام 1669م، ويشكل معلماً للتاريخ الإسلامي في أوتار برديش.",
-        "islam_en": "Gyanvapi Mosque; an imposing 17th-century congregational mosque constructed under Mughal Emperor Aurangzeb in 1669 CE."
+        "islam_en": "Gyanvapi Mosque; an imposing 17th-century congregational mosque constructed under Mughal Emperor Aurangzeb in 1669 CE.",
+        "hinduism_ru": "Один из 12 священнейших джьотирлингамов Шивы, духовное сердце древнего священного города Каши (Варанаси).",
+        "islam_ru": "Действующая джума-мечеть эпохи Аурангзеба (1669), важный мусульманский духовный центр города.",
+        "hinduism_uz": "Shiva xudosining 12 ta muqaddas jyotirlingamidan biri; Kashi (Varanasi) shahrining ma’naviy yuragi.",
+        "islam_uz": "Avrangzeb davrida (1669) bunyod etilgan faol jome masjidi, shaharning muhim Islomiy maskani.",
+        "hinduism_es": "Uno de los 12 Jyotirlingas más sagrados de Shiva, epicentro espiritual de la sagrada ciudad de Kashi (Benarés).",
+        "islam_es": "Mezquita aljama en activo mandada construir en 1669 por el emperador mogol Aurangzeb."
       },
       "timeline": [
         {
           "era_ar": "العصور القديمة – 1669 م",
           "era_en": "Antiquity – 1669 CE",
           "desc_ar": "تعرض معبد فيشواناث للهدم وإعادة البناء عدة مرات خلال الغزوات؛ حتى هدمه أورنكزيب عام 1669م وبنى مسجده على جزء من أساساته.",
-          "desc_en": "Ancient temple destroyed and rebuilt multiple times; Aurangzeb orders demolition in 1669 CE, constructing the mosque incorporating existing foundations."
+          "desc_en": "Ancient temple destroyed and rebuilt multiple times; Aurangzeb orders demolition in 1669 CE, constructing the mosque incorporating existing foundations.",
+          "era_ru": "XI–XII вв.",
+          "desc_ru": "Древний храм Вишванатха, разрушенный в ходе походов делийских правителей.",
+          "era_uz": "XI–XII asrlar",
+          "desc_uz": "Qadimgi Vishvanatx ibodatxonasining Dehli sultonligi davridagi buzilishlari.",
+          "era_es": "Siglos XI–XII",
+          "desc_es": "Templo original de Vishwanath destruido durante las incursiones del sultanato de Delhi."
         },
         {
           "era_ar": "1780 م",
           "era_en": "1780 CE",
           "desc_ar": "الملكة الماراثية أهيليا باي هولكار تشيد معبد كاشي فيشواناث الحالي المجاور مباشرة لجدار المسجد الخلفي.",
-          "desc_en": "Maratha queen Ahilyabai Holkar constructs the adjacent present-day Kashi Vishwanath Temple, right against the mosque's rear wall."
+          "desc_en": "Maratha queen Ahilyabai Holkar constructs the adjacent present-day Kashi Vishwanath Temple, right against the mosque's rear wall.",
+          "era_ru": "1669 н.э.",
+          "desc_ru": "Император Аурангзеб разрушает храм и возводит на его фундаменте мечеть Гьянвапи.",
+          "era_uz": "Milodiy 1669 yil",
+          "desc_uz": "Boburiy imperator Avrangzeb tomonidan ibodatxona o‘rniga Gyanvapi masjidi qurilishi.",
+          "era_es": "1669 d.C.",
+          "desc_es": "El emperador Aurangzeb ordena la destrucción del templo y la erección de la mezquita Gyanvapi."
         },
         {
           "era_ar": "1991 م",
           "era_en": "1991 CE",
           "desc_ar": "صدور قانون الأماكن الدينية الهندي لتجميد الوضع القائم لكافة دور العبادة كما كانت عليه في 15 أغسطس 1947.",
-          "desc_en": "Enactment of the Places of Worship Act 1991 freezing the religious character of all shrines as of Indian Independence Day."
+          "desc_en": "Enactment of the Places of Worship Act 1991 freezing the religious character of all shrines as of Indian Independence Day.",
+          "era_ru": "1780 н.э.",
+          "desc_ru": "Царица Ахальябаи Холкар строит нынешний храм Каши Вишванатх рядом с мечетью.",
+          "era_uz": "Milodiy 1780 yil",
+          "desc_uz": "Malika Axalyabay Xolkar tomonidan masjid yonida hozirgi Kashi Vishvanatx ibodatxonasining tiklanishi.",
+          "era_es": "1780 d.C.",
+          "desc_es": "La reina Ahilyabai Holkar reconstruye el actual templo de Kashi Vishwanath adyacente a la mezquita."
         },
         {
           "era_ar": "2021–2024 م",
           "era_en": "2021–2024 CE",
           "desc_ar": "دعاوى قضائية من جماعات هندوسية ومسح راداري للمسجد كشف عن بقايا جدران هندوسية، وسماح المحكمة بالصلاة الهندوسية في السرداب السفلي.",
-          "desc_en": "Archaeological Survey of India (ASI) radar survey detects temple remnants; local court permits Hindu puja in the southern cellar (Vyas Tehkhana)."
+          "desc_en": "Archaeological Survey of India (ASI) radar survey detects temple remnants; local court permits Hindu puja in the southern cellar (Vyas Tehkhana).",
+          "era_ru": "2021–2024 гг.",
+          "desc_ru": "Строительство коридора Вишванатх и археологические исследования фундамента мечети.",
+          "era_uz": "2021–2024 yillar",
+          "desc_uz": "Kashi Vishvanatx yo‘lagining ochilishi va masjid poydevori bo‘yicha arxeologik tekshiruvlar.",
+          "era_es": "2021–2024",
+          "desc_es": "Inauguración del Corredor Vishwanath e inicio de estudios arqueológicos sobre la estructura."
         }
       ],
       "current_status_ar": "يخضع الموقع لإجراءات أمنية واستخباراتية مشددة للغاية وحواجز أمنية تفصل بين جدار المسجد الخلفي التاريخي ومجمع المعبد الموسع؛ مع استمرار التقاضي في المحاكم حول حق الصلاة.",
       "current_status_en": "Extremely fortified multi-tier security perimeter separating the mosque from the Kashi Vishwanath corridor; ongoing litigation regarding religious access and worship rights.",
       "summary_ar": "أبرز نقاط الاحتكاك الديني في الهند المعاصرة؛ حيث يتجاور محراب المسجد وأقواسه مع الجدران الحجرية المنحوتة للمعبد القديم وجهاً لوجه.",
-      "summary_en": "Contemporary India's foremost religious dispute after Ayodhya, where Mughal domes physically abut exposed carved stone plinths of an ancient Shaivite temple."
+      "summary_en": "Contemporary India's foremost religious dispute after Ayodhya, where Mughal domes physically abut exposed carved stone plinths of an ancient Shaivite temple.",
+      "name_ru": "Варанаси: Храм Каши Вишванатх и Мечеть Гьянвапи",
+      "location_ru": "Варанаси, штат Уттар-Прадеш, Индия",
+      "current_status_ru": "Укрепленный комплекс под круглосуточной охраной с отдельными входами для индуистских паломников и мусульманских прихожан.",
+      "summary_ru": "Священный центр поклонения Шиве на берегу Ганга, где стена могольской мечети сохраняет элементы древнего индуистского храма.",
+      "name_uz": "Varanasi: Kashi Vishvanatx ibodatxonasi va Gyanvapi masjidi",
+      "location_uz": "Varanasi, Uttar-Pradesh shtati, Hindiston",
+      "current_status_uz": "Kengaytirilgan xavfsizlik perimetri bilan o‘ralgan; masjid devorlari va ibodatxona yo‘lagi alohida nazorat qilinadi.",
+      "summary_uz": "Gang daryosi bo‘yidagi Shiva e’tiqodi markazi; masjidning orqa devorida qadimiy hindu ibodatxonasi izlari saqlangan.",
+      "name_es": "Varanasi: Templo Kashi Vishwanath y Mezquita Gyanvapi",
+      "location_es": "Varanasi (Benarés), Uttar Pradesh, India",
+      "current_status_es": "Perímetro de alta seguridad militar que separa el corredor del templo de la mezquita histórica, con litigios activos sobre derechos de culto.",
+      "summary_es": "El corazón devocional de Shiva junto al río Ganges, cuyo muro occidental conserva las molduras del templo medieval previo."
     },
     {
       "id": "mount-kailash",
@@ -378,38 +645,86 @@
       "icon": "🏔️",
       "significance": {
         "hinduism_ar": "عرش الإله شيفا ومقر سكنه وتأمله الأبدي مع زوجته بارفاتي؛ ويُعتبر محور العالم الروحي (ميرو) ومصدر أنهار الهندوسية الأربعة المقدسة.",
-        "hinduism_en": "Abode of Lord Shiva in perpetual yogic meditation with Parvati; considered Mount Meru, the cosmic axis and source of four sacred rivers."
+        "hinduism_en": "Abode of Lord Shiva in perpetual yogic meditation with Parvati; considered Mount Meru, the cosmic axis and source of four sacred rivers.",
+        "hinduism_ru": "Обитель бога Шивы и его супруги Парвати, земное воплощение космической горы Меру.",
+        "buddhism_ru": "Обитель будды Чакрасамвары, священная гора, связанная с победой великого йогина Миларепы.",
+        "jainism_ru": "Место Аштапада, где первый тиртханкара Ришабханатха достиг духовного освобождения (мокши).",
+        "bon_ru": "Девятиэтажная гора со свастикой, духовная ось и колыбель древней тибетской религии бон.",
+        "hinduism_uz": "Shiva va uning jufti Parvatining abadiy maskani; koinotning markazi bo‘lgan Meru tog‘i timsoli.",
+        "buddhism_uz": "Chakrasamvara buddasi qarorgohi; buyuk Milarepa g‘alabasiga guvoh bo‘lgan muqaddas maskan.",
+        "jainism_uz": "Birinchi tirthankara Rishabxanatxa ma’naviy xalosga (moksha) erishgan Ashtapada joyi.",
+        "bon_uz": "To‘qqiz qavatli svastika tog‘i; qadimiy Tibet bon dinining ma’naviy beshigi va asosiy o‘qi.",
+        "hinduism_es": "Morada eterna del dios Shiva y de su consorte Parvati; manifestación terrenal del cósmico Monte Meru.",
+        "buddhism_es": "Morada de Buda Chakrasamvara; cumbre ligada a la mítica victoria espiritual del yogui Milarepa.",
+        "jainism_es": "Lugar conocido como Ashtapada, donde Rishabhanatha, primer Tirthankara, alcanzó la liberación suprema (Moksha).",
+        "bon_es": "La montaña de los nueve pisos de esvásticas, corazón cósmico y cuna del Bön tibetano ancestral."
       },
       "timeline": [
         {
           "era_ar": "الألف الأول ق.م",
           "era_en": "1st Millennium BCE",
           "desc_ar": "تقديس ديانة البون الشامانية القديمة للجبل كروح العالم والمركز الذي هبط فيه مؤسسهم تونبا شينراب من السماء.",
-          "desc_en": "Venerated by the indigenous Bön religion as the 'Nine-Story Swastika Mountain', where founder Tonpa Shenrab descended."
+          "desc_en": "Venerated by the indigenous Bön religion as the 'Nine-Story Swastika Mountain', where founder Tonpa Shenrab descended.",
+          "era_ru": "I тыс. до н.э.",
+          "desc_ru": "Почитание горы как духовного центра древней цивилизации Шангшунг и традиции бон.",
+          "era_uz": "Miloddan avvalgi I mingyillik",
+          "desc_uz": "Qadimgi Shangshung sivilizatsiyasi va bon dinining muqaddas markazi sifatida e’zozlanishi.",
+          "era_es": "I milenio a.C.",
+          "desc_es": "Venerado como eje central del reino de Zhangzhung y la tradición chamánica Bön."
         },
         {
           "era_ar": "العصر الفيدي والجايني",
           "era_en": "Vedic & Jain Antiquity",
           "desc_ar": "الجاينيون يقدسون الجبل باسم 'أشتادابا' ويعتقدون أن أول تيرثانكارا (ريشاباناثا) حقق النيرفانا والتحرر هناك.",
-          "desc_en": "Jains revere it as Ashtapada, the holy site where the first Tirthankara, Rishabhadeva, achieved spiritual liberation (Moksha)."
+          "desc_en": "Jains revere it as Ashtapada, the holy site where the first Tirthankara, Rishabhadeva, achieved spiritual liberation (Moksha).",
+          "era_ru": "XI в. н.э.",
+          "desc_ru": "Поединок между буддийским мастером Миларепой и жрецом бон Наро Бончунгом на склонах Кайласа.",
+          "era_uz": "Milodiy XI asr",
+          "desc_uz": "Budda ustozi Milarepa hamda bon kohini Naro Bonchung o‘rtasidagi ma’naviy bellashuv.",
+          "era_es": "Siglo XI d.C.",
+          "desc_es": "Concurso místico de ascensión entre el maestro budista Milarepa y el sacerdote Bön Naro Bönchung."
         },
         {
           "era_ar": "القرن 11–12 م",
           "era_en": "11th–12th Century CE",
           "desc_ar": "المناظرة الروحية الأسطورية بين الماستر البوذي ميلاريبا ومعلم البون نارو بونشون، والتي أدت لترسيخ الهيمنة البوذية على الجبل.",
-          "desc_en": "Legendary magical duel between Buddhist yogi Milarepa and Bön master Naro Bön-chung, cementing Tibetan Buddhist preeminence."
+          "desc_en": "Legendary magical duel between Buddhist yogi Milarepa and Bön master Naro Bön-chung, cementing Tibetan Buddhist preeminence.",
+          "era_ru": "1959–1980 гг.",
+          "desc_ru": "Ограничения на паломничество в период Культурной революции, восстановление паломничества в 1980-х.",
+          "era_uz": "1959–1980 yillar",
+          "desc_uz": "Madaniy inqilob davrida ziyoratlarning to‘xtatilishi, 1980-yillarda qayta tiklanishi.",
+          "era_es": "1959–1980",
+          "desc_es": "Cierre de rutas de peregrinación durante la Revolución Cultural y posterior reapertura en los años ochenta."
         },
         {
           "era_ar": "1950 م – الآن",
           "era_en": "1950 CE – Present",
           "desc_ar": "الضم الصيني للتبت وتنظيم مسارات الحج الديني بتصاريح خاصة، وحظر تسلق القمة بالكامل احتراماً لقدسيتها الدينية المطلقة.",
-          "desc_en": "Chinese administration regulates pilgrimage permits; climbing the peak remains strictly banned out of respect for its sacred status."
+          "desc_en": "Chinese administration regulates pilgrimage permits; climbing the peak remains strictly banned out of respect for its sacred status.",
+          "era_ru": "Современность",
+          "desc_ru": "Ежегодное паломничество тысяч верующих со всего мира вокруг священной вершины.",
+          "era_uz": "Hozirgi davr",
+          "desc_uz": "Dunyoning turli burchaklaridan kelgan minglab ziyoratchilarning muqaddas Kora yo‘li.",
+          "era_es": "Presente",
+          "desc_es": "Circuito milenario de peregrinación para millares de devotos de todo el mundo."
         }
       ],
       "current_status_ar": "قمة الجبل لم يطأها إنسان قط ومحرم تسلقها دولياً وصينياً؛ ويتدفق إليه الحجاج من الهند والتبت ونيبال للطواف حوله سيراً على الأقدام لمسافة 52 كم، حيث يطوف الهندوس والبوذيون مع عقارب الساعة، بينما يطوف أتباع البون عكسها.",
       "current_status_en": "An unclimbed sacred peak protected by international consensus; pilgrims perform the 52-km Kora trek—Buddhists and Hindus clockwise, Bönpos counter-clockwise.",
       "summary_ar": "المركز الروحي المشترك لأربع عقائد كبرى؛ حيث يلتقي التجريد التبتي بالأساطير الفيدية والزهد الجايني في مهابة الهيمالايا.",
-      "summary_en": "The supreme shared cosmological axis for four living religions, towering over the Tibetan plateau as an inviolable sanctuary of transcendental mystery."
+      "summary_en": "The supreme shared cosmological axis for four living religions, towering over the Tibetan plateau as an inviolable sanctuary of transcendental mystery.",
+      "name_ru": "Гора Кайлас (Ганг Ринпоче)",
+      "location_ru": "Тибетский автономный район, Гималаи (Китай)",
+      "current_status_ru": "Священная непокоренная вершина; альпинизм запрещен; паломники совершают 52-километровую кору (обход вокруг горы).",
+      "summary_ru": "Священная ось Вселенной (Меру) для четырех великих религий: индуизма, буддизма, джайнизма и бон.",
+      "name_uz": "Kaylas tog‘i (Gang Rinpoche)",
+      "location_uz": "Tibet muxtor rayoni, Himoloy (Xitoy)",
+      "current_status_uz": "Chiqish mutlaqo taqiqlangan muqaddas cho‘qqi; ziyoratchilar 52 km uzunlikdagi aylanma kora ziyoratini amalga oshiradi.",
+      "summary_uz": "To‘rtta buyuk din (hinduiylik, buddaviylik, jaynizm va bon) uchun olamning muqaddas markazi va koinot o‘qi (Meru).",
+      "name_es": "Monte Kailash (Gang Rinpoche)",
+      "location_es": "Región Autónoma del Tíbet, Himalaya (China)",
+      "current_status_es": "Cumbre virgen inescalable protegida por consenso internacional; los devotos realizan la circunvalación sagrada (Kora) de 52 km.",
+      "summary_es": "El eje cosmológico (Monte Meru) supremo compartido por cuatro religiones vivas: hinduismo, budismo, jainismo y bön."
     },
     {
       "id": "angkor-wat",
@@ -432,38 +747,80 @@
       "icon": "🛕",
       "significance": {
         "hinduism_ar": "أكبر نصب ديني في تاريخ البشرية؛ شيده إمبراطور الخمير سوريارفارمان الثاني في القرن الـ 12 كمعبد جنائزي مكرس للإله فيشنو وتمثيل لجبل ميرو.",
-        "hinduism_en": "The largest religious monument in history; built by Khmer King Suryavarman II as a royal state temple and mausoleum dedicated to Vishnu."
+        "hinduism_en": "The largest religious monument in history; built by Khmer King Suryavarman II as a royal state temple and mausoleum dedicated to Vishnu.",
+        "hinduism_ru": "Построен как земное воплощение горы Меру и мавзолей короля Сурьявармана II, посвященный богу Вишну.",
+        "buddhism_ru": "Главный национальный и духовный центр камбоджийского буддизма традиции Тхеравада с XVI века.",
+        "hinduism_uz": "Kxmer imperatori Suryavarman II tomonidan Meru tog‘i timsoli va Vishnuga atab qurilgan ulkan obida.",
+        "buddhism_uz": "XVI asrdan boshlab Kambodja Txeravada buddaviyligining bosh milliy va diniy markazi.",
+        "hinduism_es": "Erigido como representación terrenal del Monte Meru y mausoleo del rey Suryavarman II consagrado a Vishnu.",
+        "buddhism_es": "Santuario primordial del budismo Theravada en Camboya desde el siglo XVI hasta la actualidad."
       },
       "timeline": [
         {
           "era_ar": "1113–1150 م",
           "era_en": "1113–1150 CE",
           "desc_ar": "تشييد المعبد الهندوسي الهائل ونقش مئات الأمتار من اللوحات الجدارية المنحوتة التي تمثل ملحمة خض المياه واستخلاص إكسير الخلود (سامودرا مانثانا).",
-          "desc_en": "Construction under Suryavarman II; creation of monumental bas-reliefs depicting the Churning of the Ocean of Milk (Samudra Manthana)."
+          "desc_en": "Construction under Suryavarman II; creation of monumental bas-reliefs depicting the Churning of the Ocean of Milk (Samudra Manthana).",
+          "era_ru": "1113–1150 гг.",
+          "desc_ru": "Строительство храма кхмерским императором Сурьяварманом II в честь Вишну.",
+          "era_uz": "Milodiy 1113–1150 yillar",
+          "desc_uz": "Imperator Suryavarman II tomonidan Vishnu sharafiga Angkor-Vatning barpo etilishi.",
+          "era_es": "1113–1150 d.C.",
+          "desc_es": "Construcción por el rey jemer Suryavarman II como templo estatal hindú dedicado a Vishnu."
         },
         {
           "era_ar": "أواخر القرن 12 م",
           "era_en": "Late 12th Century CE",
           "desc_ar": "الملك جيافارمان السابع يعتنق بوذية الماهايانا، ثم يتحول المجمع نهائياً إلى معبد بوذي لتيار الثيرفادا مع الحفاظ على الهيكل العام.",
-          "desc_en": "King Jayavarman VII turns toward Mahayana Buddhism; gradually transitioned into an active Theravada Buddhist monastery."
+          "desc_en": "King Jayavarman VII turns toward Mahayana Buddhism; gradually transitioned into an active Theravada Buddhist monastery.",
+          "era_ru": "Конец XII в.",
+          "desc_ru": "Король Джаяварман VII основывает буддийский Ангкор-Тхом; начало интеграции буддизма.",
+          "era_uz": "XII asr oxiri",
+          "desc_uz": "Jayavarman VII davrida buddaviylik e’tiqodining ibodatxonaga uyg‘unlashtirilishi.",
+          "era_es": "Finales del siglo XII",
+          "desc_es": "Jayavarman VII establece el budismo Mahayana en Angkor Thom, iniciando la transición religiosa."
         },
         {
           "era_ar": "القرن 14–16 م",
           "era_en": "14th–16th Century CE",
           "desc_ar": "إضافة تماثيل بوذا في الأروقة المركزية وتكييف النقوش، واستمرار الرهبان البوذيين في حماية المعبد وصيانته حتى بعد هجر عاصمة الإمبراطورية.",
-          "desc_en": "Introduction of Buddha statues within central sanctuaries; Buddhist monks continuously inhabited and preserved the site after the capital relocated."
+          "desc_en": "Introduction of Buddha statues within central sanctuaries; Buddhist monks continuously inhabited and preserved the site after the capital relocated.",
+          "era_ru": "XVI в.",
+          "desc_ru": "Окончательное утверждение храма как тхеравадинской святыни под именем Ангкор-Ват.",
+          "era_uz": "XVI asr",
+          "desc_uz": "Txeravada buddaviylik ziyoratgohi sifatida yakuniy shakllanishi va Angkor-Vat nomini olishi.",
+          "era_es": "Siglo XVI",
+          "desc_es": "Consolidación definitiva como santuario budista Theravada bajo el nombre de Angkor Wat."
         },
         {
           "era_ar": "العصر الحديث",
           "era_en": "Modern Era",
           "desc_ar": "إعلانه رمزاً قومياً على علم كمبوديا وموقعاً للتراث العالمي لليونسكو؛ كرمز فريد للانتقال السلمي والامتزاج الثقافي بين الهندوسية والبوذية.",
-          "desc_en": "Featured on Cambodia's national flag and inscribed as a UNESCO World Heritage site, exemplifying syncretic transition from Hinduism to Buddhism."
+          "desc_en": "Featured on Cambodia's national flag and inscribed as a UNESCO World Heritage site, exemplifying syncretic transition from Hinduism to Buddhism.",
+          "era_ru": "1992 г. – наст. вр.",
+          "desc_ru": "Включение в Список Всемирного наследия ЮНЕСКО и масштабная международная реставрация.",
+          "era_uz": "1992 yildan hozirgacha",
+          "desc_uz": "YuNESKO Butunjahon merosi ro‘yxatiga kiritilishi va xalqaro restavratsiya dasturi.",
+          "era_es": "1992 – presente",
+          "desc_es": "Declaración como Patrimonio Mundial de la UNESCO y extensa cooperación arqueológica internacional."
         }
       ],
       "current_status_ar": "موقع تراث عالمي لليونسكو ومركز حج وعبادة بوذي حي تقام فيه الطقوس الدينية، ويضم تماثيل لبوذا جنباً إلى جنب مع المنحوتات الجدارية الملحمية الهندوسية الأصلية المحفوظة بعناية.",
       "current_status_en": "A premier UNESCO World Heritage landmark and active Theravada Buddhist pilgrimage center where ancient Hindu cosmological carvings coexist with Buddhist worship.",
       "summary_ar": "الرمز الأبرز في جنوب شرق آسيا للتحول والتلاقح الحضاري بين الهندوسية والبوذية؛ حيث تحول أضخم معابد فيشنو إلى أعظم مزارات بوذا.",
-      "summary_en": "The world's grandest monument to peaceful religious transition, illustrating how Southeast Asia adapted and blended Indian Vedic cosmology with Buddhist spirituality."
+      "summary_en": "The world's grandest monument to peaceful religious transition, illustrating how Southeast Asia adapted and blended Indian Vedic cosmology with Buddhist spirituality.",
+      "name_ru": "Храмовый комплекс Ангкор-Ват",
+      "location_ru": "Сиемреап, Камбоджа",
+      "current_status_ru": "Объект Всемирного наследия ЮНЕСКО и действующий центр тхеравадинского буддийского паломничества.",
+      "summary_ru": "Крупнейшее религиозное сооружение в мире, начавшееся как индуистский храм Вишну и ставшее центром буддизма.",
+      "name_uz": "Angkor-Vat ibodatxona majmuasi",
+      "location_uz": "Siemreap, Kambodja",
+      "current_status_uz": "YuNESKO Butunjahon merosi yodgorligi va faol Txeravada buddaviylik ziyorat markazi.",
+      "summary_uz": "Dunyodagi eng yirik diniy me’moriy majmua; Vishnu hindu ibodatxonasi sifatida boshlanib, buddaviylik markaziga aylangan.",
+      "name_es": "Complejo de templos de Angkor Wat",
+      "location_es": "Siem Riep, Camboya",
+      "current_status_es": "Patrimonio de la Humanidad por la UNESCO y activo centro de peregrinación budista Theravada.",
+      "summary_es": "La mayor estructura religiosa jamás erigida en la historia, nacida como santuario hindú a Vishnu y convertida pacíficamente al budismo."
     }
   ]
 }

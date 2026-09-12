@@ -55,6 +55,10 @@
                 <button class="btn header-btn" id="colorblindToggle" aria-pressed="false" title="إضافة نقش شكل لكل فئة لتكون قابلة للتمييز بدون لون" aria-label="أنماط عمى الألوان" data-i18n="colorblindToggle" data-i18n-title="colorblindToggle_title" data-i18n-aria-label="colorblindToggle"><i data-lucide="contrast" class="lucide-icon"></i><span class="btn-text">أنماط عمى الألوان</span></button>
                 <div class="tools-dropdown-menu" id="toolsDropdownMenu" role="menu" aria-label="أدوات" data-i18n-aria-label="sectionTools" hidden>
                     <div class="tools-grid">
+                        <button class="tool-card" id="smartboardToggleBtn" title="وضع السبورة الذكية والعرض الصفي" aria-label="وضع السبورة الذكية والعرض الصفي" data-i18n-title="smartboardModeTitle" data-i18n-aria-label="smartboardModeTitle" role="menuitem"><i data-lucide="presentation" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="smartboardModeBtn">السبورة الذكية</span></button>
+                        <button class="tool-card" id="blankMapWorksheetBtn" title="خرائط صامتة وأوراق عمل مدرسية" aria-label="خرائط صامتة وأوراق عمل مدرسية" data-i18n-title="blankMapWorksheetTitle" data-i18n-aria-label="blankMapWorksheetTitle" role="menuitem"><i data-lucide="printer" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="blankMapWorksheetBtn">خرائط صامتة</span></button>
+                        <button class="tool-card" id="teacherHubBtn" title="لوحة المعلم والواجبات المدرسية" aria-label="لوحة المعلم والواجبات المدرسية" data-i18n-title="teacherHubTitle" data-i18n-aria-label="teacherHubTitle" role="menuitem"><i data-lucide="graduation-cap" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="teacherHubBtn">لوحة المعلم</span></button>
+                        <button class="tool-card" id="academicSourcesBtn" title="المصادر والمراجع الأكاديمية المعتمدة" aria-label="المصادر والمراجع الأكاديمية المعتمدة" data-i18n-title="academicSourcesTitle" data-i18n-aria-label="academicSourcesTitle" role="menuitem"><i data-lucide="book-marked" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="academicSourcesBtn">المراجع الأكاديمية</span></button>
                         <button class="tool-card" id="measureToolBtn" title="أداة القياس" aria-label="أداة القياس" data-i18n-title="measureToolLabel" data-i18n-aria-label="measureToolLabel" role="menuitem"><i data-lucide="ruler" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="measureToolLabel"></span></button>
                         <button class="tool-card" id="coordsToggle" title="إحداثيات" aria-label="إحداثيات" data-i18n-title="coordsToggle_title" data-i18n-aria-label="coordsToggle" role="menuitem"><i data-lucide="map-pin" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="coordsToggle"></span></button>
                         <button class="tool-card" id="dataTableBtn" title="جدول البيانات" aria-label="جدول البيانات" data-i18n-title="dataTableBtn_title" data-i18n-aria-label="dataTableBtn" role="menuitem"><i data-lucide="table" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="dataTableBtn"></span></button>
@@ -94,6 +98,7 @@
         <svg id="mapSvg"></svg>
         <canvas id="adminBoundariesCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:4;"></canvas>
         <canvas id="densityCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5;"></canvas>
+        <canvas id="smartboardLaserCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:99;display:none;"></canvas>
         <div class="tooltip" id="tooltip" role="status" aria-live="polite"></div>
         <div class="export-blocking-overlay" id="exportBlockingOverlay" style="display:none" role="status" aria-live="polite">
             <div class="export-blocking-spinner"></div>
@@ -177,6 +182,47 @@
         </div>
 
         <button class="presentation-exit-btn" id="presentationExitBtn" style="display:none" data-i18n-title="presentationExitLabel"><i data-lucide="minimize" class="lucide-icon"></i><span class="btn-text" data-i18n="presentationExitLabel"></span></button>
+
+        <!-- Smartboard Interactive Classroom Floating Bar -->
+        <div class="smartboard-floating-bar" id="smartboardFloatingBar" style="display:none" role="toolbar" aria-label="أدوات السبورة الذكية">
+            <div class="smartboard-bar-drag" id="smartboardBarDrag" title="تحريك الشريط"><i data-lucide="grip-vertical" class="lucide-icon"></i></div>
+            <div class="smartboard-bar-title">
+                <i data-lucide="presentation" class="lucide-icon"></i>
+                <span data-i18n="smartboardModeBtn">السبورة الذكية</span>
+            </div>
+            <div class="smartboard-bar-tools">
+                <button type="button" class="smartboard-tool-btn active" id="smartboardLaserToggleBtn" data-tool="laser" title="مؤشر الليزر المتوهج" data-i18n-title="smartboardLaser">
+                    <i data-lucide="sun" class="lucide-icon"></i>
+                    <span class="btn-text" data-i18n="smartboardLaser">مؤشر الليزر</span>
+                </button>
+                <button type="button" class="smartboard-tool-btn" id="smartboardSpotlightBtn" data-tool="spotlight" title="تسليط الضوء البؤري" data-i18n-title="smartboardSpotlight">
+                    <i data-lucide="focus" class="lucide-icon"></i>
+                    <span class="btn-text" data-i18n="smartboardSpotlight">بقعة الضوء</span>
+                </button>
+                <button type="button" class="smartboard-tool-btn" id="smartboardDrawBtn" data-tool="draw" title="قلم الشرح والتعليم" data-i18n-title="smartboardPen" aria-label="قلم الشرح" data-i18n-aria-label="smartboardPen">
+                    <i data-lucide="pencil" class="lucide-icon"></i>
+                    <span class="btn-text" data-i18n="smartboardPen">القلم</span>
+                </button>
+                <button type="button" class="smartboard-tool-btn" id="smartboardClearDrawBtn" title="مسح التأشير" data-i18n-title="smartboardClear">
+                    <i data-lucide="trash-2" class="lucide-icon"></i>
+                    <span class="btn-text" data-i18n="smartboardClear">مسح التأشير</span>
+                </button>
+                <div class="smartboard-color-picker" id="smartboardColorPicker">
+                    <span class="laser-dot-swatch active" data-color="#ff3344" style="background:#ff3344;" title="أحمر"></span>
+                    <span class="laser-dot-swatch" data-color="#00ff88" style="background:#00ff88;" title="أخضر"></span>
+                    <span class="laser-dot-swatch" data-color="#ffea00" style="background:#ffea00;" title="أصفر"></span>
+                    <span class="laser-dot-swatch" data-color="#00c8ff" style="background:#00c8ff;" title="أزرق"></span>
+                </div>
+                <button type="button" class="smartboard-tool-btn" id="smartboardFullscreenBtn" title="ملء الشاشة" data-i18n-title="smartboardFullscreen">
+                    <i data-lucide="maximize" class="lucide-icon"></i>
+                    <span class="btn-text" data-i18n="smartboardFullscreen">ملء الشاشة</span>
+                </button>
+                <button type="button" class="smartboard-tool-btn smartboard-exit-btn" id="smartboardExitBtn" title="خروج من وضع السبورة" data-i18n-title="smartboardExit">
+                    <i data-lucide="x" class="lucide-icon"></i>
+                    <span class="btn-text" data-i18n="smartboardExit">خروج</span>
+                </button>
+            </div>
+        </div>
 
         <button class="menu-toggle" id="menuToggle" title="فتح القائمة" aria-label="فتح القائمة" data-i18n-title="menuToggle" data-i18n-aria-label="menuToggle"><i data-lucide="menu" class="lucide-icon"></i></button>
         <button class="layers-toggle" id="layersToggleBtn" title="فتح نافذة الطبقات" aria-label="فتح الطبقات" data-i18n-title="layersToggle" data-i18n-aria-label="layersToggle"><i data-lucide="layers" class="lucide-icon"></i><span class="active-layer-counter" id="layerCounter">0</span></button>
@@ -300,8 +346,8 @@
                 </div>
                 <div class="history-filter-row" id="historyFilterRow">
                     <input type="text" class="history-search-input" id="histSearchInput" aria-label="بحث في الحروب والمعارك" data-i18n-aria-label="histSearchPlaceholder" data-i18n-placeholder="histSearchPlaceholder" autocomplete="off" />
-                    <select class="history-region-select" id="histFilterRegion" aria-label="تصفية حسب المنطقة" data-i18n-aria-label="histFilterRegionLabel"></select>
-                    <select class="history-region-select" id="histFilterReligion" aria-label="تصفية حسب الديانة" data-i18n-aria-label="histFilterReligionLabel"></select>
+                    <select class="history-region-select" id="histFilterRegion" aria-label="تصفية حسب المنطقة" data-i18n-aria-label="histFilterRegionLabel" title="تصفية حسب المنطقة" data-i18n-title="histFilterRegionLabel"></select>
+                    <select class="history-region-select" id="histFilterReligion" aria-label="تصفية حسب الديانة" data-i18n-aria-label="histFilterReligionLabel" title="تصفية حسب الديانة" data-i18n-title="histFilterReligionLabel"></select>
                 </div>
                 <div class="history-war-tabs hist-epoch-grid" id="histWarTabs" role="tablist"></div>
             </div>
@@ -357,7 +403,7 @@
                 </div>
                 <div class="history-era-pop-filter-row" id="histErasFilterRow">
                     <input type="text" class="history-search-input" id="histErasSearchInput" aria-label="بحث في الحقب التاريخية" data-i18n-aria-label="histSearchPlaceholder" data-i18n-placeholder="histSearchPlaceholder" autocomplete="off" />
-                    <select class="history-region-select" id="histErasFilterRegion" aria-label="تصفية حسب المنطقة" data-i18n-aria-label="histFilterRegionLabel"></select>
+                    <select class="history-region-select" id="histErasFilterRegion" aria-label="تصفية حسب المنطقة" data-i18n-aria-label="histFilterRegionLabel" title="تصفية حسب المنطقة" data-i18n-title="histFilterRegionLabel"></select>
                 </div>
                 <div class="history-era-group hist-epoch-grid" id="historyEraGroup" style="display:none"></div>
             </div>
@@ -550,6 +596,7 @@
                     <select id="blocSelect" class="bloc-select geo-layer" aria-label="التكتلات الجيوسياسية" data-i18n-aria-label="geopoliticalBlocs" data-i18n-title="blocSelect_title"><option value="all">جميع التكتلات</option></select>
                     <button class="btn geo-layer" id="desertsForestsToggle" aria-pressed="false" title="إظهار/إخفاء الصحاري والغابات" data-i18n="desertsForests" data-i18n-title="desertsForestsToggle_title"><i data-lucide="sun" class="lucide-icon"></i><span class="btn-text">صحاري</span></button>
                     <button class="btn geo-layer" id="borderDisputesToggle" aria-pressed="false" title="إظهار/إخفاء النزاعات الحدودية" data-i18n="borderDisputes" data-i18n-title="borderDisputesToggle_title"><i data-lucide="swords" class="lucide-icon"></i><span class="btn-text">نزاعات</span></button>
+                    <button class="btn geo-layer" id="adminBoundariesToggle" aria-pressed="false" title="إظهار/إخفاء الحدود الإدارية" data-i18n="adminBoundariesToggle" data-i18n-title="adminBoundariesToggle_title"><i data-lucide="map" class="lucide-icon"></i><span class="btn-text">حدود إدارية</span></button>
                     <button class="btn hist-layer" id="historicalRoutesToggle" aria-pressed="false" title="إظهار/إخفاء الطرق التاريخية" data-i18n="historicalRoutes" data-i18n-title="historicalRoutesToggle_title"><i data-lucide="route" class="lucide-icon"></i><span class="btn-text" data-i18n="historicalRoutes">طرق تاريخية</span></button>
                     <button class="btn hist-layer" id="histCapitalsToggle" aria-pressed="false" title="إظهار/إخفاء العواصم التاريخية" data-i18n="histCapitalsToggle" data-i18n-title="histCapitalsToggle_title"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text" data-i18n="histCapitalsToggle">عواصم تاريخية</span></button>
                     <button class="btn hist-layer" id="histBattlesToggle" aria-pressed="false" title="إظهار/إخفاء المعارك الفاصلة" data-i18n="histBattlesToggle" data-i18n-title="histBattlesToggle_title"><i data-lucide="swords" class="lucide-icon"></i><span class="btn-text" data-i18n="histBattlesToggle">معارك فاصلة</span></button>
@@ -1137,6 +1184,278 @@
                 <div class="quiz-results-body" id="quizResultsBody"></div>
                 <div class="quiz-form-actions">
                     <button class="btn quiz-start-btn" id="quizResultsCloseBtn" data-i18n="quizResultsClose">إغلاق</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Academic Bibliography & Citations Modal -->
+        <div class="academic-sources-overlay" id="academicSourcesOverlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="academicSourcesModalTitle">
+            <div class="academic-sources-box">
+                <div class="academic-sources-header">
+                    <div class="academic-header-titles">
+                        <i data-lucide="book-marked" class="lucide-icon modal-header-icon"></i>
+                        <div>
+                            <h3 id="academicSourcesModalTitle" data-i18n="academicSourcesTitle">المصادر والمراجع الأكاديمية المعتمدة</h3>
+                            <p class="academic-sources-subtitle" data-i18n="academicSourcesSubtitle">توثيق شامل ومعتمد لمصادر الخرائط والحدود والحقب والحروب والحركات الاستكشافية</p>
+                        </div>
+                    </div>
+                    <button class="academic-sources-close close-btn" id="academicSourcesCloseBtn" aria-label="إغلاق" data-i18n-aria-label="closeLabel"><i data-lucide="x" class="lucide-icon"></i></button>
+                </div>
+                <div class="academic-sources-tabs" role="tablist">
+                    <button class="academic-tab-btn active" data-tab="general" data-i18n="academicTabGeneral">الخرائط والحدود</button>
+                    <button class="academic-tab-btn" data-tab="eras" data-i18n="academicTabEras">الحقب التاريخية</button>
+                    <button class="academic-tab-btn" data-tab="wars" data-i18n="academicTabWars">الحروب والمعارك</button>
+                    <button class="academic-tab-btn" data-tab="religions" data-i18n="academicTabReligions">انتشار الأديان</button>
+                    <button class="academic-tab-btn" data-tab="travelers" data-i18n="academicTabTravelers">رحلات المستكشفين</button>
+                </div>
+                <div class="academic-sources-search-wrap">
+                    <input type="text" id="academicSourcesSearch" class="quiz-input" placeholder="ابحث في المراجع، المؤلفين، الدوريات والمؤسسات الأكاديمية...">
+                </div>
+                <div class="academic-sources-content" id="academicSourcesContent"></div>
+            </div>
+        </div>
+
+        <!-- Printable Blank Maps & Classroom Worksheets Modal -->
+        <div class="class-worksheet-overlay" id="classWorksheetOverlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="classWorksheetModalTitle">
+            <div class="class-worksheet-box">
+                <div class="class-worksheet-header">
+                    <div class="academic-header-titles">
+                        <i data-lucide="printer" class="lucide-icon modal-header-icon"></i>
+                        <div>
+                            <h3 id="classWorksheetModalTitle" data-i18n="blankMapWorksheetTitle">مولد الخرائط الصامتة وأوراق العمل المدرسية</h3>
+                            <p class="academic-sources-subtitle" data-i18n="worksheetSubtitle">توليد وتصدير أوراق عمل A4 عالية الدقة مخصصة للاختبارات والأنشطة الصفية</p>
+                        </div>
+                    </div>
+                    <button class="close-btn" id="classWorksheetCloseBtn" aria-label="إغلاق" data-i18n-aria-label="closeLabel"><i data-lucide="x" class="lucide-icon"></i></button>
+                </div>
+                <div class="class-worksheet-body">
+                    <div class="worksheet-settings-panel">
+                        <h4 style="margin:0 0 10px 0; color:var(--brand-accent);" data-i18n="worksheetSettingsTitle">إعدادات الورقة الامتحانية</h4>
+                        
+                        <div class="worksheet-form-group">
+                            <label data-i18n="worksheetMapType">نوع الخريطة الصامتة:</label>
+                            <select id="worksheetMapType" class="quiz-select">
+                                <option value="modern_blank" data-i18n="worksheetTypeModern">خريطة العالم السياسية الصامتة (حدود الدول مفرغة)</option>
+                                <option value="physical_blank" data-i18n="worksheetTypePhysical">خريطة العالم الطبيعية (سواحل وأنهار صامتة)</option>
+                                <option value="current_era" data-i18n="worksheetTypeEra">خريطة الحقبة التاريخية الحالية (حدود الإمبراطورية للتمرين)</option>
+                                <option value="current_traveler" data-i18n="worksheetTypeTraveler">خريطة مسار الرحالة المختار (نقاط وموانئ صامتة)</option>
+                            </select>
+                        </div>
+
+                        <div class="worksheet-form-group">
+                            <label data-i18n="worksheetSchoolName">مدرسة / مؤسسة التعليم:</label>
+                            <input type="text" id="worksheetSchoolName" class="quiz-input" value="مدرسة الأندلس الأكاديمية">
+                        </div>
+
+                        <div class="worksheet-form-group">
+                            <label data-i18n="worksheetTeacherNameLabel">اسم المعلم المشرف:</label>
+                            <input type="text" id="worksheetTeacherName" class="quiz-input" value="أ. أحمد السعيد">
+                        </div>
+
+                        <div class="worksheet-form-group">
+                            <label data-i18n="teacherAssignmentTitle">عنوان الورقة:</label>
+                            <input type="text" id="worksheetTitleInput" class="quiz-input" value="ورقة عمل تطبيقية: تعيين المعالم الجغرافية والتاريخية">
+                        </div>
+
+                        <div class="worksheet-form-group">
+                            <label data-i18n="worksheetInstructionsLabel">تعليمات النشاط للطلاب:</label>
+                            <textarea id="worksheetInstructionsInput" class="quiz-input" rows="2">حدد على الخريطة الصامتة أدناه أهم المعالم والحدود الإقليمية وفق التوجيهات المعطاة، ودوّن إجاباتك في الجدول المخصص.</textarea>
+                        </div>
+
+                        <div class="worksheet-form-group worksheet-checkboxes">
+                            <label class="quiz-checkbox-label">
+                                <input type="checkbox" id="worksheetNumberedQuestionsCheck" checked>
+                                <span data-i18n="worksheetIncludeQuestions">إضافة جدول أسئلة مرقمة (1-10) لتدوين الإجابات</span>
+                            </label>
+                            <label class="quiz-checkbox-label">
+                                <input type="checkbox" id="worksheetEcoPrintCheck" checked>
+                                <span data-i18n="worksheetEcoMode">نمط الطباعة الموفر للحبر (Eco-Black & White)</span>
+                            </label>
+                        </div>
+
+                        <div class="worksheet-actions">
+                            <button class="btn btn-primary" id="worksheetPrintBtn"><i data-lucide="printer" class="lucide-icon"></i> <span data-i18n="worksheetPrintA4">طباعة فورية A4</span></button>
+                            <button class="btn" id="worksheetPdfBtn"><i data-lucide="file-text" class="lucide-icon"></i> <span data-i18n="worksheetDownloadPdf">تحميل PDF</span></button>
+                            <button class="btn" id="worksheetPngBtn"><i data-lucide="image" class="lucide-icon"></i> <span data-i18n="worksheetDownloadPng">صورة عالية الدقة PNG</span></button>
+                        </div>
+                    </div>
+
+                    <div class="worksheet-preview-container">
+                        <div class="worksheet-preview-title" data-i18n="worksheetLivePreview">معاينة حية لورقة العمل (A4 عريض):</div>
+                        <div class="worksheet-a4-sheet" id="worksheetA4Sheet">
+                            <div class="worksheet-sheet-header">
+                                <div class="worksheet-sheet-school" id="previewSchoolName">مدرسة الأندلس الأكاديمية</div>
+                                <div class="worksheet-sheet-meta">
+                                    <div><strong data-i18n="worksheetStudentName">اسم الطالب:</strong> ________________________</div>
+                                    <div><strong data-i18n="worksheetGrade">الصف / الشعبة:</strong> _______ &nbsp;&nbsp; <strong data-i18n="worksheetDate">التاريخ:</strong> ___ / ___ / 2026</div>
+                                </div>
+                            </div>
+                            <div class="worksheet-sheet-title" id="previewSheetTitle">ورقة عمل تطبيقية: تعيين المعالم الجغرافية والتاريخية</div>
+                            <div class="worksheet-sheet-instructions" id="previewInstructions">حدد على الخريطة الصامتة أدناه أهم المعالم والحدود الإقليمية وفق التوجيهات المعطاة، ودوّن إجاباتك في الجدول المخصص.</div>
+                            
+                            <div class="worksheet-sheet-map-box" id="worksheetSheetMapBox">
+                                <svg id="worksheetPreviewSvg" viewBox="0 0 960 500" preserveAspectRatio="xMidYMid meet"></svg>
+                            </div>
+
+                            <div class="worksheet-sheet-questions" id="worksheetSheetQuestions">
+                                <table class="worksheet-answers-table">
+                                    <tbody>
+                                        <tr>
+                                            <td>1. ___________________</td>
+                                            <td>2. ___________________</td>
+                                            <td>3. ___________________</td>
+                                            <td>4. ___________________</td>
+                                            <td>5. ___________________</td>
+                                        </tr>
+                                        <tr>
+                                            <td>6. ___________________</td>
+                                            <td>7. ___________________</td>
+                                            <td>8. ___________________</td>
+                                            <td>9. ___________________</td>
+                                            <td>10. ___________________</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="worksheet-sheet-footer">
+                                <span data-i18n="worksheetFooterPlatform">أطلس ليبيدوس التفاعلي — منصة الجغرافيا والتاريخ المدرسية والجامعية</span>
+                                <span id="previewTeacherSign">المعلم المشرف: أ. أحمد السعيد</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teacher Assignment Hub & Live Gradebook Modal -->
+        <div class="teacher-hub-overlay" id="teacherHubOverlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="teacherHubModalTitle">
+            <div class="teacher-hub-box">
+                <div class="teacher-hub-header">
+                    <div class="academic-header-titles">
+                        <i data-lucide="graduation-cap" class="lucide-icon modal-header-icon"></i>
+                        <div>
+                            <h3 id="teacherHubModalTitle" data-i18n="teacherHubTitle">لوحة المعلم ومشاركة الواجبات المدرسية</h3>
+                            <p class="academic-sources-subtitle" data-i18n="teacherHubSubtitle">إدارة التكليفات الصفية ومتابعة نتائج ودرجات الطلاب المباشرة عبر السحابة</p>
+                        </div>
+                    </div>
+                    <button class="close-btn" id="teacherHubCloseBtn" aria-label="إغلاق" data-i18n-aria-label="closeLabel"><i data-lucide="x" class="lucide-icon"></i></button>
+                </div>
+                
+                <div class="teacher-hub-tabs" role="tablist">
+                    <button class="teacher-hub-tab-btn active" id="teacherTabCreateBtn" data-tab="create" data-i18n="teacherTabAssign">إنشاء ومشاركة واجب</button>
+                    <button class="teacher-hub-tab-btn" id="teacherTabActiveBtn" data-tab="active" data-i18n="teacherTabGradebook">سجل درجات الفصل الحي</button>
+                </div>
+
+                <div class="teacher-hub-body">
+                    <!-- Create Tab -->
+                    <div class="teacher-tab-panel active" id="teacherTabCreatePanel">
+                        <div class="teacher-create-grid">
+                            <div class="teacher-create-form">
+                                <div class="worksheet-form-group">
+                                    <label data-i18n="teacherAssignmentTitle">عنوان الواجب الصفي:</label>
+                                    <input type="text" id="teacherAssignmentTitleInput" class="quiz-input" value="واجب الأطلس: اختبار الجغرافيا والتاريخ">
+                                </div>
+                                <div class="worksheet-form-group">
+                                    <label data-i18n="teacherAssignmentTopicLabel">الموضوع / الوحدة الدراسية:</label>
+                                    <select id="teacherAssignmentTopic" class="quiz-select">
+                                        <option value="countries" data-i18n="teacherTopicCountries">تحديد مواقع الدول والعواصم (معاصر)</option>
+                                        <option value="flags" data-i18n="teacherTopicFlags">أعلام الدول والرموز الوطنية</option>
+                                        <option value="eras" data-i18n="teacherTopicEras">الحقب التاريخية والإمبراطوريات الكبرى</option>
+                                        <option value="wars" data-i18n="teacherTopicWars">الحروب والمعارك الفاصلة</option>
+                                        <option value="religions" data-i18n="teacherTopicReligions">تاريخ انتشار الأديان في العالم</option>
+                                    </select>
+                                </div>
+                                <div class="worksheet-form-group">
+                                    <label data-i18n="teacherNumQuestionsLabel">عدد الأسئلة:</label>
+                                    <select id="teacherNumQuestions" class="quiz-select">
+                                        <option value="5" data-i18n="teacherNum5">5 أسئلة (تقويم صفي سريع)</option>
+                                        <option value="10" selected data-i18n="teacherNum10">10 أسئلة (واجب معياري)</option>
+                                        <option value="15" data-i18n="teacherNum15">15 سؤالاً (اختبار وحدة شامل)</option>
+                                    </select>
+                                </div>
+                                <div class="worksheet-form-group">
+                                    <label data-i18n="teacherClassCodeLabel">اسم الصف / المجموعة:</label>
+                                    <input type="text" id="teacherClassName" class="quiz-input" value="الصف العاشر / أ">
+                                </div>
+                                <button class="btn btn-primary btn-lg" id="teacherGenerateSessionBtn">
+                                    <i data-lucide="link" class="lucide-icon"></i>
+                                    <span data-i18n="teacherGenerateBtn">توليد رمز الواجب ورابط الطلاب</span>
+                                </button>
+                            </div>
+
+                            <div class="teacher-share-card" id="teacherShareCard" style="display:none">
+                                <div class="share-code-badge">
+                                    <span data-i18n="teacherSessionCodeLabel">كود جلسة الواجب:</span>
+                                    <strong id="teacherSessionCodeDisplay">ABCD-1234</strong>
+                                </div>
+                                <p data-i18n="teacherShareInstructions" style="font-size:0.88rem;color:var(--text-muted);">شارك هذا الرابط المباشر مع طلابك ليفتح الواجب تلقائياً ويسجل درجاتهم مباشرة:</p>
+                                <div class="share-link-row">
+                                    <input type="text" id="teacherStudentDirectLink" class="quiz-input" readonly>
+                                    <button class="btn btn-secondary" id="teacherCopyLinkBtn"><i data-lucide="copy" class="lucide-icon"></i> <span data-i18n="teacherCopyLink">نسخ الرابط</span></button>
+                                </div>
+                                <div class="teacher-share-notice">
+                                    <i data-lucide="check-circle" class="lucide-icon" style="color:var(--success, #10b981);"></i>
+                                    <span data-i18n="teacherShareNotice">الواجب مفعّل الآن ومتصل بقاعدة بيانات Firebase المباشرة. بمجرد حل الطلاب للاختبار ستظهر نتائجهم فوراً في تبويب "سجل درجات الفصل الحي".</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active Sessions & Gradebook Tab -->
+                    <div class="teacher-tab-panel" id="teacherTabActivePanel" style="display:none">
+                        <div class="gradebook-controls">
+                            <div class="worksheet-form-group" style="flex:1;">
+                                <label data-i18n="teacherSelectSession">اختر الواجب لعرض كشف الدرجات:</label>
+                                <div style="display:flex;gap:8px;">
+                                    <select id="teacherSessionPicker" class="quiz-select" style="flex:1;"></select>
+                                    <button class="btn btn-secondary" id="teacherRefreshGradebookBtn" title="تحديث السجل"><i data-lucide="refresh-cw" class="lucide-icon"></i> <span data-i18n="teacherRefreshGradebook">تحديث</span></button>
+                                </div>
+                            </div>
+                            <div class="gradebook-actions">
+                                <button class="btn btn-secondary" id="teacherExportCsvBtn"><i data-lucide="download" class="lucide-icon"></i> <span data-i18n="teacherExportCSV">تصدير CSV</span></button>
+                                <button class="btn btn-secondary" id="teacherPrintGradebookBtn"><i data-lucide="printer" class="lucide-icon"></i> <span data-i18n="teacherPrintGrades">طباعة الكشف</span></button>
+                            </div>
+                        </div>
+
+                        <div class="gradebook-summary-cards">
+                            <div class="grade-card"><span class="grade-card-val" id="gradebookTotalStudents">0</span><span class="grade-card-label" data-i18n="teacherTotalSubmissions">إجمالي التسليمات</span></div>
+                            <div class="grade-card"><span class="grade-card-val" id="gradebookAvgScore">0%</span><span class="grade-card-label" data-i18n="teacherClassAverage">متوسط الدرجات</span></div>
+                            <div class="grade-card"><span class="grade-card-val" id="gradebookTopScore">0%</span><span class="grade-card-label" data-i18n="teacherHighestScore">أعلى درجة</span></div>
+                        </div>
+
+                        <div class="gradebook-table-wrap">
+                            <table class="quiz-results-table gradebook-table" id="teacherGradebookTable">
+                                <thead>
+                                    <tr>
+                                        <th data-i18n="teacherColRank">#</th>
+                                        <th data-i18n="teacherColStudent">اسم الطالب</th>
+                                        <th data-i18n="teacherColScore">الدرجة</th>
+                                        <th data-i18n="teacherColPercent">النسبة</th>
+                                        <th data-i18n="teacherColTime">الوقت المستغرق</th>
+                                        <th data-i18n="teacherColDate">تاريخ التسليم</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="teacherGradebookTbody">
+                                    <tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-muted);" data-i18n="teacherNoSubmissions">لم يقم أي طالب بإرسال إجاباته بعد في هذه الجلسة.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Assignment Mode Entry Modal -->
+        <div class="student-assignment-overlay" id="studentAssignmentOverlay" style="display:none" role="dialog" aria-modal="true">
+            <div class="student-assignment-box">
+                <div class="student-box-icon"><i data-lucide="graduation-cap" class="lucide-icon"></i></div>
+                <h3 id="studentAssignmentTitleDisplay" data-i18n="studentModeTitle">واجب مدرسي تفاعلي</h3>
+                <p id="studentAssignmentDescDisplay" data-i18n="studentWelcome">أهلاً بك! يرجى إدخال اسمك الكامل لبدء الواجب المدرسي:</p>
+                <div class="worksheet-form-group" style="margin:20px 0;">
+                    <input type="text" id="studentFullNameInput" class="quiz-input" placeholder="اكتب اسمك الثلاثي هنا..." data-i18n-placeholder="studentNamePlaceholder" style="font-size:1.1rem;text-align:center;">
+                </div>
+                <div class="student-actions">
+                    <button class="btn btn-primary btn-lg" id="studentStartAssignmentBtn" style="width:100%;font-size:1.05rem;" data-i18n="studentStartAssignment">بدء الواجب الآن</button>
                 </div>
             </div>
         </div>

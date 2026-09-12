@@ -8,7 +8,16 @@
       "title_ar": "فجر عصر السلالات المبكرة وبدايات الحضارات الكبرى",
       "title_en": "Dawn of Early Dynasties & Primary Civilizations",
       "summary_ar": "دلتا النيل تضم سبعة أفرع نشطة في أقصى تدفقها وبحيرة قارون ممتلئة. مياه الخليج العربي تتوغل شمالاً حتى أور وإريدو. النهر الأصفر يجري شمالاً نحو خليج بوهاي، ونهر الساراسفاتي يتدفق موازياً للسند.",
-      "summary_en": "Nile Delta features 7 active branches at maximum discharge; Persian Gulf shoreline extends inland near Ur & Eridu; Yellow River flows north to Bohai; Sarasvati flows parallel to Indus."
+      "summary_en": "Nile Delta features 7 active branches at maximum discharge; Persian Gulf shoreline extends inland near Ur & Eridu; Yellow River flows north to Bohai; Sarasvati flows parallel to Indus.",
+      "label_ru": "3000 г. до н.э.",
+      "label_uz": "M.a. 3000 y.",
+      "label_es": "3000 a.C.",
+      "title_ru": "Зарождение ранних династий и первичных цивилизаций",
+      "title_uz": "Dastlabki sulolalar va ilk sivilizatsiyalarning paydo bo‘lishi",
+      "title_es": "Amanecer de las primeras dinastías y civilizaciones originarias",
+      "summary_ru": "Дельта Нила насчитывает 7 активных рукавов при максимальном стоке. Персидский залив простирается на север до Ура и Эриду. Хуанхэ течет на север к заливу Бохай, Сарасвати течет параллельно Инду.",
+      "summary_uz": "Nil deltasi maksimal suv oqimi bilan 7 ta faol tarmoqqa ega. Fors ko‘rfazi shimolga Ur va Eridugacha kirib borgan. Xuanxe shimolga Boxay tomon oqadi, Sarasvati esa Hind daryosiga parallel oqadi.",
+      "summary_es": "El delta del Nilo cuenta con 7 brazos activos en su caudal máximo. El golfo Pérsico penetra al norte hasta Ur y Eridu. El río Amarillo fluye al norte hacia Bohai y el Sarasvati corre paralelo al Indo."
     },
     {
       "year": -2500,
@@ -17,7 +26,16 @@
       "title_ar": "عصر بناة الأهرامات والإمبراطورية الأكدية",
       "title_en": "Age of the Pyramids & the Akkadian Empire",
       "summary_ar": "فروع النيل السبعة تنقل أحجار الأهرام، والفرات يمر مباشرة عبر حواضر سومر وأكد. تجارة دلمون ومجان البحرية تزدهر عند موانئ الخليج المتوغلة شمالاً.",
-      "summary_en": "Seven Nile branches transport pyramid stone; Euphrates directly borders Sumerian-Akkadian cities; Dilmun/Magan maritime trade flourishes in the deep Gulf."
+      "summary_en": "Seven Nile branches transport pyramid stone; Euphrates directly borders Sumerian-Akkadian cities; Dilmun/Magan maritime trade flourishes in the deep Gulf.",
+      "label_ru": "2500 г. до н.э.",
+      "label_uz": "M.a. 2500 y.",
+      "label_es": "2500 a.C.",
+      "title_ru": "Эпоха строителей пирамид и Аккадская империя",
+      "title_uz": "Piramidalar davri va Akkad imperiyasi",
+      "title_es": "Era de las pirámides y el Imperio acadio",
+      "summary_ru": "Семь рукавов Нила служат для транспортировки камня пирамид; Евфрат протекает непосредственно через города Шумера и Аккада. Морская торговля Дильмуна и Магана процветает в Персидском заливе.",
+      "summary_uz": "Nilning yetti irmog‘i piramida toshlarini tashiydi; Furot bevosita Shumer va Akkad shaharlari bo‘ylab oqadi. Dilmun va Maganning dengiz savdosi Fors ko‘rfazi chuqurligida gullab-yashnaydi.",
+      "summary_es": "Siete brazos del Nilo transportan piedra para las pirámides; el Éufrates bordea las urbes sumerio-acadias. El comercio marítimo de Dilmún y Magán florece en el golfo Pérsico."
     },
     {
       "year": -2000,
@@ -26,7 +44,16 @@
       "title_ar": "عصر أور الثالثة والدولة المصرية الوسطى",
       "title_en": "Ur III Renaissance & Egyptian Middle Kingdom",
       "summary_ar": "استصلاح واحة الفيوم وبحر يوسف عبر ملوك الأسرة الثانية عشرة. بدايات جفاف حوض نهر الساراسفاتي في شبه القارة الهندية، وتغيرات طميية في أهوار الرافدين.",
-      "summary_en": "Reclamation of the Fayum basin via Bahr Yussef under 12th Dynasty; onset of Sarasvati desiccation; siltation changes in Mesopotamian marshlands."
+      "summary_en": "Reclamation of the Fayum basin via Bahr Yussef under 12th Dynasty; onset of Sarasvati desiccation; siltation changes in Mesopotamian marshlands.",
+      "label_ru": "2000 г. до н.э.",
+      "label_uz": "M.a. 2000 y.",
+      "label_es": "2000 a.C.",
+      "title_ru": "Ренессанс III династии Ура и Среднее царство Египта",
+      "title_uz": "Ur III uyg‘onishi va Misr O‘rta podsholigi",
+      "title_es": "Renacimiento de Ur III y Reino Medio de Egipto",
+      "summary_ru": "Освоение Фаюмского оазиса фараонами XII династии через Бахр-Юсуф. Начало высыхания реки Сарасвати в Индии; заиливание болот Месопотамии.",
+      "summary_uz": "12-sulola fir’avnlari tomonidan Bahr Yusuf orqali Fayum vohasini o‘zlashtirish. Hindistonda Sarasvati daryosining quri boshlashi; Mesopotamiya botqoqliklarida loyqa to‘planishi.",
+      "summary_es": "Irrigación del oasis de El Fayum vía Bahr Yussef bajo la Dinastía XII; inicio de la desecación del Sarasvati; colmatación de las marismas mesopotámicas."
     },
     {
       "year": -1500,
@@ -35,7 +62,16 @@
       "title_ar": "العصر البرونزي المتأخر والإمبراطورية المصرية الحديثة",
       "title_en": "Late Bronze Age & Egyptian New Kingdom",
       "summary_ar": "الفرع البيلوزي يشكل خط الدفاع الحدودي الشرقي لمصر وطريق حورس الحربي. نهرا دجلة والفرات يفصلان بابل الكاشية عن آشور وميتاني. ممر بوابات قيليقية معبر جيوش الحثيين والمصريين.",
-      "summary_en": "Pelusiac branch forms Egypt's fortified eastern frontier and Ways of Horus; Tigris/Euphrates divide Kassite Babylon, Assyria, Mitanni; Cilician Gates channel Hittite-Egyptian campaigns."
+      "summary_en": "Pelusiac branch forms Egypt's fortified eastern frontier and Ways of Horus; Tigris/Euphrates divide Kassite Babylon, Assyria, Mitanni; Cilician Gates channel Hittite-Egyptian campaigns.",
+      "label_ru": "1500 г. до н.э.",
+      "label_uz": "M.a. 1500 y.",
+      "label_es": "1500 a.C.",
+      "title_ru": "Поздний бронзовый век и Новое царство Египта",
+      "title_uz": "So‘nggi bronza davri va Misr Yangi podsholigi",
+      "title_es": "Bronce Final y Reino Nuevo de Egipto",
+      "summary_ru": "Пелусийский рукав служит укрепленной восточной границей Египта. Тигр и Евфрат разделяют Вавилон, Ассирию и Митанни. Киликийские ворота пропускают армии хеттов и египтян.",
+      "summary_uz": "Peluziy irmog‘i Misrning sharqiy mudofaa chegarasini tashkil etadi. Dajla va Furot Bobil, Ossuriya va Mitannini ajratib turadi. Kilikiya darvozalari xetlar va misrliklar qo‘shinlariga yo‘l beradi.",
+      "summary_es": "El brazo pelusíaco constituye la frontera fortificada oriental de Egipto. El Tigris y el Éufrates separan Babilonia, Asiria y Mitani; las Puertas Cilicias canalizan las campañas hitito-egipcias."
     },
     {
       "year": -1000,
@@ -44,7 +80,16 @@
       "title_ar": "العصر الحديدي المبكر وممالك الشام وفينيقيا",
       "title_en": "Early Iron Age & Levantine Kingdoms",
       "summary_ar": "أفرع دلتا النيل لا تزال سبعة، عاصمة تانس تزدهر على الفرع التانيتي. الفرات ينحرف تدريجياً عن مجراه القديم قرب أور. نهر الأردن ووادي اليرموك حدود طبيعية لممالك آرام وعمون ومؤاب وإسرائيل.",
-      "summary_en": "Nile delta sustains 7 branches, Tanis thrives on Tanitic branch; Euphrates gradually avulses away from Ur; Jordan/Yarmouk define borders of Aram, Ammon, Moab, Israel."
+      "summary_en": "Nile delta sustains 7 branches, Tanis thrives on Tanitic branch; Euphrates gradually avulses away from Ur; Jordan/Yarmouk define borders of Aram, Ammon, Moab, Israel.",
+      "label_ru": "1000 г. до н.э.",
+      "label_uz": "M.a. 1000 y.",
+      "label_es": "1000 a.C.",
+      "title_ru": "Ранний железный век и царства Леванта",
+      "title_uz": "Ilk temir davri va Shom podsholiklari",
+      "title_es": "Primera Edad del Hierro y reinos levantinos",
+      "summary_ru": "В дельте Нила сохраняются 7 рукавов; Танис процветает на Танитском рукаве. Евфрат постепенно смещается от Ура. Иордан и Ярмук образуют рубежи царств Арама, Аммона, Моава и Израиля.",
+      "summary_uz": "Nil deltasida 7 ta tarmoq saqlanib turibdi; Tanis Tanit tarmog‘ida gullab-yashnamoqda. Furot Urdan asta-sekin uzoqlashmoqda. Iordan va Yarmuk Orom, Ammon, Moav va Isroil chegaralarini belgilaydi.",
+      "summary_es": "El delta del Nilo conserva 7 brazos; Tanis prospera sobre el brazo tanítico. El Éufrates se aleja de Ur. El Jordán y el Yarmuk delimitan los reinos de Aram, Amón, Moab e Israel."
     },
     {
       "year": -500,
@@ -53,7 +98,16 @@
       "title_ar": "العصر الكلاسيكي، الإمبراطورية الأخمينية واليونان",
       "title_en": "Classical Antiquity, Achaemenid Persia & Greece",
       "summary_ar": "ممر ترموبيل الساحلي يشهد ملحمة الـ 300 إسبرطي ضد الفرس. داريوس الأول يعيد حفر قناة تربط النيل بالبحر الأحمر. نهر جيحون (الأوكسوس) يتدفق عبر قناة أوزبوي نحو بحر قزوين.",
-      "summary_en": "Thermopylae coastal pass witnesses Spartan stand; Darius I restores Nile-Red Sea canal; Oxus flows through Uzboy channel into Caspian Sea."
+      "summary_en": "Thermopylae coastal pass witnesses Spartan stand; Darius I restores Nile-Red Sea canal; Oxus flows through Uzboy channel into Caspian Sea.",
+      "label_ru": "500 г. до н.э.",
+      "label_uz": "M.a. 500 y.",
+      "label_es": "500 a.C.",
+      "title_ru": "Классическая античность, Ахеменидская Персия и Греция",
+      "title_uz": "Klassik antik davr, Ahamoniylar Forsi va Yunoniston",
+      "title_es": "Antigüedad Clásica, Persia Aqueménida y Grecia",
+      "summary_ru": "Фермопильский проход видит подвиг 300 спартанцев. Дарий I восстанавливает канал Нил — Красное море. Амударья (Оксус) несет воды через Узбой в Каспийское море.",
+      "summary_uz": "Termopil dengiz dovoni 300 spartalikning qahramonligiga guvoh bo‘ladi. Doro I Nil-Qizil dengiz kanalini qayta qazdiradi. Oks (Amudaryo) O‘zboy o‘zani orqali Kaspiy dengiziga oqadi.",
+      "summary_es": "El desfiladero de las Termópilas presencia la gesta espartana; Darío I reabre el canal Nilo-Mar Rojo; el Oxus fluye a través del cauce de Uzboy hacia el mar Caspio."
     },
     {
       "year": 1,
@@ -62,7 +116,16 @@
       "title_ar": "عصر الإمبراطورية الرومانية وبداية العصر الميلادي وسلالة هان",
       "title_en": "Pax Romana, Early Han Dynasty & Dawn of Common Era",
       "summary_ar": "يوليوس قيصر يعبر نهر الروبيكون الفاصل. الراين والدانوب يشكلان حدود روما المحصنة (Limes). سترابو وهيرودوت يوثقان الأفرع السبعة للنيل، وبداية ضعف الفرع البيلوزي.",
-      "summary_en": "Julius Caesar crosses Rubicon; Rhine & Danube define fortified Roman Limes; Strabo records 7 Nile branches with early silting of the Pelusiac distributary."
+      "summary_en": "Julius Caesar crosses Rubicon; Rhine & Danube define fortified Roman Limes; Strabo records 7 Nile branches with early silting of the Pelusiac distributary.",
+      "label_ru": "1 г. н.э.",
+      "label_uz": "1 m.",
+      "label_es": "1 d.C.",
+      "title_ru": "Римская империя, ранняя династия Хань и начало н.э.",
+      "title_uz": "Rim tinchligi (Pax Romana), Ilk Xan sulolasi va milod boshi",
+      "title_es": "Pax Romana, Dinastía Han temprana y albores de la era común",
+      "summary_ru": "Юлий Цезарь переходит Рубикон. Рейн и Дунай образуют укрепленный лимес Рима. Страбон фиксирует 7 рукавов Нила и начало заиливания Пелусийского рукава.",
+      "summary_uz": "Yuliy Sezar Rubikon daryosini kechib o‘tadi. Reyn va Dunay Rimning mustahkam limes chegarasini tashkil qiladi. Strabon Nilning 7 tarmog‘ini va Peluziyning loyqalanishini qayd etadi.",
+      "summary_es": "Julio César cruza el Rubicón. El Rin y el Danubio delimitan el Limes romano. Estrabón describe los 7 brazos del Nilo y la colmatación temprana del brazo pelusíaco."
     },
     {
       "year": 500,
@@ -71,7 +134,16 @@
       "title_ar": "أواخر العصور القديمة، الساسانيون والبيزنطيون",
       "title_en": "Late Antiquity, Sasanian-Byzantine Era",
       "summary_ar": "ترسب الطمي الشديد يطمر الفرع البيلوزي والفرع الكانوبي. هور البطائح يتعاظم في جنوب العراق بفعل فيضانات دجلة والفرات وتداعي سدود الري الساسانية.",
-      "summary_en": "Severe alluvial siltation chokes Pelusiac and Canopic branches; massive Great Swamps (Al-Bata'ih) expand in southern Mesopotamia following dyke failures."
+      "summary_en": "Severe alluvial siltation chokes Pelusiac and Canopic branches; massive Great Swamps (Al-Bata'ih) expand in southern Mesopotamia following dyke failures.",
+      "label_ru": "500 г. н.э.",
+      "label_uz": "500 m.",
+      "label_es": "500 d.C.",
+      "title_ru": "Поздняя античность, Сасаниды и Византия",
+      "title_uz": "So‘nggi antik davr, Sosoniylar va Vizantiya",
+      "title_es": "Antigüedad Tardía, era Sasánida y Bizantina",
+      "summary_ru": "Заиливание перекрывает Пелусийский и Канопский рукава. Великие болота (Батаих) расширяются в Месопотамии из-за разрушения сасанидских плотин.",
+      "summary_uz": "Kuchli loyqalanish Peluziy va Kanop tarmoqlarini to‘sib qo‘yadi. Sosoniylar to‘g‘onlarining buzilishi sababli Janubiy Mesopotamiyada Katta botqoqliklar kengayadi.",
+      "summary_es": "La severa sedimentación bloquea los brazos pelusíaco y canópico; las Grandes Marismas (Al-Bata'ih) se expanden en Mesopotamia tras la rotura de diques sasánidas."
     },
     {
       "year": 1000,
@@ -80,7 +152,16 @@
       "title_ar": "العصر الذهبي الإسلامي وحقبة الحروب الصليبية",
       "title_en": "Islamic Golden Age & Crusader Era",
       "summary_ar": "دلتا النيل تستقر حول فرعين رئيسيين: دمياط ورشيد مع انحسار تام للفروع القديمة. معركة اليرموك وواديها الصخري الفاصل. النهر الأصفر لا يزال في مساره الشمالي قبل تحوله الكبير.",
-      "summary_en": "Nile Delta stabilizes around two primary branches (Damietta & Rosetta); Yarmouk River gorge anchors historic battles; Yellow River flows north prior to 1194 avulsion."
+      "summary_en": "Nile Delta stabilizes around two primary branches (Damietta & Rosetta); Yarmouk River gorge anchors historic battles; Yellow River flows north prior to 1194 avulsion.",
+      "label_ru": "1000 г. н.э.",
+      "label_uz": "1000 m.",
+      "label_es": "1000 d.C.",
+      "title_ru": "Золотой век ислама и эпоха крестовых походов",
+      "title_uz": "Islom oltin davri va Salib yurishlari",
+      "title_es": "Edad de Oro del Islam y era de las Cruzadas",
+      "summary_ru": "Дельта Нила стабилизируется вокруг двух главных рукавов: Думьят и Рашид. Ущелье реки Ярмук становится местом исторических битв. Хуанхэ течет по северному руслу до 1194 г.",
+      "summary_uz": "Nil deltasi ikkita asosiy tarmoq (Domyat va Rashid) atrofida barqarorlashadi. Yarmuk daryosi darasi tarixiy janglarga zamin bo‘ladi. Xuanxe 1194 yilgi burilishgacha shimoliy o‘zanda oqadi.",
+      "summary_es": "El delta del Nilo se estabiliza en dos brazos principales: Damietta y Rosetta. El cañón del Yarmuk alberga batallas históricas. El río Amarillo fluye al norte antes de la crecida de 1194."
     },
     {
       "year": 1500,
@@ -89,7 +170,16 @@
       "title_ar": "عصر النهضة، الدولة العثمانية وعصر الاستكشاف",
       "title_en": "Early Modern Era, Ottoman Empire & Age of Discovery",
       "summary_ar": "النهر الأصفر يغير مساره جذرياً جنوب شبه جزيرة شاندونغ ليصب في البحر الأصفر ونهر هواي. نهرا دجلة والفرات يلتقيان في شط العرب. نهر جيحون يتحول بالكامل ليصب في بحر آرال.",
-      "summary_en": "Yellow River avulses catastrophically south of Shandong into Huai River & Yellow Sea; Tigris & Euphrates converge into Shatt al-Arab; Oxus shifts to Aral Sea."
+      "summary_en": "Yellow River avulses catastrophically south of Shandong into Huai River & Yellow Sea; Tigris & Euphrates converge into Shatt al-Arab; Oxus shifts to Aral Sea.",
+      "label_ru": "1500 г. н.э.",
+      "label_uz": "1500 m.",
+      "label_es": "1500 d.C.",
+      "title_ru": "Раннее Новое время, Османская империя и эпоха открытий",
+      "title_uz": "Yangi davr ibtidosi, Usmonli imperiyasi va Buyuk kashfiyotlar",
+      "title_es": "Edad Moderna temprana, Imperio Otomano y Era de los Descubrimientos",
+      "summary_ru": "Хуанхэ катастрофически меняет русло к югу от Шаньдуна в реку Хуай и Желтое море. Тигр и Евфрат соединяются в Шатт-эль-Араб. Амударья полностью поворачивает в Аральское море.",
+      "summary_uz": "Xuanxe Shandung janubida keskin o‘zan o‘zgartirib Xuay daryosi va Sariq dengizga quyiladi. Dajla va Furot Shatt al-Arabda birlashadi. Oks butunlay Orol dengiziga yo‘naladi.",
+      "summary_es": "El río Amarillo desvía su cauce al sur de Shandong hacia el Huai y el mar Amarillo; el Tigris y el Éufrates confluyen en el Chatt al-Arab; el Oxus vierte definitivamente al mar de Aral."
     },
     {
       "year": 2000,
@@ -98,7 +188,16 @@
       "title_ar": "العصر المعاصر، السدود العملاقة والتحولات البيئية الحديثة",
       "title_en": "Contemporary Era, Mega-Dams & Modern Landscape",
       "summary_ar": "بناء السد العالي وبحيرة ناصر ينظم فيضان النيل. النهر الأصفر يستقر في مساره الشمالي مع سد الممرات الثلاثة على اليانغتسي. تراجع حاد لبحر آرال وتجفيف أهوار جنوب العراق.",
-      "summary_en": "Aswan High Dam & Lake Nasser regulate Nile; Yellow River stabilized north; Aral Sea desiccation and post-1990s drainage of Mesopotamian marshes."
+      "summary_en": "Aswan High Dam & Lake Nasser regulate Nile; Yellow River stabilized north; Aral Sea desiccation and post-1990s drainage of Mesopotamian marshes.",
+      "label_ru": "2000 г. н.э.",
+      "label_uz": "2000 m.",
+      "label_es": "2000 d.C.",
+      "title_ru": "Современная эпоха, мега-плотины и антропогенный ландшафт",
+      "title_uz": "Zamonaviy davr, ulkan to‘g‘onlar va o‘zgargan tabiiy landshaft",
+      "title_es": "Era contemporánea, megapresas y paisaje transformado",
+      "summary_ru": "Асуанская плотина регулирует Нил. Русло Хуанхэ стабилизировано на севере; на Янцзы построена плотина 'Три ущелья'. Высыхание Аральского моря и осушение месопотамских болот.",
+      "summary_uz": "Asvon to‘g‘oni va Nosir ko‘li Nil toshqinlarini tartibga soladi. Xuanxe shimolda barqarorlashtirilgan; Yantszida Uch dara to‘g‘oni qurilgan. Orol dengizining qurishi va botqoqliklarning quritilishi.",
+      "summary_es": "La presa de Asuán regula el Nilo; el río Amarillo queda estabilizado al norte; megapresa de las Tres Gargantas en el Yangtsé. Desecación del mar de Aral y drenaje de marismas mesopotámicas."
     }
   ],
   "rivers": [
@@ -1954,7 +2053,19 @@
             ]
           }
         ]
-      }
+      },
+      "name_ru": "Река Нил и ее историческая дельта",
+      "name_uz": "Nil daryosi va uning qadimiy deltasi",
+      "name_es": "Río Nilo y su delta histórico",
+      "category_ru": "Артерия египетской цивилизации и имперского орошения",
+      "category_uz": "Misr tamadduni va imperiya sug‘orish tizimining hayotiy arteriyasi",
+      "category_es": "Arteria de la civilización egipcia y la irrigación imperial",
+      "region_ru": "Северная и Восточная Африка (Египет, Нубия, Судан)",
+      "region_uz": "Shimoliy va Sharqiy Afrika (Misr, Nubiya, Sudan)",
+      "region_es": "Norte y Este de África (Egipto, Nubia, Sudán)",
+      "strategic_importance_ru": "Главный источник жизни Древнего Египта; разливы Нила определяли сельскохозяйственный и религиозный календарь; рукава дельты служили естественными рвами против вторжений.",
+      "strategic_importance_uz": "Qadimgi Misrning yagona hayot manbai; Nil toshqinlari qishloq xo‘jaligi va taqvimni belgilagan; delta tarmoqlari bosqinchilarga qarshi tabiiy mudofaa xandaqlari vazifasini bajargan.",
+      "strategic_importance_es": "Columna vertebral de Egipto; sus crecidas determinaron el calendario agrario y dinástico; los brazos del delta actuaron como formidables fosos defensivos contra invasiones asiáticas."
     },
     {
       "id": "tigris-euphrates-system",
@@ -3152,7 +3263,19 @@
             ]
           }
         ]
-      }
+      },
+      "name_ru": "Речная система Тигра и Евфрата (Месопотамия)",
+      "name_uz": "Dajla va Furot daryolari tizimi (Mesopotamiya)",
+      "name_es": "Sistema fluvial del Tigris y Éufrates (Mesopotamia)",
+      "category_ru": "Колыбель месопотамской цивилизации и шумерских городов",
+      "category_uz": "Mesopotamiya tamadduni va Shumer shaharlarining beshigi",
+      "category_es": "Cuna de la civilización mesopotámica y las urbes sumerias",
+      "region_ru": "Плодородный полумесяц (Ирак, Сирия, Южная Анатолия)",
+      "region_uz": "Unumdor yarimoy (Iroq, Suriya, Janubiy Anatoliya)",
+      "region_es": "Creciente Fértil (Irak, Siria, Anatolia meridional)",
+      "strategic_importance_ru": "Основа первых в мире ирригационных империй (Шумер, Вавилон, Ассирия); естественная ось коммуникации от Персидского залива до Анатолии.",
+      "strategic_importance_uz": "Dunyodagi ilk sug‘orish imperiyalari (Shumer, Bobil, Ossuriya) asosi; Fors ko‘rfazidan Anatoliyagacha bo‘lgan asosiy tabiiy savdo va harbiy yo‘lak.",
+      "strategic_importance_es": "Eje hidrográfico de los primeros imperios regadíos de la historia; corredor estratégico de navegación y choque constante entre potencias mesopotámicas y persas."
     },
     {
       "id": "yellow-river-system",
@@ -3733,7 +3856,19 @@
             ]
           }
         ]
-      }
+      },
+      "name_ru": "Желтая река (Хуанхэ) и ее исторические изменения русла",
+      "name_uz": "Sariq daryo (Xuanxe) va uning tarixiy o‘zan o‘zgarishlari",
+      "name_es": "Río Amarillo (Huang He) y sus históricas avulsiones",
+      "category_ru": "Колыбель китайской цивилизации и самая непредсказуемая река в истории",
+      "category_uz": "Xitoy tamaddunining beshigi va tarixdagi eng o‘zgaruvchan daryo",
+      "category_es": "Cuna de la civilización china y el río más volátil de la historia",
+      "region_ru": "Восточная Азия (Северный Китай)",
+      "region_uz": "Sharqiy Osiyo (Shimoliy Xitoy)",
+      "region_es": "Asia Oriental (Norte de China)",
+      "strategic_importance_ru": "Назван 'Горем Китая' из-за колоссальных наводнений и 26 смен русла; контроль над его дамбами решал судьбы императорских династий.",
+      "strategic_importance_uz": "Ulkan toshqinlari va tarixda 26 marta o‘zanini o‘zgartirgani uchun 'Xitoy qayg‘usi' deb atalgan; uning dambalarini boshqarish imperiyalar taqdirini hal qilgan.",
+      "strategic_importance_es": "Llamado 'el Dolor de China' por sus devastadoras inundaciones y 26 cambios de curso; el control de sus diques fue vital para la legitimidad del Mandato Celestial."
     },
     {
       "id": "oxus-amu-darya",
@@ -4245,7 +4380,19 @@
             ]
           }
         ]
-      }
+      },
+      "name_ru": "Река Оксус (Амударья) и древнее русло Узбой",
+      "name_uz": "Oks daryosi (Amudaryo) va qadimiy O‘zboy o‘zani",
+      "name_es": "Río Oxus (Amu Daria) y antiguo cauce de Uzboy",
+      "category_ru": "Артерия Мавераннахра и рубеж между Ираном и Тураном",
+      "category_uz": "Movarounnahrning bosh arteriyasi va Eron bilan Turon orasidagi chegara",
+      "category_es": "Arteria de Transoxiana y frontera entre Irán y Turán",
+      "region_ru": "Центральная Азия (Узбекистан, Туркменистан, Таджикистан)",
+      "region_uz": "Markaziy Osiyo (O‘zbekiston, Turkmaniston, Tojikiston)",
+      "region_es": "Asia Central (Uzbekistán, Turkmenistán, Tayikistán)",
+      "strategic_importance_ru": "Великий рубеж между оседлыми цивилизациями и кочевой степью; в древности через Узбой впадала в Каспий, затем в Арал; ключевая артерия Шелкового пути.",
+      "strategic_importance_uz": "O‘troq tamaddunlar va ko‘chmanchi dashtlar o‘rtasidagi buyuk chegara; qadimda O‘zboy orqali Kaspiyga, so‘ng Orolga quyilgan; Buyuk Ipak yo‘lining tayanchi.",
+      "strategic_importance_es": "Frontera geopolítica crucial entre los imperios sedentarios persas y las estepas túrquicas; fluía al Caspio por el Uzboy en la antigüedad y luego al mar de Aral."
     },
     {
       "id": "jordan-yarmouk-system",
@@ -4877,7 +5024,19 @@
             ]
           }
         ]
-      }
+      },
+      "name_ru": "Река Иордан и ущелье реки Ярмук",
+      "name_uz": "Iordan daryosi va Yarmuk darasi tizimi",
+      "name_es": "Río Jordán y sistema de cañones del Yarmuk",
+      "category_ru": "Священная река и стратегические базальтовые каньоны",
+      "category_uz": "Muqaddas daryo va strategik bazalt kanyonlari",
+      "category_es": "Río sagrado y desfiladeros basálticos estratégicos",
+      "region_ru": "Левант (Палестина, Иордания, Сирия)",
+      "region_uz": "Shom o‘lkasi (Falastin, Iordaniya, Suriya)",
+      "region_es": "Levante mediterráneo (Palestina, Jordania, Siria)",
+      "strategic_importance_ru": "Глубокая рифтовая впадина образует естественную преграду; ущелье Ярмука стало местом решающей битвы 636 года, открывшей исламу путь в Шам.",
+      "strategic_importance_uz": "Tektonik yoriq vodiysi tabiiy to‘siq vazifasini o‘tagan; Yarmuk darasi 636 yildagi Islom fathining hal qiluvchi jang maydoniga aylangan.",
+      "strategic_importance_es": "Fosa tectónica que actúa como barrera natural insalvable; los desfiladeros del Yarmuk fueron escenario de la batalla del 636 que decidió el destino de Siria."
     },
     {
       "id": "rubicon-river",
@@ -5073,7 +5232,19 @@
             ]
           }
         ]
-      }
+      },
+      "name_ru": "Река Рубикон и граница Римской республики",
+      "name_uz": "Rubikon daryosi va Rim respublikasi chegarasi",
+      "name_es": "Río Rubicón y frontera de la República romana",
+      "category_ru": "Конституционная и военная черта Древнего Рима",
+      "category_uz": "Qadimgi Rimning konstitutsiyaviy va harbiy qizil chizig‘i",
+      "category_es": "Límite constitucional y militar de la Roma republicana",
+      "region_ru": "Южная Европа (Италия)",
+      "region_uz": "Janubiy Yevropa (Italiya)",
+      "region_es": "Sur de Europa (Italia)",
+      "strategic_importance_ru": "Северная граница коренной Италии: пересечение полководцем во главе легионов приравнивалось к государственной измене; переход Цезаря в 49 г. до н.э. изменил историю.",
+      "strategic_importance_uz": "Qadimgi Italiyaning shimoliy rasmiy chegarasi; legionlar bilan uni kechib o‘tish davlatga xiyonat hisoblangan; Sezarning m.a. 49 yildagi yurishi imperiyaga yo‘l ochgan.",
+      "strategic_importance_es": "Frontera septentrional vedada al mando militar consular; cruzarlo con tropas constituía alta traición; el paso de Julio César en el 49 a.C. sentó el fin de la República."
     },
     {
       "id": "indus-sarasvati-system",
@@ -5609,7 +5780,19 @@
             ]
           }
         ]
-      }
+      },
+      "name_ru": "Река Инд и утраченная река Сарасвати",
+      "name_uz": "Hind daryosi va yo‘qolgan afsonaviy Sarasvati tizimi",
+      "name_es": "Río Indo y el perdido sistema fluvial del Sarasvati",
+      "category_ru": "Колыбель Индской цивилизации (Хараппа и Мохенджо-Даро)",
+      "category_uz": "Hind sivilizatsiyasi, Xarappa va Mohenjo-daroning beshigi",
+      "category_es": "Cuna de la civilización del valle del Indo (Harappa y Mohenjo-daro)",
+      "region_ru": "Южная Азия (Пакистан, Северо-Западная Индия, Тибет)",
+      "region_uz": "Janubiy Osiyo (Pokiston, Shimoli-g‘arbiy Hindiston, Tibet)",
+      "region_es": "Sur de Asia (Pakistán, Noroeste de India, Tíbet)",
+      "strategic_importance_ru": "Основа градостроительной цивилизации бронзового века; высыхание параллельного русла Сарасвати вызвало миграцию населения на восток к Гангу.",
+      "strategic_importance_uz": "Bronza davri shaharsozlik madaniyatining poydevori; Sarasvati daryosining qurishi xalqlarning Gang vodiysiga ko‘chishiga sabab bo‘lgan.",
+      "strategic_importance_es": "Sustento de las primeras metrópolis planificadas; la desecación del paleocauce del Sarasvati forzó la reorientación demográfica hacia el valle del Ganges."
     },
     {
       "id": "danube-rhine-system",
@@ -6103,7 +6286,19 @@
             ]
           }
         ]
-      }
+      },
+      "name_ru": "Реки Рейн и Дунай (Римский Лимес)",
+      "name_uz": "Reyn va Dunay daryolari (Rim Limes chegarasi)",
+      "name_es": "Ríos Rin y Danubio (Frontera del Limes romano)",
+      "category_ru": "Естественный оборонительный рубеж классической цивилизации",
+      "category_uz": "Klassik antik dunyoning varvarlarga qarshi tabiiy mudofaa chegarasi",
+      "category_es": "Frontera natural fortificada de Roma frente a Germania",
+      "region_ru": "Европа (Германия, Австрия, Балканы, Нидерланды)",
+      "region_uz": "Yevropa (Germaniya, Avstriya, Bolqon, Niderlandiya)",
+      "region_es": "Europa (Alemania, Austria, Balcanes, Países Bajos)",
+      "strategic_importance_ru": "Главный водный рубеж Римской империи протяженностью в тысячи километров с системой легионерских крепостей и флотилий.",
+      "strategic_importance_uz": "Rim imperiyasining minglab kilometrlarga cho‘zilgan bosh suv chegarasi; legion qal’alari va chegara flotiliyalari tarmog‘i.",
+      "strategic_importance_es": "La mayor barrera fluvial del Imperio romano; red de campamentos legionarios que dividió durante siglos el mundo grecorromano del tribal germánico."
     },
     {
       "id": "yangtze-river-system",
@@ -7179,7 +7374,19 @@
             ]
           }
         ]
-      }
+      },
+      "name_ru": "Река Янцзы (Чанцзян) и артерия Южного Китая",
+      "name_uz": "Yantszi daryosi (Chang Szyan) va Janubiy Xitoy arteriyasi",
+      "name_es": "Río Yangtsé (Chang Jiang) y arteria del sur de China",
+      "category_ru": "Водная артерия южных династий и неприступная цитадель царств",
+      "category_uz": "Janubiy sulolalar arteriyasi va xitoy podsholiklarining qal’asi",
+      "category_es": "Columna vertebral del sur de China y baluarte militar",
+      "region_ru": "Восточная и Южная Азия (Китай, от Тибета до Восточно-Китайского моря)",
+      "region_uz": "Sharqiy va Janubiy Osiyo (Xitoy, Tibetdan Sharqiy Xitoy dengizigacha)",
+      "region_es": "Asia Oriental (China, desde la meseta tibetana al mar de China Oriental)",
+      "strategic_importance_ru": "Грандиозный барьер шириной до двух километров, разделявший Северный и Южный Китай; место легендарной битвы у Красных утесов (208 г.).",
+      "strategic_importance_uz": "Shimoliy va Janubiy Xitoyni ajratib turuvchi ikki kilometrgacha keng tabiiy to‘siq; 208 yildagi Qizil qoyalar jangi maydoni.",
+      "strategic_importance_es": "Foso natural gigantesco que impidió la conquista del sur durante siglos; escenario de la célebre batalla de los Acantilados Rojos (208 d.C.)."
     },
     {
       "id": "tiber-river",
@@ -7562,7 +7769,19 @@
             ]
           }
         ]
-      }
+      },
+      "name_ru": "Река Тибр и колыбель римской цивилизации",
+      "name_uz": "Tibr daryosi va Rim tamaddunining beshigi",
+      "name_es": "Río Tíber y cuna de la civilización romana",
+      "category_ru": "Артерия Вечного Рима и порт средиземноморской империи",
+      "category_uz": "Boqiy Rimning hayot arteriyasi va imperiyaning dengizga chiqish yo‘li",
+      "category_es": "Arteria de la Roma eterna y puerto imperial",
+      "region_ru": "Южная Европа (Италия)",
+      "region_uz": "Janubiy Yevropa (Italiya)",
+      "region_es": "Sur de Europa (Italia)",
+      "strategic_importance_ru": "Обеспечивал снабжение Рима зерном и мрамором через порт Остия; служил естественным рубежом обороны города со стороны Этрурии.",
+      "strategic_importance_uz": "Ostiya porti orqali Rimni g‘alla va marmar bilan ta’minlagan; Etruriyaga qarshi shaharning tabiiy mudofaa devori bo‘lgan.",
+      "strategic_importance_es": "Vía fluvial navegable que conectaba Roma con el puerto de Ostia; foso natural clave frente a etruscos y escenario de la batalla del Puente Milvio."
     },
     {
       "id": "seine-river",
@@ -8038,7 +8257,19 @@
             ]
           }
         ]
-      }
+      },
+      "name_ru": "Река Сена и исторический бассейн Парижа",
+      "name_uz": "Sena daryosi va tarixiy Parij havzasi",
+      "name_es": "Río Sena y la cuenca histórica de París",
+      "category_ru": "Артерия Галлии, Франкского королевства и арена набегов викингов",
+      "category_uz": "Galliya va Franklar podsholigi arteriyasi hamda vikinglar hujumi maydoni",
+      "category_es": "Arteria de la Galia, el reino franco y escenario vikingo",
+      "region_ru": "Западная Европа (Франция)",
+      "region_uz": "G‘arbiy Yevropa (Fransiya)",
+      "region_es": "Europa Occidental (Francia)",
+      "strategic_importance_ru": "Остров Сите посреди Сены стал ядром средневекового Парижа; река служила путем вторжения драккаров викингов в IX веке.",
+      "strategic_importance_uz": "Sena o‘rtasidagi Site oroli o‘rta asrlar Parijining o‘zagiga aylangan; IX asrda vikinglar drakkarlarining asosiy bosqin yo‘li bo‘lgan.",
+      "strategic_importance_es": "La Île de la Cité en el Sena originó la fundación de París; eje fluvial penetrado por las flotas vikingas durante los asedios del siglo IX."
     },
     {
       "id": "thames-river",
@@ -8421,7 +8652,19 @@
             ]
           }
         ]
-      }
+      },
+      "name_ru": "Река Темза и историческая артерия Британии",
+      "name_uz": "Temza daryosi va Britaniyaning tarixiy arteriyasi",
+      "name_es": "Río Támesis y arteria histórica de Gran Bretaña",
+      "category_ru": "Ворота римского Лондиниума и место подписания Великой хартии вольностей",
+      "category_uz": "Rim Londiniumining darvozasi va Buyuk erkinliklar xartiyasi maydoni",
+      "category_es": "Puerta del Londinium romano y cuna de la Carta Magna",
+      "region_ru": "Северо-Западная Европа (Англия, Великобритания)",
+      "region_uz": "Shimoli-g‘arbiy Yevropa (Angliya, Buyuk Britaniya)",
+      "region_es": "Noroeste de Europa (Inglaterra, Gran Bretaña)",
+      "strategic_importance_ru": "Глубоководный эстуарий позволил основать крупнейший порт Британских островов; луг Раннимед на берегу Темзы стал местом рождения конституционного права (1215).",
+      "strategic_importance_uz": "Chuqur daryo estuariysi Britaniyaning eng yirik portiga asos solgan; Rannimid o‘tlog‘ida 1215 yilda Magna Carta imzolangan.",
+      "strategic_importance_es": "Estuario mareal navegable que propició el nacimiento de Londinium; en sus orillas en Runnymede se rubricó la Carta Magna en 1215."
     },
     {
       "id": "rhone-river",
@@ -9090,7 +9333,19 @@
             ]
           }
         ]
-      }
+      },
+      "name_ru": "Река Рона и греко-римский торговый коридор",
+      "name_uz": "Rona daryosi va yunon-rim qadimiy savdo yo‘lagi",
+      "name_es": "Río Ródano y corredor comercial greco-romano",
+      "category_ru": "Древний торговый путь между Средиземным морем и Северной Европой",
+      "category_uz": "O‘rta Yer dengizi va Shimoliy Yevropa orasidagi qadimiy savdo yo‘li",
+      "category_es": "Ruta comercial ancestral entre el Mediterráneo y el norte de Europa",
+      "region_ru": "Южная и Западная Европа (Швейцария, Франция, Альпы)",
+      "region_uz": "Janubiy va G‘arbiy Yevropa (Shveytsariya, Fransiya, Alp tog‘lari)",
+      "region_es": "Europa del Sur y Occidental (Suiza, Francia, Alpes)",
+      "strategic_importance_ru": "Единственный судоходный путь, напрямую связывающий Средиземное море с Центральной Европой; путь олова, вина и римской колонизации Галлии.",
+      "strategic_importance_uz": "O‘rta Yer dengizini to‘g‘ridan-to‘g‘ri Markaziy Yevropa bilan bog‘lovchi yagona daryo; qalay, vino va Rim mustamlakachiligi yo‘lagi.",
+      "strategic_importance_es": "Única arteria navegable directa entre el Mediterráneo y el interior galo; ruta del estaño y vía de penetración de las legiones romanas."
     },
     {
       "id": "volga-itil-system",
@@ -9895,7 +10150,19 @@
             ]
           }
         ]
-      }
+      },
+      "name_ru": "Река Волга (Итиль) и Каспийско-Аббасидский торговый путь",
+      "name_uz": "Volga daryosi (Itil) va Kaspiy-Abbosiylar savdo yo‘li",
+      "name_es": "Río Volga (Itil) y ruta comercial del Caspio abasí",
+      "category_ru": "Длиннейшая река Европы и путь серебра между варягами и Халифатом",
+      "category_uz": "Yevropaning eng uzun daryosi va vikinglar bilan Xalifalik orasidagi kumush yo‘li",
+      "category_es": "El río más largo de Europa y ruta de la plata entre vikingos y el Califato",
+      "region_ru": "Восточная Европа и Евразия (Россия, Каспийский бассейн)",
+      "region_uz": "Sharqiy Yevropa va Yevrosiyo (Rossiya, Kaspiy havzasi)",
+      "region_es": "Europa Oriental y Eurasia (Rusia, cuenca del Caspio)",
+      "strategic_importance_ru": "Главный торговый путь раннего средневековья, связавший Балтику с Багдадом через Хазарский каганат и Волжскую Булгарию.",
+      "strategic_importance_uz": "Erta o‘rta asrlarning bosh savdo yo‘li; Xazar xoqonligi va Volga Bulg‘oriyasi orqali Boltiqni Bag‘dod bilan bog‘lagan.",
+      "strategic_importance_es": "Gran arteria fluvial medieval por donde circularon millones de dírhams de plata entre el califato abasí, jázaros y escandinavos."
     },
     {
       "id": "dnieper-river",
@@ -10412,7 +10679,19 @@
             ]
           }
         ]
-      }
+      },
+      "name_ru": "Река Днепр (Борисфен) и колыбель Киевской Руси",
+      "name_uz": "Dnepor daryosi (Borisfen) va Kiyev Rusining beshigi",
+      "name_es": "Río Dniéper (Borístenes) y cuna del Rus de Kiev",
+      "category_ru": "Путь 'из варяг в греки' и казацкая твердыня",
+      "category_uz": "'Varyaglardan yunonlargacha' yo‘li va kazaklar tayanchi",
+      "category_es": "Ruta de los varegos a los griegos y bastión cosaco",
+      "region_ru": "Восточная Европа (Украина, Беларусь, Россия, Черное море)",
+      "region_uz": "Sharqiy Yevropa (Ukraina, Belarus, Rossiya, Qora dengiz)",
+      "region_es": "Europa Oriental (Ucrania, Bielorrusia, Rusia, mar Negro)",
+      "strategic_importance_ru": "Главный стержень государственности Киевской Руси и транзита между Скандинавией и Константинополем; пороги Днепра требовали волоков и служили засадами кочевников.",
+      "strategic_importance_uz": "Kiyev Rusi davlatchiligining o‘zagi; Skandinaviya va Vizantiya o‘rtasidagi tranzit yo‘li; daryo ostonalari ko‘chmanchilar pistirmasi bo‘lgan.",
+      "strategic_importance_es": "Eje vertebral del estado eslavo oriental y la ruta fluvial entre Escandinavia y Bizancio; sus famosos rápidos fueron puntos de emboscada pechenega."
     },
     {
       "id": "orontes-river",
@@ -10819,7 +11098,19 @@
             ]
           }
         ]
-      }
+      },
+      "name_ru": "Река Оронт (Эль-Аси) и арена битв Древнего Востока",
+      "name_uz": "Oront daryosi (Al-Asiy) va Qadimgi Sharq jang maydonlari",
+      "name_es": "Río Orontes (Al-Asi) y campo de batalla del Levante antiguo",
+      "category_ru": "Ось сирийских крепостей, битва при Кадеше и нории Хамы",
+      "category_uz": "Shom qal’alari o‘qi, Qadesh jangi va Hamo charxpalaklari",
+      "category_es": "Eje de fortalezas levantinas, batalla de Qadesh y norias de Hama",
+      "region_ru": "Западная Азия / Левант (Ливан, Сирия, Турция)",
+      "region_uz": "G‘arbiy Osiyo / Shom (Livan, Suriya, Turkiya)",
+      "region_es": "Asia Occidental / Levante (Líbano, Siria, Turquía)",
+      "strategic_importance_ru": "Течет вопреки обычаю с юга на север ('Мятежная река'); арена грандиозной колесничной битвы при Кадеше (1274 г. до н.э.) между Рамсесом II и хеттами.",
+      "strategic_importance_uz": "Odatga teskari ravishda janubdan shimolga oqadi ('Isyonkor daryo'); m.a. 1274 yilda Ramzes II va xetlar o‘rtasidagi buyuk Qadesh jangi maydoni.",
+      "strategic_importance_es": "Llamado 'el río rebelde' por fluir de sur a norte; albergó la célebre batalla de carros de Qadesh (1274 a.C.) entre Ramsés II y Muwatalli II."
     },
     {
       "id": "syr-darya-system",
@@ -11331,7 +11622,19 @@
             ]
           }
         ]
-      }
+      },
+      "name_ru": "Река Сырдарья (Яксарт) и северная граница Александра Македонского",
+      "name_uz": "Sirdaryo (Yaksart) va Aleksandr Makedonskiyning shimoliy chegarasi",
+      "name_es": "Río Sir Daria (Jaxartes) y frontera septentrional de Alejandro",
+      "category_ru": "Барьер Мавераннахра и рубеж между степью и земледельческой цивилизацией",
+      "category_uz": "Movarounnahr qalqoni va dasht bilan dehqonchilik tamadduni chegarasi",
+      "category_es": "Frontera entre la estepa nómada y la civilización sedentaria",
+      "region_ru": "Центральная Азия (Узбекистан, Таджикистан, Казахстан, Кыргызстан)",
+      "region_uz": "Markaziy Osiyo (O‘zbekiston, Tojikiston, Qozog‘iston, Qirg‘iziston)",
+      "region_es": "Asia Central (Uzbekistán, Tayikistán, Kazajistán, Kirguistán)",
+      "strategic_importance_ru": "Крайняя северная точка походов Александра Великого (город Александрия Эсхата, ныне Худжанд); рубеж против саков и кочевников Турана.",
+      "strategic_importance_uz": "Aleksandr Makedonskiy yurishlarining eng chekka shimoliy nuqtasi (Aleksandriya Esxata / Xo‘jand); saklar va ko‘chmanchilarga qarshi mudofaa chizig‘i.",
+      "strategic_importance_es": "Límite extremo de las conquistas de Alejandro Magno, donde fundó Alejandría Escate (Jujand); foso natural contra las incursiones de los jinetes escitas."
     },
     {
       "id": "ganges-brahmaputra-system",
@@ -12375,7 +12678,19 @@
             ]
           }
         ]
-      }
+      },
+      "name_ru": "Бассейн рек Ганг и Брахмапутра",
+      "name_uz": "Gang va Braxmaputra daryolari tizimi",
+      "name_es": "Sistema fluvial del Ganges y Brahmaputra",
+      "category_ru": "Духовная и сельскохозяйственная колыбель империй Маурьев, Гуптов и Моголов",
+      "category_uz": "Mavriyalar, Guptalar va Boburiylar imperiyalarining ma’naviy va qishloq xo‘jaligi beshigi",
+      "category_es": "Cuna sagrada y agrícola de los imperios Maurya, Gupta y Mogol",
+      "region_ru": "Южная Азия (Индия, Бангладеш, Тибет)",
+      "region_uz": "Janubiy Osiyo (Hindiston, Bangladesh, Tibet)",
+      "region_es": "Sur de Asia (India, Bangladés, Tíbet)",
+      "strategic_importance_ru": "Священнейшая река индуизма и плодороднейшая равнина, питавшая треть населения субконтинента; опора великих империй со столицей в Паталипутре (Патна).",
+      "strategic_importance_uz": "Hinduiylikning eng muqaddas daryosi va qit’aning uchdan bir aholisini boqqan unumdor tekislik; Pataliputra poytaxtli ulkan imperiyalar tayanchi.",
+      "strategic_importance_es": "Río sagrado supremo del hinduismo; la llanura aluvial más densamente poblada del mundo antiguo, corazón de los imperios Maurya y Gupta."
     },
     {
       "id": "niger-river-system",
@@ -13164,7 +13479,19 @@
             ]
           }
         ]
-      }
+      },
+      "name_ru": "Река Нигер и империи золота Западной Африки",
+      "name_uz": "Niger daryosi va G‘arbiy Afrikaning oltin imperiyalari",
+      "name_es": "Río Níger y los imperios del oro de África Occidental",
+      "category_ru": "Артерия империй Мали, Сонгай и Ганы и внутренняя дельта Масина",
+      "category_uz": "Mali, Songay va Gana imperiyalari hamda Masina ichki deltasining arteriyasi",
+      "category_es": "Arteria de los imperios de Malí, Songhai y Ghana y delta interior de Masina",
+      "region_ru": "Западная Африка и Сахара (Гвинея, Мали, Нигер, Нигерия)",
+      "region_uz": "G‘arbiy Afrika va Sahroi Kabir (Gvineya, Mali, Niger, Nigeriya)",
+      "region_es": "África Occidental y Sahel (Guinea, Malí, Níger, Nigeria)",
+      "strategic_importance_ru": "Огромный полумесяц реки через Сахель сделал возможным расцвет Тимбукту и Дженне; основа транссахарской торговли золотом и солью.",
+      "strategic_importance_uz": "Daryoning Saxel bo‘ylab ulkan yoyi Timbuktu va Jenne shaharlarining gullab-yashnashiga asos bo‘lgan; trans-Sahroi oltin va tuz savdosi poydevori.",
+      "strategic_importance_es": "Curvatura providencial en el Sahel que permitió el florecimiento de Tombuctú y Djenné; enlace vital de las caravanas transaharianas de oro y sal."
     },
     {
       "id": "mississippi-missouri-system",
@@ -13991,7 +14318,19 @@
             ]
           }
         ]
-      }
+      },
+      "name_ru": "Система рек Миссисипи и Миссури (Культура Кахокии)",
+      "name_uz": "Missisipi va Missuri daryolari tizimi hamda qadimiy Kaxokiya tamadduni",
+      "name_es": "Sistema Misisipi-Misuri y civilización antigua de Cahokia",
+      "category_ru": "Континентальная артерия Северной Америки и культура строителей курганов",
+      "category_uz": "Shimoliy Amerikaning materik arteriyasi va qadimiy qabrtoshlar madaniyati",
+      "category_es": "Gran arteria continental de Norteamérica y cultura de los montículos",
+      "region_ru": "Северная Америка (США, от Скалистых гор до Мексиканского залива)",
+      "region_uz": "Shimoliy Amerika (AQSH, Qoyali tog‘lardan Meksika ko‘rfazigacha)",
+      "region_es": "Norteamérica (Estados Unidos, de las Rocosas al golfo de México)",
+      "strategic_importance_ru": "Главный торговый и транспортный коридор континента; поддерживал доколумбову цивилизацию Кахокия с населением в десятки тысяч человек.",
+      "strategic_importance_uz": "Qit’aning bosh savdo va qatnov yo‘lagi; Kolumbgacha bo‘lgan o‘n minglab aholiga ega Kaxokiya shahar tamaddunini suv bilan ta’minlagan.",
+      "strategic_importance_es": "Mayor cuenca fluvial de Norteamérica; sustentó la metrópoli precolombina de Cahokia y fue la ruta clave de comercio fluvial indígena."
     }
   ],
   "mountains_and_passes": [
@@ -14047,7 +14386,16 @@
           "author_en": "Simonides of Ceos (480 BCE)",
           "text_en": "\"Go tell the Spartans, stranger passing by, that here, obedient to their laws, we lie.\""
         }
-      ]
+      ],
+      "name_ru": "Фермопильский проход (Горячие ворота)",
+      "name_uz": "Termopil dovoni (Issiq darvozalar)",
+      "name_es": "Paso de las Termópilas (Puertas Calientes)",
+      "region_ru": "Греция (между горой Эта и заливом Малиакос)",
+      "region_uz": "Yunoniston (Eta tog‘i va Maliak ko‘rfazi oralig‘ida)",
+      "region_es": "Grecia (entre el monte Eta y el golfo Maliaco)",
+      "strategic_importance_ru": "Узкое прибрежное дефиле шириной всего в несколько метров в древности; единственные сухопутные ворота из Фессалии в Центральную Грецию.",
+      "strategic_importance_uz": "Qadimda atigi bir necha metr kenglikdagi tor dengizbo‘yi yo‘lagi; Fessaliyadan Markaziy Yunonistonga olib boruvchi yagona quruqlik darvozasi.",
+      "strategic_importance_es": "Angosto paso costero de apenas unos metros de anchura en la Antigüedad; único acceso terrestre entre Tesalia y la Grecia central."
     },
     {
       "id": "cilician-gates",
@@ -14106,7 +14454,16 @@
           "author_en": "Xenophon (Anabasis, 401 BCE)",
           "text_en": "\"The pass was exceedingly steep and narrow, barely admitting a single wagon, defensible by a handful against an entire host.\""
         }
-      ]
+      ],
+      "name_ru": "Киликийские ворота (перевал Гюлек)",
+      "name_uz": "Kilikiya darvozalari (Gulek dovoni)",
+      "name_es": "Puertas Cilicias (Paso de Gülek)",
+      "region_ru": "Таврские горы (Турция, Южная Анатолия)",
+      "region_uz": "Tavr tog‘lari (Turkiya, Janubiy Anatoliya)",
+      "region_es": "Montes Tauro (Turquía, Anatolia meridional)",
+      "strategic_importance_ru": "Главный проход через хребет Тавр, соединяющий Анатолийское плато с низменностями Киликии и Сирией; через него шли армии Кира Младшего, Александра Македонского и крестоносцев.",
+      "strategic_importance_uz": "Tavr tizmasi orqali o‘tuvchi bosh yo‘lak; Anatoliya tog‘ligini Kilikiya pasttekisligi va Suriya bilan bog‘laydi; Kir, Iskandar va salibchilar armiyalari o‘tgan.",
+      "strategic_importance_es": "Paso estratégico a través de los montes Tauro que comunica la meseta anatólica con Cilicia y Siria; transitado por Alejandro Magno y los cruzados."
     },
     {
       "id": "khyber-pass",
@@ -14160,7 +14517,16 @@
           "author_en": "Rudyard Kipling",
           "text_en": "\"Every stone in the Khyber has been drenched in blood; it is the pathway of empires and the forge of frontiers.\""
         }
-      ]
+      ],
+      "name_ru": "Хайберский проход",
+      "name_uz": "Xaybar dovoni",
+      "name_es": "Paso de Jaiber",
+      "region_ru": "Гиндукуш и хребет Спингар (между Пакистаном и Афганистаном)",
+      "region_uz": "Hindukush va Spingar tizmasi (Pokiston va Afg‘oniston chegarasi)",
+      "region_es": "Hindú Kush y cordillera Spinghar (entre Pakistán y Afganistán)",
+      "strategic_importance_ru": "Главные ворота для всех завоевателей Индостана: через него вторгались арии, персы, Александр Великий, Бабур, Надир-шах и афганские правители.",
+      "strategic_importance_uz": "Hindistonga barcha bosqinchilar kirgan asosiy darvoza: oriy qabilalari, Iskandar, Mahmud G‘aznaviy, Bobur va Nodirshoh shu yerdan o‘tgan.",
+      "strategic_importance_es": "La puerta histórica por excelencia hacia el subcontinente indio; transitado por persas, macedonios, mongoles, Babur y tropas coloniales británicas."
     },
     {
       "id": "great-st-bernard-pass",
@@ -14214,7 +14580,16 @@
           "author_en": "Polybius (Histories, 2nd C. BCE)",
           "text_en": "\"Pointing down at the Italian plains, Hannibal cried: 'There lies Italy, and there lies Rome! One battle more, and all is won.'\""
         }
-      ]
+      ],
+      "name_ru": "Перевал Большой Сен-Бернар (Альпы)",
+      "name_uz": "Katta Sen-Bernar dovoni (Alp tog‘lari)",
+      "name_es": "Paso del Gran San Bernardo (Alpes)",
+      "region_ru": "Альпы (между Швейцарией и Италией)",
+      "region_uz": "Alp tog‘lari (Shveytsariya va Italiya chegarasida)",
+      "region_es": "Alpes (entre Suiza e Italia)",
+      "strategic_importance_ru": "Ключевой альпийский проход на высоте 2469 м; использовался кельтами, римскими легионами и Наполеоном Бонапартом в Итальянской кампании 1800 года.",
+      "strategic_importance_uz": "Dengiz sathidan 2469 m balandlikdagi asosiy Alp yo‘li; keltlar, Rim legionlari va 1800 yilda Napoleon Bonapart qo‘shini tomonidan oshib o‘tilgan.",
+      "strategic_importance_es": "Paso alpino vital a 2.469 m de altitud; utilizado por legiones romanas y célebre por el audaz cruce del ejército de Napoleón en mayo de 1800."
     },
     {
       "id": "mount-uhud",
@@ -14255,7 +14630,16 @@
           "author_en": "Prophet Muhammad (Sahih al-Bukhari)",
           "text_en": "\"Uhud is a mountain that loves us and we love it; it stands upon one of the gates of Paradise.\""
         }
-      ]
+      ],
+      "name_ru": "Гора Ухуд и проход лучников",
+      "name_uz": "Uhud tog‘i va Kamonchilar dovoni",
+      "name_es": "Monte Uhud y Paso de los Arqueros",
+      "region_ru": "Аравийский полуостров (к северу от Медины)",
+      "region_uz": "Arabiston yarimoroli (Madinai Munavvara shimolida)",
+      "region_es": "Península Arábiga (al norte de Medina)",
+      "strategic_importance_ru": "Естественный барьер к северу от Медины; холм лучников (Джабаль ар-Рума) стал тактическим ключом знаменитой битвы при Ухуде (625 г.).",
+      "strategic_importance_uz": "Madinaning shimolidagi tabiiy tog‘ qalqoni; Kamonchilar tepaligi 625 yildagi mashhur Uhud jangining taktik markazi bo‘lgan.",
+      "strategic_importance_es": "Accidente orográfico al norte de Medina; la colina de los arqueros fue el punto táctico neurálgico de la célebre batalla de Uhud en el 625 d.C."
     },
     {
       "id": "mount-gilboa-ain-jalut",
@@ -14301,7 +14685,16 @@
           "author_en": "Ibn Kathir (Al-Bidaya wa'n-Nihaya)",
           "text_en": "\"When the armies met at Ain Jalut, Qutuz shouted: 'O Islam!' and God granted victory, delivering a crushing blow to the Mongols.\""
         }
-      ]
+      ],
+      "name_ru": "Горы Гильбоа и равнина Айн-Джалут",
+      "name_uz": "Gilboa tog‘lari va Ayn Jolut tekisligi",
+      "name_es": "Montes Gelboé y llanura de Ain Yalut",
+      "region_ru": "Палестина (долина Изреель / Мардж Ибн Амир)",
+      "region_uz": "Falastin (Marj Ibn Omir va Izroil vodiysi)",
+      "region_es": "Palestina (valle de Jezreel / Marj Ibn Amir)",
+      "strategic_importance_ru": "Узкая долина между хребтом Гильбоа и холмами Галилеи; место битвы 1260 года, где мамлюки султана Кутуза впервые нанесли сокрушительное поражение монголам.",
+      "strategic_importance_uz": "Gilboa tizmasi va Jalila tepaliklari orasidagi vodiy; 1260 yilda sulton Qutuz boshchiligidagi mamluklar mo‘g‘ullarni ilk bor tor-mor keltirgan maydon.",
+      "strategic_importance_es": "Cuello de botella geográfico donde el ejército mameluco de Qutuz y Baibars frenó definitivamente el avance mongol hacia Egipto en 1260."
     },
     {
       "id": "mount-sinai-horeb",
@@ -14360,7 +14753,16 @@
           "author_en": "The Holy Qur'an",
           "text_en": "\"By the Fig and the Olive, and Mount Sinai, and this City of Security.\" (Surah At-Tin)"
         }
-      ]
+      ],
+      "name_ru": "Гора Синай (Хорив и монастырь Святой Екатерины)",
+      "name_uz": "Sinay tog‘i (Xoriv va Muqaddas Yekaterina)",
+      "name_es": "Monte Sinaí (Horeb y Santa Catalina)",
+      "region_ru": "Синайский полуостров (Египет)",
+      "region_uz": "Sinay yarimoroli (Misr)",
+      "region_es": "Península del Sinaí (Egipto)",
+      "strategic_importance_ru": "Гранитный массив в сердце Синайской пустыни; священное место дарования Скрижалей Завета пророку Моисею; у подножия расположен старейший монастырь.",
+      "strategic_importance_uz": "Sinay sahrosi markazidagi qadimgi granit cho‘qqi; Muso payg‘ambarga Tavrot berilgan muqaddas maskan; etagida eng qadimiy monastir joylashgan.",
+      "strategic_importance_es": "Macizo granítico en el desierto del Sinaí; monte sagrado de la teofanía mosaica y los Diez Mandamientos; alberga el monasterio de Santa Catalina."
     },
     {
       "id": "darial-gorge",
@@ -14411,7 +14813,16 @@
           "author_en": "Pliny the Elder (Natural History)",
           "text_en": "\"The Caucasian Gates are a stupendous marvel of nature, a sheer breach closed by beams and iron-plated gates against invasion.\""
         }
-      ]
+      ],
+      "name_ru": "Дарьяльское ущелье (Аланские ворота)",
+      "name_uz": "Daryol darasi (Olon darvozalari / Kavkaz darvozasi)",
+      "name_es": "Garganta de Darial (Puertas de los Alanos)",
+      "region_ru": "Большой Кавказ (граница Грузии и России)",
+      "region_uz": "Katta Kavkaz tizmasi (Gruziya va Rossiya chegarasida)",
+      "region_es": "Gran Cáucaso (frontera entre Georgia y Rusia)",
+      "strategic_importance_ru": "Грандиозный каньон реки Терек глубиной до 1000 м; главный проход через Большой Кавказ; контролировался крепостями сарматов, римлян, персов и Российской империи.",
+      "strategic_importance_uz": "Terek daryosining 1000 metrgacha chuqur darasi; Katta Kavkaz tizmasidan o‘tuvchi bosh yo‘lak; sarmatlar, Rim, Sosoniylar tomonidan qattiq qo‘riqlangan.",
+      "strategic_importance_es": "Desfiladero colosal cortado por el río Terek; paso indispensable a través del Cáucaso protegido desde la Antigüedad por fortalezas romanas, persas y georgianas."
     }
   ]
 }

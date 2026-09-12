@@ -1856,10 +1856,6 @@ header,
         padding: 6px 20px ;
         bottom: 16px ;
     }
-    .quiz-authoring-banner {
-        top: auto ;
-        bottom: 20px ;
-    }
 }
 @media (min-width: 1024px) and (max-width: 1439px) {
     .controls-bar .btn .btn-text {
@@ -3740,19 +3736,23 @@ header,
 /* ── Authoring Banner ── */
 .quiz-authoring-banner {
     position: fixed;
-    top: calc(var(--header-height) + 8px);
+    top: calc(var(--header-height) + 12px);
+    bottom: auto !important;
     left: 50%;
     transform: translateX(-50%);
     z-index: var(--z-modal-alert);
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 12px;
+    height: auto !important;
+    max-height: 48px;
+    white-space: nowrap;
     background: var(--glass-bg);
     backdrop-filter: blur(var(--glass-blur-sm));
     border: 2px solid var(--brand-accent);
     border-radius: var(--radius-md);
-    padding: 10px 20px;
-    box-shadow: var(--shadow-md);
+    padding: 8px 18px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 12px rgba(20, 184, 166, 0.3);
     color: var(--brand-accent);
     font-weight: 600;
     font-size: 0.85em;

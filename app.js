@@ -8193,14 +8193,7 @@
             Le = ar(), f.addEventListener("click", function() {
                 Te || (C && (C.disabled = !0, C.classList.add("quiz-disabled")), rr(), hn.textContent = "", 
                 Wt.textContent = "", gn.textContent = "", bn.textContent = "", 
-                ("history" === Ke || (window.historyIsActive && window.historyIsActive())) ? (sr(!0), b.style.display = "") : (
-                    document.getElementById("quizModeChoiceTitle").textContent = zi("quizModeChoiceTitle"), 
-                    document.getElementById("quizSelectiveQuestionsLabel").textContent = zi("quizSelectiveQuestions"), 
-                    document.getElementById("quizSelectiveDescLabel").textContent = zi("quizSelectiveDesc"), 
-                    document.getElementById("quizSetQuestionsLabel").textContent = zi("quizSetQuestions"), 
-                    document.getElementById("quizSetDescLabel").textContent = zi("quizSetDesc"), 
-                    y.style.display = ""
-                ));
+                sr(!0), b.style.display = "");
             }), y.addEventListener("click", function(e) {
                 e.target === y && or();
             }), g.addEventListener("click", function() {
@@ -8402,6 +8395,7 @@
                     if (-1 !== t && -1 === Se.indexOf(t)) qList.push(Le[t]);
                 });
                 if (0 === qList.length) return;
+                window._customQuestionsForAssignment = qList;
                 or();
                 var e = document.getElementById("teacherHubBtn");
                 if (e) e.click();
@@ -8410,6 +8404,36 @@
                 var genBtn = document.getElementById("teacherGenerateSessionBtn");
                 if (genBtn) genBtn.click();
             });
+            window.loadQuestionsAndStartCustomQuiz = function(questionsList, sessionCode, studentName) {
+                if (sessionCode) It = sessionCode;
+                if (studentName) zt = studentName;
+                if (Array.isArray(questionsList) && questionsList.length > 0) {
+                    var existing = ar();
+                    var addedIds = [];
+                    questionsList.forEach(function(q) {
+                        var idx = existing.findIndex(function(ex) { return ex.id === q.id || (ex.promptText === q.promptText && ex.promptText); });
+                        if (idx === -1) {
+                            existing.push(q);
+                            addedIds.push(q.id);
+                        } else {
+                            addedIds.push(existing[idx].id);
+                        }
+                    });
+                    ir(existing);
+                    Le = ar();
+                    Se = [];
+                    Ie = addedIds;
+                    sr(!1);
+                    var startBtn = document.getElementById("quizCustomStartBtn");
+                    if (startBtn && !startBtn.disabled) {
+                        startBtn.click();
+                        return true;
+                    }
+                }
+                sr(!0);
+                b.style.display = "";
+                return false;
+            };
             Rt.addEventListener("change", function() {
                 Nt.style.display = Rt.checked ? "" : "none";
             }), document.getElementById("quizTimeModeNone").addEventListener("change", function() {
@@ -10629,18 +10653,27 @@
                     (t.courses_by_epoch[i] || t.courses_by_epoch[n[0]] || []).forEach(function(n, i) {
                         var r = n.coords;
                         if (r && !(r.length < 2)) {
-                            var o = n.weight || 2, s = mn.append("g").attr("class", "hist-river-group").attr("data-river-id", t.id).attr("data-branch-index", i).style("cursor", "pointer").on("click", function(n) {
-                                n && n.stopPropagation && n.stopPropagation(), Yc(t, e);
-                            });
+                            var o = n.weight || 2,
+                                mainW = 3 === o ? (a ? 1.8 : 2.3) : 2 === o ? (a ? 1.3 : 1.6) : (a ? 0.9 : 1.2),
+                                haloW = mainW * 2.0,
+                                l = 3 === o ? "#0284c7" : 2 === o ? "#0ea5e9" : "#38bdf8",
+                                s = mn.append("g").attr("class", "hist-river-group").attr("data-river-id", t.id).attr("data-branch-index", i).style("cursor", "pointer").on("click", function(n) {
+                                    n && n.stopPropagation && n.stopPropagation(), Yc(t, e);
+                                }).on("mouseenter", function() {
+                                    d3.select(this).select(".hist-river-main").attr("stroke", "#38bdf8").attr("stroke-width", mainW * 1.35);
+                                    d3.select(this).select(".hist-river-halo").attr("stroke", "rgba(56, 189, 248, 0.55)").attr("stroke-width", haloW * 1.4);
+                                }).on("mouseleave", function() {
+                                    d3.select(this).select(".hist-river-main").attr("stroke", l).attr("stroke-width", mainW);
+                                    d3.select(this).select(".hist-river-halo").attr("stroke", "rgba(56, 189, 248, 0.28)").attr("stroke-width", haloW);
+                                });
                             s.append("path").datum({
                                 type: "LineString",
                                 coordinates: r
-                            }).attr("d", Gn).attr("fill", "none").attr("class", "hist-river-halo").attr("stroke", "rgba(56, 189, 248, 0.35)").attr("stroke-width", o * (a ? 2.8 : 4.5)).attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("vector-effect", "non-scaling-stroke");
-                            var l = 3 === o ? "#0284c7" : 2 === o ? "#0ea5e9" : "#38bdf8";
+                            }).attr("d", Gn).attr("fill", "none").attr("class", "hist-river-halo").attr("stroke", "rgba(56, 189, 248, 0.28)").attr("stroke-width", haloW).attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("vector-effect", "non-scaling-stroke");
                             s.append("path").datum({
                                 type: "LineString",
                                 coordinates: r
-                            }).attr("d", Gn).attr("fill", "none").attr("class", "hist-river-main").attr("stroke", l).attr("stroke-width", o * (a ? 1.3 : 2.2)).attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("vector-effect", "non-scaling-stroke");
+                            }).attr("d", Gn).attr("fill", "none").attr("class", "hist-river-main").attr("stroke", l).attr("stroke-width", mainW).attr("stroke-linecap", "round").attr("stroke-linejoin", "round").attr("vector-effect", "non-scaling-stroke");
                         }
                     });
                 }), (zn.mountains_and_passes || []).forEach(function(t) {
@@ -11886,12 +11919,19 @@
                     var e = L && L.value.trim() || zi("studentDefaultName") || "طالب";
                     if (e) {
                         It = t, zt = e, C && (C.style.display = "none");
-                        var n = document.getElementById("quizBtn") || document.getElementById("quizTab");
-                        n && n.click();
-                        var i = document.getElementById("quizChoiceSelective");
-                        i && i.click();
-                        var a = document.getElementById("quizStartBtn");
-                        a && a.click();
+                        var sessions = [];
+                        try {
+                            sessions = JSON.parse(localStorage.getItem(S) || "[]");
+                        } catch (err) {}
+                        var foundSession = sessions.find(function(s) { return s.code === t; });
+                        if (foundSession && foundSession.customQuestions && window.loadQuestionsAndStartCustomQuiz) {
+                            window.loadQuestionsAndStartCustomQuiz(foundSession.customQuestions, t, e);
+                        } else {
+                            var n = document.getElementById("quizBtn") || document.getElementById("quizTab");
+                            n && n.click();
+                            var startBtn = document.getElementById("quizCustomStartBtn");
+                            if (startBtn && !startBtn.disabled) startBtn.click();
+                        }
                     } else L && L.focus();
                 });
             }
@@ -11912,12 +11952,15 @@
                 alert(zi("termsMustAccept") || "يرجى الموافقة على شروط الاستخدام وسياسة حماية بيانات الطلاب قبل توليد الواجب.");
                 return;
             }
+            var customQs = window._customQuestionsForAssignment ? [].concat(window._customQuestionsForAssignment) : null;
+            window._customQuestionsForAssignment = null;
             var e = l && l.value.trim() || zi("teacherDefaultAssignmentTitle") || "واجب الجغرافيا والتاريخ", t = c && c.value || "countries", n = parseInt(d && d.value || "10", 10), i = u && u.value.trim() || "", a = "ABCDEFGHJKLMNPQRSTUVWXYZ", r = "ASG-" + a.charAt(Math.floor(24 * Math.random())) + a.charAt(Math.floor(24 * Math.random())) + Math.floor(100 + 900 * Math.random()), o = {
                 code: r,
                 title: e,
                 topic: t,
-                numQuestions: n,
+                numQuestions: customQs ? customQs.length : n,
                 className: i,
+                customQuestions: customQs,
                 createdAt: Date.now()
             };
             if ("function" == typeof window.firebaseCreateSession) try {

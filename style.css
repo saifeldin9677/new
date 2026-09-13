@@ -407,13 +407,14 @@ header,
     --btn-text: #f1f5f9;
     position: absolute ;
     top: calc(100% + 8px) ;
-    inset-inline-end: 0 ;
+    inset-inline-start: 0 ;
     z-index: var(--z-tools-dropdown) ;
-    width: 320px;
-    max-width: 90vw;
+    width: 390px;
+    max-width: 92vw;
     box-sizing: border-box;
     background: var(--dock-bg, var(--panel-overlay-96));
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 14px;
@@ -434,16 +435,20 @@ header,
 }
 .tools-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
 }
 .tool-card {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    min-height: 52px;
+    gap: 5px;
+    min-height: 56px;
+    min-width: 0;
+    width: 100%;
     padding: 10px 6px;
     border-radius: 8px;
     background: var(--btn-bg);
@@ -454,7 +459,9 @@ header,
     text-align: center;
     font-family: inherit;
     font-size: 11px;
-    line-height: 1.2;
+    line-height: 1.25;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 .tool-card:hover {
     background: var(--btn-bg-hover);
@@ -471,6 +478,9 @@ header,
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
 }
 .tool-card.toggle-on {
     background: #1a3a38;

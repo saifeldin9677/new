@@ -1208,7 +1208,7 @@
                     <button class="academic-tab-btn" data-tab="travelers" data-i18n="academicTabTravelers">رحلات المستكشفين</button>
                 </div>
                 <div class="academic-sources-search-wrap">
-                    <input type="text" id="academicSourcesSearch" class="quiz-input" placeholder="ابحث في المراجع، المؤلفين، الدوريات والمؤسسات الأكاديمية...">
+                    <input type="text" id="academicSourcesSearch" class="quiz-input" placeholder="ابحث في المراجع، المؤلفين، الدوريات والمؤسسات الأكاديمية..." aria-label="بحث في المراجع والمؤسسات الأكاديمية" data-i18n-aria-label="academicSourcesSearchAria">
                 </div>
                 <div class="academic-sources-content" id="academicSourcesContent"></div>
             </div>
@@ -1327,7 +1327,7 @@
                         <h4 style="margin:0 0 10px 0; color:var(--brand-accent);" data-i18n="worksheetSettingsTitle">إعدادات الورقة الامتحانية</h4>
                         
                         <div class="worksheet-form-group">
-                            <label data-i18n="worksheetMapType">نوع الخريطة الصامتة:</label>
+                            <label for="worksheetMapType" data-i18n="worksheetMapType">نوع الخريطة الصامتة:</label>
                             <select id="worksheetMapType" class="quiz-select">
                                 <option value="modern_blank" data-i18n="worksheetTypeModern">خريطة العالم السياسية الصامتة (حدود الدول مفرغة)</option>
                                 <option value="physical_blank" data-i18n="worksheetTypePhysical">خريطة العالم الطبيعية (سواحل وأنهار صامتة)</option>
@@ -1337,22 +1337,22 @@
                         </div>
 
                         <div class="worksheet-form-group">
-                            <label data-i18n="worksheetSchoolName">مدرسة / مؤسسة التعليم:</label>
+                            <label for="worksheetSchoolName" data-i18n="worksheetSchoolName">مدرسة / مؤسسة التعليم:</label>
                             <input type="text" id="worksheetSchoolName" class="quiz-input" value="مدرسة الأندلس الأكاديمية">
                         </div>
 
                         <div class="worksheet-form-group">
-                            <label data-i18n="worksheetTeacherNameLabel">اسم المعلم المشرف:</label>
+                            <label for="worksheetTeacherName" data-i18n="worksheetTeacherNameLabel">اسم المعلم المشرف:</label>
                             <input type="text" id="worksheetTeacherName" class="quiz-input" value="أ. أحمد السعيد">
                         </div>
 
                         <div class="worksheet-form-group">
-                            <label data-i18n="teacherAssignmentTitle">عنوان الورقة:</label>
+                            <label for="worksheetTitleInput" data-i18n="teacherAssignmentTitle">عنوان الورقة:</label>
                             <input type="text" id="worksheetTitleInput" class="quiz-input" value="ورقة عمل تطبيقية: تعيين المعالم الجغرافية والتاريخية">
                         </div>
 
                         <div class="worksheet-form-group">
-                            <label data-i18n="worksheetInstructionsLabel">تعليمات النشاط للطلاب:</label>
+                            <label for="worksheetInstructionsInput" data-i18n="worksheetInstructionsLabel">تعليمات النشاط للطلاب:</label>
                             <textarea id="worksheetInstructionsInput" class="quiz-input" rows="2">حدد على الخريطة الصامتة أدناه أهم المعالم والحدود الإقليمية وفق التوجيهات المعطاة، ودوّن إجاباتك في الجدول المخصص.</textarea>
                         </div>
 
@@ -1446,11 +1446,11 @@
                         <div class="teacher-create-grid">
                             <div class="teacher-create-form">
                                 <div class="worksheet-form-group">
-                                    <label data-i18n="teacherAssignmentTitle">عنوان الواجب الصفي:</label>
+                                    <label for="teacherAssignmentTitleInput" data-i18n="teacherAssignmentTitle">عنوان الواجب الصفي:</label>
                                     <input type="text" id="teacherAssignmentTitleInput" class="quiz-input" value="واجب الأطلس: اختبار الجغرافيا والتاريخ">
                                 </div>
                                 <div class="worksheet-form-group">
-                                    <label data-i18n="teacherAssignmentTopicLabel">الموضوع / الوحدة الدراسية:</label>
+                                    <label for="teacherAssignmentTopic" data-i18n="teacherAssignmentTopicLabel">الموضوع / الوحدة الدراسية:</label>
                                     <select id="teacherAssignmentTopic" class="quiz-select">
                                         <option value="countries" data-i18n="teacherTopicCountries">تحديد مواقع الدول والعواصم (معاصر)</option>
                                         <option value="flags" data-i18n="teacherTopicFlags">أعلام الدول والرموز الوطنية</option>
@@ -1460,7 +1460,7 @@
                                     </select>
                                 </div>
                                 <div class="worksheet-form-group">
-                                    <label data-i18n="teacherNumQuestionsLabel">عدد الأسئلة:</label>
+                                    <label for="teacherNumQuestions" data-i18n="teacherNumQuestionsLabel">عدد الأسئلة:</label>
                                     <select id="teacherNumQuestions" class="quiz-select">
                                         <option value="5" data-i18n="teacherNum5">5 أسئلة (تقويم صفي سريع)</option>
                                         <option value="10" selected data-i18n="teacherNum10">10 أسئلة (واجب معياري)</option>
@@ -1468,7 +1468,7 @@
                                     </select>
                                 </div>
                                 <div class="worksheet-form-group">
-                                    <label data-i18n="teacherClassCodeLabel">اسم الصف / المجموعة:</label>
+                                    <label for="teacherClassName" data-i18n="teacherClassCodeLabel">اسم الصف / المجموعة:</label>
                                     <input type="text" id="teacherClassName" class="quiz-input" value="الصف العاشر / أ">
                                 </div>
                                 <div class="teacher-terms-check-wrap" style="margin-bottom:14px;font-size:0.85rem;color:var(--text-muted);display:flex;align-items:flex-start;gap:8px;">
@@ -1490,7 +1490,7 @@
                                 </div>
                                 <p data-i18n="teacherShareInstructions" style="font-size:0.88rem;color:var(--text-muted);">شارك هذا الرابط المباشر مع طلابك ليفتح الواجب تلقائياً ويسجل درجاتهم مباشرة:</p>
                                 <div class="share-link-row">
-                                    <input type="text" id="teacherStudentDirectLink" class="quiz-input" readonly>
+                                    <input type="text" id="teacherStudentDirectLink" class="quiz-input" readonly aria-label="رابط الواجب المباشر للطلاب" data-i18n-aria-label="teacherStudentDirectLinkLabel">
                                     <button class="btn btn-secondary" id="teacherCopyLinkBtn"><i data-lucide="copy" class="lucide-icon"></i> <span data-i18n="teacherCopyLink">نسخ الرابط</span></button>
                                 </div>
                                 <div class="teacher-share-notice">
@@ -1505,7 +1505,7 @@
                     <div class="teacher-tab-panel" id="teacherTabActivePanel" style="display:none">
                         <div class="gradebook-controls">
                             <div class="worksheet-form-group" style="flex:1;">
-                                <label data-i18n="teacherSelectSession">اختر الواجب لعرض كشف الدرجات:</label>
+                                <label for="teacherSessionPicker" data-i18n="teacherSelectSession">اختر الواجب لعرض كشف الدرجات:</label>
                                 <div style="display:flex;gap:8px;">
                                     <select id="teacherSessionPicker" class="quiz-select" style="flex:1;"></select>
                                     <button class="btn btn-secondary" id="teacherRefreshGradebookBtn" title="تحديث السجل"><i data-lucide="refresh-cw" class="lucide-icon"></i> <span data-i18n="teacherRefreshGradebook">تحديث</span></button>
@@ -1552,7 +1552,7 @@
                 <h3 id="studentAssignmentTitleDisplay" data-i18n="studentModeTitle">واجب مدرسي تفاعلي</h3>
                 <p id="studentAssignmentDescDisplay" data-i18n="studentWelcome">أهلاً بك! يرجى إدخال اسمك الكامل لبدء الواجب المدرسي:</p>
                 <div class="worksheet-form-group" style="margin:20px 0;">
-                    <input type="text" id="studentFullNameInput" class="quiz-input" placeholder="اكتب اسمك الثلاثي هنا..." data-i18n-placeholder="studentNamePlaceholder" style="font-size:1.1rem;text-align:center;">
+                    <input type="text" id="studentFullNameInput" class="quiz-input" placeholder="اكتب اسمك الثلاثي هنا..." data-i18n-placeholder="studentNamePlaceholder" aria-label="اكتب اسمك الثلاثي هنا..." data-i18n-aria-label="studentNamePlaceholder" style="font-size:1.1rem;text-align:center;">
                 </div>
                 <div class="student-actions">
                     <button class="btn btn-primary btn-lg" id="studentStartAssignmentBtn" style="width:100%;font-size:1.05rem;" data-i18n="studentStartAssignment">بدء الواجب الآن</button>

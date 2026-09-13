@@ -11074,7 +11074,7 @@
             } catch (e) {}
             var e = void 0 !== Ke && "history" === Ke ? "history" : "geo", n = !1;
             try {
-                n = "1" === localStorage.getItem("onboardCompleted_" + e) || "1" === localStorage.getItem("onboardDone_" + e);
+                n = "1" === localStorage.getItem("onboardCompleted_" + e) || "1" === localStorage.getItem("onboardDone_" + e) || "1" === localStorage.getItem("onboardDone") || "1" === localStorage.getItem("onboardCompleted");
             } catch (e) {}
             if (!n && "function" == typeof window.startOnboarding) {
                 try {

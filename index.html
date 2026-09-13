@@ -1421,6 +1421,36 @@
             </div>
         </div>
 
+        <!-- Teacher Login Modal (Stage 0 Auth Gate) -->
+        <div class="teacher-hub-overlay" id="teacherLoginOverlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="teacherLoginTitle">
+            <div class="teacher-hub-box" style="width:480px;max-width:92vw;">
+                <div class="teacher-hub-header">
+                    <div class="academic-header-titles">
+                        <i data-lucide="lock" class="lucide-icon modal-header-icon"></i>
+                        <div>
+                            <h3 id="teacherLoginTitle" data-i18n="teacherLoginTitle">تسجيل دخول المعلم</h3>
+                            <p class="academic-sources-subtitle" data-i18n="teacherLoginSubtitle">الوصول مقصور على حسابات المعلمين المعتمدة</p>
+                        </div>
+                    </div>
+                    <button class="close-btn" id="teacherLoginCloseBtn" aria-label="إغلاق" data-i18n-aria-label="closeLabel"><i data-lucide="x" class="lucide-icon"></i></button>
+                </div>
+                <div class="teacher-hub-body" style="padding:24px;">
+                    <form id="teacherLoginForm" onsubmit="return false;" style="display:flex;flex-direction:column;gap:16px;">
+                        <div class="worksheet-form-group">
+                            <label for="teacherLoginEmailInput" data-i18n="teacherLoginEmailLabel">البريد الإلكتروني للمعلم:</label>
+                            <input type="email" id="teacherLoginEmailInput" class="quiz-input" placeholder="teacher@school.edu" required autocomplete="username">
+                        </div>
+                        <div class="worksheet-form-group">
+                            <label for="teacherLoginPasswordInput" data-i18n="teacherLoginPasswordLabel">كلمة المرور:</label>
+                            <input type="password" id="teacherLoginPasswordInput" class="quiz-input" placeholder="••••••••" required autocomplete="current-password">
+                        </div>
+                        <div id="teacherLoginErrorMsg" style="display:none;color:#ef4444;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);padding:10px 14px;border-radius:8px;font-size:0.9rem;"></div>
+                        <button type="submit" id="teacherLoginSubmitBtn" class="quiz-submit-btn" style="width:100%;margin-top:8px;" data-i18n="teacherLoginSubmit">دخول</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <!-- Teacher Assignment Hub & Live Gradebook Modal -->
         <div class="teacher-hub-overlay" id="teacherHubOverlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="teacherHubModalTitle">
             <div class="teacher-hub-box">
@@ -1432,7 +1462,13 @@
                             <p class="academic-sources-subtitle" data-i18n="teacherHubSubtitle">إدارة التكليفات الصفية ومتابعة نتائج ودرجات الطلاب المباشرة عبر السحابة</p>
                         </div>
                     </div>
-                    <button class="close-btn" id="teacherHubCloseBtn" aria-label="إغلاق" data-i18n-aria-label="closeLabel"><i data-lucide="x" class="lucide-icon"></i></button>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <button id="teacherSignOutBtn" class="teacher-hub-tab-btn" style="padding:6px 14px;font-size:0.85rem;border-radius:8px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;cursor:pointer;display:inline-flex;align-items:center;gap:6px;" title="تسجيل الخروج">
+                            <i data-lucide="log-out" class="lucide-icon"></i>
+                            <span data-i18n="teacherSignOut">تسجيل الخروج</span>
+                        </button>
+                        <button class="close-btn" id="teacherHubCloseBtn" aria-label="إغلاق" data-i18n-aria-label="closeLabel"><i data-lucide="x" class="lucide-icon"></i></button>
+                    </div>
                 </div>
                 
                 <div class="teacher-hub-tabs" role="tablist">
@@ -1591,5 +1627,6 @@
     <script src="data.js?v=2026-09-05F"></script>
     <script src="historical-polities-data.js?v=2026-09-05F"></script>
     <script src="app.js?v=2026-09-05F"></script>
+    <script src="teacher-auth-gate.js?v=2026-09-13"></script>
 </body>
 </html>

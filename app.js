@@ -11077,9 +11077,6 @@
                 n = "1" === localStorage.getItem("onboardCompleted_" + e) || "1" === localStorage.getItem("onboardDone_" + e) || "1" === localStorage.getItem("onboardDone") || "1" === localStorage.getItem("onboardCompleted");
             } catch (e) {}
             if (!n && "function" == typeof window.startOnboarding) {
-                try {
-                    localStorage.removeItem("onboardDone"), localStorage.removeItem("onboardDone_" + e);
-                } catch (e) {}
                 setTimeout(function() {
                     window.startOnboarding();
                 }, 300);
@@ -11209,13 +11206,6 @@
                 } catch (e) {}
                 e.style.cssText = "display:none !important;visibility:hidden;pointer-events:none;opacity:0;z-index:-1;", 
                 e.classList.add("hidden"), e.remove();
-                var n = !1;
-                try {
-                    n = "1" === localStorage.getItem("projectionExplainerDone");
-                } catch (e) {}
-                if (!n) try {
-                    localStorage.setItem("onboardDone", "1");
-                } catch (e) {}
                 Rs(), qd();
             });
         });

@@ -59,6 +59,7 @@
                         <button class="tool-card" id="blankMapWorksheetBtn" title="خرائط صامتة وأوراق عمل مدرسية" aria-label="خرائط صامتة وأوراق عمل مدرسية" data-i18n-title="blankMapWorksheetTitle" data-i18n-aria-label="blankMapWorksheetTitle" role="menuitem"><i data-lucide="printer" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="blankMapWorksheetBtn">خرائط صامتة</span></button>
                         <button class="tool-card" id="teacherHubBtn" title="لوحة المعلم والواجبات المدرسية" aria-label="لوحة المعلم والواجبات المدرسية" data-i18n-title="teacherHubTitle" data-i18n-aria-label="teacherHubTitle" role="menuitem"><i data-lucide="graduation-cap" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="teacherHubBtn">لوحة المعلم</span></button>
                         <button class="tool-card" id="academicSourcesBtn" title="المصادر والمراجع الأكاديمية المعتمدة" aria-label="المصادر والمراجع الأكاديمية المعتمدة" data-i18n-title="academicSourcesTitle" data-i18n-aria-label="academicSourcesTitle" role="menuitem"><i data-lucide="book-marked" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="academicSourcesBtn">المراجع الأكاديمية</span></button>
+                        <button class="tool-card" id="termsOfServiceBtn" title="شروط الاستخدام والخصوصية" aria-label="شروط الاستخدام والخصوصية" data-i18n-title="termsTitle" data-i18n-aria-label="termsTitle" role="menuitem"><i data-lucide="shield-check" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="termsBtn">شروط الاستخدام</span></button>
                         <button class="tool-card" id="measureToolBtn" title="أداة القياس" aria-label="أداة القياس" data-i18n-title="measureToolLabel" data-i18n-aria-label="measureToolLabel" role="menuitem"><i data-lucide="ruler" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="measureToolLabel"></span></button>
                         <button class="tool-card" id="coordsToggle" title="إحداثيات" aria-label="إحداثيات" data-i18n-title="coordsToggle_title" data-i18n-aria-label="coordsToggle" role="menuitem"><i data-lucide="map-pin" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="coordsToggle"></span></button>
                         <button class="tool-card" id="dataTableBtn" title="جدول البيانات" aria-label="جدول البيانات" data-i18n-title="dataTableBtn_title" data-i18n-aria-label="dataTableBtn" role="menuitem"><i data-lucide="table" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="dataTableBtn"></span></button>
@@ -916,20 +917,9 @@
         <!-- Quiz Mode: Setup Panel -->
         <div class="quiz-overlay" id="quizSetupOverlay" style="display:none">
             <div class="quiz-panel">
-                <h3 class="quiz-panel-title" id="quizSetupTitle" data-i18n="quizSetup"></h3>
-                <div class="quiz-form-row">
-                    <label class="quiz-label" data-i18n="quizSessionLabel">جلسة</label>
-                    <div class="quiz-session-inputs">
-                        <input type="text" id="quizStudentNameInput" class="quiz-input" placeholder="اسمك..." maxlength="50" aria-label="اسمك" data-i18n-aria-label="quizStudentNamePlaceholder" data-i18n-placeholder="quizStudentNamePlaceholder">
-                        <input type="text" id="quizSessionCodeInput" class="quiz-input" placeholder="رمز الجلسة..." maxlength="6" style="text-transform:uppercase" aria-label="رمز الجلسة" data-i18n-aria-label="quizSessionCodePlaceholder" data-i18n-placeholder="quizSessionCodePlaceholder">
-                    </div>
-                </div>
-                <div class="quiz-form-row" id="quizCreateSessionRow">
-                    <button class="btn" id="quizCreateSessionBtn" data-i18n="quizCreateSession"></button>
-                    <span class="quiz-session-created" id="quizSessionCreated" style="display:none"></span>
-                </div>
-                <div class="quiz-form-row">
-                    <button class="btn" id="quizViewResultsBtn" style="display:none" data-i18n="quizViewResults"></button>
+                <div class="quiz-panel-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+                    <h3 class="quiz-panel-title" id="quizSetupTitle" data-i18n="quizSetup" style="margin:0;"></h3>
+                    <button class="btn quiz-sidebar-close-btn" id="quizSetupCloseBtn" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
                 </div>
                 <div class="quiz-form-row">
                     <label class="quiz-label" id="quizRegionLabel" data-i18n="quizRegion"></label>
@@ -1016,7 +1006,10 @@
         <!-- Quiz Mode: Choice Screen (Selective vs Set Questions) -->
         <div class="quiz-overlay" id="quizModeChoiceOverlay" style="display:none">
             <div class="quiz-panel quiz-choice-panel">
-                <h3 class="quiz-panel-title" id="quizModeChoiceTitle" data-i18n="quizModeChoiceTitle"></h3>
+                <div class="quiz-panel-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+                    <h3 class="quiz-panel-title" id="quizModeChoiceTitle" data-i18n="quizModeChoiceTitle" style="margin:0;"></h3>
+                    <button class="btn quiz-sidebar-close-btn" id="quizModeChoiceCloseBtn" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
+                </div>
                 <div class="quiz-choice-cards">
                     <button class="quiz-choice-card" id="quizChoiceSelective">
                         <div class="quiz-choice-icon">🎲</div>
@@ -1028,6 +1021,13 @@
                         <div class="quiz-choice-label" id="quizSetQuestionsLabel" data-i18n="quizSetQuestions"></div>
                         <div class="quiz-choice-desc" id="quizSetDescLabel" data-i18n="quizSetDesc"></div>
                     </button>
+                </div>
+                <div class="quiz-choice-teacher-banner" id="quizChoiceTeacherBanner">
+                    <div class="teacher-banner-left" style="display:flex;align-items:center;gap:10px;">
+                        <i data-lucide="graduation-cap" class="lucide-icon teacher-banner-icon"></i>
+                        <span data-i18n="teacherBannerPrompt" style="font-size:0.88rem;">هل أنت معلم وتريد تعيين واجب ومتابعة درجات الفصل؟</span>
+                    </div>
+                    <button type="button" class="btn btn-secondary teacher-hub-shortcut-btn" id="quizOpenTeacherHubBtn" data-i18n="teacherHubBtn">لوحة المعلم</button>
                 </div>
             </div>
         </div>
@@ -1041,17 +1041,6 @@
                     <button class="btn quiz-sidebar-close-btn" id="quizCustomCloseBtn" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
                 </div>
                 <div class="quiz-custom-main-body">
-                    <div class="quiz-form-row">
-                        <label class="quiz-label" data-i18n="quizSessionLabel">جلسة</label>
-                        <div class="quiz-session-inputs">
-                            <input type="text" id="quizCustomStudentNameInput" class="quiz-input" placeholder="اسمك..." maxlength="50" aria-label="اسمك" data-i18n-aria-label="quizStudentNamePlaceholder" data-i18n-placeholder="quizStudentNamePlaceholder">
-                            <input type="text" id="quizCustomSessionCodeInput" class="quiz-input" placeholder="رمز الجلسة..." maxlength="6" style="text-transform:uppercase" aria-label="رمز الجلسة" data-i18n-aria-label="quizSessionCodePlaceholder" data-i18n-placeholder="quizSessionCodePlaceholder">
-                        </div>
-                    </div>
-                    <div class="quiz-form-row" id="quizCustomCreateSessionRow">
-                        <button class="btn" id="quizCustomCreateSessionBtn" data-i18n="quizCreateSession"></button>
-                        <span class="quiz-session-created" id="quizCustomSessionCreated" style="display:none"></span>
-                    </div>
                     <div class="quiz-form-row">
                         <button class="btn quiz-create-btn" id="quizCreateBtn" data-i18n="quizCreateNew"></button>
                     </div>
@@ -1075,8 +1064,9 @@
                         <div id="quizCustomSelectedList" class="quiz-custom-selected-list"></div>
                     </div>
                 </div>
-                <div class="quiz-custom-main-footer">
-                    <button class="btn quiz-start-btn" id="quizCustomStartBtn" disabled data-i18n="quizStartCustomQuiz"></button>
+                <div class="quiz-custom-main-footer" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
+                    <button class="btn quiz-start-btn" id="quizCustomStartBtn" disabled data-i18n="quizStartCustomQuiz">معاينة وتجربة الاختبار</button>
+                    <button class="btn btn-primary" id="quizCustomAssignBtn" disabled data-i18n="quizAssignToStudents" style="background:var(--brand-accent, #14b8a6);border-color:var(--brand-accent, #14b8a6);color:#fff;font-weight:600;">تعيين كواجب للطلاب 🎓</button>
                 </div>
             </div>
             <!-- Sidebar (library, closer to screen edge) -->
@@ -1201,6 +1191,15 @@
                     </div>
                     <button class="academic-sources-close close-btn" id="academicSourcesCloseBtn" aria-label="إغلاق" data-i18n-aria-label="closeLabel"><i data-lucide="x" class="lucide-icon"></i></button>
                 </div>
+                <!-- Cartographic Disclaimer Notice -->
+                <div class="cartographic-disclaimer-box" role="note">
+                    <i data-lucide="shield-alert" class="lucide-icon disclaimer-icon"></i>
+                    <div>
+                        <strong data-i18n="cartographicDisclaimerTitle">إخلاء مسؤولية خرائطية:</strong>
+                        <span data-i18n="cartographicDisclaimerText">إن الحدود والتسميات المستخدمة على هذه الخريطة لا تعني بالضرورة إقراراً رسمياً أو اتخاذ موقف سياسي من قِبل المنصة بشأن الوضع القانوني لأي بلد أو إقليم أو حدود، وإنما تُعرض لأغراض تعليمية وبحثية وتاريخية استناداً للمصادر الأكاديمية الدولية المعتمدة.</span>
+                        <div style="margin-top:6px;"><button type="button" id="academicTermsLinkBtn" style="background:none;border:none;color:var(--brand-accent);cursor:pointer;font-size:0.83rem;text-decoration:underline;padding:0;display:inline-flex;align-items:center;gap:4px;" data-i18n="termsAndPrivacyLink">شروط الاستخدام وسياسة الخصوصية القانونية الكاملة</button></div>
+                    </div>
+                </div>
                 <div class="academic-sources-tabs" role="tablist">
                     <button class="academic-tab-btn active" data-tab="general" data-i18n="academicTabGeneral">الخرائط والحدود</button>
                     <button class="academic-tab-btn" data-tab="eras" data-i18n="academicTabEras">الحقب التاريخية</button>
@@ -1212,6 +1211,101 @@
                     <input type="text" id="academicSourcesSearch" class="quiz-input" placeholder="ابحث في المراجع، المؤلفين، الدوريات والمؤسسات الأكاديمية...">
                 </div>
                 <div class="academic-sources-content" id="academicSourcesContent"></div>
+            </div>
+        </div>
+
+        <!-- Terms of Service & Privacy Policy Modal -->
+        <div class="terms-overlay" id="termsOverlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="termsModalTitle">
+            <div class="terms-box">
+                <div class="terms-header">
+                    <div class="terms-header-titles">
+                        <i data-lucide="shield-check" class="lucide-icon terms-header-icon"></i>
+                        <div>
+                            <h3 id="termsModalTitle" data-i18n="termsTitle">شروط الاستخدام، سياسة الخصوصية، وإخلاء المسؤولية</h3>
+                            <p class="terms-subtitle" data-i18n="termsSubtitle">الإطار القانوني والتنظيمي المعتمد لمنصة أطلس ليبيدوس التعليمية</p>
+                        </div>
+                    </div>
+                    <button class="close-btn" id="termsCloseBtn" aria-label="إغلاق" data-i18n-aria-label="closeLabel"><i data-lucide="x" class="lucide-icon"></i></button>
+                </div>
+
+                <div class="terms-tabs" role="tablist">
+                    <button class="terms-tab-btn active" data-tab="service" data-i18n="termsTabService">طبيعة الخدمة والامتحانات</button>
+                    <button class="terms-tab-btn" data-tab="privacy" data-i18n="termsTabPrivacy">الخصوصية وإدارة البيانات</button>
+                    <button class="terms-tab-btn" data-tab="cartography" data-i18n="termsTabCartography">المحتوى والحدود الجغرافية</button>
+                    <button class="terms-tab-btn" data-tab="liability" data-i18n="termsTabLiability">حدود المسؤولية والملكية</button>
+                </div>
+
+                <div class="terms-body" id="termsBodyContent">
+                    <!-- Tab 1: Service Nature & Exams -->
+                    <div class="terms-tab-content active" id="termsTab_service">
+                        <div class="terms-section-card">
+                            <h4>1. طبيعة المنصة ونطاق الخدمة (Nature of Service)</h4>
+                            <p>منصة "أطلس ليبيدوس" هي أداة برمجية ورقمية تفاعلية مخصصة <strong>للأغراض التعليمية والاستكشافية والبحثية المساعدة فقط</strong>. المنصة <strong>ليست جهة تعليمية رسمية، ولا تمنح شهادات أكاديمية، ولا تصدر اعتمادات رسمية</strong>. ينحصر دور المنصة في توفير وسيلة إيضاح كارتوغرافية ونظام تقني مساعد لحساب الإجابات وفق المعايير التي يحددها المستخدم أو المعلم.</p>
+                        </div>
+                        <div class="terms-section-card">
+                            <h4>2. إخلاء المسؤولية الأكاديمية والامتحانية (Academic & Assessment Disclaimer)</h4>
+                            <p>تقع <strong>المسؤولية الحصرية والكاملة على عاتق المعلم والمؤسسة التعليمية</strong> في إعداد الاختبارات، مراجعة الأسئلة، تقييم درجات الطلاب، وتحديد قرارات النجاح أو الرسوب. تخلي المنصة ومطوروها مسؤوليتهم القانونية والمالية والمعنوية التامة عن أي نزاع ينشأ بين الطالب والمؤسسة التعليمية بشأن الدرجات، أو رصد التقييمات، أو الرسوب، أو الحرمان من الاختبارات. يقر المعلم والمؤسسة بأن المنصة أداة مساعدة، ويجب توفير وسائل تقييم بديلة للطلاب في حال تعذر إجراء الاختبار إلكترونياً لأي سبب.</p>
+                        </div>
+                        <div class="terms-section-card">
+                            <h4>3. إخلاء المسؤولية الفنية والاتصال وحالة الخدمة ("As-Is" & Availability)</h4>
+                            <p>تُقدم المنصة وخدماتها على أساس <strong>«كما هي» (AS IS)</strong> و <strong>«بحسب توفرها» (AS AVAILABLE)</strong>، دون أي ضمانات من أي نوع، صريحة كانت أو ضمنية. تخلي المنصة مسؤوليتها الكاملة عن أي ضرر، أو فقدان لبيانات الإجابات، أو فوات لوقت الامتحان ينشأ عن: انقطاع أو ضعف شبكة الإنترنت لدى المستخدم، عدم توافق المتصفح أو الجهاز أو نفاد البطارية، انقطاع أو تباطؤ خدمات الاستضافة السحابية أو خوادم الطرف الثالث، أو أعمال التحديث والصيانة الدورية والطارئة.</p>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Privacy & Data Governance -->
+                    <div class="terms-tab-content" id="termsTab_privacy" style="display:none">
+                        <div class="terms-section-card">
+                            <h4>4. حماية بيانات الطلاب والامتثال للخصوصية (Student Privacy & Minimization)</h4>
+                            <p><strong>مبدأ الحد الأدنى من البيانات (Data Minimization):</strong> لا تطلب المنصة ولا تجمع أي بيانات حساسة للطلاب (مثل أرقام بطاقات الهوية المدنية، أرقام الهواتف، البطاقات البنكية، أو السجلات الطبية). يقتصر ما يُسجل على (الاسم المدخل، الرمز الصفي/المدرسي، والدرجة المحرزة في الواجب).</p>
+                            <p><strong>حظر الاستغلال التجاري:</strong> تتعهد المنصة تعهداً قاطعاً بعدم بيع، أو تأجير، أو استغلال، أو مشاركة أي بيانات للطلاب أو المستخدمين مع أي جهات تجارية أو إعلانية لأي غرض ربحي.</p>
+                            <p><strong>المعالجة السحابية الموثوقة:</strong> تتم معالجة وتخزين البيانات حصرياً عبر <strong>مزودي خدمات البنية التحتية والاستضافة السحابية المعتمدين والموثوقين دولياً</strong>، بصفتهم معالجين تقنيين للبيانات فقط خاضعين لأعلى معايير التشفير والأمن السيبراني، ودون أي حق لمزودي البنية التحتية في ملكية البيانات أو الاطلاع عليها أو استخدامها تجارياً.</p>
+                            <p><strong>موافقة أولياء الأمور:</strong> تقر المؤسسة التعليمية أو المعلم بمسؤوليتهما القانونية الكاملة عن الحصول على كافة الموافقات اللازمة من أولياء أمور الطلاب القُصّر قبل إدراج أسمائهم أو تكليفهم بالاختبارات، وفقاً للقوانين والتشريعات المحلية المعمول بها.</p>
+                        </div>
+                        <div class="terms-section-card">
+                            <h4>5. الإدارة الذاتية، فترة السماح والاسترجاع (Grace Period)، وإخلاء مسؤولية الحذف</h4>
+                            <p>تُعد سجلات الاختبارات والدرجات ملكاً تنظيمياً للمؤسسة التعليمية. وتوفر المنصة لمسؤولي النظام التقني المعتمدين (IT Administrators) أدوات الإدارة الذاتية لإغلاق أو حذف الفصول والسجلات وفق صلاحياتهم التامة.</p>
+                            <p>تدخل البيانات المحذوفة في <strong>فترة احتفاظ وسماح مؤقتة مدتها (45 يوماً)</strong> يُتاح خلالها لإدارة المؤسسة استعادة البيانات في حال الحذف غير المقصود، ويتم بعدها إتلاف البيانات ومسحها نهائياً وتلقائياً من الخوادم. وتخلي المنصة ومطوروها مسؤوليتهم الكاملة عن أي فقدان للسجلات ناتج عن قرارات الحذف الصادرة من الحسابات المصرح لها في المؤسسة التعليمية.</p>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Cartography & User Content -->
+                    <div class="terms-tab-content" id="termsTab_cartography" style="display:none">
+                        <div class="terms-section-card">
+                            <h4>6. إخلاء المسؤولية الكارتوغرافية والجيوسياسية والتاريخية (Geopolitical Disclaimer)</h4>
+                            <p>تستند الخرائط والمعالم والحدود السياسية والتاريخية المعروضة إلى قواعد بيانات مفتوحة المصادر ومراجع أكاديمية دولية معتمدة. <strong>إن عرض أي حدود دولية، أو مسميات جغرافية، أو مناطق متنازع عليها، أو خرائط لإمبراطوريات تاريخية، لا يعبر إطلاقاً عن موقف سياسي للمنصة أو مطوريها، ولا يُعد بأي شكل من الأشكال إقراراً قانونياً أو اعترافاً رسمياً بسيادة أي دولة أو كيان على أي إقليم أو حدود.</strong> المنصة غير مسؤولة عن أي تفسير سياسي أو اعتراض ينشأ عن استخدام الخرائط في الأبحاث أو الفصول الدراسية.</p>
+                        </div>
+                        <div class="terms-section-card">
+                            <h4>7. المحتوى المُنشأ من قِبل المستخدمين (User-Generated Content - UGC)</h4>
+                            <p>عند استخدام ميزة "تأليف الأسئلة التفاعلية المخصصة"، يتحمل المستخدم (معلماً أو مؤسسة) <strong>المسؤولية القانونية والجنائية والأخلاقية الحصرية</strong> عن كافة الأسئلة، النصوص، الرسومات، والمحتوى الذي يقوم بإنشائه ومشاركته.</p>
+                            <p>يُحظر تماماً استخدام المنصة لإنشاء أو نشر أي محتوى يتضمن: الإساءة للأديان، إثارة النعرات الطائفية والعرقية، خطابات الكراهية والعنف، التشهير، المحتوى غير الأخلاقي، أو انتهاك حقوق الملكية الفكرية للآخرين. وتحتفظ المنصة بالحق الكامل في إيقاف أي جلسة أو حذف أي محتوى مخالف دون إشعار مسبق ودون أدنى مسؤولية.</p>
+                        </div>
+                    </div>
+
+                    <!-- Tab 4: Liability & IP -->
+                    <div class="terms-tab-content" id="termsTab_liability" style="display:none">
+                        <div class="terms-section-card">
+                            <h4>8. حدود المسؤولية والتعويض القانوني (Limitation of Liability & Indemnification)</h4>
+                            <p>إلى أقصى حد يجيزه القانون المعمول به، <strong>لا تتحمل المنصة أو ملاكها أو مطوروها أي مسؤولية عن أي أضرار مباشرة، أو غير مباشرة، أو خاصة، أو تبعية، أو تعويضات تأديبية</strong> (بما في ذلك فقدان البيانات، توقف الدراسة، ضياع الدرجات، أو فوات الأرباح) ناتجة عن استخدام المنصة أو العجز عن استخدامها.</p>
+                            <p>يلتزم المستخدم (معلماً أو طالباً أو مؤسسة) بالدفاع عن المنصة ومطوريها وإبراء ذمتهم وتعويضهم عن أي أضرار، أو دعاوى قضائية، أو نفقات قانونية تنشأ عن إساءة استخدامه للمنصة، أو خرقه لهذه الشروط، أو انتهاكه لحقوق أي طرف ثالث.</p>
+                        </div>
+                        <div class="terms-section-card">
+                            <h4>9. الملكية الفكرية، القبول وسريان التعديلات (IP & Amendments)</h4>
+                            <p>كافة الأكواد البرمجية، محرك العرض الخرائطي، التصاميم، العلامات التجارية، والواجهات الخاصة بـ "أطلس ليبيدوس" هي ملكية فكرية حصرية لمطوري المنصة ومحمية بموجب قوانين الملكية الفكرية الدولية. يُحظر نسخ، أو إعادة إنتاج، أو تفكيك (Reverse Engineering)، أو استغلال أي جزء من النظام تجارياً دون ترخيص كتابي صريح مسبق.</p>
+                            <p><strong>يُعد مجرد استخدام المنصة، أو تصفح الخريطة، أو النقر على "بدء الاختبار"، أو "إنشاء واجب صفي" بمثابة إقرار صريح وموافقة قانونية غير قابلة للنقض على الالتزام بكافة بنود هذه الوثيقة.</strong> تحتفظ المنصة بالحق في تحديث هذه الشروط عند الحاجة؛ ويُعد استمرار استخدام الخدمة قبولاً بالصيغة المحدثة.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="terms-footer">
+                    <div class="terms-update-badge">
+                        <i data-lucide="info" class="lucide-icon"></i>
+                        <span>الإصدار المعتمد 2.4 — سبتمبر 2026</span>
+                    </div>
+                    <div class="terms-footer-actions">
+                        <button class="btn btn-secondary" id="termsCloseSecondaryBtn" data-i18n="termsCloseBtn">إغلاق</button>
+                        <button class="btn btn-primary" id="termsAcceptBtn" data-i18n="termsAcceptBtn">قرأت وأوافق على الشروط والسياسة</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1377,6 +1471,12 @@
                                     <label data-i18n="teacherClassCodeLabel">اسم الصف / المجموعة:</label>
                                     <input type="text" id="teacherClassName" class="quiz-input" value="الصف العاشر / أ">
                                 </div>
+                                <div class="teacher-terms-check-wrap" style="margin-bottom:14px;font-size:0.85rem;color:var(--text-muted);display:flex;align-items:flex-start;gap:8px;">
+                                    <input type="checkbox" id="teacherTermsConsentCheck" checked style="accent-color:var(--brand-accent);margin-top:3px;cursor:pointer;">
+                                    <label for="teacherTermsConsentCheck" style="cursor:pointer;line-height:1.4;">
+                                        <span data-i18n="teacherTermsConsentLabel">أقر بأنني معلم/مسؤول مصرح لي، وأوافق على</span> <a href="#" id="teacherTermsLink" style="color:var(--brand-accent);text-decoration:underline;font-weight:600;" data-i18n="termsAndPrivacyLink">شروط الاستخدام وسياسة الخصوصية</a>.
+                                    </label>
+                                </div>
                                 <button class="btn btn-primary btn-lg" id="teacherGenerateSessionBtn">
                                     <i data-lucide="link" class="lucide-icon"></i>
                                     <span data-i18n="teacherGenerateBtn">توليد رمز الواجب ورابط الطلاب</span>
@@ -1456,6 +1556,10 @@
                 </div>
                 <div class="student-actions">
                     <button class="btn btn-primary btn-lg" id="studentStartAssignmentBtn" style="width:100%;font-size:1.05rem;" data-i18n="studentStartAssignment">بدء الواجب الآن</button>
+                    <p class="student-terms-notice" style="font-size:0.8rem;color:var(--text-muted);margin-top:12px;text-align:center;line-height:1.4;">
+                        <span data-i18n="studentTermsConsentPrefix">بدخولك للواجب، فإنك تقر بموافقتك على</span>
+                        <a href="#" id="studentTermsLink" style="color:var(--brand-accent);text-decoration:underline;font-weight:600;" data-i18n="termsAndPrivacyLink">شروط الاستخدام وسياسة الخصوصية</a>.
+                    </p>
                 </div>
             </div>
         </div>

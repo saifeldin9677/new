@@ -7,7 +7,15 @@ const path = require('path');
 const SRC = __dirname;
 const DIST = path.join(__dirname, 'dist');
 
-if (!fs.existsSync(DIST)) fs.mkdirSync(DIST, { recursive: true });
+if (fs.existsSync(DIST)) {
+    fs.readdirSync(DIST).forEach(f => {
+        if (f.startsWith('screenshot-') || f.startsWith('test-')) {
+            try { fs.unlinkSync(path.join(DIST, f)); } catch(e) {}
+        }
+    });
+} else {
+    fs.mkdirSync(DIST, { recursive: true });
+}
 
 function run(cmd) {
     console.log(`  $ ${cmd}`);
@@ -68,6 +76,12 @@ if (fs.existsSync(path.join(SRC, 'vendor'))) {
     console.log('  Copied vendor/');
 } else {
     console.log('  Skipped vendor/ (directory not found)');
+}
+if (fs.existsSync(path.join(SRC, 'fonts'))) {
+    fs.cpSync(path.join(SRC, 'fonts'), path.join(DIST, 'fonts'), { recursive: true });
+    console.log('  Copied fonts/');
+} else {
+    console.log('  Skipped fonts/ (directory not found)');
 }
 ['boot.js', 'firebase.js'].forEach(function(f) {
     var srcPath = path.join(SRC, f);

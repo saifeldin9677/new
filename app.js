@@ -3338,12 +3338,14 @@
         } else e.focus();
     }
     function Ro(e, t) {
-        var n = e.value.trim(), i = t.value.trim().toUpperCase();
+        var n = e && e.value ? e.value.trim() : "", i = t && t.value ? t.value.trim().toUpperCase() : "";
         n && i && (It = i, zt = n);
     }
     function No() {
         var e = document.getElementById("quizViewResultsBtn");
-        It ? (e.style.display = "", e.textContent = zi("quizViewResults") + " (" + It + ")") : e.style.display = "none";
+        if (e) {
+            It ? (e.style.display = "", e.textContent = zi("quizViewResults") + " (" + It + ")") : e.style.display = "none";
+        }
     }
     async function Do(e, t, n, i) {
         if (It && zt) {
@@ -5419,14 +5421,23 @@
                 document.getElementById("quizLayersLabel").textContent = zi("quizLayers"), document.getElementById("quizNumLabel").textContent = zi("quizNumQuestions"), 
                 document.getElementById("quizTimeLabel").textContent = zi("quizTimeLimit"), document.getElementById("quizNoLimitText").textContent = zi("quizNoLimit"), 
                 document.getElementById("quizSetLimitText").textContent = zi("quizSetLimitText"), 
-                document.getElementById("quizMinutesText").textContent = zi("quizMinutes"), Ft.textContent = zi("quizStart"), 
-                document.getElementById("quizEndEarlyBtn").textContent = zi("quizEndEarlyBtn"), 
-                zn.textContent = zi("quizTypedAnswerSubmit"), Tt && (Tt.placeholder = zi("quizSearchCountry")), 
-                document.getElementById("quizStudentNameInput").placeholder = zi("quizStudentNamePlaceholder"), 
-                document.getElementById("quizSessionCodeInput").placeholder = zi("quizSessionCodePlaceholder");
+                document.getElementById("quizMinutesText").textContent = zi("quizMinutes"), Ft.textContent = zi("quizStart");
+                var qEnd = document.getElementById("quizEndEarlyBtn");
+                if (qEnd) qEnd.textContent = zi("quizEndEarlyBtn");
+                if (zn) zn.textContent = zi("quizTypedAnswerSubmit");
+                if (Tt) Tt.placeholder = zi("quizSearchCountry");
+                var sni = document.getElementById("quizStudentNameInput");
+                if (sni) sni.placeholder = zi("quizStudentNamePlaceholder");
+                var sci = document.getElementById("quizSessionCodeInput");
+                if (sci) sci.placeholder = zi("quizSessionCodePlaceholder");
                 var t = document.getElementById("quizCreateSessionBtn");
-                t.textContent = zi("quizCreateSession"), t.style.display = "", document.getElementById("quizSessionCreated").style.display = "none", 
-                It && (document.getElementById("quizSessionCodeInput").value = It, document.getElementById("quizStudentNameInput").value = zt || ""), 
+                if (t) {
+                    t.textContent = zi("quizCreateSession");
+                    t.style.display = "";
+                    var sc = document.getElementById("quizSessionCreated");
+                    if (sc) sc.style.display = "none";
+                    if (It && sci && sni) { sci.value = It; sni.value = zt || ""; }
+                }
                 No();
             }
             function ai() {
@@ -7699,13 +7710,23 @@
                 document.getElementById("quizCustomSelectedEmpty").textContent = zi("quizClickToAdd"), 
                 document.getElementById("quizLibraryTitle").textContent = zi("quizLibrary"), document.getElementById("quizSessionNewLabel").textContent = zi("quizSessionNewLabel"), 
                 document.getElementById("quizSessionNewEmpty").textContent = zi("quizSessionNewEmpty"), 
-                x.textContent = zi("quizStartCustomQuiz"), L.placeholder = zi("quizSearchQuestions"), 
+                x.textContent = zi("quizStartCustomQuiz");
+                var assignBtn = document.getElementById("quizCustomAssignBtn");
+                if (assignBtn) assignBtn.textContent = zi("quizAssignToStudents");
+                L.placeholder = zi("quizSearchQuestions"), 
                 B.textContent = zi("quizClearAll"), L.value = "", Le = ar(), e && (Se = [], Ie = []), 
-                lr(), pr(), dr(), document.getElementById("quizCustomStudentNameInput").placeholder = zi("quizStudentNamePlaceholder"), 
-                document.getElementById("quizCustomSessionCodeInput").placeholder = zi("quizSessionCodePlaceholder");
+                lr(), pr(), dr(), ur();
+                var csni = document.getElementById("quizCustomStudentNameInput");
+                if (csni) csni.placeholder = zi("quizStudentNamePlaceholder");
+                var csci = document.getElementById("quizCustomSessionCodeInput");
+                if (csci) csci.placeholder = zi("quizSessionCodePlaceholder");
                 var t = document.getElementById("quizCustomCreateSessionBtn");
-                t.textContent = zi("quizCreateSession"), t.style.display = "", document.getElementById("quizCustomSessionCreated").style.display = "none", 
-                It && (document.getElementById("quizCustomSessionCodeInput").value = It, document.getElementById("quizCustomStudentNameInput").value = zt || "");
+                if (t) {
+                    t.textContent = zi("quizCreateSession"), t.style.display = "";
+                    var csc = document.getElementById("quizCustomSessionCreated");
+                    if (csc) csc.style.display = "none";
+                    if (It && csci && csni) { csci.value = It; csni.value = zt || ""; }
+                }
             }
             function lr() {
                 if (E.innerHTML = "", 0 === Le.length) return k.style.display = "", void (B.style.display = "none");
@@ -7762,7 +7783,10 @@
                 })) : t.style.display = "";
             }
             function ur() {
-                x.disabled = 0 === Se.length && 0 === Ie.length;
+                var hasQ = !(0 === Se.length && 0 === Ie.length);
+                x.disabled = !hasQ;
+                var assignBtn = document.getElementById("quizCustomAssignBtn");
+                if (assignBtn) assignBtn.disabled = !hasQ;
             }
             function pr() {
                 var e = document.getElementById("quizSessionNewList"), t = document.getElementById("quizSessionNewEmpty");
@@ -8331,19 +8355,62 @@
             }), In.addEventListener("keydown", function(e) {
                 "Enter" === e.key && (e.preventDefault(), er());
             }), Ft.addEventListener("click", function() {
-                Ro(document.getElementById("quizStudentNameInput"), document.getElementById("quizSessionCodeInput")), 
+                var sni = document.getElementById("quizStudentNameInput"), sci = document.getElementById("quizSessionCodeInput");
+                if (sni && sci) Ro(sni, sci);
                 _t.style.display = "none", Ya();
-            }), document.getElementById("quizCreateSessionBtn").addEventListener("click", function() {
+            });
+            var csBtn = document.getElementById("quizCreateSessionBtn");
+            if (csBtn) csBtn.addEventListener("click", function() {
                 Oo(document.getElementById("quizStudentNameInput"), document.getElementById("quizSessionCodeInput"), document.getElementById("quizSessionCreated"), this);
-            }), document.getElementById("quizCustomCreateSessionBtn").addEventListener("click", function() {
+            });
+            var ccsBtn = document.getElementById("quizCustomCreateSessionBtn");
+            if (ccsBtn) ccsBtn.addEventListener("click", function() {
                 Oo(document.getElementById("quizCustomStudentNameInput"), document.getElementById("quizCustomSessionCodeInput"), document.getElementById("quizCustomSessionCreated"), this);
-            }), document.getElementById("quizViewResultsBtn").addEventListener("click", function() {
+            });
+            var vrBtn = document.getElementById("quizViewResultsBtn");
+            if (vrBtn) vrBtn.addEventListener("click", function() {
                 It && Fo(It);
-            }), document.getElementById("quizResultsCloseBtn").addEventListener("click", function() {
+            });
+            var resClose = document.getElementById("quizResultsCloseBtn");
+            if (resClose) resClose.addEventListener("click", function() {
                 document.getElementById("quizResultsOverlay").style.display = "none";
-            }), document.getElementById("quizResultsOverlay").addEventListener("click", function(e) {
+            });
+            var resOverlay = document.getElementById("quizResultsOverlay");
+            if (resOverlay) resOverlay.addEventListener("click", function(e) {
                 e.target === this && (this.style.display = "none");
-            }), Rt.addEventListener("change", function() {
+            });
+            var choiceCloseBtn = document.getElementById("quizModeChoiceCloseBtn");
+            if (choiceCloseBtn) choiceCloseBtn.addEventListener("click", function() {
+                or();
+            });
+            var setupCloseBtn = document.getElementById("quizSetupCloseBtn");
+            if (setupCloseBtn) setupCloseBtn.addEventListener("click", function() {
+                _t.style.display = "none", or();
+            });
+            var thShortcutBtn = document.getElementById("quizOpenTeacherHubBtn");
+            if (thShortcutBtn) thShortcutBtn.addEventListener("click", function() {
+                or();
+                var e = document.getElementById("teacherHubBtn");
+                if (e) e.click();
+            });
+            var customAssignBtn = document.getElementById("quizCustomAssignBtn");
+            if (customAssignBtn) customAssignBtn.addEventListener("click", async function() {
+                var qList = [];
+                Se.forEach(function(e) { if (Le[e]) qList.push(Le[e]); });
+                Ie.forEach(function(e) {
+                    var t = Le.findIndex(function(t) { return t.id === e; });
+                    if (-1 !== t && -1 === Se.indexOf(t)) qList.push(Le[t]);
+                });
+                if (0 === qList.length) return;
+                or();
+                var e = document.getElementById("teacherHubBtn");
+                if (e) e.click();
+                var titleInp = document.getElementById("teacherAssignmentTitleInput");
+                if (titleInp) titleInp.value = "واجب: أسئلة الخريطة المخصصة (" + qList.length + " أسئلة)";
+                var genBtn = document.getElementById("teacherGenerateSessionBtn");
+                if (genBtn) genBtn.click();
+            });
+            Rt.addEventListener("change", function() {
                 Nt.style.display = Rt.checked ? "" : "none";
             }), document.getElementById("quizTimeModeNone").addEventListener("change", function() {
                 Nt.style.display = "none";
@@ -11850,6 +11917,11 @@
             r.classList.add("active"), a.classList.remove("active"), o && (o.style.display = "none"), 
             s && (s.style.display = "block"), g && g.value && A(g.value);
         })), p && p.addEventListener("click", async function() {
+            var consentCheck = document.getElementById("teacherTermsConsentCheck");
+            if (consentCheck && !consentCheck.checked) {
+                alert(zi("termsMustAccept") || "يرجى الموافقة على شروط الاستخدام وسياسة حماية بيانات الطلاب قبل توليد الواجب.");
+                return;
+            }
             var e = l && l.value.trim() || zi("teacherDefaultAssignmentTitle") || "واجب الجغرافيا والتاريخ", t = c && c.value || "countries", n = parseInt(d && d.value || "10", 10), i = u && u.value.trim() || "", a = "ABCDEFGHJKLMNPQRSTUVWXYZ", r = "ASG-" + a.charAt(Math.floor(24 * Math.random())) + a.charAt(Math.floor(24 * Math.random())) + Math.floor(100 + 900 * Math.random()), o = {
                 code: r,
                 title: e,
@@ -11910,5 +11982,71 @@
         }), w && w.addEventListener("click", function() {
             window.print();
         }), window.addEventListener("hashchange", T), setTimeout(T, 400);
+    }(), function() {
+        var termsBtn = document.getElementById("termsOfServiceBtn"),
+            termsOverlay = document.getElementById("termsOverlay"),
+            termsCloseBtn = document.getElementById("termsCloseBtn"),
+            termsCloseSecondaryBtn = document.getElementById("termsCloseSecondaryBtn"),
+            termsAcceptBtn = document.getElementById("termsAcceptBtn"),
+            academicTermsBtn = document.getElementById("academicTermsLinkBtn"),
+            studentTermsLink = document.getElementById("studentTermsLink"),
+            teacherTermsLink = document.getElementById("teacherTermsLink"),
+            tabBtns = termsOverlay ? termsOverlay.querySelectorAll(".terms-tab-btn") : [];
+
+        function switchTermsTab(tabName) {
+            if (!termsOverlay) return;
+            tabBtns.forEach(function(b) {
+                b.classList.toggle("active", b.getAttribute("data-tab") === tabName);
+            });
+            var contents = termsOverlay.querySelectorAll(".terms-tab-content");
+            contents.forEach(function(c) {
+                var isActive = (c.id === "termsTab_" + tabName);
+                c.style.display = isActive ? "block" : "none";
+                c.classList.toggle("active", isActive);
+            });
+        }
+
+        function openTerms(tabName) {
+            if (!termsOverlay) return;
+            termsOverlay.style.display = "flex";
+            switchTermsTab(tabName || "service");
+        }
+
+        function closeTerms() {
+            if (termsOverlay) termsOverlay.style.display = "none";
+        }
+
+        tabBtns.forEach(function(btn) {
+            btn.addEventListener("click", function() {
+                var tab = this.getAttribute("data-tab");
+                if (tab) switchTermsTab(tab);
+            });
+        });
+
+        if (termsBtn) termsBtn.addEventListener("click", function() { openTerms("service"); });
+        if (academicTermsBtn) academicTermsBtn.addEventListener("click", function() { openTerms("cartography"); });
+        if (studentTermsLink) studentTermsLink.addEventListener("click", function(e) {
+            e.preventDefault();
+            openTerms("service");
+        });
+        if (teacherTermsLink) teacherTermsLink.addEventListener("click", function(e) {
+            e.preventDefault();
+            openTerms("privacy");
+        });
+
+        if (termsCloseBtn) termsCloseBtn.addEventListener("click", closeTerms);
+        if (termsCloseSecondaryBtn) termsCloseSecondaryBtn.addEventListener("click", closeTerms);
+        if (termsAcceptBtn) termsAcceptBtn.addEventListener("click", function() {
+            try {
+                localStorage.setItem("lepidos_terms_accepted_v1", "1");
+            } catch(e) {}
+            closeTerms();
+        });
+
+        if (termsOverlay) {
+            termsOverlay.addEventListener("click", function(e) {
+                if (e.target === termsOverlay) closeTerms();
+            });
+        }
     }();
 }();

@@ -1,6 +1,6 @@
-const LEPIDOS_CACHE_VERSION = 'lepidos-v5';
-const LEPIDOS_CACHE_PRECACHE = 'lepidos-precache-v5';
-const LEPIDOS_CACHE_RUNTIME = 'lepidos-runtime-v5';
+const LEPIDOS_CACHE_VERSION = 'lepidos-v22';
+const LEPIDOS_CACHE_PRECACHE = 'lepidos-precache-v22';
+const LEPIDOS_CACHE_RUNTIME = 'lepidos-runtime-v22';
 
 const PRECACHE_URLS = [
     './',
@@ -9,13 +9,24 @@ const PRECACHE_URLS = [
     './boot.js',
     './app.js',
     './data.js',
+    './historical-polities-data.js',
     './firebase.js',
     './manifest.json',
     './admin-boundaries-data.json',
     './glaciated-areas-data.json',
     './admin-name-translations.json',
     './historical-eras-data.json',
+    './historical-wars-data.json',
+    './historical-travelers-data.json',
+    './historical-capitals-data.json',
+    './historical-battles-data.json',
+    './historical-wonders-data.json',
+    './historical-sacred-sites-data.json',
+    './historical-terrain-data.json',
+    './timezone-data.json',
+    './religions-history-data.json',
     './countries-110m.json',
+    './microstates-data.json',
     './icon-192.png',
     './icon-512.png',
     './vendor/d3.min.js',

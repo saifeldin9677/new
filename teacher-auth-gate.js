@@ -155,10 +155,9 @@
                 isConfirmedTeacher = true;
                 hideTeacherLoginOverlay();
 
-                // Open Teacher Hub directly
-                const hubOverlay = document.getElementById('teacherHubOverlay');
-                if (hubOverlay) {
-                    hubOverlay.style.display = 'flex';
+                const teacherBtn = document.getElementById('teacherHubBtn');
+                if (teacherBtn) {
+                    teacherBtn.click();
                 }
             } catch(err) {
                 console.error('Login error:', err);

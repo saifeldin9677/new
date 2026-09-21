@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ws: wss: https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com; font-src 'self' data:; frame-src https://lepidos-map.firebaseapp.com; form-action 'self';">
     <title>أطلس ليبيدوس</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦋</text></svg>">
+    <link rel="icon" type="image/png" href="favicon.png">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#14B8A6">
     <link rel="stylesheet" href="fonts/fonts.css">
@@ -14,7 +14,7 @@
     <script src="vendor/topojson-client.min.js"></script>
     <script src="vendor/lucide.min.js"></script>
 
-    <link rel="stylesheet" href="style.css?v=2026-09-05E">
+    <link rel="stylesheet" href="style.css?v=2026-09-16A">
 </head>
 <body>
     <div id="srLiveAnnouncer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
@@ -24,8 +24,11 @@
     <a href="#historyBottomBar" class="skip-link hist-only" data-i18n="skipToHistory" style="display:none">Skip to history timeline</a>
     <div class="header top-header">
         <div class="header-right-group">
+            <button class="btn header-icon-btn mobile-drawer-btn" id="mobileDrawerBtn" type="button" title="القائمة" aria-label="القائمة" data-i18n-title="menuToggle" data-i18n-aria-label="menuToggle">
+                <i data-lucide="menu" class="lucide-icon"></i>
+            </button>
             <div class="title-group brand-logo">
-                <span class="logo-icon"><i data-lucide="map" class="lucide-icon"></i></span>
+                <span class="logo-icon"><img src="logo.png" alt="أطلس ليبيدوس" class="brand-logo-img" width="30" height="30"></span>
                 <div><h1 id="appTitle" class="brand-title" data-i18n="appName"></h1><div class="header-line"></div></div>
             </div>
             <div class="tools-row-start search-box-wrapper" id="toolsRowStart">
@@ -42,22 +45,24 @@
         </div>
 
         <div class="header-left-group tools-row-middle" id="toolsRowMiddle">
-            <div class="hist-opacity-control hist-only" id="histOpacityControl" style="display:none">
-                <label for="histOpacitySlider" class="hist-opacity-label" data-i18n-title="histOpacityTip" title="شفافية الحدود التاريخية">
-                    <i data-lucide="layers" class="lucide-icon"></i>
-                    <span class="btn-text" data-i18n="histOpacity">الشفافية</span>
-                </label>
-                <input type="range" id="histOpacitySlider" min="0.1" max="1" step="0.05" value="0.55" class="hist-opacity-slider" aria-label="شفافية الحدود التاريخية" data-i18n-aria-label="histOpacityTip" aria-valuemin="10" aria-valuemax="100" aria-valuenow="55" aria-valuetext="55%">
-                <span class="hist-opacity-val" id="histOpacityVal">55%</span>
-            </div>
             <div class="tools-dropdown tools-wrapper" id="toolsDropdown">
                 <button class="btn header-btn" id="toolsBtn" title="أدوات" aria-label="أدوات" data-i18n="sectionTools" data-i18n-title="sectionTools" data-i18n-aria-label="sectionTools" aria-haspopup="true" aria-expanded="false" aria-controls="toolsDropdownMenu"><i data-lucide="settings" class="lucide-icon"></i><span class="btn-text">أدوات</span></button>
                 <button class="btn header-btn" id="colorblindToggle" aria-pressed="false" title="إضافة نقش شكل لكل فئة لتكون قابلة للتمييز بدون لون" aria-label="أنماط عمى الألوان" data-i18n="colorblindToggle" data-i18n-title="colorblindToggle_title" data-i18n-aria-label="colorblindToggle"><i data-lucide="contrast" class="lucide-icon"></i><span class="btn-text">أنماط عمى الألوان</span></button>
                 <div class="tools-dropdown-menu" id="toolsDropdownMenu" role="menu" aria-label="أدوات" data-i18n-aria-label="sectionTools" hidden>
                     <div class="tools-grid">
+                        <div class="tool-card hist-only hist-opacity-tool-card" id="histOpacityToolCard" style="display:none" role="menuitem">
+                            <div class="hist-opacity-tool-header">
+                                <i data-lucide="layers" class="tool-icon lucide-icon"></i>
+                                <span class="tool-label btn-text" data-i18n="histOpacity">شفافية الحدود</span>
+                                <span class="hist-opacity-val" id="histOpacityVal">55%</span>
+                            </div>
+                            <input type="range" id="histOpacitySlider" min="0.1" max="1" step="0.05" value="0.55" class="hist-opacity-slider" aria-label="شفافية الحدود التاريخية" aria-valuemin="10" aria-valuemax="100" aria-valuenow="55" aria-valuetext="55%">
+                        </div>
                         <button class="tool-card" id="smartboardToggleBtn" title="وضع السبورة الذكية والعرض الصفي" aria-label="وضع السبورة الذكية والعرض الصفي" data-i18n-title="smartboardModeTitle" data-i18n-aria-label="smartboardModeTitle" role="menuitem"><i data-lucide="presentation" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="smartboardModeBtn">السبورة الذكية</span></button>
                         <button class="tool-card" id="blankMapWorksheetBtn" title="خرائط صامتة وأوراق عمل مدرسية" aria-label="خرائط صامتة وأوراق عمل مدرسية" data-i18n-title="blankMapWorksheetTitle" data-i18n-aria-label="blankMapWorksheetTitle" role="menuitem"><i data-lucide="printer" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="blankMapWorksheetBtn">خرائط صامتة</span></button>
                         <button class="tool-card" id="teacherHubBtn" title="لوحة المعلم والواجبات المدرسية" aria-label="لوحة المعلم والواجبات المدرسية" data-i18n-title="teacherHubTitle" data-i18n-aria-label="teacherHubTitle" role="menuitem"><i data-lucide="graduation-cap" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="teacherHubBtn">لوحة المعلم</span></button>
+                        <button class="tool-card" id="studentHubBtn" title="لوحة الطالب والواجبات المدرسية" aria-label="لوحة الطالب والواجبات المدرسية" data-i18n-title="studentHubTitle" data-i18n-aria-label="studentHubTitle" role="menuitem"><i data-lucide="book-open" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="studentHubBtn">لوحة الطالب</span></button>
+                        <button class="tool-card" id="nationSimBtn" title="محاكاة الأمم: صراع وازدهار الحضارات" aria-label="محاكاة الأمم: صراع وازدهار الحضارات" data-i18n-title="nationSimTitle" data-i18n-aria-label="nationSimTitle" role="menuitem"><i data-lucide="swords" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="nationSimBtn">محاكاة الأمم</span></button>
                         <button class="tool-card" id="academicSourcesBtn" title="المصادر والمراجع الأكاديمية المعتمدة" aria-label="المصادر والمراجع الأكاديمية المعتمدة" data-i18n-title="academicSourcesTitle" data-i18n-aria-label="academicSourcesTitle" role="menuitem"><i data-lucide="book-marked" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="academicSourcesBtn">المراجع الأكاديمية</span></button>
                         <button class="tool-card" id="termsOfServiceBtn" title="شروط الاستخدام والخصوصية" aria-label="شروط الاستخدام والخصوصية" data-i18n-title="termsTitle" data-i18n-aria-label="termsTitle" role="menuitem"><i data-lucide="shield-check" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="termsBtn">شروط الاستخدام</span></button>
                         <button class="tool-card" id="measureToolBtn" title="أداة القياس" aria-label="أداة القياس" data-i18n-title="measureToolLabel" data-i18n-aria-label="measureToolLabel" role="menuitem"><i data-lucide="ruler" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="measureToolLabel"></span></button>
@@ -73,18 +78,18 @@
                     </div>
                 </div>
             </div>
-            <div class="section-toggle" id="sectionToggle" role="group" aria-label="Section">
+            <div class="section-toggle" id="sectionToggle" role="group" aria-label="أقسام الخريطة" data-i18n-aria-label="sectionToggleAria">
                 <button class="section-toggle-btn active" id="sectionGeoBtn" data-section="geo" type="button" data-i18n-title="sectionGeo_title" aria-label="الخريطة الجغرافية المعاصرة" data-i18n-aria-label="sectionGeo"><i data-lucide="globe" class="lucide-icon"></i><span class="btn-text" data-i18n="sectionGeo">Geography</span></button>
                 <button class="section-toggle-btn" id="sectionHistoryBtn" data-section="history" type="button" data-i18n-title="sectionHistory_title" aria-label="الخريطة التاريخية" data-i18n-aria-label="sectionHistory"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text" data-i18n="sectionHistory">History</span></button>
             </div>
             <div class="lang-dropdown lang-selector-wrapper">
-                <button class="btn header-btn" id="langToggle" title="تبديل اللغة" aria-label="تبديل اللغة" data-i18n-title="langToggle_title" data-i18n-aria-label="langToggle_title"><i data-lucide="globe" class="lucide-icon"></i><span id="langToggleText" data-i18n="langButton">English</span><i data-lucide="chevron-down" class="lucide-icon dropdown-arrow"></i></button>
-                <div class="lang-dropdown-menu" id="langDropdownMenu">
-                    <button class="lang-option active" data-lang="ar" type="button">العربية</button>
-                    <button class="lang-option" data-lang="en" type="button">English</button>
-                    <button class="lang-option" data-lang="ru" type="button">Русский</button>
-                    <button class="lang-option" data-lang="uz" type="button">O'zbekcha</button>
-                    <button class="lang-option" data-lang="es" type="button">Español</button>
+                <button class="btn header-btn" id="langToggle" title="تبديل اللغة" aria-label="تبديل اللغة" data-i18n-title="langToggle_title" data-i18n-aria-label="langToggle_title" aria-haspopup="true" aria-expanded="false"><i data-lucide="globe" class="lucide-icon"></i><span id="langToggleText" data-i18n="langButton">English</span><i data-lucide="chevron-down" class="lucide-icon dropdown-arrow"></i></button>
+                <div class="lang-dropdown-menu" id="langDropdownMenu" role="menu" aria-label="اللغات المتاحة">
+                    <button class="lang-option active" data-lang="ar" type="button" role="menuitem">العربية</button>
+                    <button class="lang-option" data-lang="en" type="button" role="menuitem">English</button>
+                    <button class="lang-option" data-lang="ru" type="button" role="menuitem">Русский</button>
+                    <button class="lang-option" data-lang="uz" type="button" role="menuitem">O'zbekcha</button>
+                    <button class="lang-option" data-lang="es" type="button" role="menuitem">Español</button>
                 </div>
             </div>
             <button class="btn header-icon-btn theme-toggle-btn" id="themeToggleBtn" title="تبديل المظهر" aria-label="تبديل المظهر" data-i18n-title="themeToggleLabel" data-i18n-aria-label="themeToggleLabel">
@@ -168,6 +173,7 @@
         </div>
 
         <div class="country-panel" id="countryPanel" role="dialog" aria-modal="false" aria-label="معلومات الدولة" data-i18n-aria-label="countryPanelLabel">
+            <div class="sheet-drag-handle" aria-hidden="true"></div>
             <div class="country-panel-header">
                 <button class="export-btn" id="exportBtn" title="تحميل معلومات الدولة" aria-label="تصدير" data-i18n-title="exportLabel" data-i18n-aria-label="exportLabel"><i data-lucide="download" class="lucide-icon"></i></button>
                 <div style="flex:1"></div>
@@ -253,8 +259,110 @@
             <button class="measure-mode-btn" id="annotationFinishBtn" style="display:none" data-i18n="measureFinish">إنهاء</button>
             <button class="measure-mode-btn" id="annotationClearBtn" data-i18n="annotationClear">مسح</button>
             <button class="measure-mode-btn" id="annotationManageBtn" data-i18n="annotationManage">إدارة</button>
+            <button class="measure-mode-btn annot-collab-btn" id="annotationCollabBtn" title="التفاعل الصفي وبحوث الطلاب" aria-label="التفاعل الصفي وبحوث الطلاب" aria-expanded="false" aria-controls="annotationSidePanel"><i data-lucide="users" class="lucide-icon"></i><span class="btn-text">التفاعل والبحوث</span><span class="annot-badge" id="annotHandCountBadge" style="display:none">0</span></button>
             <button class="measure-mode-btn" id="annotationHelpBtn" title="مساعدة الوضع" data-i18n-title="annotationHelpButton" aria-label="مساعدة" data-i18n-aria-label="annotationHelpButton">؟</button>
         </div>
+
+        <!-- Annotation Side Panel: Pass Control & Student Research -->
+        <aside class="annotation-side-panel" id="annotationSidePanel" style="display:none" aria-label="لوحة التفاعل الصفي والبحوث">
+            <div class="annotation-side-header">
+                <div class="annotation-side-title-wrap">
+                    <i data-lucide="users" class="lucide-icon"></i>
+                    <h3 id="annotationSideTitle">التفاعل الصفي والبحوث</h3>
+                </div>
+                <button type="button" class="annotation-side-close" id="annotationSideCloseBtn" title="إغلاق اللوحة" aria-label="إغلاق اللوحة">&times;</button>
+            </div>
+
+            <!-- Active Controller Status Banner -->
+            <div class="annotation-controller-banner" id="annotationControllerBanner">
+                <div class="controller-status-info">
+                    <span class="controller-indicator-dot active" id="controllerIndicatorDot"></span>
+                    <span class="controller-label">التحكم الحالي:</span>
+                    <strong id="activeControllerName" class="controller-name">المعلم (أنت)</strong>
+                </div>
+                <button type="button" class="btn btn-sm btn-danger-soft revoke-control-btn" id="revokeControlBtn" style="display:none" title="استرداد التحكم فوراً للمعلم">سحب التحكم ✕</button>
+            </div>
+
+            <!-- Tab Navigation for the Side Panel -->
+            <div class="annotation-side-tabs" role="tablist">
+                <button type="button" class="annotation-side-tab active" id="tabCollabControl" role="tab" aria-selected="true" aria-controls="sectionCollabControl">
+                    <i data-lucide="hand" class="lucide-icon"></i>
+                    <span>نقل التحكم (الأيدي)</span>
+                </button>
+                <button type="button" class="annotation-side-tab" id="tabCollabResearch" role="tab" aria-selected="false" aria-controls="sectionCollabResearch">
+                    <i data-lucide="graduation-cap" class="lucide-icon"></i>
+                    <span>بحوث الطلاب</span>
+                </button>
+            </div>
+
+            <!-- Section 1: Pass Control & Hand-Raising Queue -->
+            <div class="annotation-side-section active" id="sectionCollabControl" role="tabpanel" aria-labelledby="tabCollabControl">
+                <div class="annotation-field-group">
+                    <label for="directStudentSelect" class="annotation-field-label">نقل مباشر لطالب من القائمة:</label>
+                    <div class="annotation-select-row">
+                        <select id="directStudentSelect" class="annotation-select" aria-label="اختر طالباً من الفصل">
+                            <option value="">-- اختر طالباً من الصف --</option>
+                            <option value="أحمد السعيد">أحمد السعيد</option>
+                            <option value="سارة المحمود">سارة المحمود</option>
+                            <option value="عمر بن طلال">عمر بن طلال</option>
+                            <option value="فاطمة الزهراء">فاطمة الزهراء</option>
+                            <option value="خالد بن يوسف">خالد بن يوسف</option>
+                            <option value="مريم القحطاني">مريم القحطاني</option>
+                        </select>
+                        <button type="button" class="btn btn-primary-soft" id="grantDirectStudentBtn">منح التحكم</button>
+                    </div>
+                </div>
+
+                <div class="annotation-queue-card">
+                    <div class="queue-header">
+                        <span class="queue-title"><i data-lucide="hand" class="lucide-icon"></i> طابور طلبات المشاركة (رفع الأيدي)</span>
+                        <span class="queue-badge" id="queueCountBadge">0</span>
+                    </div>
+                    <div class="queue-empty-state" id="queueEmptyState">لا توجد أيدٍ مرفوعة حالياً. يمكن للطلاب طلب المشاركة برفع أيديهم.</div>
+                    <ul class="queue-student-list" id="handRaiseQueueList"></ul>
+                </div>
+
+                <!-- Simulation button for demonstration & student test -->
+                <div class="annotation-student-sim-box">
+                    <span class="sim-hint">دور الطالب في الفصل:</span>
+                    <button type="button" class="btn btn-hand-raise" id="studentHandRaiseBtn">
+                        <i data-lucide="hand" class="lucide-icon"></i>
+                        <span id="studentHandRaiseText">✋ ارفع يدك لطلب المشاركة</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Section 2: Student Field Research Layer & Filter -->
+            <div class="annotation-side-section" id="sectionCollabResearch" role="tabpanel" aria-labelledby="tabCollabResearch" style="display:none">
+                <div class="annotation-research-toggle-row">
+                    <button type="button" class="btn btn-research-toggle active" id="toggleResearchPinsBtn" aria-pressed="true">
+                        <i data-lucide="eye" class="lucide-icon"></i>
+                        <span id="toggleResearchPinsText">إظهار دبابيس البحوث على الخريطة</span>
+                    </button>
+                </div>
+
+                <div class="annotation-field-group">
+                    <label for="researchSearchInput" class="annotation-field-label">البحث في بحوث الطلاب:</label>
+                    <input type="text" id="researchSearchInput" class="annotation-text-input" placeholder="ابحث باسم الطالب أو المدينة أو الموضوع..." aria-label="ابحث في بحوث الطلاب">
+                </div>
+
+                <div class="annotation-field-group">
+                    <label for="researchDateFilter" class="annotation-field-label">تصفية حسب تاريخ التقديم:</label>
+                    <select id="researchDateFilter" class="annotation-select" aria-label="تصفية حسب تاريخ التقديم">
+                        <option value="all">جميع التواريخ</option>
+                        <option value="this_week">أبحاث هذا الأسبوع</option>
+                        <option value="this_month">أبحاث هذا الشهر</option>
+                        <option value="older">الأبحاث السابقة</option>
+                    </select>
+                </div>
+
+                <div class="research-results-summary" id="researchResultsSummary">
+                    <span>عدد الأبحاث المعروضة: <strong id="researchMatchesCount">0</strong></span>
+                </div>
+
+                <div class="research-cards-mini-list" id="researchCardsMiniList"></div>
+            </div>
+        </aside>
 
         <div class="controls-bar" id="controlsBar" role="toolbar" tabindex="-1" aria-label="شريط التحكم" data-i18n-aria-label="controlsBarLabel">
             <div class="controls-bar-toprow">
@@ -300,6 +408,7 @@
              drop-shadow filter would otherwise become the containing block for
              our position:fixed menus (shifting them off-screen in RTL). -->
         <div class="hist-popover-menu" id="histWarsPopoverMenu" role="dialog" aria-modal="false" aria-label="الحروب والمعارك" data-i18n-aria-label="histSegWars" hidden>
+            <div class="sheet-drag-handle" aria-hidden="true"></div>
             <div class="hist-popover-header">
                 <div class="hist-drawer-title"><i data-lucide="swords" class="lucide-icon"></i> <span data-i18n="histSegWars">الحروب والمعارك</span></div>
                 <button type="button" class="hist-drawer-close-btn" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
@@ -354,6 +463,7 @@
             </div>
         </div>
         <div class="hist-popover-menu" id="histErasPopoverMenu" role="dialog" aria-modal="false" aria-label="الحقب التاريخية" data-i18n-aria-label="histSegEras" hidden>
+            <div class="sheet-drag-handle" aria-hidden="true"></div>
             <div class="hist-popover-header">
                 <div class="hist-drawer-title"><i data-lucide="landmark" class="lucide-icon"></i> <span data-i18n="histSegEras">الحقب التاريخية</span></div>
                 <button type="button" class="hist-drawer-close-btn" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
@@ -410,6 +520,7 @@
             </div>
         </div>
         <div class="hist-popover-menu" id="histFaithsPopoverMenu" role="dialog" aria-modal="false" aria-label="الأديان والمعتقدات" data-i18n-aria-label="religionsListBtn" hidden>
+            <div class="sheet-drag-handle" aria-hidden="true"></div>
             <div class="hist-popover-header">
                 <div class="hist-drawer-title"><i data-lucide="book-open" class="lucide-icon"></i> <span data-i18n="religionsListBtn">الأديان والمعتقدات</span></div>
                 <button type="button" class="hist-drawer-close-btn" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
@@ -428,6 +539,7 @@
         </div>
 
         <div class="hist-popover-menu" id="histTravelersPopoverMenu" role="dialog" aria-modal="false" aria-label="الرحالة والمستكشفون" data-i18n-aria-label="histSegTravelers" hidden>
+            <div class="sheet-drag-handle" aria-hidden="true"></div>
             <div class="hist-popover-header">
                 <div class="hist-drawer-title"><i data-lucide="compass" class="lucide-icon"></i> <span data-i18n="histSegTravelers">الرحالة والمستكشفون</span></div>
                 <button type="button" class="hist-drawer-close-btn" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
@@ -574,6 +686,7 @@
 
         <div class="layers-modal menu-popover" id="layersModal" role="dialog" aria-modal="false" aria-labelledby="layersModalTitle">
             <div class="layers-modal-content layers-dropdown-container">
+                <div class="sheet-drag-handle" aria-hidden="true"></div>
                 <div class="layers-modal-header">
                     <h3 id="layersModalTitle" data-i18n="layersModalTitle"><i data-lucide="layers" class="lucide-icon"></i><span class="btn-text">الطبقات</span></h3>
                     <button class="layers-modal-close" id="layersModalClose" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
@@ -611,6 +724,7 @@
 
         <div class="layers-modal menu-popover" id="divisionPopover" role="dialog" aria-modal="false" aria-labelledby="divisionPopoverTitle">
             <div class="layers-modal-content layers-dropdown-container">
+                <div class="sheet-drag-handle" aria-hidden="true"></div>
                 <div class="layers-modal-header">
                     <h3 id="divisionPopoverTitle" data-i18n="rowFilterLabel"><i data-lucide="filter" class="lucide-icon"></i><span class="btn-text">التقسيم</span></h3>
                     <button class="layers-modal-close" id="divisionPopoverClose" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
@@ -699,58 +813,207 @@
             </div>
         </div>
 
-        <!-- Printable era study sheet (shown only when printing) -->
-        <div class="study-sheet-print" id="studySheetPrint">
-            <div id="studySheetPrintContent"></div>
-        </div>
-
-        <!-- Mobile top bar (hidden on desktop) -->
-        <div class="mobile-topbar" id="mobileTopbar">
-            <div class="mobile-topbar-inner">
-                <div class="lang-dropdown mobile-lang-dropdown">
-                    <button class="mobile-topbar-btn" id="mobileLangToggle" title="تبديل اللغة" data-i18n-title="langToggle_title"><i data-lucide="globe" class="lucide-icon"></i><span id="mobileLangToggleText" data-i18n="langButton">English</span><i data-lucide="chevron-down" class="lucide-icon dropdown-arrow"></i></button>
-                    <div class="lang-dropdown-menu" id="mobileLangDropdownMenu">
-                        <button class="lang-option active" data-lang="ar" type="button">العربية</button>
-                        <button class="lang-option" data-lang="en" type="button">English</button>
-                        <button class="lang-option" data-lang="ru" type="button">Русский</button>
-                        <button class="lang-option" data-lang="uz" type="button">O'zbekcha</button>
-                        <button class="lang-option" data-lang="es" type="button">Español</button>
+        <!-- Student Research Details Modal -->
+        <div class="layers-modal" id="studentResearchModal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="studentResearchModalTitle">
+            <div class="layers-modal-backdrop" id="studentResearchModalBackdrop"></div>
+            <div class="layers-modal-content" style="max-width:580px">
+                <div class="layers-modal-header">
+                    <div class="research-modal-header-tag">
+                        <span class="research-grade-badge">بحث جغرافي/تاريخي معتمد</span>
                     </div>
+                    <button class="layers-modal-close" id="studentResearchModalClose" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
                 </div>
-                <div class="mobile-search-box">
-                    <input type="text" id="mobileSearchInput" placeholder="بحث عن دولة..." autocomplete="off" aria-label="بحث عن دولة" data-i18n-aria-label="searchPlaceholder" data-i18n-placeholder="searchPlaceholder">
-                    <ul class="suggestions-list" id="mobileSuggestionsList"></ul>
-                </div>
-                <div class="mobile-tools-dropdown">
-                    <button class="mobile-topbar-btn" id="mobileToolsBtn" title="أدوات" data-i18n-title="sectionTools"><i data-lucide="wrench" class="lucide-icon"></i></button>
-                    <div class="mobile-tools-menu" id="mobileToolsMenu">
-                        <button class="mobile-tools-item" id="mobileOnboardBtn" data-i18n-title="onboardMapGuide"><i data-lucide="book-open" class="lucide-icon"></i><span class="btn-text" data-i18n="onboardMapGuide">شرح الخريطة</span></button>
-                        <button class="mobile-tools-item" id="mobileShortcutsBtn" data-i18n-title="shortcutsLabel"><i data-lucide="keyboard" class="lucide-icon"></i><span class="btn-text" data-i18n="shortcutsLabel">اختصارات</span></button>
-                        <button class="mobile-tools-item" id="mobilePdfBtn" data-i18n-title="pdfExport"><i data-lucide="file-text" class="lucide-icon"></i><span class="btn-text">PDF</span></button>
-                        <button class="mobile-tools-item" id="mobileShareBtn" data-i18n-title="shareBtn_title"><i data-lucide="share-2" class="lucide-icon"></i><span class="btn-text" data-i18n="shareBtn">مشاركة</span></button>
-                        <button class="mobile-tools-item" id="mobileResetBtn2" data-i18n-title="mobileReset_title"><i data-lucide="rotate-ccw" class="lucide-icon"></i><span class="btn-text" data-i18n="resetBtn">إعادة تعيين</span></button>
-                        <button class="mobile-tools-item" id="mobileCoordsBtn" data-i18n-title="coordsToggle_title"><i data-lucide="map-pin" class="lucide-icon"></i><span class="btn-text" data-i18n="coordsToggle">إحداثيات</span></button>
-                        <button class="mobile-tools-item" id="mobileAnnotateBtn" data-i18n-title="annotationToolLabel"><i data-lucide="sticky-note" class="lucide-icon"></i><span class="btn-text" data-i18n="annotationToolLabel">وضع الشرح</span></button>
+                <div class="layers-modal-body" id="studentResearchModalBody">
+                    <h3 id="studentResearchModalTitle" class="research-modal-title"></h3>
+                    <div class="research-meta-bar">
+                        <span class="research-author"><i data-lucide="user" class="lucide-icon"></i> <span id="researchAuthorName"></span></span>
+                        <span class="research-date"><i data-lucide="calendar" class="lucide-icon"></i> <span id="researchDateText"></span></span>
+                        <span class="research-location"><i data-lucide="map-pin" class="lucide-icon"></i> <span id="researchLocationText"></span></span>
+                    </div>
+                    <div class="research-summary-content" id="researchSummaryContent"></div>
+                    <div class="research-citation-box">
+                        <div class="citation-header">
+                            <i data-lucide="book-open" class="lucide-icon"></i>
+                            <span>التوثيق والمصدر الأكاديمي:</span>
+                        </div>
+                        <p class="citation-text" id="researchCitationText"></p>
+                        <a href="#" target="_blank" rel="noopener" class="academic-source-link" id="researchSourceLink">استعراض المصدر الأكاديمي ↗</a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Mobile bottom navigation (hidden on desktop) -->
-        <div class="mobile-bottom-nav" id="mobileBottomNav">
-            <button class="mobile-nav-btn" id="mobileModeBtn" title="وضع الخريطة" data-i18n="mobileMode" data-i18n-title="mobileMode_title"><i data-lucide="palette" class="lucide-icon"></i><span class="btn-text">الوضع</span></button>
-            <button class="mobile-nav-btn" id="mobileLayersBtn" title="الطبقات" data-i18n="mobileLayers" data-i18n-title="mobileLayers_title"><i data-lucide="layers" class="lucide-icon"></i><span class="btn-text">الطبقات</span></button>
+        <!-- Printable era study sheet (shown only when printing) -->
+        <div class="study-sheet-print" id="studySheetPrint">
+            <div id="studySheetPrintContent"></div>
+        </div>
+
+        <!-- Floating Mobile Search Bar (Hidden on desktop) -->
+        <div class="mobile-search-bar" id="mobileSearchBar">
+            <div class="mobile-search-inner">
+                <i data-lucide="search" class="lucide-icon search-icon"></i>
+                <input type="text" id="mobileSearchInput" placeholder="بحث عن دولة أو معركة أو حقبة..." autocomplete="off" aria-label="بحث عن دولة أو معركة أو حقبة" data-i18n-aria-label="searchPlaceholder" data-i18n-placeholder="searchPlaceholder">
+                <button type="button" class="mobile-search-clear" id="mobileSearchClear" aria-label="مسح البحث" style="display:none">&times;</button>
+            </div>
+            <ul class="suggestions-list" id="mobileSuggestionsList"></ul>
+        </div>
+
+        <!-- Mobile adaptive bottom navigation (hidden on desktop) -->
+        <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="التنقل الرئيسي للهاتف">
+            <!-- Geography Navigation Group -->
+            <div class="mobile-nav-group active" id="mobileGeoNav">
+                <button class="mobile-nav-btn" id="mobileModeBtn" type="button" title="وضع الخريطة" aria-label="وضع الخريطة" data-i18n-title="mobileMode_title">
+                    <i data-lucide="palette" class="lucide-icon"></i>
+                    <span class="btn-text" data-i18n="mobileMode">النمط</span>
+                </button>
+                <button class="mobile-nav-btn" id="mobileLayersBtn" type="button" title="الطبقات" aria-label="الطبقات" data-i18n-title="mobileLayers_title">
+                    <i data-lucide="layers" class="lucide-icon"></i>
+                    <span class="btn-text" data-i18n="mobileLayers">الطبقات</span>
+                    <span class="mobile-layer-badge" id="mobileLayerBadge" style="display:none">0</span>
+                </button>
+            </div>
+
+            <!-- History Navigation Group -->
+            <div class="mobile-nav-group" id="mobileHistoryNav" style="display:none">
+                <button class="mobile-nav-btn" id="mobileWarsBtn" type="button" title="الحروب والمعارك" aria-label="الحروب والمعارك" data-i18n-title="histSegWars">
+                    <i data-lucide="swords" class="lucide-icon"></i>
+                    <span class="btn-text" data-i18n="mobileNavWars">الحروب</span>
+                </button>
+                <button class="mobile-nav-btn" id="mobileErasBtn" type="button" title="الحقب التاريخية" aria-label="الحقب التاريخية" data-i18n-title="histSegEras">
+                    <i data-lucide="landmark" class="lucide-icon"></i>
+                    <span class="btn-text" data-i18n="mobileNavEras">الحقب</span>
+                </button>
+                <button class="mobile-nav-btn" id="mobileFaithsBtn" type="button" title="الأديان والمعتقدات" aria-label="الأديان والمعتقدات" data-i18n-title="religionsListBtn">
+                    <i data-lucide="book-open" class="lucide-icon"></i>
+                    <span class="btn-text" data-i18n="mobileNavFaiths">الأديان</span>
+                </button>
+                <button class="mobile-nav-btn" id="mobileTravelersBtn" type="button" title="الرحالة والمستكشفون" aria-label="الرحالة والمستكشفون" data-i18n-title="histSegTravelers">
+                    <i data-lucide="compass" class="lucide-icon"></i>
+                    <span class="btn-text" data-i18n="mobileNavTravelers">الرحالة</span>
+                </button>
+                <button class="mobile-nav-btn" id="mobileHistLayersBtn" type="button" title="الطبقات التاريخية" aria-label="الطبقات التاريخية" data-i18n-title="mobileLayers_title">
+                    <i data-lucide="layers" class="lucide-icon"></i>
+                    <span class="btn-text" data-i18n="mobileNavLayers">الطبقات</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile Activities Sheet -->
+        <div class="mobile-activities-sheet mobile-sheet-modal" id="mobileActivitiesSheet" role="dialog" aria-modal="true" aria-labelledby="mobileActivitiesTitle" hidden>
+            <div class="mobile-mode-sheet-backdrop" id="mobileActivitiesBackdrop"></div>
+            <div class="mobile-mode-sheet-content">
+                <div class="sheet-drag-handle" aria-hidden="true"></div>
+                <div class="mobile-mode-sheet-header">
+                    <h3 id="mobileActivitiesTitle"><i data-lucide="sparkles" class="lucide-icon"></i> <span>الأنشطة والأدوات</span></h3>
+                    <button class="mobile-mode-sheet-close" id="mobileActivitiesClose" aria-label="إغلاق">&times;</button>
+                </div>
+                <div class="mobile-activities-grid">
+                    <button type="button" class="mobile-activity-card" id="mobileActQuizBtn">
+                        <div class="act-icon"><i data-lucide="brain" class="lucide-icon"></i></div>
+                        <div class="act-info">
+                            <strong>مسابقات واختبارات الخريطة</strong>
+                            <span>اختبر معلوماتك الجغرافية وتحدّ نفسك</span>
+                        </div>
+                    </button>
+                    <button type="button" class="mobile-activity-card" id="mobileActGlobeBtn">
+                        <div class="act-icon"><i data-lucide="earth" class="lucide-icon"></i></div>
+                        <div class="act-info">
+                            <strong>عرض الكرة الأرضية (3D Globe)</strong>
+                            <span>استعراض كروي تفاعلي ثلاثي الأبعاد</span>
+                        </div>
+                    </button>
+                    <button type="button" class="mobile-activity-card" id="mobileActCompareBtn">
+                        <div class="act-icon"><i data-lucide="git-compare" class="lucide-icon"></i></div>
+                        <div class="act-info">
+                            <strong>مقارنة المساقط</strong>
+                            <span>مقارنة مسقط مركاتور مع روبنسون</span>
+                        </div>
+                    </button>
+                    <button type="button" class="mobile-activity-card" id="mobileActAnnotateBtn">
+                        <div class="act-icon"><i data-lucide="sticky-note" class="lucide-icon"></i></div>
+                        <div class="act-info">
+                            <strong>وضع الشرح والتعليق</strong>
+                            <span>إضافة نقاط وتحديد مناطق ومسافات</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Side Drawer (Settings, Tools & Info) -->
+        <div class="mobile-side-drawer" id="mobileSideDrawer" role="dialog" aria-modal="true" aria-label="القائمة الجانبية" hidden>
+            <div class="mobile-side-drawer-backdrop" id="mobileDrawerBackdrop"></div>
+            <div class="mobile-side-drawer-content">
+                <div class="mobile-side-drawer-header">
+                    <div class="drawer-brand">
+                        <img src="logo.png" alt="أطلس ليبيدوس" width="28" height="28">
+                        <span class="drawer-title" data-i18n="appName">أطلس ليبيدوس</span>
+                    </div>
+                    <button type="button" class="drawer-close-btn" id="mobileDrawerCloseBtn" aria-label="إغلاق">&times;</button>
+                </div>
+                <div class="mobile-side-drawer-body">
+                    <div class="drawer-quick-row">
+                        <div class="drawer-lang-wrap">
+                            <label for="drawerLangSelect" class="drawer-field-label"><i data-lucide="globe" class="lucide-icon"></i> <span data-i18n="langToggle_title">اللغة</span></label>
+                            <select id="drawerLangSelect" class="quiz-select drawer-select">
+                                <option value="ar">العربية</option>
+                                <option value="en">English</option>
+                                <option value="ru">Русский</option>
+                                <option value="uz">O'zbekcha</option>
+                                <option value="es">Español</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn drawer-theme-btn" id="drawerThemeBtn" title="تبديل المظهر" aria-label="تبديل المظهر">
+                            <i data-lucide="sun" class="lucide-icon theme-icon-light"></i>
+                            <i data-lucide="moon" class="lucide-icon theme-icon-dark"></i>
+                            <span data-i18n="themeToggleLabel">المظهر</span>
+                        </button>
+                    </div>
+
+                    <div class="drawer-quick-row hist-only" id="drawerHistOpacityWrap" style="display:none">
+                        <div class="drawer-lang-wrap" style="width:100%">
+                            <div class="drawer-field-label">
+                                <i data-lucide="layers" class="lucide-icon"></i>
+                                <span data-i18n="histOpacity">شفافية الحدود التاريخية</span>
+                                <strong id="drawerHistOpacityVal" style="color:var(--brand-accent);margin-inline-start:auto;">55%</strong>
+                            </div>
+                            <input type="range" id="drawerHistOpacitySlider" min="0.1" max="1" step="0.05" value="0.55" style="width:100%;height:6px;accent-color:var(--brand-accent);margin-top:6px;cursor:pointer;" aria-label="شفافية الحدود التاريخية">
+                        </div>
+                    </div>
+
+                    <div class="drawer-section">
+                        <div class="drawer-section-title" data-i18n="sectionTools">أدوات تعليمية وفصلية</div>
+                        <button type="button" class="drawer-item-btn" id="drawerTeacherHubBtn"><i data-lucide="graduation-cap" class="lucide-icon"></i><span data-i18n="teacherHubBtn">لوحة المعلم والواجبات</span></button>
+                        <button type="button" class="drawer-item-btn" id="drawerStudentHubBtn"><i data-lucide="book-open" class="lucide-icon"></i><span data-i18n="studentHubBtn">لوحة الطالب والواجبات</span></button>
+                        <button type="button" class="drawer-item-btn" id="drawerNationSimBtn"><i data-lucide="swords" class="lucide-icon"></i><span data-i18n="nationSimBtn">محاكاة الأمم وصراع الحضارات</span></button>
+                        <button type="button" class="drawer-item-btn" id="drawerWorksheetBtn"><i data-lucide="printer" class="lucide-icon"></i><span data-i18n="blankMapWorksheetBtn">خرائط صامتة وأوراق عمل</span></button>
+                        <button type="button" class="drawer-item-btn" id="drawerSmartboardBtn"><i data-lucide="presentation" class="lucide-icon"></i><span data-i18n="smartboardModeBtn">السبورة الذكية</span></button>
+                        <button type="button" class="drawer-item-btn" id="drawerDataTableBtn"><i data-lucide="table" class="lucide-icon"></i><span data-i18n="dataTableBtn">جدول البيانات</span></button>
+                        <button type="button" class="drawer-item-btn" id="drawerPdfBtn"><i data-lucide="file-text" class="lucide-icon"></i><span data-i18n="pdfExport">تصدير خريطة PDF</span></button>
+                        <button type="button" class="drawer-item-btn" id="drawerShareBtn"><i data-lucide="share-2" class="lucide-icon"></i><span data-i18n="shareBtn">مشاركة الخريطة</span></button>
+                        <button type="button" class="drawer-item-btn" id="drawerOnboardBtn"><i data-lucide="book-open" class="lucide-icon"></i><span data-i18n="onboardMapGuide">جولة تعريفية</span></button>
+                        <button type="button" class="drawer-item-btn" id="drawerResetBtn"><i data-lucide="rotate-ccw" class="lucide-icon"></i><span data-i18n="resetBtn">إعادة ضبط الخريطة</span></button>
+                    </div>
+
+                    <div class="drawer-section">
+                        <div class="drawer-section-title">المعلومات والتوثيق</div>
+                        <button type="button" class="drawer-item-btn" id="drawerAcademicBtn"><i data-lucide="book-marked" class="lucide-icon"></i><span data-i18n="academicSourcesBtn">المراجع والمصادر الأكاديمية</span></button>
+                        <button type="button" class="drawer-item-btn" id="drawerTermsBtn"><i data-lucide="shield-check" class="lucide-icon"></i><span data-i18n="termsBtn">شروط الاستخدام والخصوصية</span></button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Mobile mode sheet -->
-        <div class="mobile-mode-sheet" id="mobileModeSheet" role="dialog" aria-modal="true" aria-labelledby="mobileModeSheetTitle">
+        <div class="mobile-mode-sheet mobile-sheet-modal" id="mobileModeSheet" role="dialog" aria-modal="true" aria-labelledby="mobileModeSheetTitle">
             <div class="mobile-mode-sheet-backdrop" id="mobileModeSheetBackdrop"></div>
             <div class="mobile-mode-sheet-content">
+                <div class="sheet-drag-handle" aria-hidden="true"></div>
                 <div class="mobile-mode-sheet-header">
                     <h3 id="mobileModeSheetTitle" data-i18n="mobileModeSheetTitle"><i data-lucide="palette" class="lucide-icon"></i><span class="btn-text">وضع الخريطة</span></h3>
                     <button class="mobile-mode-sheet-close" id="mobileModeSheetClose" aria-label="إغلاق" data-i18n-aria-label="closeLabel">&times;</button>
                 </div>
-                <div class="mobile-mode-sheet-body" id="mobileModeSheetBody">
+                <div class="mobile-mode-sheet-body">
                     <div class="mobile-mode-group" id="mobileModeButtons">
                         <button class="btn mode-btn" aria-pressed="false" data-mode="religion"><i data-lucide="book-open" class="lucide-icon"></i><span class="btn-text">دين</span></button>
                         <button class="btn mode-btn" aria-pressed="false" data-mode="terrain"><i data-lucide="mountain" class="lucide-icon"></i><span class="btn-text">تضاريس</span></button>
@@ -778,7 +1041,7 @@
         <div class="copy-notification" id="copyNotification" role="status" aria-live="polite"></div>
 
         <!-- Keyboard shortcuts overlay -->
-        <div class="shortcuts-overlay" id="shortcutsOverlay" role="dialog" aria-modal="true" data-i18n-aria-label="shortcutsLabel">
+        <div class="shortcuts-overlay" id="shortcutsOverlay" role="dialog" aria-modal="true" aria-label="اختصارات لوحة المفاتيح" data-i18n-aria-label="shortcutsLabel">
             <div class="shortcuts-box">
                 <div class="shortcut-row"><span class="shortcut-key">R</span><span class="shortcut-desc" data-i18n="shortcut_R"></span></div>
                 <div class="shortcut-row"><span class="shortcut-key">T</span><span class="shortcut-desc" data-i18n="shortcut_T"></span></div>
@@ -831,7 +1094,7 @@
         <!-- First-run section picker -->
         <div class="section-picker-overlay" id="sectionPickerOverlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="sectionPickerTitle">
             <div class="section-picker-content">
-                <div class="section-picker-icon">🦋</div>
+                <div class="section-picker-icon"><img src="logo.png" alt="أطلس ليبيدوس" class="modal-logo-img" width="76" height="76"></div>
                 <h2 class="section-picker-title" id="sectionPickerTitle" data-i18n="sectionPickerTitle"></h2>
                 <p class="section-picker-subtitle" data-i18n="sectionPickerSubtitle"></p>
                 <div class="section-picker-cards">
@@ -852,11 +1115,11 @@
         </div>
 
         <!-- First-run language selector overlay -->
-        <div class="lang-overlay" id="langOverlay">
+        <div class="lang-overlay" id="langOverlay" role="dialog" aria-modal="true" aria-labelledby="langModalTitle">
             <div class="lang-overlay-content">
-                <div class="lang-overlay-icon">🦋</div>
+                <div class="lang-overlay-icon"><img src="logo.png" alt="Lepidos Atlas" class="modal-logo-img" width="76" height="76"></div>
                 <h2 id="langModalTitle" class="lang-overlay-title">Lepidos Atlas</h2>
-                <p class="lang-overlay-subtitle" data-i18n="langOverlaySubtitle"></p>
+                <p class="lang-overlay-subtitle" data-i18n="langOverlaySubtitle">اختر لغتك المفضلة • Choose your language</p>
                 <div class="lang-overlay-buttons">
                     <button class="lang-overlay-btn" data-lang="ar">
                         <span class="lang-overlay-flag"><svg viewBox="0 0 30 20" width="1.3em" height="0.87em" style="vertical-align:middle"><rect width="30" height="20" fill="#006233" rx="1"/><circle cx="15" cy="10" r="6.5" fill="none" stroke="#fff" stroke-width="0.5" stroke-dasharray="1.1 0.55"/><path d="M9 16 Q7 10 9 4" fill="none" stroke="#fff" stroke-width="0.6"/><path d="M21 16 Q23 10 21 4" fill="none" stroke="#fff" stroke-width="0.6"/><circle cx="14.2" cy="10" r="2.8" fill="#fff"/><circle cx="15.3" cy="10" r="2.3" fill="#006233"/><circle cx="16.5" cy="10" r="0.55" fill="#fff"/></svg></span>
@@ -1142,7 +1405,7 @@
         </div>
 
         <!-- Quiz Mode: Review Pending Answers -->
-        <div class="quiz-overlay" id="quizReviewOverlay" style="display:none">
+        <div class="quiz-overlay" id="quizReviewOverlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="quizReviewTitle">
             <div class="quiz-panel quiz-review-panel">
                 <h3 class="quiz-panel-title" id="quizReviewTitle" data-i18n="quizReviewPendingAnswers"></h3>
                 <p class="quiz-review-disclaimer" id="quizReviewDisclaimer" data-i18n="quizReviewDisclaimer"></p>
@@ -1163,7 +1426,7 @@
         </div>
 
         <!-- Quiz Mode: Class Results Overlay -->
-        <div class="quiz-overlay" id="quizResultsOverlay" style="display:none">
+        <div class="quiz-overlay" id="quizResultsOverlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="quizResultsTitle">
             <div class="quiz-panel quiz-results-panel">
                 <h3 class="quiz-panel-title" id="quizResultsTitle" data-i18n="quizResultsTitle"></h3>
                 <div class="quiz-results-session-code" id="quizResultsSessionCode"></div>
@@ -1181,9 +1444,12 @@
         <!-- Academic Bibliography & Citations Modal -->
         <div class="academic-sources-overlay" id="academicSourcesOverlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="academicSourcesModalTitle">
             <div class="academic-sources-box">
+                <div class="sheet-drag-handle academic-drag-handle" aria-hidden="true"></div>
                 <div class="academic-sources-header">
                     <div class="academic-header-titles">
-                        <i data-lucide="book-marked" class="lucide-icon modal-header-icon"></i>
+                        <div class="academic-header-icon-wrap">
+                            <i data-lucide="book-marked" class="lucide-icon academic-header-icon"></i>
+                        </div>
                         <div>
                             <h3 id="academicSourcesModalTitle" data-i18n="academicSourcesTitle">المصادر والمراجع الأكاديمية المعتمدة</h3>
                             <p class="academic-sources-subtitle" data-i18n="academicSourcesSubtitle">توثيق شامل ومعتمد لمصادر الخرائط والحدود والحقب والحروب والحركات الاستكشافية</p>
@@ -1194,45 +1460,71 @@
                 <!-- Cartographic Disclaimer Notice -->
                 <div class="cartographic-disclaimer-box" role="note">
                     <i data-lucide="shield-alert" class="lucide-icon disclaimer-icon"></i>
-                    <div>
-                        <strong data-i18n="cartographicDisclaimerTitle">إخلاء مسؤولية خرائطية:</strong>
-                        <span data-i18n="cartographicDisclaimerText">إن الحدود والتسميات المستخدمة على هذه الخريطة لا تعني بالضرورة إقراراً رسمياً أو اتخاذ موقف سياسي من قِبل المنصة بشأن الوضع القانوني لأي بلد أو إقليم أو حدود، وإنما تُعرض لأغراض تعليمية وبحثية وتاريخية استناداً للمصادر الأكاديمية الدولية المعتمدة.</span>
-                        <div style="margin-top:6px;"><button type="button" id="academicTermsLinkBtn" style="background:none;border:none;color:var(--brand-accent);cursor:pointer;font-size:0.83rem;text-decoration:underline;padding:0;display:inline-flex;align-items:center;gap:4px;" data-i18n="termsAndPrivacyLink">شروط الاستخدام وسياسة الخصوصية القانونية الكاملة</button></div>
+                    <div class="disclaimer-content">
+                        <div class="disclaimer-text">
+                            <strong data-i18n="cartographicDisclaimerTitle">إخلاء مسؤولية خرائطية:</strong>
+                            <span data-i18n="cartographicDisclaimerText">إن الحدود والتسميات المستخدمة على هذه الخريطة لا تعني بالضرورة إقراراً رسمياً أو اتخاذ موقف سياسي من قِبل المنصة بشأن الوضع القانوني لأي بلد أو إقليم أو حدود، وإنما تُعرض لأغراض تعليمية وبحثية وتاريخية استناداً للمصادر الأكاديمية الدولية المعتمدة.</span>
+                        </div>
+                        <div class="disclaimer-action">
+                            <button type="button" id="academicTermsLinkBtn" class="disclaimer-link-btn" data-i18n="termsAndPrivacyLink">
+                                <i data-lucide="shield-check" class="lucide-icon" style="width:14px;height:14px;"></i>
+                                <span>شروط الاستخدام والخصوصية الكاملة</span>
+                                <i data-lucide="arrow-left" class="lucide-icon" style="width:12px;height:12px;"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="academic-sources-tabs" role="tablist">
-                    <button class="academic-tab-btn active" data-tab="general" data-i18n="academicTabGeneral">الخرائط والحدود</button>
-                    <button class="academic-tab-btn" data-tab="eras" data-i18n="academicTabEras">الحقب التاريخية</button>
-                    <button class="academic-tab-btn" data-tab="wars" data-i18n="academicTabWars">الحروب والمعارك</button>
-                    <button class="academic-tab-btn" data-tab="religions" data-i18n="academicTabReligions">انتشار الأديان</button>
-                    <button class="academic-tab-btn" data-tab="travelers" data-i18n="academicTabTravelers">رحلات المستكشفين</button>
+                    <button class="academic-tab-btn active" data-tab="general"><i data-lucide="globe" class="lucide-icon"></i><span class="btn-text" data-i18n="academicTabGeneral">الخرائط والحدود</span></button>
+                    <button class="academic-tab-btn" data-tab="eras"><i data-lucide="landmark" class="lucide-icon"></i><span class="btn-text" data-i18n="academicTabEras">الحقب التاريخية</span></button>
+                    <button class="academic-tab-btn" data-tab="wars"><i data-lucide="swords" class="lucide-icon"></i><span class="btn-text" data-i18n="academicTabWars">الحروب والمعارك</span></button>
+                    <button class="academic-tab-btn" data-tab="religions"><i data-lucide="book-open" class="lucide-icon"></i><span class="btn-text" data-i18n="academicTabReligions">انتشار الأديان</span></button>
+                    <button class="academic-tab-btn" data-tab="travelers"><i data-lucide="compass" class="lucide-icon"></i><span class="btn-text" data-i18n="academicTabTravelers">رحلات المستكشفين</span></button>
                 </div>
                 <div class="academic-sources-search-wrap">
-                    <input type="text" id="academicSourcesSearch" class="quiz-input" placeholder="ابحث في المراجع، المؤلفين، الدوريات والمؤسسات الأكاديمية..." aria-label="بحث في المراجع والمؤسسات الأكاديمية" data-i18n-aria-label="academicSourcesSearchAria">
+                    <div class="academic-search-box-inner">
+                        <i data-lucide="search" class="lucide-icon academic-search-icon"></i>
+                        <input type="text" id="academicSourcesSearch" class="academic-search-input" placeholder="ابحث في المراجع، المؤلفين، الدوريات والمؤسسات الأكاديمية..." aria-label="بحث في المراجع والمؤسسات الأكاديمية" data-i18n-aria-label="academicSourcesSearchAria">
+                        <button type="button" id="academicSourcesSearchClear" class="academic-search-clear-btn" aria-label="مسح البحث" style="display:none;"><i data-lucide="x" class="lucide-icon"></i></button>
+                    </div>
                 </div>
                 <div class="academic-sources-content" id="academicSourcesContent"></div>
+                <div class="academic-sources-footer">
+                    <div class="academic-footer-badge">
+                        <i data-lucide="award" class="lucide-icon"></i>
+                        <span>معايير التوثيق الأكاديمي: APA 7th Edition</span>
+                    </div>
+                    <div class="academic-footer-actions">
+                        <button class="btn btn-secondary academic-sources-close" id="academicFooterCloseBtn">
+                            <span class="btn-text" data-i18n="closeLabel">إغلاق</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Terms of Service & Privacy Policy Modal -->
         <div class="terms-overlay" id="termsOverlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="termsModalTitle">
             <div class="terms-box">
+                <div class="sheet-drag-handle terms-drag-handle" aria-hidden="true"></div>
                 <div class="terms-header">
                     <div class="terms-header-titles">
-                        <i data-lucide="shield-check" class="lucide-icon terms-header-icon"></i>
+                        <div class="terms-header-icon-wrap">
+                            <i data-lucide="shield-check" class="lucide-icon terms-header-icon"></i>
+                        </div>
                         <div>
-                            <h3 id="termsModalTitle" data-i18n="termsTitle">شروط الاستخدام، سياسة الخصوصية، وإخلاء المسؤولية</h3>
+                            <h3 id="termsModalTitle" data-i18n="termsTitle">شروط الاستخدام والخصوصية</h3>
                             <p class="terms-subtitle" data-i18n="termsSubtitle">الإطار القانوني والتنظيمي المعتمد لمنصة أطلس ليبيدوس التعليمية</p>
                         </div>
                     </div>
-                    <button class="close-btn" id="termsCloseBtn" aria-label="إغلاق" data-i18n-aria-label="closeLabel"><i data-lucide="x" class="lucide-icon"></i></button>
+                    <button class="close-btn terms-close-btn" id="termsCloseBtn" aria-label="إغلاق" data-i18n-aria-label="closeLabel"><i data-lucide="x" class="lucide-icon"></i></button>
                 </div>
 
                 <div class="terms-tabs" role="tablist">
-                    <button class="terms-tab-btn active" data-tab="service" data-i18n="termsTabService">طبيعة الخدمة والامتحانات</button>
-                    <button class="terms-tab-btn" data-tab="privacy" data-i18n="termsTabPrivacy">الخصوصية وإدارة البيانات</button>
-                    <button class="terms-tab-btn" data-tab="cartography" data-i18n="termsTabCartography">المحتوى والحدود الجغرافية</button>
-                    <button class="terms-tab-btn" data-tab="liability" data-i18n="termsTabLiability">حدود المسؤولية والملكية</button>
+                    <button class="terms-tab-btn active" data-tab="service"><i data-lucide="graduation-cap" class="lucide-icon"></i><span class="btn-text" data-i18n="termsTabService">طبيعة الخدمة والامتحانات</span></button>
+                    <button class="terms-tab-btn" data-tab="privacy"><i data-lucide="shield" class="lucide-icon"></i><span class="btn-text" data-i18n="termsTabPrivacy">الخصوصية وإدارة البيانات</span></button>
+                    <button class="terms-tab-btn" data-tab="cartography"><i data-lucide="globe" class="lucide-icon"></i><span class="btn-text" data-i18n="termsTabCartography">المحتوى والحدود الجغرافية</span></button>
+                    <button class="terms-tab-btn" data-tab="liability"><i data-lucide="scale" class="lucide-icon"></i><span class="btn-text" data-i18n="termsTabLiability">حدود المسؤولية والملكية</span></button>
                 </div>
 
                 <div class="terms-body" id="termsBodyContent">
@@ -1302,8 +1594,8 @@
                         <span>الإصدار المعتمد 2.4 — سبتمبر 2026</span>
                     </div>
                     <div class="terms-footer-actions">
-                        <button class="btn btn-secondary" id="termsCloseSecondaryBtn" data-i18n="termsCloseBtn">إغلاق</button>
-                        <button class="btn btn-primary" id="termsAcceptBtn" data-i18n="termsAcceptBtn">قرأت وأوافق على الشروط والسياسة</button>
+                        <button class="btn btn-secondary" id="termsCloseSecondaryBtn"><span class="btn-text" data-i18n="termsCloseBtn">إغلاق</span></button>
+                        <button class="btn btn-primary" id="termsAcceptBtn"><i data-lucide="check" class="lucide-icon"></i><span class="btn-text" data-i18n="termsAcceptBtn">قرأت وأوافق على الشروط والسياسة</span></button>
                     </div>
                 </div>
             </div>
@@ -1473,7 +1765,8 @@
                 
                 <div class="teacher-hub-tabs" role="tablist">
                     <button class="teacher-hub-tab-btn active" id="teacherTabCreateBtn" data-tab="create" data-i18n="teacherTabAssign">إنشاء ومشاركة واجب</button>
-                    <button class="teacher-hub-tab-btn" id="teacherTabActiveBtn" data-tab="active" data-i18n="teacherTabGradebook">سجل درجات الفصل الحي</button>
+                    <button class="teacher-hub-tab-btn" id="teacherTabActiveBtn" data-tab="active" data-i18n="teacherTabGradebook">سجل درجات الفصل والتصحيح</button>
+                    <button class="teacher-hub-tab-btn" id="teacherTabInquiriesBtn" data-tab="inquiries"><span>استفسارات الطلاب الجغرافية</span> <span class="badge" id="teacherInquiriesCountBadge" style="display:none;background:#f59e0b;color:#0f172a;padding:2px 8px;border-radius:999px;font-size:0.75rem;margin-right:6px;font-weight:800;">0</span></button>
                 </div>
 
                 <div class="teacher-hub-body">
@@ -1483,7 +1776,7 @@
                             <div class="teacher-create-form">
                                 <div class="worksheet-form-group">
                                     <label for="teacherAssignmentTitleInput" data-i18n="teacherAssignmentTitle">عنوان الواجب الصفي:</label>
-                                    <input type="text" id="teacherAssignmentTitleInput" class="quiz-input" value="واجب الأطلس: اختبار الجغرافيا والتاريخ">
+                                    <input type="text" id="teacherAssignmentTitleInput" class="quiz-input" value="واجب الأطلس: اختبار الجغرافيا والتاريخ والمهام المكانية">
                                 </div>
                                 <div class="worksheet-form-group">
                                     <label for="teacherAssignmentTopic" data-i18n="teacherAssignmentTopicLabel">الموضوع / الوحدة الدراسية:</label>
@@ -1495,12 +1788,39 @@
                                         <option value="religions" data-i18n="teacherTopicReligions">تاريخ انتشار الأديان في العالم</option>
                                     </select>
                                 </div>
+
+                                <!-- Spatial Task Option Box -->
+                                <div class="worksheet-form-group" style="background:rgba(45,212,191,0.08);border:1px solid rgba(45,212,191,0.25);border-radius:10px;padding:12px 14px;">
+                                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:700;color:var(--brand-accent, #2dd4bf);">
+                                        <input type="checkbox" id="teacherSpatialTaskCheck" checked style="accent-color:var(--brand-accent, #2dd4bf);width:18px;height:18px;">
+                                        <span>تضمين مهمة تخطيط ورسم مكاني على الخريطة (Spatial Task)</span>
+                                    </label>
+                                    <div id="teacherSpatialOptionsWrap" style="margin-top:10px;display:flex;flex-direction:column;gap:8px;">
+                                        <label for="teacherSpatialPromptInput" style="font-size:0.85rem;color:var(--text-secondary, #cbd5e1);">نص المهمة الجغرافية للطالب:</label>
+                                        <input type="text" id="teacherSpatialPromptInput" class="quiz-input" value="حدد مسار طريق الحرير التجاري الرابط بين بلاد الرافدين وآسيا الوسطى ثم بلاد الشام">
+                                        <div style="display:flex;gap:10px;">
+                                            <div style="flex:1;">
+                                                <label for="teacherSpatialTaskType" style="font-size:0.85rem;color:var(--text-secondary, #cbd5e1);">نوع الرسم المطلوب:</label>
+                                                <select id="teacherSpatialTaskType" class="quiz-select">
+                                                    <option value="path">رسم مسار خطي / ممر تجاري (Polyline)</option>
+                                                    <option value="polygon">تظليل إقليم جغرافي / دولة تاريخية (Polygon)</option>
+                                                    <option value="pin">إسقاط وتعيين دبوس موقع معركة أو عاصمة (Pin)</option>
+                                                </select>
+                                            </div>
+                                            <div style="flex:1;">
+                                                <label for="teacherSpatialTargetRegion" style="font-size:0.85rem;color:var(--text-secondary, #cbd5e1);">الإقليم المستهدف (توجيه):</label>
+                                                <input type="text" id="teacherSpatialTargetRegion" class="quiz-input" value="الشرق الأدنى وآسيا الوسطى">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="worksheet-form-group">
-                                    <label for="teacherNumQuestions" data-i18n="teacherNumQuestionsLabel">عدد الأسئلة:</label>
+                                    <label for="teacherNumQuestions" data-i18n="teacherNumQuestionsLabel">عدد الأسئلة المعيارية:</label>
                                     <select id="teacherNumQuestions" class="quiz-select">
-                                        <option value="5" data-i18n="teacherNum5">5 أسئلة (تقويم صفي سريع)</option>
-                                        <option value="10" selected data-i18n="teacherNum10">10 أسئلة (واجب معياري)</option>
-                                        <option value="15" data-i18n="teacherNum15">15 سؤالاً (اختبار وحدة شامل)</option>
+                                        <option value="3">3 أسئلة + مهمة مكانية (تقويم صفي)</option>
+                                        <option value="5" selected data-i18n="teacherNum5">5 أسئلة (تقويم معياري)</option>
+                                        <option value="10" data-i18n="teacherNum10">10 أسئلة (واجب شامل)</option>
                                     </select>
                                 </div>
                                 <div class="worksheet-form-group">
@@ -1567,7 +1887,7 @@
                                         <th data-i18n="teacherColStudent">اسم الطالب</th>
                                         <th data-i18n="teacherColScore">الدرجة</th>
                                         <th data-i18n="teacherColPercent">النسبة</th>
-                                        <th data-i18n="teacherColTime">الوقت المستغرق</th>
+                                        <th>الخريطة المكانية</th>
                                         <th data-i18n="teacherColDate">تاريخ التسليم</th>
                                     </tr>
                                 </thead>
@@ -1577,12 +1897,228 @@
                             </table>
                         </div>
                     </div>
+
+                    <!-- Student Inquiries Tab -->
+                    <div class="teacher-tab-panel" id="teacherTabInquiriesPanel" style="display:none">
+                        <div class="inquiries-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                            <div>
+                                <h4 style="margin:0 0 4px;font-size:1.05rem;font-weight:800;">استفسارات الطلاب الميدانية والجغرافية</h4>
+                                <p style="margin:0;font-size:0.84rem;color:var(--text-muted);">أسئلة الطلاب المقترنة بإحداثيات ومواقع محددة على خريطة ليبيدوس مع إمكانية الطيران المباشر للموقع والرد</p>
+                            </div>
+                            <button class="btn btn-secondary" id="teacherRefreshInquiriesBtn"><i data-lucide="refresh-cw" class="lucide-icon"></i> <span>تحديث</span></button>
+                        </div>
+                        <div class="teacher-inquiries-list" id="teacherInquiriesList" style="display:flex;flex-direction:column;gap:12px;max-height:420px;overflow-y:auto;">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
+        <!-- Teacher Spatial Review Modal (Manual spatial grading) -->
+        <div class="spatial-review-overlay" id="teacherSpatialReviewModal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="teacherSpatialReviewTitle">
+            <div class="spatial-review-box">
+                <div class="modal-header">
+                    <div>
+                        <h3 id="teacherSpatialReviewTitle" style="margin:0 0 4px;font-size:1.2rem;font-weight:800;">التصحيح المكاني اليدوي لإجابة الطالب</h3>
+                        <p style="margin:0;font-size:0.85rem;color:var(--text-muted);" id="spatialReviewStudentMeta">الطالب: أحمد السعيد | الواجب: واجب الأطلس</p>
+                    </div>
+                    <button class="close-btn" id="teacherSpatialReviewCloseBtn" aria-label="إغلاق"><i data-lucide="x" class="lucide-icon"></i></button>
+                </div>
+                <div class="spatial-review-body">
+                    <div class="spatial-review-prompt-card" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);padding:12px 14px;border-radius:10px;margin-bottom:12px;">
+                        <strong style="color:var(--brand-accent, #2dd4bf);">المهمة المكانية المطلوبة:</strong>
+                        <span id="spatialReviewPromptText" style="margin-right:6px;">حدد مسار طريق الحرير التجاري</span>
+                    </div>
+                    <div class="spatial-preview-canvas-card" style="margin-bottom:14px;">
+                        <div class="preview-card-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                            <span style="font-weight:700;font-size:0.9rem;">خريطة إجابة الطالب (الرسم المكاني المسلّم):</span>
+                            <span class="badge" id="spatialReviewDrawingTypeBadge" style="background:#064e3b;color:#fff;padding:2px 10px;border-radius:6px;font-size:0.8rem;font-weight:700;">مسار خطي</span>
+                        </div>
+                        <div class="spatial-svg-preview-wrap" id="spatialSvgPreviewWrap" style="background:#090d16;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px;text-align:center;">
+                            <svg id="spatialStudentPreviewSvg" width="100%" height="220" viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet"></svg>
+                        </div>
+                    </div>
+                    <div class="spatial-grading-form" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);padding:14px;border-radius:10px;">
+                        <div style="display:flex;gap:14px;flex-wrap:wrap;">
+                            <div class="worksheet-form-group" style="width:140px;">
+                                <label for="teacherGradeScoreInput" style="font-weight:700;">الدرجة (من 10):</label>
+                                <input type="number" id="teacherGradeScoreInput" min="0" max="10" step="0.5" value="9.5" class="quiz-input" style="font-weight:800;font-size:1.1rem;text-align:center;">
+                            </div>
+                            <div class="worksheet-form-group" style="flex:1;min-width:260px;">
+                                <label for="teacherGradeFeedbackInput" style="font-weight:700;">ملاحظات المعلم والتغذية الراجعة البيداغوجية:</label>
+                                <input type="text" id="teacherGradeFeedbackInput" class="quiz-input" value="رسم متقن ودقيق للمسار والمضائق الجغرافية القديمة. أحسنت!">
+                            </div>
+                        </div>
+                        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:14px;">
+                            <button class="btn btn-secondary" id="teacherSpatialReviewCancelBtn">إلغاء</button>
+                            <button class="btn btn-primary" id="teacherSpatialReviewSaveBtn"><i data-lucide="check-circle" class="lucide-icon"></i> <span>اعتماد ونشر التقييم للطالب</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Hub & Assignments Modal -->
+        <div class="student-hub-overlay" id="studentHubOverlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="studentHubModalTitle">
+            <div class="student-hub-box">
+                <div class="student-hub-header">
+                    <div class="academic-header-titles">
+                        <i data-lucide="book-open" class="lucide-icon modal-header-icon" style="color:var(--brand-accent, #2dd4bf);"></i>
+                        <div>
+                            <h3 id="studentHubModalTitle">لوحة الطالب والواجبات المدرسية</h3>
+                            <p class="academic-sources-subtitle">حل التكليفات الصفية، المهام المكانية بالرسم على الخريطة، والاستفسار المباشر من المعلم</p>
+                        </div>
+                    </div>
+                    <button class="close-btn" id="studentHubCloseBtn" aria-label="إغلاق"><i data-lucide="x" class="lucide-icon"></i></button>
+                </div>
+
+                <div class="student-hub-tabs" role="tablist">
+                    <button class="student-hub-tab-btn active" id="studentTabAssignmentsBtn" data-tab="assignments">
+                        <i data-lucide="file-check" class="lucide-icon"></i>
+                        <span>واجباتي المدرسية</span>
+                    </button>
+                    <button class="student-hub-tab-btn" id="studentTabInquiriesBtn" data-tab="inquiries">
+                        <i data-lucide="help-circle" class="lucide-icon"></i>
+                        <span>اسأل المعلم بدبوس الموقع</span>
+                    </button>
+                    <button class="student-hub-tab-btn" id="studentTabGradesBtn" data-tab="grades">
+                        <i data-lucide="award" class="lucide-icon"></i>
+                        <span>كشف درجاتي وملاحظات المعلم</span>
+                    </button>
+                </div>
+
+                <div class="student-hub-body">
+                    <!-- Assignments Tab Panel -->
+                    <div class="student-tab-panel active" id="studentTabAssignmentsPanel">
+                        <div id="studentAssignmentsListView">
+                            <div class="student-hub-panel-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+                                <div>
+                                    <h4 style="margin:0 0 4px;font-size:1.05rem;font-weight:800;">قائمة التكليفات والواجبات المدرسية</h4>
+                                    <p style="margin:0;font-size:0.84rem;color:var(--text-muted);">الواجبات المسندة إليك من المعلم في الجغرافيا والتاريخ مع المهام المكانية</p>
+                                </div>
+                                <span class="badge" id="studentActiveTasksBadge" style="background:#064e3b;color:#fff;padding:4px 12px;border-radius:999px;font-size:0.82rem;font-weight:800;">واجبات متاحة</span>
+                            </div>
+                            <div class="student-assignments-cards" id="studentAssignmentsCardsList" style="display:flex;flex-direction:column;gap:12px;">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Assignment Solver View -->
+                        <div id="studentAssignmentSolveView" style="display:none;">
+                            <div class="assignment-solve-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.1);">
+                                <button class="btn btn-secondary btn-sm" id="studentBackToAssignmentsBtn"><i data-lucide="arrow-right" class="lucide-icon"></i> <span>العودة للواجبات</span></button>
+                                <h4 id="studentSolvingAssignmentTitle" style="margin:0;font-size:1.1rem;font-weight:800;color:var(--brand-accent, #2dd4bf);"></h4>
+                            </div>
+
+                            <div class="assignment-questions-container" id="studentQuestionsContainer" style="display:flex;flex-direction:column;gap:14px;">
+                                <!-- Standard Questions -->
+                            </div>
+
+                            <div class="spatial-task-action-box" id="studentSpatialActionBox" style="background:rgba(45,212,191,0.06);border:1px solid rgba(45,212,191,0.2);border-radius:12px;padding:16px;margin-top:16px;">
+                                <div class="spatial-task-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                                    <div style="display:flex;align-items:center;gap:8px;">
+                                        <i data-lucide="map" class="lucide-icon" style="color:var(--brand-accent, #2dd4bf);"></i>
+                                        <strong style="font-size:1rem;">المهمة المكانية على الخريطة:</strong>
+                                    </div>
+                                    <span class="badge" id="studentSpatialTaskTypeBadge" style="background:#f59e0b;color:#0f172a;padding:2px 10px;border-radius:6px;font-size:0.8rem;font-weight:800;">رسم مسار</span>
+                                </div>
+                                <p id="studentSpatialInstructionsDisplay" style="margin:8px 0 12px;font-size:0.92rem;line-height:1.5;color:var(--text-secondary, #cbd5e1);"></p>
+                                
+                                <div class="spatial-solver-toolbar" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+                                    <button type="button" class="btn btn-secondary spatial-tool-btn" id="studentToolPinBtn"><i data-lucide="map-pin" class="lucide-icon"></i> <span>إسقاط دبوس 📍</span></button>
+                                    <button type="button" class="btn btn-secondary spatial-tool-btn active" id="studentToolPathBtn"><i data-lucide="pen-tool" class="lucide-icon"></i> <span>رسم مسار خطي ✏️</span></button>
+                                    <button type="button" class="btn btn-secondary spatial-tool-btn" id="studentToolPolygonBtn"><i data-lucide="hexagon" class="lucide-icon"></i> <span>تظليل منطقة ⬡</span></button>
+                                    <button type="button" class="btn btn-secondary spatial-tool-btn" id="studentToolClearBtn"><i data-lucide="trash-2" class="lucide-icon"></i> <span>مسح الرسم 🗑️</span></button>
+                                    <button type="button" class="btn btn-primary spatial-tool-btn" id="studentGoDrawOnMapBtn"><i data-lucide="maximize-2" class="lucide-icon"></i> <span>الرسم التفاعلي على الخريطة الحرة</span></button>
+                                </div>
+                                <div class="spatial-status-bar" id="studentSpatialStatusBanner">
+                                    <span>جاهز للرسم على الخريطة. انقر على النقاط لتحديد المسار أو المنطقة.</span>
+                                </div>
+                            </div>
+
+                            <div class="assignment-submit-bar" style="margin-top:20px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,0.1);padding-top:16px;">
+                                <span style="font-size:0.85rem;color:var(--text-muted);">بضغطك على إرسال، تُحفظ خريطتك وبياناتك وتُنقل مباشرة لسجل المعلم.</span>
+                                <button class="btn btn-primary btn-lg" id="studentSubmitSolutionBtn"><i data-lucide="send" class="lucide-icon"></i> <span>تسليم الواجب للمعلم الآن</span></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inquiries Tab Panel -->
+                    <div class="student-tab-panel" id="studentTabInquiriesPanel" style="display:none">
+                        <div class="inquiry-composer-card" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px;margin-bottom:20px;">
+                            <h4 style="margin:0 0 10px;font-size:1.05rem;font-weight:800;">طرح سؤال أو استفسار جغرافي جديد على المعلم</h4>
+                            <div class="worksheet-form-group">
+                                <label for="studentInquiryTitleInput" style="font-weight:700;">عنوان أو موضوع الاستفسار:</label>
+                                <input type="text" id="studentInquiryTitleInput" class="quiz-input" placeholder="مثال: استفسار حول موقع مضيق باب المندب وأهميته التجارية">
+                            </div>
+                            <div class="worksheet-form-group">
+                                <label for="studentInquiryTextInput" style="font-weight:700;">تفاصيل السؤال / الاستفسار:</label>
+                                <textarea id="studentInquiryTextInput" class="quiz-input" rows="3" placeholder="اكتب سؤالك بوضوح للمعلم ليجيبك عليه ويوضح لك السياق الجغرافي..."></textarea>
+                            </div>
+                            <div class="location-picker-group">
+                                <label style="font-weight:700;">الموقع الجغرافي المرتبط بالسؤال:</label>
+                                <div style="display:flex;align-items:center;gap:10px;margin-top:6px;flex-wrap:wrap;">
+                                    <button type="button" class="btn btn-secondary" id="studentPickLocationBtn"><i data-lucide="map-pin" class="lucide-icon"></i> <span>📍 التقاط وتحديد الموقع على الخريطة</span></button>
+                                    <span class="location-badge" id="studentPickedLocationBadge">لم يُحدد موقع بعد (انقر الزر ثم انقر فوق الخريطة)</span>
+                                </div>
+                            </div>
+                            <div style="display:flex;justify-content:flex-end;margin-top:14px;">
+                                <button class="btn btn-primary" id="studentSendInquiryBtn"><i data-lucide="send" class="lucide-icon"></i> <span>إرسال الاستفسار للمعلم</span></button>
+                            </div>
+                        </div>
+
+                        <div class="student-previous-inquiries-section">
+                            <h4 style="margin:0 0 10px;font-size:1.02rem;font-weight:800;">سجل استفساراتي ومتابعة ردود المعلم</h4>
+                            <div class="student-inquiries-list" id="studentInquiriesList" style="display:flex;flex-direction:column;gap:12px;max-height:300px;overflow-y:auto;">
+                                <!-- Filled dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Grades Tab Panel -->
+                    <div class="student-tab-panel" id="studentTabGradesPanel" style="display:none">
+                        <div class="gradebook-summary-cards">
+                            <div class="grade-card"><span class="grade-card-val" id="studentCompletedCount">1</span><span class="grade-card-label">الواجبات المنجزة</span></div>
+                            <div class="grade-card"><span class="grade-card-val" id="studentOverallAverage">95%</span><span class="grade-card-label">المعدل العام</span></div>
+                            <div class="grade-card"><span class="grade-card-val" id="studentFeedbackCount">1</span><span class="grade-card-label">تغذيات راجعة معتمدة</span></div>
+                        </div>
+
+                        <div class="student-grades-list-wrap" style="margin-top:18px;">
+                            <h4 style="margin:0 0 12px;font-size:1.05rem;font-weight:800;">سجل الدرجات والتغذية الراجعة لكل واجب</h4>
+                            <div class="student-grades-records" id="studentGradesRecordsList" style="display:flex;flex-direction:column;gap:12px;">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Banners on Map -->
+        <div class="map-floating-mode-banner" id="spatialDrawingModeBanner" style="display:none">
+            <div class="banner-content" style="display:flex;align-items:center;gap:8px;">
+                <i data-lucide="edit-3" class="lucide-icon" style="color:#f59e0b;"></i>
+                <span id="spatialDrawingBannerText">وضع حل المهمة المكانية: انقر على الخريطة لرسم المسار أو إسقاط الدبوس.</span>
+            </div>
+            <div class="banner-actions" style="display:flex;gap:8px;">
+                <button class="btn btn-secondary btn-sm" id="spatialDrawingCancelBtn">إلغاء</button>
+                <button class="btn btn-primary btn-sm" id="spatialDrawingDoneBtn">اعتماد الرسم والعودة للواجب ✓</button>
+            </div>
+        </div>
+
+        <div class="map-floating-mode-banner" id="locationPickerModeBanner" style="display:none">
+            <div class="banner-content" style="display:flex;align-items:center;gap:8px;">
+                <i data-lucide="crosshair" class="lucide-icon" style="color:#2dd4bf;"></i>
+                <span>وضع تحديد موقع الاستفسار: انقر في أي مكان على الخريطة لالتقاط الإحداثيات.</span>
+            </div>
+            <div class="banner-actions">
+                <button class="btn btn-secondary btn-sm" id="locationPickerCancelBtn">إلغاء</button>
+            </div>
+        </div>
+
         <!-- Student Assignment Mode Entry Modal -->
-        <div class="student-assignment-overlay" id="studentAssignmentOverlay" style="display:none" role="dialog" aria-modal="true">
+        <div class="student-assignment-overlay" id="studentAssignmentOverlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="studentAssignmentTitleDisplay">
             <div class="student-assignment-box">
                 <div class="student-box-icon"><i data-lucide="graduation-cap" class="lucide-icon"></i></div>
                 <h3 id="studentAssignmentTitleDisplay" data-i18n="studentModeTitle">واجب مدرسي تفاعلي</h3>
@@ -1600,11 +2136,817 @@
             </div>
         </div>
 
+        <!-- Nation Historical Strategy Simulation Workspace -->
+        <div class="nation-sim-container" id="nationSimContainer" style="display:none" role="region" aria-label="محاكاة الأمم وصراع الحضارات">
+            <!-- Top HUD Bar -->
+            <header class="sim-top-hud" id="simTopHUD">
+                <div class="sim-hud-left">
+                    <div class="sim-brand-title">
+                        <i data-lucide="swords" class="lucide-icon sim-swords-icon"></i>
+                        <h2 class="sim-title-text" id="simTitleText">محاكاة الأمم</h2>
+                    </div>
+                    <div class="sim-calendar-badge" id="simCalendarBadge">
+                        <span class="sim-calendar-year" id="simYearDisplay">1250 م</span>
+                        <span class="sim-calendar-season sim-season-spring" id="simSeasonDisplay">🌱 ربيع</span>
+                        <span class="sim-calendar-pace" id="simPaceDisplay" title="المعامل الزمني: سريان زمني طبيعي ثابت وعادل للجميع دون تسريع أو تجميد">سريان زمني ثابت</span>
+                    </div>
+                    <div class="sim-seasonal-cycle-box" id="simSeasonalCycleBox" role="status" aria-live="polite" title="سريان الزمن الطبيعي: يمر الوقت بنسب ثابتة وعادلة للجميع دون تسريع أو تجميد">
+                        <div class="sim-cycle-header">
+                            <span class="sim-cycle-indicator-dot"></span>
+                            <span class="sim-cycle-label">دورة الفصل الجاري</span>
+                            <span class="sim-cycle-countdown" id="simCycleCountdown">01:30</span>
+                        </div>
+                        <div class="sim-cycle-track" aria-hidden="true">
+                            <div class="sim-cycle-progress-fill" id="simCycleProgressFill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sim-hud-center">
+                    <div class="sim-nation-picker-wrap">
+                        <select id="simNationSelect" class="sim-select" aria-label="اختيار الدولة / الفريق">
+                            <!-- Populated dynamically via JS: Nile, Anatolia, Desert, Mediterranean, Steppes -->
+                        </select>
+                    </div>
+
+                    <nav class="sim-role-tabs-group" id="simRoleSelectGroup" role="tablist" aria-label="أدوار الفريق الخمسة">
+                        <button type="button" class="sim-role-tab active" id="simRoleLeaderBtn" data-role="leader" role="tab" aria-selected="true" aria-controls="simLeaderView">
+                            <i data-lucide="crown" class="lucide-icon"></i>
+                            <span>القائد</span>
+                        </button>
+                        <button type="button" class="sim-role-tab" id="simRoleEconomyBtn" data-role="economy" role="tab" aria-selected="false" aria-controls="simEconomyView">
+                            <i data-lucide="wheat" class="lucide-icon"></i>
+                            <span>الموارد</span>
+                        </button>
+                        <button type="button" class="sim-role-tab" id="simRoleMilitaryBtn" data-role="military" role="tab" aria-selected="false" aria-controls="simMilitaryView">
+                            <i data-lucide="shield" class="lucide-icon"></i>
+                            <span>الجيش</span>
+                        </button>
+                        <button type="button" class="sim-role-tab" id="simRolePlannerBtn" data-role="planner" role="tab" aria-selected="false" aria-controls="simPlannerView">
+                            <i data-lucide="compass" class="lucide-icon"></i>
+                            <span>المخطط</span>
+                        </button>
+                        <button type="button" class="sim-role-tab" id="simRoleIntelligenceBtn" data-role="intelligence" role="tab" aria-selected="false" aria-controls="simIntelligenceView">
+                            <i data-lucide="eye" class="lucide-icon"></i>
+                            <span>الاستخبارات</span>
+                        </button>
+                    </nav>
+                </div>
+
+                <div class="sim-hud-right">
+                    <div class="sim-power-badge" id="simPowerBadge" title="مؤشر قوة وازدهار الأمة التراكمي">
+                        <span class="sim-power-icon">🏆</span>
+                        <strong class="sim-power-val" id="simPowerScore">4,250</strong>
+                        <span class="sim-power-rank" id="simPowerRank">#1</span>
+                    </div>
+                    <button type="button" class="btn btn-secondary sim-hud-action-btn" id="simTeacherConsoleBtn" aria-label="شاشة المعلم المشرف والمحكّم الأعلى" title="شاشة المشرف التربوي والمحكّم الأعلى">
+                        <i data-lucide="graduation-cap" class="lucide-icon"></i>
+                        <span>المشرف</span>
+                    </button>
+                    <button type="button" class="btn btn-secondary sim-hud-action-btn sim-exit-btn" id="simExitBtn" aria-label="الخروج من المحاكاة" title="الخروج والعودة للخريطة">
+                        <i data-lucide="log-out" class="lucide-icon"></i>
+                        <span>خروج</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Floating Nation Command Panel -->
+            <aside class="sim-nation-panel" id="simNationPanel" aria-label="لوحة قيادة الدولة">
+                <!-- Nation Profile Summary Bar -->
+                <div class="sim-nation-header" id="simNationHeader">
+                    <div class="sim-nation-emblem-wrap">
+                        <span class="sim-nation-flag" id="simNationFlag">🦅</span>
+                        <div>
+                            <h3 class="sim-nation-name" id="simNationName">مملكة النيل والرافدين الفيضية</h3>
+                            <div class="sim-nation-tags">
+                                <span class="sim-tag" id="simNationCapital">العاصمة: الفسطاط</span>
+                                <span class="sim-tag sim-tag-biome" id="simNationBiome">إقليم فيضي نهري</span>
+                                <span class="sim-tag sim-tag-climate" id="simNationClimate">المناخ: فيضان أواخر الصيف</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats Ticker with Visual Capacity Gauges -->
+                <div class="sim-quick-stats-ticker" id="simQuickStatsTicker" aria-label="الموارد الأساسية للدولة">
+                    <div class="sim-stat-card" title="مخزون الغذاء بالصوامع">
+                        <span class="sim-stat-icon">🌾</span>
+                        <div class="sim-stat-data">
+                            <span class="sim-stat-val" id="simQuickFood">1,200</span>
+                            <span class="sim-stat-lbl">كيس قمح</span>
+                        </div>
+                        <div class="sim-stat-gauge" aria-hidden="true">
+                            <div class="sim-stat-gauge-fill sim-gauge-food" id="simGaugeFood" style="width: 75%;"></div>
+                        </div>
+                    </div>
+                    <div class="sim-stat-card" title="خام ومعادن الحديد والنحاس">
+                        <span class="sim-stat-icon">⛏️</span>
+                        <div class="sim-stat-data">
+                            <span class="sim-stat-val" id="simQuickMetals">450</span>
+                            <span class="sim-stat-lbl">سبيكة معادن</span>
+                        </div>
+                        <div class="sim-stat-gauge" aria-hidden="true">
+                            <div class="sim-stat-gauge-fill sim-gauge-metals" id="simGaugeMetals" style="width: 45%;"></div>
+                        </div>
+                    </div>
+                    <div class="sim-stat-card" title="ثروة الخيول والإبل">
+                        <span class="sim-stat-icon">🐎</span>
+                        <div class="sim-stat-data">
+                            <span class="sim-stat-val" id="simQuickLivestock">320</span>
+                            <span class="sim-stat-lbl">رأس خيل وإبل</span>
+                        </div>
+                        <div class="sim-stat-gauge" aria-hidden="true">
+                            <div class="sim-stat-gauge-fill sim-gauge-livestock" id="simGaugeLivestock" style="width: 35%;"></div>
+                        </div>
+                    </div>
+                    <div class="sim-stat-card" title="خزينة الدولة والذهب">
+                        <span class="sim-stat-icon">💰</span>
+                        <div class="sim-stat-data">
+                            <span class="sim-stat-val" id="simQuickGold">850</span>
+                            <span class="sim-stat-lbl">دينار ذهبي</span>
+                        </div>
+                        <div class="sim-stat-gauge" aria-hidden="true">
+                            <div class="sim-stat-gauge-fill sim-gauge-gold" id="simGaugeGold" style="width: 65%;"></div>
+                        </div>
+                    </div>
+                    <div class="sim-stat-card" title="إجمالي القوات والكتائب">
+                        <span class="sim-stat-icon">⚔️</span>
+                        <div class="sim-stat-data">
+                            <span class="sim-stat-val" id="simQuickTroops">1,500</span>
+                            <span class="sim-stat-lbl">مقاتل جاهز</span>
+                        </div>
+                        <div class="sim-stat-gauge" aria-hidden="true">
+                            <div class="sim-stat-gauge-fill sim-gauge-troops" id="simGaugeTroops" style="width: 80%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Imperial Council Advisor Banner (Historical & Universal Strategic Guidance) -->
+                <div class="sim-council-advisor-banner" id="simCouncilAdvisorBanner" role="region" aria-label="توجيه المستشار الاستراتيجي">
+                    <div class="sim-council-medallion" id="simCouncilMedallion">👑</div>
+                    <div class="sim-council-content">
+                        <span class="sim-council-title" id="simCouncilTitle">مستشار الشؤون السيادية:</span>
+                        <p class="sim-council-text" id="simCouncilText">أهلاً بك يا صاحب السيادة؛ أمن أمتنا يبدأ من نسج المعاهدات الدبلوماسية وتأمين الممرات قبل انطلاق القوافل.</p>
+                    </div>
+                </div>
+
+                <!-- Role Tab Panels -->
+                <div class="sim-role-content-box" id="simRoleContentBox">
+                    <!-- 1. Leader View -->
+                    <div class="sim-role-view" id="simLeaderView" role="tabpanel" aria-labelledby="simRoleLeaderBtn">
+                        <div class="sim-view-section">
+                            <div class="sim-view-header">
+                                <h4>👑 الشؤون السيادية والعلاقات الدولية</h4>
+                                <span class="sim-badge-role">مسؤولية: رئيس الدولة / القائد</span>
+                            </div>
+                            <p class="sim-view-desc">أنت صاحب القرار السيادي في توقيع المعاهدات، إعلان السلم أو الحرب، ومحاسبة الوزراء وفض النزاعات.</p>
+                            
+                            <div class="sim-diplomacy-table-wrap">
+                                <h5 class="sim-sub-heading">العلاقات الدبلوماسية مع بقية الأمم:</h5>
+                                <div class="sim-relations-list" id="simRelationsList">
+                                    <!-- Populated via JS -->
+                                </div>
+                            </div>
+
+                            <div class="sim-leader-actions-bar">
+                                <button type="button" class="btn btn-secondary sim-action-btn" id="simSignDefensePactBtn"><i data-lucide="handshake" class="lucide-icon"></i> <span>توقيع ميثاق دفاع مشترك</span></button>
+                                <button type="button" class="btn btn-secondary sim-action-btn" id="simSignTradeAgreementBtn"><i data-lucide="scroll" class="lucide-icon"></i> <span>إبرام اتفاقية تجارية</span></button>
+                                <button type="button" class="btn btn-secondary sim-action-btn" id="simDeclareSeasonalTruceBtn"><i data-lucide="shield-alert" class="lucide-icon"></i> <span>إعلان هدنة موسمية</span></button>
+                            </div>
+
+                            <!-- Sovereign Budget Allocation Panel -->
+                            <div class="sim-budget-allocation-panel" id="simLeaderBudgetPanel">
+                                <h5 class="sim-sub-heading">⚖️ مجلس الموازنة السيادية وتوزيع الموارد على الوزارات:</h5>
+                                <p class="sim-card-hint">لا موارد تزيد تلقائياً؛ كل وزارة بحاجة لتمويل من خزينة الدولة ومخزوناتها لإنتاج المحاصيل وصيانة الجند وتأمين الطرق.</p>
+                                
+                                <div class="sim-budget-grid">
+                                    <!-- 1. Agriculture / Economy -->
+                                    <div class="sim-budget-card" id="simBudgetCardEconomy">
+                                        <div class="sim-budget-card-header">
+                                            <span class="sim-budget-icon">🌾</span>
+                                            <div>
+                                                <strong>وزارة الري والزراعة</strong>
+                                                <div class="sim-budget-need">المطلوب: 80 دينار + 50 ماشية</div>
+                                            </div>
+                                        </div>
+                                        <div class="sim-budget-control">
+                                            <select id="simBudgetSelectEconomy" class="sim-select sim-select-sm" aria-label="مخصصات وزارة الري">
+                                                <option value="100" selected>تمويل كامل 100% (حصاد كامل وفير)</option>
+                                                <option value="50">تمويل نصفي 50% (انخفاض المحصول بـ 50%)</option>
+                                                <option value="0">حجب التمويل 0% (انسداد الترع وجفاف)</option>
+                                            </select>
+                                        </div>
+                                        <div class="sim-budget-impact" id="simBudgetImpactEconomy">النتيجة: صيانة سدود وترع النيل، ووفرة محاصيل الحصاد القادم.</div>
+                                    </div>
+
+                                    <!-- 2. Military -->
+                                    <div class="sim-budget-card" id="simBudgetCardMilitary">
+                                        <div class="sim-budget-card-header">
+                                            <span class="sim-budget-icon">⚔️</span>
+                                            <div>
+                                                <strong>وزارة الجيوش والحاميات</strong>
+                                                <div class="sim-budget-need">المطلوب: 120 دينار + 60 معادن + 100 قمح</div>
+                                            </div>
+                                        </div>
+                                        <div class="sim-budget-control">
+                                            <select id="simBudgetSelectMilitary" class="sim-select sim-select-sm" aria-label="مخصصات وزارة الجيوش">
+                                                <option value="100" selected>تمويل كامل 100% (معنويات وجاهزية قصوى)</option>
+                                                <option value="50">تمويل نصفي 50% (نقص عتاد وتراجع دفاعي)</option>
+                                                <option value="0">حجب التمويل 0% (تأخر رواتب وهروب 20% جند)</option>
+                                            </select>
+                                        </div>
+                                        <div class="sim-budget-impact" id="simBudgetImpactMilitary">النتيجة: ثبات الحاميات عند المضائق والمعابر بكامل كفاءتها.</div>
+                                    </div>
+
+                                    <!-- 3. Infrastructure / Planning -->
+                                    <div class="sim-budget-card" id="simBudgetCardPlanning">
+                                        <div class="sim-budget-card-header">
+                                            <span class="sim-budget-icon">🧭</span>
+                                            <div>
+                                                <strong>وزارة الطرق والممرات الجغرافية</strong>
+                                                <div class="sim-budget-need">المطلوب: 50 دينار + 40 قمح</div>
+                                            </div>
+                                        </div>
+                                        <div class="sim-budget-control">
+                                            <select id="simBudgetSelectPlanning" class="sim-select sim-select-sm" aria-label="مخصصات وزارة الطرق">
+                                                <option value="100" selected>تمويل كامل 100% (طرق سالكة وسرعة قوافل)</option>
+                                                <option value="50">تمويل نصفي 50% (وعورة وبطء مسالك 25%)</option>
+                                                <option value="0">حجب التمويل 0% (اندثار الآبار وتلف بضائع)</option>
+                                            </select>
+                                        </div>
+                                        <div class="sim-budget-impact" id="simBudgetImpactPlanning">النتيجة: صيانة الآبار والمحطات وتأمين المسارات البديلة.</div>
+                                    </div>
+
+                                    <!-- 4. Intelligence -->
+                                    <div class="sim-budget-card" id="simBudgetCardIntelligence">
+                                        <div class="sim-budget-card-header">
+                                            <span class="sim-budget-icon">👁️</span>
+                                            <div>
+                                                <strong>وزارة الاستخبارات والعيون</strong>
+                                                <div class="sim-budget-need">المطلوب: 40 دينار</div>
+                                            </div>
+                                        </div>
+                                        <div class="sim-budget-control">
+                                            <select id="simBudgetSelectIntelligence" class="sim-select sim-select-sm" aria-label="مخصصات وزارة الاستخبارات">
+                                                <option value="100" selected>تمويل كامل 100% (يقظة استخبارية وكشف جواسيس)</option>
+                                                <option value="50">تمويل نصفي 50% (رصد بطيء)</option>
+                                                <option value="0">حجب التمويل 0% (عمى استخباري وتسلل أجنبي)</option>
+                                            </select>
+                                        </div>
+                                        <div class="sim-budget-impact" id="simBudgetImpactIntelligence">النتيجة: نشر العيون وكشف شبكات التسلل والقوافل المارة.</div>
+                                    </div>
+                                </div>
+
+                                <button type="button" class="btn btn-primary sim-action-btn" id="simApplyBudgetBtn" style="margin-top:10px;width:100%;">
+                                    <i data-lucide="check-circle" class="lucide-icon"></i>
+                                    <span>اعتماد وتثبيت الموازنة السيادية ⚖️</span>
+                                </button>
+                            </div>
+
+                            <!-- Allied Expeditionary Reinforcements Panel -->
+                            <div class="sim-allied-garrison-panel" id="simAlliedGarrisonPanel">
+                                <h5 class="sim-sub-heading">🛡️ إرسال فيلق حماية وإسناد لحليف (دفاع مشترك):</h5>
+                                <p class="sim-card-hint">تبعات منطقية حاسمة: إرسال القوات يقلل قوة دفاع عاصمتك فوراً، ويُلزم الدولة المضيفة بإطعام الجنود الضيوف من صوامعها!</p>
+                                <div class="sim-form-grid">
+                                    <div class="sim-field">
+                                        <label for="simDispatchAllySelect">الدولة الحليفة المستهدفة:</label>
+                                        <select id="simDispatchAllySelect" class="sim-select">
+                                            <!-- Populated dynamically via JS from active treaties -->
+                                        </select>
+                                    </div>
+                                    <div class="sim-field">
+                                        <label for="simDispatchTroopCount">حجم الفيلق المرسل:</label>
+                                        <select id="simDispatchTroopCount" class="sim-select">
+                                            <option value="50">50 مقاتلاً (استهلاك الحليف: +4 قمح/شهر)</option>
+                                            <option value="100" selected>100 مقاتل (استهلاك الحليف: +8 قمح/شهر)</option>
+                                            <option value="200">200 مقاتل (استهلاك الحليف: +16 قمح/شهر)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="display:flex;gap:8px;margin-top:8px;">
+                                    <button type="button" class="btn btn-secondary sim-action-btn" id="simDispatchExpeditionBtn" style="flex:1;">
+                                        <i data-lucide="shield-plus" class="lucide-icon"></i>
+                                        <span>إرسال فيلق الحماية للثغور</span>
+                                    </button>
+                                    <button type="button" class="btn btn-secondary sim-action-btn" id="simRecallExpeditionBtn" style="color:#f87171;">
+                                        <i data-lucide="rotate-ccw" class="lucide-icon"></i>
+                                        <span>استدعاء القوات للوطن</span>
+                                    </button>
+                                </div>
+                                <div class="sim-dispatched-forces-status" id="simDispatchedForcesStatus" style="font-size:0.82rem;margin-top:6px;color:var(--text-muted);">
+                                    لا توجد قوات إسناد مرسلة في الخارج حالياً.
+                                </div>
+                            </div>
+
+                            <div class="sim-sovereign-decrees-box">
+                                <h5 class="sim-sub-heading">المراسيم السيادية العليا المعتمدة:</h5>
+                                <div class="sim-decrees-feed" id="simDecreesFeed">
+                                    <div class="sim-feed-item">📜 تم اعتماد تحالف تجاري مع مملكة المتوسط لتخفيض رسوم الترانزيت بنسبة 50%.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Economy View -->
+                    <div class="sim-role-view" id="simEconomyView" style="display:none" role="tabpanel" aria-labelledby="simRoleEconomyBtn">
+                        <div class="sim-view-section">
+                            <div class="sim-view-header">
+                                <h4>🌾 صوامع الموارد وتسيير القوافل التجارية</h4>
+                                <span class="sim-badge-role">مسؤولية: وزير الموارد والاقتصاد</span>
+                            </div>
+                            <p class="sim-view-desc">إدارة الصوامع والمخزون الحيوي، تسيير القوافل، ومراقبة استهلاك المحاصيل؛ إذا فرغت الصوامع تفشت المجاعة وضعف الجيش.</p>
+
+                            <!-- Tax & Revenue Policy -->
+                            <div class="sim-tax-policy-card" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px;margin-bottom:12px;">
+                                <h5 class="sim-sub-heading">⚖️ سياسة الجباية والضرائب الموسمية:</h5>
+                                <div class="sim-field">
+                                    <label for="simTaxPolicySelect">مستوى الضرائب والرسوم:</label>
+                                    <select id="simTaxPolicySelect" class="sim-select">
+                                        <option value="low">ضرائب منخفضة 5% (رضا شعبي وازدهار قوافل +40 ذهب)</option>
+                                        <option value="moderate" selected>ضرائب متوازنة 10% (استقرار اقتصادي +80 ذهب)</option>
+                                        <option value="high">ضرائب مرتفعة 20% (ذهب سريع +150، مع تراجع إنتاج 20% وسخط)</option>
+                                    </select>
+                                </div>
+                                <div class="sim-tax-policy-hint" id="simTaxPolicyHint" style="font-size:0.8rem;color:var(--text-muted);margin-top:4px;">
+                                    الضرائب المعتدلة تضمن استقرار الأسواق دون إرهاق الرعية.
+                                </div>
+                            </div>
+
+                            <!-- Granary Status Card -->
+                            <div class="sim-granary-monitor-card" id="simGranaryMonitorCard">
+                                <div class="sim-granary-row">
+                                    <span>معدل الاستهلاك الشهري للغذاء:</span>
+                                    <strong id="simMonthlyConsumptionDisplay">80 كيس / شهر</strong>
+                                </div>
+                                <div class="sim-granary-row">
+                                    <span>مستوى الأمان الغذائي:</span>
+                                    <span class="sim-status-safe" id="simFoodSecurityStatus">🟢 آمن ومستقر (يكفي لـ 15 شهراً)</span>
+                                </div>
+                            </div>
+
+                            <!-- Caravan Dispatcher -->
+                            <div class="sim-caravan-composer-card">
+                                <h5 class="sim-sub-heading">تسيير قافلة تجارية ومقايضة عبر الخريطة:</h5>
+                                <div class="sim-form-grid">
+                                    <div class="sim-field">
+                                        <label for="simCaravanDestSelect">وجهة القافلة (الدولة والميناء):</label>
+                                        <select id="simCaravanDestSelect" class="sim-select">
+                                            <!-- Populated via JS -->
+                                        </select>
+                                    </div>
+                                    <div class="sim-field">
+                                        <label for="simCaravanCargoType">نوع الشحنة المصدرة:</label>
+                                        <select id="simCaravanCargoType" class="sim-select">
+                                            <option value="wheat">🌾 قمح وغذاء (100 كيس)</option>
+                                            <option value="metals">⛏️ خام حديد ونحاس (50 سبيكة)</option>
+                                            <option value="livestock">🐎 خيول وإبل (30 رأس)</option>
+                                            <option value="gold">💰 ذهب وعملات (100 دينار)</option>
+                                        </select>
+                                    </div>
+                                    <div class="sim-field">
+                                        <label for="simCaravanRequestedReturn">المطلوب بالمقايضة من الوجهة:</label>
+                                        <select id="simCaravanRequestedReturn" class="sim-select">
+                                            <option value="metals">⛏️ خام حديد ونحاس</option>
+                                            <option value="wheat">🌾 قمح وغذاء</option>
+                                            <option value="livestock">🐎 خيول وأخشاب</option>
+                                            <option value="gold">💰 ذهب وتوابل</option>
+                                        </select>
+                                    </div>
+                                    <div class="sim-field">
+                                        <label for="simCaravanEscortOption">الحراسة المرافقة (طلب من قائد الجيش):</label>
+                                        <select id="simCaravanEscortOption" class="sim-select">
+                                            <option value="none">بدون حراسة (عالية المخاطر)</option>
+                                            <option value="light" selected>حراسة فرسان خفيفة (30 فارساً)</option>
+                                            <option value="heavy">حراسة مشددة مصفحة (80 مقاتلاً)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="sim-caravan-dispatch-actions">
+                                    <button type="button" class="btn btn-primary sim-action-btn" id="simDispatchCaravanBtn"><i data-lucide="navigation" class="lucide-icon"></i> <span>إطلاق القافلة التجارية الآن</span></button>
+                                </div>
+                            </div>
+
+                            <!-- Active Caravans List -->
+                            <div class="sim-active-caravans-wrap">
+                                <h5 class="sim-sub-heading">القوافل التجارية السارية في الطريق:</h5>
+                                <div class="sim-caravans-list" id="simActiveCaravansList">
+                                    <!-- Populated via JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Military View -->
+                    <div class="sim-role-view" id="simMilitaryView" style="display:none" role="tabpanel" aria-labelledby="simRoleMilitaryBtn">
+                        <div class="sim-view-section">
+                            <div class="sim-view-header">
+                                <h4>⚔️ تنظيم الجيوش والحاميات والدفاع التضاريسي</h4>
+                                <span class="sim-badge-role">مسؤولية: قائد الجيوش والدفاع</span>
+                            </div>
+                            <p class="sim-view-desc">حماية الحدود، تحصين نقاط الاختناق، مرافقة القوافل، وخوض المعارك مع الاستفادة من ميزات التضاريس الجبلية والسهلية.</p>
+
+                            <div class="sim-military-roster-grid">
+                                <div class="sim-roster-card">
+                                    <div class="sim-roster-title">🛡️ المشاة وحملة الرماح</div>
+                                    <div class="sim-roster-count" id="simInfantryCount">800 مقاتل</div>
+                                    <div class="sim-roster-sub">دفاع حصين بالمضائق</div>
+                                </div>
+                                <div class="sim-roster-card">
+                                    <div class="sim-roster-title">🏹 رماة السهام والفرسان</div>
+                                    <div class="sim-roster-count" id="simArchersCount">400 مقاتل</div>
+                                    <div class="sim-roster-sub">تغطية تكتيكية بعيدة</div>
+                                </div>
+                                <div class="sim-roster-card">
+                                    <div class="sim-roster-title">🐎 الفرسان المغيرون</div>
+                                    <div class="sim-roster-count" id="simCavalryCount">300 فارس</div>
+                                    <div class="sim-roster-sub">+25% تفوق في السهول</div>
+                                </div>
+                            </div>
+
+                            <div class="sim-choke-points-card">
+                                <h5 class="sim-sub-heading">نشر الحاميات عند نقاط الاختناق (Choke Points):</h5>
+                                <p class="sim-card-hint">نشر الحاميات في الممرات الجبلية والمعابر النهرية يمنح قواتك مكافأة دفاعية بنسبة <strong>+30%</strong> ويعطل مباغتة الخصوم.</p>
+                                <div class="sim-choke-list" id="simChokePointsList">
+                                    <!-- Populated via JS -->
+                                </div>
+                            </div>
+
+                            <div class="sim-battles-log-card">
+                                <h5 class="sim-sub-heading">سجل الاشتباكات والمناورات العسكرية:</h5>
+                                <div class="sim-battles-feed" id="simBattlesFeed">
+                                    <div class="sim-feed-item">🛡️ حامية مضيق باب المندب جاهزة وفي كامل تأهبها لتأمين تجارة البحر الأحمر.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. Planner View -->
+                    <div class="sim-role-view" id="simPlannerView" style="display:none" role="tabpanel" aria-labelledby="simRolePlannerBtn">
+                        <div class="sim-view-section">
+                            <div class="sim-view-header">
+                                <h4>🗺️ المخطط الجغرافي: التضاريس والمسافات والفصول</h4>
+                                <span class="sim-badge-role">مسؤولية: المخطط الجغرافي الاستراتيجي</span>
+                            </div>
+                            <p class="sim-view-desc">حساب المسافات الواقعية، معامل وعورة التضاريس، ورسم الطرق الالتفافية البديلة لتفادي الكمائن والظروف المناخية القاسية.</p>
+
+                            <!-- Distance Calculator -->
+                            <div class="sim-distance-calc-box">
+                                <h5 class="sim-sub-heading">حاسبة المسافات الجغرافية ومعامل وعورة التضاريس:</h5>
+                                <div class="sim-form-grid">
+                                    <div class="sim-field">
+                                        <label for="simCalcOriginSelect">نقطة الانطلاق:</label>
+                                        <select id="simCalcOriginSelect" class="sim-select"></select>
+                                    </div>
+                                    <div class="sim-field">
+                                        <label for="simCalcTargetSelect">نقطة الوصول:</label>
+                                        <select id="simCalcTargetSelect" class="sim-select"></select>
+                                    </div>
+                                </div>
+                                <div class="sim-calc-results" id="simCalcResultsBox">
+                                    <div class="sim-calc-metric">
+                                        <span>المسافة الكروية المستقيمة:</span>
+                                        <strong id="simCalcDistanceKm">840 كم</strong>
+                                    </div>
+                                    <div class="sim-calc-metric">
+                                        <span>معامل وعورة التضاريس:</span>
+                                        <strong id="simCalcTerrainFriction">1.3x (ممرات جبلية وصحاري)</strong>
+                                    </div>
+                                    <div class="sim-calc-metric">
+                                        <span>زمن مسير القافلة المقدر:</span>
+                                        <strong id="simCalcTravelTime">32 ساعة حقيقية (~16 يوماً تاريخياً)</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Seasonal Advisory Box -->
+                            <div class="sim-seasonal-advisory-card" id="simSeasonalAdvisoryCard">
+                                <h5 class="sim-sub-heading">تقرير الفصول المناخية والإنذار المبكر:</h5>
+                                <div class="sim-advisory-content" id="simSeasonalAdvisoryText">
+                                    🌱 <strong>فصل الربيع الحالي:</strong> اعتدال مناخي عام في كافة الأقاليم، انطلاق مواسم الرعي في البادية، وسهولة تامة في حركة القوافل التجارية دون عوائق ثلجية أو جفاف مائي.
+                                </div>
+                            </div>
+
+                            <!-- Alternative Routing Tool -->
+                            <div class="sim-alt-routing-box">
+                                <h5 class="sim-sub-heading">رسم وتخطيط مسار التفافي بديل على الخريطة:</h5>
+                                <p class="sim-card-hint">إذا تم رصد كمين أو ثلوج عاتقة في الطريق المعتاد، ارسم درباً بديلاً لتوجيه القوافل والكتائب بأمان.</p>
+                                <button type="button" class="btn btn-primary sim-action-btn" id="simDrawAltRouteBtn"><i data-lucide="pen-tool" class="lucide-icon"></i> <span>رسم مسار التفافي بديل على الخريطة الحرة</span></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. Intelligence View -->
+                    <div class="sim-role-view" id="simIntelligenceView" style="display:none" role="tabpanel" aria-labelledby="simRoleIntelligenceBtn">
+                        <div class="sim-view-section">
+                            <div class="sim-view-header">
+                                <h4>🕵️‍♂️ شبكة الاستخبارات والاستطلاع ودوائر الرصد</h4>
+                                <span class="sim-badge-role">مسؤولية: رئيس الاستخبارات</span>
+                            </div>
+                            <p class="sim-view-desc">نشر المستطلعين، رصد القوافل عبر نظام الدوائر الثلاث متحدة المركز (100-70-30 كم)، وإدارة مصير الجواسيس الأسرى والرسل.</p>
+
+                            <!-- Scouting Rings Info & Map Controls -->
+                            <div class="sim-scout-controls-card">
+                                <div class="sim-scout-header-row">
+                                    <h5 class="sim-sub-heading">نظام دوائر الرصد الثلاث متحدة المركز:</h5>
+                                    <button type="button" class="btn btn-secondary btn-sm" id="simToggleScoutRingsBtn" aria-pressed="true"><i data-lucide="radar" class="lucide-icon"></i> <span>إخفاء/إظهار دوائر الرصد على الخريطة</span></button>
+                                </div>
+                                <div class="sim-rings-legend-grid">
+                                    <div class="sim-ring-item sim-ring-outer">
+                                        <strong>الدائرة الخارجية (70 - 100 كم)</strong>
+                                        <span>رصد حركة وغبار فقط. احتمال كشف المستطلع: <strong>0%</strong> (أمان تام).</span>
+                                    </div>
+                                    <div class="sim-ring-item sim-ring-mid">
+                                        <strong>الدائرة الوسطى (30 - 70 كم)</strong>
+                                        <span>تخمين تقريبي للحمولة والقوة (±25%). احتمال كشف المستطلع: <strong>10%</strong>.</span>
+                                    </div>
+                                    <div class="sim-ring-item sim-ring-inner">
+                                        <strong>الدائرة الداخلية (0 - 30 كم)</strong>
+                                        <span>كشف مؤكد 100% للحمولة والتسليح. خطر كشف متبادل: <strong>40% - 50%</strong>.</span>
+                                    </div>
+                                </div>
+                                <div class="sim-deploy-scout-bar">
+                                    <button type="button" class="btn btn-primary sim-action-btn" id="simDeployScoutBtn"><i data-lucide="user-plus" class="lucide-icon"></i> <span>نشر طليعة استطلاع جديدة على الخريطة 👁️</span></button>
+                                </div>
+                            </div>
+
+                            <!-- Active Scouts List -->
+                            <div class="sim-scouts-list-card">
+                                <h5 class="sim-sub-heading">فرق الاستطلاع التابعة لدولتك في الميدان:</h5>
+                                <div class="sim-scouts-feed" id="simActiveScoutsFeed">
+                                    <!-- Populated via JS -->
+                                </div>
+                            </div>
+
+                            <!-- Prisoner of War / Captured Spies -->
+                            <div class="sim-prisoners-chamber-card">
+                                <h5 class="sim-sub-heading">غرفة التحقيق مع الجواسيس المعتقلين:</h5>
+                                <div class="sim-captured-spies-list" id="simCapturedSpiesList">
+                                    <!-- Populated via JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Mode Banners for Map Interaction inside Sim -->
+            <div class="map-floating-mode-banner" id="simDrawRouteBanner" style="display:none">
+                <div class="banner-content">
+                    <i data-lucide="map-pin" class="lucide-icon" style="color:#f59e0b;"></i>
+                    <span>وضع رسم المسار الالتفافي البديل: انقر على الخريطة لتحديد نقاط المسار الآمن.</span>
+                </div>
+                <div class="banner-actions">
+                    <button type="button" class="btn btn-secondary btn-sm" id="simCancelRouteBtn">إلغاء</button>
+                    <button type="button" class="btn btn-primary btn-sm" id="simSaveRouteBtn">اعتماد المسار البديل ✓</button>
+                </div>
+            </div>
+
+            <div class="map-floating-mode-banner" id="simPlaceScoutBanner" style="display:none">
+                <div class="banner-content">
+                    <i data-lucide="eye" class="lucide-icon" style="color:#14b8a6;"></i>
+                    <span>وضع نشر المستطلع: انقر على أي موقع في الخريطة لتمركز طليعة الاستطلاع.</span>
+                </div>
+                <div class="banner-actions">
+                    <button type="button" class="btn btn-secondary btn-sm" id="simCancelScoutBtn">إلغاء</button>
+                </div>
+            </div>
+
+            <!-- Teacher / Game Master Console Modal -->
+            <div class="sim-teacher-modal-overlay" id="simTeacherModal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="simTeacherTitle">
+                <div class="sim-teacher-modal-box">
+                    <div class="sim-modal-header">
+                        <div class="sim-modal-header-title">
+                            <i data-lucide="graduation-cap" class="lucide-icon" style="color:#f59e0b;"></i>
+                            <h3 id="simTeacherTitle">شاشة المشرف والمحكّم التربوي الأعلى (Game Master Console)</h3>
+                        </div>
+                        <button type="button" class="close-btn" id="simTeacherModalCloseBtn" aria-label="إغلاق"><i data-lucide="x" class="lucide-icon"></i></button>
+                    </div>
+
+                    <div class="sim-teacher-modal-body">
+                        <!-- Section 1: Events Radar -->
+                        <div class="sim-teacher-section">
+                            <h4 class="sim-sub-heading">📡 رادار الأحداث والنزاعات الجغرافية الحية:</h4>
+                            <div class="sim-teacher-events-log" id="simTeacherEventsLog">
+                                <!-- Populated via JS -->
+                            </div>
+                        </div>
+
+                        <!-- Section 2: Crisis Injector -->
+                        <div class="sim-teacher-section">
+                            <h4 class="sim-sub-heading">⚡ مطلق الأحداث التاريخية والأزمات الطارئة:</h4>
+                            <p class="sim-card-hint">إطلاق حدث تاريخي أو بيئي مفاجئ في إقليم جغرافي لاختبار سرعة تكيف ومرونة الطلاب:</p>
+                            <div class="sim-crisis-buttons-grid">
+                                <button type="button" class="btn btn-secondary sim-crisis-btn" data-crisis="drought"><i data-lucide="sun" class="lucide-icon"></i> <span>موجة جفاف وانحسار مياه ☀️</span></button>
+                                <button type="button" class="btn btn-secondary sim-crisis-btn" data-crisis="flood"><i data-lucide="droplets" class="lucide-icon"></i> <span>فيضان موسمي عارم 🌊</span></button>
+                                <button type="button" class="btn btn-secondary sim-crisis-btn" data-crisis="goldrush"><i data-lucide="sparkles" class="lucide-icon"></i> <span>اكتشاف عرق ذهب جديد 🪙</span></button>
+                                <button type="button" class="btn btn-secondary sim-crisis-btn" data-crisis="frost"><i data-lucide="snowflake" class="lucide-icon"></i> <span>صقيع قارس وتجمد ممرات ❄️</span></button>
+                            </div>
+                        </div>
+
+                        <!-- Section 3: Curriculum Reward Bridge -->
+                        <div class="sim-teacher-section">
+                            <h4 class="sim-sub-heading">🎓 جسر التميز الصفي ومكافآت الواجبات المدرسية:</h4>
+                            <p class="sim-card-hint">منح دعم استراتيجي للفريق الذي يقدم أعضاؤه بحوثاً متميزة أو يحلون واجبات أطلس ليبيدوس بنموذجية:</p>
+                            <div class="sim-reward-controls-row">
+                                <select id="simRewardNationSelect" class="sim-select">
+                                    <!-- Populated via JS -->
+                                </select>
+                                <select id="simRewardTypeSelect" class="sim-select">
+                                    <option value="wheat">🌾 منحة صوامع (+150 كيس قمح)</option>
+                                    <option value="metals">⛏️ منحة عتاد (+80 سبيكة حديد)</option>
+                                    <option value="gold">💰 منحة مالية (+120 دينار ذهبي)</option>
+                                    <option value="horses">🐎 منحة فرسان (+50 رأس خيل)</option>
+                                </select>
+                                <button type="button" class="btn btn-primary" id="simGrantRewardBtn">منح المكافأة للدولة الآن ✓</button>
+                            </div>
+                        </div>
+
+                        <!-- Section 4: Sandbox World Architect & Freeform Borders -->
+                        <div class="sim-teacher-section" id="simTeacherSandboxSection">
+                            <h4 class="sim-sub-heading">🗺️ محرر العوالم الرملية ورسم حدود الأمم الحرة (Sandbox GIS Architect):</h4>
+                            <p class="sim-card-hint">ارسم حدوداً مخصصة ومضلعات حرة لأي عدد من الفرق على الخريطة مباشرة؛ يستنتج محرك الخريطة المناخ والطقس والثروات والمضائق تلقائياً وفق الإحداثيات والتضاريس والأنهار:</p>
+                            <div class="sim-sandbox-controls-row" style="display:flex;gap:8px;flex-wrap:wrap;">
+                                <button type="button" class="btn btn-primary sim-sandbox-btn" id="simStartDrawTerritoryBtn">
+                                    <i data-lucide="pen-tool" class="lucide-icon"></i>
+                                    <span>🎨 رسم مضلع دولة جديدة على الخريطة</span>
+                                </button>
+                                <button type="button" class="btn btn-secondary sim-sandbox-btn" id="simAutoAssignTeamsBtn">
+                                    <i data-lucide="shuffle" class="lucide-icon"></i>
+                                    <span>🎲 توزيع الأقاليم عشوائياً على فرق الصف</span>
+                                </button>
+                                <button type="button" class="btn btn-secondary sim-sandbox-btn" id="simResetNewEpochBtn" style="color:#f87171;">
+                                    <i data-lucide="rotate-ccw" class="lucide-icon"></i>
+                                    <span>⚡ تصفير المحاكاة وتدشين عصر جديد</span>
+                                </button>
+                            </div>
+                            <div class="sim-sandbox-settings-row" style="display:flex;gap:12px;margin-top:10px;align-items:center;">
+                                <div class="sim-field" style="flex:1;">
+                                    <label for="simGamePaceSelect">إيقاع سريان دورات الزمن في المحاكاة:</label>
+                                    <select id="simGamePaceSelect" class="sim-select">
+                                        <option value="classroom" selected>⏱️ وضع الحصة المدرسية (90 ثانية / دورة موسمية)</option>
+                                        <option value="daily">📅 وضع اليوم الدراسي (24 ساعة / دورة موسمية)</option>
+                                        <option value="weekly_semester">🏛️ وضع الفصل الدراسي الكامل (أسبوع واقعي = دورة موسمية كاملة)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="sim-drawn-nations-container" style="margin-top:10px;background:rgba(0,0,0,0.25);border-radius:8px;padding:10px;">
+                                <div class="sim-drawn-nations-header" style="display:flex;justify-content:space-between;align-items:center;font-size:0.85rem;font-weight:700;margin-bottom:6px;">
+                                    <span>الأقاليم المعتمدة في الخريطة الرملية:</span>
+                                    <span class="sim-badge" id="simDrawnNationsCount" style="background:#3b82f6;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75rem;">0 دول</span>
+                                </div>
+                                <div class="sim-drawn-nations-list" id="simDrawnNationsList" style="display:flex;flex-wrap:wrap;gap:6px;">
+                                    <span class="sim-empty-hint" style="font-size:0.8rem;color:#94a3b8;">لم يتم رسم أقاليم مخصصة بعد؛ المحاكاة تعمل بالسيناريو التاريخي الافتراضي.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Point-and-Click Map Trade Modal (Intuitive Strategy Cards) -->
+            <div class="sim-quick-trade-modal" id="simQuickTradeModal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="simQuickTradeTitle">
+                <div class="sim-quick-trade-box">
+                    <div class="sim-modal-header">
+                        <div class="sim-modal-header-title">
+                            <span class="sim-trade-modal-icon">🐫</span>
+                            <h3 id="simQuickTradeTitle">تسيير قافلة تجارية سريعة</h3>
+                        </div>
+                        <button type="button" class="close-btn" id="simQuickTradeCloseBtn" aria-label="إغلاق"><i data-lucide="x" class="lucide-icon"></i></button>
+                    </div>
+                    <div class="sim-quick-trade-body">
+                        <div class="sim-trade-route-summary">
+                            <span id="simQuickTradeOriginFlag">🦅</span>
+                            <span id="simQuickTradeOriginName">مملكة النيل</span>
+                            <span class="sim-route-arrow">➔</span>
+                            <span id="simQuickTradeTargetFlag">🏔️</span>
+                            <strong id="simQuickTradeTargetName">إمارة الأناضول</strong>
+                        </div>
+                        <h4 class="sim-trade-section-title">اختر بلمسة واحدة المورد الذي تود تصديره:</h4>
+                        <div class="sim-trade-cards-grid" id="simExportCardsGrid">
+                            <button type="button" class="sim-trade-card active" data-cargo="wheat">
+                                <span class="sim-card-emoji">🌾</span>
+                                <span class="sim-card-title">100 كيس قمح</span>
+                                <span class="sim-card-sub">غذاء الصوامع</span>
+                            </button>
+                            <button type="button" class="sim-trade-card" data-cargo="metals">
+                                <span class="sim-card-emoji">⛏️</span>
+                                <span class="sim-card-title">50 سبيكة حديد</span>
+                                <span class="sim-card-sub">خام الدروع</span>
+                            </button>
+                            <button type="button" class="sim-trade-card" data-cargo="livestock">
+                                <span class="sim-card-emoji">🐎</span>
+                                <span class="sim-card-title">30 رأس خيل</span>
+                                <span class="sim-card-sub">كتائب فرسان</span>
+                            </button>
+                            <button type="button" class="sim-trade-card" data-cargo="gold">
+                                <span class="sim-card-emoji">💰</span>
+                                <span class="sim-card-title">100 دينار ذهبي</span>
+                                <span class="sim-card-sub">سيولة مالية</span>
+                            </button>
+                        </div>
+
+                        <h4 class="sim-trade-section-title">اختر المورد المطلوب بالمقايضة من الشريك:</h4>
+                        <div class="sim-trade-cards-grid" id="simImportCardsGrid">
+                            <button type="button" class="sim-trade-card" data-requested="metals">
+                                <span class="sim-card-emoji">⛏️</span>
+                                <span class="sim-card-title">خام معادن</span>
+                                <span class="sim-card-sub">للصناعة العسكرية</span>
+                            </button>
+                            <button type="button" class="sim-trade-card active" data-requested="gold">
+                                <span class="sim-card-emoji">💰</span>
+                                <span class="sim-card-title">دنانير ذهب</span>
+                                <span class="sim-card-sub">لإنعاش الخزينة</span>
+                            </button>
+                            <button type="button" class="sim-trade-card" data-requested="livestock">
+                                <span class="sim-card-emoji">🐎</span>
+                                <span class="sim-card-title">خيول حربية</span>
+                                <span class="sim-card-sub">لفرسان الجيش</span>
+                            </button>
+                            <button type="button" class="sim-trade-card" data-requested="wheat">
+                                <span class="sim-card-emoji">🌾</span>
+                                <span class="sim-card-title">قمح وحبوب</span>
+                                <span class="sim-card-sub">للأمان الغذائي</span>
+                            </button>
+                        </div>
+                        <button type="button" class="btn btn-primary sim-launch-caravan-btn" id="simQuickLaunchCaravanBtn">
+                            <span>إطلاق القافلة في مسارها الحريري 🐫✨</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Floating Resource Deltas Container -->
+            <div class="sim-floating-popups-container" id="simFloatingPopupsContainer" aria-hidden="true"></div>
+
+            <!-- Freeform Territory Drawing Banner -->
+            <div class="sim-draw-route-banner" id="simDrawTerritoryBanner" style="display:none;">
+                <div class="sim-draw-route-info">
+                    <i data-lucide="pen-tool" class="lucide-icon"></i>
+                    <span>وضع رسم حدود الدولة: انقر على الخريطة لتحديد زوايا الإقليم (<strong id="simDrawnPointsCount">0</strong> نقاط).</span>
+                </div>
+                <div style="display:flex;gap:8px;align-items:center;">
+                    <input type="text" id="simCustomNationNameInput" class="sim-input" placeholder="اسم الدولة (اختياري)" style="padding:4px 8px;font-size:0.82rem;width:170px;border-radius:4px;border:1px solid #475569;background:#1e293b;color:#f8fafc;" />
+                    <button type="button" class="btn btn-primary btn-sm" id="simConfirmTerritoryBtn">اعتماد مضلع الدولة ✓</button>
+                    <button type="button" class="btn btn-secondary btn-sm" id="simCancelTerritoryBtn">إلغاء ✕</button>
+                </div>
+            </div>
+
+            <!-- Country Dossier Modal (وثيقة تأسيس الأمة والتقرير الجيوسياسي) -->
+            <div class="sim-teacher-modal-overlay" id="simCountryDossierModal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="simDossierTitle">
+                <div class="sim-teacher-modal-box sim-dossier-box" style="max-width:680px;">
+                    <div class="sim-modal-header" style="background:linear-gradient(135deg, rgba(30,58,138,0.7), rgba(15,23,42,0.95));">
+                        <div class="sim-modal-header-title">
+                            <span id="simDossierFlag" style="font-size:1.8rem;">🦅</span>
+                            <div>
+                                <h3 id="simDossierTitle" style="margin:0;font-size:1.2rem;color:#f8fafc;">وثيقة تأسيس الأمة والتقرير الجيوسياسي</h3>
+                                <div id="simDossierSubtitle" style="font-size:0.82rem;color:#93c5fd;">استطلاع الخريطة الشامل للموقع والمناخ والثروات الطبيعية</div>
+                            </div>
+                        </div>
+                        <button type="button" class="close-btn" id="simDossierCloseBtn" aria-label="إغلاق"><i data-lucide="x" class="lucide-icon"></i></button>
+                    </div>
+                    <div class="sim-teacher-modal-body">
+                        <div class="sim-dossier-grid" style="display:grid;grid-template-columns:1fr;gap:12px;">
+                            <!-- Section 1: Geography & Climate -->
+                            <div class="sim-dossier-card" style="background:rgba(255,255,255,0.04);padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);">
+                                <h4 class="sim-sub-heading" style="margin:0 0 4px 0;font-size:0.9rem;">🗺️ الإقليم المناخي والجغرافي:</h4>
+                                <div id="simDossierBiome" style="font-weight:700;color:#38bdf8;font-size:0.95rem;margin-bottom:4px;">إقليم فيضي نهري</div>
+                                <p id="simDossierClimateDesc" class="sim-card-hint" style="margin:0;font-size:0.82rem;color:#cbd5e1;">شتاء معتدل وصيف دافئ مع وفرة في مياه الري وطمي فيضي عالي الخصوبة.</p>
+                            </div>
+                            <!-- Section 2: 4-Seasons Forecast -->
+                            <div class="sim-dossier-card" style="background:rgba(255,255,255,0.04);padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);">
+                                <h4 class="sim-sub-heading" style="margin:0 0 6px 0;font-size:0.9rem;">⛅ دورة فصول السنة الأربعة في إقليمكم:</h4>
+                                <ul id="simDossierSeasonsList" style="margin:0;padding-inline-start:18px;font-size:0.82rem;color:#cbd5e1;display:flex;flex-direction:column;gap:4px;">
+                                    <!-- Populated by JS -->
+                                </ul>
+                            </div>
+                            <!-- Section 3: Initial Resources Audit -->
+                            <div class="sim-dossier-card" style="background:rgba(255,255,255,0.04);padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);">
+                                <h4 class="sim-sub-heading" style="margin:0 0 6px 0;font-size:0.9rem;">🌾 كشف الثروات الطبيعية والمخزون الأولي:</h4>
+                                <div id="simDossierResourcesRow" style="display:flex;gap:10px;flex-wrap:wrap;">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                            <!-- Section 4: Strategic Vulnerabilities & Choke Points -->
+                            <div class="sim-dossier-card" style="background:rgba(255,255,255,0.04);padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);">
+                                <h4 class="sim-sub-heading" style="margin:0 0 4px 0;font-size:0.9rem;">🛡️ التقييم الدفاعي والثغور الاستراتيجية:</h4>
+                                <p id="simDossierDefenseDesc" class="sim-card-hint" style="margin:0;font-size:0.82rem;color:#cbd5e1;">تتمتع دولتكم بحصانة طبيعية؛ احرصوا على تأمين المضائق الحيوية لحماية خطوط التجارة ومخازن الغلال.</p>
+                            </div>
+                        </div>
+                        <div style="margin-top:14px;display:flex;justify-content:flex-end;">
+                            <button type="button" class="btn btn-primary" id="simAcceptDossierBtn" style="padding:8px 20px;font-size:0.95rem;font-weight:700;">
+                                <span>استلام راية الأمة وبدء المحاكاة 👑</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>  <!-- closing map-container -->
 
-    <div class="projection-compare-dock" id="projectionCompareOverlay" style="display:none">
+    <div class="projection-compare-dock" id="projectionCompareOverlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="projectionCompareTitle">
         <div class="projection-compare-header">
-            <h3 class="quiz-panel-title" data-i18n="projectionCompareTitle"></h3>
+            <h3 class="quiz-panel-title" id="projectionCompareTitle" data-i18n="projectionCompareTitle"></h3>
             <div class="projection-compare-header-actions">
                 <button class="close-btn" id="projectionCompareRefreshBtn" data-i18n-title="projectionCompareRefresh_title" title="تحديث"><i data-lucide="refresh-cw" class="lucide-icon"></i></button>
                 <button class="close-btn" id="projectionCompareCloseBtn" title="إغلاق" aria-label="إغلاق" data-i18n-title="closeCompare" data-i18n-aria-label="closeCompare"><i data-lucide="x" class="lucide-icon"></i></button>
@@ -1623,10 +2965,10 @@
 
     <script type="module" src="firebase.js"></script>
 
-    <script src="boot.js?v=2026-09-05F"></script>
-    <script src="data.js?v=2026-09-05F"></script>
-    <script src="historical-polities-data.js?v=2026-09-05F"></script>
-    <script src="app.js?v=2026-09-05F"></script>
-    <script src="teacher-auth-gate.js?v=2026-09-13"></script>
+    <script src="boot.js?v=2026-09-16G"></script>
+    <script src="data.js?v=2026-09-16G"></script>
+    <script src="historical-polities-data.js?v=2026-09-16G"></script>
+    <script src="app.js?v=2026-09-16G"></script>
+    <script src="teacher-auth-gate.js?v=2026-09-16G"></script>
 </body>
 </html>

@@ -14,7 +14,7 @@
             localStorage.setItem("theme", e);
         } catch (e) {}
     }
-    window.APP_BUILD && "2026-08-19A" !== window.APP_BUILD && "1" !== sessionStorage.getItem("lepidosBuildChecked") && (sessionStorage.setItem("lepidosBuildChecked", "1"), 
+    window.APP_BUILD && "2026-09-16D" !== window.APP_BUILD && "1" !== sessionStorage.getItem("lepidosBuildChecked") && (sessionStorage.setItem("lepidosBuildChecked", "1"), 
     location.reload()), window.refreshLucideIcons = t, window.switchSection = function(e) {
         window.applySection && window.applySection(e);
     }, i(function() {
@@ -697,22 +697,21 @@
         return Ki(e, t) > 0;
     }
     function Yi(e) {
-        if (e) {
-            var t = {
-                properties: {
-                    name: e.name_en || e.name_ar || e.id
-                },
-                _polity: e
-            };
-            if (e.origin_coords && Array.isArray(e.origin_coords)) {
-                var i = ao()(e.origin_coords);
-                if (i && !isNaN(i[0])) {
-                    var a = d3.select("#mapSvg"), r = La(), o = d3.zoomIdentity.translate(r.width / 2 - 3.5 * i[0], r.height / 2 - 3.5 * i[1]).scale(3.5);
-                    a.transition().duration(n() ? 0 : 750).call(si.transform, o);
-                }
+        if (!e || "history" !== Ke || !Pe) return;
+        var t = {
+            properties: {
+                name: e.name_en || e.name_ar || e.id
+            },
+            _polity: e
+        };
+        if (e.origin_coords && Array.isArray(e.origin_coords)) {
+            var i = ao()(e.origin_coords);
+            if (i && !isNaN(i[0])) {
+                var a = d3.select("#mapSvg"), r = La(), o = d3.zoomIdentity.translate(r.width / 2 - 3.5 * i[0], r.height / 2 - 3.5 * i[1]).scale(3.5);
+                a.transition().duration(n() ? 0 : 750).call(si.transform, o);
             }
-            "function" == typeof openHistoryPanel && openHistoryPanel(t);
         }
+        "function" == typeof openHistoryPanel && openHistoryPanel(t);
     }
     function Vi(e) {
         if (!e) return "";
@@ -840,10 +839,22 @@
         }(e || "") - .5);
         return n >= 0 ? t.brighter(1.6 * n).toString() : t.darker(1.6 * -n).toString();
     }
+    function isAntarcticaFeature(e) {
+        if (!e) return false;
+        if (e.id === "010" || e.id === 10 || e.id === "ATA") return true;
+        var t = e.properties?.name || (typeof e === "string" ? e : "");
+        if (!t) return false;
+        var n = t.toLowerCase();
+        return "antarctica" === n || "fr. s. antarctic lands" === n || "القارة القطبية الجنوبية" === t || "أنتاركتيكا" === t;
+    }
     function pa() {
+        if (window.innerWidth <= 768 || (typeof xi !== "undefined" && xi)) return null;
         return void 0 !== Pe && Pe || void 0 !== Ke && "history" === Ke ? null : "normal" === ae ? "url(#countryShadow)" : null;
     }
     function ma(e) {
+        if (isAntarcticaFeature(e)) {
+            return "light" === document.documentElement.getAttribute("data-theme") ? "#e0f2fe" : "#dceef8";
+        }
         const t = e.properties?.name || "";
         if ("normal" === ae) return ua(t);
         let n;
@@ -855,6 +866,9 @@
         return Qi(t) === ie ? d3.color(n).brighter(.6).toString() : MAP_COLORS.country.filterDim;
     }
     function fa(e) {
+        if (isAntarcticaFeature(e)) {
+            return "light" === document.documentElement.getAttribute("data-theme") ? "rgba(0,0,0,0.15)" : "rgba(255,255,255,0.65)";
+        }
         if ("normal" === ae) return MAP_COLORS.country.normalStroke;
         const t = e.properties?.name || "";
         return "all" !== ie && Qi(t) === ie ? "#fff" : MAP_COLORS.country.dimStroke;
@@ -956,7 +970,9 @@
             localStorage.setItem("cbPatterns", de ? "1" : "0");
         } catch (e) {}
         var e = document.getElementById("colorblindToggle");
-        e && (e.classList.toggle("toggle-on", de), e.setAttribute("aria-pressed", de ? "true" : "false")), 
+        e && (e.classList.toggle("toggle-on", de), e.setAttribute("aria-pressed", de ? "true" : "false"));
+        document.body && document.body.classList.toggle("colorblind-mode", de);
+        document.documentElement && document.documentElement.classList.toggle("colorblind-mode", de);
         Ea(), Gr(), X(de ? zi("colorblindToggleOn") || "تم تفعيل أنماط عمى الألوان" : zi("colorblindToggleOff") || "تم إيقاف أنماط عمى الألوان");
     }
     function xa(e) {
@@ -1043,44 +1059,46 @@
     }
     function Sa() {
         Zn.selectAll("*").remove();
+        const isLight = "light" === document.documentElement.getAttribute("data-theme");
+        const grat = isLight && MAP_COLORS.graticuleLight ? MAP_COLORS.graticuleLight : MAP_COLORS.graticule;
         const e = d3.geoGraticule10();
-        Zn.append("path").datum(e).attr("fill", "none").attr("stroke", MAP_COLORS.graticule.line).attr("stroke-width", .5).attr("d", Gn);
+        Zn.append("path").datum(e).attr("fill", "none").attr("stroke", grat.line).attr("stroke-width", .5).attr("d", Gn);
         const t = {
             type: "LineString",
             coordinates: d3.range(-180, 181, 10).map(e => [ e, 0 ])
         };
-        Zn.append("path").datum(t).attr("fill", "none").attr("stroke", MAP_COLORS.graticule.equator).attr("stroke-width", 1.2).attr("stroke-dasharray", "4,4").attr("opacity", .6).attr("d", Gn);
+        Zn.append("path").datum(t).attr("fill", "none").attr("stroke", grat.equator).attr("stroke-width", 1.2).attr("stroke-dasharray", "4,4").attr("opacity", isLight ? .7 : .6).attr("d", Gn);
         const n = {
             type: "LineString",
             coordinates: d3.range(-180, 181, 5).map(e => [ e, 23.44 ])
         };
-        Zn.append("path").datum(n).attr("fill", "none").attr("stroke", MAP_COLORS.graticule.tropic).attr("stroke-width", .8).attr("stroke-dasharray", "6,3").attr("opacity", .5).attr("d", Gn);
+        Zn.append("path").datum(n).attr("fill", "none").attr("stroke", grat.tropic).attr("stroke-width", .8).attr("stroke-dasharray", "6,3").attr("opacity", isLight ? .6 : .5).attr("d", Gn);
         const i = {
             type: "LineString",
             coordinates: d3.range(-180, 181, 5).map(e => [ e, -23.44 ])
         };
-        Zn.append("path").datum(i).attr("fill", "none").attr("stroke", MAP_COLORS.graticule.tropic).attr("stroke-width", .8).attr("stroke-dasharray", "6,3").attr("opacity", .5).attr("d", Gn);
+        Zn.append("path").datum(i).attr("fill", "none").attr("stroke", grat.tropic).attr("stroke-width", .8).attr("stroke-dasharray", "6,3").attr("opacity", isLight ? .6 : .5).attr("d", Gn);
         Zn.append("path").datum({
             type: "LineString",
             coordinates: [ [ 0, -90 ], [ 0, 90 ] ]
-        }).attr("fill", "none").attr("stroke", MAP_COLORS.graticule.meridian).attr("stroke-width", .8).attr("opacity", .4).attr("d", Gn);
+        }).attr("fill", "none").attr("stroke", grat.meridian).attr("stroke-width", .8).attr("opacity", isLight ? .5 : .4).attr("d", Gn);
         Zn.append("path").datum({
             type: "LineString",
             coordinates: [ [ 180, -90 ], [ 180, 90 ] ]
-        }).attr("fill", "none").attr("stroke", MAP_COLORS.graticule.meridian).attr("stroke-width", .8).attr("opacity", .4).attr("d", Gn);
+        }).attr("fill", "none").attr("stroke", grat.meridian).attr("stroke-width", .8).attr("opacity", isLight ? .5 : .4).attr("d", Gn);
         const a = {
             type: "LineString",
             coordinates: d3.range(-180, 181, 5).map(e => [ e, 66.56 ])
         };
-        Zn.append("path").datum(a).attr("fill", "none").attr("stroke", MAP_COLORS.graticule.polar).attr("stroke-width", .6).attr("stroke-dasharray", "2,6").attr("opacity", .4).attr("d", Gn);
+        Zn.append("path").datum(a).attr("fill", "none").attr("stroke", grat.polar).attr("stroke-width", .6).attr("stroke-dasharray", "2,6").attr("opacity", isLight ? .5 : .4).attr("d", Gn);
         const r = {
             type: "LineString",
             coordinates: d3.range(-180, 181, 5).map(e => [ e, -66.56 ])
         };
-        Zn.append("path").datum(r).attr("fill", "none").attr("stroke", MAP_COLORS.graticule.polar).attr("stroke-width", .6).attr("stroke-dasharray", "2,6").attr("opacity", .4).attr("d", Gn), 
+        Zn.append("path").datum(r).attr("fill", "none").attr("stroke", grat.polar).attr("stroke-width", .6).attr("stroke-dasharray", "2,6").attr("opacity", isLight ? .5 : .4).attr("d", Gn), 
         Zn.append("path").datum({
             type: "Sphere"
-        }).attr("fill", "none").attr("stroke", MAP_COLORS.graticule.sphere).attr("stroke-width", .6).attr("opacity", .25).attr("d", Gn);
+        }).attr("fill", "none").attr("stroke", grat.sphere).attr("stroke-width", .6).attr("opacity", isLight ? .35 : .25).attr("d", Gn);
     }
     function Ia() {
         if (!ei) return;
@@ -2304,9 +2322,14 @@
     }
     function Gr() {
         var e = document.getElementById("layerCounter");
+        var mobBadge = document.getElementById("mobileLayerBadge");
         if (e) {
             var t = 0, n = document.querySelectorAll("#layersModalBody .btn.toggle-on");
             n && (t = n.length), e.textContent = t;
+            if (mobBadge) {
+                mobBadge.textContent = t;
+                mobBadge.style.display = t > 0 ? "inline-flex" : "none";
+            }
         }
     }
     function Yr() {
@@ -2347,7 +2370,7 @@
             const t = [ ra(-15), ra(-3), ra(8), ra(18), ra(28), ra(35) ].join(",");
             e += '<div class="legend-gradient-labels"><span>&lt;0°</span><span>&gt;30°</span></div>', 
             e += `<div class="legend-gradient-bar" style="background:linear-gradient(to right,${t})"></div>`, 
-            e += `<div style="font-size:0.8em;color:var(--text-secondary);margin-top:2px">${zi("celsiusLabel")}</div>`;
+            e += `<div style="font-size:0.8em;color:var(--text-secondary);margin-top:2px">${zi("celsiusLabel")} (${zi("annualMeanNote") || "متوسط سنوي"})</div>`;
         } else if ("gdp" === ae) {
             e += `<div style="font-weight:700;margin-bottom:4px">${zi("gdpLegend")}</div>`;
             const t = MAP_COLORS.gdp.slice(1).join(",");
@@ -2584,13 +2607,13 @@
             var t = La(), n = Se.scale();
             ti.append("circle").attr("cx", t.width / 2).attr("cy", t.height / 2).attr("r", n + 12).attr("fill", "url(#atmosphereGlow)").attr("filter", "url(#atmosphereBlur)"), 
             ti.append("circle").attr("cx", t.width / 2).attr("cy", t.height / 2).attr("r", n).attr("fill", "url(#globeShading)"), 
-            Sa(), Ia(), Jn && Jn.selectAll("path").attr("d", Gn), Qn.selectAll("path").attr("d", Gn).attr("fill", e ? "var(--panel-bg, #3a4a5c)" : function(e) {
+            Sa(), Ia(), Jn && Jn.selectAll("path").attr("d", Gn), Qn.selectAll("path").attr("d", Gn).attr("fill", function(e) {
                 return ma(e);
-            }).attr("stroke", e ? "rgba(255,255,255,0.5)" : function(e) {
+            }).attr("stroke", function(e) {
                 return fa(e);
-            }).attr("stroke-width", e ? .6 : function(e) {
+            }).attr("stroke-width", function(e) {
                 return .8;
-            }).attr("opacity", e ? .9 : function(e) {
+            }).attr("opacity", function(e) {
                 return ya(e);
             }), e || (bi && (bi.remove(), bi = null), Or(fn), Fa(), Ta(), Na(), Ja(), tr(), 
             nr(), clearTimeout(Ft), Ft = setTimeout(function() {
@@ -2620,10 +2643,10 @@
             }).on("drag", function(e) {
                 Ie[0] += .25 * e.dx, Ie[1] = Math.max(-90, Math.min(90, Ie[1] - .25 * e.dy)), Se.rotate(Ie), 
                 Ae || (Ae = !0, requestAnimationFrame(function() {
-                    Ae = !1, uo(!0);
+                    Ae = !1, uo(ze);
                 }));
             }).on("end", function() {
-                ze = !1, po();
+                ze = !1, po(), requestAnimationFrame(function() { uo(!1); }), setTimeout(function() { uo(!1); }, 50);
             })), Yn.call(Me), Zn.selectAll("*").remove(), Qn.selectAll("*").remove(), bi && (bi.remove(), 
             bi = null), fn && fn.length && (Jn && Jn.selectAll("path").attr("d", Gn), yn = Qn.selectAll("path").data(fn).join("path").attr("d", Gn).attr("fill", function(e) {
                 return ma(e);
@@ -2640,11 +2663,13 @@
             var t, i = document.getElementById("quizBtn");
             i && (i.disabled = !1, i.classList.remove("quiz-disabled"), i.title = zi("quizMode")), 
             To(), (t = document.getElementById("headerProjectionLabel")) && (t.setAttribute("data-i18n", "headerProjectionType"), 
-            t.textContent = zi("headerProjectionType")), Yn.on(".drag", null), si && Yn.call(si);
+            t.textContent = zi("headerProjectionType")), Yn.on(".drag", null), si && (Yn.call(si), Yn.on("wheel.zoom", null));
             var a = La();
             Kn = Ba(a.width, a.height), ro(), ti.selectAll("*").remove(), ti.append("rect").attr("x", -500).attr("y", -500).attr("width", a.width + 1e3).attr("height", a.height + 1e3).attr("fill", "url(#oceanGradient)"), 
             Zn.selectAll("*").remove(), Sa(), Ia(), fn && fn.length && (Jn && Jn.selectAll("path").attr("d", Gn), 
-            Qn.selectAll("*").remove(), yn = Qn.selectAll("path").data(fn).join("path").attr("class", "country-path").attr("d", Gn).attr("fill", function(e) {
+            Qn.selectAll("*").remove(), yn = Qn.selectAll("path").data(fn).join("path").attr("class", function(e) {
+                return "country-path" + (isAntarcticaFeature(e) ? " antarctica-path" : "");
+            }).attr("d", Gn).attr("fill", function(e) {
                 return ma(e);
             }).attr("stroke", function(e) {
                 return fa(e);
@@ -2745,7 +2770,11 @@
         });
     }
     function vo() {
-        Yn.transition().duration(n() ? 0 : 600).ease(d3.easeCubicInOut).call(si.transform, d3.zoomIdentity);
+        if (Be && Se) {
+            co(), uo(!1);
+        } else {
+            Yn.transition().duration(n() ? 0 : 600).ease(d3.easeCubicInOut).call(si.transform, d3.zoomIdentity);
+        }
     }
     function bo(e) {
         const t = {
@@ -2974,18 +3003,42 @@
             }(t);
         });
     }
-    function Eo() {
-        if (T.classList.remove("visible"), xi) {
+    function Eo(immediate) {
+        T.classList.remove("visible");
+        if (immediate) {
+            T.style.display = "none";
+        } else {
+            setTimeout(() => {
+                T.classList.contains("visible") || (T.style.display = "none");
+            }, 220);
+        }
+        if (xi) {
             const e = document.querySelector(".zoom-controls");
             e && (e.style.opacity = ""), e && (e.style.pointerEvents = ""), o.style.opacity = "", 
             o.style.pointerEvents = "";
         }
-        setTimeout(() => {
-            T.classList.contains("visible") || (T.style.display = "none");
-        }, 220), vn = null, bn = null, Kr(null), Mr(), void 0 !== $e && $e && ($e = null, 
+        vn = null, bn = null, _n = null, En = null, Kr(null), Mr();
+        if (yn) yn.classed("highlighted-country", !1);
+        if (typeof vi !== "undefined" && vi) {
+            clearTimeout(vi);
+            vi = null;
+        }
+        var wp = document.getElementById("histWaypointPopup");
+        wp && (wp.style.display = "none");
+        if (typeof sa === "function") sa();
+        var sp = document.getElementById("histSourcesPanel");
+        sp && (sp.style.display = "none");
+        if (F) {
+            F.classList.remove("visible");
+            F.style.display = "none";
+        }
+        d3.selectAll(".tooltip").classed("visible", !1);
+        void 0 !== $e && $e && ($e = null, 
         "function" == typeof drawEraScene && void 0 !== Pe && Pe && void 0 !== Fe && "eras" === Fe && drawEraScene(!0));
     }
     function ko(e) {
+        if ("geo" !== Ke) return;
+        _n = "country";
         wn = performance.now();
         const t = e.properties?.name || "", n = Pi(t);
         let i = da(t);
@@ -3028,20 +3081,9 @@
         const g = ca(t);
         null !== g && (h += `<p><strong>📊 ${zi("tooltipHDI")}:</strong> ${g.toFixed(3)}</p>`);
         const v = timezoneOffsets[t] || timezoneOffsets[n];
-        if (v && (h += `<p><strong>🕐 ${zi("timezone")}:</strong> ${v}</p>`), !window.historyIsActive || !window.historyIsActive()) {
-            const e = window.warsForCountry ? window.warsForCountry(t) : [];
-            e.length && (h += `<div class="panel-related-wars"><h4>⚔️ ${zi("histRelatedWars")}</h4>`, 
-            e.forEach(e => {
-                h += `<button class="btn panel-related-war-btn" data-hist-war-id="${e.id}" type="button">📜 ${zi("histSegWars")}: ${e.name} (${e.years})</button>`;
-            }), h += "</div>");
-        }
+        v && (h += `<p><strong>🕐 ${zi("timezone")}:</strong> ${v}</p>`);
         h += `<br><button class="btn" id="compareBtn" title="${zi("compareWith")}">📊 ${zi("compareTitle")}</button>`, 
-        P.innerHTML = h, T.style.display = "block", P.querySelectorAll("[data-hist-war-id]").forEach(e => {
-            e.addEventListener("click", () => {
-                const t = e.getAttribute("data-hist-war-id");
-                Eo(), window.applySection && window.applySection("history"), window.focusHistoryWar && window.focusHistoryWar(t);
-            });
-        }), document.getElementById("compareBtn")?.addEventListener("click", () => {
+        P.innerHTML = h, T.style.display = "block", document.getElementById("compareBtn")?.addEventListener("click", () => {
             const e = P.querySelector(".compare-search-container");
             e && e.remove();
             const n = document.createElement("input");
@@ -3213,6 +3255,9 @@
             });
         }
         Lo && Bo(Lo);
+        if (typeof window.scaleSimAndResearchLayers === "function") {
+            window.scaleSimAndResearchLayers(t);
+        }
     }
     function Io(e) {
         window.currentTransform = e, Vn.attr("transform", e.toString());
@@ -3245,7 +3290,7 @@
     function Mo() {
         const {width: e, height: t} = La();
         let n = !1, i = null;
-        si = d3.zoom().scaleExtent([ .5, 24 ]).translateExtent([ [ 2 * -e, 2 * -t ], [ 3 * e, 3 * t ] ]).clickDistance(8).on("zoom", function(e) {
+        si = d3.zoom().scaleExtent([ .85, 24 ]).translateExtent([ [ -0.2 * e, -0.2 * t ], [ 1.2 * e, 1.2 * t ] ]).clickDistance(8).on("zoom", function(e) {
             yi || (yi = !0, Vn.classed("zooming-active", !0)), li = e.transform, Io(li), So(li && li.k), 
             Lo && Bo(Lo), Ao(), go(), Ls(), n || (n = !0, requestAnimationFrame(function() {
                 n = !1, Tr();
@@ -3306,7 +3351,112 @@
                     n >= t.length || (t[n][1](), n++, requestAnimationFrame(e));
                 }();
             }, 200);
-        }), window.zoomBehavior = si, Yn.call(si), Yn.on("dblclick.zoom", null);
+        }), window.zoomBehavior = si, Yn.call(si), Yn.on("dblclick.zoom", null), Yn.on("wheel.zoom", null);
+        window.__zoomInitialized || (window.__zoomInitialized = !0, function() {
+            window.addEventListener("wheel", function(e) {
+                if (e.ctrlKey) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+
+            window.addEventListener("keydown", function(e) {
+                if ((e.ctrlKey || e.metaKey) && (e.key === "+" || e.key === "-" || e.key === "=" || e.key === "_")) {
+                    var isInput = e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.isContentEditable);
+                    if (!isInput) {
+                        e.preventDefault();
+                        if (e.key === "+" || e.key === "=") {
+                            if (Be && Se) {
+                                Se.scale(Math.min(3000, Se.scale() * 1.35));
+                                uo(!1);
+                            } else if (si && Yn) {
+                                Yn.transition().duration(200).ease(d3.easeCubicOut).call(si.scaleBy, 1.35);
+                            }
+                        } else if (e.key === "-" || e.key === "_") {
+                            if (Be && Se) {
+                                Se.scale(Math.max(120, Se.scale() * 0.74));
+                                uo(!1);
+                            } else if (si && Yn) {
+                                Yn.transition().duration(200).ease(d3.easeCubicOut).call(si.scaleBy, 0.74);
+                            }
+                        }
+                    }
+                }
+            });
+
+            if (Q) {
+                var globeZoomRaf = null, globeZoomEndTimer = null;
+                Q.addEventListener("wheel", function(e) {
+                    var svgNode = Yn && Yn.node ? Yn.node() : document.getElementById("mapSvg");
+                    var isDirectMapTarget = false;
+                    if (svgNode && (e.target === svgNode || svgNode.contains(e.target))) {
+                        isDirectMapTarget = true;
+                    } else if (e.target === Q || (e.target && (e.target.id === "adminBoundariesCanvas" || e.target.id === "densityCanvas" || e.target.id === "smartboardLaserCanvas"))) {
+                        isDirectMapTarget = true;
+                    }
+
+                    var isUI = false;
+                    if (e.target && e.target.closest) {
+                        isUI = !!e.target.closest(
+                            ".hist-popover-menu, .hist-popover-body, .layers-modal, .layers-modal-body, .country-panel, #panelContent, " +
+                            ".history-sources-panel, .history-bottom-bar, .controls-bar, .dock-unified-wrap, .smartboard-floating-bar, " +
+                            ".annotation-toolbar, .measure-toolbar, .zoom-controls, .legend, .tooltip, .data-table-overlay, " +
+                            ".shortcuts-overlay, .teacher-hub-modal, .quiz-modal, .quiz-overlay, .settings-modal, .feedback-modal, " +
+                            ".menu-popover, .modal, .modal-content, .drawer, .drawer-content, .panel, .panel-content, " +
+                            ".hist-traveler-card, .hist-waypoint-popup, .hist-crossroads-modal, .hist-compare-modal, " +
+                            ".header, .top-header, button, select, input, textarea, a, " +
+                            "[role='dialog'], [role='toolbar'], [role='menu'], [data-scrollable], .scrollable"
+                        );
+                    }
+
+                    var isScrollable = false;
+                    if (!isUI && e.target) {
+                        var el = e.target;
+                        while (el && el !== Q && el !== document.body && el !== document.documentElement) {
+                            if (el.scrollHeight > el.clientHeight + 2 || el.scrollWidth > el.clientWidth + 2) {
+                                var s = window.getComputedStyle(el);
+                                if (s.overflowY === "auto" || s.overflowY === "scroll" || s.overflowX === "auto" || s.overflowX === "scroll") {
+                                    isScrollable = true;
+                                    break;
+                                }
+                            }
+                            el = el.parentElement;
+                        }
+                    }
+
+                    if (!isDirectMapTarget || isUI || isScrollable) {
+                        return;
+                    }
+                    e.preventDefault();
+
+                    var dy = e.deltaY;
+                    if (e.deltaMode === 1) {
+                        dy *= 20;
+                    } else if (e.deltaMode === 2) {
+                        dy *= 300;
+                    }
+
+                    var k = e.ctrlKey ? 0.008 : Math.abs(dy) < 40 ? 0.0055 : 0.0035;
+                    var factor = Math.exp(-dy * k);
+                    factor = Math.max(0.4, Math.min(2.5, factor));
+
+                    if (Be && Se) {
+                        var currentScale = Se.scale();
+                        var newScale = Math.max(100, Math.min(3000, currentScale * factor));
+                        if (Math.abs(newScale - currentScale) > 0.01) {
+                            Se.scale(newScale);
+                            uo(!0);
+                            clearTimeout(globeZoomEndTimer);
+                            globeZoomEndTimer = setTimeout(function() {
+                                uo(!1);
+                            }, 120);
+                        }
+                    } else if (si && Yn) {
+                        var pt = d3.pointer(e, Yn.node());
+                        si.scaleBy(Yn, factor, pt);
+                    }
+                }, { passive: false });
+            }
+        }());
     }
     function To() {
         lt = [], ct && ct.selectAll("*").remove(), measureResultLabel.style.display = "none";
@@ -3469,19 +3619,38 @@
         }
     }
     function Uo(e, t) {
-        e && e.defaultPrevented || st || dt || (window.historyIsActive && window.historyIsActive() ? window.openHistoryPanel(t) : e.shiftKey && vn ? (bn = t, 
-        xo(vn, bn)) : (vn = t, bn = null, function(e) {
-            if (Mr(), ko(e), xi) {
-                const e = document.querySelector(".zoom-controls");
-                e && (e.style.opacity = "0"), e && (e.style.pointerEvents = "none"), o.style.opacity = "0", 
-                o.style.pointerEvents = "none";
+        if (e && e.defaultPrevented || st || dt) return;
+        if ("history" === Ke && window.historyIsActive && window.historyIsActive()) {
+            window.openHistoryPanel(t);
+            return;
+        }
+        if ("geo" === Ke) {
+            if (e && e.shiftKey && vn) {
+                bn = t;
+                xo(vn, bn);
+            } else {
+                vn = t;
+                bn = null;
+                (function(e) {
+                    if ("geo" !== Ke) return;
+                    Mr();
+                    ko(e);
+                    if (xi) {
+                        const e = document.querySelector(".zoom-controls");
+                        e && (e.style.opacity = "0");
+                        e && (e.style.pointerEvents = "none");
+                        o.style.opacity = "0";
+                        o.style.pointerEvents = "none";
+                    }
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            "geo" === Ke && T.classList.add("visible");
+                        });
+                    });
+                })(t);
+                Kr(t);
             }
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    T.classList.add("visible");
-                });
-            });
-        }(t), Kr(t)));
+        }
     }
     window.positionWaypointPopup = Bo, window.updateHistoricalLandmarkLabels = So;
     const $o = "lepidosAnnotations";
@@ -3632,7 +3801,9 @@
         return isNaN(t) ? 10 : t;
     }
     function ns() {
+        if (typeof Vn === "undefined" || !Vn) return;
         ht || (ht = Vn.append("g").attr("class", "annotation-layer")), ht.selectAll("*").remove();
+        window.renderStudentResearchPins && window.renderStudentResearchPins();
         var e = ao(), t = null, n = Math.min(4, Math.max(1, li.k));
         yt.forEach(function(i) {
             if (!i.hidden) {
@@ -3866,7 +4037,7 @@
             setTimeout(function() {
                 window.startAnnotationTutorial && window.startAnnotationTutorial();
             }, 300);
-        }()) : (Vo(), yt = [], ls(), is(), Go(zi("annotationModeOff")));
+        }()) : (Vo(), yt = [], ls(), is(), window.cleanupAnnotationCollab && window.cleanupAnnotationCollab(), Go(zi("annotationModeOff")));
     }
     function ys() {
         var e = Yo();
@@ -4041,9 +4212,30 @@
         e && e.classList.remove("visible");
     }
     function _s() {
-        if (Jn && hn && hn.length) {
-            var e = MAP_COLORS && MAP_COLORS.country && MAP_COLORS.country.normal || "#d4c5a0";
-            Jn.selectAll("*").remove(), Jn.selectAll("path").data(hn).join("path").attr("class", "history-land-path").attr("d", Gn).attr("fill", e).attr("stroke", "none").attr("stroke-width", 0).attr("filter", null).style("pointer-events", "none");
+        if (Jn) {
+            var landData = (window.allLandFeatures && window.allLandFeatures.length) ? window.allLandFeatures : (Array.isArray(hn) && hn.length) ? hn : fn;
+            if (landData && landData.length) {
+                var e = MAP_COLORS && MAP_COLORS.country && MAP_COLORS.country.normal || "#d4c5a0";
+                Jn.selectAll("*").remove();
+                Jn.selectAll("path.history-land-path").data(landData).join("path")
+                    .attr("class", "history-land-path")
+                    .attr("d", Gn)
+                    .attr("fill", e)
+                    .attr("stroke", "none")
+                    .attr("stroke-width", 0)
+                    .attr("filter", null)
+                    .style("pointer-events", "none");
+                var antarcticFeatures = fn && fn.filter(isAntarcticaFeature);
+                if (antarcticFeatures && antarcticFeatures.length) {
+                    var iceColor = "light" === document.documentElement.getAttribute("data-theme") ? "#e0f2fe" : "#dceef8";
+                    Jn.selectAll("path.history-antarctica-path").data(antarcticFeatures).join("path")
+                        .attr("class", "history-antarctica-path")
+                        .attr("d", Gn)
+                        .attr("fill", iceColor)
+                        .attr("stroke", "none")
+                        .style("pointer-events", "none");
+                }
+            }
         }
     }
     function Cs() {
@@ -4425,14 +4617,16 @@
             a.setAttribute("viewBox", `0 0 ${e} ${t}`), a.setAttribute("width", e), a.setAttribute("height", t), 
             Yn = d3.select(a), window.svg = Yn, Yn.selectAll("*").remove();
             const n = Yn.append("defs");
-            n.append("radialGradient").attr("id", "oceanGradient").attr("cx", "50%").attr("cy", "50%").attr("r", "70%").selectAll("stop").data(MAP_COLORS.oceanGradient.map(function(e, t) {
+            var isLightInit = "light" === document.documentElement.getAttribute("data-theme");
+            var initOceanStops = isLightInit && MAP_COLORS.oceanGradientLight ? MAP_COLORS.oceanGradientLight : MAP_COLORS.oceanGradient;
+            n.append("radialGradient").attr("id", "oceanGradient").attr("cx", "50%").attr("cy", "50%").attr("r", "70%").selectAll("stop").data(initOceanStops.map(function(e, t) {
                 return {
                     offset: [ "0%", "15%", "20%", "100%" ][t],
                     color: e
                 };
             })).join("stop").attr("offset", e => e.offset).attr("stop-color", e => e.color);
             const i = n.append("filter").attr("id", "countryShadow").attr("x", "-20%").attr("y", "-20%").attr("width", "140%").attr("height", "140%").attr("color-interpolation-filters", "sRGB");
-            xi ? i.append("feFlood").attr("flood-color", "transparent") : i.append("feDropShadow").attr("dx", 0).attr("dy", 1.5).attr("stdDeviation", 2.5).attr("flood-color", "#000000").attr("flood-opacity", .35), 
+            i.append("feDropShadow").attr("dx", 0).attr("dy", 1.5).attr("stdDeviation", 2.5).attr("flood-color", "#000000").attr("flood-opacity", .35), 
             ti = Yn.append("g").style("cursor", "default").on("click", function(e) {
                 e && e.defaultPrevented || (window.historyIsActive && window.historyIsActive() ? void 0 !== $e && $e && "function" == typeof deselectHistoryPolity ? deselectHistoryPolity() : Eo() : vn && Eo());
             }), ti.append("rect").attr("x", -500).attr("y", -500).attr("width", e + 1e3).attr("height", t + 1e3).attr("fill", "url(#oceanGradient)").style("pointer-events", "all"), 
@@ -4444,7 +4638,22 @@
                     var a = document.getElementById("mapContainer");
                     a && (a.style.backgroundColor = i), document.body.style.backgroundColor = i;
                 }
-            }, ii = Yn.append("g").attr("id", "physicalLayer"), ni = Yn.append("g").attr("id", "corridorsLayer"), 
+            }, window.updateThemeOcean = function() {
+                var isLight = "light" === document.documentElement.getAttribute("data-theme");
+                var stops = isLight && MAP_COLORS.oceanGradientLight ? MAP_COLORS.oceanGradientLight : MAP_COLORS.oceanGradient;
+                var grad = d3.select("#oceanGradient");
+                if (!grad.empty()) {
+                    grad.selectAll("stop").data(stops.map(function(e, t) {
+                        return {
+                            offset: [ "0%", "15%", "20%", "100%" ][t],
+                            color: e
+                        };
+                    })).attr("stop-color", e => e.color);
+                }
+                if (typeof window.syncOceanBackground === "function") {
+                    window.syncOceanBackground();
+                }
+            }; ii = Yn.append("g").attr("id", "physicalLayer"), ni = Yn.append("g").attr("id", "corridorsLayer"), 
             sn = Yn.append("g").attr("id", "historicalRoutesLayer"), ai = Yn.append("g").attr("id", "temperatureLayer"), 
             Ut = Yn.append("g").attr("id", "capitalsLayer"), $t = Yn.append("g").attr("id", "timezonesLayer"), 
             Kt = Yn.append("g").attr("id", "majorCitiesLayer"), Gt = Yn.append("g").attr("id", "naturalResourcesLayer"), 
@@ -4471,7 +4680,7 @@
             const e = this.value.trim();
             if (M.innerHTML = "", !e) return void (M.style.display = "none");
             var t = [];
-            if (void 0 !== Ke && "history" === Ke || void 0 !== Pe && Pe) {
+            if ("history" === Ke && !!Pe) {
                 var n = "undefined" != typeof window && (window.HISTORICAL_POLITIES_DATA || window.historicalPolitiesData) || ("undefined" != typeof HISTORICAL_POLITIES_DATA ? HISTORICAL_POLITIES_DATA : null);
                 if (n) for (var i in n) {
                     for (var a = n[i], r = [ a.id, a.name_ar, a.name_en, a.name_ru, a.name_uz, a.name_es, a.founder, a.founder_en, a.capital, a.capital_en ].filter(Boolean), o = 0, s = 0; s < r.length; s++) {
@@ -4579,7 +4788,7 @@
         }
         g.remove(), function(e) {
             fn = e, window.allCountryFeatures = fn, gi = e.map(e => e.properties?.name || "").filter(e => e), 
-            Qn.selectAll("*").remove(), yn = Qn.selectAll("path").data(e).join("path").attr("class", "country-path").attr("d", Gn).attr("fill", e => ma(e)).attr("stroke", e => fa(e)).attr("stroke-width", e => .8).attr("stroke-dasharray", e => (void 0 !== Pe && Pe || void 0 !== Ke && "history" === Ke) && Dn ? "4,3" : "none").attr("opacity", e => ya(e)).attr("filter", pa).attr("cursor", "pointer").attr("vector-effect", "non-scaling-stroke").attr("tabindex", 0).attr("role", "button").attr("aria-label", e => Hi(e.properties?.name || "")), 
+            Qn.selectAll("*").remove(), yn = Qn.selectAll("path").data(e).join("path").attr("class", e => "country-path" + (isAntarcticaFeature(e) ? " antarctica-path" : "")).attr("d", Gn).attr("fill", e => ma(e)).attr("stroke", e => fa(e)).attr("stroke-width", e => .8).attr("stroke-dasharray", e => (void 0 !== Pe && Pe || void 0 !== Ke && "history" === Ke) && Dn ? "4,3" : "none").attr("opacity", e => ya(e)).attr("filter", pa).attr("cursor", "pointer").attr("vector-effect", "non-scaling-stroke").attr("tabindex", 0).attr("role", "button").attr("aria-label", e => Hi(e.properties?.name || "")), 
             yn.on("mouseenter", function(e, t) {
                 if (Te) return;
                 var i = void 0 !== Pe && Pe || void 0 !== Ke && "history" === Ke;
@@ -4610,7 +4819,7 @@
                 }
                 if ("temperature" === ae) {
                     const e = ta(a, t);
-                    c += `<div>${zi("temperature")}: ${null !== e ? e + "°C" : zi("unknown")}</div>`;
+                    c += `<div>${zi("annualMeanTemp") || (zi("temperature") + " (" + (zi("annualMeanNote") || "متوسط سنوي") + ")")}: ${null !== e ? e + "°C" : zi("unknown")}</div>`;
                 }
                 if ("gdp" === ae) {
                     const e = la(a);
@@ -5028,7 +5237,63 @@
                     icon: "👁️",
                     titleKey: "onboardColorblindTitle",
                     textKey: "onboardColorblindText"
-                } ], u = 0, p = !1;
+                } ], cMobile = [
+                    {
+                        getEl: function() { return document.querySelector("#mobileSearchInput") || document.querySelector(".search-box"); },
+                        icon: "🔍",
+                        titleKey: "onboardStep1Title",
+                        textKey: "onboardStep1Text"
+                    },
+                    {
+                        getEl: function() { return document.querySelector("#mobileModeBtn"); },
+                        icon: "🎨",
+                        titleKey: "onboardStep4Title",
+                        textKey: "onboardStep4Text"
+                    },
+                    {
+                        getEl: function() { return document.querySelector("#mobileLayersBtn"); },
+                        icon: "🗂️",
+                        titleKey: "onboardStep6Title",
+                        textKey: "onboardStep6Text"
+                    },
+                    {
+                        getEl: function() { return document.querySelector("#mobileDrawerBtn"); },
+                        icon: "⚙️",
+                        titleKey: "onboardMobileDrawerTitle",
+                        textKey: "onboardMobileDrawerText"
+                    },
+                    {
+                        getEl: function() { return document.querySelector("#sectionToggle") || document.querySelector("#sectionGeoBtn"); },
+                        icon: "🗺️",
+                        titleKey: "onboardSectionToggleTitle",
+                        textKey: "onboardSectionToggleText"
+                    }
+                ], dMobile = [
+                    {
+                        getEl: function() { return document.querySelector("#mobileHistoryNav"); },
+                        icon: "📜",
+                        titleKey: "histOnboard1Title",
+                        textKey: "histOnboard1Text"
+                    },
+                    {
+                        getEl: function() { return document.getElementById("historyBottomBar") || document.querySelector("#histErasTimelineWrap") || document.querySelector("#historySliderWrap"); },
+                        icon: "⏳",
+                        titleKey: "histOnboard2Title",
+                        textKey: "histOnboard2Text"
+                    },
+                    {
+                        getEl: function() { return document.querySelector("#mobileDrawerBtn"); },
+                        icon: "⚙️",
+                        titleKey: "onboardMobileDrawerTitle",
+                        textKey: "onboardMobileDrawerText"
+                    },
+                    {
+                        getEl: function() { return document.querySelector("#sectionToggle") || document.querySelector("#sectionHistoryBtn"); },
+                        icon: "🗺️",
+                        titleKey: "onboardSectionToggleTitle",
+                        textKey: "onboardSectionToggleText"
+                    }
+                ], u = 0, p = !1;
                 s.addEventListener("click", function() {
                     y ? B() : _();
                 }), l.addEventListener("click", function() {
@@ -5048,7 +5313,7 @@
                 };
                 var f = void 0 !== Ke && "history" === Ke ? "history" : "geo", h = !1;
                 try {
-                    h = "1" === localStorage.getItem("onboardDone_" + f) || "1" === localStorage.getItem("onboardCompleted_" + f);
+                    h = "1" === localStorage.getItem("onboardDone_" + f) || "1" === localStorage.getItem("onboardCompleted_" + f) || "1" === localStorage.getItem("onboardDone") || "1" === localStorage.getItem("onboardCompleted");
                 } catch (e) {}
                 h || setTimeout(function() {
                     p || C();
@@ -5117,7 +5382,8 @@
                 }
             }
             function w() {
-                return void 0 !== Ke && "history" === Ke ? d : c;
+                var isMob = window.innerWidth <= 768;
+                return void 0 !== Ke && "history" === Ke ? (isMob ? dMobile : d) : (isMob ? cMobile : c);
             }
             function E(e) {
                 if (e) {
@@ -5129,6 +5395,16 @@
             function k(e) {
                 if (e) {
                     var t, i, a = e.getBoundingClientRect(), r = n.offsetWidth || 300, o = n.offsetHeight || 200, s = window.innerWidth, l = window.innerHeight;
+                    if (s <= 768) {
+                        if (a.top > l / 2) {
+                            i = 64;
+                        } else {
+                            i = Math.max(10, l - o - 76);
+                        }
+                        t = Math.max(10, Math.min(s / 2 - r / 2, s - r - 10));
+                        n.style.left = t + "px", n.style.top = i + "px";
+                        return;
+                    }
                     i = a.bottom + 14, t = a.left + a.width / 2 - r / 2, i + o > l - 10 && (i = a.top - o - 14), 
                     i < 10 && (i = l / 2 - o / 2, t = s / 2 - r / 2), t < 10 && (t = 10), t + r > s - 10 && (t = s - r - 10), 
                     n.style.left = t + "px", n.style.top = i + "px";
@@ -5137,6 +5413,7 @@
             function x() {
                 b(u);
                 var e = w()[u], c = e.getEl ? e.getEl() : null;
+                if (c && c.offsetWidth === 0 && c.offsetHeight === 0 && !c.offsetParent) c = null;
                 c ? (t.style.display = "", n.style.transform = "") : (t.style.display = "none", 
                 n.style.left = "50%", n.style.top = "50%", n.style.transform = "translate(-50%,-50%)"), 
                 i.textContent = e.icon, a.textContent = zi(e.titleKey), r.textContent = zi(e.textKey), 
@@ -6299,6 +6576,27 @@
                     window.__histWarsLoaded = !0, Promise.resolve(nt);
                 }), window.__histWarsLoading;
             }
+            function getWarCountryAliases(cName) {
+                if (!cName || typeof cName !== "string") return [];
+                var clean = Pi(cName), list = [ cName, clean ];
+                if (typeof arabicNames !== "undefined" && arabicNames) {
+                    if (arabicNames[clean]) list.push(arabicNames[clean]);
+                    if (arabicNames[cName]) list.push(arabicNames[cName]);
+                }
+                if (typeof russianNames !== "undefined" && russianNames) {
+                    if (russianNames[clean]) list.push(russianNames[clean]);
+                    if (russianNames[cName]) list.push(russianNames[cName]);
+                }
+                if (typeof uzbekNames !== "undefined" && uzbekNames) {
+                    if (uzbekNames[clean]) list.push(uzbekNames[clean]);
+                    if (uzbekNames[cName]) list.push(uzbekNames[cName]);
+                }
+                if (typeof spanishNames !== "undefined" && spanishNames) {
+                    if (spanishNames[clean]) list.push(spanishNames[clean]);
+                    if (spanishNames[cName]) list.push(spanishNames[cName]);
+                }
+                return list;
+            }
             function Oi(e) {
                 if ("all" !== it && e.epoch !== it) return !1;
                 var t = Ii(e);
@@ -6317,17 +6615,15 @@
                                 a && "string" == typeof a && t.push(a);
                             });
                         }), void 0 !== e.year && null !== e.year && t.push(String(e.year)), (e.participants || []).forEach(function(e) {
-                            e && e.c && (t.push(e.c), $i(e.c).forEach(function(e) {
-                                t.push(e);
-                            }));
+                            if (e && e.c) {
+                                getWarCountryAliases(e.c).forEach(function(al) { t.push(al); });
+                            }
                         }), (e.empires || []).forEach(function(e) {
                             e.name && t.push(e.name), [ "", "_ar", "_en", "_ru", "_uz", "_es" ].forEach(function(n) {
                                 var i = e["name" + n];
                                 i && "string" == typeof i && t.push(i);
-                            }), (e.members || []).forEach(function(e) {
-                                t.push(e), $i(e).forEach(function(e) {
-                                    t.push(e);
-                                });
+                            }), (e.members || []).forEach(function(m) {
+                                getWarCountryAliases(m).forEach(function(al) { t.push(al); });
                             });
                         });
                     }), t.join(" ");
@@ -6442,7 +6738,48 @@
                             t.textContent = e.year + " · " + Ai(e, "title"), t.title = Ai(e, "desc"), t.addEventListener("click", function() {
                                 Oe = e.id, cl(), Di(), wi(), vn && T.classList.contains("visible") && ji(vn);
                             }), f && f.appendChild(t);
-                        }), Fa();
+                        });
+                        Fa();
+                        var modernCountrySet = [];
+                        (e.scenarios || []).forEach(function(sc) {
+                            (sc.participants || []).forEach(function(p) {
+                                if (p && p.c && -1 === modernCountrySet.indexOf(p.c)) modernCountrySet.push(p.c);
+                            });
+                            (sc.empires || []).forEach(function(emp) {
+                                (emp.members || []).forEach(function(m) {
+                                    if (m && -1 === modernCountrySet.indexOf(m)) modernCountrySet.push(m);
+                                });
+                            });
+                        });
+                        var cWrap = document.getElementById("histWarCountriesWrap");
+                        var cList = document.getElementById("histWarCountriesList");
+                        if (!cWrap) {
+                            var descEl = document.getElementById("histWarCardDesc");
+                            if (descEl && descEl.parentNode) {
+                                cWrap = document.createElement("div");
+                                cWrap.id = "histWarCountriesWrap";
+                                cWrap.className = "hist-card-countries-wrap";
+                                cWrap.style.cssText = "margin-top: 10px; padding-top: 8px; border-top: 1px dashed rgba(255,255,255,0.15);";
+                                cWrap.innerHTML = '<span class="hist-card-label" style="font-size:0.8rem; font-weight:700; color:var(--brand-accent,#14b8a6); display:block; margin-bottom:4px;">🌍 ' + Ti(zi("histWarModernCountries") || "الدول المعاصرة ذات الصلة:") + '</span><div class="hist-war-countries-list" id="histWarCountriesList" style="display:flex; flex-wrap:wrap; gap:4px;"></div>';
+                                descEl.parentNode.insertBefore(cWrap, document.getElementById("histWarPhaseWrap"));
+                                cList = cWrap.querySelector("#histWarCountriesList");
+                            }
+                        }
+                        if (cList) {
+                            cList.innerHTML = "";
+                            if (modernCountrySet.length) {
+                                modernCountrySet.forEach(function(cName) {
+                                    var span = document.createElement("span");
+                                    span.className = "hist-chip";
+                                    span.style.cssText = "font-size:0.75rem; padding:2px 8px; border-radius:12px; cursor:default;";
+                                    span.textContent = Hi(cName) || cName;
+                                    cList.appendChild(span);
+                                });
+                                cWrap && (cWrap.style.display = "block");
+                            } else if (cWrap) {
+                                cWrap.style.display = "none";
+                            }
+                        }
                         var g = document.getElementById("histSourcesPanel");
                         g && (g.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><h4>' + Ti(zi("histSourcesTitle")) + '</h4><button type="button" class="hist-drawer-close-btn" style="width:24px;height:24px;font-size:1rem;" onclick="document.getElementById(\'histSourcesPanel\').style.display=\'none\'">&times;</button></div><ul>' + ta(e.sources) + "</ul>"), 
                         oa(), Pe && window.updateHash && window.updateHash();
@@ -6460,6 +6797,7 @@
                 });
             }
             function ji(e) {
+                if ("history" !== Ke || !Pe) return;
                 if (cl(), "eras" !== Fe) if ("faiths" === Fe || "religions" === Fe || "function" == typeof window.religionsStillActive && window.religionsStillActive()) Eo(); else {
                     var t = document.getElementById("panelContent"), n = document.getElementById("countryPanel");
                     if (t && n) {
@@ -6747,6 +7085,10 @@
             }
             function la(forceQuiz) {
                 if ((Te && !forceQuiz) || Pe) return;
+                Eo(!0);
+                typeof cl === "function" && cl();
+                typeof sa === "function" && sa();
+                typeof lc === "function" && lc();
                 Be && mo(), Re = {
                     colorMode: ae,
                     currentReligionFilter: ie
@@ -6859,7 +7201,7 @@
                 Hn = !1;
                 var c = document.getElementById("histTerrainBtn");
                 if (c && (c.classList.remove("toggle-on"), c.setAttribute("aria-pressed", "false")), 
-                "history" === _n && T.classList.contains("visible") && Eo(), wa(), Ca("geo"), !1 !== e && Re) {
+                Eo(!0), typeof cl === "function" && cl(), typeof sa === "function" && sa(), typeof lc === "function" && lc(), wa(), Ca("geo"), !1 !== e && Re) {
                     var d = Re;
                     Ci.forEach(function(e) {
                         d[e] && !Li[e].getFlag() && Si(e);
@@ -6879,10 +7221,33 @@
                 t && (t.classList.toggle("active", !e), t.setAttribute("aria-pressed", e ? "false" : "true")), 
                 n && (n.classList.toggle("active", e), n.setAttribute("aria-pressed", e ? "true" : "false")), 
                 wa();
+                var mobGeo = document.getElementById("mobileGeoNav"), mobHist = document.getElementById("mobileHistoryNav");
+                if (mobGeo && mobHist) {
+                    mobGeo.style.setProperty("display", e ? "none" : "flex", "important");
+                    mobHist.style.setProperty("display", e ? "flex" : "none", "important");
+                }
+                var mobHistOp = document.getElementById("drawerHistOpacityWrap");
+                if (mobHistOp) {
+                    mobHistOp.style.setProperty("display", e ? "flex" : "none", "important");
+                }
+                var deskHistOp = document.getElementById("histOpacityToolCard");
+                if (deskHistOp) {
+                    deskHistOp.style.setProperty("display", e ? "flex" : "none", "important");
+                }
             }
-            var ka = [ "#modeButtons", "#sectionBaseMapLabel", "#compareProjectionsBtn", "#barDivisionBtn" ], xa = [ "#historyModeDock", "#histTerrainBtn", "#histSourcesBtn", "#histOpacityControl" ];
+            var ka = [ "#modeButtons", "#sectionBaseMapLabel", "#compareProjectionsBtn", "#barDivisionBtn" ], xa = [ "#historyModeDock", "#histTerrainBtn", "#histSourcesBtn", "#histOpacityToolCard", "#drawerHistOpacityWrap" ];
             function _a(e, t) {
-                e && (t ? e.style.setProperty("display", "flex", "important") : e.style.setProperty("display", "none", "important"));
+                if (!e) return;
+                if (window.innerWidth <= 768 && (e.id === "historyModeDock" || e.id === "modeButtons" || e.id === "barDivisionBtn" || e.id === "histTerrainBtn" || e.id === "sectionBaseMapLabel")) {
+                    e.style.setProperty("display", "none", "important");
+                    return;
+                }
+                if (e.id === "histOpacityToolCard" || e.id === "drawerHistOpacityWrap") {
+                    var isHist = "history" === Ke;
+                    e.style.setProperty("display", isHist ? "flex" : "none", "important");
+                    return;
+                }
+                t ? e.style.setProperty("display", "flex", "important") : e.style.setProperty("display", "none", "important");
             }
             function Ca(e) {
                 var t = "history" === e, n = [ un, cn, dn, sn, ln, pn, mn, rn, on ];
@@ -7327,21 +7692,41 @@
                 je ? Ha() : ja();
             }
             window.updateSvgSectionLayers = Ca, window.applySection = function(e, t, forceQuiz) {
-                if (!("geo" !== e && "history" !== e || (Te && !forceQuiz && "geo" === e))) if (La(e), e !== Ke) {
-                    if ("history" === e ? (Ke = "history", la(forceQuiz)) : (Ke = "geo", va(), le && Ma(!0)), 
-                    La(e), !1 !== t) try {
-                        localStorage.setItem("lepidosSection", e);
-                    } catch (e) {}
-                    Ea(), Yr(), window.updateHash && window.updateHash();
-                    var n = !1;
-                    try {
-                        n = "1" === localStorage.getItem("onboardCompleted_" + e) || "1" === localStorage.getItem("onboardDone_" + e);
-                    } catch (e) {}
-                    n || setTimeout(function() {
-                        var e = document.getElementById("langOverlay"), t = document.getElementById("sectionPickerOverlay"), n = document.getElementById("projectionOverlay");
-                        e && "none" !== getComputedStyle(e).display || t && "none" !== getComputedStyle(t).display || n && n.classList.contains("active") || "function" == typeof window.startOnboarding && window.startOnboarding();
-                    }, 700);
-                } else Ea();
+                if (!("geo" !== e && "history" !== e || (Te && !forceQuiz && "geo" === e))) {
+                    if (La(e), e !== Ke) {
+                        Eo(!0);
+                        typeof cl === "function" && cl();
+                        typeof sa === "function" && sa();
+                        typeof lc === "function" && lc();
+                        if ("history" === e) {
+                            Ke = "history";
+                            la(forceQuiz);
+                        } else {
+                            Ke = "geo";
+                            Pe = !1;
+                            va();
+                            le && Ma(!0);
+                        }
+                        Eo(!0);
+                        typeof cl === "function" && cl();
+                        La(e);
+                        if (!1 !== t) try {
+                            localStorage.setItem("lepidosSection", e);
+                        } catch (e) {}
+                        Ea(), Yr(), window.updateHash && window.updateHash();
+                        var n = !1;
+                        try {
+                            n = "1" === localStorage.getItem("onboardCompleted_" + e) || "1" === localStorage.getItem("onboardDone_" + e);
+                        } catch (e) {}
+                        n || setTimeout(function() {
+                            var e = document.getElementById("langOverlay"), t = document.getElementById("sectionPickerOverlay"), n = document.getElementById("projectionOverlay");
+                            e && "none" !== getComputedStyle(e).display || t && "none" !== getComputedStyle(t).display || n && n.classList.contains("active") || "function" == typeof window.startOnboarding && window.startOnboarding();
+                        }, 700);
+                    } else {
+                        "geo" === e && Pe && (Pe = !1, va());
+                        Ea();
+                    }
+                }
             }, window.applySectionWhenReady = function(e, t) {
                 var n = 0;
                 !function i() {
@@ -7352,7 +7737,7 @@
             window.renderEraTabContent = Da, window.drawHistoryScenario = wi, window.drawEraScene = Aa, 
             window.openHistoryPanel = ji, window.deselectHistoryPolity = Ta, window.showEraPolityPanel = Pa, 
             window.historyIsActive = function() {
-                return Pe;
+                return "history" === Ke && !!Pe;
             }, window.selectHistoryWar = function(e) {
                 return Promise.all([ qi(), Ba(), Ac() ]).then(function() {
                     var t = (nt || []).find(function(t) {
@@ -8517,7 +8902,7 @@
                 Kn = Ba(t, n), mr = !0, Be ? (co(), Kn = Se, ro()) : (Gn = d3.geoPath(Kn), Gn.pointRadius(xi ? 1.5 : 3)), 
                 Be ? po() : (ti.select("rect").attr("width", t + 1e3).attr("height", n + 1e3), Sa(), 
                 Ia(), fn.length && (Qn.selectAll("path").attr("d", Gn), Jn && Jn.selectAll("path").attr("d", Gn), 
-                bi && (bi.remove(), bi = null), Or(fn)), Fa(), Ta(), Tr(), Oa(), Na(), Ra(), Yn.call(si.transform, li));
+                bi && (bi.remove(), bi = null), Or(fn)), Fa(), Ta(), Tr(), Oa(), Na(), Ra(), si && si.translateExtent([ [ -0.2 * t, -0.2 * n ], [ 1.2 * t, 1.2 * n ] ]), Yn.call(si.transform, li));
             }, 80)) : Io(li);
         }).observe(Q);
         var I = document.getElementById("toolsRowStart"), z = document.querySelector(".header"), P = document.querySelector(".header-right-group"), q = document.getElementById("controlsBar");
@@ -8540,7 +8925,7 @@
         Gr();
     }
     qs && qs.addEventListener("click", function() {
-        "function" == typeof window.startOnboarding && window.startOnboarding();
+        Td(!0);
     });
     var Ns = !1;
     function Ds(e) {
@@ -8774,16 +9159,33 @@
         var o = document.getElementById("toolsBtn");
         o && o.setAttribute("aria-expanded", "false");
     });
+    function updateHistOpacity(val) {
+        Qe = parseFloat(val);
+        var pct = Math.round(100 * Qe) + "%";
+        var s1 = document.getElementById("histOpacitySlider");
+        var s2 = document.getElementById("drawerHistOpacitySlider");
+        var v1 = document.getElementById("histOpacityVal");
+        var v2 = document.getElementById("drawerHistOpacityVal");
+        if (s1 && s1.value != Qe) s1.value = Qe;
+        if (s2 && s2.value != Qe) s2.value = Qe;
+        if (v1) v1.textContent = pct;
+        if (v2) v2.textContent = pct;
+        if (rn) rn.selectAll("path").attr("fill-opacity", Qe).style("fill-opacity", Qe).attr("opacity", 1).style("opacity", 1);
+    }
     var il = document.getElementById("histOpacitySlider");
     if (il) {
         il.value = Qe;
-        var al = document.getElementById("histOpacityVal");
-        al && (al.textContent = Math.round(100 * Qe) + "%"), il.addEventListener("input", function() {
-            Qe = parseFloat(this.value);
-            var e = Math.round(100 * Qe) + "%";
-            al && (al.textContent = e), rn && rn.selectAll("path").attr("fill-opacity", Qe).style("fill-opacity", Qe).attr("opacity", 1).style("opacity", 1);
-        });
+        il.addEventListener("input", function() { updateHistOpacity(this.value); });
     }
+    var dil = document.getElementById("drawerHistOpacitySlider");
+    if (dil) {
+        dil.value = Qe;
+        dil.addEventListener("input", function() { updateHistOpacity(this.value); });
+    }
+    var al = document.getElementById("histOpacityVal");
+    if (al) al.textContent = Math.round(100 * Qe) + "%";
+    var dal = document.getElementById("drawerHistOpacityVal");
+    if (dal) dal.textContent = Math.round(100 * Qe) + "%";
     var rl = document.getElementById("histWarPhaseGroup");
     rl && rl.addEventListener("click", function(e) {
         var t = e.target.closest(".hist-phase-btn");
@@ -10756,8 +11158,14 @@
     }), window.addEventListener("resize", function() {
         u && u.classList.contains("visible") && p();
     }), document.getElementById("themeToggleBtn").addEventListener("click", function() {
-        i("light" === document.documentElement.getAttribute("data-theme") ? "dark" : "light"), 
-        ha(), _s();
+        i("light" === document.documentElement.getAttribute("data-theme") ? "dark" : "light");
+        if (typeof window.updateThemeOcean === "function") window.updateThemeOcean();
+        Sa();
+        if (yn) {
+            yn.attr("fill", function(e) { return ma(e); }).attr("stroke", function(e) { return fa(e); });
+        }
+        ha();
+        _s();
     }), document.getElementById("measureToolBtn").addEventListener("click", Po), document.getElementById("presentationModeBtn").addEventListener("click", qo), 
     document.getElementById("presentationExitBtn").addEventListener("click", qo), Q.addEventListener("click", function(e) {
         if (st) {
@@ -10796,9 +11204,21 @@
             $r();
         });
     }), S.addEventListener("click", () => {
-        Yn.transition().duration(n() ? 0 : 300).ease(d3.easeCubicOut).call(si.scaleBy, 1.35);
+        if (Be && Se) {
+            var currentScale = Se.scale();
+            Se.scale(Math.min(3000, currentScale * 1.35));
+            uo(!1);
+        } else {
+            Yn.transition().duration(n() ? 0 : 300).ease(d3.easeCubicOut).call(si.scaleBy, 1.35);
+        }
     }), I.addEventListener("click", () => {
-        Yn.transition().duration(n() ? 0 : 300).ease(d3.easeCubicOut).call(si.scaleBy, .74);
+        if (Be && Se) {
+            var currentScale = Se.scale();
+            Se.scale(Math.max(120, currentScale * .74));
+            uo(!1);
+        } else {
+            Yn.transition().duration(n() ? 0 : 300).ease(d3.easeCubicOut).call(si.scaleBy, .74);
+        }
     }), z.addEventListener("click", vo), L.addEventListener("click", zs), B.addEventListener("click", Ms), 
     document.getElementById("pdfExportBtn").addEventListener("click", js);
     var Qc = document.getElementById("mobileLangToggle"), Xc = document.getElementById("mobileSearchInput"), Jc = document.getElementById("mobileShareBtn"), Zc = document.getElementById("mobileModeBtn"), ed = document.getElementById("mobileLayersBtn"), td = document.getElementById("mobileResetBtn2"), nd = document.getElementById("mobileToolsBtn"), id = document.getElementById("mobileToolsMenu"), ad = document.getElementById("mobileOnboardBtn"), rd = document.getElementById("mobileShortcutsBtn"), od = document.getElementById("mobilePdfBtn"), sd = document.getElementById("mobileCoordsBtn"), ld = document.getElementById("mobileModeSheet"), cd = document.getElementById("mobileModeSheetBackdrop"), dd = document.getElementById("mobileModeSheetClose"), ud = document.querySelectorAll("#mobileModeButtons .mode-btn"), pd = document.querySelectorAll("#mobileFilterButtons .religion-btn");
@@ -10815,7 +11235,7 @@
         var e = this.value.trim(), t = document.getElementById("mobileSuggestionsList");
         if (t) if (t.innerHTML = "", e) {
             var n = [];
-            if (void 0 !== Ke && "history" === Ke || void 0 !== Pe && Pe) {
+            if ("history" === Ke && !!Pe) {
                 var i = "undefined" != typeof window && (window.HISTORICAL_POLITIES_DATA || window.historicalPolitiesData) || ("undefined" != typeof HISTORICAL_POLITIES_DATA ? HISTORICAL_POLITIES_DATA : null);
                 if (i) for (var a in i) {
                     for (var r = i[a], o = [ r.id, r.name_ar, r.name_en, r.name_ru, r.name_uz, r.name_es, r.founder, r.founder_en, r.capital, r.capital_en ].filter(Boolean), s = 0, l = 0; l < o.length; l++) {
@@ -10861,37 +11281,292 @@
             var e = document.getElementById("mobileSuggestionsList");
             e && (e.style.display = "none");
         }, 200);
-    }), Jc && Jc.addEventListener("click", zs), Zc && Zc.addEventListener("click", function() {
-        ld.classList.add("visible");
-    }), td && td.addEventListener("click", function() {
-        md(), Ms();
-    }), sd && sd.addEventListener("click", function() {
-        md(), io();
-    }), nd && nd.addEventListener("click", function(e) {
-        e.stopPropagation(), md(), id && id.classList.toggle("open");
-    }), ad && ad.addEventListener("click", function() {
-        md(), Td(!0);
-    }), rd && rd.addEventListener("click", function() {
-        md(), H.classList.add("visible");
-    }), od && od.addEventListener("click", function() {
-        md(), js();
-    }), document.addEventListener("click", function(e) {
+    }),    Jc && Jc.addEventListener("click", zs);
+    Zc && Zc.addEventListener("click", function() {
+        ld && ld.classList.add("visible");
+    });
+    td && td.addEventListener("click", function() {
+        md(); Ms();
+    });
+    sd && sd.addEventListener("click", function() {
+        md(); io();
+    });
+    nd && nd.addEventListener("click", function(e) {
+        e.stopPropagation(); md(); id && id.classList.toggle("open");
+    });
+    ad && ad.addEventListener("click", function() {
+        md(); Td(!0);
+    });
+    rd && rd.addEventListener("click", function() {
+        md(); H.classList.add("visible");
+    });
+    od && od.addEventListener("click", function() {
+        md(); js();
+    });
+    document.addEventListener("click", function(e) {
         id && id.classList.contains("open") && !id.contains(e.target) && e.target !== nd && !nd.contains(e.target) && md();
-    }), cd && cd.addEventListener("click", function() {
-        ld.classList.remove("visible");
-    }), dd && dd.addEventListener("click", function() {
-        ld.classList.remove("visible");
-    }), ud.forEach(function(e) {
+    });
+    cd && cd.addEventListener("click", function() {
+        ld && ld.classList.remove("visible");
+    });
+    dd && dd.addEventListener("click", function() {
+        ld && ld.classList.remove("visible");
+    });
+    ud.forEach(function(e) {
         e.addEventListener("click", function() {
-            var e = this.dataset.mode, t = document.querySelector('#modeButtons .mode-btn[data-mode="' + e + '"]');
-            t && t.click(), ld.classList.remove("visible");
+            var m = this.dataset.mode, btn = document.querySelector('#modeButtons .mode-btn[data-mode="' + m + '"]');
+            btn && btn.click();
+            ld && ld.classList.remove("visible");
         });
-    }), pd.forEach(function(e) {
+    });
+    pd.forEach(function(e) {
         e.addEventListener("click", function() {
-            var e = this.dataset.religion, t = document.querySelector('#religionButtons .religion-btn[data-religion="' + e + '"]');
-            t && t.click();
+            var rel = this.dataset.religion, btn = document.querySelector('#religionButtons .religion-btn[data-religion="' + rel + '"]');
+            btn && btn.click();
         });
-    }), document.addEventListener("keydown", function(e) {
+    });
+
+    // ── Modern Mobile Side Drawer & Adaptive Navigation Wiring ──
+    var mobDrawerBtn = document.getElementById("mobileDrawerBtn");
+    var mobSideDrawer = document.getElementById("mobileSideDrawer");
+    var mobDrawerClose = document.getElementById("mobileDrawerCloseBtn");
+    var mobDrawerBackdrop = document.getElementById("mobileDrawerBackdrop");
+    var drwLangSel = document.getElementById("drawerLangSelect");
+    var drwTheme = document.getElementById("drawerThemeBtn");
+
+    function closeMobileSideDrawer() {
+        if (mobSideDrawer) {
+            mobSideDrawer.classList.remove("visible");
+            mobSideDrawer.setAttribute("hidden", "");
+        }
+    }
+    function openMobileSideDrawer() {
+        if (mobSideDrawer) {
+            if (drwLangSel && typeof Ht !== "undefined") drwLangSel.value = Ht;
+            mobSideDrawer.removeAttribute("hidden");
+            mobSideDrawer.classList.add("visible");
+        }
+    }
+    mobDrawerBtn && mobDrawerBtn.addEventListener("click", openMobileSideDrawer);
+    mobDrawerClose && mobDrawerClose.addEventListener("click", closeMobileSideDrawer);
+    mobDrawerBackdrop && mobDrawerBackdrop.addEventListener("click", closeMobileSideDrawer);
+
+    if (drwLangSel) {
+        drwLangSel.addEventListener("change", function() {
+            var val = this.value;
+            if (val !== Ht && typeof fo === "function") {
+                fo(val);
+            }
+        });
+    }
+    if (drwTheme) {
+        drwTheme.addEventListener("click", function() {
+            var tb = document.getElementById("themeToggleBtn");
+            tb && tb.click();
+        });
+    }
+
+    function wireMobileDrawerAction(btnId, targetId) {
+        var el = document.getElementById(btnId);
+        if (el) {
+            el.addEventListener("click", function() {
+                closeMobileSideDrawer();
+                var target = document.getElementById(targetId);
+                target && target.click();
+            });
+        }
+    }
+    wireMobileDrawerAction("drawerTeacherHubBtn", "teacherHubBtn");
+    wireMobileDrawerAction("drawerStudentHubBtn", "studentHubBtn");
+    wireMobileDrawerAction("drawerNationSimBtn", "nationSimBtn");
+    wireMobileDrawerAction("drawerWorksheetBtn", "blankMapWorksheetBtn");
+    wireMobileDrawerAction("drawerSmartboardBtn", "smartboardToggleBtn");
+    wireMobileDrawerAction("drawerDataTableBtn", "dataTableBtn");
+    wireMobileDrawerAction("drawerPdfBtn", "pdfExportBtn");
+    wireMobileDrawerAction("drawerShareBtn", "shareBtn");
+    var drwOnboard = document.getElementById("drawerOnboardBtn");
+    if (drwOnboard) {
+        drwOnboard.addEventListener("click", function() {
+            closeMobileSideDrawer();
+            if (typeof window.startOnboarding === "function") {
+                window.startOnboarding();
+            }
+        });
+    }
+    wireMobileDrawerAction("drawerResetBtn", "resetBtn");
+    wireMobileDrawerAction("drawerAcademicBtn", "academicSourcesBtn");
+    wireMobileDrawerAction("drawerTermsBtn", "termsOfServiceBtn");
+
+
+    // Mobile Activities Sheet
+    var mobActBtn = document.getElementById("mobileActivitiesBtn");
+    var mobActSheet = document.getElementById("mobileActivitiesSheet");
+    var mobActClose = document.getElementById("mobileActivitiesClose");
+    var mobActBackdrop = document.getElementById("mobileActivitiesBackdrop");
+
+    function closeMobileActSheet() {
+        if (mobActSheet) {
+            mobActSheet.classList.remove("visible");
+            mobActSheet.setAttribute("hidden", "");
+        }
+    }
+    function openMobileActSheet() {
+        if (mobActSheet) {
+            mobActSheet.removeAttribute("hidden");
+            mobActSheet.classList.add("visible");
+        }
+    }
+    mobActBtn && mobActBtn.addEventListener("click", openMobileActSheet);
+    mobActClose && mobActClose.addEventListener("click", closeMobileActSheet);
+    mobActBackdrop && mobActBackdrop.addEventListener("click", closeMobileActSheet);
+
+    function wireMobileActCard(cardId, targetId) {
+        var el = document.getElementById(cardId);
+        if (el) {
+            el.addEventListener("click", function() {
+                closeMobileActSheet();
+                var target = document.getElementById(targetId);
+                target && target.click();
+            });
+        }
+    }
+    wireMobileActCard("mobileActQuizBtn", "quizBtn");
+    wireMobileActCard("mobileActGlobeBtn", "globeViewBtn");
+    wireMobileActCard("mobileActCompareBtn", "compareProjectionsBtn");
+    wireMobileActCard("mobileActAnnotateBtn", "annotateBtn");
+
+    // Mobile Division Button (Fallback if present)
+    var mobDivisionBtn = document.getElementById("mobileDivisionBtn");
+    mobDivisionBtn && mobDivisionBtn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        var bd = document.getElementById("barDivisionBtn");
+        bd && bd.click();
+    });
+
+    // Keyboard focus elevation listeners for history bottom sheet cards
+    document.querySelectorAll(".hist-popover-menu input, .hist-popover-menu select").forEach(function(inp) {
+        inp.addEventListener("focus", function() {
+            var menu = this.closest(".hist-popover-menu");
+            if (menu) menu.classList.add("keyboard-active");
+        });
+        inp.addEventListener("blur", function() {
+            var menu = this.closest(".hist-popover-menu");
+            if (menu) menu.classList.remove("keyboard-active");
+        });
+    });
+
+    // Mobile History Bottom Navigation
+    var mobWarsBtn = document.getElementById("mobileWarsBtn");
+    var mobErasBtn = document.getElementById("mobileErasBtn");
+    var mobFaithsBtn = document.getElementById("mobileFaithsBtn");
+    var mobTravelersBtn = document.getElementById("mobileTravelersBtn");
+    var mobHistLayersBtn = document.getElementById("mobileHistLayersBtn");
+
+    mobWarsBtn && mobWarsBtn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        var btn = document.getElementById("histWarsPopoverBtn");
+        btn && btn.click();
+    });
+    mobErasBtn && mobErasBtn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        var btn = document.getElementById("histErasPopoverBtn");
+        btn && btn.click();
+    });
+    mobFaithsBtn && mobFaithsBtn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        var btn = document.getElementById("histFaithsPopoverBtn");
+        btn && btn.click();
+    });
+    mobTravelersBtn && mobTravelersBtn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        var btn = document.getElementById("histTravelersPopoverBtn");
+        btn && btn.click();
+    });
+    mobHistLayersBtn && mobHistLayersBtn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        Hd(this);
+    });
+
+    // Mobile Search clear button
+    var mobSearchClear = document.getElementById("mobileSearchClear");
+    if (mobSearchClear && Xc) {
+        mobSearchClear.addEventListener("click", function() {
+            Xc.value = "";
+            var sug = document.getElementById("mobileSuggestionsList");
+            if (sug) sug.style.display = "none";
+            mobSearchClear.style.display = "none";
+            Xc.focus();
+        });
+        Xc.addEventListener("input", function() {
+            mobSearchClear.style.display = this.value.length ? "block" : "none";
+        });
+    }
+
+    // Backdrop click dismiss for Layers and Division modals on mobile
+    [document.getElementById("layersModal"), document.getElementById("divisionPopover")].forEach(function(modal) {
+        if (modal) {
+            modal.addEventListener("click", function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove("visible");
+                }
+            });
+        }
+    });
+
+    // Touch swipe-down to dismiss for mobile bottom sheets (restricted to drag handle and headers)
+    function attachSheetSwipeDismiss(sheetEl) {
+        if (!sheetEl) return;
+        var startY = 0, currentY = 0, isDragging = false;
+        sheetEl.addEventListener("touchstart", function(e) {
+            if (window.innerWidth > 768) return;
+            var handle = e.target.closest(".sheet-drag-handle, .layers-modal-header, .hist-popover-header, .mobile-mode-sheet-header, .terms-header");
+            if (handle) {
+                startY = e.touches[0].clientY;
+                isDragging = true;
+            } else {
+                isDragging = false;
+            }
+        }, { passive: true });
+        sheetEl.addEventListener("touchmove", function(e) {
+            if (!isDragging) return;
+            currentY = e.touches[0].clientY;
+        }, { passive: true });
+        sheetEl.addEventListener("touchend", function() {
+            if (isDragging && currentY - startY > 60) {
+                if (sheetEl.classList.contains("visible")) {
+                    sheetEl.classList.remove("visible");
+                    if (sheetEl.hasAttribute("hidden") === false) {
+                        sheetEl.setAttribute("hidden", "");
+                    }
+                }
+                var parentModal = sheetEl.closest(".layers-modal, .mobile-mode-sheet, .mobile-activities-sheet, .terms-overlay");
+                if (parentModal) {
+                    parentModal.classList.remove("visible");
+                    if (parentModal.style.display === "flex") {
+                        parentModal.style.display = "none";
+                    }
+                }
+            }
+            isDragging = false;
+            startY = 0;
+            currentY = 0;
+        });
+    }
+
+    [
+        document.querySelector("#layersModal .layers-dropdown-container"),
+        document.querySelector("#divisionPopover .layers-dropdown-container"),
+        document.getElementById("histWarsPopoverMenu"),
+        document.getElementById("histErasPopoverMenu"),
+        document.getElementById("histFaithsPopoverMenu"),
+        document.getElementById("histTravelersPopoverMenu"),
+        document.querySelector("#mobileModeSheet .mobile-mode-sheet-content"),
+        document.querySelector("#mobileActivitiesSheet .mobile-mode-sheet-content"),
+        document.getElementById("countryPanel"),
+        document.querySelector("#termsOverlay .terms-box")
+    ].forEach(attachSheetSwipeDismiss);
+
+    document.addEventListener("keydown", function(e) {
         if ("Escape" === e.key && yd && yd.classList.contains("visible") && xs(), "Escape" === e.key && "function" == typeof window.closeEraModals) {
             var t = document.getElementById("eraQuizModal"), n = document.getElementById("eraCompareModal");
             if (t && t.classList.contains("visible") || n && n.classList.contains("visible")) return void window.closeEraModals();
@@ -11104,12 +11779,13 @@
             t.classList.remove("active");
             try {
                 localStorage.setItem("projectionExplainerDone", "1");
-            } catch (e) {}
-            var e = void 0 !== Ke && "history" === Ke ? "history" : "geo", n = !1;
+            } catch (t) {}
+            var isManual = !!e;
+            var s = void 0 !== Ke && "history" === Ke ? "history" : "geo", n = !1;
             try {
-                n = "1" === localStorage.getItem("onboardCompleted_" + e) || "1" === localStorage.getItem("onboardDone_" + e) || "1" === localStorage.getItem("onboardDone") || "1" === localStorage.getItem("onboardCompleted");
-            } catch (e) {}
-            if (!n && "function" == typeof window.startOnboarding) {
+                n = "1" === localStorage.getItem("onboardCompleted_" + s) || "1" === localStorage.getItem("onboardDone_" + s) || "1" === localStorage.getItem("onboardDone") || "1" === localStorage.getItem("onboardCompleted");
+            } catch (t) {}
+            if ((!n || isManual) && "function" == typeof window.startOnboarding) {
                 setTimeout(function() {
                     window.startOnboarding();
                 }, 300);
@@ -11246,6 +11922,16 @@
     var Od = document.getElementById("layersToggleBtn"), Rd = document.getElementById("barLayersBtn"), Nd = document.getElementById("barDivisionBtn");
     function Dd(e, t) {
         if (e && t) {
+            if (window.innerWidth <= 768) {
+                e.style.left = "";
+                e.style.right = "";
+                e.style.top = "";
+                e.style.bottom = "";
+                e.style.maxHeight = "";
+                e.style.width = "";
+                e.style.transformOrigin = "";
+                return;
+            }
             var n = t.getBoundingClientRect(), i = e.offsetWidth, a = e.offsetHeight, r = window.innerWidth, o = window.innerHeight, s = "rtl" === document.documentElement.dir;
             if (e.classList.contains("hist-popover-menu")) {
                 var l = Math.max(54, Math.round(n.bottom + 8));
@@ -11294,7 +11980,8 @@
                     a.forEach(function(e) {
                         if ("SELECT" === e.tagName) return o ? void o.appendChild(e) : void r.appendChild(e);
                         if ("geopoliticalBlocsToggle" === e.id) {
-                            (o = document.createElement("div")).className = "blocs-compound-card", e.classList.add("blocs-toggle-btn");
+                            (o = document.createElement("div")).className = "blocs-compound-card geo-layer", e.classList.add("blocs-toggle-btn");
+                            (void 0 !== Ke && "history" === Ke || void 0 !== Pe && Pe) && o.style.setProperty("display", "none", "important");
                             var t = e.querySelector(".lucide-icon");
                             if (t) {
                                 var n = document.createElement("span");
@@ -11601,42 +12288,146 @@
         link: "https://global.oup.com/academic/product/when-china-ruled-the-seas-9780195112078"
     } ];
     !function() {
-        var e = document.getElementById("academicSourcesBtn"), n = document.getElementById("academicSourcesOverlay"), i = document.getElementById("academicSourcesCloseBtn"), a = document.getElementById("academicSourcesSearch"), r = document.getElementById("academicSourcesContent"), o = n ? n.querySelectorAll(".academic-tab-btn") : [], s = "general";
+        var e = document.getElementById("academicSourcesBtn"),
+            n = document.getElementById("academicSourcesOverlay"),
+            i = document.getElementById("academicSourcesCloseBtn"),
+            fClose = document.getElementById("academicFooterCloseBtn"),
+            a = document.getElementById("academicSourcesSearch"),
+            sClear = document.getElementById("academicSourcesSearchClear"),
+            r = document.getElementById("academicSourcesContent"),
+            o = n ? n.querySelectorAll(".academic-tab-btn") : [],
+            s = "general";
+
+        function fallbackCopy(text, btn) {
+            try {
+                var ta = document.createElement("textarea");
+                ta.value = text;
+                ta.style.position = "fixed";
+                ta.style.opacity = "0";
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand("copy");
+                document.body.removeChild(ta);
+                showCopied(btn);
+            } catch (err) {}
+        }
+
+        function showCopied(btn) {
+            var orig = btn.innerHTML;
+            btn.classList.add("copied");
+            btn.innerHTML = '<i data-lucide="check" class="lucide-icon"></i><span class="btn-text">تم النسخ</span>';
+            t();
+            setTimeout(function() {
+                btn.classList.remove("copied");
+                btn.innerHTML = orig;
+                t();
+            }, 1800);
+        }
+
+        function bindCopyButtons() {
+            if (!r) return;
+            var copyBtns = r.querySelectorAll(".academic-copy-citation-btn");
+            copyBtns.forEach(function(btn) {
+                btn.addEventListener("click", function() {
+                    var cit = this.getAttribute("data-citation") || "";
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(cit).then(function() {
+                            showCopied(btn);
+                        }).catch(function() {
+                            fallbackCopy(cit, btn);
+                        });
+                    } else {
+                        fallbackCopy(cit, btn);
+                    }
+                });
+            });
+        }
+
         function l(e) {
             if (r) {
-                var n = (e || "").trim().toLowerCase(), i = Gd.filter(function(e) {
-                    return ("all" === s || e.category === s) && (!n || -1 !== (e.title + " " + e.author + " " + e.publisher + " " + e.desc + " " + e.citation).toLowerCase().indexOf(n));
-                });
-                if (0 === i.length) return r.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--text-muted);"><i data-lucide="search-x" style="width:40px;height:40px;margin-bottom:8px;opacity:0.6;"></i><p>لم يتم العثور على مراجع مطابقة لبحثك في هذا القسم.</p></div>', 
-                void t();
-                var a = "";
+                var n = (e || "").trim().toLowerCase(),
+                    i = Gd.filter(function(e) {
+                        return ("all" === s || e.category === s) && (!n || -1 !== (e.title + " " + e.author + " " + e.publisher + " " + e.desc + " " + e.citation).toLowerCase().indexOf(n));
+                    });
+                if (0 === i.length) {
+                    r.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--text-muted);"><i data-lucide="search-x" style="width:40px;height:40px;margin-bottom:8px;opacity:0.6;"></i><p>لم يتم العثور على مراجع مطابقة لبحثك في هذا القسم.</p></div>';
+                    return void t();
+                }
+                var cardHtml = "";
                 i.forEach(function(e) {
-                    a += '<div class="academic-source-card"><div class="academic-card-top"><div class="academic-source-title">' + Ti(e.title) + '</div><span class="academic-badge">' + Ti(e.badge) + '</span></div><div class="academic-source-meta"><i data-lucide="user" style="width:13px;height:13px;vertical-align:middle;"></i> <strong>' + Ti(e.author) + "</strong> &nbsp;|&nbsp; <span>" + Ti(e.publisher) + " (" + Ti(e.year) + ')</span></div><div class="academic-source-desc">' + Ti(e.desc) + '</div><div class="academic-source-citation">' + Ti(e.citation) + "</div>" + (e.link ? '<div style="margin-top:8px;text-align:end;"><a href="' + Ti(e.link) + '" target="_blank" rel="noopener noreferrer" class="hist-source-link" style="font-size:0.82rem;">زيارة المصدر المعتمد <i data-lucide="external-link" style="width:12px;height:12px;"></i></a></div>' : "") + "</div>";
-                }), r.innerHTML = a, t();
+                    cardHtml += '<div class="academic-source-card">';
+                    cardHtml += '<div class="academic-card-top">';
+                    cardHtml += '<div class="academic-source-title">' + Ti(e.title) + '</div>';
+                    cardHtml += '<span class="academic-badge">' + Ti(e.badge) + '</span>';
+                    cardHtml += '</div>';
+                    cardHtml += '<div class="academic-source-meta"><i data-lucide="user" style="width:13px;height:13px;vertical-align:middle;"></i> <strong>' + Ti(e.author) + '</strong> &nbsp;|&nbsp; <span>' + Ti(e.publisher) + ' (' + Ti(e.year) + ')</span></div>';
+                    cardHtml += '<div class="academic-source-desc">' + Ti(e.desc) + '</div>';
+                    cardHtml += '<div class="academic-citation-wrap">';
+                    cardHtml += '<div class="academic-source-citation">' + Ti(e.citation) + '</div>';
+                    cardHtml += '<button type="button" class="academic-copy-citation-btn" data-citation="' + Ti(e.citation) + '" title="نسخ التوثيق الأكاديمي"><i data-lucide="copy" class="lucide-icon"></i><span class="btn-text">نسخ</span></button>';
+                    cardHtml += '</div>';
+                    if (e.link) {
+                        cardHtml += '<div class="academic-card-actions"><a href="' + Ti(e.link) + '" target="_blank" rel="noopener noreferrer" class="academic-source-link"><span>زيارة المصدر المعتمد</span> <i data-lucide="external-link" class="lucide-icon"></i></a></div>';
+                    }
+                    cardHtml += '</div>';
+                });
+                r.innerHTML = cardHtml;
+                t();
+                bindCopyButtons();
             }
         }
+
         function c(e) {
             e && (s = e, o.forEach(function(t) {
                 t.classList.toggle("active", t.getAttribute("data-tab") === e);
-            })), a && (a.value = ""), l(""), n && (n.style.display = "flex");
+            }));
+            a && (a.value = "");
+            sClear && (sClear.style.display = "none");
+            l("");
+            n && (n.style.display = "flex");
+            t();
         }
+
         function d() {
             n && (n.style.display = "none");
         }
+
         e && e.addEventListener("click", function() {
             c("general");
-        }), i && i.addEventListener("click", d), n && n.addEventListener("click", function(e) {
+        });
+        i && i.addEventListener("click", d);
+        fClose && fClose.addEventListener("click", d);
+        n && n.addEventListener("click", function(e) {
             e.target === n && d();
-        }), o.forEach(function(e) {
+        });
+
+        o.forEach(function(e) {
             e.addEventListener("click", function() {
                 o.forEach(function(e) {
                     e.classList.remove("active");
-                }), this.classList.add("active"), s = this.getAttribute("data-tab") || "general", 
+                });
+                this.classList.add("active");
+                s = this.getAttribute("data-tab") || "general";
                 l(a ? a.value : "");
             });
-        }), a && a.addEventListener("input", function() {
-            l(this.value);
-        }), window.openAcademicSourcesModal = c;
+        });
+
+        a && a.addEventListener("input", function() {
+            var val = this.value;
+            sClear && (sClear.style.display = val ? "flex" : "none");
+            l(val);
+        });
+
+        sClear && sClear.addEventListener("click", function() {
+            if (a) {
+                a.value = "";
+                sClear.style.display = "none";
+                l("");
+                a.focus();
+            }
+        });
+
+        window.openAcademicSourcesModal = c;
     }(), function() {
         var e = document.getElementById("smartboardToggleBtn"), t = document.getElementById("smartboardFloatingBar"), n = document.getElementById("smartboardLaserCanvas"), i = document.getElementById("smartboardExitBtn"), a = document.getElementById("smartboardFullscreenBtn"), r = document.getElementById("smartboardClearDrawBtn"), o = document.getElementById("smartboardBarDrag"), s = t ? t.querySelectorAll(".smartboard-tool-btn[data-tool]") : [], l = t ? t.querySelectorAll(".laser-dot-swatch") : [], c = !1, d = "laser", u = "#ff3344", p = n ? n.getContext("2d") : null, m = [], f = [], h = !1, y = null, g = -100, v = -100, b = null;
         function w() {
@@ -11838,183 +12629,1433 @@
             });
         });
     }(), function() {
-        var e = document.getElementById("teacherHubBtn"), n = document.getElementById("teacherHubOverlay"), i = document.getElementById("teacherHubCloseBtn"), a = document.getElementById("teacherTabCreateBtn"), r = document.getElementById("teacherTabActiveBtn"), o = document.getElementById("teacherTabCreatePanel"), s = document.getElementById("teacherTabActivePanel"), l = document.getElementById("teacherAssignmentTitleInput"), c = document.getElementById("teacherAssignmentTopic"), d = document.getElementById("teacherNumQuestions"), u = document.getElementById("teacherClassName"), p = document.getElementById("teacherGenerateSessionBtn"), m = document.getElementById("teacherShareCard"), f = document.getElementById("teacherSessionCodeDisplay"), h = document.getElementById("teacherStudentDirectLink"), y = document.getElementById("teacherCopyLinkBtn"), g = document.getElementById("teacherSessionPicker"), v = document.getElementById("teacherRefreshGradebookBtn"), b = document.getElementById("teacherExportCsvBtn"), w = document.getElementById("teacherPrintGradebookBtn"), E = document.getElementById("gradebookTotalStudents"), k = document.getElementById("gradebookAvgScore"), x = document.getElementById("gradebookTopScore"), _ = document.getElementById("teacherGradebookTbody"), C = document.getElementById("studentAssignmentOverlay"), L = document.getElementById("studentFullNameInput"), B = document.getElementById("studentStartAssignmentBtn"), S = "lepidos_teacher_sessions_v1";
-        function I() {
+        // ══════════════════════════════════════════════════════════════════════════════
+        // TEACHER HUB & STUDENT HUB DUAL EDUCATIONAL SUITE (PHASE 1)
+        // ══════════════════════════════════════════════════════════════════════════════
+        var teacherHubBtn = document.getElementById("teacherHubBtn"),
+            teacherOverlay = document.getElementById("teacherHubOverlay"),
+            teacherCloseBtn = document.getElementById("teacherHubCloseBtn"),
+            teacherTabCreateBtn = document.getElementById("teacherTabCreateBtn"),
+            teacherTabActiveBtn = document.getElementById("teacherTabActiveBtn"),
+            teacherTabInquiriesBtn = document.getElementById("teacherTabInquiriesBtn"),
+            teacherInquiriesCountBadge = document.getElementById("teacherInquiriesCountBadge"),
+            teacherTabCreatePanel = document.getElementById("teacherTabCreatePanel"),
+            teacherTabActivePanel = document.getElementById("teacherTabActivePanel"),
+            teacherTabInquiriesPanel = document.getElementById("teacherTabInquiriesPanel"),
+            teacherAssignmentTitleInput = document.getElementById("teacherAssignmentTitleInput"),
+            teacherAssignmentTopic = document.getElementById("teacherAssignmentTopic"),
+            teacherNumQuestions = document.getElementById("teacherNumQuestions"),
+            teacherClassName = document.getElementById("teacherClassName"),
+            teacherSpatialTaskCheck = document.getElementById("teacherSpatialTaskCheck"),
+            teacherSpatialConfigBox = document.getElementById("teacherSpatialConfigBox"),
+            teacherSpatialTaskType = document.getElementById("teacherSpatialTaskType"),
+            teacherSpatialPromptInput = document.getElementById("teacherSpatialPromptInput"),
+            teacherSpatialTargetRegion = document.getElementById("teacherSpatialTargetRegion"),
+            teacherGenerateSessionBtn = document.getElementById("teacherGenerateSessionBtn"),
+            teacherShareCard = document.getElementById("teacherShareCard"),
+            teacherSessionCodeDisplay = document.getElementById("teacherSessionCodeDisplay"),
+            teacherStudentDirectLink = document.getElementById("teacherStudentDirectLink"),
+            teacherCopyLinkBtn = document.getElementById("teacherCopyLinkBtn"),
+            teacherSessionPicker = document.getElementById("teacherSessionPicker"),
+            teacherRefreshGradebookBtn = document.getElementById("teacherRefreshGradebookBtn"),
+            teacherRefreshInquiriesBtn = document.getElementById("teacherRefreshInquiriesBtn"),
+            teacherExportCsvBtn = document.getElementById("teacherExportCsvBtn"),
+            teacherPrintGradebookBtn = document.getElementById("teacherPrintGradebookBtn"),
+            gradebookTotalStudents = document.getElementById("gradebookTotalStudents"),
+            gradebookAvgScore = document.getElementById("gradebookAvgScore"),
+            gradebookTopScore = document.getElementById("gradebookTopScore"),
+            teacherGradebookTbody = document.getElementById("teacherGradebookTbody"),
+            teacherSpatialReviewModal = document.getElementById("teacherSpatialReviewModal"),
+            spatialReviewCloseBtn = document.getElementById("spatialReviewCloseBtn"),
+            teacherInquiriesList = document.getElementById("teacherInquiriesList"),
+            studentAssignmentOverlay = document.getElementById("studentAssignmentOverlay"),
+            studentFullNameInput = document.getElementById("studentFullNameInput"),
+            studentStartAssignmentBtn = document.getElementById("studentStartAssignmentBtn"),
+            SESSIONS_STORAGE_KEY = "lepidos_teacher_sessions_v1",
+            INQUIRIES_STORAGE_KEY = "lepidos_student_inquiries_v1",
+            GRADES_STORAGE_KEY = "lepidos_student_grades_v1";
+
+        // Global coordinate conversion helper
+        function getMapCoordsFromEvent(e) {
+            var svg = document.getElementById("mapSvg");
+            if (!svg) return null;
+            var rect = svg.getBoundingClientRect();
+            var clientX = e.clientX, clientY = e.clientY;
+            if (e.touches && e.touches.length > 0) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            }
+            var screenX = clientX - rect.left;
+            var screenY = clientY - rect.top;
+            var transform = (typeof d3 !== "undefined" && d3.zoomTransform) ? d3.zoomTransform(svg) : (typeof li !== "undefined" && li ? li : { x: 0, y: 0, k: 1 });
+            var vnX = (screenX - transform.x) / transform.k;
+            var vnY = (screenY - transform.y) / transform.k;
+            var proj = typeof ao === "function" ? ao() : null;
+            var geoCoords = (proj && typeof proj.invert === "function") ? proj.invert([vnX, vnY]) : null;
+            return {
+                screen: [screenX, screenY],
+                vn: [vnX, vnY],
+                geo: geoCoords
+            };
+        }
+
+        // Global smooth fly to location helper
+        function flyMapToCoordinates(lng, lat) {
+            if (lng === undefined || lat === undefined || isNaN(lng) || isNaN(lat)) return;
+            var proj = typeof ao === "function" ? ao() : null;
+            if (!proj) return;
+            var pt = proj([lng, lat]);
+            if (!pt || isNaN(pt[0]) || isNaN(pt[1])) return;
+            
+            var size = typeof La === "function" ? La() : { width: window.innerWidth, height: window.innerHeight };
+            var k = 3.5;
+            var tx = size.width / 2 - k * pt[0];
+            var ty = size.height / 2 - k * pt[1];
+            var transform = d3.zoomIdentity.translate(tx, ty).scale(k);
+            
+            if (typeof Yn !== "undefined" && Yn && typeof si !== "undefined" && si) {
+                Yn.transition().duration(800).ease(d3.easeCubicInOut).call(si.transform, transform);
+            }
+            
+            if (typeof Vn !== "undefined" && Vn) {
+                var beacon = Vn.append("circle")
+                    .attr("cx", pt[0])
+                    .attr("cy", pt[1])
+                    .attr("r", 6)
+                    .attr("fill", "#2dd4bf")
+                    .attr("stroke", "#ffffff")
+                    .attr("stroke-width", 2)
+                    .attr("opacity", 1);
+                beacon.transition().duration(2500).attr("r", 32).attr("opacity", 0).remove();
+            }
+        }
+
+        // Render mini preview SVG of student spatial drawings
+        function renderSpatialSvgPreview(containerSvg, spatialData) {
+            if (!containerSvg) return;
+            var svg = d3.select(containerSvg);
+            svg.selectAll("*").remove();
+            var width = containerSvg.clientWidth || 600;
+            var height = containerSvg.clientHeight || 240;
+            
+            var gGrid = svg.append("g").attr("class", "preview-grid").attr("opacity", 0.15);
+            for (var x = 40; x < width; x += 50) gGrid.append("line").attr("x1", x).attr("y1", 0).attr("x2", x).attr("y2", height).attr("stroke", "#94a3b8");
+            for (var y = 30; y < height; y += 40) gGrid.append("line").attr("x1", 0).attr("y1", y).attr("x2", width).attr("y2", y).attr("stroke", "#94a3b8");
+
+            var points = spatialData ? (spatialData.points || []) : [];
+            if (!points || points.length === 0) {
+                svg.append("text").attr("x", width / 2).attr("y", height / 2).attr("text-anchor", "middle").attr("fill", "#94a3b8").attr("font-size", "14px").text("لا توجد بيانات رسم مسجلة من الطالب");
+                return;
+            }
+            
+            var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+            points.forEach(function(pt) {
+                var lng = (pt.geo ? pt.geo[0] : (Array.isArray(pt) ? pt[0] : 0));
+                var lat = (pt.geo ? pt.geo[1] : (Array.isArray(pt) ? pt[1] : 0));
+                if (lng < minX) minX = lng;
+                if (lng > maxX) maxX = lng;
+                if (lat < minY) minY = lat;
+                if (lat > maxY) maxY = lat;
+            });
+            
+            var padX = Math.max((maxX - minX) * 0.25, 2);
+            var padY = Math.max((maxY - minY) * 0.25, 2);
+            minX -= padX; maxX += padX;
+            minY -= padY; maxY += padY;
+            
+            function scaleLng(l) { return 40 + ((l - minX) / (maxX - minX || 1)) * (width - 80); }
+            function scaleLat(l) { return height - 40 - ((l - minY) / (maxY - minY || 1)) * (height - 80); }
+            
+            var pathD = "";
+            points.forEach(function(pt, idx) {
+                var lng = (pt.geo ? pt.geo[0] : (Array.isArray(pt) ? pt[0] : 0));
+                var lat = (pt.geo ? pt.geo[1] : (Array.isArray(pt) ? pt[1] : 0));
+                var sx = scaleLng(lng);
+                var sy = scaleLat(lat);
+                pathD += (idx === 0 ? "M " : " L ") + sx.toFixed(1) + " " + sy.toFixed(1);
+                
+                svg.append("circle")
+                   .attr("cx", sx)
+                   .attr("cy", sy)
+                   .attr("r", 6)
+                   .attr("fill", "#f59e0b")
+                   .attr("stroke", "#ffffff")
+                   .attr("stroke-width", 2);
+                   
+                svg.append("text")
+                   .attr("x", sx)
+                   .attr("y", sy - 10)
+                   .attr("text-anchor", "middle")
+                   .attr("fill", "#cbd5e1")
+                   .attr("font-size", "11px")
+                   .text((idx + 1).toString());
+            });
+            
+            if (spatialData.type === "polygon") {
+                pathD += " Z";
+            }
+            
+            svg.append("path")
+               .attr("d", pathD)
+               .attr("fill", spatialData.type === "polygon" ? "rgba(245, 158, 11, 0.25)" : "none")
+               .attr("stroke", "#f59e0b")
+               .attr("stroke-width", 3)
+               .attr("stroke-dasharray", spatialData.type === "path" ? "6,4" : "none");
+        }
+
+        // Seed rich educational demo data if empty
+        function ensureEducationalSeedData() {
+            var existingSessions = [];
+            try { existingSessions = JSON.parse(localStorage.getItem(SESSIONS_STORAGE_KEY) || "[]"); } catch(e){}
+            if (!existingSessions || existingSessions.length === 0) {
+                var seedSessions = [
+                    {
+                        code: "ASG-IBN7",
+                        title: "رحلة ابن بطوطة والتجارة البحرية الإسلامية",
+                        topic: "historicalRoutes",
+                        className: "الصف الثامن - دراسات اجتماعية",
+                        createdAt: Date.now() - 86400000 * 2,
+                        numQuestions: 2,
+                        customQuestions: [
+                            {
+                                question: "ما هو المضيق المائي الذي عبره ابن بطوطة للوصول إلى الأندلس؟",
+                                options: ["مضيق جبل طارق", "مضيق باب المندب", "مضيق البوسفور", "مضيق هرمز"],
+                                correctIndex: 0
+                            },
+                            {
+                                question: "أي الموانئ التاريخية كان نقطة انطلاق القوافل التجارية نحو المحيط الهندي؟",
+                                options: ["ميناء جدة وعدن", "ميناء الإسكندرية", "ميناء جنوة", "ميناء البصرة فقط"],
+                                correctIndex: 0
+                            }
+                        ],
+                        spatialTask: {
+                            type: "path",
+                            prompt: "ارسم على الخريطة مسار رحلة ابن بطوطة من طنجة عبر شمال أفريقيا إلى مكة المكرمة",
+                            targetRegion: "شمال أفريقيا والشرق الأوسط"
+                        }
+                    },
+                    {
+                        code: "ASG-TOP9",
+                        title: "التضاريس والموارد المائية في بلاد الرافدين والشام",
+                        topic: "physical",
+                        className: "الصف السابع - جغرافيا",
+                        createdAt: Date.now() - 86400000,
+                        numQuestions: 2,
+                        customQuestions: [
+                            {
+                                question: "ما هما النهران الرئيسيان اللذان قامت بينهما حضارات بلاد الرافدين؟",
+                                options: ["دجلة والفرات", "النيل واليرموك", "السند والغانج", "الدانوب والراين"],
+                                correctIndex: 0
+                            },
+                            {
+                                question: "ما السلسلة الجبلية التي تمتد بمحاذاة الساحل الشرقي للبحر الأبيض المتوسط؟",
+                                options: ["جبال لبنان والطوروس", "جبال الهيمالايا", "جبال الألب", "جبال القوقاز"],
+                                correctIndex: 0
+                            }
+                        ],
+                        spatialTask: {
+                            type: "polygon",
+                            prompt: "حدد برسم مضلع نطاق إقليم الهلال الخصيب أو حوض دجلة والفرات على الخريطة",
+                            targetRegion: "الهلال الخصيب"
+                        }
+                    }
+                ];
+                try { localStorage.setItem(SESSIONS_STORAGE_KEY, JSON.stringify(seedSessions)); } catch(e){}
+            }
+
+            // Seed submission for ASG-IBN7 for gradebook testing
             try {
-                return JSON.parse(localStorage.getItem(S) || "[]");
+                var subs = JSON.parse(localStorage.getItem("lepidos_quiz_submissions_ASG-IBN7") || "[]");
+                if (subs.length === 0) {
+                    subs.push({
+                        studentName: "يوسف المنصوري",
+                        sessionCode: "ASG-IBN7",
+                        assignmentTitle: "رحلة ابن بطوطة والتجارة البحرية الإسلامية",
+                        score: 2,
+                        totalQuestions: 2,
+                        percent: 100,
+                        submittedAt: Date.now() - 86400000,
+                        spatialAnswer: {
+                            type: "path",
+                            prompt: "ارسم على الخريطة مسار رحلة ابن بطوطة من طنجة عبر شمال أفريقيا إلى مكة المكرمة",
+                            points: [[-5.8, 35.7], [3.05, 36.7], [10.18, 36.8], [31.2, 30.0], [39.8, 21.4]],
+                            teacherGrade: 10,
+                            teacherFeedback: "تخطيط مسار ممتاز ومطابق جغرافياً لمحطات ابن بطوطة الرئيسية من طنجة حتى الحجاز. بارك الله فيك!"
+                        }
+                    });
+                    localStorage.setItem("lepidos_quiz_submissions_ASG-IBN7", JSON.stringify(subs));
+                }
+            } catch(e){}
+            
+            var existingInquiries = [];
+            try { existingInquiries = JSON.parse(localStorage.getItem(INQUIRIES_STORAGE_KEY) || "[]"); } catch(e){}
+            if (!existingInquiries || existingInquiries.length === 0) {
+                var seedInquiries = [
+                    {
+                        id: "inq_seed_1",
+                        studentName: "يوسف المنصوري",
+                        title: "موقع مضيق باب المندب وأهميته الاستراتيجية",
+                        text: "أستاذي العزيز، هل مضيق باب المندب يربط البحر الأحمر بالمحيط الهندي عبر خليج عدن؟ حددت النقطة على الخريطة للتأكد.",
+                        coords: [43.33, 12.58],
+                        coordsLabel: "خط طول: 43.33°E, خط عرض: 12.58°N",
+                        createdAt: Date.now() - 3600000 * 5,
+                        status: "answered",
+                        reply: "نعم أحسنت يا يوسف! موقع باب المندب دقيق للغاية، وهو ممر استراتيجي يربط البحر الأحمر بخليج عدن وبحر العرب."
+                    },
+                    {
+                        id: "inq_seed_2",
+                        studentName: "سارة الزهراني",
+                        title: "تحديد امتداد جبال الأطلس في المغرب العربي",
+                        text: "يا معلمنا، وضعت دبوساً عند أعلى قمة في جبال الأطلس (توبقال)، هل هذا هو الموقع المناسب لسلسلة الأطلس الكبير؟",
+                        coords: [-7.92, 31.06],
+                        coordsLabel: "خط طول: -7.92°W, خط عرض: 31.06°N",
+                        createdAt: Date.now() - 3600000 * 2,
+                        status: "pending",
+                        reply: null
+                    }
+                ];
+                try { localStorage.setItem(INQUIRIES_STORAGE_KEY, JSON.stringify(seedInquiries)); } catch(e){}
+            }
+            
+            var existingGrades = [];
+            try { existingGrades = JSON.parse(localStorage.getItem(GRADES_STORAGE_KEY) || "[]"); } catch(e){}
+            if (!existingGrades || existingGrades.length === 0) {
+                var seedGrades = [
+                    {
+                        sessionCode: "ASG-IBN7",
+                        assignmentTitle: "رحلة ابن بطوطة والتجارة البحرية الإسلامية",
+                        score: 2,
+                        totalQuestions: 2,
+                        percent: 100,
+                        submittedAt: Date.now() - 86400000,
+                        spatialAnswer: {
+                            type: "path",
+                            prompt: "ارسم على الخريطة مسار رحلة ابن بطوطة من طنجة عبر شمال أفريقيا إلى مكة المكرمة",
+                            points: [[-5.8, 35.7], [3.05, 36.7], [10.18, 36.8], [31.2, 30.0], [39.8, 21.4]],
+                            teacherGrade: 10,
+                            teacherFeedback: "تخطيط مسار ممتاز ومطابق جغرافياً لمحطات ابن بطوطة الرئيسية من طنجة حتى الحجاز. بارك الله فيك!"
+                        }
+                    }
+                ];
+                try { localStorage.setItem(GRADES_STORAGE_KEY, JSON.stringify(seedGrades)); } catch(e){}
+            }
+        }
+
+        function getSessions() {
+            try {
+                return JSON.parse(localStorage.getItem(SESSIONS_STORAGE_KEY) || "[]");
             } catch (e) {
                 return [];
             }
         }
-        function z() {
-            if (g) {
-                var e = I();
-                g.innerHTML = "", 0 !== e.length ? e.forEach(function(e) {
-                    var t = document.createElement("option");
-                    t.value = e.code, t.textContent = e.title + " (" + e.code + ") — " + (e.className || ""), 
-                    g.appendChild(t);
-                }) : g.innerHTML = '<option value="">' + (zi("teacherNoSessionsYet") || "لا توجد واجبات مولدة بعد") + "</option>";
+
+        function populateSessionsDropdown() {
+            if (teacherSessionPicker) {
+                var sessions = getSessions();
+                teacherSessionPicker.innerHTML = "";
+                if (sessions.length !== 0) {
+                    sessions.forEach(function(s) {
+                        var opt = document.createElement("option");
+                        opt.value = s.code;
+                        opt.textContent = s.title + " (" + s.code + ") — " + (s.className || "");
+                        teacherSessionPicker.appendChild(opt);
+                    });
+                } else {
+                    teacherSessionPicker.innerHTML = '<option value="">' + (zi("teacherNoSessionsYet") || "لا توجد واجبات مولدة بعد") + "</option>";
+                }
             }
         }
-        async function A(e) {
-            if (e) {
-                var t = [];
+
+        function openSpatialReviewModal(sessionCode, submission) {
+            if (!teacherSpatialReviewModal) return;
+            teacherSpatialReviewModal.style.display = "flex";
+            var nameEl = document.getElementById("spatialReviewStudentMeta") || document.getElementById("spatialStudentNameDisplay");
+            var typeEl = document.getElementById("spatialReviewDrawingTypeBadge") || document.getElementById("spatialTaskTypeDisplay");
+            var promptEl = document.getElementById("spatialReviewPromptText") || document.getElementById("spatialStudentPromptDisplay");
+            var scoreInput = document.getElementById("teacherGradeScoreInput");
+            var feedbackInput = document.getElementById("teacherGradeFeedbackInput");
+            var previewSvg = document.getElementById("spatialStudentPreviewSvg");
+            
+            if (nameEl) nameEl.textContent = "الطالب: " + (submission.studentName || "طالب") + " | الواجب: " + sessionCode;
+            if (typeEl) typeEl.textContent = submission.spatialAnswer.type === "path" ? "مسار خطي" : (submission.spatialAnswer.type === "polygon" ? "تظليل منطقة" : "إسقاط دبوس");
+            if (promptEl) promptEl.textContent = submission.spatialAnswer.prompt || "المهمة المكانية على الخريطة";
+            if (scoreInput) scoreInput.value = submission.spatialAnswer.teacherGrade !== undefined ? submission.spatialAnswer.teacherGrade : 10;
+            if (feedbackInput) feedbackInput.value = submission.spatialAnswer.teacherFeedback || "";
+            
+            renderSpatialSvgPreview(previewSvg, submission.spatialAnswer);
+            
+            var saveBtn = document.getElementById("teacherSpatialReviewSaveBtn") || document.getElementById("saveSpatialGradeBtn");
+            var cancelBtn = document.getElementById("teacherSpatialReviewCancelBtn");
+            var closeBtn = document.getElementById("teacherSpatialReviewCloseBtn") || document.getElementById("spatialReviewCloseBtn");
+
+            if (cancelBtn) cancelBtn.onclick = function() { teacherSpatialReviewModal.style.display = "none"; };
+            if (closeBtn) closeBtn.onclick = function() { teacherSpatialReviewModal.style.display = "none"; };
+
+            if (saveBtn) {
+                saveBtn.onclick = function() {
+                    var gradeVal = parseInt(scoreInput.value, 10);
+                    if (isNaN(gradeVal)) gradeVal = 10;
+                    if (gradeVal < 0) gradeVal = 0;
+                    if (gradeVal > 10) gradeVal = 10;
+                    var feedbackVal = feedbackInput.value.trim();
+                    submission.spatialAnswer.teacherGrade = gradeVal;
+                    submission.spatialAnswer.teacherFeedback = feedbackVal;
+                    
+                    try {
+                        var subs = JSON.parse(localStorage.getItem("lepidos_quiz_submissions_" + sessionCode) || "[]");
+                        var match = subs.find(function(s) { return s.studentName === submission.studentName; });
+                        if (match) {
+                            match.spatialAnswer = submission.spatialAnswer;
+                        } else {
+                            subs.push(submission);
+                        }
+                        localStorage.setItem("lepidos_quiz_submissions_" + sessionCode, JSON.stringify(subs));
+                    } catch(err) {
+                        console.warn("Could not save graded submission locally:", err);
+                    }
+                    
+                    try {
+                        var studentGrades = JSON.parse(localStorage.getItem(GRADES_STORAGE_KEY) || "[]");
+                        var matchGrade = studentGrades.find(function(g) { return g.sessionCode === sessionCode; });
+                        if (matchGrade && matchGrade.spatialAnswer) {
+                            matchGrade.spatialAnswer.teacherGrade = gradeVal;
+                            matchGrade.spatialAnswer.teacherFeedback = feedbackVal;
+                            localStorage.setItem(GRADES_STORAGE_KEY, JSON.stringify(studentGrades));
+                        }
+                    } catch(err) {}
+                    
+                    teacherSpatialReviewModal.style.display = "none";
+                    loadGradebookForSession(sessionCode);
+                    if (typeof renderStudentGrades === "function") renderStudentGrades();
+                };
+            }
+        }
+
+        async function loadGradebookForSession(sessionCode) {
+            if (sessionCode) {
+                var submissions = [];
                 if ("function" == typeof window.firebaseGetResultsForSession) try {
-                    t = await window.firebaseGetResultsForSession(e);
-                } catch (e) {
-                    console.warn("Could not fetch session results from Firebase:", e);
+                    submissions = await window.firebaseGetResultsForSession(sessionCode);
+                } catch (err) {
+                    console.warn("Could not fetch session results from Firebase:", err);
                 }
                 try {
-                    var n = JSON.parse(localStorage.getItem("lepidos_quiz_submissions_" + e) || "[]");
-                    if (n && n.length > 0) {
-                        var i = new Set(t.map(function(e) {
-                            return e.studentName;
-                        }));
-                        n.forEach(function(e) {
-                            i.has(e.studentName) || t.push(e);
+                    var localSubs = JSON.parse(localStorage.getItem("lepidos_quiz_submissions_" + sessionCode) || "[]");
+                    if (localSubs && localSubs.length > 0) {
+                        var existingNames = new Set(submissions.map(function(s) { return s.studentName; }));
+                        localSubs.forEach(function(s) {
+                            existingNames.has(s.studentName) || submissions.push(s);
                         });
                     }
-                } catch (e) {
-                    console.warn("Could not load local session results:", e);
+                } catch (err) {
+                    console.warn("Could not load local session results:", err);
                 }
-                var a = t.length, r = 0, o = 0;
-                if (0 === a) return E && (E.textContent = "0"), k && (k.textContent = "0%"), x && (x.textContent = "0%"), 
-                void (_ && (_.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-muted);">' + zi("teacherNoSubmissions") + "</td></tr>"));
-                t.sort(function(e, t) {
-                    var n = (e.score || 0) / (e.totalQuestions || e.total || 1);
-                    return (t.score || 0) / (t.totalQuestions || t.total || 1) - n;
-                });
-                var s = "";
-                t.forEach(function(e, t) {
-                    var n = e.totalQuestions || e.total || 1, i = e.score || 0, a = Math.round(i / n * 100);
-                    r += a, a > o && (o = a);
-                    var l = {
-                        ar: "ar-EG",
-                        en: "en-US",
-                        ru: "ru-RU",
-                        uz: "uz-UZ",
-                        es: "es-ES"
-                    }[Ht] || "ar-EG", c = e.submittedAt ? new Date(e.submittedAt).toLocaleDateString(l, {
-                        hour: "2-digit",
-                        minute: "2-digit"
-                    }) : "—", d = e.timeTaken ? Math.round(e.timeTaken / 1e3) + " " + (zi("secondsShort") || "ث") : "—";
-                    s += "<tr><td><strong>" + (t + 1) + "</strong></td><td><strong>" + Ti(e.studentName || zi("studentDefaultName") || "طالب") + "</strong></td><td>" + i + " / " + n + '</td><td><span class="academic-badge" style="font-size:0.85rem;">' + a + "%</span></td><td>" + d + "</td><td>" + c + "</td></tr>";
-                }), E && (E.textContent = String(a)), k && (k.textContent = Math.round(r / a) + "%"), 
-                x && (x.textContent = o + "%"), _ && (_.innerHTML = s);
-            } else _ && (_.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-muted);">' + zi("teacherNoSubmissions") + "</td></tr>");
-        }
-        function M() {
-            n && (n.style.display = "none");
-        }
-        function T() {
-            var e = (window.location.hash || "").match(/#(?:assignment|quizSession)=([A-Za-z0-9_-]+)/);
-            if (e) {
-                var t = e[1].toUpperCase();
-                if (C) {
-                    C.style.display = "flex";
-                    var n = document.getElementById("studentAssignmentDescDisplay");
-                    n && (n.innerHTML = (zi("studentAssignmentPrompt") || "طلب منك معلمك حل الواجب الصفي (رمز: <strong>{code}</strong>). اكتب اسمك الكامل للبدء:").replace("{code}", t));
+
+                var count = submissions.length, totalPct = 0, highestPct = 0;
+                if (0 === count) {
+                    if (gradebookTotalStudents) gradebookTotalStudents.textContent = "0";
+                    if (gradebookAvgScore) gradebookAvgScore.textContent = "0%";
+                    if (gradebookTopScore) gradebookTopScore.textContent = "0%";
+                    if (teacherGradebookTbody) teacherGradebookTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-muted);">' + (zi("teacherNoSubmissions") || "لم يقم أي طالب بإرسال إجاباته بعد في هذه الجلسة.") + "</td></tr>";
+                    return;
                 }
-                B && (B.onclick = function() {
-                    var e = L && L.value.trim() || zi("studentDefaultName") || "طالب";
-                    if (e) {
-                        It = t, zt = e, C && (C.style.display = "none");
-                        var sessions = [];
-                        try {
-                            sessions = JSON.parse(localStorage.getItem(S) || "[]");
-                        } catch (err) {}
-                        var foundSession = sessions.find(function(s) { return s.code === t; });
-                        if (foundSession && foundSession.customQuestions && window.loadQuestionsAndStartCustomQuiz) {
-                            window.loadQuestionsAndStartCustomQuiz(foundSession.customQuestions, t, e);
-                        } else {
-                            var n = document.getElementById("quizBtn") || document.getElementById("quizTab");
-                            n && n.click();
-                            var startBtn = document.getElementById("quizCustomStartBtn");
-                            if (startBtn && !startBtn.disabled) startBtn.click();
-                        }
-                    } else L && L.focus();
+
+                submissions.sort(function(a, b) {
+                    var aNorm = (a.score || 0) / (a.totalQuestions || a.total || 1);
+                    var bNorm = (b.score || 0) / (b.totalQuestions || b.total || 1);
+                    return bNorm - aNorm;
                 });
+
+                var rowsHtml = "";
+                submissions.forEach(function(sub, idx) {
+                    var numQ = sub.totalQuestions || sub.total || 1,
+                        score = sub.score || 0,
+                        pct = Math.round(score / numQ * 100);
+                    totalPct += pct;
+                    if (pct > highestPct) highestPct = pct;
+
+                    var langCode = { ar: "ar-EG", en: "en-US", ru: "ru-RU", uz: "uz-UZ", es: "es-ES" }[Ht] || "ar-EG";
+                    var dateStr = sub.submittedAt ? new Date(sub.submittedAt).toLocaleDateString(langCode, { hour: "2-digit", minute: "2-digit" }) : "—";
+                    
+                    var spatialCol = '<span style="color:var(--text-muted);font-size:0.82rem;">—</span>';
+                    if (sub.spatialAnswer) {
+                        var isGraded = (sub.spatialAnswer.teacherGrade !== undefined);
+                        var gradeLabel = isGraded ? ('تم التقييم: ' + sub.spatialAnswer.teacherGrade + '/10') : 'مراجعة وتقييم';
+                        var btnClass = isGraded ? 'btn-secondary' : 'btn-outline';
+                        spatialCol = '<button type="button" class="btn btn-xs ' + btnClass + ' review-spatial-btn" data-code="' + Ti(sessionCode) + '" data-student="' + Ti(sub.studentName) + '" style="font-size:0.82rem;padding:4px 10px;border-radius:6px;gap:6px;min-height:32px;display:inline-flex;align-items:center;"><i data-lucide="map-pin" style="width:14px;height:14px;"></i> <span>' + gradeLabel + '</span></button>';
+                    }
+                    rowsHtml += "<tr><td><strong>" + (idx + 1) + "</strong></td><td><strong>" + Ti(sub.studentName || zi("studentDefaultName") || "طالب") + "</strong></td><td>" + score + " / " + numQ + '</td><td><span class="academic-badge" style="font-size:0.85rem;">' + pct + "%</span></td><td>" + spatialCol + "</td><td>" + dateStr + "</td></tr>";
+                });
+
+                if (gradebookTotalStudents) gradebookTotalStudents.textContent = String(count);
+                if (gradebookAvgScore) gradebookAvgScore.textContent = Math.round(totalPct / count) + "%";
+                if (gradebookTopScore) gradebookTopScore.textContent = highestPct + "%";
+                if (teacherGradebookTbody) {
+                    teacherGradebookTbody.innerHTML = rowsHtml;
+                    teacherGradebookTbody.querySelectorAll(".review-spatial-btn").forEach(function(btn) {
+                        btn.addEventListener("click", function() {
+                            var sName = this.getAttribute("data-student");
+                            var foundSub = submissions.find(function(s) { return s.studentName === sName; });
+                            if (foundSub && foundSub.spatialAnswer) {
+                                openSpatialReviewModal(sessionCode, foundSub);
+                            }
+                        });
+                    });
+                    if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+                }
+            } else {
+                if (teacherGradebookTbody) teacherGradebookTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-muted);">' + (zi("teacherNoSubmissions") || "لم يقم أي طالب بإرسال إجاباته بعد في هذه الجلسة.") + "</td></tr>";
             }
         }
-        e && e.addEventListener("click", function() {
-            n && (n.style.display = "flex"), z();
-        }), i && i.addEventListener("click", M), n && n.addEventListener("click", function(e) {
-            e.target === n && M();
-        }), a && r && (a.addEventListener("click", function() {
-            a.classList.add("active"), r.classList.remove("active"), o && (o.style.display = "block"), 
-            s && (s.style.display = "none");
-        }), r.addEventListener("click", function() {
-            r.classList.add("active"), a.classList.remove("active"), o && (o.style.display = "none"), 
-            s && (s.style.display = "block"), g && g.value && A(g.value);
-        })), p && p.addEventListener("click", async function() {
-            var consentCheck = document.getElementById("teacherTermsConsentCheck");
-            if (consentCheck && !consentCheck.checked) {
-                alert(zi("termsMustAccept") || "يرجى الموافقة على شروط الاستخدام وسياسة حماية بيانات الطلاب قبل توليد الواجب.");
+
+        function renderTeacherInquiries() {
+            if (!teacherInquiriesList) return;
+            var inquiries = [];
+            try {
+                inquiries = JSON.parse(localStorage.getItem(INQUIRIES_STORAGE_KEY) || "[]");
+            } catch(err) { inquiries = []; }
+            
+            var pendingCount = inquiries.filter(function(i) { return i.status === "pending"; }).length;
+            if (teacherInquiriesCountBadge) {
+                teacherInquiriesCountBadge.textContent = String(pendingCount);
+                teacherInquiriesCountBadge.style.display = pendingCount > 0 ? "inline-flex" : "none";
+            }
+            
+            if (inquiries.length === 0) {
+                teacherInquiriesList.innerHTML = '<div style="text-align:center;padding:32px;color:var(--text-muted);font-size:0.92rem;">لا توجد استفسارات مرسلة من الطلاب بعد.</div>';
                 return;
             }
-            var customQs = window._customQuestionsForAssignment ? [].concat(window._customQuestionsForAssignment) : null;
-            window._customQuestionsForAssignment = null;
-            var e = l && l.value.trim() || zi("teacherDefaultAssignmentTitle") || "واجب الجغرافيا والتاريخ", t = c && c.value || "countries", n = parseInt(d && d.value || "10", 10), i = u && u.value.trim() || "", a = "ABCDEFGHJKLMNPQRSTUVWXYZ", r = "ASG-" + a.charAt(Math.floor(24 * Math.random())) + a.charAt(Math.floor(24 * Math.random())) + Math.floor(100 + 900 * Math.random()), o = {
-                code: r,
-                title: e,
-                topic: t,
-                numQuestions: customQs ? customQs.length : n,
-                className: i,
-                customQuestions: customQs,
-                createdAt: Date.now()
-            };
-            if ("function" == typeof window.firebaseCreateSession) try {
-                await window.firebaseCreateSession(r, o);
-            } catch (e) {
-                console.warn("Firebase session creation fallback to local:", e);
-            }
-            !function(e) {
-                var t = I();
-                t = t.filter(function(t) {
-                    return t.code !== e.code;
-                }), t.unshift(e);
-                try {
-                    localStorage.setItem(S, JSON.stringify(t));
-                } catch (e) {
-                    console.warn("Could not save teacher session to localStorage:", e);
+            
+            var html = "";
+            inquiries.forEach(function(inq) {
+                var isPending = (inq.status === "pending");
+                var statusBadge = isPending 
+                    ? '<span class="inquiry-status-badge inquiry-status-pending"><i data-lucide="clock" style="width:12px;height:12px;"></i> بانتظار ردك</span>'
+                    : '<span class="inquiry-status-badge inquiry-status-answered"><i data-lucide="check-circle" style="width:12px;height:12px;"></i> تم الرد</span>';
+                    
+                var dateStr = inq.createdAt ? new Date(inq.createdAt).toLocaleDateString("ar-EG", { hour: "2-digit", minute: "2-digit", day: "numeric", month: "short" }) : "";
+                
+                var locationHtml = "";
+                if (inq.coords && inq.coords.length >= 2) {
+                    locationHtml = '<div style="display:flex;align-items:center;gap:10px;margin-top:6px;flex-wrap:wrap;">' +
+                        '<span style="font-size:0.82rem;padding:3px 8px;border-radius:6px;background:rgba(45,212,191,0.12);color:#2dd4bf;border:1px solid rgba(45,212,191,0.3);">' +
+                        '📍 ' + (inq.coordsLabel || ('خط طول: ' + inq.coords[0].toFixed(2) + '°, خط عرض: ' + inq.coords[1].toFixed(2) + '°')) + '</span>' +
+                        '<button type="button" class="btn btn-secondary btn-xs teacher-fly-to-btn" data-lng="' + inq.coords[0] + '" data-lat="' + inq.coords[1] + '" style="font-size:0.8rem;padding:4px 8px;gap:4px;min-height:32px;display:inline-flex;align-items:center;"><i data-lucide="crosshair" style="width:13px;height:13px;"></i> <span>طيران للموقع على الخريطة</span></button>' +
+                        '</div>';
                 }
-                z();
-            }(o);
-            var s = window.location.origin + window.location.pathname + "#assignment=" + r;
-            f && (f.textContent = r), h && (h.value = s), m && (m.style.display = "flex");
-        }), y && h && y.addEventListener("click", function() {
-            h.select(), navigator.clipboard.writeText(h.value).then(function() {
-                y.innerHTML = '<i data-lucide="check" style="width:14px;height:14px;"></i> ' + zi("teacherLinkCopied"), 
-                t(), setTimeout(function() {
-                    y.innerHTML = '<i data-lucide="copy" style="width:14px;height:14px;"></i> ' + zi("teacherCopyLink"), 
-                    t();
-                }, 2500);
+                
+                var replyHtml = "";
+                if (inq.reply) {
+                    replyHtml = '<div class="inquiry-reply-box" style="margin-top:8px;">' +
+                        '<strong>ردك المرسل للطالب:</strong> ' + Ti(inq.reply) +
+                        '</div>';
+                }
+                
+                html += '<div class="inquiry-item-card" data-inq-id="' + inq.id + '">' +
+                    '<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:8px;">' +
+                        '<div><strong style="color:var(--brand-accent,#14b8a6);">' + Ti(inq.studentName || "طالب") + '</strong> <span style="font-size:0.8rem;color:var(--text-muted);margin-inline-start:8px;">' + dateStr + '</span></div>' +
+                        statusBadge +
+                    '</div>' +
+                    '<div style="font-weight:700;font-size:0.98rem;margin-top:4px;">' + Ti(inq.title) + '</div>' +
+                    '<div style="font-size:0.9rem;line-height:1.55;color:var(--text-color,#e2e8f0);">' + Ti(inq.text) + '</div>' +
+                    locationHtml +
+                    replyHtml +
+                    '<div style="display:flex;gap:8px;margin-top:8px;align-items:flex-end;">' +
+                        '<input type="text" class="quiz-input teacher-reply-input" placeholder="اكتب ردك التوجيهي أو الشرح للطالب هنا..." style="font-size:0.88rem;flex:1;min-height:40px;" value="' + (inq.reply ? Ti(inq.reply) : '') + '">' +
+                        '<button type="button" class="btn btn-primary btn-sm teacher-send-reply-btn" data-inq-id="' + inq.id + '" style="min-height:40px;white-space:nowrap;"><i data-lucide="send" style="width:14px;height:14px;"></i> <span>' + (inq.reply ? 'تحديث الرد' : 'إرسال الرد') + '</span></button>' +
+                    '</div>' +
+                '</div>';
             });
-        }), g && g.addEventListener("change", function() {
-            A(this.value);
-        }), v && v.addEventListener("click", function() {
-            g && g.value && A(g.value);
-        }), b && b.addEventListener("click", function() {
-            var e = g ? g.value : "";
-            if (e) {
-                var t = [];
-                t.push([ zi("csvRank") || "الترتيب", zi("csvStudent") || "اسم الطالب", zi("csvScore") || "الدرجة", zi("csvPercentage") || "النسبة المئوية", zi("csvTime") || "الوقت المستغرق", zi("csvDate") || "تاريخ التسليم" ]), 
-                _ && _.querySelectorAll("tr").forEach(function(e) {
-                    var n = [];
-                    e.querySelectorAll("td").forEach(function(e) {
-                        n.push('"' + e.textContent.trim().replace(/"/g, '""') + '"');
-                    }), 6 === n.length && t.push(n);
+            
+            teacherInquiriesList.innerHTML = html;
+            
+            teacherInquiriesList.querySelectorAll(".teacher-fly-to-btn").forEach(function(btn) {
+                btn.addEventListener("click", function() {
+                    var lng = parseFloat(this.getAttribute("data-lng"));
+                    var lat = parseFloat(this.getAttribute("data-lat"));
+                    if (teacherOverlay) teacherOverlay.style.display = "none";
+                    flyMapToCoordinates(lng, lat);
                 });
-                var n = "\ufeff" + t.map(function(e) {
-                    return e.join(",");
-                }).join("\n"), i = new Blob([ n ], {
-                    type: "text/csv;charset=utf-8;"
-                }), a = URL.createObjectURL(i), r = document.createElement("a");
-                r.href = a, r.download = "Lepidos-Gradebook-" + e + ".csv", r.click();
+            });
+            
+            teacherInquiriesList.querySelectorAll(".teacher-send-reply-btn").forEach(function(btn) {
+                btn.addEventListener("click", function() {
+                    var inqId = this.getAttribute("data-inq-id");
+                    var card = this.closest(".inquiry-item-card");
+                    var input = card ? card.querySelector(".teacher-reply-input") : null;
+                    var replyText = input ? input.value.trim() : "";
+                    if (!replyText) return;
+                    
+                    var targetInq = inquiries.find(function(i) { return i.id === inqId; });
+                    if (targetInq) {
+                        targetInq.reply = replyText;
+                        targetInq.status = "answered";
+                        try {
+                            localStorage.setItem(INQUIRIES_STORAGE_KEY, JSON.stringify(inquiries));
+                        } catch(err) {}
+                        renderTeacherInquiries();
+                        if (typeof renderStudentInquiriesList === "function") renderStudentInquiriesList();
+                    }
+                });
+            });
+            
+            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+        }
+
+        function switchTeacherTab(tabName) {
+            [teacherTabCreateBtn, teacherTabActiveBtn, teacherTabInquiriesBtn].forEach(function(btn) {
+                if (btn) btn.classList.remove("active");
+            });
+            [teacherTabCreatePanel, teacherTabActivePanel, teacherTabInquiriesPanel].forEach(function(panel) {
+                if (panel) panel.style.display = "none";
+            });
+
+            if (tabName === "create") {
+                if (teacherTabCreateBtn) teacherTabCreateBtn.classList.add("active");
+                if (teacherTabCreatePanel) teacherTabCreatePanel.style.display = "block";
+            } else if (tabName === "active") {
+                if (teacherTabActiveBtn) teacherTabActiveBtn.classList.add("active");
+                if (teacherTabActivePanel) teacherTabActivePanel.style.display = "block";
+                if (teacherSessionPicker && teacherSessionPicker.value) {
+                    loadGradebookForSession(teacherSessionPicker.value);
+                }
+            } else if (tabName === "inquiries") {
+                if (teacherTabInquiriesBtn) teacherTabInquiriesBtn.classList.add("active");
+                if (teacherTabInquiriesPanel) teacherTabInquiriesPanel.style.display = "block";
+                renderTeacherInquiries();
             }
-        }), w && w.addEventListener("click", function() {
-            window.print();
-        }), window.addEventListener("hashchange", T), setTimeout(T, 400);
+            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+        }
+
+        function closeTeacherHub() {
+            if (teacherOverlay) teacherOverlay.style.display = "none";
+        }
+
+        function openTeacherHub() {
+            ensureEducationalSeedData();
+            if (teacherOverlay) teacherOverlay.style.display = "flex";
+            populateSessionsDropdown();
+            renderTeacherInquiries();
+        }
+
+        function checkAssignmentUrlHash() {
+            var match = (window.location.hash || "").match(/#(?:assignment|quizSession)=([A-Za-z0-9_-]+)/);
+            if (match) {
+                var code = match[1].toUpperCase();
+                if (studentAssignmentOverlay) {
+                    studentAssignmentOverlay.style.display = "flex";
+                    var desc = document.getElementById("studentAssignmentDescDisplay");
+                    if (desc) {
+                        desc.innerHTML = (zi("studentAssignmentPrompt") || "طلب منك معلمك حل الواجب الصفي (رمز: <strong>{code}</strong>). اكتب اسمك الكامل للبدء:").replace("{code}", code);
+                    }
+                }
+                if (studentStartAssignmentBtn) {
+                    studentStartAssignmentBtn.onclick = function() {
+                        var name = (studentFullNameInput && studentFullNameInput.value.trim()) || zi("studentDefaultName") || "طالب";
+                        if (name) {
+                            try { localStorage.setItem("lepidos_student_name_v1", name); } catch(e){}
+                            if (studentAssignmentOverlay) studentAssignmentOverlay.style.display = "none";
+                            var sessions = getSessions();
+                            var foundSession = sessions.find(function(s) { return s.code === code; });
+                            if (foundSession) {
+                                openStudentHub("assignments");
+                                if (typeof openAssignmentSolver === "function") openAssignmentSolver(foundSession);
+                            }
+                        } else if (studentFullNameInput) {
+                            studentFullNameInput.focus();
+                        }
+                    };
+                }
+            }
+        }
+
+        // Wire teacher events
+        if (teacherHubBtn) teacherHubBtn.addEventListener("click", openTeacherHub);
+        if (teacherCloseBtn) teacherCloseBtn.addEventListener("click", closeTeacherHub);
+        if (teacherOverlay) {
+            teacherOverlay.addEventListener("click", function(e) {
+                if (e.target === teacherOverlay) closeTeacherHub();
+            });
+        }
+
+        if (teacherTabCreateBtn) teacherTabCreateBtn.addEventListener("click", function() { switchTeacherTab("create"); });
+        if (teacherTabActiveBtn) teacherTabActiveBtn.addEventListener("click", function() { switchTeacherTab("active"); });
+        if (teacherTabInquiriesBtn) teacherTabInquiriesBtn.addEventListener("click", function() { switchTeacherTab("inquiries"); });
+        if (teacherRefreshInquiriesBtn) teacherRefreshInquiriesBtn.addEventListener("click", renderTeacherInquiries);
+
+        if (teacherSpatialTaskCheck && teacherSpatialConfigBox) {
+            teacherSpatialTaskCheck.addEventListener("change", function() {
+                teacherSpatialConfigBox.style.display = this.checked ? "block" : "none";
+            });
+        }
+
+        if (spatialReviewCloseBtn && teacherSpatialReviewModal) {
+            spatialReviewCloseBtn.addEventListener("click", function() {
+                teacherSpatialReviewModal.style.display = "none";
+            });
+        }
+
+        if (teacherGenerateSessionBtn) {
+            teacherGenerateSessionBtn.addEventListener("click", async function() {
+                var consentCheck = document.getElementById("teacherTermsConsentCheck");
+                if (consentCheck && !consentCheck.checked) {
+                    alert(zi("termsMustAccept") || "يرجى الموافقة على شروط الاستخدام وسياسة حماية بيانات الطلاب قبل توليد الواجب.");
+                    return;
+                }
+                var customQs = window._customQuestionsForAssignment ? [].concat(window._customQuestionsForAssignment) : null;
+                window._customQuestionsForAssignment = null;
+
+                var title = teacherAssignmentTitleInput && teacherAssignmentTitleInput.value.trim() || zi("teacherDefaultAssignmentTitle") || "واجب الجغرافيا والتاريخ";
+                var topic = teacherAssignmentTopic && teacherAssignmentTopic.value || "countries";
+                var numQ = parseInt(teacherNumQuestions && teacherNumQuestions.value || "10", 10);
+                var className = teacherClassName && teacherClassName.value.trim() || "";
+
+                var spatialTask = (teacherSpatialTaskCheck && teacherSpatialTaskCheck.checked) ? {
+                    type: teacherSpatialTaskType ? teacherSpatialTaskType.value : "path",
+                    prompt: (teacherSpatialPromptInput && teacherSpatialPromptInput.value.trim()) || "ارسم المطلوب جغرافياً على الخريطة",
+                    targetRegion: (teacherSpatialTargetRegion && teacherSpatialTargetRegion.value.trim()) || ""
+                } : null;
+
+                var chars = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+                var sessionCode = "ASG-" + chars.charAt(Math.floor(24 * Math.random())) + chars.charAt(Math.floor(24 * Math.random())) + Math.floor(100 + 900 * Math.random());
+                var sessionObj = {
+                    code: sessionCode,
+                    title: title,
+                    topic: topic,
+                    numQuestions: customQs ? customQs.length : numQ,
+                    className: className,
+                    customQuestions: customQs,
+                    spatialTask: spatialTask,
+                    createdAt: Date.now()
+                };
+
+                if ("function" == typeof window.firebaseCreateSession) try {
+                    await window.firebaseCreateSession(sessionCode, sessionObj);
+                } catch (e) {
+                    console.warn("Firebase session creation fallback to local:", e);
+                }
+
+                var sessions = getSessions().filter(function(s) { return s.code !== sessionCode; });
+                sessions.unshift(sessionObj);
+                try {
+                    localStorage.setItem(SESSIONS_STORAGE_KEY, JSON.stringify(sessions));
+                } catch (e) {
+                    console.warn("Could not save teacher session locally:", e);
+                }
+
+                populateSessionsDropdown();
+                var directUrl = window.location.origin + window.location.pathname + "#assignment=" + sessionCode;
+                if (teacherSessionCodeDisplay) teacherSessionCodeDisplay.textContent = sessionCode;
+                if (teacherStudentDirectLink) teacherStudentDirectLink.value = directUrl;
+                if (teacherShareCard) teacherShareCard.style.display = "flex";
+                if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+            });
+        }
+
+        if (teacherCopyLinkBtn && teacherStudentDirectLink) {
+            teacherCopyLinkBtn.addEventListener("click", function() {
+                teacherStudentDirectLink.select();
+                navigator.clipboard.writeText(teacherStudentDirectLink.value).then(function() {
+                    teacherCopyLinkBtn.innerHTML = '<i data-lucide="check" style="width:14px;height:14px;"></i> ' + (zi("teacherLinkCopied") || "تم النسخ!");
+                    if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+                    setTimeout(function() {
+                        teacherCopyLinkBtn.innerHTML = '<i data-lucide="copy" style="width:14px;height:14px;"></i> ' + (zi("teacherCopyLink") || "نسخ الرابط");
+                        if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+                    }, 2500);
+                });
+            });
+        }
+
+        if (teacherSessionPicker) {
+            teacherSessionPicker.addEventListener("change", function() {
+                loadGradebookForSession(this.value);
+            });
+        }
+        if (teacherRefreshGradebookBtn) {
+            teacherRefreshGradebookBtn.addEventListener("click", function() {
+                if (teacherSessionPicker && teacherSessionPicker.value) loadGradebookForSession(teacherSessionPicker.value);
+            });
+        }
+        if (teacherExportCsvBtn) {
+            teacherExportCsvBtn.addEventListener("click", function() {
+                var code = teacherSessionPicker ? teacherSessionPicker.value : "";
+                if (code) {
+                    var rows = [];
+                    rows.push([ zi("csvRank") || "الترتيب", zi("csvStudent") || "اسم الطالب", zi("csvScore") || "الدرجة", zi("csvPercentage") || "النسبة المئوية", "الخريطة المكانية", zi("csvDate") || "تاريخ التسليم" ]);
+                    if (teacherGradebookTbody) {
+                        teacherGradebookTbody.querySelectorAll("tr").forEach(function(tr) {
+                            var cols = [];
+                            tr.querySelectorAll("td").forEach(function(td) {
+                                cols.push('"' + td.textContent.trim().replace(/"/g, '""') + '"');
+                            });
+                            if (cols.length === 6) rows.push(cols);
+                        });
+                    }
+                    var csvContent = "\ufeff" + rows.map(function(r) { return r.join(","); }).join("\n");
+                    var blob = new Blob([ csvContent ], { type: "text/csv;charset=utf-8;" });
+                    var url = URL.createObjectURL(blob);
+                    var a = document.createElement("a");
+                    a.href = url;
+                    a.download = "Lepidos-Gradebook-" + code + ".csv";
+                    a.click();
+                }
+            });
+        }
+        if (teacherPrintGradebookBtn) {
+            teacherPrintGradebookBtn.addEventListener("click", function() { window.print(); });
+        }
+
+        window.addEventListener("hashchange", checkAssignmentUrlHash);
+        setTimeout(checkAssignmentUrlHash, 400);
+
+        // ══════════════════════════════════════════════════════════════════════════════
+        // STUDENT HUB CONTROLLER (ASSIGNMENTS, SOLVER, SPATIAL DRAWING, INQUIRIES)
+        // ══════════════════════════════════════════════════════════════════════════════
+        var studentHubBtn = document.getElementById("studentHubBtn"),
+            drawerStudentHubBtn = document.getElementById("drawerStudentHubBtn"),
+            studentOverlay = document.getElementById("studentHubOverlay"),
+            studentCloseBtn = document.getElementById("studentHubCloseBtn"),
+            studentTabAssignmentsBtn = document.getElementById("studentTabAssignmentsBtn"),
+            studentTabInquiriesBtn = document.getElementById("studentTabInquiriesBtn"),
+            studentTabGradesBtn = document.getElementById("studentTabGradesBtn"),
+            studentTabAssignmentsPanel = document.getElementById("studentTabAssignmentsPanel"),
+            studentTabInquiriesPanel = document.getElementById("studentTabInquiriesPanel"),
+            studentTabGradesPanel = document.getElementById("studentTabGradesPanel"),
+            studentAssignmentsCardsList = document.getElementById("studentAssignmentsCardsList"),
+            studentAssignmentSolveView = document.getElementById("studentAssignmentSolveView"),
+            studentSolverBackBtn = document.getElementById("studentSolverBackBtn"),
+            studentSolverTitleDisplay = document.getElementById("studentSolverTitleDisplay"),
+            studentQuestionsContainer = document.getElementById("studentQuestionsContainer"),
+            studentSpatialActionBox = document.getElementById("studentSpatialActionBox"),
+            studentSpatialPromptDisplay = document.getElementById("studentSpatialInstructionsDisplay") || document.getElementById("studentSpatialPromptDisplay"),
+            studentSpatialHint = document.getElementById("studentSpatialHint"),
+            studentSpatialDrawBtn = document.getElementById("studentGoDrawOnMapBtn") || document.getElementById("studentSpatialDrawBtn"),
+            studentSpatialClearBtn = document.getElementById("studentToolClearBtn") || document.getElementById("studentSpatialClearBtn"),
+            studentSpatialStatus = document.getElementById("studentSpatialStatusBanner") || document.getElementById("studentSpatialStatus"),
+            studentSubmitAssignmentBtn = document.getElementById("studentSubmitSolutionBtn") || document.getElementById("studentSubmitAssignmentBtn"),
+            studentSpatialTaskTypeBadge = document.getElementById("studentSpatialTaskTypeBadge"),
+            studentToolPinBtn = document.getElementById("studentToolPinBtn"),
+            studentToolPathBtn = document.getElementById("studentToolPathBtn"),
+            studentToolPolygonBtn = document.getElementById("studentToolPolygonBtn"),
+            spatialDrawingModeBanner = document.getElementById("spatialDrawingModeBanner"),
+            spatialDrawingBannerText = document.getElementById("spatialDrawingBannerText"),
+            spatialDrawingCancelBtn = document.getElementById("spatialDrawingCancelBtn"),
+            spatialDrawingDoneBtn = document.getElementById("spatialDrawingDoneBtn"),
+            studentInquiryTitleInput = document.getElementById("studentInquiryTitleInput"),
+            studentInquiryTextInput = document.getElementById("studentInquiryTextInput"),
+            studentPickLocationBtn = document.getElementById("studentPickLocationBtn"),
+            studentPickedLocationBadge = document.getElementById("studentPickedLocationBadge"),
+            studentSendInquiryBtn = document.getElementById("studentSendInquiryBtn"),
+            studentInquiriesList = document.getElementById("studentInquiriesList"),
+            locationPickerModeBanner = document.getElementById("locationPickerModeBanner"),
+            locationPickerCancelBtn = document.getElementById("locationPickerCancelBtn"),
+            studentCompletedCount = document.getElementById("studentCompletedCount"),
+            studentOverallAverage = document.getElementById("studentOverallAverage"),
+            studentFeedbackCount = document.getElementById("studentFeedbackCount"),
+            studentGradesRecordsList = document.getElementById("studentGradesRecordsList");
+
+        var activeSolvingAssignment = null;
+        var currentStudentDraft = { answers: {}, spatialAnswer: null };
+        var pickedInquiryLocation = null;
+
+        function startSpatialDrawingMode(task, onDone) {
+            var svg = document.getElementById("mapSvg");
+            if (!spatialDrawingModeBanner || !svg) return;
+            
+            spatialDrawingModeBanner.style.display = "flex";
+            if (spatialDrawingBannerText) {
+                spatialDrawingBannerText.textContent = "وضع حل المهمة المكانية (" + (task.prompt || "ارسم على الخريطة") + "): انقر فوق الخريطة لإسقاط النقاط ورسم المطلوب.";
+            }
+            svg.style.cursor = "crosshair";
+            
+            var points = [];
+            var drawLayer = null;
+            if (typeof Vn !== "undefined" && Vn) {
+                drawLayer = Vn.select("#studentSpatialDrawLayer");
+                if (drawLayer.empty()) {
+                    drawLayer = Vn.append("g").attr("id", "studentSpatialDrawLayer");
+                }
+                drawLayer.selectAll("*").remove();
+            }
+            
+            function redraw() {
+                if (!drawLayer) return;
+                drawLayer.selectAll("*").remove();
+                if (points.length === 0) return;
+                
+                var pathD = "";
+                points.forEach(function(pt, idx) {
+                    var vx = pt.vn[0];
+                    var vy = pt.vn[1];
+                    pathD += (idx === 0 ? "M " : " L ") + vx.toFixed(1) + " " + vy.toFixed(1);
+                    
+                    drawLayer.append("circle")
+                        .attr("cx", vx)
+                        .attr("cy", vy)
+                        .attr("r", 5)
+                        .attr("fill", "#f59e0b")
+                        .attr("stroke", "#ffffff")
+                        .attr("stroke-width", 1.5);
+                        
+                    drawLayer.append("text")
+                        .attr("x", vx)
+                        .attr("y", vy - 8)
+                        .attr("text-anchor", "middle")
+                        .attr("fill", "#fbbf24")
+                        .attr("font-size", "11px")
+                        .attr("font-weight", "bold")
+                        .text(String(idx + 1));
+                });
+                
+                if (task.type === "polygon" && points.length > 2) {
+                    pathD += " Z";
+                }
+                
+                drawLayer.append("path")
+                    .attr("d", pathD)
+                    .attr("fill", task.type === "polygon" ? "rgba(245, 158, 11, 0.25)" : "none")
+                    .attr("stroke", "#f59e0b")
+                    .attr("stroke-width", 2.5)
+                    .attr("stroke-dasharray", task.type === "path" ? "5,4" : "none");
+            }
+            
+            function onMapClick(e) {
+                e.stopPropagation();
+                var coords = getMapCoordsFromEvent(e);
+                if (!coords || !coords.geo) return;
+                points.push({
+                    geo: coords.geo,
+                    vn: coords.vn
+                });
+                redraw();
+            }
+            
+            svg.addEventListener("click", onMapClick, true);
+            
+            function cleanup() {
+                svg.removeEventListener("click", onMapClick, true);
+                svg.style.cursor = "";
+                spatialDrawingModeBanner.style.display = "none";
+            }
+            
+            if (spatialDrawingCancelBtn) {
+                spatialDrawingCancelBtn.onclick = function() {
+                    cleanup();
+                    if (drawLayer) drawLayer.selectAll("*").remove();
+                    onDone(null);
+                };
+            }
+            
+            if (spatialDrawingDoneBtn) {
+                spatialDrawingDoneBtn.onclick = function() {
+                    cleanup();
+                    onDone({
+                        type: task.type || "path",
+                        prompt: task.prompt || "",
+                        points: points
+                    });
+                };
+            }
+        }
+
+        function startLocationPickerMode(onPicked) {
+            var svg = document.getElementById("mapSvg");
+            if (!locationPickerModeBanner || !svg) return;
+            
+            locationPickerModeBanner.style.display = "flex";
+            svg.style.cursor = "crosshair";
+            
+            function onMapClick(e) {
+                e.stopPropagation();
+                var coords = getMapCoordsFromEvent(e);
+                cleanup();
+                if (coords && coords.geo) {
+                    var lng = coords.geo[0];
+                    var lat = coords.geo[1];
+                    var label = "خط طول: " + lng.toFixed(2) + "°, خط عرض: " + lat.toFixed(2) + "°";
+                    
+                    if (typeof Vn !== "undefined" && Vn) {
+                        var beacon = Vn.append("circle")
+                            .attr("cx", coords.vn[0])
+                            .attr("cy", coords.vn[1])
+                            .attr("r", 8)
+                            .attr("fill", "#2dd4bf")
+                            .attr("stroke", "#ffffff")
+                            .attr("stroke-width", 2);
+                        beacon.transition().duration(2000).attr("r", 28).attr("opacity", 0).remove();
+                    }
+                    onPicked({ coords: [lng, lat], label: label });
+                } else {
+                    onPicked(null);
+                }
+            }
+            
+            function cleanup() {
+                svg.removeEventListener("click", onMapClick, true);
+                svg.style.cursor = "";
+                locationPickerModeBanner.style.display = "none";
+            }
+            
+            svg.addEventListener("click", onMapClick, true);
+            
+            if (locationPickerCancelBtn) {
+                locationPickerCancelBtn.onclick = function() {
+                    cleanup();
+                    onPicked(null);
+                };
+            }
+        }
+
+        function renderStudentAssignmentsList() {
+            if (!studentAssignmentsCardsList) return;
+            ensureEducationalSeedData();
+            var sessions = getSessions();
+            
+            var grades = [];
+            try { grades = JSON.parse(localStorage.getItem(GRADES_STORAGE_KEY) || "[]"); } catch(e){}
+            var completedCodes = new Set(grades.map(function(g) { return g.sessionCode; }));
+
+            if (sessions.length === 0) {
+                studentAssignmentsCardsList.innerHTML = '<div style="text-align:center;padding:36px;color:var(--text-muted);font-size:0.95rem;">لا توجد واجبات صفية متاحة حالياً.</div>';
+                return;
+            }
+
+            var html = "";
+            sessions.forEach(function(asg) {
+                var isCompleted = completedCodes.has(asg.code);
+                var spatialBadge = asg.spatialTask 
+                    ? '<span class="student-badge-tag student-badge-spatial"><i data-lucide="edit-3" style="width:12px;height:12px;"></i> مهمة مكانية</span>'
+                    : '';
+                var statusBadge = isCompleted
+                    ? '<span class="student-badge-tag student-badge-completed"><i data-lucide="check" style="width:12px;height:12px;"></i> تم التسليم</span>'
+                    : '';
+
+                var actionBtn = isCompleted
+                    ? '<button type="button" class="btn btn-secondary btn-sm student-view-grade-btn" data-code="' + asg.code + '"><i data-lucide="award" style="width:14px;height:14px;"></i> <span>عرض نتيجتي وملاحظات المعلم</span></button>'
+                    : '<button type="button" class="btn btn-primary btn-sm student-start-solve-btn" data-code="' + asg.code + '"><i data-lucide="edit" style="width:14px;height:14px;"></i> <span>بدء حل الواجب ✎</span></button>';
+
+                html += '<div class="student-assignment-card" data-code="' + asg.code + '">' +
+                    '<div class="student-card-header">' +
+                        '<div>' +
+                            '<h4 class="student-card-title">' + Ti(asg.title) + '</h4>' +
+                            '<p class="student-card-desc" style="margin-top:4px;">' + Ti(asg.className || "واجب صفي تفاعلي") + '</p>' +
+                        '</div>' +
+                        '<div style="display:flex;gap:6px;flex-wrap:wrap;">' + spatialBadge + statusBadge + '</div>' +
+                    '</div>' +
+                    '<div class="student-card-meta">' +
+                        '<span>رمز الواجب: <strong>' + asg.code + '</strong></span>' +
+                        '<span>عدد الأسئلة: ' + (asg.numQuestions || 2) + '</span>' +
+                        (asg.spatialTask ? '<span>المهمة المكانية: ' + Ti(asg.spatialTask.targetRegion || "رسم جغرافي") + '</span>' : '') +
+                    '</div>' +
+                    '<div style="display:flex;justify-content:flex-end;margin-top:10px;">' + actionBtn + '</div>' +
+                '</div>';
+            });
+
+            studentAssignmentsCardsList.innerHTML = html;
+
+            studentAssignmentsCardsList.querySelectorAll(".student-start-solve-btn").forEach(function(btn) {
+                btn.addEventListener("click", function() {
+                    var code = this.getAttribute("data-code");
+                    var found = sessions.find(function(s) { return s.code === code; });
+                    if (found) openAssignmentSolver(found);
+                });
+            });
+
+            studentAssignmentsCardsList.querySelectorAll(".student-view-grade-btn").forEach(function() {
+                switchStudentTab("grades");
+            });
+
+            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+        }
+
+        function openAssignmentSolver(asg) {
+            activeSolvingAssignment = asg;
+            currentStudentDraft = { answers: {}, spatialAnswer: null };
+
+            if (studentAssignmentsCardsList) studentAssignmentsCardsList.style.display = "none";
+            if (studentAssignmentSolveView) studentAssignmentSolveView.style.display = "block";
+
+            if (studentSolverTitleDisplay) {
+                studentSolverTitleDisplay.textContent = asg.title + " (" + asg.code + ")";
+            }
+
+            // Render Questions
+            var questions = asg.customQuestions || [
+                {
+                    question: "ما هي أهمية الموقع الجغرافي المدروس في حركة التجارة والحضارات؟",
+                    options: ["ممر مائي وتجاري رئيسي يربط القارات", "منطقة معزولة خالية من النشاط البشري", "حاجز طبيعي يمنع التبادل الحضاري", "منطقة جليدية قطبية"],
+                    correctIndex: 0
+                },
+                {
+                    question: "أي المظاهر الطبيعية التالية تميز هذه البيئة الجغرافية؟",
+                    options: ["أحواض نهرية وسلاسل جبلية استراتيجية", "سهول تندرا قطبية", "غابات استوائية مطيرة فقط", "أرخبيل براكين نشطة فقط"],
+                    correctIndex: 0
+                }
+            ];
+
+            var qHtml = "";
+            questions.forEach(function(q, qIdx) {
+                qHtml += '<div class="student-question-item" data-q-idx="' + qIdx + '">' +
+                    '<div class="student-question-prompt">' + (qIdx + 1) + '. ' + Ti(q.question) + '</div>' +
+                    '<div class="student-options-list">';
+                q.options.forEach(function(opt, optIdx) {
+                    qHtml += '<button type="button" class="student-option-btn" data-q-idx="' + qIdx + '" data-opt-idx="' + optIdx + '">' +
+                        '<span style="font-weight:700;color:var(--brand-accent,#14b8a6);">' + String.fromCharCode(65 + optIdx) + '.</span> ' +
+                        '<span>' + Ti(opt) + '</span>' +
+                        '</button>';
+                });
+                qHtml += '</div></div>';
+            });
+            if (studentQuestionsContainer) studentQuestionsContainer.innerHTML = qHtml;
+
+            // Wire option click
+            if (studentQuestionsContainer) {
+                studentQuestionsContainer.querySelectorAll(".student-option-btn").forEach(function(optBtn) {
+                    optBtn.addEventListener("click", function() {
+                        var qIdx = this.getAttribute("data-q-idx");
+                        var optIdx = parseInt(this.getAttribute("data-opt-idx"), 10);
+                        var siblings = this.parentElement.querySelectorAll(".student-option-btn");
+                        siblings.forEach(function(b) { b.classList.remove("selected"); });
+                        this.classList.add("selected");
+                        currentStudentDraft.answers[qIdx] = optIdx;
+                    });
+                });
+            }
+
+            // Spatial Action Box
+            if (asg.spatialTask && studentSpatialActionBox) {
+                studentSpatialActionBox.style.display = "block";
+                if (studentSpatialPromptDisplay) studentSpatialPromptDisplay.textContent = asg.spatialTask.prompt;
+                if (studentSpatialHint) studentSpatialHint.textContent = asg.spatialTask.targetRegion ? ("المنطقة المستهدفة: " + asg.spatialTask.targetRegion) : "";
+                if (studentSpatialStatus) studentSpatialStatus.innerHTML = '<span style="color:var(--text-muted);">لم يتم رسم المطلوب بعد (انقر الزر لبدء الرسم التفاعلي على الخريطة).</span>';
+                
+                if (studentSpatialDrawBtn) {
+                    studentSpatialDrawBtn.onclick = function() {
+                        if (studentOverlay) studentOverlay.style.display = "none";
+                        startSpatialDrawingMode(asg.spatialTask, function(drawnData) {
+                            if (studentOverlay) studentOverlay.style.display = "flex";
+                            if (drawnData && drawnData.points && drawnData.points.length > 0) {
+                                currentStudentDraft.spatialAnswer = drawnData;
+                                if (studentSpatialStatus) {
+                                    studentSpatialStatus.innerHTML = '<span style="color:#34d399;font-weight:700;">تم رسم المطلوب بنجاح (' + drawnData.points.length + ' نقاط مسجلة) ✓</span>';
+                                }
+                            }
+                        });
+                    };
+                }
+
+                if (studentSpatialClearBtn) {
+                    studentSpatialClearBtn.onclick = function() {
+                        currentStudentDraft.spatialAnswer = null;
+                        if (studentSpatialStatus) studentSpatialStatus.innerHTML = '<span style="color:var(--text-muted);">تم إفراغ الرسم.</span>';
+                        if (typeof Vn !== "undefined" && Vn) {
+                            var drawLayer = Vn.select("#studentSpatialDrawLayer");
+                            if (!drawLayer.empty()) drawLayer.selectAll("*").remove();
+                        }
+                    };
+                }
+            } else if (studentSpatialActionBox) {
+                studentSpatialActionBox.style.display = "none";
+            }
+
+            // Wire back button
+            if (studentSolverBackBtn) {
+                studentSolverBackBtn.onclick = function() {
+                    if (studentAssignmentSolveView) studentAssignmentSolveView.style.display = "none";
+                    if (studentAssignmentsCardsList) studentAssignmentsCardsList.style.display = "flex";
+                    renderStudentAssignmentsList();
+                };
+            }
+
+            // Wire submit button
+            if (studentSubmitAssignmentBtn) {
+                studentSubmitAssignmentBtn.onclick = function() {
+                    var studentName = localStorage.getItem("lepidos_student_name_v1") || "أحمد محمود";
+                    var correctCount = 0;
+                    questions.forEach(function(q, qIdx) {
+                        if (currentStudentDraft.answers[qIdx] === (q.correctIndex !== undefined ? q.correctIndex : 0)) {
+                            correctCount++;
+                        }
+                    });
+
+                    var submissionRecord = {
+                        studentName: studentName,
+                        sessionCode: asg.code,
+                        assignmentTitle: asg.title,
+                        score: correctCount,
+                        totalQuestions: questions.length,
+                        percent: Math.round((correctCount / questions.length) * 100),
+                        spatialAnswer: currentStudentDraft.spatialAnswer,
+                        submittedAt: Date.now()
+                    };
+
+                    // Persist to session submissions
+                    try {
+                        var subs = JSON.parse(localStorage.getItem("lepidos_quiz_submissions_" + asg.code) || "[]");
+                        subs = subs.filter(function(s) { return s.studentName !== studentName; });
+                        subs.push(submissionRecord);
+                        localStorage.setItem("lepidos_quiz_submissions_" + asg.code, JSON.stringify(subs));
+                    } catch(err) {
+                        console.warn("Could not save student submission locally:", err);
+                    }
+
+                    // Persist to student personal grades
+                    try {
+                        var studentGrades = JSON.parse(localStorage.getItem(GRADES_STORAGE_KEY) || "[]");
+                        studentGrades = studentGrades.filter(function(g) { return g.sessionCode !== asg.code; });
+                        studentGrades.unshift(submissionRecord);
+                        localStorage.setItem(GRADES_STORAGE_KEY, JSON.stringify(studentGrades));
+                    } catch(err) {
+                        console.warn("Could not save student grade record locally:", err);
+                    }
+
+                    if (studentAssignmentSolveView) studentAssignmentSolveView.style.display = "none";
+                    if (studentAssignmentsCardsList) studentAssignmentsCardsList.style.display = "flex";
+                    
+                    alert("تم تسليم الواجب بنجاح! تم إرسال إجاباتك ورسوماتك للمعلم للمراجعة والتقييم.");
+                    switchStudentTab("grades");
+                };
+            }
+
+            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+        }
+
+        function renderStudentInquiriesList() {
+            if (!studentInquiriesList) return;
+            var inquiries = [];
+            try { inquiries = JSON.parse(localStorage.getItem(INQUIRIES_STORAGE_KEY) || "[]"); } catch(e){}
+
+            if (inquiries.length === 0) {
+                studentInquiriesList.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:0.9rem;">لم تقم بإرسال أي استفسار للمعلم بعد.</div>';
+                return;
+            }
+
+            var html = "";
+            inquiries.forEach(function(inq) {
+                var isAnswered = (inq.status === "answered" || inq.reply);
+                var statusBadge = isAnswered
+                    ? '<span class="inquiry-status-badge inquiry-status-answered"><i data-lucide="check-circle" style="width:12px;height:12px;"></i> تم الرد من المعلم</span>'
+                    : '<span class="inquiry-status-badge inquiry-status-pending"><i data-lucide="clock" style="width:12px;height:12px;"></i> بانتظار رد المعلم</span>';
+
+                var dateStr = inq.createdAt ? new Date(inq.createdAt).toLocaleDateString("ar-EG", { hour: "2-digit", minute: "2-digit", day: "numeric", month: "short" }) : "";
+                
+                var locationHtml = "";
+                if (inq.coords && inq.coords.length >= 2) {
+                    locationHtml = '<div style="display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap;">' +
+                        '<span style="font-size:0.8rem;padding:3px 8px;border-radius:6px;background:rgba(45,212,191,0.12);color:#2dd4bf;border:1px solid rgba(45,212,191,0.3);">' +
+                        '📍 ' + (inq.coordsLabel || ('خط طول: ' + inq.coords[0].toFixed(2) + '°, خط عرض: ' + inq.coords[1].toFixed(2) + '°')) + '</span>' +
+                        '<button type="button" class="btn btn-secondary btn-xs student-inq-fly-btn" data-lng="' + inq.coords[0] + '" data-lat="' + inq.coords[1] + '" style="font-size:0.78rem;padding:3px 8px;gap:4px;min-height:30px;display:inline-flex;align-items:center;"><i data-lucide="crosshair" style="width:12px;height:12px;"></i> <span>الانتقال للموقع</span></button>' +
+                        '</div>';
+                }
+
+                var replyHtml = "";
+                if (inq.reply) {
+                    replyHtml = '<div class="inquiry-reply-box" style="margin-top:8px;">' +
+                        '<strong>توجيه ورد المعلم:</strong> ' + Ti(inq.reply) +
+                        '</div>';
+                }
+
+                html += '<div class="inquiry-item-card">' +
+                    '<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:6px;">' +
+                        '<strong style="font-size:0.95rem;">' + Ti(inq.title) + '</strong>' +
+                        statusBadge +
+                    '</div>' +
+                    '<div style="font-size:0.88rem;line-height:1.55;color:var(--text-color,#e2e8f0);margin-top:4px;">' + Ti(inq.text) + '</div>' +
+                    locationHtml +
+                    replyHtml +
+                    '<div style="font-size:0.78rem;color:var(--text-muted);text-align:end;margin-top:4px;">' + dateStr + '</div>' +
+                '</div>';
+            });
+
+            studentInquiriesList.innerHTML = html;
+
+            studentInquiriesList.querySelectorAll(".student-inq-fly-btn").forEach(function(btn) {
+                btn.addEventListener("click", function() {
+                    var lng = parseFloat(this.getAttribute("data-lng"));
+                    var lat = parseFloat(this.getAttribute("data-lat"));
+                    if (studentOverlay) studentOverlay.style.display = "none";
+                    flyMapToCoordinates(lng, lat);
+                });
+            });
+
+            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+        }
+
+        function renderStudentGrades() {
+            ensureEducationalSeedData();
+            var grades = [];
+            try { grades = JSON.parse(localStorage.getItem(GRADES_STORAGE_KEY) || "[]"); } catch(e){}
+
+            var count = grades.length;
+            var totalPct = 0;
+            var feedbackTotal = 0;
+
+            grades.forEach(function(g) {
+                totalPct += (g.percent || 0);
+                if (g.spatialAnswer && (g.spatialAnswer.teacherFeedback || g.spatialAnswer.teacherGrade !== undefined)) {
+                    feedbackTotal++;
+                }
+            });
+
+            var avgPct = count > 0 ? Math.round(totalPct / count) : 0;
+
+            if (studentCompletedCount) studentCompletedCount.textContent = String(count);
+            if (studentOverallAverage) studentOverallAverage.textContent = avgPct + "%";
+            if (studentFeedbackCount) studentFeedbackCount.textContent = String(feedbackTotal);
+
+            if (!studentGradesRecordsList) return;
+
+            if (count === 0) {
+                studentGradesRecordsList.innerHTML = '<div style="text-align:center;padding:28px;color:var(--text-muted);font-size:0.92rem;">لا توجد درجات مسجلة بعد. أنجز واجباتك لتظهر هنا!</div>';
+                return;
+            }
+
+            var html = "";
+            grades.forEach(function(g) {
+                var langCode = { ar: "ar-EG", en: "en-US", ru: "ru-RU", uz: "uz-UZ", es: "es-ES" }[Ht] || "ar-EG";
+                var dateStr = g.submittedAt ? new Date(g.submittedAt).toLocaleDateString(langCode, { hour: "2-digit", minute: "2-digit", day: "numeric", month: "short" }) : "—";
+                
+                var spatialStatus = "";
+                if (g.spatialAnswer) {
+                    if (g.spatialAnswer.teacherGrade !== undefined) {
+                        spatialStatus = '<span style="font-size:0.84rem;color:#34d399;font-weight:700;">تقييم المهمة المكانية: ' + g.spatialAnswer.teacherGrade + '/10 ✓</span>';
+                    } else {
+                        spatialStatus = '<span style="font-size:0.84rem;color:#fbbf24;font-weight:600;">المهمة المكانية: بانتظار تصحيح المعلم اليدوي ⏳</span>';
+                    }
+                }
+
+                var feedbackBox = "";
+                if (g.spatialAnswer && g.spatialAnswer.teacherFeedback) {
+                    feedbackBox = '<div class="inquiry-reply-box" style="margin-top:10px;">' +
+                        '<strong>تغذية راجعة من المعلم:</strong> ' + Ti(g.spatialAnswer.teacherFeedback) +
+                        '</div>';
+                }
+
+                html += '<div class="student-assignment-card">' +
+                    '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+                        '<h4 class="student-card-title">' + Ti(g.assignmentTitle || "واجب مدرسي") + '</h4>' +
+                        '<span class="academic-badge" style="font-size:0.95rem;font-weight:800;">' + (g.percent || 0) + '%</span>' +
+                    '</div>' +
+                    '<div class="student-card-meta" style="margin-top:6px;">' +
+                        '<span>الرمز: <strong>' + g.sessionCode + '</strong></span>' +
+                        '<span>الدرجة: ' + (g.score || 0) + ' / ' + (g.totalQuestions || 2) + '</span>' +
+                        '<span>التسليم: ' + dateStr + '</span>' +
+                    '</div>' +
+                    (spatialStatus ? '<div style="margin-top:6px;">' + spatialStatus + '</div>' : '') +
+                    feedbackBox +
+                '</div>';
+            });
+
+            studentGradesRecordsList.innerHTML = html;
+            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+        }
+
+        function switchStudentTab(tabName) {
+            [studentTabAssignmentsBtn, studentTabInquiriesBtn, studentTabGradesBtn].forEach(function(btn) {
+                if (btn) btn.classList.remove("active");
+            });
+            [studentTabAssignmentsPanel, studentTabInquiriesPanel, studentTabGradesPanel].forEach(function(panel) {
+                if (panel) panel.style.display = "none";
+            });
+
+            if (tabName === "assignments") {
+                if (studentTabAssignmentsBtn) studentTabAssignmentsBtn.classList.add("active");
+                if (studentTabAssignmentsPanel) studentTabAssignmentsPanel.style.display = "block";
+                if (studentAssignmentSolveView) studentAssignmentSolveView.style.display = "none";
+                if (studentAssignmentsCardsList) studentAssignmentsCardsList.style.display = "flex";
+                renderStudentAssignmentsList();
+            } else if (tabName === "inquiries") {
+                if (studentTabInquiriesBtn) studentTabInquiriesBtn.classList.add("active");
+                if (studentTabInquiriesPanel) studentTabInquiriesPanel.style.display = "block";
+                renderStudentInquiriesList();
+            } else if (tabName === "grades") {
+                if (studentTabGradesBtn) studentTabGradesBtn.classList.add("active");
+                if (studentTabGradesPanel) studentTabGradesPanel.style.display = "block";
+                renderStudentGrades();
+            }
+            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+        }
+
+        function openStudentHub(tabName) {
+            ensureEducationalSeedData();
+            if (studentOverlay) studentOverlay.style.display = "flex";
+            switchStudentTab(tabName || "assignments");
+        }
+
+        function closeStudentHub() {
+            if (studentOverlay) studentOverlay.style.display = "none";
+        }
+
+        if (studentHubBtn) studentHubBtn.addEventListener("click", function() { openStudentHub("assignments"); });
+        if (drawerStudentHubBtn) drawerStudentHubBtn.addEventListener("click", function() { openStudentHub("assignments"); });
+        if (studentCloseBtn) studentCloseBtn.addEventListener("click", closeStudentHub);
+        if (studentOverlay) {
+            studentOverlay.addEventListener("click", function(e) {
+                if (e.target === studentOverlay) closeStudentHub();
+            });
+        }
+
+        if (studentTabAssignmentsBtn) studentTabAssignmentsBtn.addEventListener("click", function() { switchStudentTab("assignments"); });
+        if (studentTabInquiriesBtn) studentTabInquiriesBtn.addEventListener("click", function() { switchStudentTab("inquiries"); });
+        if (studentTabGradesBtn) studentTabGradesBtn.addEventListener("click", function() { switchStudentTab("grades"); });
+
+        // Wire Inquiries Form
+        if (studentPickLocationBtn) {
+            studentPickLocationBtn.addEventListener("click", function() {
+                if (studentOverlay) studentOverlay.style.display = "none";
+                startLocationPickerMode(function(res) {
+                    if (studentOverlay) studentOverlay.style.display = "flex";
+                    if (res && res.coords) {
+                        pickedInquiryLocation = res;
+                        if (studentPickedLocationBadge) {
+                            studentPickedLocationBadge.textContent = "📍 " + res.label;
+                            studentPickedLocationBadge.style.color = "#2dd4bf";
+                        }
+                    }
+                });
+            });
+        }
+
+        if (studentSendInquiryBtn) {
+            studentSendInquiryBtn.addEventListener("click", function() {
+                var title = studentInquiryTitleInput ? studentInquiryTitleInput.value.trim() : "";
+                var text = studentInquiryTextInput ? studentInquiryTextInput.value.trim() : "";
+                if (!title || !text) {
+                    alert("يرجى إدخال عنوان وسؤال الاستفسار قبل الإرسال.");
+                    return;
+                }
+
+                var studentName = localStorage.getItem("lepidos_student_name_v1") || "أحمد محمود";
+                var newInquiry = {
+                    id: "inq_" + Date.now(),
+                    studentName: studentName,
+                    title: title,
+                    text: text,
+                    coords: pickedInquiryLocation ? pickedInquiryLocation.coords : null,
+                    coordsLabel: pickedInquiryLocation ? pickedInquiryLocation.label : null,
+                    createdAt: Date.now(),
+                    status: "pending",
+                    reply: null
+                };
+
+                var inquiries = [];
+                try { inquiries = JSON.parse(localStorage.getItem(INQUIRIES_STORAGE_KEY) || "[]"); } catch(e){}
+                inquiries.unshift(newInquiry);
+                try { localStorage.setItem(INQUIRIES_STORAGE_KEY, JSON.stringify(inquiries)); } catch(e){}
+
+                if (studentInquiryTitleInput) studentInquiryTitleInput.value = "";
+                if (studentInquiryTextInput) studentInquiryTextInput.value = "";
+                pickedInquiryLocation = null;
+                if (studentPickedLocationBadge) {
+                    studentPickedLocationBadge.textContent = "لم يُحدد موقع بعد (انقر الزر ثم انقر فوق الخريطة)";
+                    studentPickedLocationBadge.style.color = "#cbd5e1";
+                }
+
+                renderStudentInquiriesList();
+                renderTeacherInquiries();
+                alert("تم إرسال استفسارك بنجاح للمعلم مع إحداثيات الموقع!");
+            });
+        }
     }(), function() {
         var termsBtn = document.getElementById("termsOfServiceBtn"),
             termsOverlay = document.getElementById("termsOverlay"),
@@ -12081,5 +14122,3525 @@
                 if (e.target === termsOverlay) closeTerms();
             });
         }
+    }();
+
+    // ══════════════════════════════════════════════════════════════════════════════
+    // ANNOTATION COLLABORATION, PASS CONTROL & STUDENT RESEARCH PINS MODULE
+    // ══════════════════════════════════════════════════════════════════════════════
+    !function() {
+        var collabBtn = document.getElementById("annotationCollabBtn");
+        var sidePanel = document.getElementById("annotationSidePanel");
+        var closeBtn = document.getElementById("annotationSideCloseBtn");
+        var tabCollabControl = document.getElementById("tabCollabControl");
+        var tabCollabResearch = document.getElementById("tabCollabResearch");
+        var sectionCollabControl = document.getElementById("sectionCollabControl");
+        var sectionCollabResearch = document.getElementById("sectionCollabResearch");
+
+        var directStudentSelect = document.getElementById("directStudentSelect");
+        var grantDirectStudentBtn = document.getElementById("grantDirectStudentBtn");
+        var revokeControlBtn = document.getElementById("revokeControlBtn");
+        var activeControllerName = document.getElementById("activeControllerName");
+        var controllerIndicatorDot = document.getElementById("controllerIndicatorDot");
+
+        var studentHandRaiseBtn = document.getElementById("studentHandRaiseBtn");
+        var studentHandRaiseText = document.getElementById("studentHandRaiseText");
+        var handRaiseQueueList = document.getElementById("handRaiseQueueList");
+        var queueCountBadge = document.getElementById("queueCountBadge");
+        var annotHandCountBadge = document.getElementById("annotHandCountBadge");
+        var queueEmptyState = document.getElementById("queueEmptyState");
+
+        var toggleResearchPinsBtn = document.getElementById("toggleResearchPinsBtn");
+        var toggleResearchPinsText = document.getElementById("toggleResearchPinsText");
+        var researchSearchInput = document.getElementById("researchSearchInput");
+        var researchDateFilter = document.getElementById("researchDateFilter");
+        var researchMatchesCount = document.getElementById("researchMatchesCount");
+        var researchCardsMiniList = document.getElementById("researchCardsMiniList");
+
+        var studentResearchModal = document.getElementById("studentResearchModal");
+        var studentResearchModalClose = document.getElementById("studentResearchModalClose");
+        var studentResearchModalBackdrop = document.getElementById("studentResearchModalBackdrop");
+        var studentResearchModalTitle = document.getElementById("studentResearchModalTitle");
+        var researchAuthorName = document.getElementById("researchAuthorName");
+        var researchDateText = document.getElementById("researchDateText");
+        var researchLocationText = document.getElementById("researchLocationText");
+        var researchSummaryContent = document.getElementById("researchSummaryContent");
+        var researchCitationText = document.getElementById("researchCitationText");
+        var researchSourceLink = document.getElementById("researchSourceLink");
+
+        var activeController = { type: "teacher", name: "المعلم (أنت)" };
+        var handRaiseQueue = [];
+        var isHandRaised = false;
+        var showResearchPins = true;
+
+        var studentResearchData = [
+            {
+                id: "res-1",
+                studentName: "سارة المحمود",
+                date: "2026-09-18",
+                dateLabel: "18 سبتمبر 2026",
+                title: "أثر سد مأرب التاريخي على شبكات التجارة القديمة",
+                locationName: "مأرب، اليمن",
+                coords: [45.34, 15.42],
+                summary: "دراسة جغرافية توضح كيف ساهم سد مأرب القديم في استقرار الزراعة الفيضية وتحويل المنطقة إلى محطة تموين رئيسية لقوافل اللبان والبخور على طول الساحل الجنوبي والغربي لشبه الجزيرة العربية.",
+                citation: "الموسوعة الأثرية لتاريخ جنوب الجزيرة العربية، جامعة أكسفورد، 2022، ص 142.",
+                sourceUrl: "https://example.edu/marib-dam"
+            },
+            {
+                id: "res-2",
+                studentName: "أحمد السعيد",
+                date: "2026-09-19",
+                dateLabel: "19 سبتمبر 2026",
+                title: "حضارة دلمون: ملتقى التجارة البحرية بين الرافدين والسند",
+                locationName: "قلعة البحرين، الخليج العربي",
+                coords: [50.52, 26.23],
+                summary: "تحليل كارتوغرافي لموقع دلمون كحلقة وصل بحرية كبرى لتجارة النحاس والأحجار الكريمة والأخشاب بين بلاد سومر في العراق وحضارة وادي السند في باكستان والهند.",
+                citation: "دراسات في الآثار الشرقية وتجارة الخليج القديم، المعهد الملكي للآثار، 2021، ص 89.",
+                sourceUrl: "https://example.edu/dilmun-trade"
+            },
+            {
+                id: "res-3",
+                studentName: "عمر بن طلال",
+                date: "2026-09-15",
+                dateLabel: "15 سبتمبر 2026",
+                title: "طريق الحرير ومحطة سمرقند: واحات التبادل الثقافي",
+                locationName: "سمرقند، أوزبكستان",
+                coords: [66.97, 39.65],
+                summary: "بحث ميداني حول عبقرية موقع سمرقند عند تقاطع سلاسل جبال بامير وتيان شان، وكيف استفادت من التضاريس المحيطة لحماية القوافل وتغذية واحاتها بمياه ذوبان الثلوج الجبلية.",
+                citation: "أطلس آسيا الوسطى وطرق القوافل، الأكاديمية الدولية للدراسات الشرقية، 2023، ص 210.",
+                sourceUrl: "https://example.edu/samarkand-silk-road"
+            },
+            {
+                id: "res-4",
+                studentName: "فاطمة الزهراء",
+                date: "2026-09-12",
+                dateLabel: "12 سبتمبر 2026",
+                title: "منارات وقنوات الإسكندرية: الهندسة المائية والملاحة المتوسطية",
+                locationName: "الإسكندرية، مصر",
+                coords: [29.91, 31.20],
+                summary: "استعراض للتكامل الجغرافي بين دلتا النيل والبحر الأبيض المتوسط، ودور ربط بحيرة مريوط بالنيل في تأمين الملاحة الداخلية ونقل القمح المصري إلى موانئ روما وأثينا.",
+                citation: "مجلة التاريخ البحري والحضارات المتوسطية، منشورات جامعة السوربون، 2020، ص 75.",
+                sourceUrl: "https://example.edu/alexandria-maritime"
+            },
+            {
+                id: "res-5",
+                studentName: "خالد بن يوسف",
+                date: "2026-09-08",
+                dateLabel: "8 سبتمبر 2026",
+                title: "شبكة قنوات الري في بغداد خلال العصر العباسي",
+                locationName: "بغداد، العراق",
+                coords: [44.36, 33.31],
+                summary: "بحث يحلل توزيع قنوات نهر عيسى ونهر صرصر المتفرعة من الفرات إلى دجلة، وكيف سمح هذا الانحدار الطبوغرافي الطبيعي بتوليد أكبر واحة زراعية حضرية في القرون الوسطى.",
+                citation: "جغرافية الحضارة الإسلامية، دار الآثار والتراث، بيروت، 2022، ص 315.",
+                sourceUrl: "https://example.edu/baghdad-canals"
+            },
+            {
+                id: "res-6",
+                studentName: "مريم القحطاني",
+                date: "2026-08-28",
+                dateLabel: "28 أغسطس 2026",
+                title: "فيضانات وادي السند وعمارة موهينجو دارو الهيدروليكية",
+                locationName: "موهينجو دارو، باكستان",
+                coords: [68.13, 27.32],
+                summary: "دراسة طبوغرافية لنظام تصريف السيول وبناء الأرصفة المرتفعة لمواجهة فيضانات نهر السند الموسمية قبل أكثر من 4000 عام في شبه القارة الهندية.",
+                citation: "علم الآثار المائي والحضارات النهرية القديمة، مطبعة جامعة كامبريدج، 2019، ص 164.",
+                sourceUrl: "https://example.edu/indus-hydraulics"
+            }
+        ];
+
+        function updateControllerUI() {
+            if (activeController.type === "teacher") {
+                if (activeControllerName) activeControllerName.textContent = "المعلم (أنت)";
+                if (revokeControlBtn) revokeControlBtn.style.display = "none";
+                if (controllerIndicatorDot) {
+                    controllerIndicatorDot.style.background = "#2dd4bf";
+                    controllerIndicatorDot.style.boxShadow = "0 0 10px #2dd4bf";
+                }
+            } else {
+                if (activeControllerName) activeControllerName.textContent = "الطالب: " + activeController.name;
+                if (revokeControlBtn) revokeControlBtn.style.display = "inline-block";
+                if (controllerIndicatorDot) {
+                    controllerIndicatorDot.style.background = "#f59e0b";
+                    controllerIndicatorDot.style.boxShadow = "0 0 10px #f59e0b";
+                }
+            }
+        }
+
+        function renderQueueList() {
+            var count = handRaiseQueue.length;
+            if (queueCountBadge) queueCountBadge.textContent = String(count);
+            if (annotHandCountBadge) {
+                annotHandCountBadge.textContent = String(count);
+                annotHandCountBadge.style.display = count > 0 ? "inline-flex" : "none";
+            }
+            if (queueEmptyState) queueEmptyState.style.display = count === 0 ? "block" : "none";
+            if (!handRaiseQueueList) return;
+            handRaiseQueueList.innerHTML = "";
+
+            handRaiseQueue.forEach(function(item) {
+                var li = document.createElement("li");
+                li.className = "queue-student-item";
+
+                var info = document.createElement("div");
+                info.className = "queue-student-info";
+                info.innerHTML = "<span>✋</span> <span>" + item.name + "</span>";
+
+                var actions = document.createElement("div");
+                actions.style.display = "flex";
+                actions.style.gap = "6px";
+
+                var grantBtn = document.createElement("button");
+                grantBtn.type = "button";
+                grantBtn.className = "queue-grant-btn";
+                grantBtn.textContent = "منح التحكم";
+                grantBtn.setAttribute("aria-label", "منح التحكم لـ " + item.name);
+                grantBtn.onclick = function() {
+                    grantControlToStudent(item.name);
+                };
+
+                actions.appendChild(grantBtn);
+                li.appendChild(info);
+                li.appendChild(actions);
+                handRaiseQueueList.appendChild(li);
+            });
+            if (window.lucide && lucide.createIcons) lucide.createIcons();
+        }
+
+        function grantControlToStudent(studentName) {
+            if (!studentName) return;
+            activeController = { type: "student", name: studentName };
+            handRaiseQueue = handRaiseQueue.filter(function(s) { return s.name !== studentName; });
+            if (studentName.indexOf("(أنت)") !== -1) {
+                isHandRaised = false;
+                if (studentHandRaiseBtn) {
+                    studentHandRaiseBtn.classList.remove("active-raised");
+                    if (studentHandRaiseText) studentHandRaiseText.textContent = "✋ ارفع يدك لطلب المشاركة";
+                }
+            }
+            updateControllerUI();
+            renderQueueList();
+            if (typeof Go === "function") Go("تم نقل التحكم في الخريطة للطالب: " + studentName + " 🎯");
+        }
+
+        function revokeControl() {
+            activeController = { type: "teacher", name: "المعلم (أنت)" };
+            updateControllerUI();
+            if (typeof Go === "function") Go("تم استرداد التحكم في الخريطة للمعلم ✓");
+        }
+
+        function toggleHandRaise() {
+            isHandRaised = !isHandRaised;
+            var simName = "عبدالله الشمري (أنت)";
+            if (isHandRaised) {
+                handRaiseQueue.push({ id: Date.now(), name: simName, time: "الآن" });
+                if (studentHandRaiseBtn) studentHandRaiseBtn.classList.add("active-raised");
+                if (studentHandRaiseText) studentHandRaiseText.textContent = "✋ يدك مرفوعة (انقر للإلغاء)";
+                if (typeof Go === "function") Go("تم رفع يدك لطلب المشاركة في الخريطة ✋");
+            } else {
+                handRaiseQueue = handRaiseQueue.filter(function(s) { return s.name !== simName; });
+                if (studentHandRaiseBtn) studentHandRaiseBtn.classList.remove("active-raised");
+                if (studentHandRaiseText) studentHandRaiseText.textContent = "✋ ارفع يدك لطلب المشاركة";
+                if (typeof Go === "function") Go("تم إلغاء طلب المشاركة");
+            }
+            renderQueueList();
+        }
+
+        function openResearchModal(item) {
+            if (!studentResearchModal || !item) return;
+            if (studentResearchModalTitle) studentResearchModalTitle.textContent = item.title;
+            if (researchAuthorName) researchAuthorName.textContent = item.studentName;
+            if (researchDateText) researchDateText.textContent = item.dateLabel;
+            if (researchLocationText) researchLocationText.textContent = item.locationName;
+            if (researchSummaryContent) researchSummaryContent.textContent = item.summary;
+            if (researchCitationText) researchCitationText.textContent = item.citation;
+            if (researchSourceLink) {
+                researchSourceLink.href = item.sourceUrl || "#";
+                researchSourceLink.style.display = item.sourceUrl ? "inline-flex" : "none";
+            }
+            studentResearchModal.style.display = "flex";
+            if (window.lucide && lucide.createIcons) lucide.createIcons();
+        }
+
+        function closeResearchModal() {
+            if (studentResearchModal) studentResearchModal.style.display = "none";
+        }
+
+        function getFilteredResearchData() {
+            var q = (researchSearchInput ? researchSearchInput.value : "").trim().toLowerCase();
+            var dateF = researchDateFilter ? researchDateFilter.value : "all";
+
+            return studentResearchData.filter(function(item) {
+                if (q) {
+                    var matchesQ = item.title.toLowerCase().indexOf(q) !== -1 ||
+                                   item.studentName.toLowerCase().indexOf(q) !== -1 ||
+                                   item.locationName.toLowerCase().indexOf(q) !== -1 ||
+                                   item.summary.toLowerCase().indexOf(q) !== -1;
+                    if (!matchesQ) return false;
+                }
+                if (dateF === "this_week") {
+                    return item.date >= "2026-09-14";
+                } else if (dateF === "this_month") {
+                    return item.date >= "2026-09-01";
+                } else if (dateF === "older") {
+                    return item.date < "2026-09-01";
+                }
+                return true;
+            });
+        }
+
+        function renderResearchPins() {
+            var filtered = getFilteredResearchData();
+            if (researchMatchesCount) researchMatchesCount.textContent = String(filtered.length);
+
+            // Render mini cards in side panel
+            if (researchCardsMiniList) {
+                researchCardsMiniList.innerHTML = "";
+                filtered.forEach(function(item) {
+                    var card = document.createElement("div");
+                    card.className = "research-mini-card";
+                    card.innerHTML = '<div class="research-mini-title">' + item.title + '</div>' +
+                                     '<div class="research-mini-meta"><span>🎓 ' + item.studentName + '</span><span>📍 ' + item.locationName + '</span></div>';
+                    card.onclick = function() {
+                        openResearchModal(item);
+                    };
+                    researchCardsMiniList.appendChild(card);
+                });
+            }
+
+            if (typeof Vn === "undefined" || !Vn) return;
+            var researchLayer = Vn.select(".student-research-layer");
+            if (researchLayer.empty()) {
+                researchLayer = Vn.append("g").attr("class", "student-research-layer");
+            }
+            researchLayer.selectAll("*").remove();
+
+            if (!showResearchPins || (typeof simState !== "undefined" && simState && simState.isOpen)) {
+                researchLayer.style("display", "none");
+                return;
+            } else {
+                researchLayer.style("display", "");
+            }
+
+            var proj = typeof ao === "function" ? ao() : null;
+            if (!proj) return;
+
+            var t = (typeof li !== "undefined" && li && li.k) || (window.currentTransform && window.currentTransform.k) || 1;
+
+            filtered.forEach(function(item) {
+                var pos = proj(item.coords);
+                if (!pos || isNaN(pos[0]) || isNaN(pos[1])) return;
+
+                var g = researchLayer.append("g")
+                    .attr("class", "student-research-pin-group")
+                    .attr("transform", "translate(" + pos[0] + "," + pos[1] + ")")
+                    .attr("tabindex", "0")
+                    .attr("role", "button")
+                    .attr("aria-label", "بحث الطالب " + item.studentName + ": " + item.title);
+
+                // Pulse ring
+                g.append("circle")
+                    .attr("class", "research-pin-pulse")
+                    .attr("r", 8 / t)
+                    .attr("fill", "rgba(245, 158, 11, 0.25)")
+                    .attr("stroke", "rgba(245, 158, 11, 0.6)")
+                    .attr("stroke-width", 0.8 / t);
+
+                // Central circle
+                g.append("circle")
+                    .attr("class", "research-pin-circle")
+                    .attr("r", 4.5 / t)
+                    .attr("fill", "#f59e0b")
+                    .attr("stroke", "#ffffff")
+                    .attr("stroke-width", 1 / t);
+
+                // Label
+                g.append("text")
+                    .attr("class", "research-pin-label")
+                    .attr("x", 7 / t)
+                    .attr("y", 2.5 / t)
+                    .attr("font-size", (8 / t) + "px")
+                    .attr("paint-order", "stroke fill")
+                    .attr("stroke", "#0f172a")
+                    .attr("stroke-width", 2 / t)
+                    .attr("stroke-linejoin", "round")
+                    .text(item.studentName);
+
+                g.on("click", function() {
+                    openResearchModal(item);
+                });
+                g.on("keydown", function(e) {
+                    if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        openResearchModal(item);
+                    }
+                });
+            });
+        }
+
+        window.renderStudentResearchPins = renderResearchPins;
+        window.cleanupAnnotationCollab = function() {
+            if (sidePanel) sidePanel.style.display = "none";
+            if (collabBtn) {
+                collabBtn.classList.remove("active");
+                collabBtn.setAttribute("aria-expanded", "false");
+            }
+            if (studentResearchModal) studentResearchModal.style.display = "none";
+            if (typeof Vn !== "undefined" && Vn) {
+                Vn.select(".student-research-layer").remove();
+            }
+        };
+
+        // Wire Event Listeners
+        if (collabBtn) {
+            collabBtn.addEventListener("click", function() {
+                var isOpen = sidePanel && sidePanel.style.display !== "none";
+                if (isOpen) {
+                    sidePanel.style.display = "none";
+                    collabBtn.classList.remove("active");
+                    collabBtn.setAttribute("aria-expanded", "false");
+                } else {
+                    if (sidePanel) sidePanel.style.display = "flex";
+                    collabBtn.classList.add("active");
+                    collabBtn.setAttribute("aria-expanded", "true");
+                    renderQueueList();
+                    renderResearchPins();
+                    if (window.lucide && lucide.createIcons) lucide.createIcons();
+                }
+            });
+        }
+
+        if (closeBtn) {
+            closeBtn.addEventListener("click", function() {
+                if (sidePanel) sidePanel.style.display = "none";
+                if (collabBtn) {
+                    collabBtn.classList.remove("active");
+                    collabBtn.setAttribute("aria-expanded", "false");
+                }
+            });
+        }
+
+        if (tabCollabControl) {
+            tabCollabControl.addEventListener("click", function() {
+                tabCollabControl.classList.add("active");
+                tabCollabControl.setAttribute("aria-selected", "true");
+                if (tabCollabResearch) {
+                    tabCollabResearch.classList.remove("active");
+                    tabCollabResearch.setAttribute("aria-selected", "false");
+                }
+                if (sectionCollabControl) sectionCollabControl.style.display = "flex";
+                if (sectionCollabResearch) sectionCollabResearch.style.display = "none";
+            });
+        }
+
+        if (tabCollabResearch) {
+            tabCollabResearch.addEventListener("click", function() {
+                tabCollabResearch.classList.add("active");
+                tabCollabResearch.setAttribute("aria-selected", "true");
+                if (tabCollabControl) {
+                    tabCollabControl.classList.remove("active");
+                    tabCollabControl.setAttribute("aria-selected", "false");
+                }
+                if (sectionCollabResearch) sectionCollabResearch.style.display = "flex";
+                if (sectionCollabControl) sectionCollabControl.style.display = "none";
+                renderResearchPins();
+            });
+        }
+
+        if (grantDirectStudentBtn && directStudentSelect) {
+            grantDirectStudentBtn.addEventListener("click", function() {
+                var studentName = directStudentSelect.value;
+                if (!studentName) {
+                    if (typeof Go === "function") Go("يرجى اختيار طالب من القائمة أولاً");
+                    return;
+                }
+                grantControlToStudent(studentName);
+            });
+        }
+
+        if (revokeControlBtn) {
+            revokeControlBtn.addEventListener("click", revokeControl);
+        }
+
+        if (studentHandRaiseBtn) {
+            studentHandRaiseBtn.addEventListener("click", toggleHandRaise);
+        }
+
+        if (toggleResearchPinsBtn) {
+            toggleResearchPinsBtn.addEventListener("click", function() {
+                showResearchPins = !showResearchPins;
+                toggleResearchPinsBtn.classList.toggle("active", showResearchPins);
+                toggleResearchPinsBtn.setAttribute("aria-pressed", String(showResearchPins));
+                if (toggleResearchPinsText) {
+                    toggleResearchPinsText.textContent = showResearchPins ? "إظهار دبابيس البحوث على الخريطة" : "إخفاء دبابيس البحوث من الخريطة";
+                }
+                renderResearchPins();
+                if (typeof Go === "function") Go(showResearchPins ? "تم تفعيل طبقة بحوث الطلاب" : "تم إخفاء طبقة بحوث الطلاب");
+            });
+        }
+
+        if (researchSearchInput) {
+            researchSearchInput.addEventListener("input", renderResearchPins);
+        }
+
+        if (researchDateFilter) {
+            researchDateFilter.addEventListener("change", renderResearchPins);
+        }
+
+        if (studentResearchModalClose) {
+            studentResearchModalClose.addEventListener("click", closeResearchModal);
+        }
+
+        if (studentResearchModalBackdrop) {
+            studentResearchModalBackdrop.addEventListener("click", closeResearchModal);
+        }
+
+        updateControllerUI();
+        renderQueueList();
+        renderResearchPins();
+    }();
+
+    // ══════════════════════════════════════════════════════════════════════════════
+    // NATION HISTORICAL STRATEGY SIMULATION (محاكاة الأمم وصراع الحضارات)
+    // ══════════════════════════════════════════════════════════════════════════════
+    !function initNationSimulation() {
+        var nationSimBtn = document.getElementById("nationSimBtn"),
+            drawerNationSimBtn = document.getElementById("drawerNationSimBtn"),
+            nationSimContainer = document.getElementById("nationSimContainer"),
+            simExitBtn = document.getElementById("simExitBtn"),
+            simTeacherConsoleBtn = document.getElementById("simTeacherConsoleBtn"),
+            simTeacherModal = document.getElementById("simTeacherModal"),
+            simTeacherModalCloseBtn = document.getElementById("simTeacherModalCloseBtn"),
+            simNationSelect = document.getElementById("simNationSelect"),
+            simYearDisplay = document.getElementById("simYearDisplay"),
+            simSeasonDisplay = document.getElementById("simSeasonDisplay"),
+            simPaceDisplay = document.getElementById("simPaceDisplay"),
+            simNationFlag = document.getElementById("simNationFlag"),
+            simNationName = document.getElementById("simNationName"),
+            simNationCapital = document.getElementById("simNationCapital"),
+            simNationBiome = document.getElementById("simNationBiome"),
+            simNationClimate = document.getElementById("simNationClimate"),
+            simSeasonalCycleBox = document.getElementById("simSeasonalCycleBox"),
+            simCycleCountdown = document.getElementById("simCycleCountdown"),
+            simCycleProgressFill = document.getElementById("simCycleProgressFill"),
+            simLeaderBudgetPanel = document.getElementById("simLeaderBudgetPanel"),
+            simBudgetSelectEconomy = document.getElementById("simBudgetSelectEconomy"),
+            simBudgetSelectMilitary = document.getElementById("simBudgetSelectMilitary"),
+            simBudgetSelectPlanning = document.getElementById("simBudgetSelectPlanning"),
+            simBudgetSelectIntelligence = document.getElementById("simBudgetSelectIntelligence"),
+            simBudgetImpactEconomy = document.getElementById("simBudgetImpactEconomy"),
+            simBudgetImpactMilitary = document.getElementById("simBudgetImpactMilitary"),
+            simBudgetImpactPlanning = document.getElementById("simBudgetImpactPlanning"),
+            simBudgetImpactIntelligence = document.getElementById("simBudgetImpactIntelligence"),
+            simApplyBudgetBtn = document.getElementById("simApplyBudgetBtn"),
+            simAlliedGarrisonPanel = document.getElementById("simAlliedGarrisonPanel"),
+            simDispatchAllySelect = document.getElementById("simDispatchAllySelect"),
+            simDispatchTroopCount = document.getElementById("simDispatchTroopCount"),
+            simDispatchExpeditionBtn = document.getElementById("simDispatchExpeditionBtn"),
+            simRecallExpeditionBtn = document.getElementById("simRecallExpeditionBtn"),
+            simDispatchedForcesStatus = document.getElementById("simDispatchedForcesStatus"),
+            simTaxPolicySelect = document.getElementById("simTaxPolicySelect"),
+            simTaxPolicyHint = document.getElementById("simTaxPolicyHint"),
+            simPowerScore = document.getElementById("simPowerScore"),
+            simPowerRank = document.getElementById("simPowerRank"),
+            simQuickFood = document.getElementById("simQuickFood"),
+            simQuickMetals = document.getElementById("simQuickMetals"),
+            simQuickLivestock = document.getElementById("simQuickLivestock"),
+            simQuickGold = document.getElementById("simQuickGold"),
+            simQuickTroops = document.getElementById("simQuickTroops"),
+            simRoleSelectGroup = document.getElementById("simRoleSelectGroup"),
+            simRoleLeaderBtn = document.getElementById("simRoleLeaderBtn"),
+            simRoleEconomyBtn = document.getElementById("simRoleEconomyBtn"),
+            simRoleMilitaryBtn = document.getElementById("simRoleMilitaryBtn"),
+            simRolePlannerBtn = document.getElementById("simRolePlannerBtn"),
+            simRoleIntelligenceBtn = document.getElementById("simRoleIntelligenceBtn"),
+            simLeaderView = document.getElementById("simLeaderView"),
+            simEconomyView = document.getElementById("simEconomyView"),
+            simMilitaryView = document.getElementById("simMilitaryView"),
+            simPlannerView = document.getElementById("simPlannerView"),
+            simIntelligenceView = document.getElementById("simIntelligenceView"),
+            simRelationsList = document.getElementById("simRelationsList"),
+            simDecreesFeed = document.getElementById("simDecreesFeed"),
+            simSignDefensePactBtn = document.getElementById("simSignDefensePactBtn"),
+            simSignTradeAgreementBtn = document.getElementById("simSignTradeAgreementBtn"),
+            simDeclareSeasonalTruceBtn = document.getElementById("simDeclareSeasonalTruceBtn"),
+            simMonthlyConsumptionDisplay = document.getElementById("simMonthlyConsumptionDisplay"),
+            simFoodSecurityStatus = document.getElementById("simFoodSecurityStatus"),
+            simCaravanDestSelect = document.getElementById("simCaravanDestSelect"),
+            simCaravanCargoType = document.getElementById("simCaravanCargoType"),
+            simCaravanRequestedReturn = document.getElementById("simCaravanRequestedReturn"),
+            simCaravanEscortOption = document.getElementById("simCaravanEscortOption"),
+            simDispatchCaravanBtn = document.getElementById("simDispatchCaravanBtn"),
+            simActiveCaravansList = document.getElementById("simActiveCaravansList"),
+            simInfantryCount = document.getElementById("simInfantryCount"),
+            simArchersCount = document.getElementById("simArchersCount"),
+            simCavalryCount = document.getElementById("simCavalryCount"),
+            simChokePointsList = document.getElementById("simChokePointsList"),
+            simBattlesFeed = document.getElementById("simBattlesFeed"),
+            simCalcOriginSelect = document.getElementById("simCalcOriginSelect"),
+            simCalcTargetSelect = document.getElementById("simCalcTargetSelect"),
+            simCalcDistanceKm = document.getElementById("simCalcDistanceKm"),
+            simCalcTerrainFriction = document.getElementById("simCalcTerrainFriction"),
+            simCalcTravelTime = document.getElementById("simCalcTravelTime"),
+            simSeasonalAdvisoryText = document.getElementById("simSeasonalAdvisoryText"),
+            simDrawAltRouteBtn = document.getElementById("simDrawAltRouteBtn"),
+            simDrawRouteBanner = document.getElementById("simDrawRouteBanner"),
+            simCancelRouteBtn = document.getElementById("simCancelRouteBtn"),
+            simSaveRouteBtn = document.getElementById("simSaveRouteBtn"),
+            simToggleScoutRingsBtn = document.getElementById("simToggleScoutRingsBtn"),
+            simDeployScoutBtn = document.getElementById("simDeployScoutBtn"),
+            simPlaceScoutBanner = document.getElementById("simPlaceScoutBanner"),
+            simCancelScoutBtn = document.getElementById("simCancelScoutBtn"),
+            simActiveScoutsFeed = document.getElementById("simActiveScoutsFeed"),
+            simCapturedSpiesList = document.getElementById("simCapturedSpiesList"),
+            simTeacherEventsLog = document.getElementById("simTeacherEventsLog"),
+            simRewardNationSelect = document.getElementById("simRewardNationSelect"),
+            simRewardTypeSelect = document.getElementById("simRewardTypeSelect"),
+            simGrantRewardBtn = document.getElementById("simGrantRewardBtn"),
+            simGaugeFood = document.getElementById("simGaugeFood"),
+            simGaugeMetals = document.getElementById("simGaugeMetals"),
+            simGaugeLivestock = document.getElementById("simGaugeLivestock"),
+            simGaugeGold = document.getElementById("simGaugeGold"),
+            simGaugeTroops = document.getElementById("simGaugeTroops"),
+            simCouncilAdvisorBanner = document.getElementById("simCouncilAdvisorBanner"),
+            simCouncilMedallion = document.getElementById("simCouncilMedallion"),
+            simCouncilTitle = document.getElementById("simCouncilTitle"),
+            simCouncilText = document.getElementById("simCouncilText"),
+            simQuickTradeModal = document.getElementById("simQuickTradeModal"),
+            simQuickTradeCloseBtn = document.getElementById("simQuickTradeCloseBtn"),
+            simQuickLaunchCaravanBtn = document.getElementById("simQuickLaunchCaravanBtn"),
+            simQuickTradeOriginFlag = document.getElementById("simQuickTradeOriginFlag"),
+            simQuickTradeOriginName = document.getElementById("simQuickTradeOriginName"),
+            simQuickTradeTargetFlag = document.getElementById("simQuickTradeTargetFlag"),
+            simQuickTradeTargetName = document.getElementById("simQuickTradeTargetName"),
+            simFloatingPopupsContainer = document.getElementById("simFloatingPopupsContainer"),
+            simStartDrawTerritoryBtn = document.getElementById("simStartDrawTerritoryBtn"),
+            simAutoAssignTeamsBtn = document.getElementById("simAutoAssignTeamsBtn"),
+            simResetNewEpochBtn = document.getElementById("simResetNewEpochBtn"),
+            simGamePaceSelect = document.getElementById("simGamePaceSelect"),
+            simDrawnNationsCount = document.getElementById("simDrawnNationsCount"),
+            simDrawnNationsList = document.getElementById("simDrawnNationsList"),
+            simDrawTerritoryBanner = document.getElementById("simDrawTerritoryBanner"),
+            simDrawnPointsCount = document.getElementById("simDrawnPointsCount"),
+            simCustomNationNameInput = document.getElementById("simCustomNationNameInput"),
+            simConfirmTerritoryBtn = document.getElementById("simConfirmTerritoryBtn"),
+            simCancelTerritoryBtn = document.getElementById("simCancelTerritoryBtn"),
+            simCountryDossierModal = document.getElementById("simCountryDossierModal"),
+            simDossierCloseBtn = document.getElementById("simDossierCloseBtn"),
+            simDossierFlag = document.getElementById("simDossierFlag"),
+            simDossierTitle = document.getElementById("simDossierTitle"),
+            simDossierSubtitle = document.getElementById("simDossierSubtitle"),
+            simDossierBiome = document.getElementById("simDossierBiome"),
+            simDossierClimateDesc = document.getElementById("simDossierClimateDesc"),
+            simDossierSeasonsList = document.getElementById("simDossierSeasonsList"),
+            simDossierResourcesRow = document.getElementById("simDossierResourcesRow"),
+            simDossierDefenseDesc = document.getElementById("simDossierDefenseDesc"),
+            simAcceptDossierBtn = document.getElementById("simAcceptDossierBtn");
+
+        // Core Nations Data with Asymmetric Geo-Resources
+        var nationsData = {
+            nile: {
+                id: "nile",
+                name: "مملكة النيل والرافدين الفيضية",
+                flag: "🦅",
+                capital: "الفسطاط",
+                coords: [31.23, 30.04],
+                color: "#10b981",
+                biome: "إقليم فيضي نهري",
+                climate: "فيضان أواخر الصيف وخصوبة الطمي",
+                territory: [[28, 22], [35, 22], [36, 33], [30, 32], [28, 22]],
+                food: 1400,
+                metals: 320,
+                livestock: 280,
+                gold: 900,
+                troops: 1600,
+                consumption: 85,
+                infantry: 900,
+                archers: 450,
+                cavalry: 250,
+                allies: ["mediterranean"],
+                enemies: [],
+                truces: [],
+                budget: { economy: 100, military: 100, planning: 100, intelligence: 100 },
+                taxPolicy: "moderate",
+                expeditionaryForce: null,
+                decrees: ["📜 تم اعتماد تحالف تجاري مع مملكة المتوسط لتخفيض رسوم الترانزيت بنسبة 50%."]
+            },
+            anatolia: {
+                id: "anatolia",
+                name: "إمارة الأناضول والجبال الحصينة",
+                flag: "🏔️",
+                capital: "قونية",
+                coords: [32.48, 37.87],
+                color: "#f59e0b",
+                biome: "إقليم جبلي تضاريسي معدني",
+                climate: "شتاء قارس وثلوج تجمد الممرات",
+                territory: [[27, 36], [42, 36], [42, 42], [27, 42], [27, 36]],
+                food: 650,
+                metals: 950,
+                livestock: 310,
+                gold: 750,
+                troops: 1800,
+                consumption: 70,
+                infantry: 1100,
+                archers: 400,
+                cavalry: 300,
+                allies: [],
+                enemies: [],
+                truces: [],
+                budget: { economy: 100, military: 100, planning: 100, intelligence: 100 },
+                taxPolicy: "moderate",
+                expeditionaryForce: null,
+                decrees: ["🏔️ مرسوم تحصين بوابات قيليقية الجبلية ومضاعفة إنتاج الدروع."]
+            },
+            desert: {
+                id: "desert",
+                name: "سلطنة الواحات والسهوب الصحراوية",
+                flag: "🐪",
+                capital: "يثرب",
+                coords: [39.61, 24.46],
+                color: "#eab308",
+                biome: "إقليم صحراوي وتجارة قوافل",
+                climate: "قيظ صيفي شديد؛ ربيع وشتاء رعي وتجارة",
+                territory: [[36, 15], [52, 15], [50, 29], [37, 28], [36, 15]],
+                food: 550,
+                metals: 400,
+                livestock: 850,
+                gold: 1100,
+                troops: 1300,
+                consumption: 65,
+                infantry: 500,
+                archers: 300,
+                cavalry: 500,
+                allies: ["steppes"],
+                enemies: [],
+                truces: [],
+                budget: { economy: 100, military: 100, planning: 100, intelligence: 100 },
+                taxPolicy: "moderate",
+                expeditionaryForce: null,
+                decrees: ["🐪 إطلاق قوافل رحلة الشتاء والصيف وتأمين محطات الآبار."]
+            },
+            mediterranean: {
+                id: "mediterranean",
+                name: "جمهورية المتوسط والموانئ البحرية",
+                flag: "⛵",
+                capital: "الإسكندرية",
+                coords: [29.91, 31.20],
+                color: "#06b6d4",
+                biome: "إقليم ساحلي بحري وموانئ",
+                climate: "رياح مواتية صيفاً وعواصف بحرية خريفية",
+                territory: [[10, 32], [26, 32], [25, 37], [10, 37], [10, 32]],
+                food: 700,
+                metals: 500,
+                livestock: 250,
+                gold: 1350,
+                troops: 1400,
+                consumption: 75,
+                infantry: 600,
+                archers: 500,
+                cavalry: 300,
+                allies: ["nile"],
+                enemies: [],
+                truces: [],
+                budget: { economy: 100, military: 100, planning: 100, intelligence: 100 },
+                taxPolicy: "moderate",
+                expeditionaryForce: null,
+                decrees: ["⛵ مرسوم تحديث الأسطول التجاري وتوسيع مخازن الزيت والفضة."]
+            },
+            steppes: {
+                id: "steppes",
+                name: "خانية السهوب وطريق الحرير",
+                flag: "🏹",
+                capital: "سمرقند",
+                coords: [66.97, 39.65],
+                color: "#8b5cf6",
+                biome: "إقليم سهوب ومراعي قارية",
+                climate: "شتاء متجمد يشل الحركة؛ صيف مرعى فسيح",
+                territory: [[58, 36], [78, 36], [78, 48], [58, 48], [58, 36]],
+                food: 800,
+                metals: 480,
+                livestock: 1200,
+                gold: 800,
+                troops: 2200,
+                consumption: 90,
+                infantry: 600,
+                archers: 600,
+                cavalry: 1000,
+                allies: ["desert"],
+                enemies: [],
+                truces: [],
+                budget: { economy: 100, military: 100, planning: 100, intelligence: 100 },
+                taxPolicy: "moderate",
+                expeditionaryForce: null,
+                decrees: ["🐎 حشد فرسان السهوب وتأمين محطات طريق الحرير."]
+            }
+        };
+
+        var chokePointsData = [
+            { id: "mandeb", name: "مضيق باب المندب (بوابة البحر الأحمر)", shortName: "مضيق باب المندب", coords: [43.34, 12.58], controller: "desert", bonus: "+30% دفاع بحري وبري" },
+            { id: "hormuz", name: "مضيق هرمز (عقدة تجارة التوابل)", shortName: "مضيق هرمز", coords: [56.45, 26.56], controller: "desert", bonus: "+30% رسوم ترانزيت" },
+            { id: "cilician", name: "بوابات قيليقية (الممر الجبلي للأناضول)", shortName: "بوابات قيليقية", coords: [34.78, 37.28], controller: "anatolia", bonus: "+30% حصانة دفاعية" },
+            { id: "khyber", name: "ممر خيبر (بوابة الهند وآسيا الوسطى)", shortName: "ممر خيبر", coords: [71.15, 34.10], controller: "steppes", bonus: "+30% كمائن فرسان" },
+            { id: "gibraltar", name: "مضيق جبل طارق (معبر الأطلسي والمتوسط)", shortName: "مضيق جبل طارق", coords: [-5.35, 35.98], controller: "mediterranean", bonus: "+30% سيطرة بحرية" }
+        ];
+
+        var simState = {
+            isOpen: false,
+            activeNationId: "nile",
+            activeRole: "leader",
+            year: 1250,
+            seasonIdx: 0,
+            seasonDuration: 90,
+            seasonTimeRemaining: 90,
+            timerInterval: null,
+            safeRoutes: {},
+            seasons: [
+                { id: "spring", name: "🌱 ربيع (وفرة واعتدال مناخي)", advisory: "اعتدال عام في كافة الأقاليم، انطلاق مواسم الرعي في البادية، وسهولة تامة في حركة القوافل التجارية دون عوائق ثلجية أو جفاف مائي." },
+                { id: "summer", name: "☀️ صيف (ذروة إنتاج الشمال وقيظ الصحراء)", advisory: "ذروة إنتاج زراعي وحركي في الشمال والأناضول؛ بينما تشهد الصحراء قيظاً شديداً وجفافاً في الآبار وصعوبة في تنقل القوافل غير المجهزة بالإبل." },
+                { id: "autumn", name: "🍂 خريف (موسم الحصاد وعواصف البحر)", advisory: "موسم الحصاد وتخزين الصوامع؛ تزداد العواصف البحرية في المتوسط مما يبطئ الأساطيل بنسبة 25%، وتبدأ الممرات الجبلية بالبرودة." },
+                { id: "winter", name: "❄️ شتاء (صقيع الشمال ورحلة شتاء الصحراء)", advisory: "صقيع قارس وثلوج تجمد ممرات الأناضول وجبال آسيا الوسطى وتوقف المزارع؛ بينما يشهد إقليم الصحراء ذروة انطلاق قوافله واعتدال مناخه (رحلة الشتاء)." }
+            ],
+            showScoutRings: true,
+            caravans: [
+                {
+                    id: "c1",
+                    from: "nile",
+                    to: "mediterranean",
+                    cargo: "100 كيس قمح",
+                    requested: "40 سبيكة حديد",
+                    escort: "حراسة فرسان خفيفة (30 فارساً)",
+                    status: "في الطريق (تم قطع 65% من المسافة)",
+                    progress: 0.65,
+                    startCoords: [31.23, 30.04],
+                    endCoords: [29.91, 31.20]
+                }
+            ],
+            scouts: [
+                { id: "s1", nation: "nile", name: "طليعة استطلاع سيناء", coords: [33.8, 29.5], status: "متربص ويرصد حركة الشمال" },
+                { id: "s2", nation: "desert", name: "فرسان استطلاع الحجاز", coords: [40.2, 23.8], status: "في مأمن بالدائرة الخارجية" }
+            ],
+            capturedSpies: [
+                { id: "cs1", name: "جاسوس متنكر بقافلة تمور", originNation: "steppes", captorNation: "nile", status: "محتجز بغرفة التحقيق", detectedInCircle: "الدائرة الداخلية (0 - 30 كم)" }
+            ],
+            eventsLog: [
+                "📜 أعلنت مملكة النيل توقيع معاهدة سلام وتجارة مع جمهورية المتوسط.",
+                "🌾 انطلقت قافلة تجارية محملة بالقمح من الفسطاط متجهة نحو الإسكندرية.",
+                "👁️ تم نشر طليعة استطلاع في شبه جزيرة سيناء لمراقبة الممرات البرية.",
+                "🛡️ تم تعزيز حامية مضيق باب المندب بـ 200 مقاتل إضافي."
+            ],
+            customNations: {},
+            isSandboxMode: false,
+            isDrawingTerritory: false,
+            currentDrawingPoints: [],
+            gamePace: "classroom",
+            teamAssignments: {}
+        };
+
+        // --- Sandbox Geopolitical GIS Inference Engine ---
+        function inferTerritoryGeoProfile(polygonPoints, customName) {
+            if (!polygonPoints || polygonPoints.length < 3) return null;
+
+            var closedTerritory = polygonPoints.slice();
+            var p0 = closedTerritory[0];
+            var pLast = closedTerritory[closedTerritory.length - 1];
+            if (Math.abs(p0[0] - pLast[0]) > 0.001 || Math.abs(p0[1] - pLast[1]) > 0.001) {
+                closedTerritory.push([p0[0], p0[1]]);
+            }
+
+            var sumLng = 0, sumLat = 0;
+            polygonPoints.forEach(function(p) {
+                sumLng += p[0];
+                sumLat += p[1];
+            });
+            var cLng = sumLng / polygonPoints.length;
+            var cLat = sumLat / polygonPoints.length;
+
+            var RIVERS = [
+                { name: "Nile", points: [[31.2, 22.0], [31.2, 26.0], [31.2, 30.0], [31.5, 31.5]] },
+                { name: "TigrisEuphrates", points: [[44.0, 32.5], [40.5, 36.5], [43.5, 35.0], [47.5, 30.5]] },
+                { name: "Indus", points: [[68.0, 25.0], [71.5, 31.0], [72.5, 33.5]] },
+                { name: "DanubeRhine", points: [[18.0, 45.0], [24.0, 44.5], [12.0, 48.0]] }
+            ];
+
+            var MOUNTAINS = [
+                { name: "TaurusZagros", points: [[32.5, 37.5], [36.0, 38.0], [42.0, 38.5], [46.0, 35.0], [49.0, 32.5]] },
+                { name: "Caucasus", points: [[42.0, 42.5], [45.0, 42.0], [47.5, 41.5]] },
+                { name: "Atlas", points: [[-6.0, 32.0], [-2.0, 33.5], [3.0, 35.0]] },
+                { name: "Alps", points: [[8.0, 46.0], [11.0, 46.5], [14.0, 46.5]] },
+                { name: "HinduKush", points: [[68.5, 35.0], [71.5, 36.0], [74.0, 36.5]] }
+            ];
+
+            var COASTS = [
+                { name: "Mediterranean", points: [[30.0, 31.5], [34.0, 32.0], [25.0, 35.0], [15.0, 36.0], [5.0, 37.0], [-2.0, 36.0], [28.0, 36.5], [35.5, 34.5]] },
+                { name: "RedSea", points: [[34.0, 27.5], [37.0, 22.0], [41.0, 16.0], [43.0, 13.0]] },
+                { name: "PersianGulf", points: [[50.0, 28.0], [53.0, 25.5], [56.0, 26.5]] },
+                { name: "BlackSea", points: [[30.0, 43.0], [35.0, 43.5], [39.0, 42.5]] },
+                { name: "Caspian", points: [[50.0, 40.0], [51.5, 43.0], [52.0, 37.5]] },
+                { name: "ArabianSea", points: [[58.0, 22.0], [64.0, 24.5], [68.0, 23.0]] }
+            ];
+
+            function minDistanceToFeatures(features) {
+                var minDist = Infinity;
+                features.forEach(function(feat) {
+                    feat.points.forEach(function(fp) {
+                        var dCentroid = Math.hypot(cLng - fp[0], cLat - fp[1]);
+                        if (dCentroid < minDist) minDist = dCentroid;
+                        polygonPoints.forEach(function(pt) {
+                            var d = Math.hypot(pt[0] - fp[0], pt[1] - fp[1]);
+                            if (d < minDist) minDist = d;
+                        });
+                    });
+                });
+                return minDist;
+            }
+
+            var distRiver = minDistanceToFeatures(RIVERS);
+            var distMountain = minDistanceToFeatures(MOUNTAINS);
+            var distCoast = minDistanceToFeatures(COASTS);
+
+            var isSteppe = cLat >= 37 && cLng >= 46 && distMountain > 2.5;
+            var isDesert = cLat >= 12 && cLat <= 32 && cLng >= 12 && cLng <= 56 && distRiver > 2.5 && distCoast > 2.0;
+
+            var primaryBiome = "temperate";
+            if (distRiver <= 2.8 && distRiver < distMountain && distRiver < distCoast) {
+                primaryBiome = "river";
+            } else if (distMountain <= 3.6 && distMountain <= distRiver) {
+                primaryBiome = "mountain";
+            } else if (distCoast <= 2.8 && distCoast <= distMountain && distCoast <= distRiver) {
+                primaryBiome = "coast";
+            } else if (distRiver <= 3.2) {
+                primaryBiome = "river";
+            } else if (distMountain <= 4.0) {
+                primaryBiome = "mountain";
+            } else if (distCoast <= 3.5) {
+                primaryBiome = "coast";
+            } else if (isSteppe) {
+                primaryBiome = "steppe";
+            } else if (isDesert) {
+                primaryBiome = "desert";
+            } else {
+                if (cLat >= 35) primaryBiome = "mountain";
+                else primaryBiome = "desert";
+            }
+
+            var nationCount = Object.keys(simState.customNations).length + 1;
+            var nationColorPalette = ["#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899", "#06b6d4", "#f97316", "#84cc16", "#a855f7", "#14b8a6"];
+            var nationFlagPalette = ["🦅", "🏔️", "🐪", "⛵", "🏹", "🦁", "⚔️", "🌴", "👑", "🛡️"];
+            var color = nationColorPalette[(nationCount - 1) % nationColorPalette.length];
+            var flag = nationFlagPalette[(nationCount - 1) % nationFlagPalette.length];
+
+            var biomeTitle = "";
+            var climateSummary = "";
+            var climateDetailed = "";
+            var initialFood = 700;
+            var initialMetals = 500;
+            var initialLivestock = 500;
+            var initialGold = 800;
+            var initialTroops = 1500;
+            var consumptionRate = 75;
+            var initialInfantry = 700;
+            var initialArchers = 500;
+            var initialCavalry = 300;
+            var defenseDescription = "";
+            var seasonsForecastList = [];
+
+            if (primaryBiome === "river") {
+                biomeTitle = "إقليم فيضي نهري زراعي (أحواض الأنهار والسهول الفيضية)";
+                climateSummary = "فيضان موسمي متجدد وطمي عالي الخصوبة";
+                climateDetailed = "مورد مائي عذب دائم وتربة طميية تجدد خصوبة الأراضي سنوياً، مما يمنح وفرة كبرى في الغلال وتفوقاً في الاستقرار السكاني وتغذية الجيوش.";
+                initialFood = 1450;
+                initialMetals = 330;
+                initialLivestock = 350;
+                initialGold = 950;
+                initialTroops = 1600;
+                consumptionRate = 85;
+                initialInfantry = 900;
+                initialArchers = 450;
+                initialCavalry = 250;
+                defenseDescription = "حواجز مائية طبيعية وسهولة نقل الحاميات بالقوارب النهرية؛ ركزوا على صيانة وحماية الجسور والسدود الكبرى ضد التخريب.";
+                seasonsForecastList = [
+                    "🌱 ربيع: انطلاق مواسم البذر وتصريف مياه الجداول واعتدال المجرى النهري.",
+                    "☀️ صيف: موسم الفيضان الموسمي وارتفاع منسوب النهر وجلب الطمي الخصب (+25% إنتاج غلال).",
+                    "🍂 خريف: حصاد الحبوب وتعبئة الصوامع الكبرى وتأمين السدود.",
+                    "❄️ شتاء: اعتدال دافئ وانطلاق القوافل النهرية والبرية نحو الموانئ."
+                ];
+            } else if (primaryBiome === "mountain") {
+                biomeTitle = "إقليم تضاريسي جبلي ومناجم حصينة";
+                climateSummary = "شتاء مثلج قارس وثروات معدنية وحصانة ثغور";
+                climateDetailed = "مرتفعات شاهقة غنية بركاز الحديد والنحاس والأحجار الكريمة، وممرات وعرة تمنح تفوقاً دفاعياً هائلاً يجعل الغزو الخارجي شبه مستحيل.";
+                initialFood = 620;
+                initialMetals = 1180;
+                initialLivestock = 400;
+                initialGold = 820;
+                initialTroops = 1850;
+                consumptionRate = 70;
+                initialInfantry = 1200;
+                initialArchers = 400;
+                initialCavalry = 250;
+                defenseDescription = "حصانة تضاريسية مطلقة؛ تمنح الخوانق والممرات حامياتكم +35% قدرة صد هجومي ومكافأة كاسحة في معارك الثغور.";
+                seasonsForecastList = [
+                    "🌱 ربيع: ذوبان الثلوج وفتح الممرات وتدفق مياه الينابيع العذبة.",
+                    "☀️ صيف: ذروة استخراج المعادن وتشغيل أفران الحدادة وصناعة الدروع والسيوف.",
+                    "🍂 خريف: تخزين الحطب والعتاد وإحكام إغلاق الثغور قبل الصقيع.",
+                    "❄️ شتاء: ثلوج كثيفة تغلق الممرات الجبلية وتشل حركة أي غزو خارجي بنسبة 100%."
+                ];
+            } else if (primaryBiome === "coast") {
+                biomeTitle = "إقليم ساحلي بحري وموانئ تجارية";
+                climateSummary = "رياح بحرية مواتية للتجارة وعواصف خريفية";
+                climateDetailed = "واجهة بحرية استراتيجية ومرافئ طبيعية عميقة تؤمن أساطيل تجارية عابرة، وثروة نقدية هائلة من الرسوم الجمركية والمقايضات البحرية.";
+                initialFood = 760;
+                initialMetals = 480;
+                initialLivestock = 300;
+                initialGold = 1450;
+                initialTroops = 1450;
+                consumptionRate = 75;
+                initialInfantry = 700;
+                initialArchers = 500;
+                initialCavalry = 250;
+                defenseDescription = "أساطيل بحرية وموانئ مسورة تؤمن خطوط الإمداد وتحمي ثغور الساحل؛ تحكمكم بالممر المائي يدر رسوم ترانزيت مستمرة.";
+                seasonsForecastList = [
+                    "🌱 ربيع: إبحار الأساطيل التجارية واعتدال حركة الرياح والملاحة البحرية.",
+                    "☀️ صيف: ذروة التبادل التجاري ووصول السفن المحملة بالتوابل والحرير (+20% دخل ذهبي).",
+                    "🍂 خريف: عواصف موسمية تتطلب الحذر ورسو السفن في المرافئ الآمنة.",
+                    "❄️ شتاء: أمطار شتوية غزيرة تدعم الزراعة البعلية ومخازن المؤن الساحلية."
+                ];
+            } else if (primaryBiome === "steppe") {
+                biomeTitle = "إقليم سهوب ومراعي قارية فسيحة";
+                climateSummary = "شتاء متجمد يشل الحركة؛ صيف مرعى فسيح للجياد";
+                climateDetailed = "مراعي لا نهائية تدعم تربية خيرة سلالات الخيل وتدريب فرق الخيالة السريعة، وتفوق هجومي بحركات الفرسان والالتفاف العسكري.";
+                initialFood = 780;
+                initialMetals = 450;
+                initialLivestock = 1300;
+                initialGold = 760;
+                initialTroops = 2150;
+                consumptionRate = 90;
+                initialInfantry = 600;
+                initialArchers = 650;
+                initialCavalry = 900;
+                defenseDescription = "مرونة استراتيجية فائقة؛ قدرة مباغتة سريعة بالخيالة ورصد استباقي لأي تقدم للخصوم عبر السهول الشاسعة.";
+                seasonsForecastList = [
+                    "🌱 ربيع: اخضرار المراعي وتكاثر قطعان الخيل والمواشي وتدريب الفرسان.",
+                    "☀️ صيف: سهولة تنقل القوافل والخيالة عبر مسارات طريق الحرير دون عوائق.",
+                    "🍂 خريف: جمع الأعلاف وتسمين الجياد استعداداً لموسم الصقيع القاري.",
+                    "❄️ شتاء: صقيع قاري شديد البرودة ورياح جليدية تحد من نشاط التجارة."
+                ];
+            } else {
+                biomeTitle = "إقليم صحراوي وتجارة قوافل وواحات";
+                climateSummary = "قيظ صيفي شديد؛ رحلة شتاء رعي وتجارة ذهبية";
+                climateDetailed = "عمق استراتيجي صحراوي شاسع وواحات نخيل وآبار حيوية، واعتماد كلي على قوافل الإبل وخطوط المقايضة الطويلة التي لا تجرؤ الجيوش الثقيلة على خوضها.";
+                initialFood = 580;
+                initialMetals = 410;
+                initialLivestock = 920;
+                initialGold = 1180;
+                initialTroops = 1350;
+                consumptionRate = 65;
+                initialInfantry = 550;
+                initialArchers = 350;
+                initialCavalry = 450;
+                defenseDescription = "عمق صحراوي جاف يشكل خط دفاع طبيعي ينهك أي جيش غازٍ لا يملك أدلة متمرسين وخبرة بطرق الآبار والمسالك.";
+                seasonsForecastList = [
+                    "🌱 ربيع: اعتدال الطقس ورعي الإبل في الفياض والمراعي الموسمية.",
+                    "☀️ صيف: قيظ صيفي شديد يتطلب التمركز في الواحات والآبار المحمية وتجنب الحركة النهارية.",
+                    "🍂 خريف: انكسار موجة الحر وتجهيز القوافل الكبرى لنقل التمور والتوابل.",
+                    "❄️ شتاء: رحلة الشتاء الذهبية وانطلاق القوافل التجارية في أبهى مواسمها (+20% أرباح)."
+                ];
+            }
+
+            var defaultName = "";
+            if (primaryBiome === "river") defaultName = "مملكة الأحواض النهرية " + nationCount;
+            else if (primaryBiome === "mountain") defaultName = "إمارة القمم الحصينة " + nationCount;
+            else if (primaryBiome === "coast") defaultName = "جمهورية السواحل والتجارة " + nationCount;
+            else if (primaryBiome === "steppe") defaultName = "خانية السهوب والخيالة " + nationCount;
+            else defaultName = "سلطنة الواحات والرمال " + nationCount;
+
+            var nationName = (customName && customName.trim().length > 0) ? customName.trim() : defaultName;
+            var capitalName = "حاضرة " + (customName && customName.trim().length > 0 ? customName.trim().split(" ").slice(-1)[0] : ("الإقليم " + nationCount));
+            var customId = "custom_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+
+            return {
+                id: customId,
+                name: nationName,
+                flag: flag,
+                capital: capitalName,
+                coords: [parseFloat(cLng.toFixed(2)), parseFloat(cLat.toFixed(2))],
+                color: color,
+                biome: biomeTitle,
+                climate: climateSummary,
+                climateDesc: climateDetailed,
+                territory: closedTerritory,
+                food: initialFood,
+                metals: initialMetals,
+                livestock: initialLivestock,
+                gold: initialGold,
+                troops: initialTroops,
+                consumption: consumptionRate,
+                infantry: initialInfantry,
+                archers: initialArchers,
+                cavalry: initialCavalry,
+                allies: [],
+                enemies: [],
+                truces: [],
+                budget: { economy: 100, military: 100, planning: 100, intelligence: 100 },
+                taxPolicy: "moderate",
+                expeditionaryForce: null,
+                decrees: ["📜 وثيقة تأسيس الأمة وترسيم الحدود السيادية على الخريطة الجغرافية."],
+                seasonsForecast: seasonsForecastList,
+                defenseDesc: defenseDescription,
+                assignedTeam: null
+            };
+        }
+
+        // Territory Drawing Lifecycle
+        function startDrawingTerritory() {
+            if (simTeacherModal) simTeacherModal.style.display = "none";
+            simState.isDrawingTerritory = true;
+            simState.currentDrawingPoints = [];
+            if (simDrawTerritoryBanner) simDrawTerritoryBanner.style.display = "flex";
+            if (simDrawnPointsCount) simDrawnPointsCount.textContent = "0";
+            if (simCustomNationNameInput) simCustomNationNameInput.value = "";
+            renderSimMapLayers();
+            if (typeof Go === "function") Go("وضع رسم الحدود نشط: انقر على الخريطة لتحديد زوايا الإقليم (3 نقاط على الأقل)");
+        }
+
+        function cancelDrawingTerritory() {
+            simState.isDrawingTerritory = false;
+            simState.currentDrawingPoints = [];
+            if (simDrawTerritoryBanner) simDrawTerritoryBanner.style.display = "none";
+            renderSimMapLayers();
+            if (typeof Go === "function") Go("تم إلغاء رسم الحدود.");
+        }
+
+        function confirmCurrentTerritory(customName) {
+            if (!simState.currentDrawingPoints || simState.currentDrawingPoints.length < 3) {
+                if (typeof Go === "function") Go("⚠️ يرجى النقر على الخريطة لتحديد 3 نقاط على الأقل لتكوين مضلع الإقليم!");
+                return;
+            }
+            var newNation = inferTerritoryGeoProfile(simState.currentDrawingPoints, customName);
+            if (!newNation) return;
+
+            simState.customNations[newNation.id] = newNation;
+            nationsData[newNation.id] = newNation;
+            simState.isSandboxMode = true;
+            simState.activeNationId = newNation.id;
+
+            var logMsg = "🗺️ قام المعلم بتدشين وتخطيط أمة جديدة: " + newNation.name + " (" + newNation.biome + ")";
+            simState.eventsLog.unshift(logMsg);
+
+            simState.isDrawingTerritory = false;
+            simState.currentDrawingPoints = [];
+            if (simDrawTerritoryBanner) simDrawTerritoryBanner.style.display = "none";
+
+            populateNationSelects();
+            updateActiveNationUI();
+            updateTeacherSandboxUI();
+            renderSimMapLayers();
+            renderTeacherEventsLog();
+            saveSandboxSimulationState();
+
+            openCountryDossier(newNation.id);
+            if (typeof Go === "function") Go("تم تدشين الأمة بنجاح واستنتاج خصائصها الجغرافية والمناخية تلقائياً! 🏛️");
+        }
+
+        // Country Dossier Modal
+        function openCountryDossier(nationId) {
+            var nat = nationsData[nationId] || nationsData[simState.activeNationId];
+            if (!nat) return;
+            simState.dossierTargetId = nat.id;
+
+            if (simDossierFlag) simDossierFlag.textContent = nat.flag || "🦅";
+            if (simDossierTitle) simDossierTitle.textContent = "وثيقة تأسيس الأمة: " + nat.name;
+            if (simDossierSubtitle) {
+                var coordText = nat.coords ? " | المركز: [" + nat.coords[0].toFixed(1) + "°, " + nat.coords[1].toFixed(1) + "°]" : "";
+                var teamText = nat.assignedTeam ? " | الفريق المكلّف: " + nat.assignedTeam : "";
+                simDossierSubtitle.textContent = "العاصمة: " + (nat.capital || "الحاضرة") + coordText + teamText;
+            }
+            if (simDossierBiome) simDossierBiome.textContent = nat.biome || "إقليم جغرافي استراتيجي";
+            if (simDossierClimateDesc) simDossierClimateDesc.textContent = nat.climateDesc || nat.climate || "مناخ متوازن يجمع بين فصول الزراعة ومواسم التجارة السنوية.";
+
+            if (simDossierSeasonsList) {
+                simDossierSeasonsList.innerHTML = "";
+                var seasonsData = nat.seasonsForecast || [
+                    "🌱 ربيع: انطلاق مواسم الرعي في البادية واعتدال حركة القوافل.",
+                    "☀️ صيف: ذروة إنتاج زراعي ونشاط تجاري متزايد.",
+                    "🍂 خريف: موسم الحصاد وتخزين الصوامع وتأمين الثغور.",
+                    "❄️ شتاء: رحلة التجارة الشتوية واستقرار الحاميات في الثغور."
+                ];
+                seasonsData.forEach(function(sDesc) {
+                    var li = document.createElement("li");
+                    li.textContent = sDesc;
+                    simDossierSeasonsList.appendChild(li);
+                });
+            }
+
+            if (simDossierResourcesRow) {
+                simDossierResourcesRow.innerHTML = "";
+                var items = [
+                    { icon: "🌾", name: "الغذاء والصوامع", val: (nat.food || 1000) + " كيس", note: "استهلاك " + (nat.consumption || 75) + "/دورة" },
+                    { icon: "⛏️", name: "الحديد والمعادن", val: (nat.metals || 500) + " سبيكة", note: "تسليح ودروع" },
+                    { icon: "🐎", name: "الخيل والأنعام", val: (nat.livestock || 500) + " رأس", note: "فرسان وقوافل" },
+                    { icon: "🪙", name: "الخزينة والذهب", val: (nat.gold || 800) + " دينار", note: "سيولة وتجارة" },
+                    { icon: "⚔️", name: "الجيش والحامية", val: (nat.troops || 1500) + " مقاتل", note: (nat.infantry || 0) + " مشاة | " + (nat.archers || 0) + " رماة | " + (nat.cavalry || 0) + " فرسان" }
+                ];
+                items.forEach(function(it) {
+                    var badge = document.createElement("div");
+                    badge.className = "sim-dossier-res-badge";
+                    badge.innerHTML = "<span>" + it.icon + "</span> <div><strong>" + it.name + ": " + it.val + "</strong> <span style='font-size:0.75rem;opacity:0.8;'>(" + it.note + ")</span></div>";
+                    simDossierResourcesRow.appendChild(badge);
+                });
+            }
+
+            if (simDossierDefenseDesc) {
+                simDossierDefenseDesc.textContent = nat.defenseDesc || "حصانة استراتيجية متوازنة؛ يُنصح بنشر عيون الاستطلاع وتأمين الممرات البرية والبحرية.";
+            }
+
+            if (simCountryDossierModal) simCountryDossierModal.style.display = "flex";
+        }
+
+        // Auto-assign teams to nations
+        function autoAssignTeamsToCustomNations() {
+            var natKeys = Object.keys(simState.customNations);
+            if (natKeys.length === 0) {
+                natKeys = Object.keys(nationsData);
+            }
+
+            var defaultTeamNames = [
+                "فريق النسر الفاتح (Team 1)",
+                "فريق فرسان الصحراء (Team 2)",
+                "فريق أسود الجبال (Team 3)",
+                "فريق بحارة المتوسط (Team 4)",
+                "فريق درع السهوب (Team 5)",
+                "فريق صقور الرافدين (Team 6)",
+                "فريق رواد الأطلس (Team 7)",
+                "فريق حماة المضائق (Team 8)"
+            ];
+
+            var shuffled = natKeys.slice().sort(function() { return 0.5 - Math.random(); });
+            simState.teamAssignments = {};
+
+            var logSummaries = [];
+            shuffled.forEach(function(nId, idx) {
+                var teamName = defaultTeamNames[idx] || ("فريق الرواد " + (idx + 1));
+                var nat = nationsData[nId];
+                if (nat) {
+                    nat.assignedTeam = teamName;
+                    simState.teamAssignments[teamName] = nId;
+                    logSummaries.push(teamName + " ➔ " + nat.name);
+                }
+            });
+
+            var msg = "🎲 تم توزيع الأقاليم والدول بالقرعة على الفرق الطلابية: " + logSummaries.join(" | ");
+            simState.eventsLog.unshift(msg);
+            renderTeacherEventsLog();
+            updateTeacherSandboxUI();
+            saveSandboxSimulationState();
+            if (typeof Go === "function") Go("تم توزيع الأقاليم والدول بالقرعة على فرق الصف بنجاح! 🎲");
+        }
+
+        // Reset Simulation to New Epoch
+        function resetSimulationToNewEpoch() {
+            Object.keys(simState.customNations).forEach(function(cId) {
+                delete nationsData[cId];
+            });
+
+            simState.customNations = {};
+            simState.isSandboxMode = false;
+            simState.isDrawingTerritory = false;
+            simState.currentDrawingPoints = [];
+            simState.activeNationId = "nile";
+            simState.year = 1250;
+            simState.seasonIdx = 0;
+            simState.seasonDuration = 90;
+            simState.seasonTimeRemaining = 90;
+            simState.gamePace = "classroom";
+            simState.teamAssignments = {};
+            if (simGamePaceSelect) simGamePaceSelect.value = "classroom";
+
+            try {
+                localStorage.removeItem("agy_sandbox_sim_epoch");
+            } catch (e) {}
+
+            var dec = "⚡ قام المعلم بتصفير المحاكاة وتدشين عصر تاريخي جديد من نقطة الصفر.";
+            simState.eventsLog.unshift(dec);
+
+            populateNationSelects();
+            updateActiveNationUI();
+            updateTeacherSandboxUI();
+            renderSimMapLayers();
+            renderTeacherEventsLog();
+            updateSeasonalClockUI();
+            if (typeof Go === "function") Go("تم تصفير المحاكاة وتدشين عصر جديد بنجاح ⚡");
+        }
+
+        // Update Teacher Modal Sandbox UI List
+        function updateTeacherSandboxUI() {
+            var cKeys = Object.keys(simState.customNations);
+            if (simDrawnNationsCount) {
+                simDrawnNationsCount.textContent = cKeys.length + " دول";
+            }
+            if (simDrawnNationsList) {
+                simDrawnNationsList.innerHTML = "";
+                if (cKeys.length === 0) {
+                    var emptyHint = document.createElement("span");
+                    emptyHint.className = "sim-empty-hint";
+                    emptyHint.style.cssText = "font-size:0.8rem;color:#94a3b8;";
+                    emptyHint.textContent = "لم يتم رسم أقاليم مخصصة بعد؛ المحاكاة تعمل بالسيناريو التاريخي الافتراضي.";
+                    simDrawnNationsList.appendChild(emptyHint);
+                } else {
+                    cKeys.forEach(function(k) {
+                        var cNat = simState.customNations[k];
+                        var pill = document.createElement("div");
+                        pill.className = "sim-drawn-nation-pill";
+                        var teamBadge = cNat.assignedTeam ? "<span style='background:#10b981;color:#fff;padding:1px 5px;border-radius:4px;font-size:0.7rem;'>" + cNat.assignedTeam.split(" ")[0] + "</span>" : "";
+                        pill.innerHTML = "<span>" + cNat.flag + " " + cNat.name + "</span>" + teamBadge +
+                            "<button type='button' class='sim-pill-dossier-btn' data-nation='" + k + "' style='background:none;border:none;cursor:pointer;padding:0 2px;' title='عرض وثيقة الأمة'>📜</button>" +
+                            "<button type='button' class='sim-pill-select-btn' data-nation='" + k + "' style='background:none;border:none;cursor:pointer;padding:0 2px;' title='الانتقال لقيادة الدولة'>👑</button>";
+                        simDrawnNationsList.appendChild(pill);
+                    });
+
+                    simDrawnNationsList.querySelectorAll(".sim-pill-dossier-btn").forEach(function(b) {
+                        b.addEventListener("click", function(e) {
+                            e.stopPropagation();
+                            var nId = this.getAttribute("data-nation");
+                            openCountryDossier(nId);
+                        });
+                    });
+                    simDrawnNationsList.querySelectorAll(".sim-pill-select-btn").forEach(function(b) {
+                        b.addEventListener("click", function(e) {
+                            e.stopPropagation();
+                            var nId = this.getAttribute("data-nation");
+                            simState.activeNationId = nId;
+                            populateNationSelects();
+                            updateActiveNationUI();
+                            renderSimMapLayers();
+                            if (simTeacherModal) simTeacherModal.style.display = "none";
+                            if (typeof Go === "function") Go("تم الانتقال إلى قيادة " + nationsData[nId].name);
+                        });
+                    });
+                }
+            }
+        }
+
+        // Persistence across semesters
+        function saveSandboxSimulationState() {
+            try {
+                var payload = {
+                    customNations: simState.customNations,
+                    isSandboxMode: simState.isSandboxMode,
+                    gamePace: simState.gamePace,
+                    seasonDuration: simState.seasonDuration,
+                    seasonTimeRemaining: simState.seasonTimeRemaining,
+                    year: simState.year,
+                    seasonIdx: simState.seasonIdx,
+                    teamAssignments: simState.teamAssignments,
+                    lastSavedTimestamp: Date.now()
+                };
+                localStorage.setItem("agy_sandbox_sim_epoch", JSON.stringify(payload));
+            } catch (e) {}
+        }
+
+        function loadSandboxSimulationState() {
+            try {
+                var raw = localStorage.getItem("agy_sandbox_sim_epoch");
+                if (!raw) return;
+                var data = JSON.parse(raw);
+                if (data && data.customNations && Object.keys(data.customNations).length > 0) {
+                    simState.customNations = data.customNations;
+                    simState.isSandboxMode = !!data.isSandboxMode;
+                    simState.gamePace = data.gamePace || "classroom";
+                    simState.seasonDuration = data.seasonDuration || 90;
+                    simState.year = data.year || 1250;
+                    simState.seasonIdx = data.seasonIdx || 0;
+                    simState.teamAssignments = data.teamAssignments || {};
+
+                    Object.keys(simState.customNations).forEach(function(cId) {
+                        nationsData[cId] = simState.customNations[cId];
+                    });
+
+                    if (data.lastSavedTimestamp && (simState.gamePace === "daily" || simState.gamePace === "weekly_semester")) {
+                        var elapsed = Math.floor((Date.now() - data.lastSavedTimestamp) / 1000);
+                        var rem = (data.seasonTimeRemaining || simState.seasonDuration) - elapsed;
+                        while (rem <= 0) {
+                            advanceSimSeason();
+                            rem += simState.seasonDuration;
+                        }
+                        simState.seasonTimeRemaining = Math.max(1, rem);
+                    } else {
+                        simState.seasonTimeRemaining = data.seasonTimeRemaining || simState.seasonDuration;
+                    }
+
+                    if (simGamePaceSelect) simGamePaceSelect.value = simState.gamePace;
+                }
+            } catch (e) {}
+        }
+
+        // Populate Selects
+        function populateNationSelects() {
+            if (simNationSelect) {
+                simNationSelect.innerHTML = "";
+                Object.keys(nationsData).forEach(function(k) {
+                    var n = nationsData[k];
+                    var opt = document.createElement("option");
+                    opt.value = n.id;
+                    opt.textContent = n.flag + " " + n.name;
+                    simNationSelect.appendChild(opt);
+                });
+                simNationSelect.value = simState.activeNationId;
+            }
+            if (simRewardNationSelect) {
+                simRewardNationSelect.innerHTML = "";
+                Object.keys(nationsData).forEach(function(k) {
+                    var n = nationsData[k];
+                    var opt = document.createElement("option");
+                    opt.value = n.id;
+                    opt.textContent = n.flag + " " + n.name;
+                    simRewardNationSelect.appendChild(opt);
+                });
+            }
+            if (simCaravanDestSelect) {
+                simCaravanDestSelect.innerHTML = "";
+                Object.keys(nationsData).forEach(function(k) {
+                    if (k === simState.activeNationId) return;
+                    var n = nationsData[k];
+                    var opt = document.createElement("option");
+                    opt.value = n.id;
+                    opt.textContent = n.flag + " " + n.name + " (" + n.capital + ")";
+                    simCaravanDestSelect.appendChild(opt);
+                });
+            }
+            if (simCalcOriginSelect && simCalcTargetSelect) {
+                simCalcOriginSelect.innerHTML = "";
+                simCalcTargetSelect.innerHTML = "";
+                Object.keys(nationsData).forEach(function(k) {
+                    var n = nationsData[k];
+                    var opt1 = document.createElement("option");
+                    opt1.value = k;
+                    opt1.textContent = n.capital + " (" + n.name + ")";
+                    simCalcOriginSelect.appendChild(opt1);
+
+                    var opt2 = document.createElement("option");
+                    opt2.value = k;
+                    opt2.textContent = n.capital + " (" + n.name + ")";
+                    simCalcTargetSelect.appendChild(opt2);
+                });
+                simCalcOriginSelect.value = "nile";
+                simCalcTargetSelect.value = "anatolia";
+            }
+        }
+
+        // Distance & Travel Calculation
+        function updateDistanceCalculation() {
+            if (!simCalcOriginSelect || !simCalcTargetSelect) return;
+            var origKey = simCalcOriginSelect.value;
+            var targKey = simCalcTargetSelect.value;
+            var orig = nationsData[origKey];
+            var targ = nationsData[targKey];
+            if (!orig || !targ) return;
+
+            var distRad = typeof d3 !== "undefined" && d3.geoDistance ? d3.geoDistance(orig.coords, targ.coords) : 0.15;
+            var distKm = Math.max(1, Math.round(distRad * 6371));
+            var friction = 1.0;
+            var frictionLabel = "1.0x (سهول ممهدة وطرق نهرية)";
+
+            if (origKey === "anatolia" || targKey === "anatolia") {
+                friction = 1.35;
+                frictionLabel = "1.35x (ممرات جبلية شديدة الوعورة)";
+            } else if (origKey === "desert" || targKey === "desert") {
+                friction = 1.25;
+                frictionLabel = "1.25x (كثبان رملية ومسافات بين الآبار)";
+            } else if (origKey === "steppes" || targKey === "steppes") {
+                friction = 1.15;
+                frictionLabel = "1.15x (سهوب فسيحة وسرعة فرسان)";
+            }
+
+            var hours = Math.max(4, Math.round((distKm * friction) / 25));
+            var daysHist = Math.max(1, Math.round(hours / 2));
+
+            if (simCalcDistanceKm) simCalcDistanceKm.textContent = distKm.toLocaleString() + " كم";
+            if (simCalcTerrainFriction) simCalcTerrainFriction.textContent = frictionLabel;
+            if (simCalcTravelTime) simCalcTravelTime.textContent = hours + " ساعة حقيقية (~" + daysHist + " يوماً تاريخياً)";
+        }
+
+        // Civilization Power Index Calculation
+        function calculateCivilizationScores() {
+            var ranked = Object.keys(nationsData).map(function(k) {
+                var n = nationsData[k];
+                var cpCount = chokePointsData.filter(function(cp) { return cp.controller === n.id; }).length;
+                var treatiesCount = (n.allies ? n.allies.length : 0) + (n.truces ? n.truces.length : 0);
+                var score = Math.round(
+                    (n.food * 0.5) +
+                    (n.metals * 1.2) +
+                    (n.livestock * 1.0) +
+                    (n.gold * 1.5) +
+                    (n.troops * 0.8) +
+                    (cpCount * 300) +
+                    (treatiesCount * 150)
+                );
+                return { id: n.id, name: n.name, score: score };
+            });
+            ranked.sort(function(a, b) { return b.score - a.score; });
+            return ranked;
+        }
+
+        // Sovereign Budget Allocation & Consequences Helper
+        function updateBudgetImpactTexts() {
+            if (simBudgetImpactEconomy && simBudgetSelectEconomy) {
+                var v = simBudgetSelectEconomy.value;
+                simBudgetImpactEconomy.textContent = (v === "100") ? "النتيجة: صيانة سدود وترع النيل، وحصاد وفير 100% في الموسم القادم." : (v === "50" ? "النتيجة: انخفاض كفاءة شبكات الري، وهبوط إنتاجية الحصاد بـ 50%." : "النتيجة: انسداد الترع وتفشي الجفاف، الحصاد 0% وتصاعد خطر المجاعة!");
+            }
+            if (simBudgetImpactMilitary && simBudgetSelectMilitary) {
+                var v = simBudgetSelectMilitary.value;
+                simBudgetImpactMilitary.textContent = (v === "100") ? "النتيجة: ثبات الحاميات عند المضائق والمعابر بكامل كفاءتها ومعنوياتها." : (v === "50" ? "النتيجة: نقص في العتاد والخيول، وتراجع قوة الدفاع بنسبة 25%." : "النتيجة: تأخر الرواتب وهروب 20% من الجند وانهيار دفاعات المضائق!");
+            }
+            if (simBudgetImpactPlanning && simBudgetSelectPlanning) {
+                var v = simBudgetSelectPlanning.value;
+                simBudgetImpactPlanning.textContent = (v === "100") ? "النتيجة: صيانة الآبار والمحطات وتأمين المسارات وسرعة القوافل." : (v === "50" ? "النتيجة: وعورة المسالك وبطء سير القوافل بنسبة 25%." : "النتيجة: اندثار الآبار وتلف البضائع وارتفاع نسبة هلاك القوافل!");
+            }
+            if (simBudgetImpactIntelligence && simBudgetSelectIntelligence) {
+                var v = simBudgetSelectIntelligence.value;
+                simBudgetImpactIntelligence.textContent = (v === "100") ? "النتيجة: نشر العيون وكشف شبكات التسلل وجواسيس الخصوم." : (v === "50" ? "النتيجة: رصد متأخر للقوافل والتحركات العسكرية." : "النتيجة: عمى استخباري تام وتسلل جواسيس دون أي إنذار مبكر!");
+            }
+        }
+
+        // Tax Policy Hint Helper
+        function updateTaxPolicyHint() {
+            if (!simTaxPolicyHint || !simTaxPolicySelect) return;
+            var v = simTaxPolicySelect.value;
+            if (v === "low") {
+                simTaxPolicyHint.textContent = "ضرائب خفيفة: ترضي التجار والرعية وتزيد سمعة الدولة، وتوفر +40 دينار ذهبي.";
+            } else if (v === "high") {
+                simTaxPolicyHint.textContent = "ضرائب مرتفعة: تدر +150 دينار فوراً، لكنها تؤدي لركود التجارة وتراجع الإنتاج الزراعي بـ 20%!";
+            } else {
+                simTaxPolicyHint.textContent = "الضرائب المعتدلة تضمن استقرار الأسواق وتدر +80 دينار دون إرهاق الرعية.";
+            }
+        }
+
+        // Automated Seasonal Clock (Immutable, Synchronized Cycle - No Manual Skip or Freeze)
+        function startSeasonalClock() {
+            if (simState.timerInterval) return;
+            simState.timerInterval = setInterval(function() {
+                if (!simState.isOpen) return;
+                simState.seasonTimeRemaining -= 1;
+                if (simState.seasonTimeRemaining <= 0) {
+                    simState.seasonTimeRemaining = simState.seasonDuration;
+                    advanceSimSeason();
+                }
+                updateSeasonalClockUI();
+            }, 1000);
+            updateSeasonalClockUI();
+        }
+
+        function stopSeasonalClock() {
+            if (simState.timerInterval) {
+                clearInterval(simState.timerInterval);
+                simState.timerInterval = null;
+            }
+        }
+
+        function updateSeasonalClockUI() {
+            if (simCycleCountdown) {
+                var rem = Math.max(0, Math.round(simState.seasonTimeRemaining));
+                if (rem >= 86400) {
+                    var days = Math.floor(rem / 86400);
+                    var hrs = Math.floor((rem % 86400) / 3600);
+                    simCycleCountdown.textContent = days + " يوم " + hrs + " ساعة";
+                } else if (rem >= 3600) {
+                    var h = Math.floor(rem / 3600);
+                    var min = Math.floor((rem % 3600) / 60);
+                    simCycleCountdown.textContent = h + " س " + (min < 10 ? "0" + min : min) + " د";
+                } else {
+                    var m = Math.floor(rem / 60);
+                    var s = rem % 60;
+                    simCycleCountdown.textContent = (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+                }
+            }
+            if (simCycleProgressFill) {
+                var dur = simState.seasonDuration || 90;
+                var progress = ((dur - simState.seasonTimeRemaining) / dur) * 100;
+                simCycleProgressFill.style.width = Math.min(100, Math.max(0, progress)).toFixed(1) + "%";
+            }
+        }
+
+        // Set Simulation Game Pace (Classroom 90s, Daily 24h, Weekly Semester 7d)
+        function setGamePace(pace) {
+            simState.gamePace = pace;
+            var dur = 90;
+            var paceTitle = "وضع الحصة المدرسية (90 ثانية / دورة)";
+            if (pace === "daily") {
+                dur = 86400;
+                paceTitle = "وضع اليوم الدراسي (24 ساعة / دورة)";
+            } else if (pace === "weekly_semester") {
+                dur = 604800;
+                paceTitle = "وضع الفصل الدراسي الكامل (أسبوع واقعي = دورة موسمية)";
+            }
+            simState.seasonDuration = dur;
+            simState.seasonTimeRemaining = dur;
+            if (simGamePaceSelect) simGamePaceSelect.value = pace;
+            updateSeasonalClockUI();
+            saveSandboxSimulationState();
+
+            var logMsg = "⏱️ قام المشرف بضبط إيقاع المحاكاة إلى: " + paceTitle;
+            simState.eventsLog.unshift(logMsg);
+            renderTeacherEventsLog();
+            if (typeof Go === "function") Go("تم تعيين إيقاع سريان الزمن: " + paceTitle);
+        }
+
+        // Visual Resource Gauges Update (Dynamic Capacity & Critical Low Warnings)
+        function updateGauges(n) {
+            if (!n) return;
+            var foodPct = Math.min(100, Math.max(6, Math.round((n.food / 2000) * 100)));
+            var metalsPct = Math.min(100, Math.max(6, Math.round((n.metals / 1500) * 100)));
+            var livestockPct = Math.min(100, Math.max(6, Math.round((n.livestock / 1000) * 100)));
+            var goldPct = Math.min(100, Math.max(6, Math.round((n.gold / 2000) * 100)));
+            var troopsPct = Math.min(100, Math.max(6, Math.round((n.troops / 3000) * 100)));
+
+            if (simGaugeFood) {
+                simGaugeFood.style.width = foodPct + "%";
+                simGaugeFood.classList.toggle("gauge-critical", foodPct < 25);
+            }
+            if (simGaugeMetals) {
+                simGaugeMetals.style.width = metalsPct + "%";
+                simGaugeMetals.classList.toggle("gauge-critical", metalsPct < 20);
+            }
+            if (simGaugeLivestock) {
+                simGaugeLivestock.style.width = livestockPct + "%";
+                simGaugeLivestock.classList.toggle("gauge-critical", livestockPct < 20);
+            }
+            if (simGaugeGold) {
+                simGaugeGold.style.width = goldPct + "%";
+                simGaugeGold.classList.toggle("gauge-critical", goldPct < 20);
+            }
+            if (simGaugeTroops) {
+                simGaugeTroops.style.width = troopsPct + "%";
+                simGaugeTroops.classList.toggle("gauge-critical", troopsPct < 25);
+            }
+        }
+
+        // Dynamic Imperial Council Advisor Insights
+        function updateCouncilAdvice() {
+            var n = nationsData[simState.activeNationId];
+            if (!n || !simCouncilAdvisorBanner) return;
+
+            var role = simState.activeRole || "leader";
+            var icon = "👑";
+            var title = "المستشار الإمبراطوري";
+            var text = "";
+
+            if (role === "leader") {
+                icon = "👑";
+                title = "مستشار القيادة والسيادة العليا";
+                var months = Math.round(n.food / Math.max(1, n.consumption));
+                if (months < 4) {
+                    text = "مولاي الحاكم: صوامع الغلال تقترب من مرحلة الخطر (" + months + " أشهر فقط). سارع بإبرام تحالف تجاري أو إعلان هدنة لتأمين واردات القمح.";
+                } else if (n.enemies && n.enemies.length > 0) {
+                    text = "مولاي الحاكم: طبول الحرب تدق على الحدود. وقّع ميثاق دفاع مشترك لتأمين عاصمتنا من أي هجوم غادر.";
+                } else if (n.allies && n.allies.length > 0) {
+                    text = "مولاي الحاكم: حبال الود متصلة مع حلفائنا. استثمر هذا الاستقرار في إبرام اتفاقيات تجارية ترفع سيولة الخزينة.";
+                } else {
+                    text = "مولاي الحاكم: أمتك ترنو لحكمتك. وازن بين إطعام الرعية وحماية الثغور بالفرسان.";
+                }
+            } else if (role === "economy") {
+                icon = "⚖️";
+                title = "وزير التجارة والخزينة الإمبراطورية";
+                var activeCaravans = simState.caravans.filter(function(c) { return c.from === n.id; });
+                if (n.food > 800 && n.gold < 500) {
+                    text = "يا وزير المال: مخزون القمح وفير بينما تنقصنا السيولة الذهبية؛ أرسل قوافل حبوب للمدن المجاورة لمقايضتها بالذهب.";
+                } else if (n.metals < 300) {
+                    text = "يا وزير المال: ورش الحدادة تشكو شح المعادن؛ وجّه قوافل مقايضة إلى إمارة الأناضول لاستيراد سبائك الحديد.";
+                } else if (activeCaravans.length > 0) {
+                    text = "يا وزير المال: قوافلنا تمخر الدروب بنجاح (" + activeCaravans.length + " قافلة). راقب رسوم الترانزيت عند المضائق لحماية الأرباح.";
+                } else {
+                    text = "يا وزير المال: تجارة الأمة هي شريان الحياة؛ انقر على عاصمة شريك على الخريطة وسيّر قافلة لتبادل الفوائض.";
+                }
+            } else if (role === "military") {
+                icon = "⚔️";
+                title = "القائد العام للجيوش والحاميات";
+                if (n.troops < 1000) {
+                    text = "أيها القائد: فيالق الدفاع بحاجة لتعزيز عاجل لحماية قلاعنا ودرء خطر الغارات المفاجئة.";
+                } else if (n.food < 400) {
+                    text = "أيها القائد: الجيوش تزحف على بطونها؛ تناقص الحبوب يهدد بضعف الروح المعنوية في صفوف المقاتلين.";
+                } else {
+                    text = "أيها القائد: كتائب الفرسان والمشاة على أهبة الاستعداد. احرص على مرافقة القوافل بفرسان مدربين لردع قطاع الطرق.";
+                }
+            } else if (role === "planner") {
+                icon = "🧭";
+                title = "كبير المهندسين والجغرافيين الإمبراطوريين";
+                if (simState.safeRoutes && simState.safeRoutes[n.id]) {
+                    text = "أيها المهندس: المسار الالتفافي المعتمد يحمي قوافلنا حالياً من كمائن قطاع الطرق وتكاليف المضائق بنسبة 100%.";
+                } else {
+                    text = "أيها المهندس: دروب التجارة تعبرها مضائق خطرة؛ استخدم أداة رسم المسار لاعتماد طريق بديل آمن يضمن سلامة القوافل.";
+                }
+            } else if (role === "intelligence") {
+                icon = "👁️";
+                title = "رئيس ديوان العيون والاستطلاع السري";
+                var myScouts = simState.scouts.filter(function(s) { return s.nation === n.id; });
+                if (myScouts.length === 0) {
+                    text = "يا صاحب العيون: دروبنا بلا رصد واستطلاع؛ انشر طليعة في الميدان لتفعيل دوائر المراقبة وكشف تحركات الخصوم.";
+                } else {
+                    text = "يا صاحب العيون: مراصدنا (" + myScouts.length + ") تراقب الممرات بنجاح؛ فعّل دوائر الرصد للقبض على عيون الخصوم ومقايضتهم.";
+                }
+            }
+
+            if (simCouncilMedallion) simCouncilMedallion.textContent = icon;
+            if (simCouncilTitle) simCouncilTitle.textContent = title;
+            if (simCouncilText) simCouncilText.textContent = text;
+        }
+
+        // Floating Animated Resource Delta Popups (+100 🌾, -40 🪙)
+        function showFloatingResourceDelta(coords, text, type) {
+            if (!simFloatingPopupsContainer) return;
+            var proj = typeof ao === "function" ? ao() : null;
+            if (!proj) return;
+            var pt = proj(coords);
+            if (!pt || isNaN(pt[0]) || isNaN(pt[1])) return;
+
+            var svg = document.getElementById("mapSvg");
+            var x = pt[0];
+            var y = pt[1];
+
+            try {
+                var transGroup = svg ? svg.querySelector(".map-transform-group") : null;
+                if (transGroup && transGroup.getCTM && svg.createSVGPoint) {
+                    var ctm = transGroup.getCTM();
+                    if (ctm) {
+                        var svgPoint = svg.createSVGPoint();
+                        svgPoint.x = x;
+                        svgPoint.y = y;
+                        var screenPoint = svgPoint.matrixTransform(ctm);
+                        if (!isNaN(screenPoint.x) && !isNaN(screenPoint.y)) {
+                            x = screenPoint.x;
+                            y = screenPoint.y;
+                        }
+                    }
+                }
+            } catch (e) {}
+
+            var tag = document.createElement("div");
+            tag.className = "sim-floating-delta-tag " + (type ? "sim-delta-" + type : "sim-delta-positive");
+            tag.textContent = text;
+            var offsetX = (Math.random() - 0.5) * 20;
+            var offsetY = (Math.random() - 0.5) * 14;
+            tag.style.left = (x + offsetX) + "px";
+            tag.style.top = (y - 20 + offsetY) + "px";
+
+            simFloatingPopupsContainer.appendChild(tag);
+            setTimeout(function() {
+                if (tag.parentNode) tag.parentNode.removeChild(tag);
+            }, 1800);
+        }
+
+        // Update Active Nation Profile & Panels
+        function updateActiveNationUI() {
+            var n = nationsData[simState.activeNationId];
+            if (!n) return;
+
+            if (simNationFlag) simNationFlag.textContent = n.flag;
+            if (simNationName) simNationName.textContent = n.name;
+            if (simNationCapital) simNationCapital.textContent = "العاصمة: " + n.capital;
+            if (simNationBiome) simNationBiome.textContent = n.biome;
+            if (simNationClimate) simNationClimate.textContent = "المناخ: " + n.climate;
+
+            if (simQuickFood) simQuickFood.textContent = n.food.toLocaleString();
+            if (simQuickMetals) simQuickMetals.textContent = n.metals.toLocaleString();
+            if (simQuickLivestock) simQuickLivestock.textContent = n.livestock.toLocaleString();
+            if (simQuickGold) simQuickGold.textContent = n.gold.toLocaleString();
+            if (simQuickTroops) simQuickTroops.textContent = n.troops.toLocaleString();
+
+            updateGauges(n);
+            updateCouncilAdvice();
+
+            if (simMonthlyConsumptionDisplay) simMonthlyConsumptionDisplay.textContent = n.consumption + " كيس / شهر";
+            if (simFoodSecurityStatus) {
+                var months = Math.round(n.food / Math.max(1, n.consumption));
+                if (months >= 10) {
+                    simFoodSecurityStatus.textContent = "🟢 آمن ومستقر (يكفي لـ " + months + " شهراً)";
+                    simFoodSecurityStatus.className = "sim-status-safe";
+                } else if (months >= 4) {
+                    simFoodSecurityStatus.textContent = "🟡 متوسط المخزون (يكفي لـ " + months + " أشهر)";
+                    simFoodSecurityStatus.className = "sim-status-safe";
+                } else {
+                    simFoodSecurityStatus.textContent = "🔴 خطر مجاعة وشيك! (يكفي لـ " + months + " أشهر فقط)";
+                    simFoodSecurityStatus.style.color = "#ef4444";
+                }
+            }
+
+            if (simInfantryCount) simInfantryCount.textContent = n.infantry.toLocaleString() + " مقاتل";
+            if (simArchersCount) simArchersCount.textContent = n.archers.toLocaleString() + " مقاتل";
+            if (simCavalryCount) simCavalryCount.textContent = n.cavalry.toLocaleString() + " فارس";
+
+            // Relations List
+            if (simRelationsList) {
+                simRelationsList.innerHTML = "";
+                Object.keys(nationsData).forEach(function(k) {
+                    if (k === n.id) return;
+                    var other = nationsData[k];
+                    var isAlly = n.allies.indexOf(k) !== -1;
+                    var isEnemy = n.enemies.indexOf(k) !== -1;
+                    var isTruce = n.truces.indexOf(k) !== -1;
+                    var statusText = isAlly ? "🤝 حلف دفاعي وتجاري" : (isEnemy ? "⚔️ حالة حرب" : (isTruce ? "🛡️ هدنة موسمية" : "🕊️ سلام وحياد"));
+                    var badgeBg = isAlly ? "rgba(16, 185, 129, 0.2)" : (isEnemy ? "rgba(239, 68, 68, 0.2)" : "rgba(255, 255, 255, 0.08)");
+
+                    var item = document.createElement("div");
+                    item.className = "sim-item-card";
+                    item.innerHTML = '<div class="sim-item-info"><span class="sim-item-title">' + other.flag + ' ' + other.name + '</span>' +
+                                     '<span class="sim-item-meta">' + other.biome + '</span></div>' +
+                                     '<span class="sim-tag" style="background:' + badgeBg + ';">' + statusText + '</span>';
+                    simRelationsList.appendChild(item);
+                });
+            }
+
+            // Decrees Feed
+            if (simDecreesFeed && n.decrees) {
+                simDecreesFeed.innerHTML = "";
+                n.decrees.forEach(function(d) {
+                    var f = document.createElement("div");
+                    f.className = "sim-feed-item";
+                    f.textContent = d;
+                    simDecreesFeed.appendChild(f);
+                });
+            }
+
+            // Caravans List
+            if (simActiveCaravansList) {
+                simActiveCaravansList.innerHTML = "";
+                var natCaravans = simState.caravans.filter(function(c) {
+                    return c.from === n.id || c.to === n.id;
+                });
+                if (natCaravans.length === 0) {
+                    simActiveCaravansList.innerHTML = '<p class="sim-card-hint">لا توجد قوافل سارية حالياً. استخدم النموذج أعلاه لتسيير قافلة.</p>';
+                } else {
+                    natCaravans.forEach(function(c) {
+                        var targetNat = nationsData[c.to];
+                        var item = document.createElement("div");
+                        item.className = "sim-item-card";
+                        item.innerHTML = '<div class="sim-item-info"><span class="sim-item-title">🐫 قافلة إلى: ' + (targetNat ? targetNat.name : c.to) + '</span>' +
+                                         '<span class="sim-item-meta">الحمولة: ' + c.cargo + ' | المقايضة: ' + c.requested + '</span></div>' +
+                                         '<span class="sim-tag" style="background:rgba(245, 158, 11, 0.2);">' + c.status + '</span>';
+                        simActiveCaravansList.appendChild(item);
+                    });
+                }
+            }
+
+            // Choke Points
+            if (simChokePointsList) {
+                simChokePointsList.innerHTML = "";
+                chokePointsData.forEach(function(cp) {
+                    var isMine = cp.controller === n.id;
+                    var item = document.createElement("div");
+                    item.className = "sim-item-card";
+                    item.innerHTML = '<div class="sim-item-info"><span class="sim-item-title">🛡️ ' + cp.name + '</span>' +
+                                     '<span class="sim-item-meta">الميزة: ' + cp.bonus + '</span></div>' +
+                                     '<span class="sim-tag" style="background:' + (isMine ? "rgba(16, 185, 129, 0.2)" : "rgba(255, 255, 255, 0.08)") + ';">' + (isMine ? "تحت سيطرة دولتك ✓" : "تحت سيطرة دولة أخرى") + '</span>';
+                    simChokePointsList.appendChild(item);
+                });
+            }
+
+            // Scouts List
+            if (simActiveScoutsFeed) {
+                simActiveScoutsFeed.innerHTML = "";
+                var natScouts = simState.scouts.filter(function(s) { return s.nation === n.id; });
+                if (natScouts.length === 0) {
+                    simActiveScoutsFeed.innerHTML = '<p class="sim-card-hint">لا توجد فرق استطلاع في الميدان حالياً. اضغط الزر أعلاه لنشر طليعة.</p>';
+                } else {
+                    natScouts.forEach(function(s) {
+                        var item = document.createElement("div");
+                        item.className = "sim-item-card";
+                        item.innerHTML = '<div class="sim-item-info"><span class="sim-item-title">👁️ ' + s.name + '</span>' +
+                                         '<span class="sim-item-meta">الإحداثيات: [' + s.coords[0].toFixed(1) + '°, ' + s.coords[1].toFixed(1) + '°]</span></div>' +
+                                         '<span class="sim-tag" style="background:rgba(20, 184, 166, 0.2);">' + s.status + '</span>';
+                        simActiveScoutsFeed.appendChild(item);
+                    });
+                }
+            }
+
+            // Captured Spies
+            if (simCapturedSpiesList) {
+                simCapturedSpiesList.innerHTML = "";
+                var natSpies = simState.capturedSpies.filter(function(cs) { return cs.captorNation === n.id; });
+                if (natSpies.length === 0) {
+                    simCapturedSpiesList.innerHTML = '<p class="sim-card-hint">لا يوجد جواسيس معتقلون حالياً في السجون.</p>';
+                } else {
+                    natSpies.forEach(function(cs) {
+                        var orig = nationsData[cs.originNation];
+                        var item = document.createElement("div");
+                        item.className = "sim-item-card";
+                        item.innerHTML = '<div class="sim-item-info"><span class="sim-item-title">🕵️ ' + cs.name + ' (تابع لـ: ' + (orig ? orig.name : cs.originNation) + ')</span>' +
+                                         '<span class="sim-item-meta">مكان الكشف: ' + cs.detectedInCircle + '</span></div>' +
+                                         '<div style="display:flex;gap:6px;"><button class="btn btn-secondary btn-sm sim-ransom-btn" data-spy-id="' + cs.id + '">فدية ومقايضة</button>' +
+                                         '<button class="btn btn-secondary btn-sm sim-execute-btn" style="color:#f87171;" data-spy-id="' + cs.id + '">إعدام</button></div>';
+                        simCapturedSpiesList.appendChild(item);
+                    });
+                    // Wire action buttons
+                    simCapturedSpiesList.querySelectorAll(".sim-ransom-btn").forEach(function(btn) {
+                        btn.onclick = function() {
+                            var spyId = this.getAttribute("data-spy-id");
+                            handleSpyDecision(spyId, "ransom");
+                        };
+                    });
+                    simCapturedSpiesList.querySelectorAll(".sim-execute-btn").forEach(function(btn) {
+                        btn.onclick = function() {
+                            var spyId = this.getAttribute("data-spy-id");
+                            handleSpyDecision(spyId, "execute");
+                        };
+                    });
+                }
+            }
+
+            // Seasonal Advisory
+            if (simSeasonalAdvisoryText) {
+                var s = simState.seasons[simState.seasonIdx];
+                simSeasonalAdvisoryText.innerHTML = "<strong>" + s.name + ":</strong> " + s.advisory;
+            }
+
+            // Update Civilization Power Ranking
+            var scores = calculateCivilizationScores();
+            var myRankIdx = -1;
+            for (var si = 0; si < scores.length; si++) {
+                if (scores[si].id === n.id) {
+                    myRankIdx = si;
+                    break;
+                }
+            }
+            var myScore = (myRankIdx !== -1) ? scores[myRankIdx].score : 0;
+            if (simPowerScore) simPowerScore.textContent = myScore.toLocaleString();
+            if (simPowerRank) simPowerRank.textContent = "#" + (myRankIdx + 1) + " من 5";
+
+            // Camera focus & pan to active nation's capital
+            if (typeof ic === "function" && n.coords) {
+                ic(n.coords, 2.8);
+            }
+
+            // Update Sovereign Budget Allocation Inputs
+            if (n.budget) {
+                if (simBudgetSelectEconomy) simBudgetSelectEconomy.value = String(n.budget.economy !== undefined ? n.budget.economy : "100");
+                if (simBudgetSelectMilitary) simBudgetSelectMilitary.value = String(n.budget.military !== undefined ? n.budget.military : "100");
+                if (simBudgetSelectPlanning) simBudgetSelectPlanning.value = String(n.budget.planning !== undefined ? n.budget.planning : "100");
+                if (simBudgetSelectIntelligence) simBudgetSelectIntelligence.value = String(n.budget.intelligence !== undefined ? n.budget.intelligence : "100");
+                updateBudgetImpactTexts();
+            }
+
+            // Update Tax Policy Select
+            if (simTaxPolicySelect) {
+                simTaxPolicySelect.value = n.taxPolicy || "moderate";
+                updateTaxPolicyHint();
+            }
+
+            // Update Allied Garrison Select & Dispatched Status
+            if (simDispatchAllySelect) {
+                simDispatchAllySelect.innerHTML = "";
+                var potentialAllies = Object.keys(nationsData).filter(function(k) { return k !== n.id; });
+                potentialAllies.forEach(function(ak) {
+                    var an = nationsData[ak];
+                    if (an) {
+                        var isAlly = (n.allies || []).indexOf(ak) !== -1;
+                        var opt = document.createElement("option");
+                        opt.value = ak;
+                        opt.textContent = an.flag + " " + an.name + " (" + an.capital + ")" + (isAlly ? " [حليف]" : "");
+                        simDispatchAllySelect.appendChild(opt);
+                    }
+                });
+            }
+
+            if (simDispatchedForcesStatus) {
+                if (n.expeditionaryForce) {
+                    var targetNat = nationsData[n.expeditionaryForce.target];
+                    simDispatchedForcesStatus.textContent = "🛡️ تم إرسال " + n.expeditionaryForce.count + " مقاتلاً لحماية " + (targetNat ? targetNat.name : n.expeditionaryForce.target) + " (استهلاك الحليف: +" + n.expeditionaryForce.foodBurden + " قمح/شهر).";
+                    simDispatchedForcesStatus.style.color = "#38bdf8";
+                } else {
+                    simDispatchedForcesStatus.textContent = "لا توجد قوات إسناد مرسلة في الخارج حالياً.";
+                    simDispatchedForcesStatus.style.color = "";
+                }
+            }
+
+            updateDistanceCalculation();
+            renderSimMapLayers();
+        }
+
+        // Spy decisions
+        function handleSpyDecision(spyId, decision) {
+            var n = nationsData[simState.activeNationId];
+            simState.capturedSpies = simState.capturedSpies.filter(function(cs) { return cs.id !== spyId; });
+            if (decision === "ransom") {
+                n.gold += 120;
+                n.metals += 50;
+                simState.eventsLog.unshift("💰 تم إطلاق سراح الجاسوس عبر مقايضة دبلوماسية وحصلت " + n.name + " على فدية قدرها 120 دينار و50 سبيكة معادن.");
+                if (typeof Go === "function") Go("تمت المقايضة الدبلوماسية واستلام الفدية بنجاح!");
+            } else {
+                simState.eventsLog.unshift("⚖️ أصدرت محكمة " + n.name + " حكماً بإعدام الجاسوس، مما خفض كفاءة استخبارات العدو بنسبة 50% لفصل كامل.");
+                if (typeof Go === "function") Go("تم تنفيذ الحكم وإضعاف كفاءة استخبارات الخصم.");
+            }
+            updateActiveNationUI();
+            renderTeacherEventsLog();
+        }
+
+        // Render Teacher Events Log
+        function renderTeacherEventsLog() {
+            if (!simTeacherEventsLog) return;
+            simTeacherEventsLog.innerHTML = "";
+            simState.eventsLog.forEach(function(ev) {
+                var d = document.createElement("div");
+                d.className = "sim-feed-item";
+                d.textContent = ev;
+                simTeacherEventsLog.appendChild(d);
+            });
+        }
+
+        // Switch Role Tabs
+        function switchRole(roleName) {
+            simState.activeRole = roleName;
+            var roles = ["leader", "economy", "military", "planner", "intelligence"];
+            roles.forEach(function(r) {
+                var btn = document.getElementById("simRole" + r.charAt(0).toUpperCase() + r.slice(1) + "Btn");
+                var view = document.getElementById("sim" + r.charAt(0).toUpperCase() + r.slice(1) + "View");
+                if (btn) {
+                    var isActive = r === roleName;
+                    btn.classList.toggle("active", isActive);
+                    btn.setAttribute("aria-selected", String(isActive));
+                }
+                if (view) {
+                    view.style.display = r === roleName ? "block" : "none";
+                }
+            });
+            updateCouncilAdvice();
+            if (window.lucide && lucide.createIcons) lucide.createIcons();
+        }
+
+        // Dynamic Zoom Scaler for Simulation & Research Layers (Inverse Screen-Pixel Size Preservation & Semantic LOD)
+        function scaleSimAndResearchLayers(zoomK) {
+            var t = zoomK || (typeof li !== "undefined" && li && li.k) || (window.currentTransform && window.currentTransform.k) || 1;
+            if (!t || isNaN(t) || t <= 0) return;
+
+            if (typeof Vn === "undefined" || !Vn) return;
+
+            // 1. Student Research Layer (if visible)
+            var rLayer = Vn.select(".student-research-layer");
+            if (!rLayer.empty() && rLayer.style("display") !== "none") {
+                rLayer.selectAll(".research-pin-pulse")
+                    .attr("r", 12 / t)
+                    .attr("stroke-width", 1.2 / t);
+                rLayer.selectAll(".research-pin-circle")
+                    .attr("r", 6.5 / t)
+                    .attr("stroke-width", 1.5 / t);
+                rLayer.selectAll(".research-pin-label")
+                    .attr("x", 10 / t)
+                    .attr("y", 4 / t)
+                    .attr("font-size", (12 / t) + "px")
+                    .attr("stroke-width", 2.5 / t);
+            }
+
+            // 2. Sim Interactive Layer (if open)
+            var sLayer = Vn.select(".sim-interactive-layer");
+            if (!sLayer.empty() && typeof simState !== "undefined" && simState && simState.isOpen) {
+                var isMacroZoom = t < 1.4;
+
+                // Territory polygon stroke
+                sLayer.selectAll(".sim-territory-poly")
+                    .attr("stroke-width", 2.5 / t);
+
+                // Semantic Level of Detail (LOD):
+                // At macro overview zoom (t < 1.4), hide cluttering micro-elements in dense areas (Nile Delta, etc.)
+                // Smoothly reveal them when student zooms in (t >= 1.4)
+                sLayer.selectAll(".sim-scout-group")
+                    .style("display", isMacroZoom ? "none" : "");
+                sLayer.selectAll(".sim-caravan-group")
+                    .style("display", isMacroZoom ? "none" : "");
+                sLayer.selectAll(".sim-caravan-path")
+                    .style("display", isMacroZoom ? "none" : "");
+                sLayer.selectAll(".sim-safe-route-line")
+                    .style("display", isMacroZoom ? "none" : "");
+                sLayer.selectAll(".sim-safe-route-label")
+                    .style("display", isMacroZoom ? "none" : "");
+                sLayer.selectAll(".sim-treaty-seal")
+                    .style("display", isMacroZoom ? "none" : "");
+                sLayer.selectAll(".sim-partner-capital-marker")
+                    .style("display", isMacroZoom ? "none" : "");
+
+                // Active Capital (Always visible, prominent and readable)
+                sLayer.selectAll(".sim-capital-marker").each(function() {
+                    var g = d3.select(this);
+                    g.select(".sim-capital-aura")
+                        .attr("r", 18 / t)
+                        .attr("stroke-width", 2.2 / t);
+                    g.select(".sim-capital-circle")
+                        .attr("r", 11 / t)
+                        .attr("stroke-width", 2 / t);
+                    g.select(".sim-capital-label")
+                        .attr("x", 18 / t)
+                        .attr("y", 5 / t)
+                        .attr("text-anchor", "start")
+                        .attr("font-size", (13 / t) + "px")
+                        .attr("stroke-width", 3 / t);
+                });
+
+                // Strategic Choke Points (Always visible)
+                sLayer.selectAll(".sim-choke-point-group").each(function() {
+                    var g = d3.select(this);
+                    var isMine = g.classed("choke-mine");
+                    g.select(".sim-choke-circle")
+                        .attr("r", (isMine ? 12 : 10) / t)
+                        .attr("stroke-width", (isMine ? 2.2 : 1.5) / t);
+                    g.select(".sim-choke-label")
+                        .attr("y", -(isMine ? 16 : 14) / t)
+                        .attr("font-size", (12 / t) + "px")
+                        .attr("stroke-width", 3 / t);
+                    g.select(".sim-choke-icon")
+                        .attr("y", 4 / t)
+                        .attr("font-size", (11 / t) + "px");
+                    g.select(".sim-choke-coin")
+                        .attr("x", 12 / t)
+                        .attr("y", -5 / t)
+                        .attr("font-size", (10 / t) + "px");
+                });
+
+                // When t >= 1.4, update dimensions for revealed elements:
+                if (!isMacroZoom) {
+                    // Safe route line & label
+                    sLayer.selectAll(".sim-safe-route-line")
+                        .attr("stroke-width", 2.5 / t)
+                        .attr("stroke-dasharray", (6 / t) + "," + (4 / t));
+                    sLayer.selectAll(".sim-safe-route-label")
+                        .attr("font-size", (12 / t) + "px")
+                        .attr("stroke-width", 2.5 / t)
+                        .each(function() {
+                            var baseCY = parseFloat(this.getAttribute("data-cy") || 0);
+                            if (baseCY) {
+                                this.setAttribute("y", baseCY - (16 / t));
+                            }
+                        });
+
+                    // Diplomatic Silk Ribbons & Seals
+                    sLayer.selectAll(".sim-silk-ribbon")
+                        .attr("stroke-width", 2.5 / t);
+                    sLayer.selectAll(".sim-treaty-seal").each(function() {
+                        var g = d3.select(this);
+                        g.select(".sim-seal-circle")
+                            .attr("r", 10 / t)
+                            .attr("stroke-width", 1.8 / t);
+                        g.select(".sim-seal-icon")
+                            .attr("y", 3.5 / t)
+                            .attr("font-size", (10 / t) + "px");
+                    });
+
+                    // Partner Capitals
+                    sLayer.selectAll(".sim-partner-capital-marker").each(function() {
+                        var g = d3.select(this);
+                        g.select(".sim-partner-circle")
+                            .attr("r", 9 / t)
+                            .attr("stroke-width", 1.6 / t);
+                        g.select(".sim-partner-label")
+                            .attr("y", -12 / t)
+                            .attr("font-size", (12 / t) + "px")
+                            .attr("stroke-width", 2.5 / t);
+                    });
+
+                    // Caravans
+                    sLayer.selectAll(".sim-caravan-path")
+                        .attr("stroke-width", 2 / t)
+                        .attr("stroke-dasharray", (5 / t) + "," + (4 / t));
+                    sLayer.selectAll(".sim-caravan-group").each(function() {
+                        var g = d3.select(this);
+                        g.select(".sim-caravan-circle")
+                            .attr("r", 9.5 / t)
+                            .attr("stroke-width", 1.6 / t);
+                        g.select(".sim-caravan-icon")
+                            .attr("y", 3.2 / t)
+                            .attr("font-size", (10 / t) + "px");
+                        g.select(".sim-caravan-label")
+                            .attr("y", -13 / t)
+                            .attr("font-size", (11.5 / t) + "px")
+                            .attr("stroke-width", 2.5 / t);
+                    });
+
+                    // Scouts
+                    sLayer.selectAll(".scout-ring-outer, .scout-ring-mid, .scout-ring-inner")
+                        .attr("stroke-width", 1 / t);
+                    sLayer.selectAll(".sim-scout-group").each(function() {
+                        var g = d3.select(this);
+                        g.select(".sim-scout-circle")
+                            .attr("r", 9 / t)
+                            .attr("stroke-width", 1.6 / t);
+                        g.select(".sim-scout-icon")
+                            .attr("y", 3.2 / t)
+                            .attr("font-size", (10 / t) + "px");
+                        g.select(".sim-scout-label")
+                            .attr("x", 12 / t)
+                            .attr("y", 4 / t)
+                            .attr("font-size", (11.5 / t) + "px")
+                            .attr("stroke-width", 2.5 / t);
+                    });
+                }
+            }
+        }
+        window.scaleSimAndResearchLayers = scaleSimAndResearchLayers;
+
+        // D3 Map Rendering (Focused & Isolated to Active Nation with Inverse Zoom Scaling)
+        function renderSimMapLayers() {
+            if (typeof Vn === "undefined" || !Vn) return;
+            var simLayer = Vn.select(".sim-interactive-layer");
+            if (simLayer.empty()) {
+                simLayer = Vn.append("g").attr("class", "sim-interactive-layer");
+            }
+            simLayer.selectAll("*").remove();
+
+            if (!simState.isOpen) return;
+
+            var proj = typeof ao === "function" ? ao() : null;
+            if (!proj) return;
+
+            var activeNat = nationsData[simState.activeNationId];
+            if (!activeNat) return;
+
+            var t = (typeof li !== "undefined" && li && li.k) || (window.currentTransform && window.currentTransform.k) || 1;
+
+            // 1. Territory Polygon - ONLY ACTIVE NATION IS DISPLAYED!
+            if (activeNat.territory && activeNat.territory.length >= 3) {
+                var pathData = activeNat.territory.map(function(pt, idx) {
+                    var p = proj(pt);
+                    return (idx === 0 ? "M" : "L") + p[0] + "," + p[1];
+                }).join(" ") + " Z";
+
+                simLayer.append("path")
+                    .attr("class", "sim-territory-poly active-territory")
+                    .attr("d", pathData)
+                    .attr("fill", activeNat.color)
+                    .attr("stroke", activeNat.color)
+                    .attr("stroke-width", 2 / t)
+            }
+
+            // Other Custom Nations Territories in Sandbox Mode (Subtle partition borders)
+            if (simState.customNations) {
+                Object.keys(simState.customNations).forEach(function(cId) {
+                    if (cId === activeNat.id) return;
+                    var cNat = simState.customNations[cId];
+                    if (cNat && cNat.territory && cNat.territory.length >= 3) {
+                        var cPath = cNat.territory.map(function(pt, idx) {
+                            var p = proj(pt);
+                            return (idx === 0 ? "M" : "L") + p[0] + "," + p[1];
+                        }).join(" ") + " Z";
+
+                        simLayer.append("path")
+                            .attr("class", "sim-territory-poly other-custom-territory")
+                            .attr("d", cPath)
+                            .attr("fill", cNat.color || "#64748b")
+                            .attr("stroke", cNat.color || "#64748b")
+                            .attr("stroke-width", 1.8 / t)
+                            .attr("stroke-dasharray", (5 / t) + "," + (3 / t))
+                            .attr("fill-opacity", 0.12);
+                    }
+                });
+            }
+
+            // Live Freeform Territory Drawing Preview
+            if (simState.isDrawingTerritory && simState.currentDrawingPoints && simState.currentDrawingPoints.length > 0) {
+                var drawPts = simState.currentDrawingPoints;
+                var drawPath = drawPts.map(function(pt, idx) {
+                    var p = proj(pt);
+                    return (idx === 0 ? "M" : "L") + p[0] + "," + p[1];
+                }).join(" ") + (drawPts.length >= 3 ? " Z" : "");
+
+                simLayer.append("path")
+                    .attr("class", "sim-drawing-polygon")
+                    .attr("d", drawPath)
+                    .attr("fill", "rgba(59, 130, 246, 0.28)")
+                    .attr("stroke", "#3b82f6")
+                    .attr("stroke-width", 2.5 / t)
+                    .attr("stroke-dasharray", (6 / t) + "," + (3 / t));
+
+                drawPts.forEach(function(pt, idx) {
+                    var p = proj(pt);
+                    if (!p) return;
+                    simLayer.append("circle")
+                        .attr("class", "sim-drawing-vertex")
+                        .attr("cx", p[0])
+                        .attr("cy", p[1])
+                        .attr("r", 6 / t)
+                        .attr("fill", "#60a5fa")
+                        .attr("stroke", "#ffffff")
+                        .attr("stroke-width", 2 / t);
+
+                    simLayer.append("text")
+                        .attr("class", "sim-drawing-vertex-label")
+                        .attr("x", p[0])
+                        .attr("y", p[1] - (9 / t))
+                        .attr("text-anchor", "middle")
+                        .attr("fill", "#93c5fd")
+                        .attr("font-size", (11 / t) + "px")
+                        .attr("font-weight", "bold")
+                        .attr("paint-order", "stroke fill")
+                        .attr("stroke", "#0f172a")
+                        .attr("stroke-width", 2.5 / t)
+                        .text(idx + 1);
+                });
+            }
+
+            // Safe route polyline if chartered by Spatial Planner
+            if (simState.safeRoutes && simState.safeRoutes[activeNat.id]) {
+                var cX = activeNat.coords[0];
+                var cY = activeNat.coords[1];
+                var safePoints = [
+                    [cX - 2.5, cY - 1.2],
+                    [cX - 0.5, cY + 1.5],
+                    [cX + 2.2, cY + 0.8]
+                ];
+                var safePath = safePoints.map(function(pt, idx) {
+                    var p = proj(pt);
+                    return (idx === 0 ? "M" : "L") + p[0] + "," + p[1];
+                }).join(" ");
+
+                simLayer.append("path")
+                    .attr("d", safePath)
+                    .attr("fill", "none")
+                    .attr("stroke", "#10b981")
+                    .attr("stroke-width", 2 / t)
+                    .attr("stroke-dasharray", (5 / t) + "," + (3 / t))
+                    .attr("class", "sim-safe-route-line");
+
+                var safeLabelPos = proj(safePoints[1]);
+                if (safeLabelPos) {
+                    simLayer.append("text")
+                        .attr("class", "sim-safe-route-label")
+                        .attr("x", safeLabelPos[0])
+                        .attr("y", safeLabelPos[1] - (14 / t))
+                        .attr("data-cy", safeLabelPos[1])
+                        .attr("text-anchor", "middle")
+                        .attr("fill", "#34d399")
+                        .attr("font-size", (12 / t) + "px")
+                        .attr("font-weight", "bold")
+                        .attr("paint-order", "stroke fill")
+                        .attr("stroke", "#0f172a")
+                        .attr("stroke-width", 2.5 / t)
+                        .attr("stroke-linejoin", "round")
+                        .text("مسار جغرافي آمن معتمد ✓");
+                }
+            }
+
+            // 2. Choke Points (with control rings and concise labels)
+            chokePointsData.forEach(function(cp) {
+                var p = proj(cp.coords);
+                if (!p || isNaN(p[0]) || isNaN(p[1])) return;
+                var isMine = cp.controller === activeNat.id;
+
+                var g = simLayer.append("g")
+                    .attr("class", "sim-choke-point-group" + (isMine ? " choke-mine" : ""))
+                    .attr("transform", "translate(" + p[0] + "," + p[1] + ")");
+
+                g.append("circle")
+                    .attr("class", "sim-choke-circle")
+                    .attr("r", (isMine ? 12 : 10) / t)
+                    .attr("fill", isMine ? "rgba(16, 185, 129, 0.35)" : "rgba(245, 158, 11, 0.2)")
+                    .attr("stroke", isMine ? "#10b981" : "#f59e0b")
+                    .attr("stroke-width", (isMine ? 2.2 : 1.5) / t);
+
+                g.append("text")
+                    .attr("class", "sim-choke-label")
+                    .attr("y", -(isMine ? 16 : 14) / t)
+                    .attr("text-anchor", "middle")
+                    .attr("fill", isMine ? "#34d399" : "#fbbf24")
+                    .attr("font-size", (12 / t) + "px")
+                    .attr("font-weight", isMine ? "800" : "600")
+                    .attr("paint-order", "stroke fill")
+                    .attr("stroke", "#0f172a")
+                    .attr("stroke-width", 3 / t)
+                    .attr("stroke-linejoin", "round")
+                    .text(cp.shortName || cp.name.split(" (")[0]);
+
+                g.append("text")
+                    .attr("class", "sim-choke-icon")
+                    .attr("y", 4 / t)
+                    .attr("text-anchor", "middle")
+                    .attr("font-size", (11 / t) + "px")
+                    .text("🛡️");
+
+                if (isMine) {
+                    g.append("text")
+                        .attr("class", "sim-choke-coin")
+                        .attr("x", 12 / t)
+                        .attr("y", -5 / t)
+                        .attr("font-size", (10 / t) + "px")
+                        .text("🪙");
+                }
+
+                g.on("click", function() {
+                    if (typeof Go === "function") Go(cp.name + " (" + cp.bonus + ")");
+                });
+            });
+
+            // 3. Capitals: ONLY Active Nation is prominently displayed
+            var pCap = proj(activeNat.coords);
+            if (pCap && !isNaN(pCap[0]) && !isNaN(pCap[1])) {
+                var gCap = simLayer.append("g")
+                    .attr("class", "sim-capital-marker active-capital")
+                    .attr("transform", "translate(" + pCap[0] + "," + pCap[1] + ")");
+
+                gCap.append("circle")
+                    .attr("class", "sim-capital-aura")
+                    .attr("r", 18 / t)
+                    .attr("fill", "none")
+                    .attr("stroke", activeNat.color)
+                    .attr("stroke-width", 2.2 / t)
+                    .attr("opacity", 0.65);
+
+                gCap.append("circle")
+                    .attr("class", "sim-capital-circle")
+                    .attr("r", 11 / t)
+                    .attr("fill", activeNat.color)
+                    .attr("stroke", "#ffffff")
+                    .attr("stroke-width", 2 / t);
+
+                gCap.append("text")
+                    .attr("class", "sim-capital-label")
+                    .attr("x", 18 / t)
+                    .attr("y", 5 / t)
+                    .attr("text-anchor", "start")
+                    .attr("fill", "#ffffff")
+                    .attr("font-size", (13 / t) + "px")
+                    .attr("font-weight", "bold")
+                    .attr("paint-order", "stroke fill")
+                    .attr("stroke", "#0f172a")
+                    .attr("stroke-width", 3 / t)
+                    .attr("stroke-linejoin", "round")
+                    .text(activeNat.flag + " " + activeNat.capital);
+            }
+
+            // 3b. Diplomatic Silk Treaty Ribbons connecting Active Capital to Allies & Truces
+            var alliedOrTruce = (activeNat.allies || []).concat(activeNat.truces || []);
+            alliedOrTruce.forEach(function(otherId) {
+                if (otherId === activeNat.id) return;
+                var otherNat = nationsData[otherId];
+                if (!otherNat || !otherNat.coords) return;
+
+                var pFrom = proj(activeNat.coords);
+                var pTo = proj(otherNat.coords);
+                if (!pFrom || !pTo || isNaN(pFrom[0]) || isNaN(pTo[0])) return;
+
+                var isAlly = (activeNat.allies || []).indexOf(otherId) !== -1;
+                var ribbonColor = isAlly ? "#10b981" : "#f59e0b";
+
+                var midX = (pFrom[0] + pTo[0]) / 2;
+                var midY = (pFrom[1] + pTo[1]) / 2;
+                var dx = pTo[0] - pFrom[0];
+                var dy = pTo[1] - pFrom[1];
+                var dist = Math.sqrt(dx * dx + dy * dy);
+                var normX = -dy / (dist || 1);
+                var normY = dx / (dist || 1);
+                var curveDist = Math.min(50, Math.max(20, dist * 0.15));
+                var ctrlX = midX + normX * curveDist;
+                var ctrlY = midY + normY * curveDist;
+
+                var ribbonPath = "M" + pFrom[0] + "," + pFrom[1] + " Q" + ctrlX + "," + ctrlY + " " + pTo[0] + "," + pTo[1];
+
+                simLayer.append("path")
+                    .attr("class", "sim-silk-ribbon")
+                    .attr("d", ribbonPath)
+                    .attr("fill", "none")
+                    .attr("stroke", ribbonColor)
+                    .attr("stroke-width", 2 / t);
+
+                var sealMidX = (pFrom[0] + 2 * ctrlX + pTo[0]) / 4;
+                var sealMidY = (pFrom[1] + 2 * ctrlY + pTo[1]) / 4;
+
+                var gSeal = simLayer.append("g")
+                    .attr("class", "sim-treaty-seal")
+                    .attr("transform", "translate(" + sealMidX + "," + sealMidY + ")");
+
+                gSeal.append("circle")
+                    .attr("class", "sim-seal-circle")
+                    .attr("r", 10 / t)
+                    .attr("fill", "#0f172a")
+                    .attr("stroke", ribbonColor)
+                    .attr("stroke-width", 1.8 / t);
+
+                gSeal.append("text")
+                    .attr("class", "sim-seal-icon")
+                    .attr("y", 3.5 / t)
+                    .attr("text-anchor", "middle")
+                    .attr("font-size", (10 / t) + "px")
+                    .text(isAlly ? "🤝" : "🛡️");
+
+                gSeal.on("click", function() {
+                    if (typeof Go === "function") {
+                        Go((isAlly ? "ميثاق تحالف تجاري ودفاعي مع " : "هدنة موسمية مع ") + otherNat.name);
+                    }
+                });
+            });
+
+            // 3c. Partner Capitals (Subtle Clickable Trade Anchors for Direct Point-and-Click Trade)
+            Object.keys(nationsData).forEach(function(k) {
+                if (k === activeNat.id) return;
+                var otherNat = nationsData[k];
+                var pOth = proj(otherNat.coords);
+                if (!pOth || isNaN(pOth[0]) || isNaN(pOth[1])) return;
+
+                var gPartner = simLayer.append("g")
+                    .attr("class", "sim-partner-capital-marker")
+                    .attr("transform", "translate(" + pOth[0] + "," + pOth[1] + ")");
+
+                gPartner.append("circle")
+                    .attr("class", "sim-partner-circle")
+                    .attr("r", 9 / t)
+                    .attr("fill", otherNat.color || "#64748b")
+                    .attr("stroke", "#ffffff")
+                    .attr("stroke-width", 1.6 / t)
+                    .attr("opacity", 0.9);
+
+                gPartner.append("text")
+                    .attr("class", "sim-partner-label")
+                    .attr("y", -12 / t)
+                    .attr("text-anchor", "middle")
+                    .attr("fill", "#f8fafc")
+                    .attr("font-size", (12 / t) + "px")
+                    .attr("font-weight", "700")
+                    .attr("paint-order", "stroke fill")
+                    .attr("stroke", "#0f172a")
+                    .attr("stroke-width", 2.5 / t)
+                    .attr("stroke-linejoin", "round")
+                    .text(otherNat.flag + " " + otherNat.capital);
+
+                gPartner.on("click", function() {
+                    openQuickTradeModal(otherNat.id);
+                });
+            });
+
+            // 4. Caravans (Active nation's inbound & outbound caravans)
+            simState.caravans.filter(function(c) {
+                return c.from === activeNat.id || c.to === activeNat.id;
+            }).forEach(function(c) {
+                var pStart = proj(c.startCoords);
+                var pEnd = proj(c.endCoords);
+                if (!pStart || !pEnd) return;
+
+                // Path
+                simLayer.append("line")
+                    .attr("class", "sim-caravan-path")
+                    .attr("x1", pStart[0])
+                    .attr("y1", pStart[1])
+                    .attr("x2", pEnd[0])
+                    .attr("y2", pEnd[1])
+                    .attr("stroke", "#f59e0b")
+                    .attr("stroke-width", 2 / t)
+                    .attr("stroke-dasharray", (5 / t) + "," + (4 / t))
+                    .attr("opacity", 0.85);
+
+                // Current position interpolation
+                var currX = pStart[0] + (pEnd[0] - pStart[0]) * c.progress;
+                var currY = pStart[1] + (pEnd[1] - pStart[1]) * c.progress;
+
+                var gCar = simLayer.append("g")
+                    .attr("class", "sim-caravan-group")
+                    .attr("transform", "translate(" + currX + "," + currY + ")");
+
+                gCar.append("circle")
+                    .attr("class", "sim-caravan-circle")
+                    .attr("r", 9.5 / t)
+                    .attr("fill", "#f59e0b")
+                    .attr("stroke", "#ffffff")
+                    .attr("stroke-width", 1.6 / t);
+
+                gCar.append("text")
+                    .attr("class", "sim-caravan-icon")
+                    .attr("y", 3.2 / t)
+                    .attr("text-anchor", "middle")
+                    .attr("font-size", (10 / t) + "px")
+                    .text("🐫");
+
+                gCar.append("text")
+                    .attr("class", "sim-caravan-label")
+                    .attr("y", -13 / t)
+                    .attr("text-anchor", "middle")
+                    .attr("fill", "#ffffff")
+                    .attr("font-size", (11.5 / t) + "px")
+                    .attr("font-weight", "700")
+                    .attr("paint-order", "stroke fill")
+                    .attr("stroke", "#0f172a")
+                    .attr("stroke-width", 2.5 / t)
+                    .attr("stroke-linejoin", "round")
+                    .text("قافلة (" + c.cargo + ")");
+            });
+
+            // 5. Scouts belonging to active nation
+            simState.scouts.filter(function(s) {
+                return s.nation === activeNat.id;
+            }).forEach(function(s) {
+                var p = proj(s.coords);
+                if (!p) return;
+
+                var gScout = simLayer.append("g")
+                    .attr("class", "sim-scout-group")
+                    .attr("transform", "translate(" + p[0] + "," + p[1] + ")");
+
+                if (simState.showScoutRings) {
+                    var p100 = proj([s.coords[0], s.coords[1] + (100 / 111)]);
+                    var r100 = p100 ? Math.max(25, Math.abs(p[1] - p100[1])) : 70;
+                    var r70 = r100 * 0.7;
+                    var r30 = r100 * 0.3;
+
+                    // Outer ring (100 km)
+                    gScout.append("circle")
+                        .attr("class", "scout-ring-outer")
+                        .attr("r", r100)
+                        .attr("stroke-width", 1 / t);
+
+                    // Mid ring (70 km)
+                    gScout.append("circle")
+                        .attr("class", "scout-ring-mid")
+                        .attr("r", r70)
+                        .attr("stroke-width", 1 / t);
+
+                    // Inner ring (30 km)
+                    gScout.append("circle")
+                        .attr("class", "scout-ring-inner")
+                        .attr("r", r30)
+                        .attr("stroke-width", 1 / t);
+                }
+
+                gScout.append("circle")
+                    .attr("class", "sim-scout-circle")
+                    .attr("r", 9 / t)
+                    .attr("fill", "#14b8a6")
+                    .attr("stroke", "#ffffff")
+                    .attr("stroke-width", 1.6 / t);
+
+                gScout.append("text")
+                    .attr("class", "sim-scout-icon")
+                    .attr("y", 3.2 / t)
+                    .attr("text-anchor", "middle")
+                    .attr("font-size", (10 / t) + "px")
+                    .text("👁️");
+
+                gScout.append("text")
+                    .attr("class", "sim-scout-label")
+                    .attr("x", 12 / t)
+                    .attr("y", 4 / t)
+                    .attr("fill", "#2dd4bf")
+                    .attr("font-size", (11.5 / t) + "px")
+                    .attr("font-weight", "700")
+                    .attr("paint-order", "stroke fill")
+                    .attr("stroke", "#0f172a")
+                    .attr("stroke-width", 2.5 / t)
+                    .attr("stroke-linejoin", "round")
+                    .text(s.name);
+            });
+
+            // Ensure all elements are immediately scaled
+            scaleSimAndResearchLayers(t);
+        }
+
+        // Open & Close
+        function openNationSim() {
+            simState.isOpen = true;
+            if (nationSimContainer) nationSimContainer.style.display = "flex";
+            var controlsBar = document.getElementById("controlsBar");
+            if (controlsBar) controlsBar.style.display = "none";
+            var histBottomBar = document.getElementById("historyBottomBar");
+            if (histBottomBar) histBottomBar.style.display = "none";
+
+            // Enforce layer isolation: hide student research pins so they don't clutter the sim
+            if (typeof Vn !== "undefined" && Vn) {
+                Vn.select(".student-research-layer").style("display", "none");
+            }
+
+            loadSandboxSimulationState();
+            populateNationSelects();
+            updateActiveNationUI();
+            switchRole(simState.activeRole);
+            renderSimMapLayers();
+            renderTeacherEventsLog();
+            startSeasonalClock();
+            if (typeof Go === "function") Go("مرحباً بك في محاكاة الأمم: صراع وازدهار الحضارات");
+            if (window.lucide && lucide.createIcons) lucide.createIcons();
+        }
+
+        function closeNationSim() {
+            simState.isOpen = false;
+            stopSeasonalClock();
+            if (nationSimContainer) nationSimContainer.style.display = "none";
+            if (simDrawRouteBanner) simDrawRouteBanner.style.display = "none";
+            if (simPlaceScoutBanner) simPlaceScoutBanner.style.display = "none";
+            if (simDrawTerritoryBanner) simDrawTerritoryBanner.style.display = "none";
+            if (simCountryDossierModal) simCountryDossierModal.style.display = "none";
+            if (simTeacherModal) simTeacherModal.style.display = "none";
+            if (simQuickTradeModal) simQuickTradeModal.style.display = "none";
+            var controlsBar = document.getElementById("controlsBar");
+            if (controlsBar) controlsBar.style.display = "";
+            var histBottomBar = document.getElementById("historyBottomBar");
+            if (histBottomBar && typeof currentSection !== "undefined" && currentSection === "history") {
+                histBottomBar.style.display = "";
+            }
+            if (typeof Vn !== "undefined" && Vn) {
+                Vn.select(".sim-interactive-layer").selectAll("*").remove();
+                if (typeof showResearchPins !== "undefined" && showResearchPins) {
+                    Vn.select(".student-research-layer").style("display", "");
+                }
+            }
+        }
+
+        // Event Handlers Wiring
+        if (nationSimBtn) {
+            nationSimBtn.addEventListener("click", openNationSim);
+        }
+
+        if (drawerNationSimBtn) {
+            drawerNationSimBtn.addEventListener("click", function() {
+                if (typeof closeMobileSideDrawer === "function") closeMobileSideDrawer();
+                openNationSim();
+            });
+        }
+
+        if (simExitBtn) {
+            simExitBtn.addEventListener("click", closeNationSim);
+        }
+
+        if (simNationSelect) {
+            simNationSelect.addEventListener("change", function() {
+                simState.activeNationId = this.value;
+                updateActiveNationUI();
+            });
+        }
+
+        // Role buttons
+        if (simRoleLeaderBtn) simRoleLeaderBtn.addEventListener("click", function() { switchRole("leader"); });
+        if (simRoleEconomyBtn) simRoleEconomyBtn.addEventListener("click", function() { switchRole("economy"); });
+        if (simRoleMilitaryBtn) simRoleMilitaryBtn.addEventListener("click", function() { switchRole("military"); });
+        if (simRolePlannerBtn) simRolePlannerBtn.addEventListener("click", function() { switchRole("planner"); });
+        if (simRoleIntelligenceBtn) simRoleIntelligenceBtn.addEventListener("click", function() { switchRole("intelligence"); });
+
+        // Leader action buttons
+        if (simSignDefensePactBtn) {
+            simSignDefensePactBtn.addEventListener("click", function() {
+                var n = nationsData[simState.activeNationId];
+                var targetId = n.id === "nile" ? "mediterranean" : "nile";
+                if (n.allies.indexOf(targetId) === -1) n.allies.push(targetId);
+                var decree = "🤝 تم توقيع ميثاق دفاع مشترك ومساعدة متبادلة مع " + nationsData[targetId].name + ".";
+                n.decrees.unshift(decree);
+                simState.eventsLog.unshift(decree);
+                if (typeof Go === "function") Go("تم توقيع ميثاق الدفاع المشترك بنجاح!");
+                updateActiveNationUI();
+                renderTeacherEventsLog();
+            });
+        }
+
+        if (simSignTradeAgreementBtn) {
+            simSignTradeAgreementBtn.addEventListener("click", function() {
+                var n = nationsData[simState.activeNationId];
+                var decree = "📜 تم إبرام اتفاقية تجارية تمنح تخفيضاً في رسوم العبور بنسبة 40%.";
+                n.decrees.unshift(decree);
+                n.gold += 80;
+                simState.eventsLog.unshift(decree);
+                if (typeof Go === "function") Go("تم توقيع الاتفاقية التجارية وازدهار الخزينة!");
+                updateActiveNationUI();
+                renderTeacherEventsLog();
+            });
+        }
+
+        if (simDeclareSeasonalTruceBtn) {
+            simDeclareSeasonalTruceBtn.addEventListener("click", function() {
+                var n = nationsData[simState.activeNationId];
+                var decree = "🛡️ تم إعلان هدنة موسمية طوال فصل " + simState.seasons[simState.seasonIdx].name + " لتمكين القوافل من عبور الطرق بأمان.";
+                n.decrees.unshift(decree);
+                simState.eventsLog.unshift(decree);
+                if (typeof Go === "function") Go("تم إعلان الهدنة الموسمية بنجاح!");
+                updateActiveNationUI();
+                renderTeacherEventsLog();
+            });
+        }
+
+        // Economy: Dispatch Caravan
+        if (simDispatchCaravanBtn) {
+            simDispatchCaravanBtn.addEventListener("click", function() {
+                var n = nationsData[simState.activeNationId];
+                var destKey = simCaravanDestSelect ? simCaravanDestSelect.value : "mediterranean";
+                var targetNat = nationsData[destKey];
+                if (!targetNat) return;
+
+                if (n.food < 100) {
+                    if (typeof Go === "function") Go("تحذير: لا يوجد مخزون كافٍ من القمح لتسيير القافلة!");
+                    return;
+                }
+
+                n.food -= 100;
+                var cargoName = simCaravanCargoType ? simCaravanCargoType.options[simCaravanCargoType.selectedIndex].text : "100 كيس قمح";
+                var returnName = simCaravanRequestedReturn ? simCaravanRequestedReturn.options[simCaravanRequestedReturn.selectedIndex].text : "خام معادن";
+                var escortName = simCaravanEscortOption ? simCaravanEscortOption.options[simCaravanEscortOption.selectedIndex].text : "حراسة خفيفة";
+
+                // Cavalry Escort Garrison Deduction: troops are deducted from home defense until arrival!
+                var escortCavalry = 0;
+                if (simCaravanEscortOption) {
+                    var val = simCaravanEscortOption.value;
+                    if (val === "cavalry_heavy" || escortName.indexOf("60") !== -1) {
+                        escortCavalry = 60;
+                    } else if (val === "cavalry_light" || escortName.indexOf("30") !== -1 || escortName.indexOf("فرسان") !== -1) {
+                        escortCavalry = 30;
+                    }
+                }
+                if (escortCavalry > 0) {
+                    if (n.cavalry < escortCavalry) {
+                        if (typeof Go === "function") Go("⚠️ تحذير: فرسان الحامية لا يكفون لتأمين القافلة (" + n.cavalry + " متاح فقط)!");
+                        return;
+                    }
+                    n.cavalry -= escortCavalry;
+                    n.troops -= escortCavalry;
+                }
+
+                var newCaravan = {
+                    id: "c_" + Date.now(),
+                    from: n.id,
+                    to: targetNat.id,
+                    cargo: cargoName,
+                    requested: returnName,
+                    escort: escortName,
+                    escortCavalry: escortCavalry,
+                    status: "انطلقت حديثاً (10% من الطريق)",
+                    progress: 0.15,
+                    startCoords: n.coords,
+                    endCoords: targetNat.coords
+                };
+
+                simState.caravans.push(newCaravan);
+                var evText = "🌾 سيّرت " + n.name + " قافلة تجارية محملة بـ (" + cargoName + ") نحو " + targetNat.name + " بمرافقة " + escortName + (escortCavalry > 0 ? " (تم اقتطاع " + escortCavalry + " فارساً من الحامية للمرافقة)" : "") + ".";
+                simState.eventsLog.unshift(evText);
+                if (typeof Go === "function") Go("تم إطلاق القافلة واقتطاع فرسان الحراسة من حامية العاصمة!");
+                updateActiveNationUI();
+                renderTeacherEventsLog();
+            });
+        }
+
+        // Planner: Origin/Target change
+        if (simCalcOriginSelect) simCalcOriginSelect.addEventListener("change", updateDistanceCalculation);
+        if (simCalcTargetSelect) simCalcTargetSelect.addEventListener("change", updateDistanceCalculation);
+
+        // Planner: Alternative Route Banner
+        if (simDrawAltRouteBtn) {
+            simDrawAltRouteBtn.addEventListener("click", function() {
+                if (simDrawRouteBanner) simDrawRouteBanner.style.display = "flex";
+                if (typeof Go === "function") Go("انقر على الخريطة لتحديد معالم الطريق الالتفافي البديل");
+            });
+        }
+        if (simCancelRouteBtn) {
+            simCancelRouteBtn.addEventListener("click", function() {
+                if (simDrawRouteBanner) simDrawRouteBanner.style.display = "none";
+            });
+        }
+        if (simSaveRouteBtn) {
+            simSaveRouteBtn.addEventListener("click", function() {
+                if (simDrawRouteBanner) simDrawRouteBanner.style.display = "none";
+                simState.safeRoutes[simState.activeNationId] = true;
+                var n = nationsData[simState.activeNationId];
+                var dec = "🗺️ اعتمد المخطط الجغرافي مساراً التفافياً آمناً يلغي خطر كمائن قطاع الطرق بنسبة 100%.";
+                n.decrees.unshift(dec);
+                simState.eventsLog.unshift(dec);
+                if (typeof Go === "function") Go("تم اعتماد المسار الالتفافي البديل وتفادي نقاط الخطر بنجاح ✓");
+                updateActiveNationUI();
+                renderTeacherEventsLog();
+            });
+        }
+
+        // Intelligence: Toggle rings
+        if (simToggleScoutRingsBtn) {
+            simToggleScoutRingsBtn.addEventListener("click", function() {
+                simState.showScoutRings = !simState.showScoutRings;
+                this.setAttribute("aria-pressed", String(simState.showScoutRings));
+                renderSimMapLayers();
+                if (typeof Go === "function") Go(simState.showScoutRings ? "تم إظهار دوائر الرصد الثلاثية" : "تم إخفاء دوائر الرصد الثلاثية");
+            });
+        }
+
+        // Intelligence: Deploy Scout Banner
+        if (simDeployScoutBtn) {
+            simDeployScoutBtn.addEventListener("click", function() {
+                if (simPlaceScoutBanner) simPlaceScoutBanner.style.display = "flex";
+                if (typeof Go === "function") Go("انقر على الموقع المطلوب على الخريطة لتمركز طليعة الاستطلاع");
+            });
+        }
+        if (simCancelScoutBtn) {
+            simCancelScoutBtn.addEventListener("click", function() {
+                if (simPlaceScoutBanner) simPlaceScoutBanner.style.display = "none";
+            });
+        }
+
+        // Map Click to place scout or draw territory boundaries
+        var svgEl = document.getElementById("mapSvg");
+        if (svgEl) {
+            svgEl.addEventListener("click", function(e) {
+                var proj = typeof ao === "function" ? ao() : null;
+                if (!proj || !proj.invert) return;
+
+                var t = (typeof li !== "undefined" && li) ? li : (window.currentTransform || null);
+                var rect = svgEl.getBoundingClientRect();
+                var clickX = e.clientX - rect.left;
+                var clickY = e.clientY - rect.top;
+                var tCoord = (t && typeof t.invert === "function") ? t.invert([clickX, clickY]) : [clickX, clickY];
+                var coords = proj.invert(tCoord);
+                if (!coords || isNaN(coords[0]) || isNaN(coords[1])) return;
+
+                // 1. Territory Drawing Mode
+                if (simState.isDrawingTerritory) {
+                    var pt = [parseFloat(coords[0].toFixed(2)), parseFloat(coords[1].toFixed(2))];
+                    simState.currentDrawingPoints.push(pt);
+                    if (simDrawnPointsCount) {
+                        simDrawnPointsCount.textContent = simState.currentDrawingPoints.length;
+                    }
+                    renderSimMapLayers();
+                    return;
+                }
+
+                // 2. Scout Placement Mode
+                if (!simPlaceScoutBanner || simPlaceScoutBanner.style.display === "none") return;
+
+                var n = nationsData[simState.activeNationId];
+                var newScout = {
+                    id: "scout_" + Date.now(),
+                    nation: n.id,
+                    name: "طليعة استطلاع " + n.name.split(" ")[1],
+                    coords: coords,
+                    status: "متمركزة بدوائر رصد نشطة"
+                };
+
+                simState.scouts.push(newScout);
+                simPlaceScoutBanner.style.display = "none";
+                simState.eventsLog.unshift("👁️ نشرت " + n.name + " طليعة استطلاع جديدة عند خط عرض " + coords[1].toFixed(1) + "°.");
+                if (typeof Go === "function") Go("تم نشر طليعة الاستطلاع وتفعيل دوائر الرصد الثلاث بنجاح!");
+                updateActiveNationUI();
+                renderTeacherEventsLog();
+                renderSimMapLayers();
+            });
+        }
+
+        // Teacher Console Modal
+        if (simTeacherConsoleBtn) {
+            simTeacherConsoleBtn.addEventListener("click", function() {
+                if (simTeacherModal) {
+                    simTeacherModal.style.display = "flex";
+                    renderTeacherEventsLog();
+                }
+            });
+        }
+
+        if (simTeacherModalCloseBtn) {
+            simTeacherModalCloseBtn.addEventListener("click", function() {
+                if (simTeacherModal) simTeacherModal.style.display = "none";
+            });
+        }
+
+        // Crisis buttons
+        document.querySelectorAll(".sim-crisis-btn").forEach(function(btn) {
+            btn.addEventListener("click", function() {
+                var crisis = this.getAttribute("data-crisis");
+                var crisisDesc = "";
+                if (crisis === "drought") {
+                    crisisDesc = "☀️ موجة جفاف حادة ضربت واحات الصحراء وأحواض الأنهار، مما قلص محاصيل الغذاء بنسبة 20%.";
+                    Object.keys(nationsData).forEach(function(k) { nationsData[k].food = Math.max(100, nationsData[k].food - 120); });
+                } else if (crisis === "flood") {
+                    crisisDesc = "🌊 فيضان موسمي عارم غمر حوض النيل والرافدين، جلب طمياً خصباً لكنه أخر حركة القوافل.";
+                    nationsData.nile.food += 250;
+                } else if (crisis === "goldrush") {
+                    crisisDesc = "🪙 اكتشاف عرق ذهب ومعادن نفيسة في هضبة الأناضول، مما رفع ثروة الإمارة بنسبة قياسية!";
+                    nationsData.anatolia.gold += 300;
+                    nationsData.anatolia.metals += 150;
+                } else if (crisis === "frost") {
+                    crisisDesc = "❄️ موجة صقيع قارس جمدت ممرات سهوب آسيا، مما شل حركة قوافل الشمال مؤقتاً.";
+                }
+
+                simState.eventsLog.unshift(crisisDesc);
+                renderTeacherEventsLog();
+                updateActiveNationUI();
+                if (typeof Go === "function") Go("تم إطلاق الحدث التاريخي الطارئ وتطبيقه على المحاكاة!");
+            });
+        });
+
+        // Curriculum Reward Granter
+        if (simGrantRewardBtn) {
+            simGrantRewardBtn.addEventListener("click", function() {
+                var targetKey = simRewardNationSelect ? simRewardNationSelect.value : "nile";
+                var rewardType = simRewardTypeSelect ? simRewardTypeSelect.value : "wheat";
+                var targetNat = nationsData[targetKey];
+                if (!targetNat) return;
+
+                var text = "";
+                if (rewardType === "wheat") {
+                    targetNat.food += 150;
+                    text = "🌾 منحة صوامع (+150 كيس قمح)";
+                } else if (rewardType === "metals") {
+                    targetNat.metals += 80;
+                    text = "⛏️ منحة عتاد (+80 سبيكة حديد)";
+                } else if (rewardType === "gold") {
+                    targetNat.gold += 120;
+                    text = "💰 منحة مالية (+120 دينار ذهبي)";
+                } else if (rewardType === "horses") {
+                    targetNat.livestock += 50;
+                    targetNat.cavalry += 50;
+                    text = "🐎 منحة فرسان (+50 رأس خيل)";
+                }
+
+                var msg = "🎓 منح المشرف التربوي " + text + " لـ " + targetNat.name + " تقديراً لتميز أبحاثهم وإجاباتهم النموذجية!";
+                simState.eventsLog.unshift(msg);
+                renderTeacherEventsLog();
+                updateActiveNationUI();
+                if (typeof Go === "function") Go("تم منح المكافأة الدراسية بنجاح إلى " + targetNat.name);
+            });
+        }
+
+        // -----------------------------------------------------------
+        // Quick Trade Modal Logic (Point-and-Click Direct Map Trade)
+        // -----------------------------------------------------------
+        var quickTradeTargetId = "anatolia";
+        var quickSelectedCargo = "wheat";
+        var quickSelectedRequested = "gold";
+
+        function openQuickTradeModal(targetId) {
+            var n = nationsData[simState.activeNationId];
+            var other = nationsData[targetId];
+            if (!n || !other) return;
+
+            quickTradeTargetId = targetId;
+
+            if (simQuickTradeOriginFlag) simQuickTradeOriginFlag.textContent = n.flag;
+            if (simQuickTradeOriginName) simQuickTradeOriginName.textContent = n.name;
+            if (simQuickTradeTargetFlag) simQuickTradeTargetFlag.textContent = other.flag;
+            if (simQuickTradeTargetName) simQuickTradeTargetName.textContent = other.name;
+
+            quickSelectedCargo = "wheat";
+            if (other.id === "anatolia") {
+                quickSelectedRequested = "metals";
+            } else if (other.id === "steppes") {
+                quickSelectedRequested = "livestock";
+            } else {
+                quickSelectedRequested = "gold";
+            }
+
+            updateQuickTradeCardsSelection();
+
+            if (simQuickTradeModal) simQuickTradeModal.style.display = "flex";
+            if (window.lucide && lucide.createIcons) lucide.createIcons();
+        }
+
+        function closeQuickTradeModal() {
+            if (simQuickTradeModal) simQuickTradeModal.style.display = "none";
+        }
+
+        function updateQuickTradeCardsSelection() {
+            var expCards = document.querySelectorAll("#simExportCardsGrid .sim-trade-card");
+            expCards.forEach(function(card) {
+                var cargo = card.getAttribute("data-cargo");
+                card.classList.toggle("active", cargo === quickSelectedCargo);
+            });
+
+            var impCards = document.querySelectorAll("#simImportCardsGrid .sim-trade-card");
+            impCards.forEach(function(card) {
+                var req = card.getAttribute("data-requested");
+                card.classList.toggle("active", req === quickSelectedRequested);
+            });
+        }
+
+        if (simQuickTradeCloseBtn) {
+            simQuickTradeCloseBtn.addEventListener("click", closeQuickTradeModal);
+        }
+
+        var expCardsList = document.querySelectorAll("#simExportCardsGrid .sim-trade-card");
+        expCardsList.forEach(function(card) {
+            card.addEventListener("click", function() {
+                quickSelectedCargo = this.getAttribute("data-cargo") || "wheat";
+                updateQuickTradeCardsSelection();
+            });
+        });
+
+        var impCardsList = document.querySelectorAll("#simImportCardsGrid .sim-trade-card");
+        impCardsList.forEach(function(card) {
+            card.addEventListener("click", function() {
+                quickSelectedRequested = this.getAttribute("data-requested") || "gold";
+                updateQuickTradeCardsSelection();
+            });
+        });
+
+        if (simQuickLaunchCaravanBtn) {
+            simQuickLaunchCaravanBtn.addEventListener("click", function() {
+                var n = nationsData[simState.activeNationId];
+                var targetNat = nationsData[quickTradeTargetId];
+                if (!n || !targetNat) return;
+
+                var cargoLabel = "";
+                var returnLabel = "";
+                var deltaTagText = "";
+
+                if (quickSelectedCargo === "wheat") {
+                    if (n.food < 100) {
+                        if (typeof Go === "function") Go("⚠️ تحذير: صوامع القمح لا تكفي لتسيير هذه القافلة!");
+                        return;
+                    }
+                    n.food -= 100;
+                    cargoLabel = "100 كيس قمح";
+                    deltaTagText = "-100 🌾";
+                } else if (quickSelectedCargo === "metals") {
+                    if (n.metals < 50) {
+                        if (typeof Go === "function") Go("⚠️ تحذير: سبائك المعادن لا تكفي لتسيير هذه القافلة!");
+                        return;
+                    }
+                    n.metals -= 50;
+                    cargoLabel = "50 سبيكة حديد";
+                    deltaTagText = "-50 ⛏️";
+                } else if (quickSelectedCargo === "livestock") {
+                    if (n.livestock < 30) {
+                        if (typeof Go === "function") Go("⚠️ تحذير: قطعان الخيل لا تكفي لتسيير هذه القافلة!");
+                        return;
+                    }
+                    n.livestock -= 30;
+                    cargoLabel = "30 رأس خيل";
+                    deltaTagText = "-30 🐎";
+                } else if (quickSelectedCargo === "gold") {
+                    if (n.gold < 100) {
+                        if (typeof Go === "function") Go("⚠️ تحذير: الدنانير الذهبية لا تكفي لتسيير هذه القافلة!");
+                        return;
+                    }
+                    n.gold -= 100;
+                    cargoLabel = "100 دينار ذهبي";
+                    deltaTagText = "-100 🪙";
+                }
+
+                if (quickSelectedRequested === "metals") returnLabel = "خام معادن وعتاد";
+                else if (quickSelectedRequested === "gold") returnLabel = "دنانير ذهب";
+                else if (quickSelectedRequested === "livestock") returnLabel = "خيول حربية أصيلة";
+                else if (quickSelectedRequested === "wheat") returnLabel = "قمح وحبوب الصوامع";
+
+                // Armed Cavalry Escort Deduction for Quick Trade
+                var quickEscort = 0;
+                if (n.cavalry >= 30) {
+                    quickEscort = 30;
+                    n.cavalry -= 30;
+                    n.troops -= 30;
+                }
+
+                var newCaravan = {
+                    id: "c_" + Date.now(),
+                    from: n.id,
+                    to: targetNat.id,
+                    cargo: cargoLabel,
+                    requested: returnLabel,
+                    escort: quickEscort > 0 ? "حراسة 30 فارساً" : "حراسة مشاة خفيفة",
+                    escortCavalry: quickEscort,
+                    status: "انطلقت حديثاً (10% من الطريق)",
+                    progress: 0.15,
+                    startCoords: n.coords,
+                    endCoords: targetNat.coords
+                };
+
+                simState.caravans.push(newCaravan);
+                showFloatingResourceDelta(n.coords, deltaTagText, "negative");
+
+                var decreeMsg = "🐫 سيّرت " + n.name + " قافلة تجارية سريعة محملة بـ (" + cargoLabel + ") إلى " + targetNat.name + " طلباً لـ (" + returnLabel + ")" + (quickEscort > 0 ? " بمرافقة 30 فارساً مقتطعاً من الحامية" : "") + ".";
+                n.decrees.unshift(decreeMsg);
+                simState.eventsLog.unshift(decreeMsg);
+
+                closeQuickTradeModal();
+                updateActiveNationUI();
+                renderTeacherEventsLog();
+
+                if (typeof Go === "function") {
+                    Go("تم إطلاق القافلة في مسارها الحريري بنجاح 🐫✨");
+                }
+            });
+        }
+
+        // Seasonal Turn Progression Engine
+        function advanceSimSeason() {
+            simState.seasonIdx = (simState.seasonIdx + 1) % 4;
+            if (simState.seasonIdx === 0) {
+                simState.year += 1;
+            }
+            var currSeason = simState.seasons[simState.seasonIdx];
+            var seasonClasses = ["sim-season-spring", "sim-season-summer", "sim-season-autumn", "sim-season-winter"];
+
+            if (simYearDisplay) simYearDisplay.textContent = simState.year + " م";
+            if (simSeasonDisplay) {
+                var seasonShort = currSeason.name.split(" ")[0] + " " + currSeason.name.split(" ")[1];
+                simSeasonDisplay.textContent = seasonShort;
+                simSeasonDisplay.className = "sim-calendar-season " + seasonClasses[simState.seasonIdx];
+            }
+
+            var turnLog = [];
+            turnLog.push("📅 حلول فصل جديد: " + currSeason.name + " لعام " + simState.year + " م.");
+
+            // 1. Food Consumption & Sovereign Budget Consequences for all 5 nations
+            Object.keys(nationsData).forEach(function(k) {
+                var nat = nationsData[k];
+                var quarterlyConsumption = (nat.consumption || 70) * 3;
+                var b = nat.budget || { economy: 100, military: 100, planning: 100, intelligence: 100 };
+
+                // Seasonal production yield baseline
+                var seasonalHarvest = 0;
+                if (currSeason.id === "spring") {
+                    seasonalHarvest = (nat.id === "desert") ? 150 : 100;
+                    nat.livestock += 40;
+                } else if (currSeason.id === "summer") {
+                    seasonalHarvest = (nat.id === "anatolia" || nat.id === "steppes") ? 200 : 80;
+                } else if (currSeason.id === "autumn") {
+                    seasonalHarvest = (nat.id === "nile") ? 350 : 180;
+                } else if (currSeason.id === "winter") {
+                    seasonalHarvest = (nat.id === "desert") ? 120 : 30;
+                }
+
+                // Ministry of Irrigation & Agriculture Impact (No magical auto-generation)
+                if (b.economy === 0) {
+                    seasonalHarvest = 0;
+                    var econAlert = "⚠️ انسداد الترع وتفشي الجفاف في " + nat.name + " بسبب حجب موازنة الري وتوقف صيانة السدود (الحصاد 0%)!";
+                    nat.decrees.unshift(econAlert);
+                    turnLog.push(econAlert);
+                } else if (b.economy === 50) {
+                    seasonalHarvest = Math.round(seasonalHarvest * 0.5);
+                    turnLog.push("🌾 تراجع إنتاجية الحصاد بنسبة 50% في " + nat.name + " لتقليص موازنة الري والزراعة.");
+                }
+
+                // Ministry of Military & Garrison Impact
+                if (b.military === 0) {
+                    var deserters = Math.round(nat.troops * 0.20);
+                    nat.troops = Math.max(100, nat.troops - deserters);
+                    nat.infantry = Math.max(50, Math.round(nat.infantry * 0.8));
+                    var milAlert = "⚔️ تمرد وتأخر رواتب الجند في " + nat.name + "! فرار " + deserters + " مقاتلاً من الحاميات لتوقف الموازنة العسكرية!";
+                    nat.decrees.unshift(milAlert);
+                    turnLog.push(milAlert);
+                } else if (b.military === 50) {
+                    turnLog.push("🛡️ نقص عتاد ودروع وتراجع جاهزية حاميات " + nat.name + " بنسبة 25%.");
+                }
+
+                // Ministry of Infrastructure Impact
+                if (b.planning === 0) {
+                    turnLog.push("🧭 اندثار الآبار وتدهور المسالك في " + nat.name + " لغياب موازنة الطرق والممرات.");
+                }
+
+                // Ministry of Intelligence Impact
+                if (b.intelligence === 0) {
+                    turnLog.push("👁️ عمى استخباري تام في " + nat.name + " لغياب تمويل العيون وشبكات الرصد.");
+                }
+
+                // Tax Policy Revenue & Economic Health
+                var pol = nat.taxPolicy || "moderate";
+                var taxGold = 80;
+                if (pol === "low") {
+                    taxGold = 40;
+                } else if (pol === "high") {
+                    taxGold = 150;
+                    seasonalHarvest = Math.round(seasonalHarvest * 0.80);
+                    turnLog.push("🪙 ضرائب باهظة في " + nat.name + ": تحصيل 150 ديناراً مع انكماش الإنتاج الزراعي بنسبة 20%.");
+                }
+
+                nat.food += seasonalHarvest;
+                nat.food -= quarterlyConsumption;
+
+                if (nat.id === simState.activeNationId) {
+                    if (seasonalHarvest > 0) {
+                        showFloatingResourceDelta(nat.coords, "+" + seasonalHarvest + " 🌾", "positive");
+                    }
+                    showFloatingResourceDelta([nat.coords[0] + 0.3, nat.coords[1] - 0.2], "-" + quarterlyConsumption + " 🌾", "negative");
+                }
+
+                if (nat.food <= 0) {
+                    nat.food = 0;
+                    var troopLoss = Math.round(nat.troops * 0.15);
+                    nat.troops = Math.max(200, nat.troops - troopLoss);
+                    nat.infantry = Math.max(100, Math.round(nat.infantry * 0.85));
+                    nat.cavalry = Math.max(50, Math.round(nat.cavalry * 0.85));
+                    nat.gold = Math.max(0, nat.gold - 80);
+                    var famineMsg = "⚠️ مجاعة قاحلة في " + nat.name + "! نفاد صوامع القمح أدى لفقدان " + troopLoss + " جندياً وانخفاض الضرائب!";
+                    nat.decrees.unshift(famineMsg);
+                    turnLog.push(famineMsg);
+                } else {
+                    nat.gold += taxGold;
+                    if (nat.id === simState.activeNationId) {
+                        showFloatingResourceDelta([nat.coords[0] - 0.3, nat.coords[1] + 0.2], "+" + taxGold + " 🪙", "gold");
+                    }
+                }
+            });
+
+            // 2. Caravans Movement, Ambush Risk, Tolls, Cavalry Escorts & Delivery
+            var remainingCaravans = [];
+            simState.caravans.forEach(function(c) {
+                var speed = 0.45;
+                if (currSeason.id === "winter" && (c.from === "steppes" || c.to === "steppes" || c.from === "anatolia" || c.to === "anatolia")) {
+                    speed = 0.25;
+                } else if (currSeason.id === "summer" && (c.from === "desert" || c.to === "desert")) {
+                    speed = 0.30;
+                }
+
+                var senderNat = nationsData[c.from];
+                if (senderNat && senderNat.budget && senderNat.budget.planning === 50) {
+                    speed *= 0.75;
+                }
+
+                c.progress = Math.min(1.0, c.progress + speed);
+
+                // Choke points transit tolls check
+                if (c.progress >= 0.5 && !c.tollChecked) {
+                    c.tollChecked = true;
+                    chokePointsData.forEach(function(cp) {
+                        if (cp.controller && cp.controller !== c.from) {
+                            var controllerNat = nationsData[cp.controller];
+                            var fromNat = nationsData[c.from];
+                            if (fromNat && controllerNat) {
+                                var hasTreaty = (fromNat.allies && fromNat.allies.indexOf(cp.controller) !== -1);
+                                var tollAmount = hasTreaty ? 15 : 40;
+                                if (fromNat.gold >= tollAmount) {
+                                    fromNat.gold -= tollAmount;
+                                    controllerNat.gold += tollAmount;
+                                    var tollMsg = "🪙 دفعت قافلة " + fromNat.name + " رسم ترانزيت قدره " + tollAmount + " دينار لـ " + controllerNat.name + " عند " + cp.name + (hasTreaty ? " (مخفّض بالمعاهدة)" : "") + ".";
+                                    turnLog.push(tollMsg);
+                                    if (fromNat.id === simState.activeNationId) {
+                                        showFloatingResourceDelta(cp.coords, "-" + tollAmount + " 🪙", "negative");
+                                    } else if (controllerNat.id === simState.activeNationId) {
+                                        showFloatingResourceDelta(cp.coords, "+" + tollAmount + " 🪙", "gold");
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // Bandit Ambush Check:
+                var isSafeRoute = !!(simState.safeRoutes && simState.safeRoutes[c.from]);
+                var isEscorted = c.escort && (c.escort.indexOf("فرسان") !== -1 || c.escort.indexOf("حراسة") !== -1 || (c.escortCavalry && c.escortCavalry > 0));
+                var ambushChance = isSafeRoute ? 0 : (isEscorted ? 0.08 : 0.35);
+
+                if (!c.ambushChecked && c.progress >= 0.4 && c.progress < 0.9) {
+                    c.ambushChecked = true;
+                    if (Math.random() < ambushChance) {
+                        var sender = nationsData[c.from];
+                        var ambushLoss = isEscorted ? "تصدت الحراسة للكمين بخسائر طفيفة" : "تم الاستيلاء على نصف الحمولة من قبل قطاع الطرق!";
+                        if (!isEscorted && sender) {
+                            sender.gold = Math.max(0, sender.gold - 50);
+                        }
+                        var ambushMsg = "⚔️ وقعت قافلة " + (sender ? sender.name : c.from) + " في كمين لقطاع الطرق! (" + ambushLoss + ")";
+                        turnLog.push(ambushMsg);
+                    }
+                }
+
+                // Delivery check & return of armed cavalry escort to home garrison
+                if (c.progress >= 1.0) {
+                    var sender = nationsData[c.from];
+                    var receiver = nationsData[c.to];
+                    if (sender && receiver) {
+                        if (c.requested.indexOf("حديد") !== -1 || c.requested.indexOf("معادن") !== -1) {
+                            sender.metals += 90;
+                        } else if (c.requested.indexOf("خيل") !== -1 || c.requested.indexOf("مواشي") !== -1) {
+                            sender.livestock += 70;
+                            sender.cavalry += 40;
+                        } else {
+                            sender.gold += 180;
+                        }
+                        receiver.food += 100;
+
+                        // Return armed cavalry escort to sender city garrison!
+                        if (c.escortCavalry && c.escortCavalry > 0) {
+                            sender.cavalry += c.escortCavalry;
+                            sender.troops += c.escortCavalry;
+                            var returnMsg = "🐎 عادت كتيبة حراسة الفرسان (" + c.escortCavalry + " فارساً) إلى حامية " + sender.name + " بسلام بعد تأمين مسار القافلة.";
+                            sender.decrees.unshift(returnMsg);
+                            turnLog.push(returnMsg);
+                        }
+
+                        var deliveryMsg = "✅ وصلت قافلة " + sender.name + " إلى " + receiver.name + " بسلام وتم استلام المقايضة (" + c.requested + ").";
+                        sender.decrees.unshift(deliveryMsg);
+                        turnLog.push(deliveryMsg);
+
+                        if (c.from === simState.activeNationId) {
+                            showFloatingResourceDelta(sender.coords, "+180 🪙", "gold");
+                        } else if (c.to === simState.activeNationId) {
+                            showFloatingResourceDelta(receiver.coords, "+100 🌾", "positive");
+                        }
+                    }
+                } else {
+                    c.status = "في الطريق (تم قطع " + Math.round(c.progress * 100) + "% من المسافة)";
+                    remainingCaravans.push(c);
+                }
+            });
+            simState.caravans = remainingCaravans;
+
+            turnLog.reverse().forEach(function(msg) {
+                simState.eventsLog.unshift(msg);
+            });
+
+            updateActiveNationUI();
+            updateCouncilAdvice();
+            renderSimMapLayers();
+            renderTeacherEventsLog();
+
+            if (typeof Go === "function") {
+                Go("تم التقدم إلى " + currSeason.name + " (" + simState.year + " م) وتحديث المحاصيل وموازين القوى!");
+            }
+        }
+
+        // Wire Sovereign Budget Allocation Controls
+        if (simApplyBudgetBtn) {
+            simApplyBudgetBtn.addEventListener("click", function() {
+                var n = nationsData[simState.activeNationId];
+                if (!n) return;
+                n.budget = {
+                    economy: parseInt(simBudgetSelectEconomy ? simBudgetSelectEconomy.value : "100", 10),
+                    military: parseInt(simBudgetSelectMilitary ? simBudgetSelectMilitary.value : "100", 10),
+                    planning: parseInt(simBudgetSelectPlanning ? simBudgetSelectPlanning.value : "100", 10),
+                    intelligence: parseInt(simBudgetSelectIntelligence ? simBudgetSelectIntelligence.value : "100", 10)
+                };
+                var decree = "⚖️ اعتمد صاحب السيادة توزيع الموازنة العليا: الري " + n.budget.economy + "%، الجيوش " + n.budget.military + "%، الطرق " + n.budget.planning + "%، العيون " + n.budget.intelligence + "%.";
+                n.decrees.unshift(decree);
+                simState.eventsLog.unshift(decree);
+                if (typeof Go === "function") Go("تم اعتماد وتثبيت الموازنة السيادية بنجاح ⚖️");
+                updateActiveNationUI();
+                renderTeacherEventsLog();
+            });
+        }
+
+        [simBudgetSelectEconomy, simBudgetSelectMilitary, simBudgetSelectPlanning, simBudgetSelectIntelligence].forEach(function(sel) {
+            if (sel) sel.addEventListener("change", updateBudgetImpactTexts);
+        });
+
+        if (simTaxPolicySelect) {
+            simTaxPolicySelect.addEventListener("change", function() {
+                var n = nationsData[simState.activeNationId];
+                if (!n) return;
+                n.taxPolicy = this.value;
+                updateTaxPolicyHint();
+                var dec = "⚖️ تم تعديل سياسة الضرائب إلى: " + (n.taxPolicy === "low" ? "منخفضة 5%" : (n.taxPolicy === "high" ? "مرتفعة 20%" : "متوازنة 10%"));
+                n.decrees.unshift(dec);
+                simState.eventsLog.unshift(dec);
+                renderTeacherEventsLog();
+            });
+        }
+
+        // Wire Allied Garrison Controls
+        if (simDispatchExpeditionBtn) {
+            simDispatchExpeditionBtn.addEventListener("click", function() {
+                var n = nationsData[simState.activeNationId];
+                if (!n) return;
+                if (n.expeditionaryForce) {
+                    if (typeof Go === "function") Go("⚠️ لديك بالفعل فيلق إسناد مرسل بالخارج؛ استدعه أولاً قبل إرسال فيلق جديد.");
+                    return;
+                }
+                var targetId = simDispatchAllySelect ? simDispatchAllySelect.value : null;
+                var allyNat = nationsData[targetId];
+                if (!allyNat || targetId === n.id) {
+                    if (typeof Go === "function") Go("يرجى اختيار دولة حليفة صالحة لإرسال الفيلق إليها.");
+                    return;
+                }
+                var count = parseInt(simDispatchTroopCount ? simDispatchTroopCount.value : "100", 10);
+                if (n.troops < count + 300) {
+                    if (typeof Go === "function") Go("⚠️ تحذير: لا يمكنك تجريد دفاعات العاصمة إلى مستوى حرج (تحتاج 300 مقاتل على الأقل كاحتياطي)!");
+                    return;
+                }
+
+                var foodBurden = Math.round(count * 0.08);
+                n.troops -= count;
+                n.infantry = Math.max(50, n.infantry - count);
+                allyNat.troops += count;
+                allyNat.consumption = (allyNat.consumption || 70) + foodBurden;
+                n.expeditionaryForce = { target: targetId, count: count, foodBurden: foodBurden };
+
+                var dec = "🛡️ أرسلت " + n.name + " فيلق حماية وإسناد مؤلف من " + count + " مقاتلاً لدعم دفاعات " + allyNat.name + " (يستهلكون +" + foodBurden + " قمح/شهر من صوامع الحليف).";
+                n.decrees.unshift(dec);
+                allyNat.decrees.unshift("🤝 وصلت قوات حماية حليفة (" + count + " مقاتلاً) من " + n.name + " لتعزيز الثغور.");
+                simState.eventsLog.unshift(dec);
+                if (typeof Go === "function") Go("تم إرسال فيلق الإسناد والحماية للحليف بنجاح 🛡️");
+                updateActiveNationUI();
+                renderTeacherEventsLog();
+            });
+        }
+
+        if (simRecallExpeditionBtn) {
+            simRecallExpeditionBtn.addEventListener("click", function() {
+                var n = nationsData[simState.activeNationId];
+                if (!n || !n.expeditionaryForce) {
+                    if (typeof Go === "function") Go("لا توجد قوات إسناد مرسلة بالخارج لاستدعائها حالياً.");
+                    return;
+                }
+                var allyNat = nationsData[n.expeditionaryForce.target];
+                if (allyNat) {
+                    allyNat.troops = Math.max(100, allyNat.troops - n.expeditionaryForce.count);
+                    allyNat.consumption = Math.max(40, (allyNat.consumption || 70) - n.expeditionaryForce.foodBurden);
+                }
+                n.troops += n.expeditionaryForce.count;
+                n.infantry += n.expeditionaryForce.count;
+                var dec = "🛡️ استدعت " + n.name + " فيلق الحماية (" + n.expeditionaryForce.count + " مقاتلاً) من ثغور " + (allyNat ? allyNat.name : "الحليف") + " وعادوا لحامية الوطن.";
+                n.decrees.unshift(dec);
+                simState.eventsLog.unshift(dec);
+                n.expeditionaryForce = null;
+                if (typeof Go === "function") Go("عادت قوات الإسناد إلى حامية العاصمة بنجاح ✓");
+                updateActiveNationUI();
+                renderTeacherEventsLog();
+            });
+        }
+
+        // Wire Sandbox World Architect Controls
+        if (simStartDrawTerritoryBtn) {
+            simStartDrawTerritoryBtn.addEventListener("click", function() {
+                startDrawingTerritory();
+            });
+        }
+
+        if (simConfirmTerritoryBtn) {
+            simConfirmTerritoryBtn.addEventListener("click", function() {
+                var customName = simCustomNationNameInput ? simCustomNationNameInput.value.trim() : "";
+                confirmCurrentTerritory(customName);
+            });
+        }
+
+        if (simCancelTerritoryBtn) {
+            simCancelTerritoryBtn.addEventListener("click", function() {
+                cancelDrawingTerritory();
+            });
+        }
+
+        if (simAutoAssignTeamsBtn) {
+            simAutoAssignTeamsBtn.addEventListener("click", function() {
+                autoAssignTeamsToCustomNations();
+            });
+        }
+
+        if (simResetNewEpochBtn) {
+            simResetNewEpochBtn.addEventListener("click", function() {
+                resetSimulationToNewEpoch();
+            });
+        }
+
+        if (simGamePaceSelect) {
+            simGamePaceSelect.addEventListener("change", function() {
+                setGamePace(this.value);
+            });
+        }
+
+        if (simDossierCloseBtn) {
+            simDossierCloseBtn.addEventListener("click", function() {
+                if (simCountryDossierModal) simCountryDossierModal.style.display = "none";
+            });
+        }
+
+        if (simAcceptDossierBtn) {
+            simAcceptDossierBtn.addEventListener("click", function() {
+                if (simCountryDossierModal) simCountryDossierModal.style.display = "none";
+                if (simState.dossierTargetId && nationsData[simState.dossierTargetId]) {
+                    simState.activeNationId = simState.dossierTargetId;
+                    populateNationSelects();
+                    updateActiveNationUI();
+                    renderSimMapLayers();
+                    if (typeof Go === "function") Go("تم استلام راية أمة " + nationsData[simState.dossierTargetId].name + " وبدء قيادتها!");
+                }
+            });
+        }
+
+        window.openNationSimulation = openNationSim;
+        window.closeNationSimulation = closeNationSim;
+        window.advanceSimSeason = advanceSimSeason;
+        window.startSeasonalClock = startSeasonalClock;
+        window.stopSeasonalClock = stopSeasonalClock;
+        window.calculateCivilizationScores = calculateCivilizationScores;
+        window.openQuickTradeModal = openQuickTradeModal;
+        window.closeQuickTradeModal = closeQuickTradeModal;
+        window.showFloatingResourceDelta = showFloatingResourceDelta;
+        window.updateCouncilAdvice = updateCouncilAdvice;
+        window.updateGauges = updateGauges;
+        window.inferTerritoryGeoProfile = inferTerritoryGeoProfile;
+        window.startDrawingTerritory = startDrawingTerritory;
+        window.cancelDrawingTerritory = cancelDrawingTerritory;
+        window.confirmCurrentTerritory = confirmCurrentTerritory;
+        window.openCountryDossier = openCountryDossier;
+        window.autoAssignTeamsToCustomNations = autoAssignTeamsToCustomNations;
+        window.resetSimulationToNewEpoch = resetSimulationToNewEpoch;
+        window.setGamePace = setGamePace;
+        window.updateTeacherSandboxUI = updateTeacherSandboxUI;
+        window.saveSandboxSimulationState = saveSandboxSimulationState;
+        window.loadSandboxSimulationState = loadSandboxSimulationState;
+        window.simState = simState;
+        window.nationsData = nationsData;
     }();
 }();

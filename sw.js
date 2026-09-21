@@ -1,6 +1,6 @@
-const LEPIDOS_CACHE_VERSION = 'lepidos-v22';
-const LEPIDOS_CACHE_PRECACHE = 'lepidos-precache-v22';
-const LEPIDOS_CACHE_RUNTIME = 'lepidos-runtime-v22';
+const LEPIDOS_CACHE_VERSION = 'lepidos-v36';
+const LEPIDOS_CACHE_PRECACHE = 'lepidos-precache-v36';
+const LEPIDOS_CACHE_RUNTIME = 'lepidos-runtime-v36';
 
 const PRECACHE_URLS = [
     './',
@@ -29,6 +29,8 @@ const PRECACHE_URLS = [
     './microstates-data.json',
     './icon-192.png',
     './icon-512.png',
+    './logo.png',
+    './favicon.png',
     './vendor/d3.min.js',
     './vendor/d3-geo-projection.min.js',
     './vendor/topojson-client.min.js',

@@ -83,7 +83,7 @@ if (fs.existsSync(path.join(SRC, 'fonts'))) {
 } else {
     console.log('  Skipped fonts/ (directory not found)');
 }
-['boot.js', 'firebase.js'].forEach(function(f) {
+['boot.js', 'firebase.js', 'teacher-auth-gate.js'].forEach(function(f) {
     var srcPath = path.join(SRC, f);
     if (fs.existsSync(srcPath)) {
         fs.copyFileSync(srcPath, path.join(DIST, f));
@@ -92,7 +92,7 @@ if (fs.existsSync(path.join(SRC, 'fonts'))) {
         console.log('  Skipped ' + f + ' (not found in source)');
     }
 });
-['manifest.json', 'sw.js', 'icon-192.png', 'icon-512.png'].forEach(function(f) {
+['manifest.json', 'sw.js', 'icon-192.png', 'icon-512.png', 'logo.png', 'favicon.png', 'logo.svg'].forEach(function(f) {
     var srcPath = path.join(SRC, f);
     if (fs.existsSync(srcPath)) {
         fs.copyFileSync(srcPath, path.join(DIST, f));

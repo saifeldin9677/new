@@ -13136,12 +13136,15 @@ th {
 }
 
 /* Map Floating Banners */
-.map-floating-mode-banner {
+.map-floating-mode-banner,
+#simDrawTerritoryBanner,
+.sim-draw-territory-banner {
     position: fixed;
     top: 76px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 10001;
+    z-index: 10005 !important;
+    pointer-events: auto !important;
     background: rgba(15, 28, 46, 0.96);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -13160,12 +13163,20 @@ th {
     animation: bannerSlideDown 0.22s ease-out;
 }
 
+.map-floating-mode-banner *,
+#simDrawTerritoryBanner *,
+.sim-draw-territory-banner * {
+    pointer-events: auto !important;
+}
+
 @keyframes bannerSlideDown {
     from { opacity: 0; transform: translate(-50%, -16px); }
     to { opacity: 1; transform: translate(-50%, 0); }
 }
 
-[data-theme="light"] .map-floating-mode-banner {
+[data-theme="light"] .map-floating-mode-banner,
+[data-theme="light"] #simDrawTerritoryBanner,
+[data-theme="light"] .sim-draw-territory-banner {
     background: #ffffff !important;
     border-color: #0d9488 !important;
     color: #0f172a !important;
@@ -15136,21 +15147,50 @@ th {
     stroke: #3b82f6;
     stroke-width: 2px;
     stroke-dasharray: 4, 3;
-    pointer-events: none;
+    pointer-events: none !important;
 }
 
 .sim-drawing-vertex {
     fill: #3b82f6;
     stroke: #ffffff;
     stroke-width: 2px;
-    cursor: pointer;
+    pointer-events: none !important;
 }
 
 .sim-drawing-line {
     stroke: #3b82f6;
     stroke-width: 2px;
     stroke-dasharray: 4, 3;
-    pointer-events: none;
+    pointer-events: none !important;
+}
+
+/* Territory Drawing Mode Active State (Disable Country Clicks, Highlights and Tooltips) */
+body.sim-drawing-mode-active #mapSvg {
+    cursor: crosshair !important;
+}
+
+body.sim-drawing-mode-active .country-path,
+body.sim-drawing-mode-active .country-label,
+body.sim-drawing-mode-active .city-label,
+body.sim-drawing-mode-active .major-city-marker,
+body.sim-drawing-mode-active .capital-marker,
+body.sim-drawing-mode-active .hist-landmark-pin,
+body.sim-drawing-mode-active .hist-river-group,
+body.sim-drawing-mode-active .hist-mountain-pass-marker,
+body.sim-drawing-mode-active .terrain-feature,
+body.sim-drawing-mode-active .sim-drawing-vertex,
+body.sim-drawing-mode-active .sim-drawing-vertex-label,
+body.sim-drawing-mode-active .sim-drawing-polygon {
+    pointer-events: none !important;
+    cursor: crosshair !important;
+}
+
+body.sim-drawing-mode-active #countryPanel,
+body.sim-drawing-mode-active #tooltip {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
 }
 
 /* 6. Country Dossier Modal */

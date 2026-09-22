@@ -2148,13 +2148,13 @@
                     <div class="sim-calendar-badge" id="simCalendarBadge">
                         <span class="sim-calendar-year" id="simYearDisplay">1250 م</span>
                         <span class="sim-calendar-season sim-season-spring" id="simSeasonDisplay">🌱 ربيع</span>
-                        <span class="sim-calendar-pace" id="simPaceDisplay" title="المعامل الزمني: سريان زمني طبيعي ثابت وعادل للجميع دون تسريع أو تجميد">سريان زمني ثابت</span>
+                        <span class="sim-calendar-pace" id="simPaceDisplay" title="المعامل الزمني: دورة أسبوعية مستمرة طوال الفصل الدراسي">دورة أسبوعية (فصل كامل)</span>
                     </div>
-                    <div class="sim-seasonal-cycle-box" id="simSeasonalCycleBox" role="status" aria-live="polite" title="سريان الزمن الطبيعي: يمر الوقت بنسب ثابتة وعادلة للجميع دون تسريع أو تجميد">
+                    <div class="sim-seasonal-cycle-box" id="simSeasonalCycleBox" role="status" aria-live="polite" title="سريان الزمن الطبيعي: دورة أسبوعية متزامنة وعادلة لكافة الفرق">
                         <div class="sim-cycle-header">
                             <span class="sim-cycle-indicator-dot"></span>
-                            <span class="sim-cycle-label">دورة الفصل الجاري</span>
-                            <span class="sim-cycle-countdown" id="simCycleCountdown">01:30</span>
+                            <span class="sim-cycle-label">دورة الفصل (أسبوعية)</span>
+                            <span class="sim-cycle-countdown" id="simCycleCountdown">7 أيام</span>
                         </div>
                         <div class="sim-cycle-track" aria-hidden="true">
                             <div class="sim-cycle-progress-fill" id="simCycleProgressFill" style="width: 0%;"></div>
@@ -2163,10 +2163,20 @@
                 </div>
 
                 <div class="sim-hud-center">
-                    <div class="sim-nation-picker-wrap">
+                    <div class="sim-nation-picker-wrap" style="display:flex;gap:6px;align-items:center;">
                         <select id="simNationSelect" class="sim-select" aria-label="اختيار الدولة / الفريق">
-                            <!-- Populated dynamically via JS: Nile, Anatolia, Desert, Mediterranean, Steppes -->
+                            <!-- Populated dynamically via JS from teacher-defined nations -->
                         </select>
+                        <button type="button" class="btn btn-primary sim-hud-action-btn" id="simQuickDrawTerritoryBtn" title="رسم حدود دولة جديدة لهذا الفريق على الخريطة" style="background:linear-gradient(135deg,#3b82f6,#2563eb);border-color:#60a5fa;color:#fff;font-weight:700;display:inline-flex;align-items:center;gap:4px;padding:4px 9px;font-size:0.8rem;white-space:nowrap;">
+                            <i data-lucide="pen-tool" class="lucide-icon"></i>
+                            <span>🎨 رسم دولة</span>
+                        </button>
+                        <button type="button" class="btn btn-secondary sim-hud-action-btn" id="simQuickAutoGenerateBtn" title="توليد وتوزيع أقاليم مقترحة بالقرعة لفرق الصف" style="font-size:0.8rem;padding:4px 8px;gap:4px;white-space:nowrap;">
+                            <span>✨ أقاليم الفرق</span>
+                        </button>
+                        <button type="button" class="btn btn-secondary sim-hud-action-btn" id="simViewDossierHudBtn" title="عرض وثيقة تأسيس الأمة والتقرير الجيوسياسي للفريق" style="font-size:0.8rem;padding:4px 8px;gap:4px;white-space:nowrap;">
+                            <span>📜 وثيقة الأمة</span>
+                        </button>
                     </div>
 
                     <nav class="sim-role-tabs-group" id="simRoleSelectGroup" role="tablist" aria-label="أدوار الفريق الخمسة">
@@ -2783,9 +2793,9 @@
                                 <div class="sim-field" style="flex:1;">
                                     <label for="simGamePaceSelect">إيقاع سريان دورات الزمن في المحاكاة:</label>
                                     <select id="simGamePaceSelect" class="sim-select">
-                                        <option value="classroom" selected>⏱️ وضع الحصة المدرسية (90 ثانية / دورة موسمية)</option>
+                                        <option value="weekly_semester" selected>🏛️ وضع الفصل الدراسي الكامل (أسبوع واقعي = دورة موسمية كاملة)</option>
                                         <option value="daily">📅 وضع اليوم الدراسي (24 ساعة / دورة موسمية)</option>
-                                        <option value="weekly_semester">🏛️ وضع الفصل الدراسي الكامل (أسبوع واقعي = دورة موسمية كاملة)</option>
+                                        <option value="classroom">⏱️ وضع الحصة المدرسية (90 ثانية / دورة موسمية)</option>
                                     </select>
                                 </div>
                             </div>
@@ -2795,8 +2805,64 @@
                                     <span class="sim-badge" id="simDrawnNationsCount" style="background:#3b82f6;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75rem;">0 دول</span>
                                 </div>
                                 <div class="sim-drawn-nations-list" id="simDrawnNationsList" style="display:flex;flex-wrap:wrap;gap:6px;">
-                                    <span class="sim-empty-hint" style="font-size:0.8rem;color:#94a3b8;">لم يتم رسم أقاليم مخصصة بعد؛ المحاكاة تعمل بالسيناريو التاريخي الافتراضي.</span>
+                                    <span class="sim-empty-hint" style="font-size:0.8rem;color:#94a3b8;">لم يتم رسم أقاليم مخصصة بعد؛ المحاكاة بانتظار تحديد أقاليم الفرق.</span>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- World Setup Modal (تدشين أقاليم الفرق وعصر المحاكاة) -->
+            <div class="sim-teacher-modal-overlay" id="simWorldSetupModal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="simWorldSetupTitle">
+                <div class="sim-teacher-modal-box" style="max-width:620px;">
+                    <div class="sim-modal-header" style="background:linear-gradient(135deg, rgba(30,58,138,0.85), rgba(15,23,42,0.95));">
+                        <div class="sim-modal-header-title">
+                            <span style="font-size:1.8rem;">🗺️</span>
+                            <div>
+                                <h3 id="simWorldSetupTitle" style="margin:0;font-size:1.2rem;color:#f8fafc;">تدشين عصر المحاكاة: تحديد أقاليم فرق الصف</h3>
+                                <div style="font-size:0.82rem;color:#93c5fd;">المحاكاة مفتوحة بالكامل؛ ارسم حدود دول الفرق أو ولّد أقاليم مقترحة تلقائياً</div>
+                            </div>
+                        </div>
+                        <button type="button" class="close-btn" id="simWorldSetupCloseBtn" aria-label="إغلاق"><i data-lucide="x" class="lucide-icon"></i></button>
+                    </div>
+                    <div class="sim-teacher-modal-body" style="padding:18px;">
+                        <p style="font-size:0.92rem;color:#cbd5e1;margin-bottom:16px;line-height:1.6;">
+                            مرحباً بك أيها المعلم في محاكي الأمم الجيوسياسي. لا توجد دول محددة مسبقاً لهذا العصر؛ <strong>أنت من يحدد أقاليم ودول الفرق</strong> وفق عدد المجموعات في صفك. تستنتج الخريطة آلياً المناخ والموارد الطبيعية لكل إقليم بحسب إحداثياته الجغرافية:
+                        </p>
+                        
+                        <div style="display:grid;grid-template-columns:1fr;gap:12px;">
+                            <!-- Choice 1: Draw manually -->
+                            <div class="sim-dossier-card" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(59,130,246,0.1);border:1px solid #3b82f6;border-radius:8px;">
+                                <div>
+                                    <div style="font-weight:700;color:#60a5fa;font-size:0.95rem;">🎨 الخيار 1: رسم حدود الفرق بيدك على الخريطة</div>
+                                    <div style="font-size:0.82rem;color:#94a3b8;">انقر على أي منطقة في العالم لرسم مضلع حر لأي عدد تريده من الفرق.</div>
+                                </div>
+                                <button type="button" class="btn btn-primary" id="simSetupStartDrawBtn" style="padding:8px 16px;font-weight:700;white-space:nowrap;">
+                                    ابدأ بالرسم الآن 🎨
+                                </button>
+                            </div>
+
+                            <!-- Choice 2: Auto-generate custom territories for N teams -->
+                            <div class="sim-dossier-card" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(16,185,129,0.1);border:1px solid #10b981;border-radius:8px;">
+                                <div>
+                                    <div style="font-weight:700;color:#34d399;font-size:0.95rem;">✨ الخيار 2: توليد أقاليم مقترحة بالقرعة لفرق الصف</div>
+                                    <div style="font-size:0.82rem;color:#94a3b8;">يوزع المحرك آلياً أقاليم جغرافية متنوعة (أنهار، جبال، سواحل، سهوب، واحات) بالقرعة على الفرق.</div>
+                                    <div style="margin-top:8px;display:flex;align-items:center;gap:8px;">
+                                        <label for="simSetupTeamCountSelect" style="font-size:0.82rem;color:#e2e8f0;">عدد فرق الصف:</label>
+                                        <select id="simSetupTeamCountSelect" class="sim-select" style="width:110px;padding:3px 8px;font-size:0.82rem;">
+                                            <option value="3">3 فرق</option>
+                                            <option value="4">4 فرق</option>
+                                            <option value="5" selected>5 فرق</option>
+                                            <option value="6">6 فرق</option>
+                                            <option value="7">7 فرق</option>
+                                            <option value="8">8 فرق</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-success" id="simSetupAutoGenerateBtn" style="padding:8px 16px;font-weight:700;white-space:nowrap;background:#10b981;color:#fff;border:none;border-radius:6px;">
+                                    توليد وتوزيع الفرق ✨
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -2879,15 +2945,15 @@
             <div class="sim-floating-popups-container" id="simFloatingPopupsContainer" aria-hidden="true"></div>
 
             <!-- Freeform Territory Drawing Banner -->
-            <div class="sim-draw-route-banner" id="simDrawTerritoryBanner" style="display:none;">
-                <div class="sim-draw-route-info">
-                    <i data-lucide="pen-tool" class="lucide-icon"></i>
+            <div class="map-floating-mode-banner sim-draw-territory-banner" id="simDrawTerritoryBanner" style="display:none; pointer-events:auto !important; z-index:10005 !important;">
+                <div class="banner-content" style="display:flex;align-items:center;gap:8px;">
+                    <i data-lucide="pen-tool" class="lucide-icon" style="color:#2dd4bf;"></i>
                     <span>وضع رسم حدود الدولة: انقر على الخريطة لتحديد زوايا الإقليم (<strong id="simDrawnPointsCount">0</strong> نقاط).</span>
                 </div>
-                <div style="display:flex;gap:8px;align-items:center;">
-                    <input type="text" id="simCustomNationNameInput" class="sim-input" placeholder="اسم الدولة (اختياري)" style="padding:4px 8px;font-size:0.82rem;width:170px;border-radius:4px;border:1px solid #475569;background:#1e293b;color:#f8fafc;" />
-                    <button type="button" class="btn btn-primary btn-sm" id="simConfirmTerritoryBtn">اعتماد مضلع الدولة ✓</button>
-                    <button type="button" class="btn btn-secondary btn-sm" id="simCancelTerritoryBtn">إلغاء ✕</button>
+                <div class="banner-actions" style="display:flex;gap:8px;align-items:center;">
+                    <input type="text" id="simCustomNationNameInput" class="sim-input" placeholder="اسم الدولة (اختياري)" style="padding:6px 12px;font-size:0.85rem;width:180px;border-radius:6px;border:1px solid #475569;background:#1e293b;color:#f8fafc;pointer-events:auto;" />
+                    <button type="button" class="btn btn-primary btn-sm" id="simConfirmTerritoryBtn" style="pointer-events:auto;cursor:pointer;">اعتماد مضلع الدولة ✓</button>
+                    <button type="button" class="btn btn-secondary btn-sm" id="simCancelTerritoryBtn" style="pointer-events:auto;cursor:pointer;">إلغاء ✕</button>
                 </div>
             </div>
 

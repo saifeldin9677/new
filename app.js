@@ -2682,6 +2682,7 @@
             }).attr("filter", pa).attr("cursor", "pointer").attr("vector-effect", "non-scaling-stroke").attr("tabindex", 0).attr("role", "button").attr("aria-label", function(e) {
                 return Hi(e.properties?.name || "");
             }), yn.on("mouseenter", function(e, t) {
+                if (window.simState && (window.simState.isDrawingTerritory || window.simState.isOpen)) return;
                 if (!Te) {
                     var i = t.properties?.name || "", a = Hi(i), o = Qi(i), s = (se && Xi(i), '<div class="country-name"><strong>' + a + "</strong></div>");
                     if ("religion" === ae) {
@@ -2691,8 +2692,10 @@
                     r.innerHTML = s, r.classList.add("visible"), d3.select(this).transition().duration(n() ? 0 : 120).attr("stroke", "#fff").attr("stroke-width", 1.5);
                 }
             }).on("mousemove", function(e) {
+                if (window.simState && (window.simState.isDrawingTerritory || window.simState.isOpen)) return;
                 r.style.left = e.offsetX + 14 + "px", r.style.top = e.offsetY - 10 + "px", Ur(e);
             }).on("mouseleave", function() {
+                if (window.simState && (window.simState.isDrawingTerritory || window.simState.isOpen)) return;
                 r.classList.remove("visible"), d3.select(this).datum() !== vn && d3.select(this).transition().duration(n() ? 0 : 120).attr("stroke", function(e) {
                     return fa(e);
                 }).attr("stroke-width", function(e) {
@@ -3620,6 +3623,7 @@
     }
     function Uo(e, t) {
         if (e && e.defaultPrevented || st || dt) return;
+        if (window.simState && (window.simState.isDrawingTerritory || window.simState.isOpen)) return;
         if ("history" === Ke && window.historyIsActive && window.historyIsActive()) {
             window.openHistoryPanel(t);
             return;
@@ -4790,6 +4794,7 @@
             fn = e, window.allCountryFeatures = fn, gi = e.map(e => e.properties?.name || "").filter(e => e), 
             Qn.selectAll("*").remove(), yn = Qn.selectAll("path").data(e).join("path").attr("class", e => "country-path" + (isAntarcticaFeature(e) ? " antarctica-path" : "")).attr("d", Gn).attr("fill", e => ma(e)).attr("stroke", e => fa(e)).attr("stroke-width", e => .8).attr("stroke-dasharray", e => (void 0 !== Pe && Pe || void 0 !== Ke && "history" === Ke) && Dn ? "4,3" : "none").attr("opacity", e => ya(e)).attr("filter", pa).attr("cursor", "pointer").attr("vector-effect", "non-scaling-stroke").attr("tabindex", 0).attr("role", "button").attr("aria-label", e => Hi(e.properties?.name || "")), 
             yn.on("mouseenter", function(e, t) {
+                if (window.simState && (window.simState.isDrawingTerritory || window.simState.isOpen)) return;
                 if (Te) return;
                 var i = void 0 !== Pe && Pe || void 0 !== Ke && "history" === Ke;
                 if (i && !Dn) return;
@@ -4835,14 +4840,17 @@
                 r.classList.add("visible"), ci.w = r.offsetWidth || 180, ci.h = r.offsetHeight || 60, 
                 d3.select(this).transition().duration(n() ? 0 : 120).attr("stroke", "#fff").attr("stroke-width", 1.5);
             }).on("mousemove", function(e, t) {
+                if (window.simState && (window.simState.isDrawingTerritory || window.simState.isOpen)) return;
                 Hr = e, Fr || (Fr = !0, requestAnimationFrame(jr)), Ur(e);
             }).on("mouseleave", function() {
+                if (window.simState && (window.simState.isDrawingTerritory || window.simState.isOpen)) return;
                 r.classList.remove("visible"), d3.select(this).datum() !== vn && d3.select(this).transition().duration(n() ? 0 : 120).attr("stroke", e => fa(e)).attr("stroke-width", e => .8);
             }).on("click", Uo).on("keydown", function(e, t) {
                 "Enter" !== e.key && " " !== e.key || (e.preventDefault(), Uo(e, t));
             });
             let t = 0, i = 0, a = null;
             yn.on("touchstart.peek", function(e, n) {
+                if (window.simState && (window.simState.isDrawingTerritory || window.simState.isOpen)) return;
                 1 === e.touches.length && (t = e.touches[0].clientX, i = e.touches[0].clientY, clearTimeout(a), 
                 a = setTimeout(() => {
                     const e = n.properties?.name || "", a = Hi(e), o = Qi(e), s = "ar" === Ht ? religionArabic[o] || o : "ru" === Ht ? religionRussian[o] || o : "uz" === Ht ? religionUzbek[o] || o : "es" === Ht && religionSpanish[o] || o;
@@ -14733,10 +14741,19 @@
             simDossierSeasonsList = document.getElementById("simDossierSeasonsList"),
             simDossierResourcesRow = document.getElementById("simDossierResourcesRow"),
             simDossierDefenseDesc = document.getElementById("simDossierDefenseDesc"),
-            simAcceptDossierBtn = document.getElementById("simAcceptDossierBtn");
+            simAcceptDossierBtn = document.getElementById("simAcceptDossierBtn"),
+            simQuickDrawTerritoryBtn = document.getElementById("simQuickDrawTerritoryBtn"),
+            simQuickAutoGenerateBtn = document.getElementById("simQuickAutoGenerateBtn"),
+            simViewDossierHudBtn = document.getElementById("simViewDossierHudBtn"),
+            simWorldSetupModal = document.getElementById("simWorldSetupModal"),
+            simWorldSetupCloseBtn = document.getElementById("simWorldSetupCloseBtn"),
+            simSetupStartDrawBtn = document.getElementById("simSetupStartDrawBtn"),
+            simSetupAutoGenerateBtn = document.getElementById("simSetupAutoGenerateBtn"),
+            simSetupTeamCountSelect = document.getElementById("simSetupTeamCountSelect"),
+            simPaceDisplay = document.getElementById("simPaceDisplay");
 
-        // Core Nations Data with Asymmetric Geo-Resources
-        var nationsData = {
+        // Historical Core Nations Template (Available as an optional preset/reference)
+        var historicalNationsTemplate = {
             nile: {
                 id: "nile",
                 name: "مملكة النيل والرافدين الفيضية",
@@ -14882,14 +14899,16 @@
             { id: "gibraltar", name: "مضيق جبل طارق (معبر الأطلسي والمتوسط)", shortName: "مضيق جبل طارق", coords: [-5.35, 35.98], controller: "mediterranean", bonus: "+30% سيطرة بحرية" }
         ];
 
+        var nationsData = {};
+
         var simState = {
             isOpen: false,
-            activeNationId: "nile",
+            activeNationId: null,
             activeRole: "leader",
             year: 1250,
             seasonIdx: 0,
-            seasonDuration: 90,
-            seasonTimeRemaining: 90,
+            seasonDuration: 604800,
+            seasonTimeRemaining: 604800,
             timerInterval: null,
             safeRoutes: {},
             seasons: [
@@ -14899,38 +14918,17 @@
                 { id: "winter", name: "❄️ شتاء (صقيع الشمال ورحلة شتاء الصحراء)", advisory: "صقيع قارس وثلوج تجمد ممرات الأناضول وجبال آسيا الوسطى وتوقف المزارع؛ بينما يشهد إقليم الصحراء ذروة انطلاق قوافله واعتدال مناخه (رحلة الشتاء)." }
             ],
             showScoutRings: true,
-            caravans: [
-                {
-                    id: "c1",
-                    from: "nile",
-                    to: "mediterranean",
-                    cargo: "100 كيس قمح",
-                    requested: "40 سبيكة حديد",
-                    escort: "حراسة فرسان خفيفة (30 فارساً)",
-                    status: "في الطريق (تم قطع 65% من المسافة)",
-                    progress: 0.65,
-                    startCoords: [31.23, 30.04],
-                    endCoords: [29.91, 31.20]
-                }
-            ],
-            scouts: [
-                { id: "s1", nation: "nile", name: "طليعة استطلاع سيناء", coords: [33.8, 29.5], status: "متربص ويرصد حركة الشمال" },
-                { id: "s2", nation: "desert", name: "فرسان استطلاع الحجاز", coords: [40.2, 23.8], status: "في مأمن بالدائرة الخارجية" }
-            ],
-            capturedSpies: [
-                { id: "cs1", name: "جاسوس متنكر بقافلة تمور", originNation: "steppes", captorNation: "nile", status: "محتجز بغرفة التحقيق", detectedInCircle: "الدائرة الداخلية (0 - 30 كم)" }
-            ],
+            caravans: [],
+            scouts: [],
+            capturedSpies: [],
             eventsLog: [
-                "📜 أعلنت مملكة النيل توقيع معاهدة سلام وتجارة مع جمهورية المتوسط.",
-                "🌾 انطلقت قافلة تجارية محملة بالقمح من الفسطاط متجهة نحو الإسكندرية.",
-                "👁️ تم نشر طليعة استطلاع في شبه جزيرة سيناء لمراقبة الممرات البرية.",
-                "🛡️ تم تعزيز حامية مضيق باب المندب بـ 200 مقاتل إضافي."
+                "🏛️ بدأ الفصل الدراسي: بانتظار ترسيم المعلم لحدود أقاليم الفرق الطلابية وتدشين الأمم."
             ],
             customNations: {},
-            isSandboxMode: false,
+            isSandboxMode: true,
             isDrawingTerritory: false,
             currentDrawingPoints: [],
-            gamePace: "classroom",
+            gamePace: "weekly_semester",
             teamAssignments: {}
         };
 
@@ -15188,22 +15186,92 @@
             };
         }
 
-        // Territory Drawing Lifecycle
+        // Territory Drawing Lifecycle & Geo-Intelligence Layer Controls
+        var savedModeBeforeDrawing = null;
+        var savedNaturalResourcesBeforeDrawing = false;
+
         function startDrawingTerritory() {
             if (simTeacherModal) simTeacherModal.style.display = "none";
+            if (simWorldSetupModal) simWorldSetupModal.style.display = "none";
             simState.isDrawingTerritory = true;
             simState.currentDrawingPoints = [];
-            if (simDrawTerritoryBanner) simDrawTerritoryBanner.style.display = "flex";
+
+            // Add active class to body for CSS pointer-events disabling on countries/pins
+            document.body.classList.add("sim-drawing-mode-active");
+
+            // Close any country panel or tooltip that might be open
+            if (T) T.classList.remove("visible");
+            if (r) r.classList.remove("visible");
+
+            // 1. Save previous map mode and switch to 'terrain' automatically
+            savedModeBeforeDrawing = (typeof ae !== "undefined") ? ae : null;
+            if (typeof Vr === "function" && ae !== "terrain") {
+                Vr("terrain");
+            }
+
+            // 2. Save previous natural resources state and activate resources layer
+            var resLayer = (typeof Li !== "undefined" && Li) ? Li["naturalResources"] : null;
+            savedNaturalResourcesBeforeDrawing = resLayer ? !!resLayer.getFlag() : false;
+            if (!savedNaturalResourcesBeforeDrawing && resLayer) {
+                resLayer.setFlag(true);
+                var rBtn = document.getElementById(resLayer.btnId);
+                if (rBtn) {
+                    rBtn.classList.add("toggle-on");
+                    rBtn.setAttribute("aria-pressed", "true");
+                }
+                if (resLayer.drawFn) resLayer.drawFn();
+                if (resLayer.postDrawFn) resLayer.postDrawFn();
+                if (typeof Yr === "function") Yr();
+                if (typeof Cs === "function") Cs();
+                if (typeof Gr === "function") Gr();
+            }
+
+            if (simDrawTerritoryBanner) {
+                simDrawTerritoryBanner.style.display = "flex";
+            }
             if (simDrawnPointsCount) simDrawnPointsCount.textContent = "0";
-            if (simCustomNationNameInput) simCustomNationNameInput.value = "";
+            if (simCustomNationNameInput) {
+                simCustomNationNameInput.value = "";
+                setTimeout(function() {
+                    try { simCustomNationNameInput.focus(); } catch (err) {}
+                }, 150);
+            }
             renderSimMapLayers();
-            if (typeof Go === "function") Go("وضع رسم الحدود نشط: انقر على الخريطة لتحديد زوايا الإقليم (3 نقاط على الأقل)");
+            if (typeof Go === "function") Go("وضع رسم الحدود نشط: تم تفعيل خريطة التضاريس وطبقة الموارد لمساعدتك على اختيار الإقليم بدقة.");
+        }
+
+        function cleanupDrawingTerritoryMode() {
+            simState.isDrawingTerritory = false;
+            simState.currentDrawingPoints = [];
+            document.body.classList.remove("sim-drawing-mode-active");
+            if (simDrawTerritoryBanner) simDrawTerritoryBanner.style.display = "none";
+
+            // Restore previous mode if it was changed
+            if (savedModeBeforeDrawing && savedModeBeforeDrawing !== "terrain" && typeof Vr === "function") {
+                Vr(savedModeBeforeDrawing);
+            }
+            savedModeBeforeDrawing = null;
+
+            // Restore natural resources layer if it was turned on by drawing mode
+            var resLayer = (typeof Li !== "undefined" && Li) ? Li["naturalResources"] : null;
+            if (!savedNaturalResourcesBeforeDrawing && resLayer && resLayer.getFlag()) {
+                resLayer.setFlag(false);
+                var rBtn = document.getElementById(resLayer.btnId);
+                if (rBtn) {
+                    rBtn.classList.remove("toggle-on");
+                    rBtn.setAttribute("aria-pressed", "false");
+                }
+                if (resLayer.drawFn) resLayer.drawFn();
+                if (resLayer.postDrawFn) resLayer.postDrawFn();
+                if (typeof Yr === "function") Yr();
+                if (typeof Cs === "function") Cs();
+                if (typeof Gr === "function") Gr();
+            }
+            savedNaturalResourcesBeforeDrawing = false;
         }
 
         function cancelDrawingTerritory() {
-            simState.isDrawingTerritory = false;
-            simState.currentDrawingPoints = [];
-            if (simDrawTerritoryBanner) simDrawTerritoryBanner.style.display = "none";
+            cleanupDrawingTerritoryMode();
             renderSimMapLayers();
             if (typeof Go === "function") Go("تم إلغاء رسم الحدود.");
         }
@@ -15224,9 +15292,7 @@
             var logMsg = "🗺️ قام المعلم بتدشين وتخطيط أمة جديدة: " + newNation.name + " (" + newNation.biome + ")";
             simState.eventsLog.unshift(logMsg);
 
-            simState.isDrawingTerritory = false;
-            simState.currentDrawingPoints = [];
-            if (simDrawTerritoryBanner) simDrawTerritoryBanner.style.display = "none";
+            cleanupDrawingTerritoryMode();
 
             populateNationSelects();
             updateActiveNationUI();
@@ -15344,14 +15410,15 @@
             simState.isSandboxMode = false;
             simState.isDrawingTerritory = false;
             simState.currentDrawingPoints = [];
-            simState.activeNationId = "nile";
+            simState.activeNationId = null;
             simState.year = 1250;
             simState.seasonIdx = 0;
-            simState.seasonDuration = 90;
-            simState.seasonTimeRemaining = 90;
-            simState.gamePace = "classroom";
+            simState.seasonDuration = 604800;
+            simState.seasonTimeRemaining = 604800;
+            simState.gamePace = "weekly_semester";
             simState.teamAssignments = {};
-            if (simGamePaceSelect) simGamePaceSelect.value = "classroom";
+            if (simGamePaceSelect) simGamePaceSelect.value = "weekly_semester";
+            if (simPaceDisplay) simPaceDisplay.textContent = "دورة أسبوعية (فصل كامل)";
 
             try {
                 localStorage.removeItem("agy_sandbox_sim_epoch");
@@ -15367,6 +15434,115 @@
             renderTeacherEventsLog();
             updateSeasonalClockUI();
             if (typeof Go === "function") Go("تم تصفير المحاكاة وتدشين عصر جديد بنجاح ⚡");
+        }
+
+        // Procedural Generation of Balanced Preset Nations for N Student Teams
+        function generatePresetNationsForTeams(count) {
+            var numTeams = Math.max(3, Math.min(8, parseInt(count, 10) || 5));
+            var presets = [
+                {
+                    name: "أمة أحواض النيل والرافدين الفيضية",
+                    points: [[28.5, 23.0], [35.0, 23.0], [35.5, 32.5], [29.0, 31.8]],
+                    teamName: "فريق النسر الفاتح (الفريق 1)"
+                },
+                {
+                    name: "إمارة قمم الأناضول والتعدين الحصين",
+                    points: [[29.0, 36.5], [42.0, 36.5], [42.0, 42.0], [29.0, 42.0]],
+                    teamName: "فريق أسود الجبال (الفريق 2)"
+                },
+                {
+                    name: "جمهورية ثغور وموانئ المتوسط التجارية",
+                    points: [[12.0, 32.0], [26.0, 32.0], [25.5, 37.0], [12.0, 37.0]],
+                    teamName: "فريق بحارة المتوسط (الفريق 3)"
+                },
+                {
+                    name: "سلطنة واحات الحجاز وقوافل الصحراء",
+                    points: [[37.5, 16.0], [51.0, 16.0], [49.5, 28.0], [37.5, 27.0]],
+                    teamName: "فريق فرسان الصحراء (الفريق 4)"
+                },
+                {
+                    name: "خانية سهوب الحرير والمراعي الفسيحة",
+                    points: [[56.0, 36.0], [75.0, 36.0], [75.0, 46.5], [56.0, 46.5]],
+                    teamName: "فريق درع السهوب (الفريق 5)"
+                },
+                {
+                    name: "مملكة جبال الأطلس وحصون الغرب",
+                    points: [[-6.0, 30.5], [7.5, 30.5], [7.5, 36.2], [-6.0, 36.2]],
+                    teamName: "فريق صقور الأطلس (الفريق 6)"
+                },
+                {
+                    name: "إمارة مضيق هرمز ومسارات التوابل",
+                    points: [[53.0, 22.5], [62.5, 22.5], [62.5, 28.5], [53.0, 28.5]],
+                    teamName: "فريق حماة المضائق (الفريق 7)"
+                },
+                {
+                    name: "سلطنة باب المندب والقرن البحري",
+                    points: [[41.0, 11.5], [48.5, 11.5], [48.5, 17.5], [41.0, 17.5]],
+                    teamName: "فريق رواد القرن (الفريق 8)"
+                }
+            ];
+
+            simState.customNations = {};
+            Object.keys(nationsData).forEach(function(k) {
+                delete nationsData[k];
+            });
+
+            var createdIds = [];
+            for (var i = 0; i < numTeams && i < presets.length; i++) {
+                var p = presets[i];
+                var nat = inferTerritoryGeoProfile(p.points, p.name);
+                if (nat) {
+                    nat.assignedTeam = p.teamName;
+                    simState.customNations[nat.id] = nat;
+                    nationsData[nat.id] = nat;
+                    simState.teamAssignments[p.teamName] = nat.id;
+                    createdIds.push(nat.id);
+                }
+            }
+
+            simState.isSandboxMode = true;
+            if (createdIds.length > 0) {
+                simState.activeNationId = createdIds[0];
+            }
+
+            var logMsg = "✨ قام المعلم بالتوليد التلقائي لـ " + createdIds.length + " أقاليم مخصصة وتوزيعها على الفرق الطلابية.";
+            simState.eventsLog.unshift(logMsg);
+
+            populateNationSelects();
+            updateActiveNationUI();
+            updateTeacherSandboxUI();
+            renderSimMapLayers();
+            renderTeacherEventsLog();
+            saveSandboxSimulationState();
+
+            if (createdIds.length > 0) {
+                openCountryDossier(createdIds[0]);
+            }
+
+            if (typeof Go === "function") Go("تم إنشاء " + createdIds.length + " أقاليم متوازنة لفرق الصف وفتح وثيقة تأسيس الأمة! ✨");
+        }
+
+        // Optional Loader for Historical Nations Template (Used for testing and historical baseline)
+        function loadHistoricalTemplate() {
+            simState.customNations = {};
+            Object.keys(historicalNationsTemplate).forEach(function(k) {
+                var copy = JSON.parse(JSON.stringify(historicalNationsTemplate[k]));
+                nationsData[k] = copy;
+            });
+            simState.activeNationId = "nile";
+            simState.isSandboxMode = false;
+            simState.scouts = [
+                { id: "s1", nation: "nile", name: "طليعة استطلاع سيناء", coords: [33.8, 29.5], status: "متربص ويرصد حركة الشمال" },
+                { id: "s2", nation: "desert", name: "فرسان استطلاع الحجاز", coords: [40.2, 23.8], status: "في مأمن بالدائرة الخارجية" }
+            ];
+            simState.capturedSpies = [
+                { id: "cs1", name: "جاسوس متنكر بقافلة تمور", originNation: "steppes", captorNation: "nile", status: "محتجز بغرفة التحقيق", detectedInCircle: "الدائرة الداخلية (0 - 30 كم)" }
+            ];
+            populateNationSelects();
+            updateActiveNationUI();
+            updateTeacherSandboxUI();
+            renderSimMapLayers();
+            saveSandboxSimulationState();
         }
 
         // Update Teacher Modal Sandbox UI List
@@ -15473,20 +15649,34 @@
 
         // Populate Selects
         function populateNationSelects() {
+            var keys = Object.keys(nationsData);
             if (simNationSelect) {
                 simNationSelect.innerHTML = "";
-                Object.keys(nationsData).forEach(function(k) {
-                    var n = nationsData[k];
-                    var opt = document.createElement("option");
-                    opt.value = n.id;
-                    opt.textContent = n.flag + " " + n.name;
-                    simNationSelect.appendChild(opt);
-                });
-                simNationSelect.value = simState.activeNationId;
+                if (keys.length === 0) {
+                    var emptyOpt = document.createElement("option");
+                    emptyOpt.value = "";
+                    emptyOpt.textContent = "🎨 لم تحدد دولاً بعد (انقر لرسم دولة)";
+                    simNationSelect.appendChild(emptyOpt);
+                } else {
+                    keys.forEach(function(k) {
+                        var n = nationsData[k];
+                        var opt = document.createElement("option");
+                        opt.value = n.id;
+                        var teamSuffix = n.assignedTeam ? " [" + n.assignedTeam.split(" ")[0] + "]" : "";
+                        opt.textContent = n.flag + " " + n.name + teamSuffix;
+                        simNationSelect.appendChild(opt);
+                    });
+                    if (simState.activeNationId && nationsData[simState.activeNationId]) {
+                        simNationSelect.value = simState.activeNationId;
+                    } else if (keys.length > 0) {
+                        simState.activeNationId = keys[0];
+                        simNationSelect.value = keys[0];
+                    }
+                }
             }
             if (simRewardNationSelect) {
                 simRewardNationSelect.innerHTML = "";
-                Object.keys(nationsData).forEach(function(k) {
+                keys.forEach(function(k) {
                     var n = nationsData[k];
                     var opt = document.createElement("option");
                     opt.value = n.id;
@@ -15496,7 +15686,7 @@
             }
             if (simCaravanDestSelect) {
                 simCaravanDestSelect.innerHTML = "";
-                Object.keys(nationsData).forEach(function(k) {
+                keys.forEach(function(k) {
                     if (k === simState.activeNationId) return;
                     var n = nationsData[k];
                     var opt = document.createElement("option");
@@ -15508,7 +15698,7 @@
             if (simCalcOriginSelect && simCalcTargetSelect) {
                 simCalcOriginSelect.innerHTML = "";
                 simCalcTargetSelect.innerHTML = "";
-                Object.keys(nationsData).forEach(function(k) {
+                keys.forEach(function(k) {
                     var n = nationsData[k];
                     var opt1 = document.createElement("option");
                     opt1.value = k;
@@ -15520,8 +15710,13 @@
                     opt2.textContent = n.capital + " (" + n.name + ")";
                     simCalcTargetSelect.appendChild(opt2);
                 });
-                simCalcOriginSelect.value = "nile";
-                simCalcTargetSelect.value = "anatolia";
+                if (keys.length >= 2) {
+                    simCalcOriginSelect.value = keys[0];
+                    simCalcTargetSelect.value = keys[1];
+                } else if (keys.length === 1) {
+                    simCalcOriginSelect.value = keys[0];
+                    simCalcTargetSelect.value = keys[0];
+                }
             }
         }
 
@@ -15640,7 +15835,7 @@
                 if (rem >= 86400) {
                     var days = Math.floor(rem / 86400);
                     var hrs = Math.floor((rem % 86400) / 3600);
-                    simCycleCountdown.textContent = days + " يوم " + hrs + " ساعة";
+                    simCycleCountdown.textContent = (hrs > 0) ? (days + " يوم و " + hrs + " س") : (days + " يوم");
                 } else if (rem >= 3600) {
                     var h = Math.floor(rem / 3600);
                     var min = Math.floor((rem % 3600) / 60);
@@ -15652,7 +15847,7 @@
                 }
             }
             if (simCycleProgressFill) {
-                var dur = simState.seasonDuration || 90;
+                var dur = simState.seasonDuration || 604800;
                 var progress = ((dur - simState.seasonTimeRemaining) / dur) * 100;
                 simCycleProgressFill.style.width = Math.min(100, Math.max(0, progress)).toFixed(1) + "%";
             }
@@ -15663,16 +15858,20 @@
             simState.gamePace = pace;
             var dur = 90;
             var paceTitle = "وضع الحصة المدرسية (90 ثانية / دورة)";
+            var paceTag = "دورة حصة (90 ثانية)";
             if (pace === "daily") {
                 dur = 86400;
                 paceTitle = "وضع اليوم الدراسي (24 ساعة / دورة)";
+                paceTag = "دورة يومية (24 ساعة)";
             } else if (pace === "weekly_semester") {
                 dur = 604800;
                 paceTitle = "وضع الفصل الدراسي الكامل (أسبوع واقعي = دورة موسمية)";
+                paceTag = "دورة أسبوعية (فصل كامل)";
             }
             simState.seasonDuration = dur;
             simState.seasonTimeRemaining = dur;
             if (simGamePaceSelect) simGamePaceSelect.value = pace;
+            if (simPaceDisplay) simPaceDisplay.textContent = paceTag;
             updateSeasonalClockUI();
             saveSandboxSimulationState();
 
@@ -15829,7 +16028,22 @@
         // Update Active Nation Profile & Panels
         function updateActiveNationUI() {
             var n = nationsData[simState.activeNationId];
-            if (!n) return;
+            if (!n) {
+                if (simNationFlag) simNationFlag.textContent = "🗺️";
+                if (simNationName) simNationName.textContent = "لم يتم تحديد دولة بعد";
+                if (simNationCapital) simNationCapital.textContent = "انقر على 'رسم دولة' أو 'أقاليم الفرق'";
+                if (simNationBiome) simNationBiome.textContent = "بانتظار تخطيط المعلم";
+                if (simNationClimate) simNationClimate.textContent = "المناخ: غير محدد";
+                if (simQuickFood) simQuickFood.textContent = "0";
+                if (simQuickMetals) simQuickMetals.textContent = "0";
+                if (simQuickLivestock) simQuickLivestock.textContent = "0";
+                if (simQuickGold) simQuickGold.textContent = "0";
+                if (simQuickTroops) simQuickTroops.textContent = "0";
+                if (simCouncilMedallion) simCouncilMedallion.textContent = "🗺️";
+                if (simCouncilTitle) simCouncilTitle.textContent = "الموجه الإمبراطوري";
+                if (simCouncilText) simCouncilText.textContent = "ابدأ بتخطيط أقاليم العالم ورسم حدود الدول للفرق الطلابية عبر شريط الأدوات العلوي!";
+                return;
+            }
 
             if (simNationFlag) simNationFlag.textContent = n.flag;
             if (simNationName) simNationName.textContent = n.name;
@@ -16284,50 +16498,10 @@
             var proj = typeof ao === "function" ? ao() : null;
             if (!proj) return;
 
-            var activeNat = nationsData[simState.activeNationId];
-            if (!activeNat) return;
-
+            var activeNat = nationsData[simState.activeNationId] || null;
             var t = (typeof li !== "undefined" && li && li.k) || (window.currentTransform && window.currentTransform.k) || 1;
 
-            // 1. Territory Polygon - ONLY ACTIVE NATION IS DISPLAYED!
-            if (activeNat.territory && activeNat.territory.length >= 3) {
-                var pathData = activeNat.territory.map(function(pt, idx) {
-                    var p = proj(pt);
-                    return (idx === 0 ? "M" : "L") + p[0] + "," + p[1];
-                }).join(" ") + " Z";
-
-                simLayer.append("path")
-                    .attr("class", "sim-territory-poly active-territory")
-                    .attr("d", pathData)
-                    .attr("fill", activeNat.color)
-                    .attr("stroke", activeNat.color)
-                    .attr("stroke-width", 2 / t)
-            }
-
-            // Other Custom Nations Territories in Sandbox Mode (Subtle partition borders)
-            if (simState.customNations) {
-                Object.keys(simState.customNations).forEach(function(cId) {
-                    if (cId === activeNat.id) return;
-                    var cNat = simState.customNations[cId];
-                    if (cNat && cNat.territory && cNat.territory.length >= 3) {
-                        var cPath = cNat.territory.map(function(pt, idx) {
-                            var p = proj(pt);
-                            return (idx === 0 ? "M" : "L") + p[0] + "," + p[1];
-                        }).join(" ") + " Z";
-
-                        simLayer.append("path")
-                            .attr("class", "sim-territory-poly other-custom-territory")
-                            .attr("d", cPath)
-                            .attr("fill", cNat.color || "#64748b")
-                            .attr("stroke", cNat.color || "#64748b")
-                            .attr("stroke-width", 1.8 / t)
-                            .attr("stroke-dasharray", (5 / t) + "," + (3 / t))
-                            .attr("fill-opacity", 0.12);
-                    }
-                });
-            }
-
-            // Live Freeform Territory Drawing Preview
+            // 0. Live Freeform Territory Drawing Preview (Teacher Sandbox)
             if (simState.isDrawingTerritory && simState.currentDrawingPoints && simState.currentDrawingPoints.length > 0) {
                 var drawPts = simState.currentDrawingPoints;
                 var drawPath = drawPts.map(function(pt, idx) {
@@ -16370,8 +16544,46 @@
                 });
             }
 
+            // 1. Territory Polygon - ONLY ACTIVE NATION IS DISPLAYED!
+            if (activeNat && activeNat.territory && activeNat.territory.length >= 3) {
+                var pathData = activeNat.territory.map(function(pt, idx) {
+                    var p = proj(pt);
+                    return (idx === 0 ? "M" : "L") + p[0] + "," + p[1];
+                }).join(" ") + " Z";
+
+                simLayer.append("path")
+                    .attr("class", "sim-territory-poly active-territory")
+                    .attr("d", pathData)
+                    .attr("fill", activeNat.color)
+                    .attr("stroke", activeNat.color)
+                    .attr("stroke-width", 2 / t);
+            }
+
+            // Other Custom Nations Territories in Sandbox Mode (Subtle partition borders)
+            if (simState.customNations) {
+                Object.keys(simState.customNations).forEach(function(cId) {
+                    if (activeNat && cId === activeNat.id) return;
+                    var cNat = simState.customNations[cId];
+                    if (cNat && cNat.territory && cNat.territory.length >= 3) {
+                        var cPath = cNat.territory.map(function(pt, idx) {
+                            var p = proj(pt);
+                            return (idx === 0 ? "M" : "L") + p[0] + "," + p[1];
+                        }).join(" ") + " Z";
+
+                        simLayer.append("path")
+                            .attr("class", "sim-partition-poly other-custom-territory")
+                            .attr("d", cPath)
+                            .attr("fill", cNat.color || "#64748b")
+                            .attr("stroke", cNat.color || "#64748b")
+                            .attr("stroke-width", 1.8 / t)
+                            .attr("stroke-dasharray", (5 / t) + "," + (3 / t))
+                            .attr("fill-opacity", 0.12);
+                    }
+                });
+            }
+
             // Safe route polyline if chartered by Spatial Planner
-            if (simState.safeRoutes && simState.safeRoutes[activeNat.id]) {
+            if (activeNat && simState.safeRoutes && simState.safeRoutes[activeNat.id]) {
                 var cX = activeNat.coords[0];
                 var cY = activeNat.coords[1];
                 var safePoints = [
@@ -16415,7 +16627,7 @@
             chokePointsData.forEach(function(cp) {
                 var p = proj(cp.coords);
                 if (!p || isNaN(p[0]) || isNaN(p[1])) return;
-                var isMine = cp.controller === activeNat.id;
+                var isMine = activeNat && cp.controller === activeNat.id;
 
                 var g = simLayer.append("g")
                     .attr("class", "sim-choke-point-group" + (isMine ? " choke-mine" : ""))
@@ -16463,103 +16675,107 @@
             });
 
             // 3. Capitals: ONLY Active Nation is prominently displayed
-            var pCap = proj(activeNat.coords);
-            if (pCap && !isNaN(pCap[0]) && !isNaN(pCap[1])) {
-                var gCap = simLayer.append("g")
-                    .attr("class", "sim-capital-marker active-capital")
-                    .attr("transform", "translate(" + pCap[0] + "," + pCap[1] + ")");
+            if (activeNat && activeNat.coords) {
+                var pCap = proj(activeNat.coords);
+                if (pCap && !isNaN(pCap[0]) && !isNaN(pCap[1])) {
+                    var gCap = simLayer.append("g")
+                        .attr("class", "sim-capital-marker active-capital")
+                        .attr("transform", "translate(" + pCap[0] + "," + pCap[1] + ")");
 
-                gCap.append("circle")
-                    .attr("class", "sim-capital-aura")
-                    .attr("r", 18 / t)
-                    .attr("fill", "none")
-                    .attr("stroke", activeNat.color)
-                    .attr("stroke-width", 2.2 / t)
-                    .attr("opacity", 0.65);
+                    gCap.append("circle")
+                        .attr("class", "sim-capital-aura")
+                        .attr("r", 18 / t)
+                        .attr("fill", "none")
+                        .attr("stroke", activeNat.color)
+                        .attr("stroke-width", 2.2 / t)
+                        .attr("opacity", 0.65);
 
-                gCap.append("circle")
-                    .attr("class", "sim-capital-circle")
-                    .attr("r", 11 / t)
-                    .attr("fill", activeNat.color)
-                    .attr("stroke", "#ffffff")
-                    .attr("stroke-width", 2 / t);
+                    gCap.append("circle")
+                        .attr("class", "sim-capital-circle")
+                        .attr("r", 11 / t)
+                        .attr("fill", activeNat.color)
+                        .attr("stroke", "#ffffff")
+                        .attr("stroke-width", 2 / t);
 
-                gCap.append("text")
-                    .attr("class", "sim-capital-label")
-                    .attr("x", 18 / t)
-                    .attr("y", 5 / t)
-                    .attr("text-anchor", "start")
-                    .attr("fill", "#ffffff")
-                    .attr("font-size", (13 / t) + "px")
-                    .attr("font-weight", "bold")
-                    .attr("paint-order", "stroke fill")
-                    .attr("stroke", "#0f172a")
-                    .attr("stroke-width", 3 / t)
-                    .attr("stroke-linejoin", "round")
-                    .text(activeNat.flag + " " + activeNat.capital);
+                    gCap.append("text")
+                        .attr("class", "sim-capital-label")
+                        .attr("x", 18 / t)
+                        .attr("y", 5 / t)
+                        .attr("text-anchor", "start")
+                        .attr("fill", "#ffffff")
+                        .attr("font-size", (13 / t) + "px")
+                        .attr("font-weight", "bold")
+                        .attr("paint-order", "stroke fill")
+                        .attr("stroke", "#0f172a")
+                        .attr("stroke-width", 3 / t)
+                        .attr("stroke-linejoin", "round")
+                        .text(activeNat.flag + " " + activeNat.capital);
+                }
             }
 
             // 3b. Diplomatic Silk Treaty Ribbons connecting Active Capital to Allies & Truces
-            var alliedOrTruce = (activeNat.allies || []).concat(activeNat.truces || []);
-            alliedOrTruce.forEach(function(otherId) {
-                if (otherId === activeNat.id) return;
-                var otherNat = nationsData[otherId];
-                if (!otherNat || !otherNat.coords) return;
+            if (activeNat && activeNat.coords) {
+                var alliedOrTruce = (activeNat.allies || []).concat(activeNat.truces || []);
+                alliedOrTruce.forEach(function(otherId) {
+                    if (otherId === activeNat.id) return;
+                    var otherNat = nationsData[otherId];
+                    if (!otherNat || !otherNat.coords) return;
 
-                var pFrom = proj(activeNat.coords);
-                var pTo = proj(otherNat.coords);
-                if (!pFrom || !pTo || isNaN(pFrom[0]) || isNaN(pTo[0])) return;
+                    var pFrom = proj(activeNat.coords);
+                    var pTo = proj(otherNat.coords);
+                    if (!pFrom || !pTo || isNaN(pFrom[0]) || isNaN(pTo[0])) return;
 
-                var isAlly = (activeNat.allies || []).indexOf(otherId) !== -1;
-                var ribbonColor = isAlly ? "#10b981" : "#f59e0b";
+                    var isAlly = (activeNat.allies || []).indexOf(otherId) !== -1;
+                    var ribbonColor = isAlly ? "#10b981" : "#f59e0b";
 
-                var midX = (pFrom[0] + pTo[0]) / 2;
-                var midY = (pFrom[1] + pTo[1]) / 2;
-                var dx = pTo[0] - pFrom[0];
-                var dy = pTo[1] - pFrom[1];
-                var dist = Math.sqrt(dx * dx + dy * dy);
-                var normX = -dy / (dist || 1);
-                var normY = dx / (dist || 1);
-                var curveDist = Math.min(50, Math.max(20, dist * 0.15));
-                var ctrlX = midX + normX * curveDist;
-                var ctrlY = midY + normY * curveDist;
+                    var midX = (pFrom[0] + pTo[0]) / 2;
+                    var midY = (pFrom[1] + pTo[1]) / 2;
+                    var dx = pTo[0] - pFrom[0];
+                    var dy = pTo[1] - pFrom[1];
+                    var dist = Math.sqrt(dx * dx + dy * dy);
+                    var normX = -dy / (dist || 1);
+                    var normY = dx / (dist || 1);
+                    var curveDist = Math.min(50, Math.max(20, dist * 0.15));
+                    var ctrlX = midX + normX * curveDist;
+                    var ctrlY = midY + normY * curveDist;
 
-                var ribbonPath = "M" + pFrom[0] + "," + pFrom[1] + " Q" + ctrlX + "," + ctrlY + " " + pTo[0] + "," + pTo[1];
+                    var ribbonPath = "M" + pFrom[0] + "," + pFrom[1] + " Q" + ctrlX + "," + ctrlY + " " + pTo[0] + "," + pTo[1];
 
-                simLayer.append("path")
-                    .attr("class", "sim-silk-ribbon")
-                    .attr("d", ribbonPath)
-                    .attr("fill", "none")
-                    .attr("stroke", ribbonColor)
-                    .attr("stroke-width", 2 / t);
+                    simLayer.append("path")
+                        .attr("class", "sim-silk-ribbon")
+                        .attr("d", ribbonPath)
+                        .attr("fill", "none")
+                        .attr("stroke", ribbonColor)
+                        .attr("stroke-width", 2 / t);
 
-                var sealMidX = (pFrom[0] + 2 * ctrlX + pTo[0]) / 4;
-                var sealMidY = (pFrom[1] + 2 * ctrlY + pTo[1]) / 4;
+                    var sealMidX = (pFrom[0] + 2 * ctrlX + pTo[0]) / 4;
+                    var sealMidY = (pFrom[1] + 2 * ctrlY + pTo[1]) / 4;
 
-                var gSeal = simLayer.append("g")
-                    .attr("class", "sim-treaty-seal")
-                    .attr("transform", "translate(" + sealMidX + "," + sealMidY + ")");
+                    var gSeal = simLayer.append("g")
+                        .attr("class", "sim-treaty-seal")
+                        .attr("transform", "translate(" + sealMidX + "," + sealMidY + ")");
 
-                gSeal.append("circle")
-                    .attr("class", "sim-seal-circle")
-                    .attr("r", 10 / t)
-                    .attr("fill", "#0f172a")
-                    .attr("stroke", ribbonColor)
-                    .attr("stroke-width", 1.8 / t);
+                    gSeal.append("circle")
+                        .attr("class", "sim-seal-circle")
+                        .attr("r", 10 / t)
+                        .attr("fill", "#0f172a")
+                        .attr("stroke", ribbonColor)
+                        .attr("stroke-width", 1.8 / t);
 
-                gSeal.append("text")
-                    .attr("class", "sim-seal-icon")
-                    .attr("y", 3.5 / t)
-                    .attr("text-anchor", "middle")
-                    .attr("font-size", (10 / t) + "px")
-                    .text(isAlly ? "🤝" : "🛡️");
+                    gSeal.append("text")
+                        .attr("class", "sim-seal-icon")
+                        .attr("y", 3.5 / t)
+                        .attr("text-anchor", "middle")
+                        .attr("font-size", (10 / t) + "px")
+                        .text(isAlly ? "🤝" : "🛡️");
 
-                gSeal.on("click", function() {
-                    if (typeof Go === "function") {
-                        Go((isAlly ? "ميثاق تحالف تجاري ودفاعي مع " : "هدنة موسمية مع ") + otherNat.name);
-                    }
+                    gSeal.on("click", function() {
+                        if (typeof Go === "function") {
+                            Go((isAlly ? "ميثاق تحالف تجاري ودفاعي مع " : "هدنة موسمية مع ") + otherNat.name);
+                        }
+                    });
                 });
-            });
+            }
 
             // 3c. Partner Capitals (Subtle Clickable Trade Anchors for Direct Point-and-Click Trade)
             Object.keys(nationsData).forEach(function(k) {
@@ -16600,7 +16816,7 @@
 
             // 4. Caravans (Active nation's inbound & outbound caravans)
             simState.caravans.filter(function(c) {
-                return c.from === activeNat.id || c.to === activeNat.id;
+                return activeNat && (c.from === activeNat.id || c.to === activeNat.id);
             }).forEach(function(c) {
                 var pStart = proj(c.startCoords);
                 var pEnd = proj(c.endCoords);
@@ -16656,7 +16872,7 @@
 
             // 5. Scouts belonging to active nation
             simState.scouts.filter(function(s) {
-                return s.nation === activeNat.id;
+                return activeNat && (s.nation === activeNat.id);
             }).forEach(function(s) {
                 var p = proj(s.coords);
                 if (!p) return;
@@ -16743,11 +16959,20 @@
             renderSimMapLayers();
             renderTeacherEventsLog();
             startSeasonalClock();
+
+            // Open World Setup Modal if no nations are defined yet
+            if (Object.keys(simState.customNations).length === 0 && simWorldSetupModal) {
+                simWorldSetupModal.style.display = "flex";
+            }
+
             if (typeof Go === "function") Go("مرحباً بك في محاكاة الأمم: صراع وازدهار الحضارات");
             if (window.lucide && lucide.createIcons) lucide.createIcons();
         }
 
         function closeNationSim() {
+            if (simState.isDrawingTerritory) {
+                cleanupDrawingTerritoryMode();
+            }
             simState.isOpen = false;
             stopSeasonalClock();
             if (nationSimContainer) nationSimContainer.style.display = "none";
@@ -16755,6 +16980,7 @@
             if (simPlaceScoutBanner) simPlaceScoutBanner.style.display = "none";
             if (simDrawTerritoryBanner) simDrawTerritoryBanner.style.display = "none";
             if (simCountryDossierModal) simCountryDossierModal.style.display = "none";
+            if (simWorldSetupModal) simWorldSetupModal.style.display = "none";
             if (simTeacherModal) simTeacherModal.style.display = "none";
             if (simQuickTradeModal) simQuickTradeModal.style.display = "none";
             var controlsBar = document.getElementById("controlsBar");
@@ -16789,8 +17015,9 @@
 
         if (simNationSelect) {
             simNationSelect.addEventListener("change", function() {
-                simState.activeNationId = this.value;
+                simState.activeNationId = this.value || null;
                 updateActiveNationUI();
+                renderSimMapLayers();
             });
         }
 
@@ -16805,7 +17032,13 @@
         if (simSignDefensePactBtn) {
             simSignDefensePactBtn.addEventListener("click", function() {
                 var n = nationsData[simState.activeNationId];
-                var targetId = n.id === "nile" ? "mediterranean" : "nile";
+                if (!n) return;
+                var otherKeys = Object.keys(nationsData).filter(function(k) { return k !== n.id; });
+                if (otherKeys.length === 0) {
+                    if (typeof Go === "function") Go("⚠️ لا توجد دول أخرى في العالم لتوقيع ميثاق الدفاع معها!");
+                    return;
+                }
+                var targetId = otherKeys[0];
                 if (n.allies.indexOf(targetId) === -1) n.allies.push(targetId);
                 var decree = "🤝 تم توقيع ميثاق دفاع مشترك ومساعدة متبادلة مع " + nationsData[targetId].name + ".";
                 n.decrees.unshift(decree);
@@ -16813,12 +17046,14 @@
                 if (typeof Go === "function") Go("تم توقيع ميثاق الدفاع المشترك بنجاح!");
                 updateActiveNationUI();
                 renderTeacherEventsLog();
+                renderSimMapLayers();
             });
         }
 
         if (simSignTradeAgreementBtn) {
             simSignTradeAgreementBtn.addEventListener("click", function() {
                 var n = nationsData[simState.activeNationId];
+                if (!n) return;
                 var decree = "📜 تم إبرام اتفاقية تجارية تمنح تخفيضاً في رسوم العبور بنسبة 40%.";
                 n.decrees.unshift(decree);
                 n.gold += 80;
@@ -16832,6 +17067,7 @@
         if (simDeclareSeasonalTruceBtn) {
             simDeclareSeasonalTruceBtn.addEventListener("click", function() {
                 var n = nationsData[simState.activeNationId];
+                if (!n) return;
                 var decree = "🛡️ تم إعلان هدنة موسمية طوال فصل " + simState.seasons[simState.seasonIdx].name + " لتمكين القوافل من عبور الطرق بأمان.";
                 n.decrees.unshift(decree);
                 simState.eventsLog.unshift(decree);
@@ -16845,9 +17081,14 @@
         if (simDispatchCaravanBtn) {
             simDispatchCaravanBtn.addEventListener("click", function() {
                 var n = nationsData[simState.activeNationId];
-                var destKey = simCaravanDestSelect ? simCaravanDestSelect.value : "mediterranean";
-                var targetNat = nationsData[destKey];
-                if (!targetNat) return;
+                if (!n) return;
+                var otherKeys = Object.keys(nationsData).filter(function(k) { return k !== n.id; });
+                var destKey = (simCaravanDestSelect && simCaravanDestSelect.value) ? simCaravanDestSelect.value : (otherKeys[0] || null);
+                var targetNat = destKey ? nationsData[destKey] : null;
+                if (!targetNat) {
+                    if (typeof Go === "function") Go("⚠️ يجب توفر دولة شريكة أخرى لإرسال القافلة إليها!");
+                    return;
+                }
 
                 if (n.food < 100) {
                     if (typeof Go === "function") Go("تحذير: لا يوجد مخزون كافٍ من القمح لتسيير القافلة!");
@@ -16971,6 +17212,10 @@
 
                 // 1. Territory Drawing Mode
                 if (simState.isDrawingTerritory) {
+                    if (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
                     var pt = [parseFloat(coords[0].toFixed(2)), parseFloat(coords[1].toFixed(2))];
                     simState.currentDrawingPoints.push(pt);
                     if (simDrawnPointsCount) {
@@ -17027,12 +17272,27 @@
                     crisisDesc = "☀️ موجة جفاف حادة ضربت واحات الصحراء وأحواض الأنهار، مما قلص محاصيل الغذاء بنسبة 20%.";
                     Object.keys(nationsData).forEach(function(k) { nationsData[k].food = Math.max(100, nationsData[k].food - 120); });
                 } else if (crisis === "flood") {
-                    crisisDesc = "🌊 فيضان موسمي عارم غمر حوض النيل والرافدين، جلب طمياً خصباً لكنه أخر حركة القوافل.";
-                    nationsData.nile.food += 250;
+                    crisisDesc = "🌊 فيضان موسمي عارم غمر أحواض الأنهار والسهول الفيضية، جلب طمياً خصباً لكنه أخر حركة القوافل.";
+                    if (nationsData.nile) {
+                        nationsData.nile.food += 250;
+                    } else {
+                        Object.keys(nationsData).forEach(function(k) {
+                            if (nationsData[k].biome && nationsData[k].biome.indexOf("نهر") !== -1) nationsData[k].food += 250;
+                        });
+                    }
                 } else if (crisis === "goldrush") {
-                    crisisDesc = "🪙 اكتشاف عرق ذهب ومعادن نفيسة في هضبة الأناضول، مما رفع ثروة الإمارة بنسبة قياسية!";
-                    nationsData.anatolia.gold += 300;
-                    nationsData.anatolia.metals += 150;
+                    crisisDesc = "🪙 اكتشاف عرق ذهب ومعادن نفيسة في السلاسل الجبلية، مما رفع ثروة المناجم بنسبة قياسية!";
+                    if (nationsData.anatolia) {
+                        nationsData.anatolia.gold += 300;
+                        nationsData.anatolia.metals += 150;
+                    } else {
+                        Object.keys(nationsData).forEach(function(k) {
+                            if (nationsData[k].biome && (nationsData[k].biome.indexOf("جبل") !== -1 || nationsData[k].biome.indexOf("معدن") !== -1)) {
+                                nationsData[k].gold += 300;
+                                nationsData[k].metals += 150;
+                            }
+                        });
+                    }
                 } else if (crisis === "frost") {
                     crisisDesc = "❄️ موجة صقيع قارس جمدت ممرات سهوب آسيا، مما شل حركة قوافل الشمال مؤقتاً.";
                 }
@@ -17047,9 +17307,9 @@
         // Curriculum Reward Granter
         if (simGrantRewardBtn) {
             simGrantRewardBtn.addEventListener("click", function() {
-                var targetKey = simRewardNationSelect ? simRewardNationSelect.value : "nile";
+                var targetKey = simRewardNationSelect ? simRewardNationSelect.value : (simState.activeNationId || Object.keys(nationsData)[0]);
                 var rewardType = simRewardTypeSelect ? simRewardTypeSelect.value : "wheat";
-                var targetNat = nationsData[targetKey];
+                var targetNat = targetKey ? nationsData[targetKey] : null;
                 if (!targetNat) return;
 
                 var text = "";
@@ -17569,17 +17829,46 @@
         }
 
         if (simConfirmTerritoryBtn) {
-            simConfirmTerritoryBtn.addEventListener("click", function() {
+            simConfirmTerritoryBtn.addEventListener("click", function(e) {
+                if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
                 var customName = simCustomNationNameInput ? simCustomNationNameInput.value.trim() : "";
                 confirmCurrentTerritory(customName);
             });
         }
 
         if (simCancelTerritoryBtn) {
-            simCancelTerritoryBtn.addEventListener("click", function() {
+            simCancelTerritoryBtn.addEventListener("click", function(e) {
+                if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
                 cancelDrawingTerritory();
             });
         }
+
+        if (simCustomNationNameInput) {
+            simCustomNationNameInput.addEventListener("keydown", function(e) {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var customName = simCustomNationNameInput.value.trim();
+                    confirmCurrentTerritory(customName);
+                } else if (e.key === "Escape") {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    cancelDrawingTerritory();
+                }
+            });
+        }
+
+        window.addEventListener("keydown", function(e) {
+            if (simState.isDrawingTerritory && e.key === "Escape") {
+                cancelDrawingTerritory();
+            }
+        });
 
         if (simAutoAssignTeamsBtn) {
             simAutoAssignTeamsBtn.addEventListener("click", function() {
@@ -17618,6 +17907,53 @@
             });
         }
 
+        // Quick Top HUD Action Buttons
+        if (simQuickDrawTerritoryBtn) {
+            simQuickDrawTerritoryBtn.addEventListener("click", function() {
+                startDrawingTerritory();
+            });
+        }
+
+        if (simQuickAutoGenerateBtn) {
+            simQuickAutoGenerateBtn.addEventListener("click", function() {
+                generatePresetNationsForTeams(5);
+            });
+        }
+
+        if (simViewDossierHudBtn) {
+            simViewDossierHudBtn.addEventListener("click", function() {
+                if (simState.activeNationId && nationsData[simState.activeNationId]) {
+                    openCountryDossier(simState.activeNationId);
+                } else if (Object.keys(nationsData).length > 0) {
+                    openCountryDossier(Object.keys(nationsData)[0]);
+                } else {
+                    if (typeof Go === "function") Go("⚠️ لم يتم إنشاء أي أمة بعد! انقر على 'رسم دولة' أو 'أقاليم الفرق'");
+                }
+            });
+        }
+
+        // World Setup Modal Buttons
+        if (simWorldSetupCloseBtn) {
+            simWorldSetupCloseBtn.addEventListener("click", function() {
+                if (simWorldSetupModal) simWorldSetupModal.style.display = "none";
+            });
+        }
+
+        if (simSetupStartDrawBtn) {
+            simSetupStartDrawBtn.addEventListener("click", function() {
+                if (simWorldSetupModal) simWorldSetupModal.style.display = "none";
+                startDrawingTerritory();
+            });
+        }
+
+        if (simSetupAutoGenerateBtn) {
+            simSetupAutoGenerateBtn.addEventListener("click", function() {
+                var count = simSetupTeamCountSelect ? parseInt(simSetupTeamCountSelect.value, 10) : 5;
+                if (simWorldSetupModal) simWorldSetupModal.style.display = "none";
+                generatePresetNationsForTeams(count || 5);
+            });
+        }
+
         window.openNationSimulation = openNationSim;
         window.closeNationSimulation = closeNationSim;
         window.advanceSimSeason = advanceSimSeason;
@@ -17634,6 +17970,8 @@
         window.cancelDrawingTerritory = cancelDrawingTerritory;
         window.confirmCurrentTerritory = confirmCurrentTerritory;
         window.openCountryDossier = openCountryDossier;
+        window.generatePresetNationsForTeams = generatePresetNationsForTeams;
+        window.loadHistoricalTemplate = loadHistoricalTemplate;
         window.autoAssignTeamsToCustomNations = autoAssignTeamsToCustomNations;
         window.resetSimulationToNewEpoch = resetSimulationToNewEpoch;
         window.setGamePace = setGamePace;

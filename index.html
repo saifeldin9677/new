@@ -2204,6 +2204,14 @@
                 </div>
 
                 <div class="sim-hud-right">
+                    <div class="sim-mp-badge" id="simMultiplayerBadge" style="display:none;background:rgba(16,185,129,0.15);border:1px solid #10b981;color:#10b981;border-radius:20px;padding:3px 10px;font-size:0.75rem;font-weight:700;align-items:center;gap:6px;">
+                        <span style="width:8px;height:8px;background:#10b981;border-radius:50%;display:inline-block;"></span>
+                        <span id="simMultiplayerBadgeText">متزامن سحابياً</span>
+                    </div>
+                    <button type="button" class="btn btn-secondary sim-hud-action-btn" id="simMultiplayerHubBtn" title="إدارة اللعبة الجماعية أو تسجيل دخول الطلاب" style="border-color:#8b5cf6;color:#a78bfa;">
+                        <i data-lucide="users" class="lucide-icon"></i>
+                        <span>لعبة جماعية 🌐</span>
+                    </button>
                     <div class="sim-power-badge" id="simPowerBadge" title="مؤشر قوة وازدهار الأمة التراكمي">
                         <span class="sim-power-icon">🏆</span>
                         <strong class="sim-power-val" id="simPowerScore">4,250</strong>
@@ -2780,6 +2788,10 @@
                                     <i data-lucide="pen-tool" class="lucide-icon"></i>
                                     <span>🎨 رسم مضلع دولة جديدة على الخريطة</span>
                                 </button>
+                                <button type="button" class="btn btn-secondary sim-sandbox-btn" id="simTeacherOpenMpBtn" style="border-color:#8b5cf6;color:#c084fc;">
+                                    <i data-lucide="globe" class="lucide-icon"></i>
+                                    <span>🌐 إعدادات اللعبة الجماعية والرموز</span>
+                                </button>
                                 <button type="button" class="btn btn-secondary sim-sandbox-btn" id="simAutoAssignTeamsBtn">
                                     <i data-lucide="shuffle" class="lucide-icon"></i>
                                     <span>🎲 توزيع الأقاليم عشوائياً على فرق الصف</span>
@@ -2864,6 +2876,141 @@
                                     توليد وتوزيع الفرق ✨
                                 </button>
                             </div>
+
+                            <!-- Choice 3: Start Multiplayer Game (Cloud) -->
+                            <div class="sim-dossier-card" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(168,85,247,0.1);border:1px solid #a855f7;border-radius:8px;">
+                                <div>
+                                    <div style="font-weight:700;color:#c084fc;font-size:0.95rem;">🌐 الخيار 3: تدشين لعبة جماعية سحابية (Multiplayer Cloud)</div>
+                                    <div style="font-size:0.82rem;color:#94a3b8;">توليد رموز انضمام خاصة لـ 5 أدوار وزارية لكل فريق ومزامنة الخريطة عبر أجهزة الطلاب مباشرة.</div>
+                                </div>
+                                <div style="display:flex;gap:6px;">
+                                    <button type="button" class="btn btn-primary" id="simSetupStartMultiplayerBtn" style="padding:8px 14px;font-weight:700;white-space:nowrap;background:#9333ea;border-color:#a855f7;color:#fff;">
+                                        تدشين لعبة جماعية 🌐
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" id="simSetupStudentLoginBtn" style="padding:8px 12px;font-size:0.85rem;white-space:nowrap;">
+                                        دخول طالب 🔑
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Teacher Multiplayer Management Modal (إدارة اللعبة الجماعية والفرق والأدوار) -->
+            <div class="sim-teacher-modal-overlay" id="simTeacherMultiplayerModal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="simTeacherMpTitle">
+                <div class="sim-teacher-modal-box" style="max-width:850px;width:95vw;">
+                    <div class="sim-modal-header" style="background:linear-gradient(135deg, rgba(76,29,149,0.9), rgba(15,23,42,0.95));">
+                        <div class="sim-modal-header-title">
+                            <span style="font-size:1.8rem;">🌐</span>
+                            <div>
+                                <h3 id="simTeacherMpTitle" style="margin:0;font-size:1.2rem;color:#f8fafc;">إدارة اللعبة الجماعية السحابية (Stage 1: Multiplayer Engine)</h3>
+                                <div style="font-size:0.82rem;color:#c084fc;">تكوين فرق الصف وتوليد رموز الانضمام للأدوار الوزارية الخمسة لكل فريق</div>
+                            </div>
+                        </div>
+                        <button type="button" class="close-btn" id="simTeacherMpCloseBtn" aria-label="إغلاق"><i data-lucide="x" class="lucide-icon"></i></button>
+                    </div>
+
+                    <div class="sim-teacher-modal-body" style="padding:20px;gap:16px;">
+                        <!-- Game Config Row -->
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:12px;background:rgba(0,0,0,0.25);padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.08);">
+                            <div>
+                                <label for="simMpGameCodeInput" style="display:block;font-size:0.8rem;color:#94a3b8;margin-bottom:4px;font-weight:700;">رمز اللعبة (Game Code):</label>
+                                <div style="display:flex;gap:6px;">
+                                    <input type="text" id="simMpGameCodeInput" class="sim-input" style="font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#38bdf8;padding:6px 10px;font-size:0.95rem;background:rgba(15,23,42,0.8);border:1px solid #38bdf8;border-radius:6px;width:100%;" placeholder="SIM101">
+                                    <button type="button" class="btn btn-secondary" id="simMpRegenGameCodeBtn" title="توليد رمز لعبة جديد" style="padding:6px 10px;">🎲</button>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="simMpGamePaceSelect" style="display:block;font-size:0.8rem;color:#94a3b8;margin-bottom:4px;font-weight:700;">إيقاع سريان الفصول:</label>
+                                <select id="simMpGamePaceSelect" class="sim-select" style="padding:6px 10px;font-size:0.85rem;width:100%;">
+                                    <option value="weekly_semester" selected>🏛️ فصلي أسبوعي (أسبوع كامل = فصل)</option>
+                                    <option value="daily">📅 يومي (24 ساعة = فصل)</option>
+                                    <option value="classroom">⏱️ حصة مدرسية (90 ثانية = فصل)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="simMpTeamCountSelect" style="display:block;font-size:0.8rem;color:#94a3b8;margin-bottom:4px;font-weight:700;">عدد الفرق:</label>
+                                <select id="simMpTeamCountSelect" class="sim-select" style="padding:6px 10px;font-size:0.85rem;width:100%;">
+                                    <option value="1">فريق واحد (تجربة واختبار)</option>
+                                    <option value="2">فريقان</option>
+                                    <option value="3">3 فرق</option>
+                                    <option value="4">4 فرق</option>
+                                    <option value="5" selected>5 فرق</option>
+                                    <option value="6">6 فرق</option>
+                                    <option value="7">7 فرق</option>
+                                    <option value="8">8 فرق</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Status bar -->
+                        <div id="simMpTeacherAlert" style="display:none;padding:10px 14px;border-radius:8px;font-size:0.85rem;line-height:1.5;"></div>
+
+                        <!-- Teams and Members Cards List -->
+                        <div id="simMpTeamsList" style="display:flex;flex-direction:column;gap:14px;max-height:48vh;overflow-y:auto;padding-right:4px;">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+
+                        <!-- Action Bar -->
+                        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.1);">
+                            <div style="display:flex;gap:8px;">
+                                <button type="button" class="btn btn-secondary" id="simMpCopyAllCodesBtn" style="padding:8px 14px;font-size:0.85rem;">
+                                    📋 نسخ كافة الرموز للمعلم
+                                </button>
+                                <button type="button" class="btn btn-secondary" id="simMpSwitchToDrawingBtn" style="padding:8px 14px;font-size:0.85rem;border-color:#3b82f6;color:#60a5fa;">
+                                    🎨 رسم / تعيين أقاليم الفرق
+                                </button>
+                            </div>
+                            <button type="button" class="btn btn-primary" id="simMpSaveGameBtn" style="padding:9px 20px;font-weight:800;background:linear-gradient(135deg,#9333ea,#7c3aed);border:none;border-radius:8px;font-size:0.95rem;">
+                                🚀 تدشين وحفظ اللعبة على السحابة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Login Modal (تسجيل دخول الطالب برمز اللعبة ورمز الدور الوزاري) -->
+            <div class="sim-teacher-modal-overlay" id="simPlayerLoginModal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="simPlayerLoginTitle">
+                <div class="sim-teacher-modal-box" style="max-width:480px;width:95vw;">
+                    <div class="sim-modal-header" style="background:linear-gradient(135deg, rgba(14,116,144,0.9), rgba(15,23,42,0.95));">
+                        <div class="sim-modal-header-title">
+                            <span style="font-size:1.8rem;">🔑</span>
+                            <div>
+                                <h3 id="simPlayerLoginTitle" style="margin:0;font-size:1.15rem;color:#f8fafc;">تسجيل دخول طالب — محاكاة الأمم</h3>
+                                <div style="font-size:0.8rem;color:#7dd3fc;">انضم إلى فريقك وتولى قيادة وزارتك على الخريطة الحية</div>
+                            </div>
+                        </div>
+                        <button type="button" class="close-btn" id="simPlayerLoginCloseBtn" aria-label="إغلاق"><i data-lucide="x" class="lucide-icon"></i></button>
+                    </div>
+
+                    <div class="sim-teacher-modal-body" style="padding:22px;gap:16px;">
+                        <div>
+                            <label for="simLoginGameCode" style="display:block;font-size:0.85rem;color:#cbd5e1;margin-bottom:6px;font-weight:700;">
+                                🏷️ رمز اللعبة الجماعية (Game Code):
+                            </label>
+                            <input type="text" id="simLoginGameCode" class="sim-input" style="width:100%;font-size:1.1rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;padding:10px 14px;border-radius:8px;border:1.5px solid #0284c7;background:rgba(15,23,42,0.9);color:#38bdf8;" placeholder="مثال: SIM101" autocomplete="off">
+                        </div>
+
+                        <div>
+                            <label for="simLoginJoinCode" style="display:block;font-size:0.85rem;color:#cbd5e1;margin-bottom:6px;font-weight:700;">
+                                🛡️ رمز انضمامك الشخصي (8 أحرف):
+                            </label>
+                            <input type="text" id="simLoginJoinCode" class="sim-input" style="width:100%;font-size:1.15rem;font-weight:800;text-transform:uppercase;letter-spacing:3px;padding:10px 14px;border-radius:8px;border:1.5px solid #10b981;background:rgba(15,23,42,0.9);color:#34d399;" placeholder="مثال: K7X9M2W4" autocomplete="off">
+                            <div style="font-size:0.75rem;color:#94a3b8;margin-top:4px;">
+                                الرمز المكون من 8 أحرف وأرقام الذي سلمه لك المعلم لدورك الخاص.
+                            </div>
+                        </div>
+
+                        <div id="simLoginStatusAlert" style="display:none;padding:10px 14px;border-radius:8px;font-size:0.85rem;line-height:1.5;"></div>
+
+                        <div style="display:flex;gap:10px;margin-top:8px;">
+                            <button type="button" class="btn btn-primary" id="simSubmitPlayerLoginBtn" style="flex:1;padding:12px;font-size:1rem;font-weight:800;background:linear-gradient(135deg,#0284c7,#0369a1);border:none;border-radius:8px;">
+                                👑 دخول واستلام الراية
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="simCancelPlayerLoginBtn" style="padding:12px 18px;font-size:0.9rem;">
+                                إلغاء
+                            </button>
                         </div>
                     </div>
                 </div>

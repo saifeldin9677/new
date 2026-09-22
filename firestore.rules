@@ -84,6 +84,44 @@ service cloud.firestore {
     }
 
     // ──────────────────────────────────────────────────────────────
+    // Nation Simulation — Stage 1: Multiplayer Foundation
+    // ──────────────────────────────────────────────────────────────
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    match /simGames/{gameId} {
+      allow create: if isTeacher();
+      allow read: if isSignedIn();
+      // Allow teacher to update any field; allow signed-in players to advance season clock fields
+      allow update: if (isTeacher() && resource.data.teacherId == request.auth.uid)
+        || (isSignedIn() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['seasonIdx', 'year', 'currentSeasonStartedAt', 'status']));
+      allow delete: if false;
+
+      match /teams/{teamId} {
+        allow read: if isSignedIn();
+        allow create: if isTeacher()
+          && get(/databases/$(database)/documents/simGames/$(gameId)).data.teacherId == request.auth.uid;
+        // Teacher can update team info/nationId/reset codes; signed-in players can update members to claim their role
+        allow update: if (isTeacher() && get(/databases/$(database)/documents/simGames/$(gameId)).data.teacherId == request.auth.uid)
+          || (isSignedIn() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['members']));
+        allow delete: if false;
+      }
+
+      match /nations/{nationId} {
+        allow read: if isSignedIn();
+        allow create: if isTeacher()
+          && get(/databases/$(database)/documents/simGames/$(gameId)).data.teacherId == request.auth.uid;
+        // Temporary loose rule for Stage 1 foundation: any signed-in player may update
+        // this nation's shared state. Narrowing this to per-role field permissions
+        // (e.g., only the military role can change troop counts) is intentionally
+        // deferred to Stage 2 — this stage only proves the sync itself works.
+        allow update: if isSignedIn();
+        allow delete: if false;
+      }
+    }
+
+    // ──────────────────────────────────────────────────────────────
     // Everything else
     // ──────────────────────────────────────────────────────────────
     // Default: every other collection/path is DENIED.

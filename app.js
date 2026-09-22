@@ -14750,7 +14750,30 @@
             simSetupStartDrawBtn = document.getElementById("simSetupStartDrawBtn"),
             simSetupAutoGenerateBtn = document.getElementById("simSetupAutoGenerateBtn"),
             simSetupTeamCountSelect = document.getElementById("simSetupTeamCountSelect"),
-            simPaceDisplay = document.getElementById("simPaceDisplay");
+            simSetupStartMultiplayerBtn = document.getElementById("simSetupStartMultiplayerBtn"),
+            simSetupStudentLoginBtn = document.getElementById("simSetupStudentLoginBtn"),
+            simMultiplayerBadge = document.getElementById("simMultiplayerBadge"),
+            simMultiplayerBadgeText = document.getElementById("simMultiplayerBadgeText"),
+            simMultiplayerHubBtn = document.getElementById("simMultiplayerHubBtn"),
+            simTeacherOpenMpBtn = document.getElementById("simTeacherOpenMpBtn"),
+            simTeacherMultiplayerModal = document.getElementById("simTeacherMultiplayerModal"),
+            simTeacherMpCloseBtn = document.getElementById("simTeacherMpCloseBtn"),
+            simMpGameCodeInput = document.getElementById("simMpGameCodeInput"),
+            simMpRegenGameCodeBtn = document.getElementById("simMpRegenGameCodeBtn"),
+            simMpGamePaceSelect = document.getElementById("simMpGamePaceSelect"),
+            simMpTeamCountSelect = document.getElementById("simMpTeamCountSelect"),
+            simMpTeacherAlert = document.getElementById("simMpTeacherAlert"),
+            simMpTeamsList = document.getElementById("simMpTeamsList"),
+            simMpCopyAllCodesBtn = document.getElementById("simMpCopyAllCodesBtn"),
+            simMpSwitchToDrawingBtn = document.getElementById("simMpSwitchToDrawingBtn"),
+            simMpSaveGameBtn = document.getElementById("simMpSaveGameBtn"),
+            simPlayerLoginModal = document.getElementById("simPlayerLoginModal"),
+            simPlayerLoginCloseBtn = document.getElementById("simPlayerLoginCloseBtn"),
+            simLoginGameCode = document.getElementById("simLoginGameCode"),
+            simLoginJoinCode = document.getElementById("simLoginJoinCode"),
+            simLoginStatusAlert = document.getElementById("simLoginStatusAlert"),
+            simSubmitPlayerLoginBtn = document.getElementById("simSubmitPlayerLoginBtn"),
+            simCancelPlayerLoginBtn = document.getElementById("simCancelPlayerLoginBtn");
 
         // Historical Core Nations Template (Available as an optional preset/reference)
         var historicalNationsTemplate = {
@@ -14929,7 +14952,17 @@
             isDrawingTerritory: false,
             currentDrawingPoints: [],
             gamePace: "weekly_semester",
-            teamAssignments: {}
+            teamAssignments: {},
+            isMultiplayer: false,
+            gameId: null,
+            teamId: null,
+            teamName: null,
+            playerRole: null,
+            playerName: null,
+            currentSeasonStartedAt: null,
+            unsubGame: null,
+            unsubTeams: null,
+            unsubNations: null
         };
 
         // --- Sandbox Geopolitical GIS Inference Engine ---
@@ -15289,6 +15322,15 @@
             simState.isSandboxMode = true;
             simState.activeNationId = newNation.id;
 
+            if (simState.isMultiplayer && simState.gameId && window.firebaseAssignTeamNation) {
+                var unassigned = mpTeacherTeams.find(function(t) { return !t.nationId; });
+                if (unassigned) {
+                    unassigned.nationId = newNation.id;
+                    newNation.assignedTeam = unassigned.name;
+                    window.firebaseAssignTeamNation(simState.gameId, unassigned.id, newNation.id, newNation);
+                }
+            }
+
             var logMsg = "🗺️ قام المعلم بتدشين وتخطيط أمة جديدة: " + newNation.name + " (" + newNation.biome + ")";
             simState.eventsLog.unshift(logMsg);
 
@@ -15389,6 +15431,14 @@
                     nat.assignedTeam = teamName;
                     simState.teamAssignments[teamName] = nId;
                     logSummaries.push(teamName + " ➔ " + nat.name);
+
+                    if (simState.isMultiplayer && simState.gameId && window.firebaseAssignTeamNation) {
+                        var mpTeam = mpTeacherTeams[idx] || mpTeacherTeams.find(function(t) { return t.name === teamName; });
+                        if (mpTeam) {
+                            mpTeam.nationId = nId;
+                            window.firebaseAssignTeamNation(simState.gameId, mpTeam.id, nId, nat);
+                        }
+                    }
                 }
             });
 
@@ -15497,6 +15547,14 @@
                     nationsData[nat.id] = nat;
                     simState.teamAssignments[p.teamName] = nat.id;
                     createdIds.push(nat.id);
+
+                    if (simState.isMultiplayer && simState.gameId && window.firebaseAssignTeamNation) {
+                        var mpT = mpTeacherTeams[i] || mpTeacherTeams.find(function(t) { return t.name === p.teamName; });
+                        if (mpT) {
+                            mpT.nationId = nat.id;
+                            window.firebaseAssignTeamNation(simState.gameId, mpT.id, nat.id, nat);
+                        }
+                    }
                 }
             }
 
@@ -15727,7 +15785,7 @@
             var targKey = simCalcTargetSelect.value;
             var orig = nationsData[origKey];
             var targ = nationsData[targKey];
-            if (!orig || !targ) return;
+            if (!orig || !targ || !Array.isArray(orig.coords) || !Array.isArray(targ.coords)) return;
 
             var distRad = typeof d3 !== "undefined" && d3.geoDistance ? d3.geoDistance(orig.coords, targ.coords) : 0.15;
             var distKm = Math.max(1, Math.round(distRad * 6371));
@@ -15812,10 +15870,31 @@
             if (simState.timerInterval) return;
             simState.timerInterval = setInterval(function() {
                 if (!simState.isOpen) return;
-                simState.seasonTimeRemaining -= 1;
-                if (simState.seasonTimeRemaining <= 0) {
-                    simState.seasonTimeRemaining = simState.seasonDuration;
-                    advanceSimSeason();
+
+                if (simState.isMultiplayer && simState.currentSeasonStartedAt) {
+                    var startedSec = simState.currentSeasonStartedAt.seconds
+                        ? simState.currentSeasonStartedAt.seconds
+                        : (simState.currentSeasonStartedAt instanceof Date ? simState.currentSeasonStartedAt.getTime() / 1000 : Math.floor(Date.now() / 1000));
+                    var nowSec = Date.now() / 1000;
+                    var elapsed = Math.max(0, nowSec - startedSec);
+                    var dur = simState.seasonDuration || 604800;
+                    var rem = Math.max(0, dur - elapsed);
+                    simState.seasonTimeRemaining = rem;
+
+                    if (rem <= 0 && simState.gameId && window.firebaseAdvanceSimSeason) {
+                        var nextIdx = (simState.seasonIdx + 1) % 4;
+                        var nextYear = (simState.seasonIdx === 3) ? simState.year + 1 : simState.year;
+                        window.firebaseAdvanceSimSeason(simState.gameId, {
+                            seasonIdx: nextIdx,
+                            year: nextYear
+                        });
+                    }
+                } else {
+                    simState.seasonTimeRemaining -= 1;
+                    if (simState.seasonTimeRemaining <= 0) {
+                        simState.seasonTimeRemaining = simState.seasonDuration;
+                        advanceSimSeason();
+                    }
                 }
                 updateSeasonalClockUI();
             }, 1000);
@@ -16060,6 +16139,10 @@
             updateGauges(n);
             updateCouncilAdvice();
 
+            if (simState.isMultiplayer && simState.gameId && simState.activeNationId && !isRemoteSyncing) {
+                debouncedSyncNation(simState.activeNationId);
+            }
+
             if (simMonthlyConsumptionDisplay) simMonthlyConsumptionDisplay.textContent = n.consumption + " كيس / شهر";
             if (simFoodSecurityStatus) {
                 var months = Math.round(n.food / Math.max(1, n.consumption));
@@ -16075,9 +16158,9 @@
                 }
             }
 
-            if (simInfantryCount) simInfantryCount.textContent = n.infantry.toLocaleString() + " مقاتل";
-            if (simArchersCount) simArchersCount.textContent = n.archers.toLocaleString() + " مقاتل";
-            if (simCavalryCount) simCavalryCount.textContent = n.cavalry.toLocaleString() + " فارس";
+            if (simInfantryCount) simInfantryCount.textContent = ((n.infantry != null) ? n.infantry : Math.round((n.troops || 0) * 0.5)).toLocaleString() + " مقاتل";
+            if (simArchersCount) simArchersCount.textContent = ((n.archers != null) ? n.archers : Math.round((n.troops || 0) * 0.3)).toLocaleString() + " مقاتل";
+            if (simCavalryCount) simCavalryCount.textContent = ((n.cavalry != null) ? n.cavalry : Math.round((n.troops || 0) * 0.2)).toLocaleString() + " فارس";
 
             // Relations List
             if (simRelationsList) {
@@ -16085,9 +16168,9 @@
                 Object.keys(nationsData).forEach(function(k) {
                     if (k === n.id) return;
                     var other = nationsData[k];
-                    var isAlly = n.allies.indexOf(k) !== -1;
-                    var isEnemy = n.enemies.indexOf(k) !== -1;
-                    var isTruce = n.truces.indexOf(k) !== -1;
+                    var isAlly = (n.allies || []).indexOf(k) !== -1;
+                    var isEnemy = (n.enemies || []).indexOf(k) !== -1;
+                    var isTruce = (n.truces || []).indexOf(k) !== -1;
                     var statusText = isAlly ? "🤝 حلف دفاعي وتجاري" : (isEnemy ? "⚔️ حالة حرب" : (isTruce ? "🛡️ هدنة موسمية" : "🕊️ سلام وحياد"));
                     var badgeBg = isAlly ? "rgba(16, 185, 129, 0.2)" : (isEnemy ? "rgba(239, 68, 68, 0.2)" : "rgba(255, 255, 255, 0.08)");
 
@@ -16952,7 +17035,10 @@
                 Vn.select(".student-research-layer").style("display", "none");
             }
 
-            loadSandboxSimulationState();
+            if (!simState.isMultiplayer) {
+                loadSandboxSimulationState();
+            }
+
             populateNationSelects();
             updateActiveNationUI();
             switchRole(simState.activeRole);
@@ -16960,8 +17046,8 @@
             renderTeacherEventsLog();
             startSeasonalClock();
 
-            // Open World Setup Modal if no nations are defined yet
-            if (Object.keys(simState.customNations).length === 0 && simWorldSetupModal) {
+            // Open World Setup Modal if no nations are defined yet and not in multiplayer
+            if (!simState.isMultiplayer && Object.keys(simState.customNations).length === 0 && Object.keys(nationsData).length === 0 && simWorldSetupModal) {
                 simWorldSetupModal.style.display = "flex";
             }
 
@@ -16983,6 +17069,13 @@
             if (simWorldSetupModal) simWorldSetupModal.style.display = "none";
             if (simTeacherModal) simTeacherModal.style.display = "none";
             if (simQuickTradeModal) simQuickTradeModal.style.display = "none";
+            if (simTeacherMultiplayerModal) simTeacherMultiplayerModal.style.display = "none";
+            if (simPlayerLoginModal) simPlayerLoginModal.style.display = "none";
+
+            if (simState.unsubGame) { simState.unsubGame(); simState.unsubGame = null; }
+            if (simState.unsubTeams) { simState.unsubTeams(); simState.unsubTeams = null; }
+            if (simState.unsubNations) { simState.unsubNations(); simState.unsubNations = null; }
+
             var controlsBar = document.getElementById("controlsBar");
             if (controlsBar) controlsBar.style.display = "";
             var histBottomBar = document.getElementById("historyBottomBar");
@@ -17497,11 +17590,17 @@
         }
 
         // Seasonal Turn Progression Engine
-        function advanceSimSeason() {
-            simState.seasonIdx = (simState.seasonIdx + 1) % 4;
-            if (simState.seasonIdx === 0) {
-                simState.year += 1;
+        function advanceSimSeason(skipIncrement) {
+            if (!skipIncrement) {
+                simState.seasonIdx = (simState.seasonIdx + 1) % 4;
+                if (simState.seasonIdx === 0) {
+                    simState.year += 1;
+                }
             }
+            advanceSimSeasonLocalEffects();
+        }
+
+        function advanceSimSeasonLocalEffects() {
             var currSeason = simState.seasons[simState.seasonIdx];
             var seasonClasses = ["sim-season-spring", "sim-season-summer", "sim-season-autumn", "sim-season-winter"];
 
@@ -17954,6 +18053,595 @@
             });
         }
 
+        // ──────────────────────────────────────────────────────────────
+        // Nation Simulation — Stage 1: Multiplayer Foundation Module
+        // ──────────────────────────────────────────────────────────────
+        var mpTeacherTeams = [];
+        var simSyncDebounceTimers = {};
+        var isRemoteSyncing = false;
+
+        function generateSimJoinCode() {
+            var chars = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+            var code = "";
+            for (var i = 0; i < 8; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        function getRoleArabicTitle(role) {
+            switch(role) {
+                case "leader": return "القائد العام";
+                case "military": return "قائد الجيش";
+                case "intelligence": return "رئيس الاستخبارات";
+                case "economy": return "وزير الموارد";
+                case "planner": return "كبير المخططين";
+                default: return role || "عضو الفريق";
+            }
+        }
+
+        function debouncedSyncNation(nationId) {
+            console.log("[debouncedSyncNation called]", nationId, "isMultiplayer:", simState.isMultiplayer, "gameId:", simState.gameId, "isRemoteSyncing:", isRemoteSyncing);
+            if (!simState.isMultiplayer || !simState.gameId || !nationId || isRemoteSyncing) return;
+            if (simSyncDebounceTimers[nationId]) {
+                clearTimeout(simSyncDebounceTimers[nationId]);
+            }
+            simSyncDebounceTimers[nationId] = setTimeout(async function() {
+                try {
+                    console.log("[debouncedSyncNation timeout firing]", nationId);
+                    if (window.firebaseSyncNation && nationsData[nationId]) {
+                        await window.firebaseSyncNation(simState.gameId, nationId, nationsData[nationId]);
+                        console.log("[debouncedSyncNation completed firebaseSyncNation]", nationId);
+                    }
+                } catch(e) {
+                    console.warn("Failed debounced nation sync:", e);
+                }
+            }, 500);
+        }
+
+        var defaultTeamNamesList = [
+            "فريق النسر الفاتح (الفريق 1)",
+            "فريق أسود الجبال (الفريق 2)",
+            "فريق بحارة المتوسط (الفريق 3)",
+            "فريق فرسان الصحراء (الفريق 4)",
+            "فريق درع السهوب (الفريق 5)",
+            "فريق صقور الرافدين (الفريق 6)",
+            "فريق رواد الأطلس (الفريق 7)",
+            "فريق حماة المضائق (الفريق 8)"
+        ];
+        var defaultTeamColors = ["#3b82f6", "#f59e0b", "#10b981", "#ef4444", "#8b5cf6", "#06b6d4", "#ec4899", "#14b8a6"];
+
+        function initDefaultMpTeacherTeams(count) {
+            var n = Math.max(1, Math.min(8, parseInt(count, 10) || 5));
+            mpTeacherTeams.length = 0;
+            window.mpTeacherTeams = mpTeacherTeams;
+            for (var i = 0; i < n; i++) {
+                var tName = defaultTeamNamesList[i] || ("الفريق " + (i + 1));
+                var tColor = defaultTeamColors[i % defaultTeamColors.length];
+                var tId = "team_" + (i + 1);
+                var members = {};
+                ["leader", "military", "intelligence", "economy", "planner"].forEach(function(r) {
+                    var rAr = getRoleArabicTitle(r);
+                    members[r] = {
+                        name: "طالب " + (i + 1) + " (" + rAr + ")",
+                        rawCode: generateSimJoinCode(),
+                        joinCodeHash: "",
+                        claimedByUid: null
+                    };
+                });
+                mpTeacherTeams.push({
+                    id: tId,
+                    name: tName,
+                    color: tColor,
+                    nationId: null,
+                    members: members
+                });
+            }
+            window.mpTeacherTeams = mpTeacherTeams;
+            renderMultiplayerTeacherTeams();
+        }
+
+        function renderMultiplayerTeacherTeams() {
+            if (!simMpTeamsList) return;
+            if (!mpTeacherTeams || mpTeacherTeams.length === 0) {
+                initDefaultMpTeacherTeams(simMpTeamCountSelect ? simMpTeamCountSelect.value : 5);
+            }
+            var html = "";
+            mpTeacherTeams.forEach(function(t) {
+                html += '<div class="sim-dossier-card" style="background:rgba(15,23,42,0.7);border:1px solid ' + (t.color || "#3b82f6") + ';border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px;">';
+                html += '  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:8px;">';
+                html += '    <div style="display:flex;align-items:center;gap:8px;">';
+                html += '      <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:' + (t.color || "#3b82f6") + ';"></span>';
+                html += '      <strong style="font-size:1rem;color:#f8fafc;">' + t.name + '</strong>';
+                if (t.nationId && nationsData[t.nationId]) {
+                    html += '      <span style="font-size:0.75rem;background:#065f46;color:#6ee7b7;padding:2px 6px;border-radius:4px;">دولة معينة: ' + nationsData[t.nationId].name + '</span>';
+                } else {
+                    html += '      <span style="font-size:0.75rem;background:#374151;color:#9ca3af;padding:2px 6px;border-radius:4px;">لم تعين دولة بعد</span>';
+                }
+                html += '    </div>';
+                html += '    <span style="font-size:0.75rem;color:#94a3b8;">معرف: ' + t.id + '</span>';
+                html += '  </div>';
+
+                html += '  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));gap:8px;">';
+                ["leader", "military", "intelligence", "economy", "planner"].forEach(function(r) {
+                    var m = t.members[r];
+                    var isClaimed = !!m.claimedByUid;
+                    html += '    <div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:8px;display:flex;flex-direction:column;gap:4px;border:1px solid ' + (isClaimed ? '#059669' : 'rgba(255,255,255,0.06)') + ';">';
+                    html += '      <div style="font-size:0.75rem;font-weight:700;color:#93c5fd;">' + getRoleArabicTitle(r) + '</div>';
+                    html += '      <input type="text" class="sim-input sim-mp-name-input" data-team="' + t.id + '" data-role="' + r + '" value="' + (m.name || "") + '" style="font-size:0.78rem;padding:3px 6px;width:100%;border-radius:4px;background:rgba(0,0,0,0.5);color:#fff;border:1px solid #334155;">';
+                    html += '      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:3px;">';
+                    html += '        <code style="font-family:monospace;font-weight:800;font-size:0.85rem;color:#38bdf8;letter-spacing:1px;">' + (m.rawCode || '******') + '</code>';
+                    html += '        <div style="display:flex;gap:3px;">';
+                    html += '          <button type="button" class="btn btn-secondary sim-mp-copy-code-btn" data-code="' + (m.rawCode || '') + '" title="نسخ رمز الانضمام" style="padding:2px 5px;font-size:0.7rem;">📋</button>';
+                    html += '          <button type="button" class="btn btn-secondary sim-mp-regen-code-btn" data-team="' + t.id + '" data-role="' + r + '" title="تجديد هذا الرمز" style="padding:2px 5px;font-size:0.7rem;">🔄</button>';
+                    html += '        </div>';
+                    html += '      </div>';
+                    html += '      <div style="font-size:0.7rem;margin-top:2px;">' + (isClaimed ? '<span style="color:#34d399;font-weight:700;">✅ متصل</span>' : '<span style="color:#94a3b8;">⏳ لم ينضم</span>') + '</div>';
+                    html += '    </div>';
+                });
+                html += '  </div>';
+                html += '</div>';
+            });
+            simMpTeamsList.innerHTML = html;
+
+            simMpTeamsList.querySelectorAll(".sim-mp-name-input").forEach(function(inp) {
+                inp.addEventListener("change", function() {
+                    var tId = this.dataset.team;
+                    var role = this.dataset.role;
+                    var team = mpTeacherTeams.find(function(x) { return x.id === tId; });
+                    if (team && team.members[role]) {
+                        team.members[role].name = this.value.trim();
+                    }
+                });
+            });
+
+            simMpTeamsList.querySelectorAll(".sim-mp-copy-code-btn").forEach(function(btn) {
+                btn.addEventListener("click", function() {
+                    var code = this.dataset.code;
+                    if (code && navigator.clipboard) {
+                        navigator.clipboard.writeText(code).then(function() {
+                            if (typeof Go === "function") Go("تم نسخ رمز الانضمام: " + code);
+                        });
+                    }
+                });
+            });
+
+            simMpTeamsList.querySelectorAll(".sim-mp-regen-code-btn").forEach(function(btn) {
+                btn.addEventListener("click", function() {
+                    var tId = this.dataset.team;
+                    var role = this.dataset.role;
+                    regenerateMemberJoinCode(tId, role);
+                });
+            });
+        }
+
+        async function saveMultiplayerGame() {
+            var gId = simMpGameCodeInput ? simMpGameCodeInput.value.trim().toUpperCase() : "";
+            if (!gId) {
+                gId = "SIM" + Math.floor(100 + Math.random() * 900);
+                if (simMpGameCodeInput) simMpGameCodeInput.value = gId;
+            }
+            var pace = simMpGamePaceSelect ? simMpGamePaceSelect.value : "weekly_semester";
+            var dur = 604800;
+            if (pace === "daily") dur = 86400;
+            else if (pace === "classroom") dur = 90;
+
+            if (simMpTeacherAlert) {
+                simMpTeacherAlert.style.display = "block";
+                simMpTeacherAlert.style.background = "rgba(59,130,246,0.2)";
+                simMpTeacherAlert.style.color = "#60a5fa";
+                simMpTeacherAlert.textContent = "جاري نشر وتدشين اللعبة السحابية والفرق على خوادم Firestore...";
+            }
+
+            var currentUser = window.firebaseAuth ? window.firebaseAuth.currentUser : null;
+            if (!currentUser && window.firebaseSignInAnonymous) {
+                var anonRes = await window.firebaseSignInAnonymous();
+                if (!anonRes.ok) {
+                    if (simMpTeacherAlert) {
+                        simMpTeacherAlert.style.background = "rgba(239,68,68,0.2)";
+                        simMpTeacherAlert.style.color = "#f87171";
+                        simMpTeacherAlert.textContent = "تعذر الاتصال بالمصادقة السحابية.";
+                    }
+                    return;
+                }
+            }
+
+            for (var t of mpTeacherTeams) {
+                for (var r of ["leader", "military", "intelligence", "economy", "planner"]) {
+                    var m = t.members[r];
+                    if (m && m.rawCode && !m.joinCodeHash) {
+                        m.joinCodeHash = await window.firebaseHashJoinCode(m.rawCode);
+                    }
+                }
+            }
+
+            var gameRes = await window.firebaseCreateSimGame(gId, {
+                gamePace: pace,
+                seasonDuration: dur,
+                year: simState.year || 1250
+            });
+            if (!gameRes.ok) {
+                if (simMpTeacherAlert) {
+                    simMpTeacherAlert.style.background = "rgba(239,68,68,0.2)";
+                    simMpTeacherAlert.style.color = "#f87171";
+                    simMpTeacherAlert.textContent = "تعذر تدشين اللعبة: " + (gameRes.error || "");
+                }
+                return;
+            }
+
+            var teamsDataForFirestore = mpTeacherTeams.map(function(teamObj) {
+                var cleanMembers = {};
+                ["leader", "military", "intelligence", "economy", "planner"].forEach(function(rk) {
+                    cleanMembers[rk] = {
+                        name: teamObj.members[rk].name,
+                        joinCodeHash: teamObj.members[rk].joinCodeHash,
+                        claimedByUid: teamObj.members[rk].claimedByUid || null
+                    };
+                });
+                return {
+                    id: teamObj.id,
+                    name: teamObj.name,
+                    color: teamObj.color,
+                    nationId: teamObj.nationId || null,
+                    members: cleanMembers
+                };
+            });
+
+            var teamsRes = await window.firebaseCreateSimTeams(gId, teamsDataForFirestore);
+            if (!teamsRes.ok) {
+                if (simMpTeacherAlert) {
+                    simMpTeacherAlert.style.background = "rgba(239,68,68,0.2)";
+                    simMpTeacherAlert.style.color = "#f87171";
+                    simMpTeacherAlert.textContent = "تعذر حفظ الفرق: " + (teamsRes.error || "");
+                }
+                return;
+            }
+
+            simState.isMultiplayer = true;
+            simState.gameId = gId;
+            simState.seasonDuration = dur;
+            simState.gamePace = pace;
+
+            if (simState.unsubTeams) simState.unsubTeams();
+            simState.unsubTeams = window.firebaseListenSimTeams(gId, function(updatedTeams) {
+                updatedTeams.forEach(function(uTeam) {
+                    var localT = mpTeacherTeams.find(function(lt) { return lt.id === uTeam.id; });
+                    if (localT && uTeam.members) {
+                        ["leader", "military", "intelligence", "economy", "planner"].forEach(function(rk) {
+                            if (localT.members[rk] && uTeam.members[rk]) {
+                                localT.members[rk].claimedByUid = uTeam.members[rk].claimedByUid;
+                            }
+                        });
+                    }
+                });
+                renderMultiplayerTeacherTeams();
+            });
+
+            if (simState.unsubNations) simState.unsubNations();
+            simState.unsubNations = window.firebaseListenSimNations(gId, function(updatedNations) {
+                updatedNations.forEach(function(nDoc) {
+                    nationsData[nDoc.id] = Object.assign(nationsData[nDoc.id] || {}, nDoc);
+                });
+                isRemoteSyncing = true;
+                try {
+                    updateActiveNationUI();
+                } catch(e) {
+                } finally {
+                    isRemoteSyncing = false;
+                }
+                renderSimMapLayers();
+            });
+
+            if (simMpTeacherAlert) {
+                simMpTeacherAlert.style.background = "rgba(16,185,129,0.2)";
+                simMpTeacherAlert.style.color = "#34d399";
+                simMpTeacherAlert.textContent = "✅ تم تدشين وحفظ اللعبة برمز: " + gId + ". الرموز جاهزة للمشاركة مع طلابك!";
+            }
+
+            if (simMultiplayerBadge) {
+                simMultiplayerBadge.style.display = "inline-flex";
+            }
+            if (simMultiplayerBadgeText) {
+                simMultiplayerBadgeText.textContent = "لعبة المعلم: " + gId + " 🟢";
+            }
+
+            if (typeof Go === "function") Go("تم نشر وتدشين اللعبة السحابية بنجاح! رمز اللعبة: " + gId);
+        }
+
+        async function regenerateMemberJoinCode(teamId, roleKey) {
+            var targetTeam = mpTeacherTeams.find(function(t) { return t.id === teamId; });
+            if (!targetTeam || !targetTeam.members[roleKey]) return;
+            var newCode = generateSimJoinCode();
+            var newHash = await window.firebaseHashJoinCode(newCode);
+
+            targetTeam.members[roleKey].rawCode = newCode;
+            targetTeam.members[roleKey].joinCodeHash = newHash;
+            targetTeam.members[roleKey].claimedByUid = null;
+
+            if (simState.gameId && window.firebaseRegenerateMemberCode) {
+                await window.firebaseRegenerateMemberCode(simState.gameId, teamId, roleKey, newHash);
+            }
+            window.mpTeacherTeams = mpTeacherTeams;
+            renderMultiplayerTeacherTeams();
+            if (typeof Go === "function") Go("تم تجديد رمز دور " + getRoleArabicTitle(roleKey) + ": " + newCode);
+            return newCode;
+        }
+
+        async function submitStudentLogin() {
+            var gId = simLoginGameCode ? simLoginGameCode.value.trim().toUpperCase() : "";
+            var jCode = simLoginJoinCode ? simLoginJoinCode.value.trim().toUpperCase() : "";
+            if (!gId || !jCode) {
+                if (simLoginStatusAlert) {
+                    simLoginStatusAlert.style.display = "block";
+                    simLoginStatusAlert.style.background = "rgba(239,68,68,0.2)";
+                    simLoginStatusAlert.style.color = "#f87171";
+                    simLoginStatusAlert.textContent = "يرجى إدخال رمز اللعبة ورمز الانضمام الشخصي.";
+                }
+                return;
+            }
+
+            if (simLoginStatusAlert) {
+                simLoginStatusAlert.style.display = "block";
+                simLoginStatusAlert.style.background = "rgba(59,130,246,0.2)";
+                simLoginStatusAlert.style.color = "#60a5fa";
+                simLoginStatusAlert.textContent = "جاري التحقق من الرمز وحجز مقعد الوزارة على السحابة...";
+            }
+
+            var res = await window.firebaseLookupAndClaimJoinCode(gId, jCode);
+            if (!res.ok) {
+                if (simLoginStatusAlert) {
+                    simLoginStatusAlert.style.display = "block";
+                    simLoginStatusAlert.style.background = "rgba(239,68,68,0.2)";
+                    simLoginStatusAlert.style.color = "#f87171";
+                    simLoginStatusAlert.textContent = res.message || "رمز الانضمام غير صالح أو اللعبة غير موجودة.";
+                }
+                return;
+            }
+
+            try {
+                localStorage.setItem("agy_sim_session", JSON.stringify({
+                    gameId: res.gameId,
+                    teamId: res.teamId,
+                    role: res.role,
+                    uid: res.uid,
+                    memberName: res.memberName,
+                    teamName: res.teamName,
+                    joinCode: jCode
+                }));
+            } catch(e) {}
+
+            startMultiplayerSession(res);
+        }
+
+        function startMultiplayerSession(res) {
+            simState.isMultiplayer = true;
+            simState.gameId = res.gameId;
+            simState.teamId = res.teamId;
+            simState.teamName = res.teamName;
+            simState.playerRole = res.role;
+            simState.playerName = res.memberName;
+            simState.activeRole = res.role;
+            simState.activeNationId = res.nationId || null;
+
+            if (simPlayerLoginModal) simPlayerLoginModal.style.display = "none";
+            if (simTeacherMultiplayerModal) simTeacherMultiplayerModal.style.display = "none";
+            if (simWorldSetupModal) simWorldSetupModal.style.display = "none";
+
+            simState.isOpen = true;
+            if (nationSimContainer) nationSimContainer.style.display = "flex";
+            var controlsBar = document.getElementById("controlsBar");
+            if (controlsBar) controlsBar.style.display = "none";
+            var histBottomBar = document.getElementById("historyBottomBar");
+            if (histBottomBar) histBottomBar.style.display = "none";
+
+            if (simMultiplayerBadge) {
+                simMultiplayerBadge.style.display = "inline-flex";
+            }
+            if (simMultiplayerBadgeText) {
+                simMultiplayerBadgeText.textContent = res.teamName + " | " + getRoleArabicTitle(res.role) + " (" + res.memberName + ")";
+            }
+
+            switchRole(res.role);
+            populateNationSelects();
+            updateActiveNationUI();
+            renderSimMapLayers();
+
+            if (simState.unsubGame) simState.unsubGame();
+            simState.unsubGame = window.firebaseListenSimGame(res.gameId, function(gDoc) {
+                if (!gDoc) return;
+                var seasonChanged = (gDoc.seasonIdx !== simState.seasonIdx || gDoc.year !== simState.year);
+                simState.seasonIdx = (typeof gDoc.seasonIdx === "number") ? gDoc.seasonIdx : simState.seasonIdx;
+                simState.year = (typeof gDoc.year === "number") ? gDoc.year : simState.year;
+                simState.gamePace = gDoc.gamePace || simState.gamePace;
+                simState.seasonDuration = gDoc.seasonDuration || simState.seasonDuration;
+                simState.currentSeasonStartedAt = gDoc.currentSeasonStartedAt || simState.currentSeasonStartedAt;
+
+                if (seasonChanged) {
+                    advanceSimSeasonLocalEffects();
+                }
+                updateSeasonalClockUI();
+            });
+
+            if (simState.unsubTeams) simState.unsubTeams();
+            simState.unsubTeams = window.firebaseListenSimTeams(res.gameId, function(teamsList) {
+                var myTeam = teamsList.find(function(t) { return t.id === simState.teamId; });
+                if (myTeam && myTeam.nationId && myTeam.nationId !== simState.activeNationId) {
+                    simState.activeNationId = myTeam.nationId;
+                    populateNationSelects();
+                    updateActiveNationUI();
+                    renderSimMapLayers();
+                    if (nationsData[simState.activeNationId]) {
+                        openCountryDossier(simState.activeNationId);
+                    }
+                }
+            });
+
+            if (simState.unsubNations) simState.unsubNations();
+            simState.unsubNations = window.firebaseListenSimNations(res.gameId, function(nationsList) {
+                nationsList.forEach(function(nDoc) {
+                    var nId = nDoc.id;
+                    nationsData[nId] = Object.assign(nationsData[nId] || {}, nDoc);
+                });
+                populateNationSelects();
+                if (simState.activeNationId && nationsData[simState.activeNationId]) {
+                    isRemoteSyncing = true;
+                    try {
+                        updateActiveNationUI();
+                    } catch(err) {
+                        console.error("Error in updateActiveNationUI during remote sync:", err);
+                    } finally {
+                        isRemoteSyncing = false;
+                    }
+                }
+                renderSimMapLayers();
+            });
+
+            startSeasonalClock();
+
+            if (typeof Go === "function") Go("مرحباً بك يا " + res.memberName + " في قيادة " + res.teamName + " (" + getRoleArabicTitle(res.role) + ") 👑");
+        }
+
+        function autoResumeSavedMultiplayerSession() {
+            try {
+                var saved = localStorage.getItem("agy_sim_session");
+                if (!saved) return;
+                var data = JSON.parse(saved);
+                if (data && data.gameId && data.teamId && data.role) {
+                    if (window.firebaseCheckSimSession) {
+                        window.firebaseCheckSimSession(data.gameId, data.teamId, data.role).then(function(checkRes) {
+                            if (checkRes && checkRes.valid) {
+                                startMultiplayerSession(checkRes);
+                            }
+                        });
+                    }
+                }
+            } catch(e) {}
+        }
+
+        // Multiplayer Event Listeners Wiring
+        if (simMultiplayerHubBtn) {
+            simMultiplayerHubBtn.addEventListener("click", function() {
+                var isTeacherAuth = (window.firebaseAuth && window.firebaseAuth.currentUser && window.isTeacherSignedIn);
+                if (isTeacherAuth || (mpTeacherTeams && mpTeacherTeams.length > 0 && !simState.isMultiplayer)) {
+                    if (simTeacherMultiplayerModal) {
+                        renderMultiplayerTeacherTeams();
+                        simTeacherMultiplayerModal.style.display = "flex";
+                    }
+                } else {
+                    if (simPlayerLoginModal) {
+                        simPlayerLoginModal.style.display = "flex";
+                    }
+                }
+            });
+        }
+
+        if (simSetupStartMultiplayerBtn) {
+            simSetupStartMultiplayerBtn.addEventListener("click", function() {
+                if (simWorldSetupModal) simWorldSetupModal.style.display = "none";
+                if (simTeacherMultiplayerModal) {
+                    renderMultiplayerTeacherTeams();
+                    simTeacherMultiplayerModal.style.display = "flex";
+                }
+            });
+        }
+
+        if (simSetupStudentLoginBtn) {
+            simSetupStudentLoginBtn.addEventListener("click", function() {
+                if (simWorldSetupModal) simWorldSetupModal.style.display = "none";
+                if (simPlayerLoginModal) {
+                    simPlayerLoginModal.style.display = "flex";
+                }
+            });
+        }
+
+        if (simTeacherOpenMpBtn) {
+            simTeacherOpenMpBtn.addEventListener("click", function() {
+                if (simTeacherMultiplayerModal) {
+                    renderMultiplayerTeacherTeams();
+                    simTeacherMultiplayerModal.style.display = "flex";
+                }
+            });
+        }
+
+        if (simTeacherMpCloseBtn) {
+            simTeacherMpCloseBtn.addEventListener("click", function() {
+                if (simTeacherMultiplayerModal) simTeacherMultiplayerModal.style.display = "none";
+            });
+        }
+
+        if (simPlayerLoginCloseBtn) {
+            simPlayerLoginCloseBtn.addEventListener("click", function() {
+                if (simPlayerLoginModal) simPlayerLoginModal.style.display = "none";
+            });
+        }
+
+        if (simCancelPlayerLoginBtn) {
+            simCancelPlayerLoginBtn.addEventListener("click", function() {
+                if (simPlayerLoginModal) simPlayerLoginModal.style.display = "none";
+            });
+        }
+
+        if (simSubmitPlayerLoginBtn) {
+            simSubmitPlayerLoginBtn.addEventListener("click", submitStudentLogin);
+        }
+
+        if (simLoginJoinCode) {
+            simLoginJoinCode.addEventListener("keydown", function(e) {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    submitStudentLogin();
+                }
+            });
+        }
+
+        if (simMpRegenGameCodeBtn) {
+            simMpRegenGameCodeBtn.addEventListener("click", function() {
+                var code = "SIM" + Math.floor(100 + Math.random() * 900);
+                if (simMpGameCodeInput) simMpGameCodeInput.value = code;
+            });
+        }
+
+        if (simMpTeamCountSelect) {
+            simMpTeamCountSelect.addEventListener("change", function() {
+                initDefaultMpTeacherTeams(this.value);
+            });
+        }
+
+        if (simMpSaveGameBtn) {
+            simMpSaveGameBtn.addEventListener("click", saveMultiplayerGame);
+        }
+
+        if (simMpCopyAllCodesBtn) {
+            simMpCopyAllCodesBtn.addEventListener("click", function() {
+                var gCode = (simMpGameCodeInput ? simMpGameCodeInput.value.trim().toUpperCase() : "") || "SIM101";
+                var text = "👑 بيانات الانضمام لمحاكاة الأمم الجماعية\n🏷️ رمز اللعبة: " + gCode + "\n════════════════════════════════════\n";
+                mpTeacherTeams.forEach(function(t) {
+                    text += "🚩 " + t.name + ":\n";
+                    ["leader", "military", "intelligence", "economy", "planner"].forEach(function(r) {
+                        var m = t.members[r];
+                        text += "  • " + getRoleArabicTitle(r) + " (" + m.name + "): " + (m.rawCode || '******') + "\n";
+                    });
+                    text += "\n";
+                });
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(text).then(function() {
+                        if (typeof Go === "function") Go("تم نسخ رموز انضمام كافة الفرق بنجاح!");
+                    });
+                }
+            });
+        }
+
+        if (simMpSwitchToDrawingBtn) {
+            simMpSwitchToDrawingBtn.addEventListener("click", function() {
+                if (simTeacherMultiplayerModal) simTeacherMultiplayerModal.style.display = "none";
+                startDrawingTerritory();
+            });
+        }
+
+        // Initialize default multiplayer teams structure in memory
+        initDefaultMpTeacherTeams(5);
+        autoResumeSavedMultiplayerSession();
+
         window.openNationSimulation = openNationSim;
         window.closeNationSimulation = closeNationSim;
         window.advanceSimSeason = advanceSimSeason;
@@ -17978,6 +18666,14 @@
         window.updateTeacherSandboxUI = updateTeacherSandboxUI;
         window.saveSandboxSimulationState = saveSandboxSimulationState;
         window.loadSandboxSimulationState = loadSandboxSimulationState;
+        window.startMultiplayerSession = startMultiplayerSession;
+        window.saveMultiplayerGame = saveMultiplayerGame;
+        window.submitStudentLogin = submitStudentLogin;
+        window.regenerateMemberJoinCode = regenerateMemberJoinCode;
+        window.initDefaultMpTeacherTeams = initDefaultMpTeacherTeams;
+        window.renderMultiplayerTeacherTeams = renderMultiplayerTeacherTeams;
+        window.debouncedSyncNation = debouncedSyncNation;
+        window.mpTeacherTeams = mpTeacherTeams;
         window.simState = simState;
         window.nationsData = nationsData;
     }();

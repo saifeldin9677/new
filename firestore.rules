@@ -90,12 +90,22 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    function isMemberOfNationTeam(gameId, nationId, uid) {
+      let ownerTeamId = get(/databases/$(database)/documents/simGames/$(gameId)/nations/$(nationId)).data.ownerTeamId;
+      let team = get(/databases/$(database)/documents/simGames/$(gameId)/teams/$(ownerTeamId)).data;
+      return team.members.leader.claimedByUid == uid
+          || team.members.military.claimedByUid == uid
+          || team.members.intelligence.claimedByUid == uid
+          || team.members.economy.claimedByUid == uid
+          || team.members.planner.claimedByUid == uid;
+    }
+
     match /simGames/{gameId} {
       allow create: if isTeacher();
       allow read: if isSignedIn();
-      // Allow teacher to update any field; allow signed-in players to advance season clock fields
+      // Allow teacher to update any field; allow signed-in players to advance season clock fields or claim/release resolution lock
       allow update: if (isTeacher() && resource.data.teacherId == request.auth.uid)
-        || (isSignedIn() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['seasonIdx', 'year', 'currentSeasonStartedAt', 'status']));
+        || (isSignedIn() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['seasonIdx', 'year', 'currentSeasonStartedAt', 'status', 'resolvingSeasonLock']));
       allow delete: if false;
 
       match /teams/{teamId} {
@@ -116,7 +126,41 @@ service cloud.firestore {
         // this nation's shared state. Narrowing this to per-role field permissions
         // (e.g., only the military role can change troop counts) is intentionally
         // deferred to Stage 2 — this stage only proves the sync itself works.
-        allow update: if isSignedIn();
+        // Stage 3 Resolver Override: The device holding the resolvingSeasonLock is
+        // explicitly permitted to write seasonal updates to EVERY nation during season resolution.
+        allow update: if isSignedIn()
+          || (isSignedIn() && get(/databases/$(database)/documents/simGames/$(gameId)).data.resolvingSeasonLock.uid == request.auth.uid);
+        allow delete: if false;
+      }
+
+      // ──────────────────────────────────────────────────────────────
+      // Nation Simulation — Stage 3: Caravans, Scouts, Logs, Spies
+      // ──────────────────────────────────────────────────────────────
+      match /caravans/{caravanId} {
+        allow read: if isSignedIn();
+        allow write: if isSignedIn();
+      }
+
+      match /scouts/{scoutId} {
+        allow read: if isSignedIn();
+        allow write: if isSignedIn();
+      }
+
+      match /eventsLog/{eventId} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn();
+        allow update, delete: if false;
+      }
+
+      match /capturedSpies/{spyId} {
+        // Read strictly restricted to the origin team and the capturing team
+        allow read: if isSignedIn() && (
+             isMemberOfNationTeam(gameId, resource.data.originNationId, request.auth.uid)
+          || isMemberOfNationTeam(gameId, resource.data.captorNationId, request.auth.uid)
+        );
+        allow create: if isSignedIn();
+        // Only the capturing team decides ransom/execute
+        allow update: if isSignedIn() && isMemberOfNationTeam(gameId, resource.data.captorNationId, request.auth.uid);
         allow delete: if false;
       }
     }

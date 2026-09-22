@@ -15881,12 +15881,28 @@
                     var rem = Math.max(0, dur - elapsed);
                     simState.seasonTimeRemaining = rem;
 
-                    if (rem <= 0 && simState.gameId && window.firebaseAdvanceSimSeason) {
-                        var nextIdx = (simState.seasonIdx + 1) % 4;
-                        var nextYear = (simState.seasonIdx === 3) ? simState.year + 1 : simState.year;
-                        window.firebaseAdvanceSimSeason(simState.gameId, {
-                            seasonIdx: nextIdx,
-                            year: nextYear
+                    if (rem <= 0 && simState.gameId && !simState.isResolvingSeason && window.firebaseTryClaimSeasonResolution) {
+                        simState.isResolvingSeason = true;
+                        window.firebaseTryClaimSeasonResolution(simState.gameId).then(async function(claimRes) {
+                            if (!claimRes || !claimRes.claimed) {
+                                console.log("[SIM] Resolution lock held by another client, awaiting resolution...");
+                                simState.isResolvingSeason = false;
+                                return;
+                            }
+                            console.log("[SIM] Resolution lock CLAIMED! Executing single-device authoritative season resolution...");
+                            try {
+                                await executeMultiplayerSeasonResolution(simState.gameId);
+                            } catch(err) {
+                                console.error("[SIM] Error during authoritative season resolution:", err);
+                            } finally {
+                                simState.isResolvingSeason = false;
+                                if (window.firebaseReleaseSeasonResolution) {
+                                    await window.firebaseReleaseSeasonResolution(simState.gameId);
+                                }
+                            }
+                        }).catch(function(err) {
+                            console.error("[SIM] Lock acquisition error:", err);
+                            simState.isResolvingSeason = false;
                         });
                     }
                 } else {
@@ -16247,23 +16263,48 @@
                 }
             }
 
-            // Captured Spies
+            // Captured Spies (Restricted Visibility: captor nation & origin nation only)
             if (simCapturedSpiesList) {
                 simCapturedSpiesList.innerHTML = "";
-                var natSpies = simState.capturedSpies.filter(function(cs) { return cs.captorNation === n.id; });
-                if (natSpies.length === 0) {
-                    simCapturedSpiesList.innerHTML = '<p class="sim-card-hint">لا يوجد جواسيس معتقلون حالياً في السجون.</p>';
+                var currentNatId = (n && n.id) ? n.id : simState.activeNationId;
+                var myCaptures = simState.capturedSpies.filter(function(cs) {
+                    var cId = cs.captorNationId || cs.captorNation;
+                    return cId === currentNatId && (!cs.status || (cs.status.indexOf("تمت") === -1 && cs.status.indexOf("تم الإعدام") === -1));
+                });
+                var myLostSpies = simState.capturedSpies.filter(function(cs) {
+                    var oId = cs.originNationId || cs.originNation;
+                    var cId = cs.captorNationId || cs.captorNation;
+                    return oId === currentNatId && cId !== currentNatId;
+                });
+
+                if (myCaptures.length === 0 && myLostSpies.length === 0) {
+                    simCapturedSpiesList.innerHTML = '<p class="sim-card-hint">لا يوجد جواسيس معتقلون حالياً في السجون أو مأسورون لدى الخصوم.</p>';
                 } else {
-                    natSpies.forEach(function(cs) {
-                        var orig = nationsData[cs.originNation];
+                    // 1. Spies our nation has captured in our prisons (with ransom/execute buttons)
+                    myCaptures.forEach(function(cs) {
+                        var oId = cs.originNationId || cs.originNation;
+                        var orig = nationsData[oId];
                         var item = document.createElement("div");
                         item.className = "sim-item-card";
-                        item.innerHTML = '<div class="sim-item-info"><span class="sim-item-title">🕵️ ' + cs.name + ' (تابع لـ: ' + (orig ? orig.name : cs.originNation) + ')</span>' +
-                                         '<span class="sim-item-meta">مكان الكشف: ' + cs.detectedInCircle + '</span></div>' +
+                        item.innerHTML = '<div class="sim-item-info"><span class="sim-item-title">🕵️ ' + cs.name + ' (تابع لـ: ' + (orig ? orig.name : oId) + ')</span>' +
+                                         '<span class="sim-item-meta">مكان الكشف: ' + (cs.detectedInCircle || "الدائرة الداخلية") + ' | الحالة: ' + (cs.status || "محتجز") + '</span></div>' +
                                          '<div style="display:flex;gap:6px;"><button class="btn btn-secondary btn-sm sim-ransom-btn" data-spy-id="' + cs.id + '">فدية ومقايضة</button>' +
                                          '<button class="btn btn-secondary btn-sm sim-execute-btn" style="color:#f87171;" data-spy-id="' + cs.id + '">إعدام</button></div>';
                         simCapturedSpiesList.appendChild(item);
                     });
+
+                    // 2. Our nation's scouts/spies captured by other nations
+                    myLostSpies.forEach(function(cs) {
+                        var cId = cs.captorNationId || cs.captorNation;
+                        var captor = nationsData[cId];
+                        var item = document.createElement("div");
+                        item.className = "sim-item-card";
+                        item.style.borderColor = "rgba(239, 68, 68, 0.4)";
+                        item.innerHTML = '<div class="sim-item-info"><span class="sim-item-title" style="color:#f87171;">⚠️ ' + cs.name + ' (محتجز في سجون: ' + (captor ? captor.name : cId) + ')</span>' +
+                                         '<span class="sim-item-meta">الحالة: ' + (cs.status || "محتجز بغرفة التحقيق") + ' | بانتظار قرار الخصم</span></div>';
+                        simCapturedSpiesList.appendChild(item);
+                    });
+
                     // Wire action buttons
                     simCapturedSpiesList.querySelectorAll(".sim-ransom-btn").forEach(function(btn) {
                         btn.onclick = function() {
@@ -16350,22 +16391,72 @@
             renderSimMapLayers();
         }
 
-        // Spy decisions
+        // Spy decisions (Restricted: Never logged to public eventsLog)
         function handleSpyDecision(spyId, decision) {
             var n = nationsData[simState.activeNationId];
-            simState.capturedSpies = simState.capturedSpies.filter(function(cs) { return cs.id !== spyId; });
+            var decreeText = "";
             if (decision === "ransom") {
-                n.gold += 120;
-                n.metals += 50;
-                simState.eventsLog.unshift("💰 تم إطلاق سراح الجاسوس عبر مقايضة دبلوماسية وحصلت " + n.name + " على فدية قدرها 120 دينار و50 سبيكة معادن.");
+                if (n) {
+                    n.gold += 120;
+                    n.metals += 50;
+                }
+                decreeText = "💰 تم إطلاق سراح الجاسوس عبر مقايضة دبلوماسية وحصلت " + (n ? n.name : "الدولة") + " على فدية قدرها 120 دينار و50 سبيكة معادن.";
                 if (typeof Go === "function") Go("تمت المقايضة الدبلوماسية واستلام الفدية بنجاح!");
             } else {
-                simState.eventsLog.unshift("⚖️ أصدرت محكمة " + n.name + " حكماً بإعدام الجاسوس، مما خفض كفاءة استخبارات العدو بنسبة 50% لفصل كامل.");
+                decreeText = "⚖️ أصدرت محكمة " + (n ? n.name : "الدولة") + " حكماً بإعدام الجاسوس، مما خفض كفاءة استخبارات العدو بنسبة 50% لفصل كامل.";
                 if (typeof Go === "function") Go("تم تنفيذ الحكم وإضعاف كفاءة استخبارات الخصم.");
             }
+            if (n && n.decrees) {
+                n.decrees.unshift(decreeText);
+            }
+
+            if (simState.isMultiplayer && simState.gameId) {
+                if (window.firebaseUpdateCapturedSpy) {
+                    window.firebaseUpdateCapturedSpy(simState.gameId, spyId, {
+                        status: decision === "ransom" ? "تمت المقايضة واستلام الفدية" : "تم تنفيذ حكم الإعدام",
+                        resolvedAt: new Date().toISOString()
+                    });
+                }
+                if (n && window.firebaseSyncNation) {
+                    window.firebaseSyncNation(simState.gameId, simState.activeNationId, n);
+                }
+                // NOTE: Spy decisions are strictly excluded from firebaseLogSimEvent to keep espionage private!
+            } else {
+                simState.capturedSpies = simState.capturedSpies.filter(function(cs) { return cs.id !== spyId; });
+                simState.eventsLog.unshift(decreeText);
+                renderTeacherEventsLog();
+            }
             updateActiveNationUI();
-            renderTeacherEventsLog();
         }
+
+        // Trigger / record a captured spy (restricted to origin & captor)
+        async function triggerSpyCapture(spyData) {
+            if (!spyData) return;
+            var originId = spyData.originNationId || spyData.originNation || "steppes";
+            var captorId = spyData.captorNationId || spyData.captorNation || simState.activeNationId || "nile";
+            var originNat = nationsData[originId];
+            var captorNat = nationsData[captorId];
+            var newSpy = {
+                id: spyData.id || ("spy_" + Date.now()),
+                originNationId: originId,
+                originTeamId: spyData.originTeamId || null,
+                captorNationId: captorId,
+                captorTeamId: spyData.captorTeamId || null,
+                name: spyData.name || "جاسوس سري متنكر",
+                status: spyData.status || "محتجز بغرفة التحقيق",
+                detectedInCircle: spyData.detectedInCircle || "الدائرة الداخلية (0 - 30 كم)"
+            };
+
+            if (simState.isMultiplayer && simState.gameId && window.firebaseCaptureSpy) {
+                await window.firebaseCaptureSpy(simState.gameId, newSpy);
+            } else {
+                simState.capturedSpies.push(newSpy);
+                updateActiveNationUI();
+            }
+            return newSpy;
+        }
+        window.triggerSpyCapture = triggerSpyCapture;
+        window.firebaseCaptureSpyAction = triggerSpyCapture;
 
         // Render Teacher Events Log
         function renderTeacherEventsLog() {
@@ -17075,6 +17166,10 @@
             if (simState.unsubGame) { simState.unsubGame(); simState.unsubGame = null; }
             if (simState.unsubTeams) { simState.unsubTeams(); simState.unsubTeams = null; }
             if (simState.unsubNations) { simState.unsubNations(); simState.unsubNations = null; }
+            if (simState.unsubCaravans) { simState.unsubCaravans(); simState.unsubCaravans = null; }
+            if (simState.unsubScouts) { simState.unsubScouts(); simState.unsubScouts = null; }
+            if (simState.unsubSpies) { simState.unsubSpies(); simState.unsubSpies = null; }
+            if (simState.unsubEvents) { simState.unsubEvents(); simState.unsubEvents = null; }
 
             var controlsBar = document.getElementById("controlsBar");
             if (controlsBar) controlsBar.style.display = "";
@@ -17226,12 +17321,22 @@
                     endCoords: targetNat.coords
                 };
 
-                simState.caravans.push(newCaravan);
                 var evText = "🌾 سيّرت " + n.name + " قافلة تجارية محملة بـ (" + cargoName + ") نحو " + targetNat.name + " بمرافقة " + escortName + (escortCavalry > 0 ? " (تم اقتطاع " + escortCavalry + " فارساً من الحامية للمرافقة)" : "") + ".";
-                simState.eventsLog.unshift(evText);
+                if (simState.isMultiplayer && simState.gameId && window.firebaseCreateSimCaravan) {
+                    window.firebaseCreateSimCaravan(simState.gameId, newCaravan);
+                    if (window.firebaseLogSimEvent) {
+                        window.firebaseLogSimEvent(simState.gameId, evText);
+                    }
+                    if (window.firebaseSyncNation) {
+                        window.firebaseSyncNation(simState.gameId, simState.activeNationId, n);
+                    }
+                } else {
+                    simState.caravans.push(newCaravan);
+                    simState.eventsLog.unshift(evText);
+                    renderTeacherEventsLog();
+                }
                 if (typeof Go === "function") Go("تم إطلاق القافلة واقتطاع فرسان الحراسة من حامية العاصمة!");
                 updateActiveNationUI();
-                renderTeacherEventsLog();
             });
         }
 
@@ -17330,12 +17435,20 @@
                     status: "متمركزة بدوائر رصد نشطة"
                 };
 
-                simState.scouts.push(newScout);
+                var evScout = "👁️ نشرت " + n.name + " طليعة استطلاع جديدة عند خط عرض " + coords[1].toFixed(1) + "°.";
+                if (simState.isMultiplayer && simState.gameId && window.firebaseCreateSimScout) {
+                    window.firebaseCreateSimScout(simState.gameId, newScout);
+                    if (window.firebaseLogSimEvent) {
+                        window.firebaseLogSimEvent(simState.gameId, evScout);
+                    }
+                } else {
+                    simState.scouts.push(newScout);
+                    simState.eventsLog.unshift(evScout);
+                    renderTeacherEventsLog();
+                }
                 simPlaceScoutBanner.style.display = "none";
-                simState.eventsLog.unshift("👁️ نشرت " + n.name + " طليعة استطلاع جديدة عند خط عرض " + coords[1].toFixed(1) + "°.");
                 if (typeof Go === "function") Go("تم نشر طليعة الاستطلاع وتفعيل دوائر الرصد الثلاث بنجاح!");
                 updateActiveNationUI();
-                renderTeacherEventsLog();
                 renderSimMapLayers();
             });
         }
@@ -17572,16 +17685,26 @@
                     endCoords: targetNat.coords
                 };
 
-                simState.caravans.push(newCaravan);
                 showFloatingResourceDelta(n.coords, deltaTagText, "negative");
-
                 var decreeMsg = "🐫 سيّرت " + n.name + " قافلة تجارية سريعة محملة بـ (" + cargoLabel + ") إلى " + targetNat.name + " طلباً لـ (" + returnLabel + ")" + (quickEscort > 0 ? " بمرافقة 30 فارساً مقتطعاً من الحامية" : "") + ".";
                 n.decrees.unshift(decreeMsg);
-                simState.eventsLog.unshift(decreeMsg);
+
+                if (simState.isMultiplayer && simState.gameId && window.firebaseCreateSimCaravan) {
+                    window.firebaseCreateSimCaravan(simState.gameId, newCaravan);
+                    if (window.firebaseLogSimEvent) {
+                        window.firebaseLogSimEvent(simState.gameId, decreeMsg);
+                    }
+                    if (window.firebaseSyncNation) {
+                        window.firebaseSyncNation(simState.gameId, simState.activeNationId, n);
+                    }
+                } else {
+                    simState.caravans.push(newCaravan);
+                    simState.eventsLog.unshift(decreeMsg);
+                    renderTeacherEventsLog();
+                }
 
                 closeQuickTradeModal();
                 updateActiveNationUI();
-                renderTeacherEventsLog();
 
                 if (typeof Go === "function") {
                     Go("تم إطلاق القافلة في مسارها الحريري بنجاح 🐫✨");
@@ -17600,31 +17723,25 @@
             advanceSimSeasonLocalEffects();
         }
 
-        function advanceSimSeasonLocalEffects() {
-            var currSeason = simState.seasons[simState.seasonIdx];
-            var seasonClasses = ["sim-season-spring", "sim-season-summer", "sim-season-autumn", "sim-season-winter"];
-
-            if (simYearDisplay) simYearDisplay.textContent = simState.year + " م";
-            if (simSeasonDisplay) {
-                var seasonShort = currSeason.name.split(" ")[0] + " " + currSeason.name.split(" ")[1];
-                simSeasonDisplay.textContent = seasonShort;
-                simSeasonDisplay.className = "sim-calendar-season " + seasonClasses[simState.seasonIdx];
-            }
-
+        // Core Mathematical & Rules Engine for Seasonal Progression (Shared by Sandbox & Multiplayer Authority)
+        function computeSeasonResolutionEffects(targetNations, targetCaravans, seasonIdx, year) {
+            var currSeason = simState.seasons[seasonIdx];
             var turnLog = [];
-            turnLog.push("📅 حلول فصل جديد: " + currSeason.name + " لعام " + simState.year + " م.");
+            turnLog.push("📅 حلول فصل جديد: " + currSeason.name + " لعام " + year + " م.");
 
-            // 1. Food Consumption & Sovereign Budget Consequences for all 5 nations
-            Object.keys(nationsData).forEach(function(k) {
-                var nat = nationsData[k];
+            // 1. Food Consumption & Sovereign Budget Consequences for all nations
+            Object.keys(targetNations).forEach(function(k) {
+                var nat = targetNations[k];
+                if (!nat) return;
                 var quarterlyConsumption = (nat.consumption || 70) * 3;
                 var b = nat.budget || { economy: 100, military: 100, planning: 100, intelligence: 100 };
+                if (!nat.decrees) nat.decrees = [];
 
                 // Seasonal production yield baseline
                 var seasonalHarvest = 0;
                 if (currSeason.id === "spring") {
                     seasonalHarvest = (nat.id === "desert") ? 150 : 100;
-                    nat.livestock += 40;
+                    nat.livestock = (nat.livestock || 0) + 40;
                 } else if (currSeason.id === "summer") {
                     seasonalHarvest = (nat.id === "anatolia" || nat.id === "steppes") ? 200 : 80;
                 } else if (currSeason.id === "autumn") {
@@ -17646,9 +17763,9 @@
 
                 // Ministry of Military & Garrison Impact
                 if (b.military === 0) {
-                    var deserters = Math.round(nat.troops * 0.20);
-                    nat.troops = Math.max(100, nat.troops - deserters);
-                    nat.infantry = Math.max(50, Math.round(nat.infantry * 0.8));
+                    var deserters = Math.round((nat.troops || 0) * 0.20);
+                    nat.troops = Math.max(100, (nat.troops || 0) - deserters);
+                    nat.infantry = Math.max(50, Math.round((nat.infantry || 0) * 0.8));
                     var milAlert = "⚔️ تمرد وتأخر رواتب الجند في " + nat.name + "! فرار " + deserters + " مقاتلاً من الحاميات لتوقف الموازنة العسكرية!";
                     nat.decrees.unshift(milAlert);
                     turnLog.push(milAlert);
@@ -17677,37 +17794,28 @@
                     turnLog.push("🪙 ضرائب باهظة في " + nat.name + ": تحصيل 150 ديناراً مع انكماش الإنتاج الزراعي بنسبة 20%.");
                 }
 
-                nat.food += seasonalHarvest;
+                nat.food = (nat.food || 0) + seasonalHarvest;
                 nat.food -= quarterlyConsumption;
-
-                if (nat.id === simState.activeNationId) {
-                    if (seasonalHarvest > 0) {
-                        showFloatingResourceDelta(nat.coords, "+" + seasonalHarvest + " 🌾", "positive");
-                    }
-                    showFloatingResourceDelta([nat.coords[0] + 0.3, nat.coords[1] - 0.2], "-" + quarterlyConsumption + " 🌾", "negative");
-                }
 
                 if (nat.food <= 0) {
                     nat.food = 0;
-                    var troopLoss = Math.round(nat.troops * 0.15);
-                    nat.troops = Math.max(200, nat.troops - troopLoss);
-                    nat.infantry = Math.max(100, Math.round(nat.infantry * 0.85));
-                    nat.cavalry = Math.max(50, Math.round(nat.cavalry * 0.85));
-                    nat.gold = Math.max(0, nat.gold - 80);
+                    var troopLoss = Math.round((nat.troops || 0) * 0.15);
+                    nat.troops = Math.max(200, (nat.troops || 0) - troopLoss);
+                    nat.infantry = Math.max(100, Math.round((nat.infantry || 0) * 0.85));
+                    nat.cavalry = Math.max(50, Math.round((nat.cavalry || 0) * 0.85));
+                    nat.gold = Math.max(0, (nat.gold || 0) - 80);
                     var famineMsg = "⚠️ مجاعة قاحلة في " + nat.name + "! نفاد صوامع القمح أدى لفقدان " + troopLoss + " جندياً وانخفاض الضرائب!";
                     nat.decrees.unshift(famineMsg);
                     turnLog.push(famineMsg);
                 } else {
-                    nat.gold += taxGold;
-                    if (nat.id === simState.activeNationId) {
-                        showFloatingResourceDelta([nat.coords[0] - 0.3, nat.coords[1] + 0.2], "+" + taxGold + " 🪙", "gold");
-                    }
+                    nat.gold = (nat.gold || 0) + taxGold;
                 }
             });
 
             // 2. Caravans Movement, Ambush Risk, Tolls, Cavalry Escorts & Delivery
             var remainingCaravans = [];
-            simState.caravans.forEach(function(c) {
+            var completedCaravanIds = [];
+            (targetCaravans || []).forEach(function(c) {
                 var speed = 0.45;
                 if (currSeason.id === "winter" && (c.from === "steppes" || c.to === "steppes" || c.from === "anatolia" || c.to === "anatolia")) {
                     speed = 0.25;
@@ -17715,37 +17823,34 @@
                     speed = 0.30;
                 }
 
-                var senderNat = nationsData[c.from];
+                var senderNat = targetNations[c.from];
                 if (senderNat && senderNat.budget && senderNat.budget.planning === 50) {
                     speed *= 0.75;
                 }
 
-                c.progress = Math.min(1.0, c.progress + speed);
+                c.progress = Math.min(1.0, (c.progress || 0) + speed);
 
                 // Choke points transit tolls check
                 if (c.progress >= 0.5 && !c.tollChecked) {
                     c.tollChecked = true;
-                    chokePointsData.forEach(function(cp) {
-                        if (cp.controller && cp.controller !== c.from) {
-                            var controllerNat = nationsData[cp.controller];
-                            var fromNat = nationsData[c.from];
-                            if (fromNat && controllerNat) {
-                                var hasTreaty = (fromNat.allies && fromNat.allies.indexOf(cp.controller) !== -1);
-                                var tollAmount = hasTreaty ? 15 : 40;
-                                if (fromNat.gold >= tollAmount) {
-                                    fromNat.gold -= tollAmount;
-                                    controllerNat.gold += tollAmount;
-                                    var tollMsg = "🪙 دفعت قافلة " + fromNat.name + " رسم ترانزيت قدره " + tollAmount + " دينار لـ " + controllerNat.name + " عند " + cp.name + (hasTreaty ? " (مخفّض بالمعاهدة)" : "") + ".";
-                                    turnLog.push(tollMsg);
-                                    if (fromNat.id === simState.activeNationId) {
-                                        showFloatingResourceDelta(cp.coords, "-" + tollAmount + " 🪙", "negative");
-                                    } else if (controllerNat.id === simState.activeNationId) {
-                                        showFloatingResourceDelta(cp.coords, "+" + tollAmount + " 🪙", "gold");
+                    if (typeof chokePointsData !== "undefined" && Array.isArray(chokePointsData)) {
+                        chokePointsData.forEach(function(cp) {
+                            if (cp.controller && cp.controller !== c.from) {
+                                var controllerNat = targetNations[cp.controller];
+                                var fromNat = targetNations[c.from];
+                                if (fromNat && controllerNat) {
+                                    var hasTreaty = (fromNat.allies && fromNat.allies.indexOf(cp.controller) !== -1);
+                                    var tollAmount = hasTreaty ? 15 : 40;
+                                    if ((fromNat.gold || 0) >= tollAmount) {
+                                        fromNat.gold -= tollAmount;
+                                        controllerNat.gold = (controllerNat.gold || 0) + tollAmount;
+                                        var tollMsg = "🪙 دفعت قافلة " + fromNat.name + " رسم ترانزيت قدره " + tollAmount + " دينار لـ " + controllerNat.name + " عند " + cp.name + (hasTreaty ? " (مخفّض بالمعاهدة)" : "") + ".";
+                                        turnLog.push(tollMsg);
                                     }
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
 
                 // Bandit Ambush Check:
@@ -17756,10 +17861,10 @@
                 if (!c.ambushChecked && c.progress >= 0.4 && c.progress < 0.9) {
                     c.ambushChecked = true;
                     if (Math.random() < ambushChance) {
-                        var sender = nationsData[c.from];
+                        var sender = targetNations[c.from];
                         var ambushLoss = isEscorted ? "تصدت الحراسة للكمين بخسائر طفيفة" : "تم الاستيلاء على نصف الحمولة من قبل قطاع الطرق!";
                         if (!isEscorted && sender) {
-                            sender.gold = Math.max(0, sender.gold - 50);
+                            sender.gold = Math.max(0, (sender.gold || 0) - 50);
                         }
                         var ambushMsg = "⚔️ وقعت قافلة " + (sender ? sender.name : c.from) + " في كمين لقطاع الطرق! (" + ambushLoss + ")";
                         turnLog.push(ambushMsg);
@@ -17768,46 +17873,64 @@
 
                 // Delivery check & return of armed cavalry escort to home garrison
                 if (c.progress >= 1.0) {
-                    var sender = nationsData[c.from];
-                    var receiver = nationsData[c.to];
+                    var sender = targetNations[c.from];
+                    var receiver = targetNations[c.to];
                     if (sender && receiver) {
-                        if (c.requested.indexOf("حديد") !== -1 || c.requested.indexOf("معادن") !== -1) {
-                            sender.metals += 90;
-                        } else if (c.requested.indexOf("خيل") !== -1 || c.requested.indexOf("مواشي") !== -1) {
-                            sender.livestock += 70;
-                            sender.cavalry += 40;
+                        var req = c.requested || "";
+                        if (req.indexOf("حديد") !== -1 || req.indexOf("معادن") !== -1) {
+                            sender.metals = (sender.metals || 0) + 90;
+                        } else if (req.indexOf("خيل") !== -1 || req.indexOf("مواشي") !== -1) {
+                            sender.livestock = (sender.livestock || 0) + 70;
+                            sender.cavalry = (sender.cavalry || 0) + 40;
                         } else {
-                            sender.gold += 180;
+                            sender.gold = (sender.gold || 0) + 180;
                         }
-                        receiver.food += 100;
+                        receiver.food = (receiver.food || 0) + 100;
 
-                        // Return armed cavalry escort to sender city garrison!
                         if (c.escortCavalry && c.escortCavalry > 0) {
-                            sender.cavalry += c.escortCavalry;
-                            sender.troops += c.escortCavalry;
+                            sender.cavalry = (sender.cavalry || 0) + c.escortCavalry;
+                            sender.troops = (sender.troops || 0) + c.escortCavalry;
                             var returnMsg = "🐎 عادت كتيبة حراسة الفرسان (" + c.escortCavalry + " فارساً) إلى حامية " + sender.name + " بسلام بعد تأمين مسار القافلة.";
+                            if (!sender.decrees) sender.decrees = [];
                             sender.decrees.unshift(returnMsg);
                             turnLog.push(returnMsg);
                         }
 
-                        var deliveryMsg = "✅ وصلت قافلة " + sender.name + " إلى " + receiver.name + " بسلام وتم استلام المقايضة (" + c.requested + ").";
+                        var deliveryMsg = "✅ وصلت قافلة " + sender.name + " إلى " + receiver.name + " بسلام وتم استلام المقايضة (" + (c.requested || "بضائع") + ").";
+                        if (!sender.decrees) sender.decrees = [];
                         sender.decrees.unshift(deliveryMsg);
                         turnLog.push(deliveryMsg);
-
-                        if (c.from === simState.activeNationId) {
-                            showFloatingResourceDelta(sender.coords, "+180 🪙", "gold");
-                        } else if (c.to === simState.activeNationId) {
-                            showFloatingResourceDelta(receiver.coords, "+100 🌾", "positive");
-                        }
                     }
+                    completedCaravanIds.push(c.id);
                 } else {
                     c.status = "في الطريق (تم قطع " + Math.round(c.progress * 100) + "% من المسافة)";
                     remainingCaravans.push(c);
                 }
             });
-            simState.caravans = remainingCaravans;
 
-            turnLog.reverse().forEach(function(msg) {
+            return {
+                updatedNations: targetNations,
+                remainingCaravans: remainingCaravans,
+                completedCaravanIds: completedCaravanIds,
+                turnLog: turnLog
+            };
+        }
+
+        // Local Sandbox Resolution (Used only when simState.isMultiplayer === false)
+        function advanceSimSeasonLocalEffects() {
+            var currSeason = simState.seasons[simState.seasonIdx];
+            var seasonClasses = ["sim-season-spring", "sim-season-summer", "sim-season-autumn", "sim-season-winter"];
+
+            if (simYearDisplay) simYearDisplay.textContent = simState.year + " م";
+            if (simSeasonDisplay) {
+                var seasonShort = currSeason.name.split(" ")[0] + " " + currSeason.name.split(" ")[1];
+                simSeasonDisplay.textContent = seasonShort;
+                simSeasonDisplay.className = "sim-calendar-season " + seasonClasses[simState.seasonIdx];
+            }
+
+            var res = computeSeasonResolutionEffects(nationsData, simState.caravans, simState.seasonIdx, simState.year);
+            simState.caravans = res.remainingCaravans;
+            res.turnLog.reverse().forEach(function(msg) {
                 simState.eventsLog.unshift(msg);
             });
 
@@ -17819,6 +17942,30 @@
             if (typeof Go === "function") {
                 Go("تم التقدم إلى " + currSeason.name + " (" + simState.year + " م) وتحديث المحاصيل وموازين القوى!");
             }
+        }
+
+        // Centralized Authoritative Season Resolution (Executed by exactly ONE lock-holding device in multiplayer)
+        async function executeMultiplayerSeasonResolution(gameId) {
+            console.log("[SIM] Fetching fresh state of all nations and caravans from Firestore...");
+            var freshNations = await window.firebaseFetchAllNations(gameId);
+            var freshCaravans = await window.firebaseFetchAllCaravans(gameId);
+
+            var nextSeasonIdx = (simState.seasonIdx + 1) % 4;
+            var nextYear = (simState.seasonIdx === 3) ? (simState.year + 1) : simState.year;
+
+            console.log("[SIM] Running authoritative computeSeasonResolutionEffects for season=" + nextSeasonIdx + ", year=" + nextYear);
+            var res = computeSeasonResolutionEffects(freshNations, freshCaravans, nextSeasonIdx, nextYear);
+
+            console.log("[SIM] Committing batched season update to Firestore...");
+            await window.firebaseResolveSeasonBatch(gameId, {
+                seasonIdx: nextSeasonIdx,
+                year: nextYear,
+                nations: res.updatedNations,
+                caravans: res.remainingCaravans,
+                completedCaravanIds: res.completedCaravanIds,
+                newEvents: res.turnLog
+            });
+            console.log("[SIM] Single-device season resolution complete!");
         }
 
         // Wire Sovereign Budget Allocation Controls
@@ -18457,7 +18604,19 @@
                 simState.currentSeasonStartedAt = gDoc.currentSeasonStartedAt || simState.currentSeasonStartedAt;
 
                 if (seasonChanged) {
-                    advanceSimSeasonLocalEffects();
+                    var currSeason = simState.seasons[simState.seasonIdx];
+                    var seasonClasses = ["sim-season-spring", "sim-season-summer", "sim-season-autumn", "sim-season-winter"];
+                    if (simYearDisplay) simYearDisplay.textContent = simState.year + " م";
+                    if (simSeasonDisplay) {
+                        var seasonShort = currSeason.name.split(" ")[0] + " " + currSeason.name.split(" ")[1];
+                        simSeasonDisplay.textContent = seasonShort;
+                        simSeasonDisplay.className = "sim-calendar-season " + seasonClasses[simState.seasonIdx];
+                    }
+                    if (typeof Go === "function") {
+                        Go("حلول فصل جديد: " + currSeason.name + " (" + simState.year + " م)");
+                    }
+                    updateActiveNationUI();
+                    renderSimMapLayers();
                 }
                 updateSeasonalClockUI();
             });
@@ -18495,6 +18654,41 @@
                 }
                 renderSimMapLayers();
             });
+
+            // Stage 3 Live Subcollection Listeners
+            if (simState.unsubCaravans) simState.unsubCaravans();
+            if (window.firebaseListenSimCaravans) {
+                simState.unsubCaravans = window.firebaseListenSimCaravans(res.gameId, function(caravansList) {
+                    simState.caravans = caravansList || [];
+                    renderSimMapLayers();
+                    updateActiveNationUI();
+                });
+            }
+
+            if (simState.unsubScouts) simState.unsubScouts();
+            if (window.firebaseListenSimScouts) {
+                simState.unsubScouts = window.firebaseListenSimScouts(res.gameId, function(scoutsList) {
+                    simState.scouts = scoutsList || [];
+                    renderSimMapLayers();
+                    updateActiveNationUI();
+                });
+            }
+
+            if (simState.unsubSpies) simState.unsubSpies();
+            if (window.firebaseListenSimCapturedSpies) {
+                simState.unsubSpies = window.firebaseListenSimCapturedSpies(res.gameId, function(spiesList) {
+                    simState.capturedSpies = spiesList || [];
+                    updateActiveNationUI();
+                });
+            }
+
+            if (simState.unsubEvents) simState.unsubEvents();
+            if (window.firebaseListenSimEvents) {
+                simState.unsubEvents = window.firebaseListenSimEvents(res.gameId, function(eventsList) {
+                    simState.eventsLog = (eventsList || []).map(function(e) { return e.text; });
+                    renderTeacherEventsLog();
+                });
+            }
 
             startSeasonalClock();
 
@@ -18676,5 +18870,8 @@
         window.mpTeacherTeams = mpTeacherTeams;
         window.simState = simState;
         window.nationsData = nationsData;
+        window.executeMultiplayerSeasonResolution = executeMultiplayerSeasonResolution;
+        window.computeSeasonResolutionEffects = computeSeasonResolutionEffects;
+        window.triggerSpyCapture = triggerSpyCapture;
     }();
 }();

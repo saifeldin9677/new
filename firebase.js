@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, addDoc, collection, query, orderBy, getDocs, getDoc, updateDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, addDoc, collection, query, orderBy, getDocs, getDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, runTransaction, writeBatch } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyC_o_-C7NFeTQwFb-kZRCI59HnTc2DDTUA",
@@ -483,6 +483,321 @@ window.firebaseAdvanceSimSeason = async function(gameId, updateData) {
         console.error('Failed to advance season in firestore:', e);
         return { ok: false, error: e.message || String(e) };
     }
+};
+
+// ──────────────────────────────────────────────────────────────
+// Nation Simulation — Stage 3: Centralized Season Resolution & Collections
+// ──────────────────────────────────────────────────────────────
+
+// Centralized Season Resolution Lock (with 20s stale recovery)
+window.firebaseTryClaimSeasonResolution = async function(gameId) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        const gameRef = doc(db, 'simGames', gId);
+        const myUid = auth.currentUser ? auth.currentUser.uid : ('anon_' + Date.now());
+
+        const result = await runTransaction(db, async function(transaction) {
+            const gameSnap = await transaction.get(gameRef);
+            if (!gameSnap.exists()) {
+                return { claimed: false, error: 'game_not_found' };
+            }
+            const data = gameSnap.data();
+            const lock = data.resolvingSeasonLock;
+            if (lock && lock.uid) {
+                let claimedAtMs = 0;
+                if (lock.claimedAt) {
+                    if (typeof lock.claimedAt.toMillis === 'function') {
+                        claimedAtMs = lock.claimedAt.toMillis();
+                    } else if (typeof lock.claimedAt.seconds === 'number') {
+                        claimedAtMs = lock.claimedAt.seconds * 1000;
+                    } else if (typeof lock.claimedAt === 'number') {
+                        claimedAtMs = lock.claimedAt;
+                    } else if (typeof lock.claimedAt === 'string') {
+                        claimedAtMs = Date.parse(lock.claimedAt) || 0;
+                    }
+                }
+                const nowMs = Date.now();
+                // If lock is still fresh (< 20 seconds old), cannot claim
+                if (nowMs - claimedAtMs < 20000) {
+                    return { claimed: false, lockHeldBy: lock.uid };
+                }
+            }
+            // Lock is free or stale (>20s) -> claim it
+            transaction.update(gameRef, {
+                resolvingSeasonLock: {
+                    uid: myUid,
+                    claimedAt: serverTimestamp()
+                }
+            });
+            return { claimed: true, uid: myUid };
+        });
+        return result;
+    } catch(e) {
+        console.error('Failed to claim season resolution lock:', e);
+        return { claimed: false, error: e.message || String(e) };
+    }
+};
+
+window.firebaseReleaseSeasonResolution = async function(gameId) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        await updateDoc(doc(db, 'simGames', gId), {
+            resolvingSeasonLock: { uid: null, claimedAt: null }
+        });
+        return { ok: true };
+    } catch(e) {
+        console.error('Failed to release season resolution lock:', e);
+        return { ok: false, error: e.message || String(e) };
+    }
+};
+
+// Fresh Fetchers for Season Resolution
+window.firebaseFetchAllNations = async function(gameId) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        const snap = await getDocs(collection(db, 'simGames', gId, 'nations'));
+        const nations = {};
+        snap.docs.forEach(function(d) {
+            nations[d.id] = { id: d.id, ...d.data() };
+        });
+        return nations;
+    } catch(e) {
+        console.error('Failed to fetch all nations:', e);
+        return {};
+    }
+};
+
+window.firebaseFetchAllCaravans = async function(gameId) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        const snap = await getDocs(collection(db, 'simGames', gId, 'caravans'));
+        return snap.docs.map(function(d) { return { id: d.id, ...d.data() }; });
+    } catch(e) {
+        console.error('Failed to fetch all caravans:', e);
+        return [];
+    }
+};
+
+window.firebaseFetchAllScouts = async function(gameId) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        const snap = await getDocs(collection(db, 'simGames', gId, 'scouts'));
+        return snap.docs.map(function(d) { return { id: d.id, ...d.data() }; });
+    } catch(e) {
+        console.error('Failed to fetch all scouts:', e);
+        return [];
+    }
+};
+
+// Batched Write for Single-Device Resolution Results
+window.firebaseResolveSeasonBatch = async function(gameId, payload) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        const batch = writeBatch(db);
+        const gameRef = doc(db, 'simGames', gId);
+
+        // Update game doc with new season and year
+        const gameUpdate = {
+            seasonIdx: payload.seasonIdx,
+            year: payload.year,
+            currentSeasonStartedAt: serverTimestamp()
+        };
+        batch.update(gameRef, gameUpdate);
+
+        // Update all nations
+        if (payload.nations) {
+            Object.keys(payload.nations).forEach(function(nId) {
+                const nRef = doc(db, 'simGames', gId, 'nations', nId);
+                const nData = JSON.parse(JSON.stringify(payload.nations[nId]));
+                batch.set(nRef, nData, { merge: true });
+            });
+        }
+
+        // Update remaining / ongoing caravans
+        if (payload.caravans) {
+            payload.caravans.forEach(function(c) {
+                const cRef = doc(db, 'simGames', gId, 'caravans', c.id);
+                batch.set(cRef, c, { merge: true });
+            });
+        }
+
+        // Delete completed / arrived caravans
+        if (payload.completedCaravanIds) {
+            payload.completedCaravanIds.forEach(function(cId) {
+                const cRef = doc(db, 'simGames', gId, 'caravans', cId);
+                batch.delete(cRef);
+            });
+        }
+
+        // Log events (only shared events, no spies)
+        if (payload.newEvents && Array.isArray(payload.newEvents)) {
+            payload.newEvents.forEach(function(evText) {
+                const evId = 'ev_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+                const evRef = doc(db, 'simGames', gId, 'eventsLog', evId);
+                batch.set(evRef, {
+                    id: evId,
+                    text: evText,
+                    createdAt: serverTimestamp()
+                });
+            });
+        }
+
+        await batch.commit();
+        return { ok: true };
+    } catch(e) {
+        console.error('Failed to resolve season batch:', e);
+        return { ok: false, error: e.message || String(e) };
+    }
+};
+
+// Caravans Management
+window.firebaseCreateSimCaravan = async function(gameId, caravanData) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        const cId = caravanData.id || ('c_' + Date.now());
+        const payload = JSON.parse(JSON.stringify(caravanData));
+        payload.id = cId;
+        payload.createdAt = serverTimestamp();
+        await setDoc(doc(db, 'simGames', gId, 'caravans', cId), payload);
+        return { ok: true, id: cId };
+    } catch(e) {
+        console.error('Failed to create caravan:', e);
+        return { ok: false, error: e.message || String(e) };
+    }
+};
+
+window.firebaseUpdateSimCaravan = async function(gameId, caravanId, caravanData) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        const payload = JSON.parse(JSON.stringify(caravanData));
+        await updateDoc(doc(db, 'simGames', gId, 'caravans', caravanId), payload);
+        return { ok: true };
+    } catch(e) {
+        console.error('Failed to update caravan:', e);
+        return { ok: false, error: e.message || String(e) };
+    }
+};
+
+// Scouts Management
+window.firebaseCreateSimScout = async function(gameId, scoutData) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        const sId = scoutData.id || ('scout_' + Date.now());
+        const payload = JSON.parse(JSON.stringify(scoutData));
+        payload.id = sId;
+        payload.createdAt = serverTimestamp();
+        await setDoc(doc(db, 'simGames', gId, 'scouts', sId), payload);
+        return { ok: true, id: sId };
+    } catch(e) {
+        console.error('Failed to create scout:', e);
+        return { ok: false, error: e.message || String(e) };
+    }
+};
+
+// Captured Spies Management (Restricted Visibility)
+window.firebaseCaptureSpy = async function(gameId, spyData) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        const spyId = spyData.id || ('spy_' + Date.now());
+        const payload = {
+            id: spyId,
+            originNationId: spyData.originNationId || spyData.originNation,
+            originTeamId: spyData.originTeamId || null,
+            captorNationId: spyData.captorNationId || spyData.captorNation,
+            captorTeamId: spyData.captorTeamId || null,
+            name: spyData.name,
+            status: spyData.status || "محتجز بغرفة التحقيق",
+            detectedInCircle: spyData.detectedInCircle || "الدائرة الداخلية (0 - 30 كم)",
+            createdAt: serverTimestamp()
+        };
+        await setDoc(doc(db, 'simGames', gId, 'capturedSpies', spyId), payload);
+        return { ok: true, id: spyId };
+    } catch(e) {
+        console.error('Failed to record captured spy:', e);
+        return { ok: false, error: e.message || String(e) };
+    }
+};
+
+window.firebaseUpdateCapturedSpy = async function(gameId, spyId, updateData) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        await updateDoc(doc(db, 'simGames', gId, 'capturedSpies', spyId), updateData);
+        return { ok: true };
+    } catch(e) {
+        console.error('Failed to update captured spy:', e);
+        return { ok: false, error: e.message || String(e) };
+    }
+};
+
+// Events Log
+window.firebaseLogSimEvent = async function(gameId, text) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        const evId = 'ev_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+        await setDoc(doc(db, 'simGames', gId, 'eventsLog', evId), {
+            id: evId,
+            text: text,
+            createdAt: serverTimestamp()
+        });
+        return { ok: true, id: evId };
+    } catch(e) {
+        console.error('Failed to log event:', e);
+        return { ok: false, error: e.message || String(e) };
+    }
+};
+
+// Subcollections Real-Time Listeners
+window.firebaseListenSimCaravans = function(gameId, onUpdate, onError) {
+    const gId = String(gameId).trim().toUpperCase();
+    return onSnapshot(collection(db, 'simGames', gId, 'caravans'), function(snap) {
+        if (typeof onUpdate === 'function') {
+            const list = snap.docs.map(function(d) { return { id: d.id, ...d.data() }; });
+            onUpdate(list);
+        }
+    }, function(err) {
+        if (typeof onError === 'function') onError(err);
+        else console.warn('Listen sim caravans error:', err);
+    });
+};
+
+window.firebaseListenSimScouts = function(gameId, onUpdate, onError) {
+    const gId = String(gameId).trim().toUpperCase();
+    return onSnapshot(collection(db, 'simGames', gId, 'scouts'), function(snap) {
+        if (typeof onUpdate === 'function') {
+            const list = snap.docs.map(function(d) { return { id: d.id, ...d.data() }; });
+            onUpdate(list);
+        }
+    }, function(err) {
+        if (typeof onError === 'function') onError(err);
+        else console.warn('Listen sim scouts error:', err);
+    });
+};
+
+window.firebaseListenSimCapturedSpies = function(gameId, onUpdate, onError) {
+    const gId = String(gameId).trim().toUpperCase();
+    return onSnapshot(collection(db, 'simGames', gId, 'capturedSpies'), function(snap) {
+        if (typeof onUpdate === 'function') {
+            const list = snap.docs.map(function(d) { return { id: d.id, ...d.data() }; });
+            onUpdate(list);
+        }
+    }, function(err) {
+        if (typeof onError === 'function') onError(err);
+        else console.warn('Listen sim captured spies error:', err);
+    });
+};
+
+window.firebaseListenSimEvents = function(gameId, onUpdate, onError) {
+    const gId = String(gameId).trim().toUpperCase();
+    const q = query(collection(db, 'simGames', gId, 'eventsLog'), orderBy('createdAt', 'desc'));
+    return onSnapshot(q, function(snap) {
+        if (typeof onUpdate === 'function') {
+            const list = snap.docs.map(function(d) { return { id: d.id, ...d.data() }; });
+            onUpdate(list);
+        }
+    }, function(err) {
+        if (typeof onError === 'function') onError(err);
+        else console.warn('Listen sim events error:', err);
+    });
 };
 
 console.log('Firebase initialized for project:', firebaseConfig.projectId);

@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient (Deep Nautical Ocean) -->
+    <radialGradient id="oceanBg" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#0f2236"/>
+      <stop offset="60%" stop-color="#091520"/>
+      <stop offset="100%" stop-color="#060e17"/>
+    </radialGradient>
+
+    <!-- Signature Teal Gradient -->
+    <linearGradient id="tealGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2dd4bf"/>
+      <stop offset="50%" stop-color="#14b8a6"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+
+    <!-- Pure White Accent Gradient -->
+    <linearGradient id="whiteGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#dceef8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 1. Deep Ocean Navy Background -->
+  <rect width="512" height="512" rx="100" fill="url(#oceanBg)"/>
+
+  <!-- 2. Minimalist Circular Globe (Graticule Grid Lines) -->
+  <g stroke="#14b8a6" stroke-width="2.5" fill="none" opacity="0.45">
+    <circle cx="256" cy="256" r="160" stroke-width="3.5" stroke="#14b8a6"/>
+    <!-- Equator -->
+    <line x1="96" y1="256" x2="416" y2="256" stroke-dasharray="8 6"/>
+    <!-- Central Meridian -->
+    <line x1="256" y1="96" x2="256" y2="416" stroke-dasharray="8 6"/>
+    <!-- Parallels of Latitude -->
+    <ellipse cx="256" cy="256" rx="160" ry="85"/>
+    <ellipse cx="256" cy="256" rx="160" ry="135"/>
+    <!-- Meridians of Longitude -->
+    <ellipse cx="256" cy="256" rx="85" ry="160"/>
+  </g>
+
+  <!-- 3. Minimalist Geometric Butterfly Wings (Waterman Butterfly Facets) -->
+  <g stroke-linejoin="round" stroke-linecap="round">
+    <!-- Upper Left Wing -->
+    <polygon points="256,256 130,130 100,185 185,275" fill="url(#tealGrad)" opacity="0.9"/>
+    <polygon points="130,130 100,185 70,165" fill="#2dd4bf" opacity="0.5"/>
+    <polygon points="130,130 185,275 256,256" fill="url(#whiteGrad)" opacity="0.2"/>
+
+    <!-- Lower Left Wing -->
+    <polygon points="256,256 175,290 120,355 175,385 230,325" fill="url(#tealGrad)" opacity="0.85"/>
+    <polygon points="175,290 120,355 100,325" fill="#2dd4bf" opacity="0.45"/>
+    <polygon points="175,385 230,325 256,256" fill="url(#whiteGrad)" opacity="0.15"/>
+
+    <!-- Upper Right Wing -->
+    <polygon points="256,256 382,130 412,185 327,275" fill="url(#tealGrad)" opacity="0.9"/>
+    <polygon points="382,130 412,185 442,165" fill="#2dd4bf" opacity="0.5"/>
+    <polygon points="382,130 327,275 256,256" fill="url(#whiteGrad)" opacity="0.2"/>
+
+    <!-- Lower Right Wing -->
+    <polygon points="256,256 337,290 392,355 337,385 282,325" fill="url(#tealGrad)" opacity="0.85"/>
+    <polygon points="337,290 392,355 412,325" fill="#2dd4bf" opacity="0.45"/>
+    <polygon points="337,385 282,325 256,256" fill="url(#whiteGrad)" opacity="0.15"/>
+
+    <!-- Crisp White Wing Contour & Graticule Edges -->
+    <path d="M 256,256 L 130,130 L 100,185 L 70,165 L 130,130 M 100,185 L 185,275 L 256,256
+             M 256,256 L 175,290 L 120,355 L 100,325 L 175,290 M 120,355 L 175,385 L 230,325 L 256,256"
+          fill="none" stroke="#ffffff" stroke-width="2.5" opacity="0.9"/>
+    <path d="M 256,256 L 382,130 L 412,185 L 442,165 L 382,130 M 412,185 L 327,275 L 256,256
+             M 256,256 L 337,290 L 392,355 L 412,325 L 337,290 M 392,355 L 337,385 L 282,325 L 256,256"
+          fill="none" stroke="#ffffff" stroke-width="2.5" opacity="0.9"/>
+  </g>
+
+  <!-- 4. Central Astrolabe Ring & Navigational Compass Star -->
+  <g>
+    <!-- Astrolabe Top Crown Loop (عروة تعليق الأسطرلاب الفلكي) -->
+    <path d="M 256,182 C 247,182 242,174 244,166 C 246,158 250,154 256,154 C 262,154 266,158 268,166 C 270,174 265,182 256,182 Z"
+          fill="none" stroke="#2dd4bf" stroke-width="3"/>
+    <circle cx="256" cy="166" r="3.5" fill="#ffffff"/>
+
+    <!-- Astrolabe Outer & Inner Rings -->
+    <circle cx="256" cy="256" r="62" fill="#091520" stroke="#14b8a6" stroke-width="4.5"/>
+    <circle cx="256" cy="256" r="53" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.8"/>
+
+    <!-- Cardinal Ticks on Astrolabe Ring -->
+    <line x1="256" y1="194" x2="256" y2="204" stroke="#ffffff" stroke-width="3"/>
+    <line x1="256" y1="308" x2="256" y2="318" stroke="#ffffff" stroke-width="3"/>
+    <line x1="194" y1="256" x2="204" y2="256" stroke="#ffffff" stroke-width="3"/>
+    <line x1="308" y1="256" x2="318" y2="256" stroke="#ffffff" stroke-width="3"/>
+
+    <!-- Compass 4-Point Star (Pure White & Teal) -->
+    <!-- North Point -->
+    <polygon points="256,256 250,244 256,206 256,256" fill="#ffffff"/>
+    <polygon points="256,256 262,244 256,206 256,256" fill="#14b8a6"/>
+    <!-- South Point -->
+    <polygon points="256,256 262,268 256,306 256,256" fill="#ffffff"/>
+    <polygon points="256,256 250,268 256,306 256,256" fill="#14b8a6"/>
+    <!-- East Point -->
+    <polygon points="256,256 268,250 306,256 256,256" fill="#ffffff"/>
+    <polygon points="256,256 268,262 306,256 256,256" fill="#14b8a6"/>
+    <!-- West Point -->
+    <polygon points="256,256 244,262 206,256 256,256" fill="#ffffff"/>
+    <polygon points="256,256 244,250 206,256 256,256" fill="#14b8a6"/>
+
+    <!-- Center Pivot Axis Point -->
+    <circle cx="256" cy="256" r="8" fill="#ffffff"/>
+    <circle cx="256" cy="256" r="4" fill="#091520"/>
+  </g>
+</svg>

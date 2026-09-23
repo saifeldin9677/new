@@ -15504,6 +15504,9 @@
                         }
                     }
                 });
+                if (window.firebaseCleanSimulationSubcollections) {
+                    window.firebaseCleanSimulationSubcollections(simState.gameId);
+                }
                 if (window.firebaseLogSimEvent) {
                     window.firebaseLogSimEvent(simState.gameId, dec);
                 }
@@ -16789,7 +16792,7 @@
             }
 
             // Safe route polyline if chartered by Spatial Planner
-            if (activeNat && simState.safeRoutes && simState.safeRoutes[activeNat.id]) {
+            if (activeNat && activeNat.coords && simState.safeRoutes && simState.safeRoutes[activeNat.id]) {
                 var cX = activeNat.coords[0];
                 var cY = activeNat.coords[1];
                 var safePoints = [
@@ -17389,7 +17392,7 @@
             });
         }
         if (simSaveRouteBtn) {
-            simSaveRouteBtn.addEventListener("click", function() {
+            simSaveRouteBtn.addEventListener("click", async function() {
                 if (simDrawRouteBanner) simDrawRouteBanner.style.display = "none";
                 simState.safeRoutes[simState.activeNationId] = true;
                 var n = nationsData[simState.activeNationId];
@@ -17402,15 +17405,24 @@
                 }
                 simState.eventsLog.unshift(dec);
                 if (typeof Go === "function") Go("تم اعتماد المسار الالتفافي البديل وتفادي نقاط الخطر بنجاح ✓");
+                if (typeof simSyncDebounceTimers !== "undefined" && simSyncDebounceTimers[simState.activeNationId]) {
+                    clearTimeout(simSyncDebounceTimers[simState.activeNationId]);
+                    delete simSyncDebounceTimers[simState.activeNationId];
+                }
                 if (simState.isMultiplayer && simState.gameId && n) {
                     if (window.firebaseSyncNation) {
-                        window.firebaseSyncNation(simState.gameId, simState.activeNationId, n);
+                        await window.firebaseSyncNation(simState.gameId, simState.activeNationId, n);
                     }
                     if (window.firebaseLogSimEvent) {
                         window.firebaseLogSimEvent(simState.gameId, dec);
                     }
                 }
-                updateActiveNationUI();
+                isRemoteSyncing = true;
+                try {
+                    updateActiveNationUI();
+                } finally {
+                    isRemoteSyncing = false;
+                }
                 renderTeacherEventsLog();
             });
         }
@@ -18023,7 +18035,7 @@
 
         // Wire Sovereign Budget Allocation Controls
         if (simApplyBudgetBtn) {
-            simApplyBudgetBtn.addEventListener("click", function() {
+            simApplyBudgetBtn.addEventListener("click", async function() {
                 var n = nationsData[simState.activeNationId];
                 if (!n) return;
                 n.budget = {
@@ -18036,15 +18048,24 @@
                 n.decrees.unshift(decree);
                 simState.eventsLog.unshift(decree);
                 if (typeof Go === "function") Go("تم اعتماد وتثبيت الموازنة السيادية بنجاح ⚖️");
+                if (typeof simSyncDebounceTimers !== "undefined" && simSyncDebounceTimers[simState.activeNationId]) {
+                    clearTimeout(simSyncDebounceTimers[simState.activeNationId]);
+                    delete simSyncDebounceTimers[simState.activeNationId];
+                }
                 if (simState.isMultiplayer && simState.gameId) {
                     if (window.firebaseSyncNation) {
-                        window.firebaseSyncNation(simState.gameId, simState.activeNationId, n);
+                        await window.firebaseSyncNation(simState.gameId, simState.activeNationId, n);
                     }
                     if (window.firebaseLogSimEvent) {
                         window.firebaseLogSimEvent(simState.gameId, decree);
                     }
                 }
-                updateActiveNationUI();
+                isRemoteSyncing = true;
+                try {
+                    updateActiveNationUI();
+                } finally {
+                    isRemoteSyncing = false;
+                }
                 renderTeacherEventsLog();
             });
         }
@@ -18054,7 +18075,7 @@
         });
 
         if (simTaxPolicySelect) {
-            simTaxPolicySelect.addEventListener("change", function() {
+            simTaxPolicySelect.addEventListener("change", async function() {
                 var n = nationsData[simState.activeNationId];
                 if (!n) return;
                 n.taxPolicy = this.value;
@@ -18062,13 +18083,23 @@
                 var dec = "⚖️ تم تعديل سياسة الضرائب إلى: " + (n.taxPolicy === "low" ? "منخفضة 5%" : (n.taxPolicy === "high" ? "مرتفعة 20%" : "متوازنة 10%"));
                 n.decrees.unshift(dec);
                 simState.eventsLog.unshift(dec);
+                if (typeof simSyncDebounceTimers !== "undefined" && simSyncDebounceTimers[simState.activeNationId]) {
+                    clearTimeout(simSyncDebounceTimers[simState.activeNationId]);
+                    delete simSyncDebounceTimers[simState.activeNationId];
+                }
                 if (simState.isMultiplayer && simState.gameId) {
                     if (window.firebaseSyncNation) {
-                        window.firebaseSyncNation(simState.gameId, simState.activeNationId, n);
+                        await window.firebaseSyncNation(simState.gameId, simState.activeNationId, n);
                     }
                     if (window.firebaseLogSimEvent) {
                         window.firebaseLogSimEvent(simState.gameId, dec);
                     }
+                }
+                isRemoteSyncing = true;
+                try {
+                    updateActiveNationUI();
+                } finally {
+                    isRemoteSyncing = false;
                 }
                 renderTeacherEventsLog();
             });
@@ -18545,6 +18576,7 @@
                 } finally {
                     isRemoteSyncing = false;
                 }
+                populateNationSelects();
                 renderSimMapLayers();
             });
 
@@ -18684,7 +18716,12 @@
                     if (typeof Go === "function") {
                         Go("حلول فصل جديد: " + currSeason.name + " (" + simState.year + " م)");
                     }
-                    updateActiveNationUI();
+                    isRemoteSyncing = true;
+                    try {
+                        updateActiveNationUI();
+                    } finally {
+                        isRemoteSyncing = false;
+                    }
                     renderSimMapLayers();
                 }
                 updateSeasonalClockUI();
@@ -18696,7 +18733,12 @@
                 if (myTeam && myTeam.nationId && myTeam.nationId !== simState.activeNationId) {
                     simState.activeNationId = myTeam.nationId;
                     populateNationSelects();
-                    updateActiveNationUI();
+                    isRemoteSyncing = true;
+                    try {
+                        updateActiveNationUI();
+                    } finally {
+                        isRemoteSyncing = false;
+                    }
                     renderSimMapLayers();
                     if (nationsData[simState.activeNationId]) {
                         openCountryDossier(simState.activeNationId);
@@ -18731,7 +18773,12 @@
                 simState.unsubCaravans = window.firebaseListenSimCaravans(res.gameId, function(caravansList) {
                     simState.caravans = caravansList || [];
                     renderSimMapLayers();
-                    updateActiveNationUI();
+                    isRemoteSyncing = true;
+                    try {
+                        updateActiveNationUI();
+                    } finally {
+                        isRemoteSyncing = false;
+                    }
                 });
             }
 
@@ -18740,7 +18787,12 @@
                 simState.unsubScouts = window.firebaseListenSimScouts(res.gameId, function(scoutsList) {
                     simState.scouts = scoutsList || [];
                     renderSimMapLayers();
-                    updateActiveNationUI();
+                    isRemoteSyncing = true;
+                    try {
+                        updateActiveNationUI();
+                    } finally {
+                        isRemoteSyncing = false;
+                    }
                 });
             }
 
@@ -18748,7 +18800,12 @@
             if (window.firebaseListenSimCapturedSpies) {
                 simState.unsubSpies = window.firebaseListenSimCapturedSpies(res.gameId, function(spiesList) {
                     simState.capturedSpies = spiesList || [];
-                    updateActiveNationUI();
+                    isRemoteSyncing = true;
+                    try {
+                        updateActiveNationUI();
+                    } finally {
+                        isRemoteSyncing = false;
+                    }
                 });
             }
 

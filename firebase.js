@@ -302,8 +302,42 @@ window.firebaseLookupAndClaimJoinCode = async function(gameId, rawJoinCode) {
             return { ok: false, error: 'invalid_code', message: 'رمز الانضمام غير صحيح. تحقق من الأحرف المدخلة.' };
         }
 
-        // 5. Check claiming lock
-        if (matchedMember.claimedByUid && matchedMember.claimedByUid !== currentUid) {
+        // 5. Wrap claim in a Firestore transaction to eliminate race conditions (Fix 3)
+        const teamRef = doc(db, 'simGames', gId, 'teams', matchedTeam.id);
+        const claimResult = await runTransaction(db, async function(transaction) {
+            const freshTeamSnap = await transaction.get(teamRef);
+            if (!freshTeamSnap.exists()) {
+                throw new Error('team_not_found');
+            }
+            const freshData = freshTeamSnap.data();
+            const freshMembers = freshData.members || {};
+            const freshMember = freshMembers[matchedRole];
+            if (!freshMember) {
+                throw new Error('role_not_found');
+            }
+            if (freshMember.claimedByUid && freshMember.claimedByUid !== currentUid) {
+                return { ok: false, error: 'already_claimed' };
+            }
+            if (!freshMember.claimedByUid) {
+                const updatedMembers = { ...freshMembers };
+                updatedMembers[matchedRole] = {
+                    ...freshMember,
+                    claimedByUid: currentUid
+                };
+                transaction.update(teamRef, {
+                    members: updatedMembers
+                });
+            }
+            return {
+                ok: true,
+                teamName: freshData.name,
+                teamColor: freshData.color,
+                nationId: freshData.nationId || null,
+                memberName: freshMember.name
+            };
+        });
+
+        if (!claimResult.ok && claimResult.error === 'already_claimed') {
             return {
                 ok: false,
                 error: 'already_claimed',
@@ -311,28 +345,15 @@ window.firebaseLookupAndClaimJoinCode = async function(gameId, rawJoinCode) {
             };
         }
 
-        // 6. Write claimedByUid if not claimed yet
-        if (!matchedMember.claimedByUid) {
-            const updatedMembers = { ...matchedTeam.members };
-            updatedMembers[matchedRole] = {
-                ...matchedMember,
-                claimedByUid: currentUid
-            };
-            await updateDoc(doc(db, 'simGames', gId, 'teams', matchedTeam.id), {
-                members: updatedMembers
-            });
-            matchedMember.claimedByUid = currentUid;
-        }
-
         return {
             ok: true,
             gameId: gId,
             teamId: matchedTeam.id,
-            teamName: matchedTeam.name,
-            teamColor: matchedTeam.color,
-            nationId: matchedTeam.nationId || null,
+            teamName: claimResult.teamName || matchedTeam.name,
+            teamColor: claimResult.teamColor || matchedTeam.color,
+            nationId: claimResult.nationId !== undefined ? claimResult.nationId : (matchedTeam.nationId || null),
             role: matchedRole,
-            memberName: matchedMember.name,
+            memberName: claimResult.memberName || matchedMember.name,
             uid: currentUid
         };
     } catch(e) {
@@ -796,8 +817,43 @@ window.firebaseListenSimEvents = function(gameId, onUpdate, onError) {
         }
     }, function(err) {
         if (typeof onError === 'function') onError(err);
-        else console.warn('Listen sim events error:', err);
     });
+};
+
+// Clean up all caravans, scouts, and captured spies in Firestore for a game (Fix 4: Batch Delete)
+window.firebaseCleanSimulationSubcollections = async function(gameId) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        const batch = writeBatch(db);
+        let count = 0;
+
+        const [caravansSnap, scoutsSnap, spiesSnap] = await Promise.all([
+            getDocs(collection(db, 'simGames', gId, 'caravans')),
+            getDocs(collection(db, 'simGames', gId, 'scouts')),
+            getDocs(collection(db, 'simGames', gId, 'capturedSpies'))
+        ]);
+
+        caravansSnap.docs.forEach(function(docSnap) {
+            batch.delete(docSnap.ref);
+            count++;
+        });
+        scoutsSnap.docs.forEach(function(docSnap) {
+            batch.delete(docSnap.ref);
+            count++;
+        });
+        spiesSnap.docs.forEach(function(docSnap) {
+            batch.delete(docSnap.ref);
+            count++;
+        });
+
+        if (count > 0) {
+            await batch.commit();
+        }
+        return { ok: true, deletedCount: count };
+    } catch(e) {
+        console.error('Failed to clean simulation subcollections:', e);
+        return { ok: false, error: e.message || String(e) };
+    }
 };
 
 console.log('Firebase initialized for project:', firebaseConfig.projectId);

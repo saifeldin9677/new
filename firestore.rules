@@ -122,28 +122,69 @@ service cloud.firestore {
         allow read: if isSignedIn();
         allow create: if isTeacher()
           && get(/databases/$(database)/documents/simGames/$(gameId)).data.teacherId == request.auth.uid;
-        // Temporary loose rule for Stage 1 foundation: any signed-in player may update
-        // this nation's shared state. Narrowing this to per-role field permissions
-        // (e.g., only the military role can change troop counts) is intentionally
-        // deferred to Stage 2 — this stage only proves the sync itself works.
-        // Stage 3 Resolver Override: The device holding the resolvingSeasonLock is
-        // explicitly permitted to write seasonal updates to EVERY nation during season resolution.
-        allow update: if isSignedIn()
-          || (isSignedIn() && get(/databases/$(database)/documents/simGames/$(gameId)).data.resolvingSeasonLock.uid == request.auth.uid);
+        // Role- and team-scoped update permissions (Stage 2 Hardening)
+        allow update: if isSignedIn() && (
+             (get(/databases/$(database)/documents/simGames/$(gameId)/teams/$(resource.data.ownerTeamId)).data.members.military.claimedByUid == request.auth.uid
+               && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['troops','infantry','archers','cavalry','expeditionaryForce','budget','decrees'])
+               && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['budget']) || (
+                     request.resource.data.budget.economy == resource.data.budget.economy
+                  && request.resource.data.budget.planning == resource.data.budget.planning
+                  && request.resource.data.budget.intelligence == resource.data.budget.intelligence
+               )))
+          || (get(/databases/$(database)/documents/simGames/$(gameId)/teams/$(resource.data.ownerTeamId)).data.members.economy.claimedByUid == request.auth.uid
+               && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['gold','treasury','food','metals','livestock','consumption','taxPolicy','budget','decrees'])
+               && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['budget']) || (
+                     request.resource.data.budget.military == resource.data.budget.military
+                  && request.resource.data.budget.planning == resource.data.budget.planning
+                  && request.resource.data.budget.intelligence == resource.data.budget.intelligence
+               )))
+          || (get(/databases/$(database)/documents/simGames/$(gameId)/teams/$(resource.data.ownerTeamId)).data.members.intelligence.claimedByUid == request.auth.uid
+               && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['budget','decrees'])
+               && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['budget']) || (
+                     request.resource.data.budget.military == resource.data.budget.military
+                  && request.resource.data.budget.economy == resource.data.budget.economy
+                  && request.resource.data.budget.planning == resource.data.budget.planning
+               )))
+          || (get(/databases/$(database)/documents/simGames/$(gameId)/teams/$(resource.data.ownerTeamId)).data.members.planner.claimedByUid == request.auth.uid
+               && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['territory','decrees','budget','safeRoute'])
+               && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['budget']) || (
+                     request.resource.data.budget.military == resource.data.budget.military
+                  && request.resource.data.budget.economy == resource.data.budget.economy
+                  && request.resource.data.budget.intelligence == resource.data.budget.intelligence
+               )))
+          || (get(/databases/$(database)/documents/simGames/$(gameId)/teams/$(resource.data.ownerTeamId)).data.members.leader.claimedByUid == request.auth.uid
+               && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['allies','enemies','truces','decrees','budget','treasury']))
+          || (get(/databases/$(database)/documents/simGames/$(gameId)).data.resolvingSeasonLock.uid == request.auth.uid)
+          || (get(/databases/$(database)/documents/simGames/$(gameId)).data.teacherId == request.auth.uid)
+        );
         allow delete: if false;
       }
 
       // ──────────────────────────────────────────────────────────────
-      // Nation Simulation — Stage 3: Caravans, Scouts, Logs, Spies
+      // Nation Simulation — Stage 2 & 3: Caravans, Scouts, Logs, Spies
       // ──────────────────────────────────────────────────────────────
       match /caravans/{caravanId} {
         allow read: if isSignedIn();
-        allow write: if isSignedIn();
+        allow create: if isSignedIn() && (
+             isMemberOfNationTeam(gameId, request.resource.data.from, request.auth.uid)
+          || get(/databases/$(database)/documents/simGames/$(gameId)).data.resolvingSeasonLock.uid == request.auth.uid
+        );
+        allow update: if isSignedIn() && (
+             isMemberOfNationTeam(gameId, resource.data.from, request.auth.uid)
+          || get(/databases/$(database)/documents/simGames/$(gameId)).data.resolvingSeasonLock.uid == request.auth.uid
+        );
+        allow delete: if get(/databases/$(database)/documents/simGames/$(gameId)).data.teacherId == request.auth.uid
+          || get(/databases/$(database)/documents/simGames/$(gameId)).data.resolvingSeasonLock.uid == request.auth.uid;
       }
 
       match /scouts/{scoutId} {
         allow read: if isSignedIn();
-        allow write: if isSignedIn();
+        allow create: if isSignedIn() && isMemberOfNationTeam(gameId, request.resource.data.nation, request.auth.uid);
+        allow update: if isSignedIn() && (
+             isMemberOfNationTeam(gameId, resource.data.nation, request.auth.uid)
+          || get(/databases/$(database)/documents/simGames/$(gameId)).data.resolvingSeasonLock.uid == request.auth.uid
+        );
+        allow delete: if get(/databases/$(database)/documents/simGames/$(gameId)).data.teacherId == request.auth.uid;
       }
 
       match /eventsLog/{eventId} {
@@ -161,7 +202,7 @@ service cloud.firestore {
         allow create: if isSignedIn();
         // Only the capturing team decides ransom/execute
         allow update: if isSignedIn() && isMemberOfNationTeam(gameId, resource.data.captorNationId, request.auth.uid);
-        allow delete: if false;
+        allow delete: if get(/databases/$(database)/documents/simGames/$(gameId)).data.teacherId == request.auth.uid;
       }
     }
 

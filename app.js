@@ -15322,12 +15322,14 @@
             simState.isSandboxMode = true;
             simState.activeNationId = newNation.id;
 
-            if (simState.isMultiplayer && simState.gameId && window.firebaseAssignTeamNation) {
+            if (simState.isMultiplayer && simState.gameId) {
                 var unassigned = mpTeacherTeams.find(function(t) { return !t.nationId; });
-                if (unassigned) {
+                if (unassigned && window.firebaseAssignTeamNation) {
                     unassigned.nationId = newNation.id;
                     newNation.assignedTeam = unassigned.name;
                     window.firebaseAssignTeamNation(simState.gameId, unassigned.id, newNation.id, newNation);
+                } else if (window.firebaseSyncNation) {
+                    window.firebaseSyncNation(simState.gameId, newNation.id, newNation);
                 }
             }
 
@@ -15460,13 +15462,18 @@
             simState.isSandboxMode = false;
             simState.isDrawingTerritory = false;
             simState.currentDrawingPoints = [];
-            simState.activeNationId = null;
+            simState.activeNationId = (simState.isMultiplayer && simState.activeNationId) ? simState.activeNationId : null;
             simState.year = 1250;
             simState.seasonIdx = 0;
             simState.seasonDuration = 604800;
             simState.seasonTimeRemaining = 604800;
             simState.gamePace = "weekly_semester";
-            simState.teamAssignments = {};
+            simState.teamAssignments = (simState.isMultiplayer && simState.teamAssignments) ? simState.teamAssignments : {};
+            simState.caravans = [];
+            simState.scouts = [];
+            simState.capturedSpies = [];
+            simState.safeRoutes = {};
+
             if (simGamePaceSelect) simGamePaceSelect.value = "weekly_semester";
             if (simPaceDisplay) simPaceDisplay.textContent = "دورة أسبوعية (فصل كامل)";
 
@@ -15476,6 +15483,31 @@
 
             var dec = "⚡ قام المعلم بتصفير المحاكاة وتدشين عصر تاريخي جديد من نقطة الصفر.";
             simState.eventsLog.unshift(dec);
+
+            if (simState.isMultiplayer && simState.gameId) {
+                if (window.firebaseAdvanceSimSeason) {
+                    window.firebaseAdvanceSimSeason(simState.gameId, {
+                        seasonIdx: 0,
+                        year: 1250
+                    });
+                }
+                Object.keys(nationsData).forEach(function(nId) {
+                    var nat = nationsData[nId];
+                    if (nat) {
+                        nat.budget = { military: 25, economy: 25, planning: 25, intelligence: 25 };
+                        nat.taxPolicy = "moderate";
+                        nat.safeRoute = false;
+                        nat.decrees = [];
+                        nat.expeditionaryForce = null;
+                        if (window.firebaseSyncNation) {
+                            window.firebaseSyncNation(simState.gameId, nId, nat);
+                        }
+                    }
+                });
+                if (window.firebaseLogSimEvent) {
+                    window.firebaseLogSimEvent(simState.gameId, dec);
+                }
+            }
 
             populateNationSelects();
             updateActiveNationUI();
@@ -17361,10 +17393,23 @@
                 if (simDrawRouteBanner) simDrawRouteBanner.style.display = "none";
                 simState.safeRoutes[simState.activeNationId] = true;
                 var n = nationsData[simState.activeNationId];
+                if (n) {
+                    n.safeRoute = true;
+                }
                 var dec = "🗺️ اعتمد المخطط الجغرافي مساراً التفافياً آمناً يلغي خطر كمائن قطاع الطرق بنسبة 100%.";
-                n.decrees.unshift(dec);
+                if (n && n.decrees) {
+                    n.decrees.unshift(dec);
+                }
                 simState.eventsLog.unshift(dec);
                 if (typeof Go === "function") Go("تم اعتماد المسار الالتفافي البديل وتفادي نقاط الخطر بنجاح ✓");
+                if (simState.isMultiplayer && simState.gameId && n) {
+                    if (window.firebaseSyncNation) {
+                        window.firebaseSyncNation(simState.gameId, simState.activeNationId, n);
+                    }
+                    if (window.firebaseLogSimEvent) {
+                        window.firebaseLogSimEvent(simState.gameId, dec);
+                    }
+                }
                 updateActiveNationUI();
                 renderTeacherEventsLog();
             });
@@ -17536,6 +17581,14 @@
 
                 var msg = "🎓 منح المشرف التربوي " + text + " لـ " + targetNat.name + " تقديراً لتميز أبحاثهم وإجاباتهم النموذجية!";
                 simState.eventsLog.unshift(msg);
+                if (simState.isMultiplayer && simState.gameId) {
+                    if (window.firebaseSyncNation) {
+                        window.firebaseSyncNation(simState.gameId, targetKey, targetNat);
+                    }
+                    if (window.firebaseLogSimEvent) {
+                        window.firebaseLogSimEvent(simState.gameId, msg);
+                    }
+                }
                 renderTeacherEventsLog();
                 updateActiveNationUI();
                 if (typeof Go === "function") Go("تم منح المكافأة الدراسية بنجاح إلى " + targetNat.name);
@@ -17983,6 +18036,14 @@
                 n.decrees.unshift(decree);
                 simState.eventsLog.unshift(decree);
                 if (typeof Go === "function") Go("تم اعتماد وتثبيت الموازنة السيادية بنجاح ⚖️");
+                if (simState.isMultiplayer && simState.gameId) {
+                    if (window.firebaseSyncNation) {
+                        window.firebaseSyncNation(simState.gameId, simState.activeNationId, n);
+                    }
+                    if (window.firebaseLogSimEvent) {
+                        window.firebaseLogSimEvent(simState.gameId, decree);
+                    }
+                }
                 updateActiveNationUI();
                 renderTeacherEventsLog();
             });
@@ -18001,6 +18062,14 @@
                 var dec = "⚖️ تم تعديل سياسة الضرائب إلى: " + (n.taxPolicy === "low" ? "منخفضة 5%" : (n.taxPolicy === "high" ? "مرتفعة 20%" : "متوازنة 10%"));
                 n.decrees.unshift(dec);
                 simState.eventsLog.unshift(dec);
+                if (simState.isMultiplayer && simState.gameId) {
+                    if (window.firebaseSyncNation) {
+                        window.firebaseSyncNation(simState.gameId, simState.activeNationId, n);
+                    }
+                    if (window.firebaseLogSimEvent) {
+                        window.firebaseLogSimEvent(simState.gameId, dec);
+                    }
+                }
                 renderTeacherEventsLog();
             });
         }
@@ -18640,6 +18709,7 @@
                 nationsList.forEach(function(nDoc) {
                     var nId = nDoc.id;
                     nationsData[nId] = Object.assign(nationsData[nId] || {}, nDoc);
+                    simState.safeRoutes[nId] = !!nDoc.safeRoute;
                 });
                 populateNationSelects();
                 if (simState.activeNationId && nationsData[simState.activeNationId]) {

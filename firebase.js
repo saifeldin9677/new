@@ -946,11 +946,12 @@ window.firebaseCleanSimulationSubcollections = async function(gameId) {
         const batch = writeBatch(db);
         let count = 0;
 
-        const [caravansSnap, scoutsSnap, spiesSnap, expeditionsSnap] = await Promise.all([
+        const [caravansSnap, scoutsSnap, spiesSnap, expeditionsSnap, missionsSnap] = await Promise.all([
             getDocs(collection(db, 'simGames', gId, 'caravans')),
             getDocs(collection(db, 'simGames', gId, 'scouts')),
             getDocs(collection(db, 'simGames', gId, 'capturedSpies')),
-            getDocs(collection(db, 'simGames', gId, 'expeditionRequests'))
+            getDocs(collection(db, 'simGames', gId, 'expeditionRequests')),
+            getDocs(collection(db, 'simGames', gId, 'scoutMissions'))
         ]);
 
         caravansSnap.docs.forEach(function(docSnap) {
@@ -969,6 +970,10 @@ window.firebaseCleanSimulationSubcollections = async function(gameId) {
             batch.delete(docSnap.ref);
             count++;
         });
+        missionsSnap.docs.forEach(function(docSnap) {
+            batch.delete(docSnap.ref);
+            count++;
+        });
 
         if (count > 0) {
             await batch.commit();
@@ -976,6 +981,120 @@ window.firebaseCleanSimulationSubcollections = async function(gameId) {
         return { ok: true, deletedCount: count };
     } catch(e) {
         console.error('Failed to clean simulation subcollections:', e);
+        return { ok: false, error: e.message || String(e) };
+    }
+};
+
+// ──────────────────────────────────────────────────────────────
+// Nation Simulation — Stage 6: Scout Intelligence, Delayed Reports & Pursuit
+// ──────────────────────────────────────────────────────────────
+window.firebaseCreateScoutMission = async function(gameId, missionData) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        const mId = missionData.id || ('mission_' + Date.now());
+        const payload = JSON.parse(JSON.stringify({
+            ...missionData,
+            id: mId,
+            createdAt: missionData.createdAt || Date.now()
+        }));
+        await setDoc(doc(db, 'simGames', gId, 'scoutMissions', mId), payload);
+        return { ok: true, id: mId };
+    } catch(e) {
+        console.error('Failed to create scout mission:', e);
+        return { ok: false, error: e.message || String(e) };
+    }
+};
+
+window.firebaseUpdateScoutMission = async function(gameId, missionId, updateData) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        const payload = JSON.parse(JSON.stringify(updateData));
+        await updateDoc(doc(db, 'simGames', gId, 'scoutMissions', missionId), payload);
+        return { ok: true };
+    } catch(e) {
+        console.error('Failed to update scout mission:', e);
+        return { ok: false, error: e.message || String(e) };
+    }
+};
+
+window.firebaseSetScoutReportData = async function(gameId, missionId, reportData) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        const payload = JSON.parse(JSON.stringify(reportData));
+        await setDoc(doc(db, 'simGames', gId, 'scoutMissions', missionId, 'report', 'data'), payload, { merge: true });
+        return { ok: true };
+    } catch(e) {
+        console.error('Failed to set scout report data:', e);
+        return { ok: false, error: e.message || String(e) };
+    }
+};
+
+window.firebaseGetScoutReportData = async function(gameId, missionId) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        const snap = await getDoc(doc(db, 'simGames', gId, 'scoutMissions', missionId, 'report', 'data'));
+        if (snap.exists()) {
+            return { ok: true, data: snap.data() };
+        }
+        return { ok: false, error: 'not_found' };
+    } catch(e) {
+        console.warn('Failed to get scout report data:', e);
+        return { ok: false, error: e.code || e.message || String(e) };
+    }
+};
+
+window.firebaseListenScoutMissions = function(gameId, onUpdate, onError) {
+    const gId = String(gameId).trim().toUpperCase();
+    return onSnapshot(collection(db, 'simGames', gId, 'scoutMissions'), function(snap) {
+        if (typeof onUpdate === 'function') {
+            const list = snap.docs.map(function(d) { return { id: d.id, ...d.data() }; });
+            onUpdate(list);
+        }
+    }, function(err) {
+        if (typeof onError === 'function') onError(err);
+        else console.warn('Listen scout missions error:', err);
+    });
+};
+
+window.firebaseResolvePursuit = async function(gameId, missionId, pursuitSuccess) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        const missionRef = doc(db, 'simGames', gId, 'scoutMissions', missionId);
+        const result = await runTransaction(db, async function(transaction) {
+            const mDoc = await transaction.get(missionRef);
+            if (!mDoc.exists()) {
+                throw new Error('Mission not found');
+            }
+            const data = mDoc.data();
+            if (data.pursuitResolved || data.status === 'captured') {
+                return { ok: false, alreadyResolved: true };
+            }
+
+            const updates = {
+                pursuitResolved: true,
+                pursuitSuccess: !!pursuitSuccess,
+                resolvedAt: Date.now()
+            };
+            if (pursuitSuccess) {
+                updates.status = 'captured';
+            }
+            transaction.update(missionRef, updates);
+            return { ok: true, success: pursuitSuccess, mission: data };
+        });
+        return result;
+    } catch(e) {
+        console.error('Failed to resolve pursuit transaction:', e);
+        return { ok: false, error: e.message || String(e) };
+    }
+};
+
+window.firebaseDeleteSimScout = async function(gameId, scoutId) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        await deleteDoc(doc(db, 'simGames', gId, 'scouts', scoutId));
+        return { ok: true };
+    } catch(e) {
+        console.error('Failed to delete scout:', e);
         return { ok: false, error: e.message || String(e) };
     }
 };

@@ -14945,6 +14945,7 @@
             scouts: [],
             capturedSpies: [],
             expeditionRequests: [],
+            scoutMissions: [],
             eventsLog: [
                 "🏛️ بدأ الفصل الدراسي: بانتظار ترسيم المعلم لحدود أقاليم الفرق الطلابية وتدشين الأمم."
             ],
@@ -14964,7 +14965,8 @@
             unsubGame: null,
             unsubTeams: null,
             unsubNations: null,
-            unsubExpeditions: null
+            unsubExpeditions: null,
+            unsubScoutMissions: null
         };
 
         // --- Sandbox Geopolitical GIS Inference Engine ---
@@ -15455,7 +15457,7 @@
         }
 
         // Reset Simulation to New Epoch
-        function resetSimulationToNewEpoch() {
+        async function resetSimulationToNewEpoch() {
             Object.keys(simState.customNations).forEach(function(cId) {
                 delete nationsData[cId];
             });
@@ -15475,6 +15477,7 @@
             simState.scouts = [];
             simState.capturedSpies = [];
             simState.expeditionRequests = [];
+            simState.scoutMissions = [];
             simState.safeRoutes = {};
 
             if (simGamePaceSelect) simGamePaceSelect.value = "weekly_semester";
@@ -15489,12 +15492,14 @@
 
             if (simState.isMultiplayer && simState.gameId) {
                 if (window.firebaseAdvanceSimSeason) {
-                    window.firebaseAdvanceSimSeason(simState.gameId, {
+                    await window.firebaseAdvanceSimSeason(simState.gameId, {
                         seasonIdx: 0,
                         year: 1250
                     });
                 }
-                Object.keys(nationsData).forEach(function(nId) {
+                var nIds = Object.keys(nationsData);
+                for (var i = 0; i < nIds.length; i++) {
+                    var nId = nIds[i];
                     var nat = nationsData[nId];
                     if (nat) {
                         nat.budget = { military: 25, economy: 25, planning: 25, intelligence: 25 };
@@ -15503,15 +15508,15 @@
                         nat.decrees = [];
                         nat.expeditionaryForce = null;
                         if (window.firebaseSyncNation) {
-                            window.firebaseSyncNation(simState.gameId, nId, nat);
+                            await window.firebaseSyncNation(simState.gameId, nId, nat);
                         }
                     }
-                });
+                }
                 if (window.firebaseCleanSimulationSubcollections) {
-                    window.firebaseCleanSimulationSubcollections(simState.gameId);
+                    await window.firebaseCleanSimulationSubcollections(simState.gameId);
                 }
                 if (window.firebaseLogSimEvent) {
-                    window.firebaseLogSimEvent(simState.gameId, dec);
+                    await window.firebaseLogSimEvent(simState.gameId, dec);
                 }
             }
 
@@ -15950,8 +15955,13 @@
                         advanceSimSeason();
                     }
                 }
-                if (simState.isMultiplayer && simState.gameId && typeof checkAndResolveExpiredExpulsions === "function") {
-                    checkAndResolveExpiredExpulsions();
+                if (simState.isMultiplayer && simState.gameId) {
+                    if (typeof checkAndResolveExpiredExpulsions === "function") {
+                        checkAndResolveExpiredExpulsions();
+                    }
+                    if (typeof checkAndResolveReturningScoutMissions === "function") {
+                        checkAndResolveReturningScoutMissions();
+                    }
                 }
                 updateSeasonalClockUI();
             }, 1000);
@@ -16286,21 +16296,125 @@
                 });
             }
 
-            // Scouts List
+            // Scouts List & Scout Intelligence Missions
             if (simActiveScoutsFeed) {
                 simActiveScoutsFeed.innerHTML = "";
                 var natScouts = simState.scouts.filter(function(s) { return s.nation === n.id; });
+                var foreignCaravans = (simState.caravans || []).filter(function(c) { return c.from !== n.id; });
+
                 if (natScouts.length === 0) {
                     simActiveScoutsFeed.innerHTML = '<p class="sim-card-hint">لا توجد فرق استطلاع في الميدان حالياً. اضغط الزر أعلاه لنشر طليعة.</p>';
                 } else {
                     natScouts.forEach(function(s) {
                         var item = document.createElement("div");
                         item.className = "sim-item-card";
-                        item.innerHTML = '<div class="sim-item-info"><span class="sim-item-title">👁️ ' + s.name + '</span>' +
-                                         '<span class="sim-item-meta">الإحداثيات: [' + s.coords[0].toFixed(1) + '°, ' + s.coords[1].toFixed(1) + '°]</span></div>' +
-                                         '<span class="sim-tag" style="background:rgba(20, 184, 166, 0.2);">' + s.status + '</span>';
+                        var coordsText = (s.coords && s.coords[0] != null) ? (s.coords[0].toFixed(1) + '°, ' + s.coords[1].toFixed(1) + '°') : ((s.lat != null ? s.lat.toFixed(1) : '31.5') + '°, ' + (s.lng != null ? s.lng.toFixed(1) : '-7.5') + '°');
+                        var html = '<div class="sim-item-info"><span class="sim-item-title">👁️ ' + s.name + '</span>' +
+                                         '<span class="sim-item-meta">الإحداثيات: [' + coordsText + ']</span></div>' +
+                                         '<span class="sim-tag" style="background:rgba(20, 184, 166, 0.2);">' + (s.status || "نشط بالميدان") + '</span>';
+                        if (foreignCaravans.length > 0) {
+                            html += '<div style="margin-top:8px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:6px;align-items:center;">'
+                                 + '<select class="sim-select sim-caravan-target-select" data-scout-id="' + s.id + '" style="font-size:0.75rem;padding:2px 4px;">';
+                            foreignCaravans.forEach(function(fc) {
+                                var fromNat = nationsData[fc.from];
+                                html += '<option value="' + fc.id + '">قافلة ' + (fromNat ? fromNat.name : fc.from) + ' (' + fc.cargo + ')</option>';
+                            });
+                            html += '</select>'
+                                 + '<button type="button" class="btn btn-primary btn-sm sim-start-scout-mission-btn" data-scout-id="' + s.id + '" style="font-size:0.75rem;padding:2px 6px;">بدء تعقب 🎯</button>'
+                                 + '</div>';
+                        }
+                        item.innerHTML = html;
                         simActiveScoutsFeed.appendChild(item);
                     });
+
+                    simActiveScoutsFeed.querySelectorAll(".sim-start-scout-mission-btn").forEach(function(btn) {
+                        btn.onclick = function() {
+                            var sId = this.getAttribute("data-scout-id");
+                            var sel = simActiveScoutsFeed.querySelector('.sim-caravan-target-select[data-scout-id="' + sId + '"]');
+                            var cId = sel ? sel.value : null;
+                            if (sId && cId) {
+                                handleStartScoutMission(sId, cId);
+                            }
+                        };
+                    });
+                }
+
+                // Render Active Missions for Our Scouting Nation
+                var currentNatId = (n && n.id) ? n.id : simState.activeNationId;
+                var myMissions = (simState.scoutMissions || []).filter(function(m) {
+                    return m.scoutNationId === currentNatId || m.scoutNationId === simState.activeNationId;
+                });
+                if (myMissions.length > 0) {
+                    var mSection = document.createElement("div");
+                    mSection.style.marginTop = "14px";
+                    mSection.innerHTML = '<h6 style="color:#2dd4bf;margin-bottom:6px;font-size:0.85rem;">🎯 مهام الاستطلاع الجارية لدولتك:</h6>';
+                    myMissions.forEach(function(m) {
+                        var mCard = document.createElement("div");
+                        mCard.className = "sim-item-card";
+                        mCard.style.borderColor = "rgba(20, 184, 166, 0.4)";
+                        var targNat = nationsData[m.targetNationId];
+                        var targName = targNat ? targNat.name : m.targetNationId;
+
+                        var tierLabel = m.tier === "outer" ? "1. الدائرة الخارجية (70-100 كم) 📍" :
+                                       (m.tier === "middle" ? "2. الدائرة الوسطى (30-70 كم) 🔍" : "3. الدائرة الداخلية (0-30 كم) 👁️");
+
+                        var statusBadge = m.status === "active" ? '<span class="sim-tag" style="background:#0284c7;">المستطلع يتربص بالهدف</span>' :
+                                         (m.status === "returning" ? '<span class="sim-tag" style="background:#eab308;color:#000;">في طريق العودة 🐎</span>' :
+                                         (m.status === "reported" ? '<span class="sim-tag" style="background:#10b981;">وصل التقرير بنجاح ✓</span>' :
+                                         '<span class="sim-tag" style="background:#ef4444;">سقط في الأسر ⛓️</span>'));
+
+                        var cardHtml = '<div class="sim-item-info"><span class="sim-item-title">تعقب قافلة ' + targName + '</span>'
+                            + '<span class="sim-item-meta">النطاق الحالي: <strong>' + tierLabel + '</strong></span></div>'
+                            + statusBadge;
+
+                        if (m.status === "active") {
+                            cardHtml += '<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">';
+                            if (m.tier === "outer") {
+                                cardHtml += '<button type="button" class="btn btn-secondary btn-sm" onclick="window.handleScoutAdvanceTier(\'' + m.id + '\', \'middle\')" style="font-size:0.75rem;padding:3px 6px;">التقدم للدائرة الوسطى 🔍</button>';
+                            } else if (m.tier === "middle") {
+                                cardHtml += '<button type="button" class="btn btn-secondary btn-sm" onclick="window.handleScoutAdvanceTier(\'' + m.id + '\', \'inner\')" style="font-size:0.75rem;padding:3px 6px;color:#f59e0b;border-color:#f59e0b;">التسلل للدائرة الداخلية ⚠️</button>';
+                            }
+                            cardHtml += '<button type="button" class="btn btn-primary btn-sm" onclick="window.handleScoutOrderReturn(\'' + m.id + '\')" style="font-size:0.75rem;padding:3px 6px;">أمر بالعودة بالتقرير 🐎</button>'
+                                     + '</div>';
+                        } else if (m.status === "returning") {
+                            var remMs = Math.max(0, (m.reportETA || Date.now()) - Date.now());
+                            var remSec = Math.ceil(remMs / 1000);
+                            cardHtml += '<div style="margin-top:6px;font-size:0.78rem;color:var(--text-muted);">'
+                                     + 'المستطلع في طريق العودة للوطن (متبقي: ~' + remSec + ' ثانية)...'
+                                     + '</div>';
+                        } else if (m.status === "reported") {
+                            cardHtml += '<div style="margin-top:8px;">'
+                                     + '<button type="button" class="btn btn-primary btn-sm" onclick="window.handleReadScoutReport(\'' + m.id + '\')" style="font-size:0.8rem;padding:4px 8px;background:#14b8a6;border:none;">فتح وقراءة التقرير الاستخباراتي 📜</button>'
+                                     + '</div>';
+                        }
+                        mCard.innerHTML = cardHtml;
+                        mSection.appendChild(mCard);
+                    });
+                    simActiveScoutsFeed.appendChild(mSection);
+                }
+
+                // Render Detection Notice for Target Nation (Military or Intelligence view)
+                var detectedOnUs = (simState.scoutMissions || []).filter(function(m) {
+                    return (m.targetNationId === currentNatId || m.targetNationId === simState.activeNationId) && m.detected && m.status !== "captured" && !m.pursuitResolved && !m.targetRerouted;
+                });
+                if (detectedOnUs.length > 0) {
+                    var dSection = document.createElement("div");
+                    dSection.style.marginTop = "14px";
+                    dSection.innerHTML = '<h6 style="color:#ef4444;margin-bottom:6px;font-size:0.85rem;">🚨 إنذارات رصد استخباراتي معادية:</h6>';
+                    detectedOnUs.forEach(function(dm) {
+                        var dCard = document.createElement("div");
+                        dCard.className = "sim-item-card";
+                        dCard.style.borderColor = "rgba(239, 68, 68, 0.5)";
+                        dCard.style.background = "rgba(239, 68, 68, 0.1)";
+                        dCard.innerHTML = '<div class="sim-item-info"><span class="sim-item-title" style="color:#f87171;">⚠️ رصد طليعة استطلاع مجهولة تتربص بقافلتنا!</span>'
+                            + '<span class="sim-item-meta">النطاق: الدائرة الداخلية (0 - 30 كم) | الخطر: كشف كامل للحمولة</span></div>'
+                            + '<div style="margin-top:8px;display:flex;gap:6px;">'
+                            + '<button type="button" class="btn btn-secondary btn-sm" onclick="window.handlePursueScout(\'' + dm.id + '\')" style="font-size:0.75rem;padding:3px 8px;color:#ef4444;border-color:#ef4444;">شن مطاردة لاعتقال المستطلع ⚔️</button>'
+                            + '<button type="button" class="btn btn-primary btn-sm" onclick="window.handleRerouteCaravan(\'' + dm.targetCaravanId + '\', \'' + dm.id + '\')" style="font-size:0.75rem;padding:3px 8px;background:#3b82f6;border:none;">تغيير مسار القافلة 🗺️</button>'
+                            + '</div>';
+                        dSection.appendChild(dCard);
+                    });
+                    simActiveScoutsFeed.appendChild(dSection);
                 }
             }
 
@@ -17063,8 +17177,8 @@
             simState.caravans.filter(function(c) {
                 return activeNat && (c.from === activeNat.id || c.to === activeNat.id);
             }).forEach(function(c) {
-                var pStart = proj(c.startCoords);
-                var pEnd = proj(c.endCoords);
+                var pStart = (c.startCoords && Array.isArray(c.startCoords)) ? proj(c.startCoords) : null;
+                var pEnd = (c.endCoords && Array.isArray(c.endCoords)) ? proj(c.endCoords) : null;
                 if (!pStart || !pEnd) return;
 
                 // Path
@@ -17119,7 +17233,7 @@
             simState.scouts.filter(function(s) {
                 return activeNat && (s.nation === activeNat.id);
             }).forEach(function(s) {
-                var p = proj(s.coords);
+                var p = (s.coords && Array.isArray(s.coords)) ? proj(s.coords) : null;
                 if (!p) return;
 
                 var gScout = simLayer.append("g")
@@ -17242,6 +17356,7 @@
             if (simState.unsubSpies) { simState.unsubSpies(); simState.unsubSpies = null; }
             if (simState.unsubEvents) { simState.unsubEvents(); simState.unsubEvents = null; }
             if (simState.unsubExpeditions) { simState.unsubExpeditions(); simState.unsubExpeditions = null; }
+            if (simState.unsubScoutMissions) { simState.unsubScoutMissions(); simState.unsubScoutMissions = null; }
 
             var controlsBar = document.getElementById("controlsBar");
             if (controlsBar) controlsBar.style.display = "";
@@ -18315,6 +18430,23 @@
                 }
             }
 
+            // Check for detected enemy scout missions targeting our caravans (Military role alert)
+            var currentNatId = (n && n.id) ? n.id : simState.activeNationId;
+            var detectedMissions = (simState.scoutMissions || []).filter(function(m) {
+                return (m.targetNationId === currentNatId || m.targetNationId === simState.activeNationId) && m.detected && m.status !== "captured" && !m.pursuitResolved && !m.targetRerouted;
+            });
+            if (detectedMissions.length > 0) {
+                detectedMissions.forEach(function(dm) {
+                    html += '<div style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);border-radius:10px;padding:8px 10px;margin-bottom:8px;">'
+                        + '<div style="color:#f87171;font-weight:bold;">🚨 إنذار عسكري: رصدت حراسة القافلة طليعة استطلاع مجهولة تتربص بها (الدائرة الداخلية)!</div>'
+                        + '<div style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">يحق لقائد الجيش شن مطاردة فورية لأسر المستطلع أو تغيير مسار القافلة.</div>'
+                        + '<div style="display:flex;gap:6px;margin-top:6px;">'
+                        + '<button type="button" class="btn btn-secondary btn-sm" onclick="window.handlePursueScout(\'' + dm.id + '\')" style="padding:3px 8px;font-size:0.8rem;color:#ef4444;border-color:#ef4444;">شن مطاردة لاعتقال المستطلع ⚔️</button>'
+                        + '<button type="button" class="btn btn-primary btn-sm" onclick="window.handleRerouteCaravan(\'' + dm.targetCaravanId + '\', \'' + dm.id + '\')" style="padding:3px 8px;font-size:0.8rem;background:#3b82f6;border:none;">تغيير مسار القافلة 🗺️</button>'
+                        + '</div></div>';
+                });
+            }
+
             if (!html) {
                 html = '<div style="color:var(--text-muted);font-size:0.82rem;">لا توجد قوات إسناد مرسلة أو مستضافة حالياً.</div>';
             }
@@ -18588,6 +18720,415 @@
                             isResolvingExpulsion = false;
                         }
                     }
+                }
+            }
+        }
+
+        // ──────────────────────────────────────────────────────────────
+        // Stage 6: Scout Intelligence Missions, Tier Progression & Pursuit
+        // ──────────────────────────────────────────────────────────────
+        async function handleStartScoutMission(scoutId, targetCaravanId) {
+            var n = nationsData[simState.activeNationId];
+            if (!n) return;
+            var activeNatId = (n && n.id) ? n.id : simState.activeNationId;
+            var scout = (simState.scouts || []).find(function(s) {
+                return s && s.id === scoutId && (s.nation === activeNatId || (n && s.nation === n.id) || s.nation === simState.activeNationId);
+            });
+            if (!scout) {
+                if (typeof Go === "function") Go("يرجى اختيار طليعة استطلاع صالحة تابعة لدولتك.");
+                return { ok: false, error: "scout_not_found" };
+            }
+            var caravan = (simState.caravans || []).find(function(c) { return c && c.id === targetCaravanId; });
+            if (!caravan) {
+                if (typeof Go === "function") Go("يرجى تحديد قافلة تجارية صالحة للتعقب.");
+                return { ok: false, error: "caravan_not_found" };
+            }
+            if (caravan.from === activeNatId || (n && caravan.from === n.id) || caravan.from === simState.activeNationId) {
+                if (typeof Go === "function") Go("⚠️ لا يمكنك تعقب قوافل دولتك؛ اختر قافلة تجارية لدولة أخرى.");
+                return;
+            }
+
+            var targetNat = nationsData[caravan.from] || { id: caravan.from, name: caravan.from };
+            var missionId = "mission_" + Date.now();
+            var dataOuter = {
+                sighting: true,
+                targetCargoType: "حركة قوافل تجارية (غبار ورصد مسار)",
+                heading: caravan.to,
+                observedAt: Date.now()
+            };
+
+            var missionData = {
+                id: missionId,
+                scoutId: scout.id,
+                scoutNationId: activeNatId,
+                scoutTeamId: n.ownerTeamId || (simState.teamAssignments && simState.teamAssignments[activeNatId]) || 'team_1',
+                targetCaravanId: caravan.id,
+                targetNationId: caravan.from,
+                targetTeamId: targetNat.ownerTeamId || (simState.teamAssignments && simState.teamAssignments[targetNat.id]) || 'team_2',
+                tier: "outer",
+                status: "active",
+                reportETA: null,
+                detected: false,
+                createdAt: Date.now()
+            };
+
+            if (simState.isMultiplayer && simState.gameId && window.firebaseCreateScoutMission) {
+                var createRes = await window.firebaseCreateScoutMission(simState.gameId, missionData);
+                if (createRes && createRes.ok) {
+                    if (window.firebaseSetScoutReportData) {
+                        await window.firebaseSetScoutReportData(simState.gameId, missionId, { data_outer: dataOuter });
+                    }
+                    var ev = "👁️ انطلقت " + scout.name + " في مهمة تعقب لقافلة " + targetNat.name + " (الدائرة الخارجية: رصد حركة).";
+                    if (window.firebaseLogSimEvent) window.firebaseLogSimEvent(simState.gameId, ev);
+                    if (typeof Go === "function") Go("انطلقت طليعة الاستطلاع نحو مسار القافلة وتمركزت بالدائرة الخارجية ✓");
+                }
+            } else {
+                if (!simState.scoutMissions) simState.scoutMissions = [];
+                simState.scoutMissions.push(missionData);
+                if (!simState.scoutReports) simState.scoutReports = {};
+                simState.scoutReports[missionId] = { data_outer: dataOuter };
+                if (typeof Go === "function") Go("انطلقت طليعة الاستطلاع نحو مسار القافلة وتمركزت بالدائرة الخارجية ✓");
+            }
+            updateActiveNationUI();
+            var finalId = (createRes && createRes.missionId) || missionId;
+            return { ok: true, missionId: finalId };
+        }
+
+        async function handleScoutAdvanceTier(missionId, nextTier) {
+            var mission = (simState.scoutMissions || []).find(function(m) { return m.id === missionId; });
+            if (!mission || mission.status !== "active") return { ok: false, error: "not_active" };
+            var caravan = (simState.caravans || []).find(function(c) { return c.id === mission.targetCaravanId; });
+
+            if (!nextTier) {
+                if (mission.tier === "outer") nextTier = "middle";
+                else if (mission.tier === "middle") nextTier = "inner";
+            }
+
+            if (nextTier === "middle") {
+                var dataMiddle = {
+                    estimatedCargo: "شحنة تجارية مقدرة بنحو " + (caravan ? caravan.cargo : "بضائع ومؤن"),
+                    estimatedEscort: "حراسة مرافقة مقدرة بنحو " + (caravan && caravan.escortCavalry ? "~" + caravan.escortCavalry + " فارساً" : (caravan ? caravan.escort : "حراسة مشاة خفيفة")),
+                    observedAt: Date.now()
+                };
+                mission.tier = "middle";
+                if (simState.isMultiplayer && simState.gameId && window.firebaseUpdateScoutMission) {
+                    await window.firebaseUpdateScoutMission(simState.gameId, mission.id, { tier: "middle" });
+                    if (window.firebaseSetScoutReportData) {
+                        await window.firebaseSetScoutReportData(simState.gameId, mission.id, { data_middle: dataMiddle });
+                    }
+                } else {
+                    if (!simState.scoutReports) simState.scoutReports = {};
+                    if (!simState.scoutReports[mission.id]) simState.scoutReports[mission.id] = {};
+                    simState.scoutReports[mission.id].data_middle = dataMiddle;
+                }
+                if (typeof Go === "function") Go("تقدم المستطلع إلى الدائرة الوسطى ورصد تقديرات الحمولة والحراسة 🔍");
+            } else if (nextTier === "inner") {
+                var dataInner = {
+                    exactCargo: caravan ? caravan.cargo : "100 كيس قمح",
+                    exactEscort: caravan ? caravan.escort : "حراسة خفيفة",
+                    escortCavalry: caravan ? (caravan.escortCavalry || 0) : 0,
+                    destination: caravan ? caravan.to : "",
+                    observedAt: Date.now()
+                };
+
+                // Detection chance calculation:
+                var baseChance = 0.40;
+                var escortBonus = 0;
+                if (caravan) {
+                    if (caravan.escortCavalry >= 60 || (caravan.escort && caravan.escort.indexOf("مشددة") !== -1)) {
+                        escortBonus = 0.25;
+                    } else if (caravan.escortCavalry > 0 || (caravan.escort && (caravan.escort.indexOf("فرسان") !== -1 || caravan.escort.indexOf("حراسة") !== -1))) {
+                        escortBonus = 0.15;
+                    }
+                }
+                var targetScouts = (simState.scouts || []).filter(function(s) { return s.nation === mission.targetNationId; });
+                var scoutBonus = Math.min(0.30, targetScouts.length * 0.10);
+                var totalChance = Math.min(0.95, baseChance + escortBonus + scoutBonus);
+
+                var isDetected = false;
+                if (typeof window.__simForceDetection === "boolean") {
+                    isDetected = window.__simForceDetection;
+                } else if (typeof window.__simForceScoutDetected === "boolean") {
+                    isDetected = window.__simForceScoutDetected;
+                } else {
+                    isDetected = Math.random() < totalChance;
+                }
+
+                mission.tier = "inner";
+                var updatePayload = { tier: "inner" };
+                if (isDetected) {
+                    mission.detected = true;
+                    mission.detectedAt = Date.now();
+                    updatePayload.detected = true;
+                    updatePayload.detectedAt = Date.now();
+                }
+
+                if (simState.isMultiplayer && simState.gameId && window.firebaseUpdateScoutMission) {
+                    await window.firebaseUpdateScoutMission(simState.gameId, mission.id, updatePayload);
+                    if (window.firebaseSetScoutReportData) {
+                        await window.firebaseSetScoutReportData(simState.gameId, mission.id, { data_inner: dataInner });
+                    }
+                } else {
+                    if (!simState.scoutReports) simState.scoutReports = {};
+                    if (!simState.scoutReports[mission.id]) simState.scoutReports[mission.id] = {};
+                    simState.scoutReports[mission.id].data_inner = dataInner;
+                }
+
+                if (typeof Go === "function") Go("تسلل المستطلع إلى الدائرة الداخلية وجمع تفاصيل الحمولة والتسليح بنجاح 👁️");
+            }
+            updateActiveNationUI();
+            return { ok: true, tier: mission.tier, detected: !!mission.detected };
+        }
+
+        async function handleScoutOrderReturn(missionId) {
+            var mission = (simState.scoutMissions || []).find(function(m) { return m.id === missionId; });
+            if (!mission || mission.status !== "active") return { ok: false, error: "not_active" };
+
+            var durationMs = window.__simScoutReturnDurationMs || 4000;
+            var reportETA = Date.now() + durationMs;
+            mission.status = "returning";
+            mission.reportETA = reportETA;
+
+            if (simState.isMultiplayer && simState.gameId && window.firebaseUpdateScoutMission) {
+                await window.firebaseUpdateScoutMission(simState.gameId, mission.id, {
+                    status: "returning",
+                    reportETA: reportETA
+                });
+            }
+            if (typeof Go === "function") Go("أُصدر أمر العودة للمستطلع؛ التقرير سيكون متاحاً فور وصوله لحامية الوطن 🐎");
+            updateActiveNationUI();
+
+            setTimeout(async function() {
+                if (mission.status === "returning" && Date.now() >= reportETA) {
+                    if (simState.isMultiplayer && simState.gameId && window.firebaseUpdateScoutMission) {
+                        await window.firebaseUpdateScoutMission(simState.gameId, mission.id, {
+                            status: "reported",
+                            reportedAt: Date.now()
+                        });
+                    } else {
+                        mission.status = "reported";
+                        mission.reportedAt = Date.now();
+                    }
+                    updateActiveNationUI();
+                }
+            }, Math.max(100, durationMs + 50));
+            return { ok: true, reportETA: reportETA };
+        }
+
+        async function handleReadScoutReport(missionId) {
+            var mission = (simState.scoutMissions || []).find(function(m) { return m.id === missionId; });
+            if (!mission) return { ok: false, error: "not_found" };
+
+            if (mission.status === "returning" && mission.reportETA && Date.now() >= mission.reportETA) {
+                if (simState.isMultiplayer && simState.gameId && window.firebaseUpdateScoutMission) {
+                    await window.firebaseUpdateScoutMission(simState.gameId, mission.id, {
+                        status: "reported",
+                        reportedAt: Date.now()
+                    });
+                }
+                mission.status = "reported";
+            }
+
+            if (simState.isMultiplayer && simState.gameId && window.firebaseGetScoutReportData) {
+                var res = await window.firebaseGetScoutReportData(simState.gameId, missionId);
+                if (res && res.ok) {
+                    mission.reportData = res.data;
+                    renderScoutReportModal(mission, res.data);
+                    return res;
+                } else {
+                    var errMsg = res ? (res.error || "محجوب أمنياً") : "تعذر القراءة";
+                    if (typeof Go === "function") Go("⚠️ لا يمكن قراءة التقرير حالياً: " + errMsg);
+                    return res;
+                }
+            } else {
+                var data = (simState.scoutReports && simState.scoutReports[missionId]) || null;
+                if (mission.status !== "reported" || (mission.reportETA && Date.now() < mission.reportETA)) {
+                    if (typeof Go === "function") Go("⚠️ لا يمكن قراءة التقرير قبل وصول المستطلع لحامية الوطن!");
+                    return { ok: false, error: "permission-denied" };
+                }
+                mission.reportData = data;
+                renderScoutReportModal(mission, data);
+                return { ok: true, data: data };
+            }
+        }
+
+        async function handlePursueScout(missionId) {
+            var mission = (simState.scoutMissions || []).find(function(m) { return m.id === missionId; });
+            if (!mission) return { ok: false, error: "not_found" };
+
+            var pursuitSuccess = false;
+            if (typeof window.__simForcePursuitSuccess === "boolean") {
+                pursuitSuccess = window.__simForcePursuitSuccess;
+            } else {
+                var caravan = (simState.caravans || []).find(function(c) { return c.id === mission.targetCaravanId; });
+                var pChance = 0.50;
+                if (caravan && caravan.escortCavalry >= 60) pChance = 0.70;
+                else if (caravan && caravan.escortCavalry > 0) pChance = 0.55;
+                pursuitSuccess = Math.random() < pChance;
+            }
+
+            var scoutNat = nationsData[mission.scoutNationId];
+            var captorNat = nationsData[mission.targetNationId];
+            var spyData = {
+                id: "cs_" + Date.now(),
+                name: "طليعة استطلاع مأسورة (" + (scoutNat ? scoutNat.name : mission.scoutNationId) + ")",
+                originNationId: mission.scoutNationId,
+                originTeamId: mission.scoutTeamId,
+                captorNationId: mission.targetNationId,
+                captorTeamId: mission.targetTeamId,
+                status: "محتجز بغرفة التحقيق",
+                detectedInCircle: "الدائرة الداخلية (0 - 30 كم)",
+                createdAt: Date.now()
+            };
+
+            if (simState.isMultiplayer && simState.gameId && window.firebaseResolvePursuit) {
+                var res = await window.firebaseResolvePursuit(simState.gameId, missionId, pursuitSuccess, mission.targetCaravanId, mission.scoutId, spyData);
+                if (!res || !res.ok) {
+                    if (typeof Go === "function") Go("تم البت في أمر هذه الطليعة مسبقاً.");
+                    return res;
+                }
+                if (pursuitSuccess) {
+                    mission.status = "captured";
+                    mission.pursuitResolved = true;
+                    mission.pursuitSuccess = true;
+
+                    simState.scouts = (simState.scouts || []).filter(function(s) { return s.id !== mission.scoutId; });
+
+                    var decCaptor = "⚔️ نجحت حراسة القافلة في ملاحقة وأسر طليعة الاستطلاع ونقل الجاسوس إلى غرفة التحقيق!";
+                    if (captorNat && captorNat.decrees) captorNat.decrees.unshift(decCaptor);
+                    if (window.firebaseLogSimEvent) window.firebaseLogSimEvent(simState.gameId, decCaptor);
+                    if (typeof Go === "function") Go(decCaptor);
+                } else {
+                    mission.pursuitResolved = true;
+                    mission.pursuitSuccess = false;
+
+                    var targetCaravan = (simState.caravans || []).find(function(c) { return c.id === mission.targetCaravanId; });
+                    if (targetCaravan) {
+                        targetCaravan.progress = Math.max(0.05, (targetCaravan.progress || 0.15) - 0.15);
+                        targetCaravan.status = "تأخرت القافلة بسبب انشغال الحراسة بمطاردة فاشلة";
+                        if (window.firebaseCreateSimCaravan) {
+                            await window.firebaseCreateSimCaravan(simState.gameId, targetCaravan);
+                        }
+                    }
+
+                    var decFail = "💨 أفلتت طليعة الاستطلاع من قبضة الحراسة، وعادت القافلة لمسارها بعد تأخير في زمن الوصول.";
+                    var captorN = nationsData[mission.targetNationId];
+                    if (captorN && captorN.decrees) captorN.decrees.unshift(decFail);
+                    if (window.firebaseLogSimEvent) window.firebaseLogSimEvent(simState.gameId, decFail);
+                    if (typeof Go === "function") Go(decFail);
+                }
+                updateActiveNationUI();
+                return res;
+            } else {
+                mission.pursuitResolved = true;
+                mission.pursuitSuccess = pursuitSuccess;
+                if (pursuitSuccess) {
+                    mission.status = "captured";
+                    simState.scouts = (simState.scouts || []).filter(function(s) { return s.id !== mission.scoutId; });
+                } else {
+                    var targetCaravan = (simState.caravans || []).find(function(c) { return c.id === mission.targetCaravanId; });
+                    if (targetCaravan) {
+                        targetCaravan.progress = Math.max(0.05, (targetCaravan.progress || 0.15) - 0.15);
+                    }
+                }
+                updateActiveNationUI();
+                return { ok: true, success: pursuitSuccess };
+            }
+        }
+
+        async function handleRerouteCaravan(caravanId, missionId) {
+            var caravan = (simState.caravans || []).find(function(c) { return c.id === caravanId; });
+            if (!caravan) return;
+
+            caravan.isSafeRoute = true;
+            caravan.status = "غيرت القافلة مسارها لتفادي الطليعة المتربصة وتأمين الحمولة ✓";
+
+            if (simState.isMultiplayer && simState.gameId) {
+                if (window.firebaseCreateSimCaravan) {
+                    await window.firebaseCreateSimCaravan(simState.gameId, caravan);
+                }
+                if (missionId && window.firebaseUpdateScoutMission) {
+                    await window.firebaseUpdateScoutMission(simState.gameId, missionId, { targetRerouted: true });
+                }
+            }
+            var dec = "🗺️ اعتمدت قيادة القافلة مساراً التفافياً لتفادي الطليعة المعادية وضمان وصول التجارة بأمان.";
+            var n = nationsData[caravan.from];
+            if (n && n.decrees) n.decrees.unshift(dec);
+            if (window.firebaseLogSimEvent) window.firebaseLogSimEvent(simState.gameId, dec);
+            if (typeof Go === "function") Go("تم تغيير مسار القافلة وتأمينها بنجاح 🗺️");
+            updateActiveNationUI();
+            return { ok: true };
+        }
+
+        function renderScoutReportModal(mission, reportData) {
+            var oldModal = document.getElementById("simScoutReportModal");
+            if (oldModal) oldModal.remove();
+
+            var outer = (reportData && reportData.data_outer) ? reportData.data_outer : null;
+            var middle = (reportData && reportData.data_middle) ? reportData.data_middle : null;
+            var inner = (reportData && reportData.data_inner) ? reportData.data_inner : null;
+
+            var targetNat = nationsData[mission.targetNationId];
+            var targetName = targetNat ? targetNat.name : mission.targetNationId;
+
+            var html = '<div id="simScoutReportModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;z-index:99999;padding:16px;">'
+                + '<div style="background:#0f172a;border:1px solid #14b8a6;border-radius:12px;max-width:540px;width:100%;padding:20px;color:#f8fafc;box-shadow:0 20px 40px rgba(0,0,0,0.8);">'
+                + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;">'
+                + '<h4 style="margin:0;font-size:1.1rem;color:#2dd4bf;">📜 تقرير الاستطلاع السري العائد</h4>'
+                + '<button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById(\'simScoutReportModal\').remove()" style="padding:2px 8px;">✕</button>'
+                + '</div>'
+                + '<div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:14px;">هدف التعقب: قافلة <strong>' + targetName + '</strong> | الحالة: تم استلام التقرير بحامية الوطن ✓</div>';
+
+            if (outer) {
+                html += '<div style="background:rgba(20,184,166,0.1);border-left:3px solid #14b8a6;padding:10px;border-radius:6px;margin-bottom:10px;">'
+                    + '<strong style="color:#2dd4bf;">📍 رصد الدائرة الخارجية (70 - 100 كم):</strong>'
+                    + '<div style="font-size:0.85rem;margin-top:4px;">' + (outer.targetCargoType || "رصد مؤكد لقافلة متحركة") + ' متجهة نحو: ' + (outer.heading || "غير محدد") + '</div>'
+                    + '</div>';
+            }
+            if (middle) {
+                html += '<div style="background:rgba(59,130,246,0.1);border-left:3px solid #3b82f6;padding:10px;border-radius:6px;margin-bottom:10px;">'
+                    + '<strong style="color:#60a5fa;">🔍 رصد الدائرة الوسطى (30 - 70 كم):</strong>'
+                    + '<div style="font-size:0.85rem;margin-top:4px;">' + middle.estimatedCargo + '</div>'
+                    + '<div style="font-size:0.85rem;margin-top:2px;">' + middle.estimatedEscort + '</div>'
+                    + '</div>';
+            }
+            if (inner) {
+                html += '<div style="background:rgba(245,158,11,0.1);border-left:3px solid #f59e0b;padding:10px;border-radius:6px;margin-bottom:10px;">'
+                    + '<strong style="color:#fbbf24;">👁️ رصد الدائرة الداخلية اللصيقة (0 - 30 كم):</strong>'
+                    + '<div style="font-size:0.85rem;margin-top:4px;">الحمولة المؤكدة: <strong>' + inner.exactCargo + '</strong></div>'
+                    + '<div style="font-size:0.85rem;margin-top:2px;">التسليح والحراسة: <strong>' + inner.exactEscort + ' (' + inner.escortCavalry + ' فارساً)</strong></div>'
+                    + '<div style="font-size:0.85rem;margin-top:2px;">وجهة الوصول: <strong>' + inner.destination + '</strong></div>'
+                    + '</div>';
+            }
+
+            html += '<div style="text-align:right;margin-top:16px;">'
+                + '<button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById(\'simScoutReportModal\').remove()">إغلاق التقرير</button>'
+                + '</div></div></div>';
+
+            document.body.insertAdjacentHTML("beforeend", html);
+        }
+
+        async function checkAndResolveReturningScoutMissions() {
+            if (!simState.isMultiplayer || !simState.gameId) return;
+            var activeId = simState.activeNationId;
+            var n = nationsData[activeId];
+            var currentNatId = (n && n.id) ? n.id : activeId;
+            var missions = simState.scoutMissions || [];
+            for (var i = 0; i < missions.length; i++) {
+                var m = missions[i];
+                var isScoutOwner = (m.scoutNationId === currentNatId || m.scoutNationId === activeId);
+                if (isScoutOwner && m.status === "returning" && m.reportETA && Date.now() >= m.reportETA) {
+                    m.status = "reported";
+                    m.reportedAt = Date.now();
+                    if (window.firebaseUpdateScoutMission) {
+                        await window.firebaseUpdateScoutMission(simState.gameId, m.id, {
+                            status: "reported",
+                            reportedAt: Date.now()
+                        });
+                    }
+                    var ev = "📜 عادت طليعة الاستطلاع إلى الوطن بسلام وأصبح التقرير متاحاً للقراءة.";
+                    if (window.firebaseLogSimEvent) window.firebaseLogSimEvent(simState.gameId, ev);
+                    updateActiveNationUI();
                 }
             }
         }
@@ -19083,6 +19624,16 @@
                 });
             }
 
+            if (simState.unsubScoutMissions) simState.unsubScoutMissions();
+            if (window.firebaseListenScoutMissions) {
+                simState.unsubScoutMissions = window.firebaseListenScoutMissions(gId, function(missionsList) {
+                    simState.scoutMissions = missionsList || [];
+                    if (typeof checkAndResolveReturningScoutMissions === "function") {
+                        checkAndResolveReturningScoutMissions();
+                    }
+                });
+            }
+
             if (simMpTeacherAlert) {
                 simMpTeacherAlert.style.background = "rgba(16,185,129,0.2)";
                 simMpTeacherAlert.style.color = "#34d399";
@@ -19336,6 +19887,22 @@
                 });
             }
 
+            if (simState.unsubScoutMissions) simState.unsubScoutMissions();
+            if (window.firebaseListenScoutMissions) {
+                simState.unsubScoutMissions = window.firebaseListenScoutMissions(res.gameId, function(missionsList) {
+                    simState.scoutMissions = missionsList || [];
+                    if (typeof checkAndResolveReturningScoutMissions === "function") {
+                        checkAndResolveReturningScoutMissions();
+                    }
+                    isRemoteSyncing = true;
+                    try {
+                        updateActiveNationUI();
+                    } finally {
+                        isRemoteSyncing = false;
+                    }
+                });
+            }
+
             startSeasonalClock();
 
             if (typeof Go === "function") Go("مرحباً بك يا " + res.memberName + " في قيادة " + res.teamName + " (" + getRoleArabicTitle(res.role) + ") 👑");
@@ -19527,5 +20094,13 @@
         window.handleSenderRefuseWithdrawal = handleSenderRefuseWithdrawal;
         window.handleHostIssueExpulsion = handleHostIssueExpulsion;
         window.checkAndResolveExpiredExpulsions = checkAndResolveExpiredExpulsions;
+        window.handleStartScoutMission = handleStartScoutMission;
+        window.handleScoutAdvanceTier = handleScoutAdvanceTier;
+        window.handleScoutOrderReturn = handleScoutOrderReturn;
+        window.handleReadScoutReport = handleReadScoutReport;
+        window.handlePursueScout = handlePursueScout;
+        window.handleRerouteCaravan = handleRerouteCaravan;
+        window.renderScoutReportModal = renderScoutReportModal;
+        window.checkAndResolveReturningScoutMissions = checkAndResolveReturningScoutMissions;
     }();
 }();

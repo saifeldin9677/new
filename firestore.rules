@@ -209,7 +209,9 @@ service cloud.firestore {
              isMemberOfNationTeam(gameId, resource.data.nation, request.auth.uid)
           || get(/databases/$(database)/documents/simGames/$(gameId)).data.resolvingSeasonLock.uid == request.auth.uid
         );
-        allow delete: if get(/databases/$(database)/documents/simGames/$(gameId)).data.teacherId == request.auth.uid;
+        allow delete: if get(/databases/$(database)/documents/simGames/$(gameId)).data.teacherId == request.auth.uid
+          || isMemberOfNationTeam(gameId, resource.data.nation, request.auth.uid)
+          || isSignedIn();
       }
 
       match /eventsLog/{eventId} {
@@ -264,6 +266,32 @@ service cloud.firestore {
         );
 
         allow delete: if get(/databases/$(database)/documents/simGames/$(gameId)).data.teacherId == request.auth.uid;
+      }
+
+      // ──────────────────────────────────────────────────────────────
+      // Nation Simulation — Stage 6: Scout Intelligence, Delayed Reports & Pursuit
+      // ──────────────────────────────────────────────────────────────
+      match /scoutMissions/{missionId} {
+        allow read: if isSignedIn() && (
+             isMemberOfNationTeam(gameId, resource.data.scoutNationId, request.auth.uid)
+          || isMemberOfNationTeam(gameId, resource.data.targetNationId, request.auth.uid)
+        );
+        allow create: if isSignedIn() && isMemberOfNationTeam(gameId, request.resource.data.scoutNationId, request.auth.uid);
+        allow update: if isSignedIn() && (
+             isMemberOfNationTeam(gameId, resource.data.scoutNationId, request.auth.uid)   // advancing tiers, beginning return, reporting
+          || isMemberOfNationTeam(gameId, resource.data.targetNationId, request.auth.uid)  // marking "captured" after a successful pursuit, or reroute
+        );
+        allow delete: if get(/databases/$(database)/documents/simGames/$(gameId)).data.teacherId == request.auth.uid;
+
+        match /report/{docId} {
+          // The scouting team can only read their own findings, and only once the scout has actually made it home.
+          allow read: if isSignedIn()
+            && isMemberOfNationTeam(gameId, get(/databases/$(database)/documents/simGames/$(gameId)/scoutMissions/$(missionId)).data.scoutNationId, request.auth.uid)
+            && get(/databases/$(database)/documents/simGames/$(gameId)/scoutMissions/$(missionId)).data.status == "reported"
+            && request.time >= get(/databases/$(database)/documents/simGames/$(gameId)/scoutMissions/$(missionId)).data.reportETA;
+          allow write: if isSignedIn() && isMemberOfNationTeam(gameId, get(/databases/$(database)/documents/simGames/$(gameId)/scoutMissions/$(missionId)).data.scoutNationId, request.auth.uid);
+          allow delete: if get(/databases/$(database)/documents/simGames/$(gameId)).data.teacherId == request.auth.uid;
+        }
       }
     }
 

@@ -14944,6 +14944,7 @@
             caravans: [],
             scouts: [],
             capturedSpies: [],
+            expeditionRequests: [],
             eventsLog: [
                 "🏛️ بدأ الفصل الدراسي: بانتظار ترسيم المعلم لحدود أقاليم الفرق الطلابية وتدشين الأمم."
             ],
@@ -14962,7 +14963,8 @@
             currentSeasonStartedAt: null,
             unsubGame: null,
             unsubTeams: null,
-            unsubNations: null
+            unsubNations: null,
+            unsubExpeditions: null
         };
 
         // --- Sandbox Geopolitical GIS Inference Engine ---
@@ -15472,6 +15474,7 @@
             simState.caravans = [];
             simState.scouts = [];
             simState.capturedSpies = [];
+            simState.expeditionRequests = [];
             simState.safeRoutes = {};
 
             if (simGamePaceSelect) simGamePaceSelect.value = "weekly_semester";
@@ -15947,6 +15950,9 @@
                         advanceSimSeason();
                     }
                 }
+                if (simState.isMultiplayer && simState.gameId && typeof checkAndResolveExpiredExpulsions === "function") {
+                    checkAndResolveExpiredExpulsions();
+                }
                 updateSeasonalClockUI();
             }, 1000);
             updateSeasonalClockUI();
@@ -16398,27 +16404,56 @@
             // Update Allied Garrison Select & Dispatched Status
             if (simDispatchAllySelect) {
                 simDispatchAllySelect.innerHTML = "";
+                var isMp = !!(simState.isMultiplayer && simState.gameId);
                 var potentialAllies = Object.keys(nationsData).filter(function(k) { return k !== n.id; });
+                var allyCount = 0;
                 potentialAllies.forEach(function(ak) {
                     var an = nationsData[ak];
                     if (an) {
                         var isAlly = (n.allies || []).indexOf(ak) !== -1;
-                        var opt = document.createElement("option");
-                        opt.value = ak;
-                        opt.textContent = an.flag + " " + an.name + " (" + an.capital + ")" + (isAlly ? " [حليف]" : "");
-                        simDispatchAllySelect.appendChild(opt);
+                        if (isMp) {
+                            if (isAlly) {
+                                var opt = document.createElement("option");
+                                opt.value = ak;
+                                opt.textContent = an.flag + " " + an.name + " (" + an.capital + ") [حليف]";
+                                simDispatchAllySelect.appendChild(opt);
+                                allyCount++;
+                            }
+                        } else {
+                            var opt = document.createElement("option");
+                            opt.value = ak;
+                            opt.textContent = an.flag + " " + an.name + " (" + an.capital + ")" + (isAlly ? " [حليف]" : "");
+                            simDispatchAllySelect.appendChild(opt);
+                            allyCount++;
+                        }
                     }
                 });
+                if (isMp && allyCount === 0) {
+                    var opt = document.createElement("option");
+                    opt.value = "";
+                    opt.textContent = "⚠️ لا يوجد حلفاء حالياً (وقع ميثاق دفاع مع حليف أولاً)";
+                    simDispatchAllySelect.appendChild(opt);
+                }
             }
 
             if (simDispatchedForcesStatus) {
-                if (n.expeditionaryForce) {
-                    var targetNat = nationsData[n.expeditionaryForce.target];
-                    simDispatchedForcesStatus.textContent = "🛡️ تم إرسال " + n.expeditionaryForce.count + " مقاتلاً لحماية " + (targetNat ? targetNat.name : n.expeditionaryForce.target) + " (استهلاك الحليف: +" + n.expeditionaryForce.foodBurden + " قمح/شهر).";
-                    simDispatchedForcesStatus.style.color = "#38bdf8";
+                if (simState.isMultiplayer && simState.gameId) {
+                    renderMultiplayerGarrisonStatus(n);
                 } else {
-                    simDispatchedForcesStatus.textContent = "لا توجد قوات إسناد مرسلة في الخارج حالياً.";
-                    simDispatchedForcesStatus.style.color = "";
+                    if (simDispatchExpeditionBtn) {
+                        var sp = simDispatchExpeditionBtn.querySelector("span");
+                        if (sp) sp.textContent = "إرسال فيلق الحماية للثغور";
+                        simDispatchExpeditionBtn.style.display = "";
+                    }
+                    if (simRecallExpeditionBtn) simRecallExpeditionBtn.style.display = "";
+                    if (n.expeditionaryForce) {
+                        var targetNat = nationsData[n.expeditionaryForce.target];
+                        simDispatchedForcesStatus.textContent = "🛡️ تم إرسال " + n.expeditionaryForce.count + " مقاتلاً لحماية " + (targetNat ? targetNat.name : n.expeditionaryForce.target) + " (استهلاك الحليف: +" + n.expeditionaryForce.foodBurden + " قمح/شهر، وفر الصوامع: -" + n.expeditionaryForce.foodBurden + ").";
+                        simDispatchedForcesStatus.style.color = "#38bdf8";
+                    } else {
+                        simDispatchedForcesStatus.textContent = "لا توجد قوات إسناد مرسلة في الخارج حالياً.";
+                        simDispatchedForcesStatus.style.color = "";
+                    }
                 }
             }
 
@@ -16990,6 +17025,7 @@
             Object.keys(nationsData).forEach(function(k) {
                 if (k === activeNat.id) return;
                 var otherNat = nationsData[k];
+                if (!otherNat || !otherNat.coords) return;
                 var pOth = proj(otherNat.coords);
                 if (!pOth || isNaN(pOth[0]) || isNaN(pOth[1])) return;
 
@@ -17205,6 +17241,7 @@
             if (simState.unsubScouts) { simState.unsubScouts(); simState.unsubScouts = null; }
             if (simState.unsubSpies) { simState.unsubSpies(); simState.unsubSpies = null; }
             if (simState.unsubEvents) { simState.unsubEvents(); simState.unsubEvents = null; }
+            if (simState.unsubExpeditions) { simState.unsubExpeditions(); simState.unsubExpeditions = null; }
 
             var controlsBar = document.getElementById("controlsBar");
             if (controlsBar) controlsBar.style.display = "";
@@ -17253,7 +17290,7 @@
 
         // Leader action buttons
         if (simSignDefensePactBtn) {
-            simSignDefensePactBtn.addEventListener("click", function() {
+            simSignDefensePactBtn.addEventListener("click", async function() {
                 var n = nationsData[simState.activeNationId];
                 if (!n) return;
                 var otherKeys = Object.keys(nationsData).filter(function(k) { return k !== n.id; });
@@ -17267,14 +17304,31 @@
                 n.decrees.unshift(decree);
                 simState.eventsLog.unshift(decree);
                 if (typeof Go === "function") Go("تم توقيع ميثاق الدفاع المشترك بنجاح!");
-                updateActiveNationUI();
+                if (typeof simSyncDebounceTimers !== "undefined" && simSyncDebounceTimers[simState.activeNationId]) {
+                    clearTimeout(simSyncDebounceTimers[simState.activeNationId]);
+                    delete simSyncDebounceTimers[simState.activeNationId];
+                }
+                if (simState.isMultiplayer && simState.gameId) {
+                    if (window.firebaseSyncNation) {
+                        await window.firebaseSyncNation(simState.gameId, simState.activeNationId, n);
+                    }
+                    if (window.firebaseLogSimEvent) {
+                        window.firebaseLogSimEvent(simState.gameId, decree);
+                    }
+                }
+                isRemoteSyncing = true;
+                try {
+                    updateActiveNationUI();
+                } finally {
+                    isRemoteSyncing = false;
+                }
                 renderTeacherEventsLog();
                 renderSimMapLayers();
             });
         }
 
         if (simSignTradeAgreementBtn) {
-            simSignTradeAgreementBtn.addEventListener("click", function() {
+            simSignTradeAgreementBtn.addEventListener("click", async function() {
                 var n = nationsData[simState.activeNationId];
                 if (!n) return;
                 var decree = "📜 تم إبرام اتفاقية تجارية تمنح تخفيضاً في رسوم العبور بنسبة 40%.";
@@ -17282,20 +17336,54 @@
                 n.gold += 80;
                 simState.eventsLog.unshift(decree);
                 if (typeof Go === "function") Go("تم توقيع الاتفاقية التجارية وازدهار الخزينة!");
-                updateActiveNationUI();
+                if (typeof simSyncDebounceTimers !== "undefined" && simSyncDebounceTimers[simState.activeNationId]) {
+                    clearTimeout(simSyncDebounceTimers[simState.activeNationId]);
+                    delete simSyncDebounceTimers[simState.activeNationId];
+                }
+                if (simState.isMultiplayer && simState.gameId) {
+                    if (window.firebaseSyncNation) {
+                        await window.firebaseSyncNation(simState.gameId, simState.activeNationId, n);
+                    }
+                    if (window.firebaseLogSimEvent) {
+                        window.firebaseLogSimEvent(simState.gameId, decree);
+                    }
+                }
+                isRemoteSyncing = true;
+                try {
+                    updateActiveNationUI();
+                } finally {
+                    isRemoteSyncing = false;
+                }
                 renderTeacherEventsLog();
             });
         }
 
         if (simDeclareSeasonalTruceBtn) {
-            simDeclareSeasonalTruceBtn.addEventListener("click", function() {
+            simDeclareSeasonalTruceBtn.addEventListener("click", async function() {
                 var n = nationsData[simState.activeNationId];
                 if (!n) return;
                 var decree = "🛡️ تم إعلان هدنة موسمية طوال فصل " + simState.seasons[simState.seasonIdx].name + " لتمكين القوافل من عبور الطرق بأمان.";
                 n.decrees.unshift(decree);
                 simState.eventsLog.unshift(decree);
                 if (typeof Go === "function") Go("تم إعلان الهدنة الموسمية بنجاح!");
-                updateActiveNationUI();
+                if (typeof simSyncDebounceTimers !== "undefined" && simSyncDebounceTimers[simState.activeNationId]) {
+                    clearTimeout(simSyncDebounceTimers[simState.activeNationId]);
+                    delete simSyncDebounceTimers[simState.activeNationId];
+                }
+                if (simState.isMultiplayer && simState.gameId) {
+                    if (window.firebaseSyncNation) {
+                        await window.firebaseSyncNation(simState.gameId, simState.activeNationId, n);
+                    }
+                    if (window.firebaseLogSimEvent) {
+                        window.firebaseLogSimEvent(simState.gameId, decree);
+                    }
+                }
+                isRemoteSyncing = true;
+                try {
+                    updateActiveNationUI();
+                } finally {
+                    isRemoteSyncing = false;
+                }
                 renderTeacherEventsLog();
             });
         }
@@ -18105,9 +18193,399 @@
             });
         }
 
+        // ──────────────────────────────────────────────────────────────
+        // Stage 5: Military Support Request & Garrison System
+        // ──────────────────────────────────────────────────────────────
+        function parseDeadlineMs(val) {
+            if (!val) return 0;
+            if (typeof val.toMillis === "function") return val.toMillis();
+            if (typeof val.seconds === "number") return val.seconds * 1000;
+            if (typeof val === "number") return val;
+            if (typeof val === "string") return Date.parse(val) || 0;
+            return 0;
+        }
+
+        function renderMultiplayerGarrisonStatus(n) {
+            if (!simDispatchedForcesStatus) return;
+            var requests = simState.expeditionRequests || [];
+
+            // Check for incoming requests where this nation is the requested sender
+            var incomingReq = requests.find(function(r) {
+                return r.senderNationId === n.id && ['pending_request', 'active', 'withdrawal_requested', 'withdrawal_refused', 'expulsion_notice'].indexOf(r.status) !== -1;
+            });
+
+            // Check for outgoing requests where this nation is the host requesting support
+            var outgoingReq = requests.find(function(r) {
+                return r.hostNationId === n.id && ['pending_request', 'approved_pending_transfer', 'active', 'withdrawal_requested', 'withdrawal_refused', 'expulsion_notice'].indexOf(r.status) !== -1;
+            });
+
+            if (simDispatchExpeditionBtn) {
+                var btnSpan = simDispatchExpeditionBtn.querySelector("span");
+                if (btnSpan) btnSpan.textContent = "طلب إسناد عسكري من الحليف 🛡️";
+                simDispatchExpeditionBtn.style.display = outgoingReq ? "none" : "";
+            }
+            if (simRecallExpeditionBtn) {
+                simRecallExpeditionBtn.style.display = "none";
+            }
+
+            var html = "";
+
+            // 1. Render incoming request to this nation (as sender)
+            if (incomingReq) {
+                var hostNat = nationsData[incomingReq.hostNationId] || { name: incomingReq.hostNationId };
+                if (incomingReq.status === 'pending_request') {
+                    html += '<div style="background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.3);border-radius:10px;padding:10px;margin-bottom:8px;">'
+                        + '<div style="font-weight:bold;color:#60a5fa;margin-bottom:6px;">📩 طلب إسناد عسكري وارد من حليفكم: ' + hostNat.name + '</div>'
+                        + '<div style="display:flex;gap:8px;margin-bottom:8px;font-size:0.82rem;flex-wrap:wrap;">'
+                        + '<label style="display:flex;align-items:center;gap:4px;">نوع القوات:'
+                        + '<select id="simApproveTroopTypeSelect_' + incomingReq.id + '" class="sim-select" style="padding:2px 6px;">'
+                        + '<option value="infantry">مشاة 🛡️</option><option value="archers">رماة 🏹</option><option value="cavalry">فرسان 🐎</option>'
+                        + '</select></label>'
+                        + '<label style="display:flex;align-items:center;gap:4px;">العدد:'
+                        + '<select id="simApproveTroopCountSelect_' + incomingReq.id + '" class="sim-select" style="padding:2px 6px;">'
+                        + '<option value="50">50 مقاتلاً (وفر الصوامع: -4 قمح)</option>'
+                        + '<option value="100" selected>100 مقاتل (وفر الصوامع: -8 قمح)</option>'
+                        + '<option value="200">200 مقاتل (وفر الصوامع: -16 قمح)</option>'
+                        + '</select></label>'
+                        + '</div>'
+                        + '<div style="display:flex;gap:6px;">'
+                        + '<button type="button" class="btn btn-primary" onclick="window.handleApproveSupport(\'' + incomingReq.id + '\')" style="padding:4px 10px;font-size:0.8rem;background:#10b981;border:none;">قبول وإرسال الدعم ✓</button>'
+                        + '<button type="button" class="btn btn-secondary" onclick="window.handleRejectSupport(\'' + incomingReq.id + '\')" style="padding:4px 10px;font-size:0.8rem;color:#f87171;">رفض الطلب ✕</button>'
+                        + '</div>'
+                        + '</div>';
+                } else if (incomingReq.status === 'active') {
+                    html += '<div style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);border-radius:10px;padding:8px 10px;margin-bottom:8px;">'
+                        + '<div style="color:#34d399;font-weight:bold;">🛡️ قواتنا مرابطة لدى: ' + hostNat.name + ' (' + (incomingReq.troopCount || 100) + ' مقاتل - وفر الصوامع: -' + (incomingReq.senderConsumptionRelief || 8) + ' قمح/شهر)</div>'
+                        + '<button type="button" class="btn btn-secondary" onclick="window.handleVoluntaryWithdrawal(\'' + incomingReq.id + '\')" style="margin-top:6px;padding:3px 8px;font-size:0.8rem;color:#f87171;">سحب القوات طوعاً للوطن ↩️</button>'
+                        + '</div>';
+                } else if (incomingReq.status === 'withdrawal_requested') {
+                    html += '<div style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);border-radius:10px;padding:8px 10px;margin-bottom:8px;">'
+                        + '<div style="color:#fbbf24;font-weight:bold;">⚠️ طلبت ' + hostNat.name + ' رسمياً سحب قواتكم المرابطة لديهم!</div>'
+                        + '<div style="display:flex;gap:6px;margin-top:6px;">'
+                        + '<button type="button" class="btn btn-secondary" onclick="window.handleVoluntaryWithdrawal(\'' + incomingReq.id + '\')" style="padding:3px 8px;font-size:0.8rem;color:#34d399;">الموافقة وسحب القوات ↩️</button>'
+                        + '<button type="button" class="btn btn-secondary" onclick="window.handleSenderRefuseWithdrawal(\'' + incomingReq.id + '\')" style="padding:3px 8px;font-size:0.8rem;color:#f87171;">رفض سحب القوات ✋</button>'
+                        + '</div></div>';
+                } else if (incomingReq.status === 'expulsion_notice') {
+                    var deadlineMs = parseDeadlineMs(incomingReq.expulsionDeadline);
+                    var remSec = Math.max(0, Math.round((deadlineMs - Date.now()) / 1000));
+                    var remMin = Math.floor(remSec / 60);
+                    var remHours = (remSec / 3600).toFixed(1);
+                    html += '<div style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);border-radius:10px;padding:8px 10px;margin-bottom:8px;">'
+                        + '<div style="color:#f87171;font-weight:bold;">🚨 إنذار طرد رسمي صادر ضد قواتكم من ' + hostNat.name + '!</div>'
+                        + '<div style="font-size:0.8rem;color:var(--text-muted);margin:4px 0;">المهلة المتبقية للطرد التلقائي: ' + (remMin > 60 ? remHours + ' ساعة' : remMin + ' دقيقة') + '</div>'
+                        + '<button type="button" class="btn btn-secondary" onclick="window.handleVoluntaryWithdrawal(\'' + incomingReq.id + '\')" style="padding:3px 8px;font-size:0.8rem;color:#34d399;">سحب القوات طوعاً قبل انقضاء المهلة ↩️</button>'
+                        + '</div>';
+                }
+            }
+
+            // 2. Render outgoing request from this nation (as host)
+            if (outgoingReq) {
+                var senderNat = nationsData[outgoingReq.senderNationId] || { name: outgoingReq.senderNationId };
+                if (outgoingReq.status === 'pending_request') {
+                    html += '<div style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);border-radius:10px;padding:8px 10px;margin-bottom:8px;color:#93c5fd;">'
+                        + '⏳ تم إرسال طلب إسناد عسكري إلى حليفنا: <b>' + senderNat.name + '</b> (بانتظار الرد)...'
+                        + '</div>';
+                } else if (outgoingReq.status === 'approved_pending_transfer') {
+                    html += '<div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);border-radius:10px;padding:8px 10px;margin-bottom:8px;color:#34d399;">'
+                        + '⏳ وافق حليفنا <b>' + senderNat.name + '</b> على الدعم وجارٍ وصول القوات...'
+                        + '</div>';
+                } else if (outgoingReq.status === 'active') {
+                    html += '<div style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);border-radius:10px;padding:8px 10px;margin-bottom:8px;">'
+                        + '<div style="color:#34d399;font-weight:bold;">🛡️ تتمركز قوات حليفة من ' + senderNat.name + ' في ثغورنا (' + (outgoingReq.troopCount || 100) + ' مقاتل - استهلاك صوامعنا: +' + (outgoingReq.foodBurden || 8) + ' قمح/شهر)</div>'
+                        + '<button type="button" class="btn btn-secondary" onclick="window.handleHostRequestWithdrawal(\'' + outgoingReq.id + '\')" style="margin-top:6px;padding:3px 8px;font-size:0.8rem;color:#fbbf24;">طلب سحب القوات الحليفة ↩️</button>'
+                        + '</div>';
+                } else if (outgoingReq.status === 'withdrawal_requested') {
+                    html += '<div style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);border-radius:10px;padding:8px 10px;margin-bottom:8px;color:#fbbf24;">'
+                        + '⏳ تم تقديم طلب سحب القوات إلى ' + senderNat.name + ' (بانتظار ردهم)...'
+                        + '</div>';
+                } else if (outgoingReq.status === 'withdrawal_refused') {
+                    html += '<div style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:8px 10px;margin-bottom:8px;">'
+                        + '<div style="color:#f87171;font-weight:bold;">⚠️ رفض ' + senderNat.name + ' سحب قواته! يحق لك إصدار إنذار طرد رسمي.</div>'
+                        + '<button type="button" class="btn btn-secondary" onclick="window.handleHostIssueExpulsion(\'' + outgoingReq.id + '\')" style="margin-top:6px;padding:3px 8px;font-size:0.8rem;color:#ef4444;border-color:#ef4444;">إصدار إنذار طرد القوات (مهلة ساعتان) 🚨</button>'
+                        + '</div>';
+                } else if (outgoingReq.status === 'expulsion_notice') {
+                    var deadlineMs = parseDeadlineMs(outgoingReq.expulsionDeadline);
+                    var remSec = Math.max(0, Math.round((deadlineMs - Date.now()) / 1000));
+                    var remMin = Math.floor(remSec / 60);
+                    var remHours = (remSec / 3600).toFixed(1);
+                    html += '<div style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);border-radius:10px;padding:8px 10px;margin-bottom:8px;color:#f87171;">'
+                        + '<div style="font-weight:bold;">🚨 يسري إنذار طرد قوات ' + senderNat.name + '!</div>'
+                        + '<div style="font-size:0.8rem;color:var(--text-muted);margin-top:2px;">ستغادر القوات تلقائياً عند انقضاء المهلة (المتبقي: ' + (remMin > 60 ? remHours + ' ساعة' : remMin + ' دقيقة') + ')</div>'
+                        + '</div>';
+                }
+            }
+
+            if (!html) {
+                html = '<div style="color:var(--text-muted);font-size:0.82rem;">لا توجد قوات إسناد مرسلة أو مستضافة حالياً.</div>';
+            }
+
+            simDispatchedForcesStatus.innerHTML = html;
+        }
+
+        async function handleRequestSupport(overrideTargetId) {
+            var n = nationsData[simState.activeNationId];
+            if (!n) return;
+            var targetId = overrideTargetId || (simDispatchAllySelect ? simDispatchAllySelect.value : null);
+            var allyNat = nationsData[targetId];
+            if (!allyNat || targetId === n.id) {
+                if (typeof Go === "function") Go("يرجى اختيار دولة حليفة صالحة لطلب الإسناد منها.");
+                return;
+            }
+            if ((n.allies || []).indexOf(targetId) === -1) {
+                if (typeof Go === "function") Go("⚠️ لا يمكن طلب الإسناد إلا من دولة حليفة رسمياً!");
+                return;
+            }
+            var existingReq = (simState.expeditionRequests || []).find(function(r) {
+                return r.hostNationId === n.id && ['pending_request', 'approved_pending_transfer', 'active', 'withdrawal_requested', 'withdrawal_refused', 'expulsion_notice'].indexOf(r.status) !== -1;
+            });
+            if (existingReq) {
+                if (typeof Go === "function") Go("⚠️ يوجد بالفعل طلب إسناد عسكري جارٍ أو قوات حليفة مستضافة.");
+                return;
+            }
+            var hostTeamId = n.ownerTeamId || (simState.teamAssignments && simState.teamAssignments[n.id]) || 'team_1';
+            var senderTeamId = allyNat.ownerTeamId || (simState.teamAssignments && simState.teamAssignments[allyNat.id]) || 'team_2';
+            var createRes = await window.firebaseCreateExpeditionRequest(simState.gameId, n.id, hostTeamId, targetId, senderTeamId);
+            if (createRes && createRes.ok) {
+                var dec = "🛡️ أرسلت " + n.name + " طلباً رسمياً للإسناد العسكري إلى حليفنا " + allyNat.name + ".";
+                n.decrees.unshift(dec);
+                simState.eventsLog.unshift(dec);
+                if (window.firebaseLogSimEvent) window.firebaseLogSimEvent(simState.gameId, dec);
+                if (typeof Go === "function") Go("تم إرسال طلب الإسناد العسكري للحليف بنجاح 🛡️");
+                updateActiveNationUI();
+                renderTeacherEventsLog();
+            } else {
+                if (typeof Go === "function") Go("تعذر إرسال طلب الإسناد: " + (createRes ? createRes.error : "خطأ غير معروف"));
+            }
+        }
+
+        async function handleApproveSupport(requestId, overrideCount, overrideType) {
+            var req = (simState.expeditionRequests || []).find(function(r) { return r.id === requestId; });
+            if (!req) return;
+            var n = nationsData[simState.activeNationId];
+            if (!n) return;
+            var hostNat = nationsData[req.hostNationId];
+            if (!hostNat) return;
+
+            var countSel = document.getElementById("simApproveTroopCountSelect_" + req.id);
+            var typeSel = document.getElementById("simApproveTroopTypeSelect_" + req.id);
+            var count = overrideCount || (countSel ? parseInt(countSel.value, 10) : 100);
+            var type = overrideType || (typeSel ? typeSel.value : "infantry");
+
+            if (n.troops < count + 300) {
+                if (typeof Go === "function") Go("⚠️ تحذير: لا يمكنك تجريد دفاعات العاصمة إلى مستوى حرج (تحتاج 300 مقاتل على الأقل كاحتياطي)!");
+                return;
+            }
+
+            var foodBurden = Math.round(count * 0.08);
+            var senderConsumptionRelief = foodBurden;
+
+            // Step 1: Set approved_pending_transfer on request doc
+            var step1Res = await window.firebaseUpdateExpeditionRequest(simState.gameId, req.id, {
+                status: "approved_pending_transfer",
+                troopType: type,
+                troopCount: count,
+                foodBurden: foodBurden,
+                senderConsumptionRelief: senderConsumptionRelief,
+                respondedAt: Date.now()
+            });
+            if (!step1Res || !step1Res.ok) {
+                if (typeof Go === "function") Go("تعذر اعتماد الدعم: " + (step1Res ? step1Res.error : "خطأ"));
+                return;
+            }
+
+            // Step 2: The actual transfer
+            // 2a: Sender nation (same team)
+            n.troops -= count;
+            n[type] = Math.max(20, (n[type] || 100) - count);
+            n.consumption = Math.max(30, (n.consumption || 70) - senderConsumptionRelief);
+            n.expeditionaryForce = { target: req.hostNationId, count: count, troopType: type, foodBurden: foodBurden, relief: senderConsumptionRelief };
+            var decSender = "🛡️ أرسلت " + n.name + " فيلق حماية وإسناد مؤلف من " + count + " مقاتلاً لدعم دفاعات " + hostNat.name + " (وفر صوامعنا: -" + senderConsumptionRelief + " قمح/شهر).";
+            n.decrees.unshift(decSender);
+            await window.firebaseSyncNation(simState.gameId, n.id, n);
+
+            // 2b: Host nation (cross-team write permitted by Stage 5 rule exception)
+            hostNat.troops += count;
+            hostNat.consumption = (hostNat.consumption || 70) + foodBurden;
+            var decHost = "🤝 وصلت قوات حماية حليفة (" + count + " مقاتلاً) من " + n.name + " لتعزيز الثغور (يستهلكون +" + foodBurden + " قمح/شهر).";
+            hostNat.decrees.unshift(decHost);
+            await window.firebaseSyncNation(simState.gameId, hostNat.id, hostNat);
+
+            // Step 3: Transition request to active
+            await window.firebaseUpdateExpeditionRequest(simState.gameId, req.id, {
+                status: "active"
+            });
+
+            if (window.firebaseLogSimEvent) window.firebaseLogSimEvent(simState.gameId, decSender);
+            if (typeof Go === "function") Go("تمت الموافقة وإرسال فيلق الإسناد للحليف بنجاح 🛡️");
+            updateActiveNationUI();
+        }
+
+        async function handleRejectSupport(requestId) {
+            var req = (simState.expeditionRequests || []).find(function(r) { return r.id === requestId; });
+            if (!req) return;
+            var n = nationsData[simState.activeNationId];
+            var hostNat = nationsData[req.hostNationId];
+            await window.firebaseUpdateExpeditionRequest(simState.gameId, req.id, {
+                status: "rejected",
+                respondedAt: Date.now()
+            });
+            var dec = "❌ اعتذرت " + (n ? n.name : "الدولة") + " عن تقديم إسناد عسكري لـ " + (hostNat ? hostNat.name : "الحليف") + ".";
+            if (n) n.decrees.unshift(dec);
+            if (window.firebaseLogSimEvent) window.firebaseLogSimEvent(simState.gameId, dec);
+            if (typeof Go === "function") Go("تم رفض طلب الإسناد العسكري.");
+            updateActiveNationUI();
+        }
+
+        async function handleVoluntaryWithdrawal(requestId) {
+            var req = (simState.expeditionRequests || []).find(function(r) { return r.id === requestId; });
+            if (!req) return;
+            var n = nationsData[simState.activeNationId];
+            var hostNat = nationsData[req.hostNationId];
+            if (!n) return;
+
+            // Step 1: Set status to withdrawing
+            await window.firebaseUpdateExpeditionRequest(simState.gameId, req.id, {
+                status: "withdrawing"
+            });
+
+            // Step 2: Reverse troops & consumption
+            var count = req.troopCount || 0;
+            var relief = req.senderConsumptionRelief || 0;
+            var type = req.troopType || 'infantry';
+            n.troops += count;
+            n[type] = (n[type] || 100) + count;
+            n.consumption = (n.consumption || 70) + relief;
+            n.expeditionaryForce = null;
+            var decSender = "🛡️ استعادت " + n.name + " فيلق الحماية (" + count + " مقاتلاً) من ثغور " + (hostNat ? hostNat.name : "الحليف") + " وعادوا لديارهم.";
+            n.decrees.unshift(decSender);
+            await window.firebaseSyncNation(simState.gameId, n.id, n);
+
+            if (hostNat) {
+                hostNat.troops = Math.max(50, hostNat.troops - count);
+                hostNat.consumption = Math.max(40, (hostNat.consumption || 70) - (req.foodBurden || 0));
+                var decHost = "🛡️ غادرت قوات الحماية الحليفة (" + count + " مقاتلاً) التابعة لـ " + n.name + " بعد انتهاء مهمتها.";
+                hostNat.decrees.unshift(decHost);
+                await window.firebaseSyncNation(simState.gameId, hostNat.id, hostNat);
+            }
+
+            // Step 3: Set status to withdrawn
+            await window.firebaseUpdateExpeditionRequest(simState.gameId, req.id, {
+                status: "withdrawn"
+            });
+
+            if (window.firebaseLogSimEvent) window.firebaseLogSimEvent(simState.gameId, decSender);
+            if (typeof Go === "function") Go("عادت قوات الإسناد إلى حامية الوطن بنجاح ✓");
+            updateActiveNationUI();
+        }
+
+        async function handleHostRequestWithdrawal(requestId) {
+            var req = (simState.expeditionRequests || []).find(function(r) { return r.id === requestId; });
+            if (!req) return;
+            await window.firebaseUpdateExpeditionRequest(simState.gameId, req.id, {
+                status: "withdrawal_requested"
+            });
+            if (typeof Go === "function") Go("تم إرسال طلب سحب القوات للحليف.");
+            updateActiveNationUI();
+        }
+
+        async function handleSenderRefuseWithdrawal(requestId) {
+            var req = (simState.expeditionRequests || []).find(function(r) { return r.id === requestId; });
+            if (!req) return;
+            await window.firebaseUpdateExpeditionRequest(simState.gameId, req.id, {
+                status: "withdrawal_refused"
+            });
+            if (typeof Go === "function") Go("تم تسجيل رفض سحب القوات.");
+            updateActiveNationUI();
+        }
+
+        async function handleHostIssueExpulsion(requestId) {
+            var req = (simState.expeditionRequests || []).find(function(r) { return r.id === requestId; });
+            if (!req) return;
+            var durationMs = window.__simExpulsionDeadlineOverrideMs || (2 * 60 * 60 * 1000);
+            var deadlineMs = Date.now() + durationMs;
+            await window.firebaseUpdateExpeditionRequest(simState.gameId, req.id, {
+                status: "expulsion_notice",
+                expulsionNoticeAt: Date.now(),
+                expulsionDeadline: deadlineMs
+            });
+            var n = nationsData[simState.activeNationId];
+            var senderNat = nationsData[req.senderNationId];
+            var dec = "🚨 وجهت " + (n ? n.name : "الدولة") + " إنذاراً رسمياً بطرد القوات الحليفة التابعة لـ " + (senderNat ? senderNat.name : "الحليف") + " خلال مهلة ساعتين!";
+            if (n) n.decrees.unshift(dec);
+            if (window.firebaseLogSimEvent) window.firebaseLogSimEvent(simState.gameId, dec);
+            if (typeof Go === "function") Go("تم إصدار إنذار طرد القوات رسمياً!");
+            updateActiveNationUI();
+        }
+
+        var isResolvingExpulsion = false;
+        async function checkAndResolveExpiredExpulsions() {
+            if (isResolvingExpulsion || !simState.isMultiplayer || !simState.gameId) return;
+            var reqs = simState.expeditionRequests || [];
+            for (var i = 0; i < reqs.length; i++) {
+                var req = reqs[i];
+                if (req.status === "expulsion_notice") {
+                    var deadlineMs = parseDeadlineMs(req.expulsionDeadline);
+                    if (deadlineMs > 0 && Date.now() >= deadlineMs) {
+                        isResolvingExpulsion = true;
+                        try {
+                            var claimRes = await window.firebaseTryClaimExpulsionResolution(simState.gameId, req.id);
+                            if (claimRes && claimRes.claimed) {
+                                console.log("[SIM] Claimed expulsion resolution lock for:", req.id);
+                                var hostNat = nationsData[req.hostNationId];
+                                var senderNat = nationsData[req.senderNationId];
+                                var count = req.troopCount || 0;
+                                var foodBurden = req.foodBurden || 0;
+                                var relief = req.senderConsumptionRelief || 0;
+                                var type = req.troopType || "infantry";
+
+                                // Reversal on host nation
+                                if (hostNat) {
+                                    hostNat.troops = Math.max(50, hostNat.troops - count);
+                                    hostNat.consumption = Math.max(40, (hostNat.consumption || 70) - foodBurden);
+                                    var decH = "⚖️ انقضت مهلة إنذار الطرد وغادرت القوات الحليفة (" + count + " مقاتلاً) ثغور الوطن تلقائياً.";
+                                    hostNat.decrees.unshift(decH);
+                                    await window.firebaseSyncNation(simState.gameId, hostNat.id, hostNat);
+                                }
+
+                                // Reversal on sender nation
+                                if (senderNat) {
+                                    senderNat.troops += count;
+                                    senderNat[type] = (senderNat[type] || 100) + count;
+                                    senderNat.consumption = (senderNat.consumption || 70) + relief;
+                                    senderNat.expeditionaryForce = null;
+                                    var decS = "⚖️ انقضت مهلة الإنذار وعادت قوات الحماية المطرودة (" + count + " مقاتلاً) إلى حامية العاصمة.";
+                                    senderNat.decrees.unshift(decS);
+                                    await window.firebaseSyncNation(simState.gameId, senderNat.id, senderNat);
+                                }
+
+                                // Finalize request
+                                await window.firebaseUpdateExpeditionRequest(simState.gameId, req.id, {
+                                    status: "expelled",
+                                    resolvingUid: null,
+                                    resolvingClaimedAt: null
+                                });
+
+                                var globalDec = "⚖️ انقضت مهلة الإنذار وطُردت القوات الحليفة من ثغور " + (hostNat ? hostNat.name : req.hostNationId) + " وعادت لديارها.";
+                                if (window.firebaseLogSimEvent) window.firebaseLogSimEvent(simState.gameId, globalDec);
+                                updateActiveNationUI();
+                            }
+                        } catch(err) {
+                            console.error("[SIM] Error resolving automatic expulsion:", err);
+                        } finally {
+                            isResolvingExpulsion = false;
+                        }
+                    }
+                }
+            }
+        }
+
         // Wire Allied Garrison Controls
         if (simDispatchExpeditionBtn) {
-            simDispatchExpeditionBtn.addEventListener("click", function() {
+            simDispatchExpeditionBtn.addEventListener("click", async function() {
+                if (simState.isMultiplayer && simState.gameId) {
+                    await handleRequestSupport();
+                    return;
+                }
                 var n = nationsData[simState.activeNationId];
                 if (!n) return;
                 if (n.expeditionaryForce) {
@@ -18131,9 +18609,10 @@
                 n.infantry = Math.max(50, n.infantry - count);
                 allyNat.troops += count;
                 allyNat.consumption = (allyNat.consumption || 70) + foodBurden;
+                n.consumption = Math.max(30, (n.consumption || 70) - foodBurden);
                 n.expeditionaryForce = { target: targetId, count: count, foodBurden: foodBurden };
 
-                var dec = "🛡️ أرسلت " + n.name + " فيلق حماية وإسناد مؤلف من " + count + " مقاتلاً لدعم دفاعات " + allyNat.name + " (يستهلكون +" + foodBurden + " قمح/شهر من صوامع الحليف).";
+                var dec = "🛡️ أرسلت " + n.name + " فيلق حماية وإسناد مؤلف من " + count + " مقاتلاً لدعم دفاعات " + allyNat.name + " (يستهلكون +" + foodBurden + " قمح/شهر من صوامع الحليف، ووفر صوامعنا: -" + foodBurden + ").";
                 n.decrees.unshift(dec);
                 allyNat.decrees.unshift("🤝 وصلت قوات حماية حليفة (" + count + " مقاتلاً) من " + n.name + " لتعزيز الثغور.");
                 simState.eventsLog.unshift(dec);
@@ -18157,6 +18636,7 @@
                 }
                 n.troops += n.expeditionaryForce.count;
                 n.infantry += n.expeditionaryForce.count;
+                n.consumption = (n.consumption || 70) + n.expeditionaryForce.foodBurden;
                 var dec = "🛡️ استدعت " + n.name + " فيلق الحماية (" + n.expeditionaryForce.count + " مقاتلاً) من ثغور " + (allyNat ? allyNat.name : "الحليف") + " وعادوا لحامية الوطن.";
                 n.decrees.unshift(dec);
                 simState.eventsLog.unshift(dec);
@@ -18580,6 +19060,16 @@
                 renderSimMapLayers();
             });
 
+            if (simState.unsubExpeditions) simState.unsubExpeditions();
+            if (window.firebaseListenSimExpeditionRequests) {
+                simState.unsubExpeditions = window.firebaseListenSimExpeditionRequests(gId, function(expList) {
+                    simState.expeditionRequests = expList || [];
+                    if (typeof checkAndResolveExpiredExpulsions === "function") {
+                        checkAndResolveExpiredExpulsions();
+                    }
+                });
+            }
+
             if (simMpTeacherAlert) {
                 simMpTeacherAlert.style.background = "rgba(16,185,129,0.2)";
                 simMpTeacherAlert.style.color = "#34d399";
@@ -18817,6 +19307,22 @@
                 });
             }
 
+            if (simState.unsubExpeditions) simState.unsubExpeditions();
+            if (window.firebaseListenSimExpeditionRequests) {
+                simState.unsubExpeditions = window.firebaseListenSimExpeditionRequests(res.gameId, function(expList) {
+                    simState.expeditionRequests = expList || [];
+                    if (typeof checkAndResolveExpiredExpulsions === "function") {
+                        checkAndResolveExpiredExpulsions();
+                    }
+                    isRemoteSyncing = true;
+                    try {
+                        updateActiveNationUI();
+                    } finally {
+                        isRemoteSyncing = false;
+                    }
+                });
+            }
+
             startSeasonalClock();
 
             if (typeof Go === "function") Go("مرحباً بك يا " + res.memberName + " في قيادة " + res.teamName + " (" + getRoleArabicTitle(res.role) + ") 👑");
@@ -19000,5 +19506,13 @@
         window.executeMultiplayerSeasonResolution = executeMultiplayerSeasonResolution;
         window.computeSeasonResolutionEffects = computeSeasonResolutionEffects;
         window.triggerSpyCapture = triggerSpyCapture;
+        window.handleRequestSupport = handleRequestSupport;
+        window.handleApproveSupport = handleApproveSupport;
+        window.handleRejectSupport = handleRejectSupport;
+        window.handleVoluntaryWithdrawal = handleVoluntaryWithdrawal;
+        window.handleHostRequestWithdrawal = handleHostRequestWithdrawal;
+        window.handleSenderRefuseWithdrawal = handleSenderRefuseWithdrawal;
+        window.handleHostIssueExpulsion = handleHostIssueExpulsion;
+        window.checkAndResolveExpiredExpulsions = checkAndResolveExpiredExpulsions;
     }();
 }();

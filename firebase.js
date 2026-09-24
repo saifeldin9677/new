@@ -820,17 +820,137 @@ window.firebaseListenSimEvents = function(gameId, onUpdate, onError) {
     });
 };
 
-// Clean up all caravans, scouts, and captured spies in Firestore for a game (Fix 4: Batch Delete)
+// Expedition Requests (Stage 5: Military Support Request System)
+window.firebaseCreateExpeditionRequest = async function(gameId, hostNationId, hostTeamId, senderNationId, senderTeamId) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        const reqId = hostNationId;
+        const payload = {
+            id: reqId,
+            hostNationId: hostNationId,
+            hostTeamId: hostTeamId,
+            senderNationId: senderNationId,
+            senderTeamId: senderTeamId,
+            status: "pending_request",
+            troopType: null,
+            troopCount: null,
+            foodBurden: null,
+            senderConsumptionRelief: null,
+            requestedAt: serverTimestamp(),
+            respondedAt: null,
+            expulsionNoticeAt: null,
+            expulsionDeadline: null,
+            resolvingUid: null,
+            resolvingClaimedAt: null
+        };
+        await setDoc(doc(db, 'simGames', gId, 'expeditionRequests', reqId), payload);
+        return { ok: true, id: reqId };
+    } catch(e) {
+        console.error('Failed to create expedition request:', e);
+        return { ok: false, error: e.message || String(e) };
+    }
+};
+
+window.firebaseUpdateExpeditionRequest = async function(gameId, requestId, updateData) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        const payload = { ...updateData };
+        await updateDoc(doc(db, 'simGames', gId, 'expeditionRequests', requestId), payload);
+        return { ok: true };
+    } catch(e) {
+        console.error('Failed to update expedition request:', e);
+        return { ok: false, error: e.message || String(e) };
+    }
+};
+
+window.firebaseListenSimExpeditionRequests = function(gameId, onUpdate, onError) {
+    const gId = String(gameId).trim().toUpperCase();
+    return onSnapshot(collection(db, 'simGames', gId, 'expeditionRequests'), function(snap) {
+        if (typeof onUpdate === 'function') {
+            const list = snap.docs.map(function(d) { return { id: d.id, ...d.data() }; });
+            onUpdate(list);
+        }
+    }, function(err) {
+        if (typeof onError === 'function') onError(err);
+        else console.warn('Listen sim expedition requests error:', err);
+    });
+};
+
+window.firebaseTryClaimExpulsionResolution = async function(gameId, requestId) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        const reqRef = doc(db, 'simGames', gId, 'expeditionRequests', requestId);
+        const myUid = auth.currentUser ? auth.currentUser.uid : ('anon_' + Date.now());
+
+        const result = await runTransaction(db, async function(transaction) {
+            const reqSnap = await transaction.get(reqRef);
+            if (!reqSnap.exists()) {
+                return { claimed: false, error: 'request_not_found' };
+            }
+            const data = reqSnap.data();
+            if (data.status !== 'expulsion_notice') {
+                return { claimed: false, error: 'already_resolved', status: data.status };
+            }
+            const lockUid = data.resolvingUid;
+            const lockClaimedAt = data.resolvingClaimedAt;
+
+            if (lockUid) {
+                let claimedAtMs = 0;
+                if (lockClaimedAt) {
+                    if (typeof lockClaimedAt.toMillis === 'function') {
+                        claimedAtMs = lockClaimedAt.toMillis();
+                    } else if (typeof lockClaimedAt.seconds === 'number') {
+                        claimedAtMs = lockClaimedAt.seconds * 1000;
+                    } else if (typeof lockClaimedAt === 'number') {
+                        claimedAtMs = lockClaimedAt;
+                    } else if (typeof lockClaimedAt === 'string') {
+                        claimedAtMs = Date.parse(lockClaimedAt) || 0;
+                    }
+                }
+                const nowMs = Date.now();
+                if (nowMs - claimedAtMs < 20000) {
+                    return { claimed: false, lockHeldBy: lockUid };
+                }
+            }
+            transaction.update(reqRef, {
+                resolvingUid: myUid,
+                resolvingClaimedAt: serverTimestamp()
+            });
+            return { claimed: true, uid: myUid };
+        });
+        return result;
+    } catch(e) {
+        console.error('Failed to claim expulsion resolution lock:', e);
+        return { claimed: false, error: e.message || String(e) };
+    }
+};
+
+window.firebaseReleaseExpulsionResolution = async function(gameId, requestId) {
+    try {
+        const gId = String(gameId).trim().toUpperCase();
+        await updateDoc(doc(db, 'simGames', gId, 'expeditionRequests', requestId), {
+            resolvingUid: null,
+            resolvingClaimedAt: null
+        });
+        return { ok: true };
+    } catch(e) {
+        console.error('Failed to release expulsion resolution lock:', e);
+        return { ok: false, error: e.message || String(e) };
+    }
+};
+
+// Clean up all caravans, scouts, captured spies, and expedition requests in Firestore for a game (Batch Delete)
 window.firebaseCleanSimulationSubcollections = async function(gameId) {
     try {
         const gId = String(gameId).trim().toUpperCase();
         const batch = writeBatch(db);
         let count = 0;
 
-        const [caravansSnap, scoutsSnap, spiesSnap] = await Promise.all([
+        const [caravansSnap, scoutsSnap, spiesSnap, expeditionsSnap] = await Promise.all([
             getDocs(collection(db, 'simGames', gId, 'caravans')),
             getDocs(collection(db, 'simGames', gId, 'scouts')),
-            getDocs(collection(db, 'simGames', gId, 'capturedSpies'))
+            getDocs(collection(db, 'simGames', gId, 'capturedSpies')),
+            getDocs(collection(db, 'simGames', gId, 'expeditionRequests'))
         ]);
 
         caravansSnap.docs.forEach(function(docSnap) {
@@ -842,6 +962,10 @@ window.firebaseCleanSimulationSubcollections = async function(gameId) {
             count++;
         });
         spiesSnap.docs.forEach(function(docSnap) {
+            batch.delete(docSnap.ref);
+            count++;
+        });
+        expeditionsSnap.docs.forEach(function(docSnap) {
             batch.delete(docSnap.ref);
             count++;
         });

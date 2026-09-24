@@ -122,10 +122,10 @@ service cloud.firestore {
         allow read: if isSignedIn();
         allow create: if isTeacher()
           && get(/databases/$(database)/documents/simGames/$(gameId)).data.teacherId == request.auth.uid;
-        // Role- and team-scoped update permissions (Stage 2 Hardening)
+        // Role- and team-scoped update permissions (Stage 2 Hardening & Stage 5 Extensions)
         allow update: if isSignedIn() && (
              (get(/databases/$(database)/documents/simGames/$(gameId)/teams/$(resource.data.ownerTeamId)).data.members.military.claimedByUid == request.auth.uid
-               && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['troops','infantry','archers','cavalry','expeditionaryForce','budget','decrees'])
+               && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['troops','infantry','archers','cavalry','expeditionaryForce','consumption','budget','decrees','activeSupportRequestId'])
                && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['budget']) || (
                      request.resource.data.budget.economy == resource.data.budget.economy
                   && request.resource.data.budget.planning == resource.data.budget.planning
@@ -153,7 +153,32 @@ service cloud.firestore {
                   && request.resource.data.budget.intelligence == resource.data.budget.intelligence
                )))
           || (get(/databases/$(database)/documents/simGames/$(gameId)/teams/$(resource.data.ownerTeamId)).data.members.leader.claimedByUid == request.auth.uid
-               && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['allies','enemies','truces','decrees','budget','treasury']))
+               && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['allies','enemies','truces','decrees','budget','treasury','gold']))
+          // Stage 5: Expedition support: sender applies the agreed transfer to the host nation
+          || (isSignedIn()
+               && resource.data.activeSupportRequestId != null
+               && get(/databases/$(database)/documents/simGames/$(gameId)/expeditionRequests/$(resource.data.activeSupportRequestId)).data.status == "approved_pending_transfer"
+               && isMemberOfNationTeam(
+                    gameId,
+                    get(/databases/$(database)/documents/simGames/$(gameId)/expeditionRequests/$(resource.data.activeSupportRequestId)).data.senderNationId,
+                    request.auth.uid)
+               && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['troops','consumption','activeSupportRequestId']))
+          // Stage 5: Expedition support ending: voluntary withdrawal (sender) or automatic expulsion (whoever holds the resolver claim)
+          || (isSignedIn()
+               && resource.data.activeSupportRequestId != null
+               && (
+                    (get(/databases/$(database)/documents/simGames/$(gameId)/expeditionRequests/$(resource.data.activeSupportRequestId)).data.status == "withdrawing"
+                      && isMemberOfNationTeam(gameId, get(/databases/$(database)/documents/simGames/$(gameId)/expeditionRequests/$(resource.data.activeSupportRequestId)).data.senderNationId, request.auth.uid))
+                 || (get(/databases/$(database)/documents/simGames/$(gameId)/expeditionRequests/$(resource.data.activeSupportRequestId)).data.resolvingUid == request.auth.uid)
+                  )
+               && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['troops','consumption','activeSupportRequestId']))
+          // Stage 5: Sender nation reversal during automatic expulsion resolution
+          || (
+               resource.data.expeditionaryForce != null
+            && exists(/databases/$(database)/documents/simGames/$(gameId)/expeditionRequests/$(resource.data.expeditionaryForce.target))
+            && get(/databases/$(database)/documents/simGames/$(gameId)/expeditionRequests/$(resource.data.expeditionaryForce.target)).data.resolvingUid == request.auth.uid
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['troops', 'consumption', 'expeditionaryForce', 'infantry', 'cavalry', 'archers', 'decrees'])
+          )
           || (get(/databases/$(database)/documents/simGames/$(gameId)).data.resolvingSeasonLock.uid == request.auth.uid)
           || (get(/databases/$(database)/documents/simGames/$(gameId)).data.teacherId == request.auth.uid)
         );
@@ -202,6 +227,42 @@ service cloud.firestore {
         allow create: if isSignedIn();
         // Only the capturing team decides ransom/execute
         allow update: if isSignedIn() && isMemberOfNationTeam(gameId, resource.data.captorNationId, request.auth.uid);
+        allow delete: if get(/databases/$(database)/documents/simGames/$(gameId)).data.teacherId == request.auth.uid;
+      }
+
+      // ──────────────────────────────────────────────────────────────
+      // Nation Simulation — Stage 5: Military Support Request System
+      // ──────────────────────────────────────────────────────────────
+      match /expeditionRequests/{requestId} {
+        allow read: if isSignedIn() && (
+             isMemberOfNationTeam(gameId, resource.data.hostNationId, request.auth.uid)
+          || isMemberOfNationTeam(gameId, resource.data.senderNationId, request.auth.uid)
+        );
+
+        allow create: if isSignedIn()
+          && isMemberOfNationTeam(gameId, request.resource.data.hostNationId, request.auth.uid)
+          && request.resource.data.status == "pending_request"
+          && request.resource.data.senderNationId in get(/databases/$(database)/documents/simGames/$(gameId)/nations/$(request.resource.data.hostNationId)).data.allies;
+
+        allow update: if isSignedIn() && (
+             (isMemberOfNationTeam(gameId, resource.data.senderNationId, request.auth.uid)
+               && resource.data.status == "pending_request"
+               && (request.resource.data.status == "rejected" || request.resource.data.status == "approved_pending_transfer"))
+          || (isMemberOfNationTeam(gameId, resource.data.senderNationId, request.auth.uid)
+               && resource.data.status == "approved_pending_transfer"
+               && request.resource.data.status == "active")
+          || (isMemberOfNationTeam(gameId, resource.data.senderNationId, request.auth.uid)
+               && (resource.data.status == "active" || resource.data.status == "withdrawal_requested" || resource.data.status == "expulsion_notice")
+               && (request.resource.data.status == "withdrawing" || request.resource.data.status == "withdrawn" || request.resource.data.status == "withdrawal_refused"))
+          || (isMemberOfNationTeam(gameId, resource.data.hostNationId, request.auth.uid)
+               && resource.data.status == "active"
+               && request.resource.data.status == "withdrawal_requested")
+          || (isMemberOfNationTeam(gameId, resource.data.hostNationId, request.auth.uid)
+               && resource.data.status == "withdrawal_refused"
+               && request.resource.data.status == "expulsion_notice")
+          || (resource.data.status == "expulsion_notice") // covers both claiming the resolver lock and the final auto-expelled write
+        );
+
         allow delete: if get(/databases/$(database)/documents/simGames/$(gameId)).data.teacherId == request.auth.uid;
       }
     }

@@ -18409,7 +18409,10 @@
             // 2b: Host nation (cross-team write permitted by Stage 5 rule exception)
             hostNat.troops += count;
             hostNat.consumption = (hostNat.consumption || 70) + foodBurden;
-            await window.firebaseSyncNation(simState.gameId, hostNat.id, hostNat);
+            await window.firebaseSyncNation(simState.gameId, hostNat.id, {
+                troops: hostNat.troops,
+                consumption: hostNat.consumption
+            });
 
             // Step 3: Transition request to active
             await window.firebaseUpdateExpeditionRequest(simState.gameId, req.id, {
@@ -18468,7 +18471,11 @@
                 hostNat.troops = Math.max(50, hostNat.troops - count);
                 hostNat.consumption = Math.max(40, (hostNat.consumption || 70) - (req.foodBurden || 0));
                 hostNat.activeSupportRequestId = null;
-                await window.firebaseSyncNation(simState.gameId, hostNat.id, hostNat);
+                await window.firebaseSyncNation(simState.gameId, hostNat.id, {
+                    troops: hostNat.troops,
+                    consumption: hostNat.consumption,
+                    activeSupportRequestId: null
+                });
             }
 
             // Step 3: Set status to withdrawn
@@ -18546,7 +18553,11 @@
                                     hostNat.troops = Math.max(50, hostNat.troops - count);
                                     hostNat.consumption = Math.max(40, (hostNat.consumption || 70) - foodBurden);
                                     hostNat.activeSupportRequestId = null;
-                                    await window.firebaseSyncNation(simState.gameId, hostNat.id, hostNat);
+                                    await window.firebaseSyncNation(simState.gameId, hostNat.id, {
+                                        troops: hostNat.troops,
+                                        consumption: hostNat.consumption,
+                                        activeSupportRequestId: null
+                                    });
                                 }
 
                                 // Reversal on sender nation
@@ -19313,18 +19324,6 @@
             if (window.firebaseListenSimExpeditionRequests) {
                 simState.unsubExpeditions = window.firebaseListenSimExpeditionRequests(res.gameId, function(expList) {
                     simState.expeditionRequests = expList || [];
-                    if (simState.activeNationId && nationsData[simState.activeNationId]) {
-                        var myNat = nationsData[simState.activeNationId];
-                        if (myNat.activeSupportRequestId) {
-                            var myReq = (expList || []).find(function(r) { return r.id === myNat.activeSupportRequestId; });
-                            if (myReq && ['rejected', 'withdrawn', 'expelled'].indexOf(myReq.status) !== -1) {
-                                myNat.activeSupportRequestId = null;
-                                if (simState.role === 'military') {
-                                    window.firebaseSyncNation(res.gameId, myNat.id, myNat);
-                                }
-                            }
-                        }
-                    }
                     if (typeof checkAndResolveExpiredExpulsions === "function") {
                         checkAndResolveExpiredExpulsions();
                     }

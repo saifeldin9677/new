@@ -18346,10 +18346,13 @@
             var senderTeamId = allyNat.ownerTeamId || (simState.teamAssignments && simState.teamAssignments[allyNat.id]) || 'team_2';
             var createRes = await window.firebaseCreateExpeditionRequest(simState.gameId, n.id, hostTeamId, targetId, senderTeamId);
             if (createRes && createRes.ok) {
+                var reqId = createRes.id || n.id;
+                n.activeSupportRequestId = reqId;
                 var dec = "🛡️ أرسلت " + n.name + " طلباً رسمياً للإسناد العسكري إلى حليفنا " + allyNat.name + ".";
                 n.decrees.unshift(dec);
                 simState.eventsLog.unshift(dec);
                 if (window.firebaseLogSimEvent) window.firebaseLogSimEvent(simState.gameId, dec);
+                await window.firebaseSyncNation(simState.gameId, n.id, n);
                 if (typeof Go === "function") Go("تم إرسال طلب الإسناد العسكري للحليف بنجاح 🛡️");
                 updateActiveNationUI();
                 renderTeacherEventsLog();
@@ -18406,8 +18409,6 @@
             // 2b: Host nation (cross-team write permitted by Stage 5 rule exception)
             hostNat.troops += count;
             hostNat.consumption = (hostNat.consumption || 70) + foodBurden;
-            var decHost = "🤝 وصلت قوات حماية حليفة (" + count + " مقاتلاً) من " + n.name + " لتعزيز الثغور (يستهلكون +" + foodBurden + " قمح/شهر).";
-            hostNat.decrees.unshift(decHost);
             await window.firebaseSyncNation(simState.gameId, hostNat.id, hostNat);
 
             // Step 3: Transition request to active
@@ -18425,6 +18426,9 @@
             if (!req) return;
             var n = nationsData[simState.activeNationId];
             var hostNat = nationsData[req.hostNationId];
+            if (hostNat && hostNat.activeSupportRequestId === req.id) {
+                hostNat.activeSupportRequestId = null;
+            }
             await window.firebaseUpdateExpeditionRequest(simState.gameId, req.id, {
                 status: "rejected",
                 respondedAt: Date.now()
@@ -18463,8 +18467,7 @@
             if (hostNat) {
                 hostNat.troops = Math.max(50, hostNat.troops - count);
                 hostNat.consumption = Math.max(40, (hostNat.consumption || 70) - (req.foodBurden || 0));
-                var decHost = "🛡️ غادرت قوات الحماية الحليفة (" + count + " مقاتلاً) التابعة لـ " + n.name + " بعد انتهاء مهمتها.";
-                hostNat.decrees.unshift(decHost);
+                hostNat.activeSupportRequestId = null;
                 await window.firebaseSyncNation(simState.gameId, hostNat.id, hostNat);
             }
 
@@ -18542,8 +18545,7 @@
                                 if (hostNat) {
                                     hostNat.troops = Math.max(50, hostNat.troops - count);
                                     hostNat.consumption = Math.max(40, (hostNat.consumption || 70) - foodBurden);
-                                    var decH = "⚖️ انقضت مهلة إنذار الطرد وغادرت القوات الحليفة (" + count + " مقاتلاً) ثغور الوطن تلقائياً.";
-                                    hostNat.decrees.unshift(decH);
+                                    hostNat.activeSupportRequestId = null;
                                     await window.firebaseSyncNation(simState.gameId, hostNat.id, hostNat);
                                 }
 
@@ -19311,6 +19313,18 @@
             if (window.firebaseListenSimExpeditionRequests) {
                 simState.unsubExpeditions = window.firebaseListenSimExpeditionRequests(res.gameId, function(expList) {
                     simState.expeditionRequests = expList || [];
+                    if (simState.activeNationId && nationsData[simState.activeNationId]) {
+                        var myNat = nationsData[simState.activeNationId];
+                        if (myNat.activeSupportRequestId) {
+                            var myReq = (expList || []).find(function(r) { return r.id === myNat.activeSupportRequestId; });
+                            if (myReq && ['rejected', 'withdrawn', 'expelled'].indexOf(myReq.status) !== -1) {
+                                myNat.activeSupportRequestId = null;
+                                if (simState.role === 'military') {
+                                    window.firebaseSyncNation(res.gameId, myNat.id, myNat);
+                                }
+                            }
+                        }
+                    }
                     if (typeof checkAndResolveExpiredExpulsions === "function") {
                         checkAndResolveExpiredExpulsions();
                     }

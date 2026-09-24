@@ -1056,9 +1056,14 @@ window.firebaseListenScoutMissions = function(gameId, onUpdate, onError) {
     });
 };
 
-window.firebaseResolvePursuit = async function(gameId, missionId, pursuitSuccess) {
+window.firebaseResolvePursuit = async function(gameId, missionId, arg3, arg4, arg5) {
     try {
         const gId = String(gameId).trim().toUpperCase();
+        // Sanitize parameters: remove any caller-injected boolean attempt
+        const caravanId = typeof arg3 === 'string' ? arg3 : (typeof arg4 === 'string' ? arg4 : null);
+        const scoutId = typeof arg4 === 'string' && arg4 !== caravanId ? arg4 : (typeof arg5 === 'string' ? arg5 : null);
+        const spyData = (arg3 && typeof arg3 === 'object') ? arg3 : ((arg4 && typeof arg4 === 'object') ? arg4 : ((arg5 && typeof arg5 === 'object') ? arg5 : null));
+
         const missionRef = doc(db, 'simGames', gId, 'scoutMissions', missionId);
         const result = await runTransaction(db, async function(transaction) {
             const mDoc = await transaction.get(missionRef);
@@ -1070,16 +1075,59 @@ window.firebaseResolvePursuit = async function(gameId, missionId, pursuitSuccess
                 return { ok: false, alreadyResolved: true };
             }
 
+            // 1. Read the target caravan document fresh inside the transaction
+            const effCaravanId = caravanId || data.targetCaravanId;
+            let pChance = 0.50;
+            let caravanRef = null;
+            let cDoc = null;
+            if (effCaravanId) {
+                caravanRef = doc(db, 'simGames', gId, 'caravans', effCaravanId);
+                cDoc = await transaction.get(caravanRef);
+                if (cDoc.exists()) {
+                    const cData = cDoc.data();
+                    const escort = Number(cData.escortCavalry) || 0;
+                    if (escort >= 60) pChance = 0.70;
+                    else if (escort > 0) pChance = 0.55;
+                    else pChance = 0.50;
+                }
+            }
+
+            // 2. Roll Math.random() < pChance inside the transaction, not before calling it
+            const pursuitSuccess = Math.random() < pChance;
+
+            // 3. Write transaction updates
             const updates = {
                 pursuitResolved: true,
-                pursuitSuccess: !!pursuitSuccess,
+                pursuitSuccess: pursuitSuccess,
                 resolvedAt: Date.now()
             };
             if (pursuitSuccess) {
                 updates.status = 'captured';
+                transaction.update(missionRef, updates);
+
+                const effScoutId = scoutId || data.scoutId;
+                if (effScoutId) {
+                    const scoutRef = doc(db, 'simGames', gId, 'scouts', effScoutId);
+                    transaction.delete(scoutRef);
+                }
+
+                if (spyData && spyData.id) {
+                    const spyRef = doc(db, 'simGames', gId, 'capturedSpies', spyData.id);
+                    transaction.set(spyRef, spyData);
+                }
+            } else {
+                transaction.update(missionRef, updates);
+                if (caravanRef && cDoc && cDoc.exists()) {
+                    const cData = cDoc.data();
+                    const prevProg = Number(cData.progress) || 0;
+                    const newProg = Math.max(0, Math.round((prevProg - 0.15) * 100) / 100);
+                    transaction.update(caravanRef, {
+                        progress: newProg,
+                        status: "تأخرت القافلة بسبب انشغال الحراسة بمطاردة فاشلة"
+                    });
+                }
             }
-            transaction.update(missionRef, updates);
-            return { ok: true, success: pursuitSuccess, mission: data };
+            return { ok: true, success: pursuitSuccess, mission: data, pChance };
         });
         return result;
     } catch(e) {

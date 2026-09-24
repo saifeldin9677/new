@@ -18772,25 +18772,36 @@
                 createdAt: Date.now()
             };
 
+            var finalId = missionId;
             if (simState.isMultiplayer && simState.gameId && window.firebaseCreateScoutMission) {
                 var createRes = await window.firebaseCreateScoutMission(simState.gameId, missionData);
                 if (createRes && createRes.ok) {
+                    if (createRes.missionId) {
+                        finalId = createRes.missionId;
+                        missionData.id = finalId;
+                    }
                     if (window.firebaseSetScoutReportData) {
-                        await window.firebaseSetScoutReportData(simState.gameId, missionId, { data_outer: dataOuter });
+                        await window.firebaseSetScoutReportData(simState.gameId, finalId, { data_outer: dataOuter });
                     }
                     var ev = "👁️ انطلقت " + scout.name + " في مهمة تعقب لقافلة " + targetNat.name + " (الدائرة الخارجية: رصد حركة).";
                     if (window.firebaseLogSimEvent) window.firebaseLogSimEvent(simState.gameId, ev);
                     if (typeof Go === "function") Go("انطلقت طليعة الاستطلاع نحو مسار القافلة وتمركزت بالدائرة الخارجية ✓");
                 }
             } else {
-                if (!simState.scoutMissions) simState.scoutMissions = [];
-                simState.scoutMissions.push(missionData);
                 if (!simState.scoutReports) simState.scoutReports = {};
                 simState.scoutReports[missionId] = { data_outer: dataOuter };
                 if (typeof Go === "function") Go("انطلقت طليعة الاستطلاع نحو مسار القافلة وتمركزت بالدائرة الخارجية ✓");
             }
+
+            if (!simState.scoutMissions) simState.scoutMissions = [];
+            var mIdx = simState.scoutMissions.findIndex(function(m) { return m && m.id === finalId; });
+            if (mIdx === -1) {
+                simState.scoutMissions.push(missionData);
+            } else {
+                simState.scoutMissions[mIdx] = missionData;
+            }
+
             updateActiveNationUI();
-            var finalId = (createRes && createRes.missionId) || missionId;
             return { ok: true, missionId: finalId };
         }
 
@@ -18956,17 +18967,6 @@
             var mission = (simState.scoutMissions || []).find(function(m) { return m.id === missionId; });
             if (!mission) return { ok: false, error: "not_found" };
 
-            var pursuitSuccess = false;
-            if (typeof window.__simForcePursuitSuccess === "boolean") {
-                pursuitSuccess = window.__simForcePursuitSuccess;
-            } else {
-                var caravan = (simState.caravans || []).find(function(c) { return c.id === mission.targetCaravanId; });
-                var pChance = 0.50;
-                if (caravan && caravan.escortCavalry >= 60) pChance = 0.70;
-                else if (caravan && caravan.escortCavalry > 0) pChance = 0.55;
-                pursuitSuccess = Math.random() < pChance;
-            }
-
             var scoutNat = nationsData[mission.scoutNationId];
             var captorNat = nationsData[mission.targetNationId];
             var spyData = {
@@ -18982,11 +18982,12 @@
             };
 
             if (simState.isMultiplayer && simState.gameId && window.firebaseResolvePursuit) {
-                var res = await window.firebaseResolvePursuit(simState.gameId, missionId, pursuitSuccess, mission.targetCaravanId, mission.scoutId, spyData);
+                var res = await window.firebaseResolvePursuit(simState.gameId, missionId, mission.targetCaravanId, mission.scoutId, spyData);
                 if (!res || !res.ok) {
                     if (typeof Go === "function") Go("تم البت في أمر هذه الطليعة مسبقاً.");
                     return res;
                 }
+                var pursuitSuccess = !!res.success;
                 if (pursuitSuccess) {
                     mission.status = "captured";
                     mission.pursuitResolved = true;
@@ -19020,19 +19021,36 @@
                 updateActiveNationUI();
                 return res;
             } else {
+                // Single-device Sandbox Mode
+                var caravan = (simState.caravans || []).find(function(c) { return c.id === mission.targetCaravanId; });
+                var pChance = 0.50;
+                if (caravan && caravan.escortCavalry >= 60) pChance = 0.70;
+                else if (caravan && caravan.escortCavalry > 0) pChance = 0.55;
+                var localSuccess = Math.random() < pChance;
+
                 mission.pursuitResolved = true;
-                mission.pursuitSuccess = pursuitSuccess;
-                if (pursuitSuccess) {
+                mission.pursuitSuccess = localSuccess;
+
+                if (localSuccess) {
                     mission.status = "captured";
                     simState.scouts = (simState.scouts || []).filter(function(s) { return s.id !== mission.scoutId; });
+                    if (!simState.capturedSpies) simState.capturedSpies = [];
+                    simState.capturedSpies.push(spyData);
+
+                    var decCaptorLocal = "⚔️ نجحت حراسة القافلة في ملاحقة وأسر طليعة الاستطلاع ونقل الجاسوس إلى غرفة التحقيق!";
+                    if (captorNat && captorNat.decrees) captorNat.decrees.unshift(decCaptorLocal);
+                    if (typeof Go === "function") Go(decCaptorLocal);
                 } else {
-                    var targetCaravan = (simState.caravans || []).find(function(c) { return c.id === mission.targetCaravanId; });
-                    if (targetCaravan) {
-                        targetCaravan.progress = Math.max(0.05, (targetCaravan.progress || 0.15) - 0.15);
+                    var targetCaravanLocal = (simState.caravans || []).find(function(c) { return c.id === mission.targetCaravanId; });
+                    if (targetCaravanLocal) {
+                        targetCaravanLocal.progress = Math.max(0.05, (targetCaravanLocal.progress || 0.15) - 0.15);
                     }
+                    var decFailLocal = "💨 أفلتت طليعة الاستطلاع من قبضة الحراسة، وعادت القافلة لمسارها بعد تأخير في زمن الوصول.";
+                    if (captorNat && captorNat.decrees) captorNat.decrees.unshift(decFailLocal);
+                    if (typeof Go === "function") Go(decFailLocal);
                 }
                 updateActiveNationUI();
-                return { ok: true, success: pursuitSuccess };
+                return { ok: true, success: localSuccess };
             }
         }
 

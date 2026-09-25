@@ -5,10 +5,12 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper: checks if the caller is an authenticated teacher whose UID exists in /teachers
+    // Helper: checks if the caller is an authenticated teacher (legacy /teachers or unified /users with role == 'teacher')
     function isTeacher() {
       return request.auth != null
-        && exists(/databases/$(database)/documents/teachers/$(request.auth.uid));
+        && (exists(/databases/$(database)/documents/teachers/$(request.auth.uid))
+            || (exists(/databases/$(database)/documents/users/$(request.auth.uid))
+                && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "teacher"));
     }
 
     // ──────────────────────────────────────────────────────────────
@@ -75,7 +77,14 @@ service cloud.firestore {
               || (request.resource.data.timeTaken is number
                   && request.resource.data.timeTaken >= 0))
           && request.resource.data.answers is list
-          && request.resource.data.completedAt == request.time;
+          && request.resource.data.completedAt == request.time
+          && (!('studentUid' in request.resource.data)
+              || (request.resource.data.studentUid is string
+                  && request.resource.data.studentUid.size() > 0))
+          && (!('studentDisplayName' in request.resource.data)
+              || (request.resource.data.studentDisplayName is string
+                  && request.resource.data.studentDisplayName.size() > 0
+                  && request.resource.data.studentDisplayName.size() <= 100));
 
       allow update, delete: if false;
 

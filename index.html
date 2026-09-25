@@ -2191,15 +2191,50 @@
 
         <!-- Student Assignment Mode Entry Modal -->
         <div class="student-assignment-overlay" id="studentAssignmentOverlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="studentAssignmentTitleDisplay">
-            <div class="student-assignment-box">
+            <div class="student-assignment-box" style="max-width:440px;">
                 <div class="student-box-icon"><i data-lucide="graduation-cap" class="lucide-icon"></i></div>
                 <h3 id="studentAssignmentTitleDisplay" data-i18n="studentModeTitle">واجب مدرسي تفاعلي</h3>
                 <p id="studentAssignmentDescDisplay" data-i18n="studentWelcome">أهلاً بك! يرجى إدخال اسمك الكامل لبدء الواجب المدرسي:</p>
-                <div class="worksheet-form-group" style="margin:20px 0;">
-                    <input type="text" id="studentFullNameInput" class="quiz-input" placeholder="اكتب اسمك الثلاثي هنا..." data-i18n-placeholder="studentNamePlaceholder" aria-label="اكتب اسمك الثلاثي هنا..." data-i18n-aria-label="studentNamePlaceholder" style="font-size:1.1rem;text-align:center;">
+
+                <!-- OPTION 1: Plain Name-Only Flow (Legacy / Guest) -->
+                <div id="studentNameOnlySection" style="margin-top:16px;">
+                    <div class="worksheet-form-group" style="margin-bottom:12px;">
+                        <input type="text" id="studentFullNameInput" class="quiz-input" placeholder="اكتب اسمك الثلاثي هنا..." data-i18n-placeholder="studentNamePlaceholder" aria-label="اكتب اسمك الثلاثي هنا..." data-i18n-aria-label="studentNamePlaceholder" style="font-size:1.05rem;text-align:center;">
+                    </div>
+                    <button class="btn btn-primary btn-lg" id="studentStartAssignmentBtn" style="width:100%;font-size:1rem;" data-i18n="studentStartAssignment">بدء الواجب الآن</button>
                 </div>
+
+                <!-- SEPARATOR -->
+                <div class="student-join-divider" style="display:flex;align-items:center;margin:18px 0;text-align:center;">
+                    <div style="flex:1;border-bottom:1px solid rgba(255,255,255,0.15);"></div>
+                    <span style="padding:0 12px;color:var(--text-muted, #94a3b8);font-size:0.85rem;font-weight:600;">أو</span>
+                    <div style="flex:1;border-bottom:1px solid rgba(255,255,255,0.15);"></div>
+                </div>
+
+                <!-- OPTION 2: Unified Account Login Flow -->
+                <div id="studentAccountSection">
+                    <!-- State A: Already logged in as account -->
+                    <div id="studentAccountLoggedInBox" style="display:none;background:rgba(45,212,191,0.08);border:1px solid rgba(45,212,191,0.25);border-radius:10px;padding:12px;text-align:center;margin-bottom:10px;">
+                        <div style="font-size:0.85rem;color:var(--text-muted, #94a3b8);margin-bottom:4px;">مسجل الدخول بحسابك المدرسي:</div>
+                        <div id="studentAccountUserBadge" style="font-weight:700;color:var(--brand-accent, #2dd4bf);font-size:1.05rem;margin-bottom:8px;"></div>
+                        <button class="btn btn-primary btn-lg" id="studentAccountStartBtn" style="width:100%;font-size:1rem;background:var(--brand-accent, #14b8a6);border-color:var(--brand-accent, #14b8a6);color:#fff;">متابعة والبدء بهذا الحساب 🎓</button>
+                    </div>
+
+                    <!-- State B: Not logged in - prompt account login -->
+                    <div id="studentAccountLoggedOutBox">
+                        <div style="display:flex;flex-direction:column;gap:8px;">
+                            <input type="text" id="studentAccountUsernameInput" class="quiz-input" placeholder="اسم المستخدم المدرسي (مثل s-xxxxxx)..." autocomplete="username" style="font-size:0.95rem;text-align:center;direction:ltr;">
+                            <input type="password" id="studentAccountPasswordInput" class="quiz-input" placeholder="كلمة المرور..." autocomplete="current-password" style="font-size:0.95rem;text-align:center;direction:ltr;">
+                            <div id="studentAccountLoginError" style="display:none;color:#ef4444;font-size:0.82rem;text-align:center;background:rgba(239,68,68,0.1);padding:6px;border-radius:6px;"></div>
+                            <button type="button" class="btn btn-secondary btn-lg" id="studentAccountLoginBtn" style="width:100%;font-size:0.95rem;background:rgba(56,189,248,0.15);border-color:#0284c7;color:#38bdf8;">
+                                <i data-lucide="key" style="width:16px;height:16px;display:inline-block;vertical-align:middle;margin-left:6px;"></i>
+                                تسجيل الدخول بحسابك المدرسي
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="student-actions">
-                    <button class="btn btn-primary btn-lg" id="studentStartAssignmentBtn" style="width:100%;font-size:1.05rem;" data-i18n="studentStartAssignment">بدء الواجب الآن</button>
                     <p class="student-terms-notice" style="font-size:0.8rem;color:var(--text-muted);margin-top:12px;text-align:center;line-height:1.4;">
                         <span data-i18n="studentTermsConsentPrefix">بدخولك للواجب، فإنك تقر بموافقتك على</span>
                         <a href="#" id="studentTermsLink" style="color:var(--brand-accent);text-decoration:underline;font-weight:600;" data-i18n="termsAndPrivacyLink">شروط الاستخدام وسياسة الخصوصية</a>.

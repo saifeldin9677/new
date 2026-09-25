@@ -35,7 +35,11 @@ window.firebaseSecondaryAuth = secondaryAuth;
 // --- Step 1a: Teacher Auth Helpers ---
 window.firebaseTeacherSignIn = async function(email, password) {
     try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        let loginEmail = (email || '').trim();
+        if (!loginEmail.includes('@') && typeof window.firebaseToSyntheticEmail === 'function') {
+            loginEmail = window.firebaseToSyntheticEmail(loginEmail);
+        }
+        const userCredential = await signInWithEmailAndPassword(auth, loginEmail, password);
         return { ok: true, uid: userCredential.user.uid };
     } catch(e) {
         console.warn('Teacher sign-in failed:', e);
@@ -65,6 +69,16 @@ window.firebaseCheckIsTeacher = async function(uid) {
     } catch(e) {
         console.warn('Check is teacher failed:', e);
         return false; // Fail closed, never fail open
+    }
+};
+
+window.firebaseCheckIsAccountTeacher = async function(uid) {
+    try {
+        if (!uid) return false;
+        const snap = await getDoc(doc(db, 'users', uid));
+        return snap.exists() && snap.data().role === 'teacher';
+    } catch(e) {
+        return false;
     }
 };
 
@@ -115,9 +129,9 @@ window.firebaseCreateSession = async function(sessionCode, config) {
     }
 };
 
-window.firebaseSaveQuizResult = async function(sessionCode, studentName, score, total, timeTaken, answers) {
+window.firebaseSaveQuizResult = async function(sessionCode, studentName, score, total, timeTaken, answers, studentUid, studentDisplayName) {
     try {
-        await addDoc(collection(db, 'quizSessions', sessionCode.toUpperCase(), 'results'), {
+        const payload = {
             sessionCode: sessionCode.toUpperCase(),
             studentName: studentName,
             score: score,
@@ -125,7 +139,14 @@ window.firebaseSaveQuizResult = async function(sessionCode, studentName, score, 
             timeTaken: timeTaken || null,
             answers: answers || [],
             completedAt: serverTimestamp()
-        });
+        };
+        if (studentUid) {
+            payload.studentUid = studentUid;
+        }
+        if (studentDisplayName) {
+            payload.studentDisplayName = studentDisplayName;
+        }
+        await addDoc(collection(db, 'quizSessions', sessionCode.toUpperCase(), 'results'), payload);
         return true;
     } catch(e) { console.error('Failed to save result:', e); return false; }
 };

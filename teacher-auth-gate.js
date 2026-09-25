@@ -19,7 +19,15 @@
                     return;
                 }
                 try {
-                    isConfirmedTeacher = await window.firebaseCheckIsTeacher(user.uid);
+                    let isLegacy = false;
+                    if (typeof window.firebaseCheckIsTeacher === 'function') {
+                        isLegacy = await window.firebaseCheckIsTeacher(user.uid);
+                    }
+                    let isAccount = false;
+                    if (typeof window.firebaseCheckIsAccountTeacher === 'function') {
+                        isAccount = await window.firebaseCheckIsAccountTeacher(user.uid);
+                    }
+                    isConfirmedTeacher = isLegacy || isAccount;
                 } catch(e) {
                     console.warn('Teacher auth check failed:', e);
                     isConfirmedTeacher = false;
@@ -135,8 +143,22 @@
                     return;
                 }
 
-                // Verify teacher status
-                const isTeacher = await window.firebaseCheckIsTeacher(res.uid);
+                // Verify teacher status: either legacy marker or account role == teacher
+                let isTeacher = false;
+                try {
+                    let isLegacy = false;
+                    if (typeof window.firebaseCheckIsTeacher === 'function') {
+                        isLegacy = await window.firebaseCheckIsTeacher(res.uid);
+                    }
+                    let isAccount = false;
+                    if (typeof window.firebaseCheckIsAccountTeacher === 'function') {
+                        isAccount = await window.firebaseCheckIsAccountTeacher(res.uid);
+                    }
+                    isTeacher = isLegacy || isAccount;
+                } catch(e) {
+                    console.warn('Teacher check error:', e);
+                    isTeacher = false;
+                }
                 if (!isTeacher) {
                     // Sign back out immediately
                     if (typeof window.firebaseTeacherSignOut === 'function') {

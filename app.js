@@ -3532,7 +3532,9 @@
                 console.warn("Local quiz submission storage fallback failed:", e);
             }
             if ("function" == typeof window.firebaseSaveQuizResult) try {
-                await window.firebaseSaveQuizResult(It, zt, t, n, i, a);
+                var studentUid = window._currentStudentUid || localStorage.getItem("lepidos_student_uid_v1") || null;
+                var studentDisplayName = window._currentStudentDisplayName || localStorage.getItem("lepidos_student_account_name_v1") || null;
+                await window.firebaseSaveQuizResult(It, zt, t, n, i, a, studentUid, studentDisplayName);
             } catch (e) {
                 console.warn("Firebase submission failed, maintained in local fallback:", e);
             }
@@ -13118,7 +13120,11 @@
                         var btnClass = isGraded ? 'btn-secondary' : 'btn-outline';
                         spatialCol = '<button type="button" class="btn btn-xs ' + btnClass + ' review-spatial-btn" data-code="' + Ti(sessionCode) + '" data-student="' + Ti(sub.studentName) + '" style="font-size:0.82rem;padding:4px 10px;border-radius:6px;gap:6px;min-height:32px;display:inline-flex;align-items:center;"><i data-lucide="map-pin" style="width:14px;height:14px;"></i> <span>' + gradeLabel + '</span></button>';
                     }
-                    rowsHtml += "<tr><td><strong>" + (idx + 1) + "</strong></td><td><strong>" + Ti(sub.studentName || zi("studentDefaultName") || "طالب") + "</strong></td><td>" + score + " / " + numQ + '</td><td><span class="academic-badge" style="font-size:0.85rem;">' + pct + "%</span></td><td>" + spatialCol + "</td><td>" + dateStr + "</td></tr>";
+                    var studentNameDisplay = Ti(sub.studentDisplayName || sub.studentName || zi("studentDefaultName") || "طالب");
+                    if (sub.studentUid) {
+                        studentNameDisplay += ' <span class="badge" style="background:rgba(56,189,248,0.2);color:#38bdf8;padding:1px 6px;border-radius:4px;font-size:0.75rem;font-weight:600;margin-right:6px;">حساب رسمي</span>';
+                    }
+                    rowsHtml += "<tr><td><strong>" + (idx + 1) + "</strong></td><td><strong>" + studentNameDisplay + "</strong></td><td>" + score + " / " + numQ + '</td><td><span class="academic-badge" style="font-size:0.85rem;">' + pct + "%</span></td><td>" + spatialCol + "</td><td>" + dateStr + "</td></tr>";
                 });
 
                 if (gradebookTotalStudents) gradebookTotalStudents.textContent = String(count);
@@ -13282,21 +13288,116 @@
                     if (desc) {
                         desc.innerHTML = (zi("studentAssignmentPrompt") || "طلب منك معلمك حل الواجب الصفي (رمز: <strong>{code}</strong>). اكتب اسمك الكامل للبدء:").replace("{code}", code);
                     }
+                    
+                    // Update Account Option Box state
+                    var loggedInBox = document.getElementById("studentAccountLoggedInBox");
+                    var loggedOutBox = document.getElementById("studentAccountLoggedOutBox");
+                    var badge = document.getElementById("studentAccountUserBadge");
+                    var acctUser = (window.accountSystem && typeof window.accountSystem.getState === "function") ? window.accountSystem.getState().currentUser : null;
+                    if (acctUser && acctUser.uid) {
+                        if (loggedInBox) loggedInBox.style.display = "block";
+                        if (loggedOutBox) loggedOutBox.style.display = "none";
+                        if (badge) badge.textContent = (acctUser.displayName || acctUser.username) + " (" + (acctUser.username || "") + ")";
+                    } else {
+                        if (loggedInBox) loggedInBox.style.display = "none";
+                        if (loggedOutBox) loggedOutBox.style.display = "block";
+                    }
                 }
+
+                function launchAssignmentForStudent(studentName, studentUid, studentDisplayName) {
+                    try {
+                        localStorage.setItem("lepidos_student_name_v1", studentName);
+                        if (studentUid) {
+                            localStorage.setItem("lepidos_student_uid_v1", studentUid);
+                        } else {
+                            localStorage.removeItem("lepidos_student_uid_v1");
+                        }
+                        if (studentDisplayName) {
+                            localStorage.setItem("lepidos_student_account_name_v1", studentDisplayName);
+                        } else {
+                            localStorage.removeItem("lepidos_student_account_name_v1");
+                        }
+                    } catch(e){}
+                    window._currentStudentUid = studentUid || null;
+                    window._currentStudentDisplayName = studentDisplayName || null;
+                    if (studentAssignmentOverlay) studentAssignmentOverlay.style.display = "none";
+                    var sessions = getSessions();
+                    var foundSession = sessions.find(function(s) { return s.code === code; });
+                    if (foundSession) {
+                        openStudentHub("assignments");
+                        if (typeof openAssignmentSolver === "function") openAssignmentSolver(foundSession);
+                    }
+                }
+
+                // Path 1: Plain name-only flow (Existing)
                 if (studentStartAssignmentBtn) {
                     studentStartAssignmentBtn.onclick = function() {
                         var name = (studentFullNameInput && studentFullNameInput.value.trim()) || zi("studentDefaultName") || "طالب";
                         if (name) {
-                            try { localStorage.setItem("lepidos_student_name_v1", name); } catch(e){}
-                            if (studentAssignmentOverlay) studentAssignmentOverlay.style.display = "none";
-                            var sessions = getSessions();
-                            var foundSession = sessions.find(function(s) { return s.code === code; });
-                            if (foundSession) {
-                                openStudentHub("assignments");
-                                if (typeof openAssignmentSolver === "function") openAssignmentSolver(foundSession);
-                            }
+                            launchAssignmentForStudent(name, null, null);
                         } else if (studentFullNameInput) {
                             studentFullNameInput.focus();
+                        }
+                    };
+                }
+
+                // Path 2A: Continue with already logged-in account
+                var studentAccountStartBtn = document.getElementById("studentAccountStartBtn");
+                if (studentAccountStartBtn) {
+                    studentAccountStartBtn.onclick = function() {
+                        var acctUser = (window.accountSystem && typeof window.accountSystem.getState === "function") ? window.accountSystem.getState().currentUser : null;
+                        var uid = (acctUser && acctUser.uid) || (window.firebaseAuth && window.firebaseAuth.currentUser && window.firebaseAuth.currentUser.uid) || null;
+                        var displayName = (acctUser && (acctUser.displayName || acctUser.username)) || "طالب مسجل";
+                        launchAssignmentForStudent(displayName, uid, displayName);
+                    };
+                }
+
+                // Path 2B: Log in with username/password from account system
+                var studentAccountLoginBtn = document.getElementById("studentAccountLoginBtn");
+                if (studentAccountLoginBtn) {
+                    studentAccountLoginBtn.onclick = async function() {
+                        var uInput = document.getElementById("studentAccountUsernameInput");
+                        var pInput = document.getElementById("studentAccountPasswordInput");
+                        var errDiv = document.getElementById("studentAccountLoginError");
+                        var uName = (uInput && uInput.value.trim()) || "";
+                        var pass = (pInput && pInput.value) || "";
+                        if (!uName || !pass) {
+                            if (errDiv) {
+                                errDiv.textContent = "يرجى إدخال اسم المستخدم وكلمة المرور.";
+                                errDiv.style.display = "block";
+                            }
+                            return;
+                        }
+                        if (errDiv) errDiv.style.display = "none";
+                        studentAccountLoginBtn.disabled = true;
+                        studentAccountLoginBtn.textContent = "جارٍ تسجيل الدخول...";
+                        try {
+                            if (typeof window.firebaseAccountSignIn !== "function") {
+                                throw new Error("خدمة المصادقة غير متوفرة.");
+                            }
+                            var res = await window.firebaseAccountSignIn(uName, pass);
+                            if (res && res.ok) {
+                                var uid = res.uid;
+                                var displayName = (res.user && (res.user.displayName || res.user.username)) || uName;
+                                if (window.accountSystem && typeof window.accountSystem.refresh === "function") {
+                                    window.accountSystem.refresh();
+                                }
+                                launchAssignmentForStudent(displayName, uid, displayName);
+                            } else {
+                                if (errDiv) {
+                                    errDiv.textContent = (res && res.message) || "فشل تسجيل الدخول.";
+                                    errDiv.style.display = "block";
+                                }
+                            }
+                        } catch(err) {
+                            if (errDiv) {
+                                errDiv.textContent = "خطأ: " + (err.message || String(err));
+                                errDiv.style.display = "block";
+                            }
+                        } finally {
+                            studentAccountLoginBtn.disabled = false;
+                            studentAccountLoginBtn.innerHTML = '<i data-lucide="key" style="width:16px;height:16px;display:inline-block;vertical-align:middle;margin-left:6px;"></i> تسجيل الدخول بحسابك المدرسي';
+                            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
                         }
                     };
                 }
@@ -13823,6 +13924,11 @@
                         submittedAt: Date.now()
                     };
 
+                    var studentUid = window._currentStudentUid || localStorage.getItem("lepidos_student_uid_v1") || null;
+                    var studentDisplayName = window._currentStudentDisplayName || localStorage.getItem("lepidos_student_account_name_v1") || null;
+                    if (studentUid) submissionRecord.studentUid = studentUid;
+                    if (studentDisplayName) submissionRecord.studentDisplayName = studentDisplayName;
+
                     // Persist to session submissions
                     try {
                         var subs = JSON.parse(localStorage.getItem("lepidos_quiz_submissions_" + asg.code) || "[]");
@@ -13831,6 +13937,21 @@
                         localStorage.setItem("lepidos_quiz_submissions_" + asg.code, JSON.stringify(subs));
                     } catch(err) {
                         console.warn("Could not save student submission locally:", err);
+                    }
+
+                    if ("function" == typeof window.firebaseSaveQuizResult) {
+                        try {
+                            var answersList = questions.map(function(q, qIdx) {
+                                return {
+                                    questionId: q.id || qIdx,
+                                    correct: currentStudentDraft.answers[qIdx] === (q.correctIndex !== undefined ? q.correctIndex : 0),
+                                    answer: currentStudentDraft.answers[qIdx]
+                                };
+                            });
+                            window.firebaseSaveQuizResult(asg.code, studentName, correctCount, questions.length, null, answersList, studentUid, studentDisplayName);
+                        } catch(e) {
+                            console.warn("Could not save assignment result to Firebase:", e);
+                        }
                     }
 
                     // Persist to student personal grades

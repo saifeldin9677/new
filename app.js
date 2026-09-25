@@ -3298,7 +3298,13 @@
             Lo && Bo(Lo), Ao(), go(), Ls(), n || (n = !0, requestAnimationFrame(function() {
                 n = !1, Tr();
             })), br();
+            if (typeof window.onMapZoomOrPan === "function") {
+                window.onMapZoomOrPan();
+            }
         }).on("end", function() {
+            if (typeof window.onMapZoomOrPanEnd === "function") {
+                window.onMapZoomOrPanEnd();
+            }
             clearTimeout(i), i = setTimeout(function() {
                 yi = !1, Vn.classed("zooming-active", !1), Ao(), function() {
                     if (Co(li && li.k), So(li && li.k), !bi) return;
@@ -3975,9 +3981,7 @@
                 return e;
             }), n = "arrow" === ut;
             if (kt >= 10) if (t.length < 2) ls(); else {
-                bt = !1, _t && (cancelAnimationFrame(_t), _t = null);
-                var i = n ? [ t[0], t[t.length - 1] ] : t, a = rs(n ? i : t);
-                Ct = null, ft = [], ls(), yt.push({
+                var newAnn = {
                     id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
                     type: n ? "arrow" : "freehand",
                     coords: i,
@@ -3986,7 +3990,11 @@
                     size: mt,
                     distanceKm: a,
                     createdAt: Date.now()
-                }), Vo(), ns(), Go(zi("annotationAdded")), e || Go(zi("annotationLengthLabel").replace("{km}", a.toLocaleString("en")));
+                };
+                Ct = null, ft = [], ls(), yt.push(newAnn), Vo(), ns(), Go(zi("annotationAdded")), e || Go(zi("annotationLengthLabel").replace("{km}", a.toLocaleString("en")));
+                if (typeof window.broadcastLiveAnnotation === "function") {
+                    window.broadcastLiveAnnotation(newAnn);
+                }
             } else ls();
         }
     }
@@ -4041,7 +4049,7 @@
             setTimeout(function() {
                 window.startAnnotationTutorial && window.startAnnotationTutorial();
             }, 300);
-        }()) : (Vo(), yt = [], ls(), is(), window.cleanupAnnotationCollab && window.cleanupAnnotationCollab(), Go(zi("annotationModeOff")));
+        }(), window.initAnnotationCollab && window.initAnnotationCollab()) : (Vo(), yt = [], ls(), is(), window.cleanupAnnotationCollab && window.cleanupAnnotationCollab(), Go(zi("annotationModeOff")));
     }
     function ys() {
         var e = Yo();
@@ -11708,7 +11716,8 @@
         dt && ("region" !== ut ? "freehand" !== ut && "arrow" !== ut || (bt || vt && vt.length >= 2) && us(!1) : function() {
             if (ft.length < 3) return;
             var e = ft.slice();
-            ft = [], yt.push({
+            ft = [];
+            var newAnn = {
                 id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
                 type: "region",
                 coords: e,
@@ -11716,7 +11725,11 @@
                 color: pt,
                 size: mt,
                 createdAt: Date.now()
-            }), Vo(), ns(), Go(zi("annotationAdded"));
+            };
+            yt.push(newAnn), Vo(), ns(), Go(zi("annotationAdded"));
+            if (typeof window.broadcastLiveAnnotation === "function") {
+                window.broadcastLiveAnnotation(newAnn);
+            }
         }());
     });
     var wd = document.getElementById("annotationClearBtn");
@@ -11850,27 +11863,40 @@
             kindPinOn: !(!document.getElementById("annotationKindPin") || !document.getElementById("annotationKindPin").classList.contains("toggle-on"))
         };
     }, Md && (Md.addEventListener("pointerdown", function(e) {
-        if (dt && ("freehand" === ut || "arrow" === ut) && e.target && e.target.closest && e.target.closest("#mapSvg") && !Lt && 2 !== e.button && 1 !== e.button) return bt ? (bt = !1, 
-        void cs()) : void (("touch" !== e.pointerType || e.isPrimary) && (e.preventDefault(), 
-        e.stopPropagation(), wt = e.pointerId, bt = !0, [ e.clientX, e.clientY ], Et = [ e.clientX, e.clientY ], 
-        kt = 0, vt = [], xt = [ e.clientX, e.clientY ], os(), vt.length && ss()));
+        if (dt && ("freehand" === ut || "arrow" === ut) && e.target && e.target.closest && e.target.closest("#mapSvg") && !Lt && 2 !== e.button && 1 !== e.button) {
+            if (typeof window.checkCanDrawAnnotation === "function" && !window.checkCanDrawAnnotation()) return;
+            return bt ? (bt = !1, 
+            void cs()) : void (("touch" !== e.pointerType || e.isPrimary) && (e.preventDefault(), 
+            e.stopPropagation(), wt = e.pointerId, bt = !0, [ e.clientX, e.clientY ], Et = [ e.clientX, e.clientY ], 
+            kt = 0, vt = [], xt = [ e.clientX, e.clientY ], os(), vt.length && ss()));
+        }
     }), Md.addEventListener("pointermove", function(e) {
         bt && e.pointerId === wt && (e.target && e.target.closest && e.target.closest("#mapSvg") ? (e.preventDefault(), 
         e.stopPropagation(), xt = [ e.clientX, e.clientY ], _t || (_t = requestAnimationFrame(os))) : ms());
     }), Md.addEventListener("pointerup", ps), Md.addEventListener("pointercancel", ps)), 
     Q && Q.addEventListener("click", function(e) {
         if (dt && (!e.target || !e.target.closest || e.target.closest("#mapSvg")) && !(e.target && e.target.closest && e.target.closest(".annotation-pin-circle, .annotation-pin-label, .annotation-region-poly"))) {
+            if (typeof window.checkCanDrawAnnotation === "function" && !window.checkCanDrawAnnotation()) return;
             var t = ki(), n = e.clientX - t.left, i = e.clientY - t.top, a = Qo(li.invert([ n, i ]));
-            !a || isNaN(a[0]) || isNaN(a[1]) || ("pin" === ut ? (yt.push({
-                id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-                type: "pin",
-                coords: [ a[0], a[1] ],
-                label: "",
-                color: pt,
-                size: mt,
-                createdAt: Date.now()
-            }), Vo(), ns(), Go(zi("annotationAdded"))) : "region" === ut && (ft.push([ a[0], a[1] ]), 
-            as()));
+            if (!a || isNaN(a[0]) || isNaN(a[1])) return;
+            if ("pin" === ut) {
+                var newAnn = {
+                    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+                    type: "pin",
+                    coords: [ a[0], a[1] ],
+                    label: "",
+                    color: pt,
+                    size: mt,
+                    createdAt: Date.now()
+                };
+                yt.push(newAnn), Vo(), ns(), Go(zi("annotationAdded"));
+                if (typeof window.broadcastLiveAnnotation === "function") {
+                    window.broadcastLiveAnnotation(newAnn);
+                }
+            } else if ("region" === ut) {
+                ft.push([ a[0], a[1] ]);
+                as();
+            }
         }
     }, !0), document.addEventListener("keydown", function(e) {
         "Space" === e.code && !e.repeat && e.target && "INPUT" !== e.target.tagName && ds(!0);
@@ -14180,6 +14206,17 @@
         var isHandRaised = false;
         var showResearchPins = true;
 
+        var currentLiveClassId = null;
+        var liveClassData = null;
+        var unsubLiveClass = null;
+        var unsubLiveHands = null;
+        var unsubLiveAnnotations = null;
+        var mapViewThrottleTimer = null;
+        var pendingMapView = null;
+        var lastMapViewWriteTime = 0;
+        var isApplyingRemoteView = false;
+        var studentNameCache = {};
+
         var activeApprovedResearch = [];
         var teacherReviewQueue = [];
         var studentMySubmissions = [];
@@ -14699,21 +14736,205 @@
             }
         }
 
+        function getLiveClassIdForUser(user) {
+            if (!user) return null;
+            if (user.liveClassId) return user.liveClassId;
+            if (window._mockLiveClassId) return window._mockLiveClassId;
+            if (user.role === 'teacher') {
+                if (user.currentClassId) return user.currentClassId;
+                if (Array.isArray(user.classIds) && user.classIds.length > 0) return user.classIds[0];
+                if (user.classId) return user.classId;
+                return 'class_' + user.uid;
+            } else {
+                if (user.currentClassId) return user.currentClassId;
+                if (user.classId) return user.classId;
+                if (user.teacherId) return 'class_' + user.teacherId;
+                return null;
+            }
+        }
+
+        function isLocalUserActiveController() {
+            var user = getActiveUser();
+            if (!currentLiveClassId || !liveClassData) {
+                return !user || user.role === 'teacher' || (activeController && activeController.type === 'teacher');
+            }
+            if (liveClassData.activeControllerUid) {
+                return !!(user && user.uid === liveClassData.activeControllerUid);
+            }
+            return !!(user && (user.uid === liveClassData.teacherId || user.role === 'teacher'));
+        }
+
+        function checkCanDrawAnnotation() {
+            if (!isLocalUserActiveController()) {
+                if (typeof Go === "function") Go("التحكم في الخريطة والرسم ليس معك حالياً ✋");
+                return false;
+            }
+            return true;
+        }
+
+        window.isLocalUserActiveController = isLocalUserActiveController;
+        window.checkCanDrawAnnotation = checkCanDrawAnnotation;
+
+        function broadcastLiveAnnotation(newAnn) {
+            if (!currentLiveClassId) return;
+            if (!isLocalUserActiveController()) {
+                console.warn("Cannot broadcast annotation: local user is not active controller");
+                return;
+            }
+            var user = getActiveUser();
+            var payload = Object.assign({}, newAnn, {
+                authorUid: user ? user.uid : "unknown"
+            });
+            if (typeof window.firebaseAddLiveAnnotation === "function") {
+                window.firebaseAddLiveAnnotation(currentLiveClassId, payload).catch(function(err) {
+                    console.error("firebaseAddLiveAnnotation error:", err);
+                });
+            }
+        }
+        window.broadcastLiveAnnotation = broadcastLiveAnnotation;
+
+        function getCurrentMapCenterAndZoom() {
+            var size = typeof La === "function" ? La() : { width: window.innerWidth, height: window.innerHeight };
+            var k = (typeof li !== "undefined" && li && li.k) ? li.k : 1;
+            var center = [0, 0];
+            if (typeof li !== "undefined" && li && typeof Qo === "function") {
+                try {
+                    var unscaledPt = li.invert([size.width / 2, size.height / 2]);
+                    var geoPt = Qo(unscaledPt);
+                    if (geoPt && isFinite(geoPt[0]) && isFinite(geoPt[1])) {
+                        center = [Math.round(geoPt[0] * 1000) / 1000, Math.round(geoPt[1] * 1000) / 1000];
+                    }
+                } catch(e) {}
+            }
+            return {
+                center: center,
+                zoom: Math.round(k * 100) / 100
+            };
+        }
+
+        function applyRemoteMapView(center, zoom) {
+            if (!center || !Array.isArray(center) || !zoom) return;
+            var proj = typeof ao === "function" ? ao() : null;
+            if (!proj || typeof si === "undefined" || !si || typeof Yn === "undefined" || !Yn) return;
+            try {
+                var pt = proj(center);
+                if (!pt || !isFinite(pt[0]) || !isFinite(pt[1])) return;
+                var size = typeof La === "function" ? La() : { width: window.innerWidth, height: window.innerHeight };
+                var k = Math.max(0.85, Math.min(24, Number(zoom) || 1));
+                var tx = size.width / 2 - k * pt[0];
+                var ty = size.height / 2 - k * pt[1];
+                var targetTransform = d3.zoomIdentity.translate(tx, ty).scale(k);
+
+                isApplyingRemoteView = true;
+                Yn.transition().duration(200).ease(d3.easeLinear).call(si.transform, targetTransform).on("end", function() {
+                    setTimeout(function() {
+                        isApplyingRemoteView = false;
+                    }, 60);
+                });
+            } catch(e) {
+                console.error("applyRemoteMapView error:", e);
+                isApplyingRemoteView = false;
+            }
+        }
+
+        window.onMapZoomOrPan = function() {
+            if (isApplyingRemoteView) return;
+            if (!isLocalUserActiveController()) return;
+            if (!currentLiveClassId) return;
+
+            var mapView = getCurrentMapCenterAndZoom();
+            pendingMapView = mapView;
+
+            var now = Date.now();
+            if (now - lastMapViewWriteTime >= 150) {
+                lastMapViewWriteTime = now;
+                if (mapViewThrottleTimer) {
+                    clearTimeout(mapViewThrottleTimer);
+                    mapViewThrottleTimer = null;
+                }
+                if (typeof window.firebaseUpdateLiveMapView === "function") {
+                    window.firebaseUpdateLiveMapView(currentLiveClassId, mapView);
+                }
+            } else if (!mapViewThrottleTimer) {
+                var delay = 150 - (now - lastMapViewWriteTime);
+                mapViewThrottleTimer = setTimeout(function() {
+                    mapViewThrottleTimer = null;
+                    lastMapViewWriteTime = Date.now();
+                    if (pendingMapView && typeof window.firebaseUpdateLiveMapView === "function") {
+                        window.firebaseUpdateLiveMapView(currentLiveClassId, pendingMapView);
+                    }
+                }, delay);
+            }
+        };
+
+        window.onMapZoomOrPanEnd = function() {
+            if (isApplyingRemoteView || !isLocalUserActiveController() || !currentLiveClassId) return;
+            var now = Date.now();
+            if (now - lastMapViewWriteTime >= 150) {
+                if (mapViewThrottleTimer) {
+                    clearTimeout(mapViewThrottleTimer);
+                    mapViewThrottleTimer = null;
+                }
+                lastMapViewWriteTime = now;
+                if (pendingMapView && typeof window.firebaseUpdateLiveMapView === "function") {
+                    window.firebaseUpdateLiveMapView(currentLiveClassId, pendingMapView);
+                }
+            } else if (!mapViewThrottleTimer) {
+                var delay = 150 - (now - lastMapViewWriteTime);
+                mapViewThrottleTimer = setTimeout(function() {
+                    mapViewThrottleTimer = null;
+                    lastMapViewWriteTime = Date.now();
+                    if (pendingMapView && typeof window.firebaseUpdateLiveMapView === "function") {
+                        window.firebaseUpdateLiveMapView(currentLiveClassId, pendingMapView);
+                    }
+                }, delay);
+            }
+        };
+
         function updateControllerUI() {
-            if (activeController.type === "teacher") {
-                if (activeControllerName) activeControllerName.textContent = "المعلم (أنت)";
-                if (revokeControlBtn) revokeControlBtn.style.display = "none";
-                if (controllerIndicatorDot) {
+            var user = getActiveUser();
+            var isTeacher = (user && user.role === "teacher");
+            var isController = isLocalUserActiveController();
+
+            if (controllerIndicatorDot) {
+                if (isController) {
                     controllerIndicatorDot.style.background = "#2dd4bf";
                     controllerIndicatorDot.style.boxShadow = "0 0 10px #2dd4bf";
-                }
-            } else {
-                if (activeControllerName) activeControllerName.textContent = "الطالب: " + activeController.name;
-                if (revokeControlBtn) revokeControlBtn.style.display = "inline-block";
-                if (controllerIndicatorDot) {
+                } else {
                     controllerIndicatorDot.style.background = "#f59e0b";
                     controllerIndicatorDot.style.boxShadow = "0 0 10px #f59e0b";
                 }
+            }
+
+            var controllerUid = liveClassData ? liveClassData.activeControllerUid : (activeController.type === "student" ? activeController.uid : null);
+            if (!controllerUid) {
+                if (activeControllerName) {
+                    activeControllerName.textContent = isTeacher ? "المعلم (أنت)" : "المعلم";
+                }
+                if (revokeControlBtn) revokeControlBtn.style.display = "none";
+            } else {
+                var name = (user && user.uid === controllerUid) ? (user.displayName || "أنت") : (studentNameCache[controllerUid] || activeController.name || controllerUid);
+                if (activeControllerName) {
+                    activeControllerName.textContent = (user && user.uid === controllerUid) ? "أنت (المتحكم حالياً 🎯)" : ("الطالب: " + name);
+                }
+                if (revokeControlBtn) {
+                    revokeControlBtn.style.display = isTeacher ? "inline-block" : "none";
+                }
+            }
+
+            if (studentHandRaiseBtn) {
+                studentHandRaiseBtn.style.display = isTeacher ? "none" : "inline-flex";
+                if (isController) {
+                    if (studentHandRaiseText) studentHandRaiseText.textContent = "أنت تقود العرض حالياً 🎯";
+                    studentHandRaiseBtn.classList.remove("active-raised");
+                } else {
+                    if (studentHandRaiseText) studentHandRaiseText.textContent = isHandRaised ? "✋ يدك مرفوعة (انقر للإلغاء)" : "✋ ارفع يدك لطلب المشاركة";
+                }
+            }
+
+            var clearBoardBtn = document.getElementById("annotationClearBoardBtn");
+            if (clearBoardBtn) {
+                clearBoardBtn.style.display = isTeacher ? "inline-flex" : "none";
             }
         }
 
@@ -14728,28 +14949,36 @@
             if (!handRaiseQueueList) return;
             handRaiseQueueList.innerHTML = "";
 
+            var user = getActiveUser();
+            var isTeacher = (user && user.role === "teacher");
+
             handRaiseQueue.forEach(function(item) {
+                var studentUid = item.uid || item.id;
+                var studentName = item.displayName || item.name || studentUid;
+
                 var li = document.createElement("li");
                 li.className = "queue-student-item";
 
                 var info = document.createElement("div");
                 info.className = "queue-student-info";
-                info.innerHTML = "<span>✋</span> <span>" + item.name + "</span>";
+                info.innerHTML = "<span>✋</span> <span>" + escapeHtml(studentName) + "</span>";
 
                 var actions = document.createElement("div");
                 actions.style.display = "flex";
                 actions.style.gap = "6px";
 
-                var grantBtn = document.createElement("button");
-                grantBtn.type = "button";
-                grantBtn.className = "queue-grant-btn";
-                grantBtn.textContent = "منح التحكم";
-                grantBtn.setAttribute("aria-label", "منح التحكم لـ " + item.name);
-                grantBtn.onclick = function() {
-                    grantControlToStudent(item.name);
-                };
+                if (isTeacher) {
+                    var grantBtn = document.createElement("button");
+                    grantBtn.type = "button";
+                    grantBtn.className = "queue-grant-btn";
+                    grantBtn.textContent = "منح التحكم";
+                    grantBtn.setAttribute("aria-label", "منح التحكم لـ " + studentName);
+                    grantBtn.onclick = function() {
+                        grantControlToStudent(studentUid, studentName);
+                    };
+                    actions.appendChild(grantBtn);
+                }
 
-                actions.appendChild(grantBtn);
                 li.appendChild(info);
                 li.appendChild(actions);
                 handRaiseQueueList.appendChild(li);
@@ -14757,44 +14986,245 @@
             if (window.lucide && lucide.createIcons) lucide.createIcons();
         }
 
-        function grantControlToStudent(studentName) {
-            if (!studentName) return;
-            activeController = { type: "student", name: studentName };
-            handRaiseQueue = handRaiseQueue.filter(function(s) { return s.name !== studentName; });
-            if (studentName.indexOf("(أنت)") !== -1) {
-                isHandRaised = false;
-                if (studentHandRaiseBtn) {
-                    studentHandRaiseBtn.classList.remove("active-raised");
-                    if (studentHandRaiseText) studentHandRaiseText.textContent = "✋ ارفع يدك لطلب المشاركة";
+        function handleLiveClassUpdate(data) {
+            if (!data) return;
+            liveClassData = data;
+
+            var controllerUid = data.activeControllerUid;
+            if (controllerUid && !studentNameCache[controllerUid]) {
+                studentNameCache[controllerUid] = "طالب (" + controllerUid + ")";
+            }
+
+            updateControllerUI();
+
+            if (data.currentMapView && !isLocalUserActiveController()) {
+                var curView = getCurrentMapCenterAndZoom();
+                var dLng = Math.abs(curView.center[0] - data.currentMapView.center[0]);
+                var dLat = Math.abs(curView.center[1] - data.currentMapView.center[1]);
+                var dZoom = Math.abs(curView.zoom - data.currentMapView.zoom);
+                if (dLng > 0.01 || dLat > 0.01 || dZoom > 0.01) {
+                    applyRemoteMapView(data.currentMapView.center, data.currentMapView.zoom);
                 }
             }
-            updateControllerUI();
-            renderQueueList();
-            if (typeof Go === "function") Go("تم نقل التحكم في الخريطة للطالب: " + studentName + " 🎯");
         }
 
-        function revokeControl() {
-            activeController = { type: "teacher", name: "المعلم (أنت)" };
+        function handleLiveHandRaisesUpdate(list) {
+            handRaiseQueue = Array.isArray(list) ? list.slice() : [];
+            handRaiseQueue.forEach(function(item) {
+                var uid = item.uid || item.id;
+                if (uid && item.displayName) {
+                    studentNameCache[uid] = item.displayName;
+                }
+            });
+
+            var user = getActiveUser();
+            if (user) {
+                var found = handRaiseQueue.some(function(item) {
+                    return item.uid === user.uid || item.id === user.uid;
+                });
+                isHandRaised = found;
+            }
+
             updateControllerUI();
+            renderQueueList();
+        }
+
+        function handleLiveAnnotationsUpdate(list) {
+            if (!Array.isArray(list)) return;
+            yt = list.slice();
+            if (typeof ns === "function") ns();
+            if (typeof Vo === "function") Vo();
+        }
+
+        async function initExplanationLiveClass() {
+            cleanupExplanationLiveClass();
+            var user = getActiveUser();
+            if (!user) return;
+            var classId = getLiveClassIdForUser(user);
+            if (!classId) return;
+
+            currentLiveClassId = classId;
+
+            if (user.role === 'teacher' && typeof window.firebaseInitLiveClass === 'function') {
+                try {
+                    await window.firebaseInitLiveClass(classId, user.uid);
+                } catch(e) {
+                    console.error('firebaseInitLiveClass error:', e);
+                }
+            }
+
+            if (typeof window.firebaseListenLiveClass === 'function') {
+                unsubLiveClass = window.firebaseListenLiveClass(classId, handleLiveClassUpdate);
+            }
+            if (typeof window.firebaseListenLiveHandRaises === 'function') {
+                unsubLiveHands = window.firebaseListenLiveHandRaises(classId, handleLiveHandRaisesUpdate);
+            }
+            if (typeof window.firebaseListenLiveAnnotations === 'function') {
+                unsubLiveAnnotations = window.firebaseListenLiveAnnotations(classId, handleLiveAnnotationsUpdate);
+            }
+
+            updateControllerUI();
+        }
+
+        function cleanupExplanationLiveClass() {
+            if (typeof unsubLiveClass === 'function') {
+                unsubLiveClass();
+                unsubLiveClass = null;
+            }
+            if (typeof unsubLiveHands === 'function') {
+                unsubLiveHands();
+                unsubLiveHands = null;
+            }
+            if (typeof unsubLiveAnnotations === 'function') {
+                unsubLiveAnnotations();
+                unsubLiveAnnotations = null;
+            }
+            if (mapViewThrottleTimer) {
+                clearTimeout(mapViewThrottleTimer);
+                mapViewThrottleTimer = null;
+            }
+            currentLiveClassId = null;
+            liveClassData = null;
+            pendingMapView = null;
+            isApplyingRemoteView = false;
+        }
+
+        window.initAnnotationCollab = initExplanationLiveClass;
+        window.cleanupAnnotationCollab = cleanupExplanationLiveClass;
+
+        async function grantControlToStudent(studentUid, studentName) {
+            if (!studentUid) return;
+            var name = studentName || studentUid;
+            studentNameCache[studentUid] = name;
+
+            if (currentLiveClassId && typeof window.firebaseGrantLiveControl === "function") {
+                try {
+                    var res = await window.firebaseGrantLiveControl(currentLiveClassId, studentUid);
+                    if (res && res.ok) {
+                        if (typeof window.firebaseLowerHand === "function") {
+                            await window.firebaseLowerHand(currentLiveClassId, studentUid);
+                        }
+                    } else {
+                        console.error("firebaseGrantLiveControl error:", res && res.error);
+                    }
+                } catch(e) {
+                    console.error("Failed to grant control:", e);
+                }
+            } else {
+                activeController = { type: "student", uid: studentUid, name: name };
+                updateControllerUI();
+            }
+            if (typeof Go === "function") Go("تم نقل التحكم في الخريطة للطالب: " + name + " 🎯");
+        }
+
+        async function revokeControl() {
+            if (currentLiveClassId && typeof window.firebaseRevokeLiveControl === "function") {
+                try {
+                    var res = await window.firebaseRevokeLiveControl(currentLiveClassId);
+                    if (!res || !res.ok) {
+                        console.error("firebaseRevokeLiveControl error:", res && res.error);
+                    }
+                } catch(e) {
+                    console.error("Failed to revoke control:", e);
+                }
+            } else {
+                activeController = { type: "teacher", name: "المعلم (أنت)" };
+                updateControllerUI();
+            }
             if (typeof Go === "function") Go("تم استرداد التحكم في الخريطة للمعلم ✓");
         }
 
-        function toggleHandRaise() {
-            isHandRaised = !isHandRaised;
-            var simName = "عبدالله الشمري (أنت)";
-            if (isHandRaised) {
-                handRaiseQueue.push({ id: Date.now(), name: simName, time: "الآن" });
-                if (studentHandRaiseBtn) studentHandRaiseBtn.classList.add("active-raised");
-                if (studentHandRaiseText) studentHandRaiseText.textContent = "✋ يدك مرفوعة (انقر للإلغاء)";
-                if (typeof Go === "function") Go("تم رفع يدك لطلب المشاركة في الخريطة ✋");
-            } else {
-                handRaiseQueue = handRaiseQueue.filter(function(s) { return s.name !== simName; });
-                if (studentHandRaiseBtn) studentHandRaiseBtn.classList.remove("active-raised");
-                if (studentHandRaiseText) studentHandRaiseText.textContent = "✋ ارفع يدك لطلب المشاركة";
-                if (typeof Go === "function") Go("تم إلغاء طلب المشاركة");
+        async function toggleHandRaise() {
+            var user = getActiveUser();
+            if (!user) {
+                if (typeof Go === "function") Go("يجب تسجيل الدخول كطالب لرفع اليد");
+                return;
             }
-            renderQueueList();
+            if (isLocalUserActiveController()) {
+                if (typeof Go === "function") Go("أنت بالفعل تقود العرض حالياً 🎯");
+                return;
+            }
+
+            if (!currentLiveClassId) {
+                isHandRaised = !isHandRaised;
+                var simName = user.displayName || user.username || "أنت";
+                if (isHandRaised) {
+                    handRaiseQueue.push({ id: user.uid, uid: user.uid, displayName: simName });
+                    if (studentHandRaiseBtn) studentHandRaiseBtn.classList.add("active-raised");
+                    if (studentHandRaiseText) studentHandRaiseText.textContent = "✋ يدك مرفوعة (انقر للإلغاء)";
+                    if (typeof Go === "function") Go("تم رفع يدك لطلب المشاركة في الخريطة ✋");
+                } else {
+                    handRaiseQueue = handRaiseQueue.filter(function(s) { return s.uid !== user.uid; });
+                    if (studentHandRaiseBtn) studentHandRaiseBtn.classList.remove("active-raised");
+                    if (studentHandRaiseText) studentHandRaiseText.textContent = "✋ ارفع يدك لطلب المشاركة";
+                    if (typeof Go === "function") Go("تم إلغاء طلب المشاركة");
+                }
+                renderQueueList();
+                return;
+            }
+
+            if (!isHandRaised) {
+                try {
+                    var name = user.displayName || user.username || "طالب";
+                    var res = await window.firebaseRaiseHand(currentLiveClassId, user.uid, name);
+                    if (res && res.ok) {
+                        isHandRaised = true;
+                        if (studentHandRaiseBtn) studentHandRaiseBtn.classList.add("active-raised");
+                        if (studentHandRaiseText) studentHandRaiseText.textContent = "✋ يدك مرفوعة (انقر للإلغاء)";
+                        if (typeof Go === "function") Go("تم رفع يدك لطلب المشاركة في الخريطة ✋");
+                    }
+                } catch(e) {
+                    console.error("firebaseRaiseHand error:", e);
+                }
+            } else {
+                try {
+                    var res = await window.firebaseLowerHand(currentLiveClassId, user.uid);
+                    if (res && res.ok) {
+                        isHandRaised = false;
+                        if (studentHandRaiseBtn) studentHandRaiseBtn.classList.remove("active-raised");
+                        if (studentHandRaiseText) studentHandRaiseText.textContent = "✋ ارفع يدك لطلب المشاركة";
+                        if (typeof Go === "function") Go("تم إلغاء طلب المشاركة");
+                    }
+                } catch(e) {
+                    console.error("firebaseLowerHand error:", e);
+                }
+            }
         }
+
+        async function clearLiveBoard(skipConfirm) {
+            var user = getActiveUser();
+            if (user && user.role !== 'teacher') {
+                if (typeof Go === "function") Go("مسح اللوحة متاح للمعلم فقط");
+                return;
+            }
+            if (!skipConfirm && typeof window._skipClearBoardConfirm === "undefined" && typeof confirm === "function") {
+                if (!confirm("هل تريد مسح جميع الرسومات والشروحات لجميع الطلاب في الحصة؟")) return;
+            }
+            if (!currentLiveClassId) {
+                yt = [];
+                if (typeof ns === "function") ns();
+                if (typeof Vo === "function") Vo();
+                if (typeof Go === "function") Go("تم مسح لوحة الشروحات ✓");
+                return;
+            }
+            try {
+                var res = await window.firebaseClearLiveAnnotations(currentLiveClassId);
+                if (res && res.ok) {
+                    if (typeof Go === "function") Go("تم مسح لوحة الشروحات لجميع الطلاب ✓");
+                } else {
+                    console.error("firebaseClearLiveAnnotations error:", res && res.error);
+                }
+            } catch(e) {
+                console.error("clearLiveBoard error:", e);
+            }
+        }
+
+        window.clearLiveExplanationBoard = clearLiveBoard;
+        window.grantLiveExplanationControl = grantControlToStudent;
+        window.revokeLiveExplanationControl = revokeControl;
+        window.getExplanationAnnotations = function() {
+            return Array.isArray(yt) ? yt : [];
+        };
 
         function openResearchModal(item) {
             if (!studentResearchModal || !item) return;
@@ -15044,12 +15474,20 @@
 
         if (grantDirectStudentBtn && directStudentSelect) {
             grantDirectStudentBtn.addEventListener("click", function() {
-                var studentName = directStudentSelect.value;
-                if (!studentName) {
+                var selVal = directStudentSelect.value;
+                if (!selVal) {
                     if (typeof Go === "function") Go("يرجى اختيار طالب من القائمة أولاً");
                     return;
                 }
-                grantControlToStudent(studentName);
+                var selText = (directStudentSelect.options && directStudentSelect.selectedIndex >= 0) ? directStudentSelect.options[directStudentSelect.selectedIndex].text : selVal;
+                grantControlToStudent(selVal, selText);
+            });
+        }
+
+        var clearBoardBtn = document.getElementById("annotationClearBoardBtn");
+        if (clearBoardBtn) {
+            clearBoardBtn.addEventListener("click", function() {
+                clearLiveBoard();
             });
         }
 
@@ -15100,7 +15538,13 @@
         if (typeof window.firebaseOnAuthChange === "function") {
             window.firebaseOnAuthChange(function() {
                 refreshResearchData();
+                if (typeof dt !== "undefined" && dt) {
+                    initExplanationLiveClass();
+                }
             });
+        }
+        if (typeof dt !== "undefined" && dt) {
+            initExplanationLiveClass();
         }
         window.refreshExplanationResearch = refreshResearchData;
     }();

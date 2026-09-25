@@ -429,6 +429,55 @@ service cloud.firestore {
     }
 
     // ──────────────────────────────────────────────────────────────
+    // Explanation Mode: Live Control Handoff & Collaborative Drawing (Stage 2b)
+    // ──────────────────────────────────────────────────────────────
+    match /liveClasses/{classId} {
+      allow read: if isSignedIn() && (
+           resource.data.teacherId == request.auth.uid
+        || getUserData(request.auth.uid).classId == classId
+      );
+      allow create: if isSignedIn() && getUserData(request.auth.uid).role == "teacher"
+        && request.resource.data.teacherId == request.auth.uid;
+
+      // Granting/revoking control: the teacher may set it to anyone; the current controller may relinquish it back to null themselves
+      allow update: if isSignedIn() && (
+           (resource.data.teacherId == request.auth.uid
+             && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["activeControllerUid", "updatedAt"]))
+        || (resource.data.activeControllerUid == request.auth.uid
+             && request.resource.data.activeControllerUid == null
+             && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["activeControllerUid", "updatedAt"]))
+           // The current controller (teacher-with-no-one-assigned counts as controller too) may update the map view
+        || ((resource.data.activeControllerUid == request.auth.uid
+              || (resource.data.activeControllerUid == null && resource.data.teacherId == request.auth.uid))
+             && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["currentMapView", "updatedAt"]))
+      );
+      allow delete: if isSuperAdmin(request.auth.uid) || resource.data.teacherId == request.auth.uid;
+
+      match /handRaises/{uid} {
+        allow read: if isSignedIn() && (
+             get(/databases/$(database)/documents/liveClasses/$(classId)).data.teacherId == request.auth.uid
+          || getUserData(request.auth.uid).classId == classId
+        );
+        allow create, delete: if isSignedIn() && request.auth.uid == uid;
+        allow update: if false;
+      }
+
+      match /annotations/{annotationId} {
+        allow read: if isSignedIn() && (
+             get(/databases/$(database)/documents/liveClasses/$(classId)).data.teacherId == request.auth.uid
+          || getUserData(request.auth.uid).classId == classId
+        );
+        allow create: if isSignedIn()
+          && request.resource.data.authorUid == request.auth.uid
+          && (get(/databases/$(database)/documents/liveClasses/$(classId)).data.activeControllerUid == request.auth.uid
+              || (get(/databases/$(database)/documents/liveClasses/$(classId)).data.activeControllerUid == null
+                  && get(/databases/$(database)/documents/liveClasses/$(classId)).data.teacherId == request.auth.uid));
+        allow update: if false;
+        allow delete: if get(/databases/$(database)/documents/liveClasses/$(classId)).data.teacherId == request.auth.uid;
+      }
+    }
+
+    // ──────────────────────────────────────────────────────────────
     // Everything else
     // ──────────────────────────────────────────────────────────────
     // Default: every other collection/path is DENIED.

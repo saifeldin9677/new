@@ -1690,4 +1690,170 @@ window.firebaseGetStudentSubmissions = async function(studentUid) {
     }
 };
 
+// ──────────────────────────────────────────────────────────────
+// Explanation Mode: Stage 2b Live Control Handoff & Collaborative Drawing
+// ──────────────────────────────────────────────────────────────
+window.firebaseInitLiveClass = async function(classId, teacherId) {
+    if (!classId) return { ok: false, error: 'no-class-id' };
+    try {
+        const classRef = doc(db, 'liveClasses', classId);
+        const snap = await getDoc(classRef);
+        if (!snap.exists()) {
+            await setDoc(classRef, {
+                teacherId: teacherId || (auth.currentUser ? auth.currentUser.uid : null),
+                activeControllerUid: null,
+                currentMapView: null,
+                updatedAt: serverTimestamp()
+            });
+        }
+        return { ok: true, classId };
+    } catch(err) {
+        console.error('Failed to init live class:', err);
+        return { ok: false, error: err.code || 'init-failed', message: err.message || String(err) };
+    }
+};
+
+window.firebaseGrantLiveControl = async function(classId, studentUid) {
+    if (!classId || !studentUid) return { ok: false, error: 'missing-args' };
+    try {
+        const classRef = doc(db, 'liveClasses', classId);
+        await updateDoc(classRef, {
+            activeControllerUid: studentUid,
+            updatedAt: serverTimestamp()
+        });
+        return { ok: true, activeControllerUid: studentUid };
+    } catch(err) {
+        console.error('Failed to grant control:', err);
+        return { ok: false, error: err.code || 'grant-failed', message: err.message || String(err) };
+    }
+};
+
+window.firebaseRevokeLiveControl = async function(classId) {
+    if (!classId) return { ok: false, error: 'no-class-id' };
+    try {
+        const classRef = doc(db, 'liveClasses', classId);
+        await updateDoc(classRef, {
+            activeControllerUid: null,
+            updatedAt: serverTimestamp()
+        });
+        return { ok: true, activeControllerUid: null };
+    } catch(err) {
+        console.error('Failed to revoke control:', err);
+        return { ok: false, error: err.code || 'revoke-failed', message: err.message || String(err) };
+    }
+};
+
+window.firebaseRaiseHand = async function(classId, studentUid, displayName) {
+    if (!classId || !studentUid) return { ok: false, error: 'missing-args' };
+    try {
+        const handRef = doc(db, 'liveClasses', classId, 'handRaises', studentUid);
+        await setDoc(handRef, {
+            displayName: displayName || 'طالب',
+            raisedAt: serverTimestamp()
+        });
+        return { ok: true };
+    } catch(err) {
+        console.error('Failed to raise hand:', err);
+        return { ok: false, error: err.code || 'raise-failed', message: err.message || String(err) };
+    }
+};
+
+window.firebaseLowerHand = async function(classId, studentUid) {
+    if (!classId || !studentUid) return { ok: false, error: 'missing-args' };
+    try {
+        const handRef = doc(db, 'liveClasses', classId, 'handRaises', studentUid);
+        await deleteDoc(handRef);
+        return { ok: true };
+    } catch(err) {
+        console.error('Failed to lower hand:', err);
+        return { ok: false, error: err.code || 'lower-failed', message: err.message || String(err) };
+    }
+};
+
+window.firebaseUpdateLiveMapView = async function(classId, mapView) {
+    if (!classId || !mapView) return { ok: false, error: 'missing-args' };
+    try {
+        const classRef = doc(db, 'liveClasses', classId);
+        await updateDoc(classRef, {
+            currentMapView: mapView,
+            updatedAt: serverTimestamp()
+        });
+        return { ok: true };
+    } catch(err) {
+        console.error('Failed to update map view:', err);
+        return { ok: false, error: err.code || 'map-view-failed', message: err.message || String(err) };
+    }
+};
+
+window.firebaseAddLiveAnnotation = async function(classId, annotationData) {
+    if (!classId || !annotationData) return { ok: false, error: 'missing-args' };
+    try {
+        const annColl = collection(db, 'liveClasses', classId, 'annotations');
+        const docRef = await addDoc(annColl, {
+            type: annotationData.type || 'highlight',
+            authorUid: auth.currentUser ? auth.currentUser.uid : (annotationData.authorUid || null),
+            data: annotationData.data || {},
+            createdAt: serverTimestamp()
+        });
+        return { ok: true, id: docRef.id };
+    } catch(err) {
+        console.error('Failed to add live annotation:', err);
+        return { ok: false, error: err.code || 'add-annotation-failed', message: err.message || String(err) };
+    }
+};
+
+window.firebaseClearLiveAnnotations = async function(classId) {
+    if (!classId) return { ok: false, error: 'no-class-id' };
+    try {
+        const annColl = collection(db, 'liveClasses', classId, 'annotations');
+        const snap = await getDocs(annColl);
+        if (snap.empty) return { ok: true, count: 0 };
+        const batch = writeBatch(db);
+        snap.docs.forEach(d => {
+            batch.delete(d.ref);
+        });
+        await batch.commit();
+        return { ok: true, count: snap.docs.length };
+    } catch(err) {
+        console.error('Failed to clear live annotations:', err);
+        return { ok: false, error: err.code || 'clear-failed', message: err.message || String(err) };
+    }
+};
+
+window.firebaseListenLiveClass = function(classId, callback) {
+    if (!classId || typeof callback !== 'function') return () => {};
+    const classRef = doc(db, 'liveClasses', classId);
+    return onSnapshot(classRef, (snap) => {
+        if (snap.exists()) {
+            callback({ id: snap.id, ...snap.data() });
+        } else {
+            callback(null);
+        }
+    }, (err) => {
+        console.warn('liveClass listener error:', err);
+    });
+};
+
+window.firebaseListenLiveHandRaises = function(classId, callback) {
+    if (!classId || typeof callback !== 'function') return () => {};
+    const handColl = collection(db, 'liveClasses', classId, 'handRaises');
+    return onSnapshot(handColl, (snap) => {
+        const list = snap.docs.map(d => ({ uid: d.id, ...d.data() }));
+        callback(list);
+    }, (err) => {
+        console.warn('liveHandRaises listener error:', err);
+    });
+};
+
+window.firebaseListenLiveAnnotations = function(classId, callback) {
+    if (!classId || typeof callback !== 'function') return () => {};
+    const annColl = collection(db, 'liveClasses', classId, 'annotations');
+    return onSnapshot(annColl, (snap) => {
+        const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        callback(list);
+    }, (err) => {
+        console.warn('liveAnnotations listener error:', err);
+    });
+};
+
 console.log('Firebase initialized for project:', firebaseConfig.projectId);

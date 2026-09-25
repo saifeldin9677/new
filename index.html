@@ -342,6 +342,24 @@
                     </button>
                 </div>
 
+                <!-- Teacher Review Queue (Visible for Teachers) -->
+                <div class="teacher-review-queue-card" id="teacherReviewQueueCard" style="display:none;background:rgba(30,41,59,0.7);border:1px solid #334155;border-radius:10px;padding:12px;margin-bottom:14px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                        <h4 style="margin:0;font-size:0.95rem;color:#38bdf8;">📋 طابور مراجعة الأبحاث (<span id="teacherReviewPendingCount">0</span>)</h4>
+                        <button type="button" class="btn btn-sm btn-secondary" id="teacherRefreshReviewBtn" style="font-size:0.75rem;padding:2px 8px;">تحديث 🔄</button>
+                    </div>
+                    <div id="teacherReviewQueueList" style="display:flex;flex-direction:column;gap:10px;max-height:360px;overflow-y:auto;"></div>
+                </div>
+
+                <!-- Student Submissions & New Research Button (Visible for Students) -->
+                <div class="student-my-submissions-card" id="studentMySubmissionsCard" style="display:none;background:rgba(30,41,59,0.7);border:1px solid #334155;border-radius:10px;padding:12px;margin-bottom:14px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
+                        <h4 style="margin:0;font-size:0.95rem;color:#38bdf8;">📁 أبحاثي وتغذية المعلم</h4>
+                        <button type="button" class="quiz-submit-btn" id="studentNewSubmissionBtn" style="font-size:0.8rem;padding:5px 12px;">+ تقديم بحث جديد 📝</button>
+                    </div>
+                    <div id="studentMySubmissionsList" style="display:flex;flex-direction:column;gap:10px;max-height:280px;overflow-y:auto;"></div>
+                </div>
+
                 <div class="annotation-field-group">
                     <label for="researchSearchInput" class="annotation-field-label">البحث في بحوث الطلاب:</label>
                     <input type="text" id="researchSearchInput" class="annotation-text-input" placeholder="ابحث باسم الطالب أو المدينة أو الموضوع..." aria-label="ابحث في بحوث الطلاب">
@@ -840,6 +858,58 @@
                         <p class="citation-text" id="researchCitationText"></p>
                         <a href="#" target="_blank" rel="noopener" class="academic-source-link" id="researchSourceLink">استعراض المصدر الأكاديمي ↗</a>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Research Submission & Revision Modal -->
+        <div class="layers-modal" id="studentResearchSubmitModal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="researchSubmitModalTitle">
+            <div class="layers-modal-backdrop" id="studentResearchSubmitModalBackdrop"></div>
+            <div class="layers-modal-content" style="max-width:540px;width:95vw;max-height:90vh;overflow-y:auto;">
+                <div class="layers-modal-header">
+                    <h3 id="researchSubmitModalTitle" style="margin:0;font-size:1.15rem;color:#38bdf8;">تقديم بحث جغرافي/تاريخي جديد</h3>
+                    <button class="layers-modal-close" id="studentResearchSubmitModalClose" aria-label="إغلاق">&times;</button>
+                </div>
+                <div class="layers-modal-body" style="padding:16px;">
+                    <form id="studentResearchForm" style="display:flex;flex-direction:column;gap:12px;">
+                        <div class="worksheet-form-group">
+                            <label for="researchInputTitle" style="font-size:0.85rem;color:#cbd5e1;font-weight:600;">عنوان البحث:</label>
+                            <input type="text" id="researchInputTitle" class="quiz-input" placeholder="مثال: أثر سد مأرب على شبكات التجارة القديمة" required>
+                        </div>
+                        <div class="worksheet-form-group" style="position:relative;">
+                            <label for="researchInputLocation" style="font-size:0.85rem;color:#cbd5e1;font-weight:600;">اسم الموقع أو المعلم الجغرافي:</label>
+                            <input type="text" id="researchInputLocation" class="quiz-input" placeholder="ابحث عن دولة، عاصمة، موقع تاريخي أو اكتب الاسم..." required autocomplete="off">
+                            <ul id="researchLocationSuggestions" class="suggestions-list" style="display:none;position:absolute;width:100%;z-index:100;max-height:160px;overflow-y:auto;background:#0f172a;border:1px solid #334155;border-radius:6px;list-style:none;padding:4px 0;margin:4px 0 0 0;"></ul>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                            <div class="worksheet-form-group">
+                                <label for="researchInputLng" style="font-size:0.85rem;color:#cbd5e1;font-weight:600;">خط الطول (Longitude):</label>
+                                <input type="number" step="any" id="researchInputLng" class="quiz-input" placeholder="45.34" required style="direction:ltr;text-align:right;">
+                            </div>
+                            <div class="worksheet-form-group">
+                                <label for="researchInputLat" style="font-size:0.85rem;color:#cbd5e1;font-weight:600;">دائرة العرض (Latitude):</label>
+                                <input type="number" step="any" id="researchInputLat" class="quiz-input" placeholder="15.42" required style="direction:ltr;text-align:right;">
+                            </div>
+                        </div>
+                        <div class="worksheet-form-group">
+                            <label for="researchInputSummary" style="font-size:0.85rem;color:#cbd5e1;font-weight:600;">ملخص البحث والأهمية التاريخية/الجغرافية:</label>
+                            <textarea id="researchInputSummary" class="quiz-input" rows="4" placeholder="اكتب ملخصاً توضيحياً للأثر الجغرافي والتاريخي لهذا الموقع..." required style="resize:vertical;font-family:inherit;"></textarea>
+                        </div>
+                        <div class="worksheet-form-group">
+                            <label for="researchInputCitation" style="font-size:0.85rem;color:#cbd5e1;font-weight:600;">التوثيق والمصدر الأكاديمي:</label>
+                            <input type="text" id="researchInputCitation" class="quiz-input" placeholder="اسم المرجع، المؤلف، سنة النشر، رقم الصفحة...">
+                        </div>
+                        <div class="worksheet-form-group">
+                            <label for="researchInputUrl" style="font-size:0.85rem;color:#cbd5e1;font-weight:600;">رابط المصدر الأكاديمي (URL):</label>
+                            <input type="url" id="researchInputUrl" class="quiz-input" placeholder="https://example.edu/source" style="direction:ltr;text-align:right;">
+                        </div>
+                        <input type="hidden" id="researchSubmitEditingId" value="">
+                        <div id="researchSubmitError" style="display:none;color:#ef4444;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);padding:8px 12px;border-radius:6px;font-size:0.85rem;"></div>
+                        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px;">
+                            <button type="button" class="btn btn-secondary" id="researchSubmitCancelBtn" style="padding:6px 14px;">إلغاء</button>
+                            <button type="submit" class="quiz-submit-btn" id="researchSubmitSaveBtn" style="padding:8px 18px;">تقديم البحث للمراجعة 🚀</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

@@ -398,6 +398,37 @@ service cloud.firestore {
     }
 
     // ──────────────────────────────────────────────────────────────
+    // Explanation Mode: Research Submissions (Stage 2a)
+    // ──────────────────────────────────────────────────────────────
+    match /researchSubmissions/{submissionId} {
+      allow read: if isSignedIn() && (
+           resource.data.studentUid == request.auth.uid
+        || resource.data.teacherId == request.auth.uid
+        || (resource.data.status == "approved" && getUserData(request.auth.uid).teacherId == resource.data.teacherId)
+      );
+
+      allow create: if isSignedIn()
+        && getUserData(request.auth.uid).role == "student"
+        && request.resource.data.studentUid == request.auth.uid
+        && request.resource.data.teacherId == getUserData(request.auth.uid).teacherId
+        && request.resource.data.status == "submitted";
+
+      allow update: if isSignedIn() && (
+           // Student may revise and resubmit their own entry, but only while it needs revision — never while it's already approved
+           (resource.data.studentUid == request.auth.uid
+             && resource.data.status == "needs_revision"
+             && request.resource.data.status == "submitted"
+             && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["title","summary","locationName","coords","citation","sourceUrl","status","updatedAt"]))
+           // Teacher may approve or request revision, but not edit the student's actual content
+        || (resource.data.teacherId == request.auth.uid
+             && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["status","teacherFeedback","updatedAt"])
+             && request.resource.data.status in ["needs_revision", "approved"])
+      );
+
+      allow delete: if isSignedIn() && (isSuperAdmin(request.auth.uid) || resource.data.teacherId == request.auth.uid);
+    }
+
+    // ──────────────────────────────────────────────────────────────
     // Everything else
     // ──────────────────────────────────────────────────────────────
     // Default: every other collection/path is DENIED.

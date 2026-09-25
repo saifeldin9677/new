@@ -14180,80 +14180,524 @@
         var isHandRaised = false;
         var showResearchPins = true;
 
-        var studentResearchData = [
-            {
-                id: "res-1",
-                studentName: "سارة المحمود",
-                date: "2026-09-18",
-                dateLabel: "18 سبتمبر 2026",
-                title: "أثر سد مأرب التاريخي على شبكات التجارة القديمة",
-                locationName: "مأرب، اليمن",
-                coords: [45.34, 15.42],
-                summary: "دراسة جغرافية توضح كيف ساهم سد مأرب القديم في استقرار الزراعة الفيضية وتحويل المنطقة إلى محطة تموين رئيسية لقوافل اللبان والبخور على طول الساحل الجنوبي والغربي لشبه الجزيرة العربية.",
-                citation: "الموسوعة الأثرية لتاريخ جنوب الجزيرة العربية، جامعة أكسفورد، 2022، ص 142.",
-                sourceUrl: "https://example.edu/marib-dam"
-            },
-            {
-                id: "res-2",
-                studentName: "أحمد السعيد",
-                date: "2026-09-19",
-                dateLabel: "19 سبتمبر 2026",
-                title: "حضارة دلمون: ملتقى التجارة البحرية بين الرافدين والسند",
-                locationName: "قلعة البحرين، الخليج العربي",
-                coords: [50.52, 26.23],
-                summary: "تحليل كارتوغرافي لموقع دلمون كحلقة وصل بحرية كبرى لتجارة النحاس والأحجار الكريمة والأخشاب بين بلاد سومر في العراق وحضارة وادي السند في باكستان والهند.",
-                citation: "دراسات في الآثار الشرقية وتجارة الخليج القديم، المعهد الملكي للآثار، 2021، ص 89.",
-                sourceUrl: "https://example.edu/dilmun-trade"
-            },
-            {
-                id: "res-3",
-                studentName: "عمر بن طلال",
-                date: "2026-09-15",
-                dateLabel: "15 سبتمبر 2026",
-                title: "طريق الحرير ومحطة سمرقند: واحات التبادل الثقافي",
-                locationName: "سمرقند، أوزبكستان",
-                coords: [66.97, 39.65],
-                summary: "بحث ميداني حول عبقرية موقع سمرقند عند تقاطع سلاسل جبال بامير وتيان شان، وكيف استفادت من التضاريس المحيطة لحماية القوافل وتغذية واحاتها بمياه ذوبان الثلوج الجبلية.",
-                citation: "أطلس آسيا الوسطى وطرق القوافل، الأكاديمية الدولية للدراسات الشرقية، 2023، ص 210.",
-                sourceUrl: "https://example.edu/samarkand-silk-road"
-            },
-            {
-                id: "res-4",
-                studentName: "فاطمة الزهراء",
-                date: "2026-09-12",
-                dateLabel: "12 سبتمبر 2026",
-                title: "منارات وقنوات الإسكندرية: الهندسة المائية والملاحة المتوسطية",
-                locationName: "الإسكندرية، مصر",
-                coords: [29.91, 31.20],
-                summary: "استعراض للتكامل الجغرافي بين دلتا النيل والبحر الأبيض المتوسط، ودور ربط بحيرة مريوط بالنيل في تأمين الملاحة الداخلية ونقل القمح المصري إلى موانئ روما وأثينا.",
-                citation: "مجلة التاريخ البحري والحضارات المتوسطية، منشورات جامعة السوربون، 2020، ص 75.",
-                sourceUrl: "https://example.edu/alexandria-maritime"
-            },
-            {
-                id: "res-5",
-                studentName: "خالد بن يوسف",
-                date: "2026-09-08",
-                dateLabel: "8 سبتمبر 2026",
-                title: "شبكة قنوات الري في بغداد خلال العصر العباسي",
-                locationName: "بغداد، العراق",
-                coords: [44.36, 33.31],
-                summary: "بحث يحلل توزيع قنوات نهر عيسى ونهر صرصر المتفرعة من الفرات إلى دجلة، وكيف سمح هذا الانحدار الطبوغرافي الطبيعي بتوليد أكبر واحة زراعية حضرية في القرون الوسطى.",
-                citation: "جغرافية الحضارة الإسلامية، دار الآثار والتراث، بيروت، 2022، ص 315.",
-                sourceUrl: "https://example.edu/baghdad-canals"
-            },
-            {
-                id: "res-6",
-                studentName: "مريم القحطاني",
-                date: "2026-08-28",
-                dateLabel: "28 أغسطس 2026",
-                title: "فيضانات وادي السند وعمارة موهينجو دارو الهيدروليكية",
-                locationName: "موهينجو دارو، باكستان",
-                coords: [68.13, 27.32],
-                summary: "دراسة طبوغرافية لنظام تصريف السيول وبناء الأرصفة المرتفعة لمواجهة فيضانات نهر السند الموسمية قبل أكثر من 4000 عام في شبه القارة الهندية.",
-                citation: "علم الآثار المائي والحضارات النهرية القديمة، مطبعة جامعة كامبريدج، 2019، ص 164.",
-                sourceUrl: "https://example.edu/indus-hydraulics"
+        var activeApprovedResearch = [];
+        var teacherReviewQueue = [];
+        var studentMySubmissions = [];
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function getActiveUser() {
+            if (window._mockCurrentUser) return window._mockCurrentUser;
+            if (window.accountSystem && typeof window.accountSystem.getState === 'function') {
+                var st = window.accountSystem.getState();
+                if (st && st.currentUser) return st.currentUser;
             }
-        ];
+            if (typeof window.firebaseAuth !== 'undefined' && window.firebaseAuth && window.firebaseAuth.currentUser) {
+                return { uid: window.firebaseAuth.currentUser.uid };
+            }
+            return null;
+        }
+
+        async function refreshResearchData() {
+            var user = getActiveUser();
+            if (!user) {
+                activeApprovedResearch = [];
+                teacherReviewQueue = [];
+                studentMySubmissions = [];
+                updateResearchPanels();
+                renderResearchPins();
+                return;
+            }
+
+            var role = user.role;
+            var teacherId = (role === 'teacher') ? user.uid : (user.teacherId || null);
+
+            // 1. If teacherId is known, load class approved research
+            if (teacherId && typeof window.firebaseGetClassApprovedResearch === 'function') {
+                try {
+                    var appRes = await window.firebaseGetClassApprovedResearch(teacherId);
+                    if (appRes && appRes.ok) {
+                        activeApprovedResearch = appRes.submissions || [];
+                    } else {
+                        activeApprovedResearch = [];
+                    }
+                } catch(e) {
+                    console.warn('Failed to load class approved research:', e);
+                    activeApprovedResearch = [];
+                }
+            } else {
+                activeApprovedResearch = [];
+            }
+
+            // 2. If student, load student's own submissions
+            if (role === 'student' && typeof window.firebaseGetStudentSubmissions === 'function') {
+                try {
+                    var myRes = await window.firebaseGetStudentSubmissions(user.uid);
+                    if (myRes && myRes.ok) {
+                        studentMySubmissions = myRes.submissions || [];
+                    } else {
+                        studentMySubmissions = [];
+                    }
+                } catch(e) {
+                    console.warn('Failed to load student submissions:', e);
+                    studentMySubmissions = [];
+                }
+            } else {
+                studentMySubmissions = [];
+            }
+
+            // 3. If teacher, load teacher review queue
+            if (role === 'teacher' && typeof window.firebaseGetTeacherReviewQueue === 'function') {
+                try {
+                    var qRes = await window.firebaseGetTeacherReviewQueue(user.uid);
+                    if (qRes && qRes.ok) {
+                        teacherReviewQueue = qRes.submissions || [];
+                    } else {
+                        teacherReviewQueue = [];
+                    }
+                } catch(e) {
+                    console.warn('Failed to load teacher review queue:', e);
+                    teacherReviewQueue = [];
+                }
+            } else {
+                teacherReviewQueue = [];
+            }
+
+            updateResearchPanels();
+            renderResearchPins();
+        }
+
+        function updateResearchPanels() {
+            var user = getActiveUser();
+            var role = user ? user.role : null;
+
+            var tCard = document.getElementById("teacherReviewQueueCard");
+            var sCard = document.getElementById("studentMySubmissionsCard");
+
+            if (role === 'teacher') {
+                if (tCard) tCard.style.display = "block";
+                if (sCard) sCard.style.display = "none";
+                renderTeacherReviewQueue();
+            } else if (role === 'student') {
+                if (tCard) tCard.style.display = "none";
+                if (sCard) sCard.style.display = "block";
+                renderStudentMySubmissions();
+            } else {
+                if (tCard) tCard.style.display = "none";
+                if (sCard) sCard.style.display = "none";
+            }
+        }
+
+        function renderTeacherReviewQueue() {
+            var listEl = document.getElementById("teacherReviewQueueList");
+            var countEl = document.getElementById("teacherReviewPendingCount");
+            if (!listEl) return;
+
+            var pending = teacherReviewQueue.filter(function(item) {
+                return item.status === 'submitted' || item.status === 'needs_revision';
+            });
+
+            if (countEl) countEl.textContent = String(pending.length);
+            listEl.innerHTML = "";
+
+            if (pending.length === 0) {
+                listEl.innerHTML = '<div style="color:#94a3b8;font-size:0.85rem;text-align:center;padding:12px;">لا توجد بحوث جديدة قيد الانتظار حالياً ✓</div>';
+                return;
+            }
+
+            pending.forEach(function(item) {
+                var card = document.createElement("div");
+                card.className = "teacher-queue-item";
+                card.style.cssText = "background:rgba(15,23,42,0.8);border:1px solid #334155;border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px;";
+
+                var isNeedsRev = item.status === 'needs_revision';
+                var statusBadge = isNeedsRev ? '<span style="background:rgba(245,158,11,0.2);color:#fbbf24;padding:2px 8px;border-radius:4px;font-size:0.75rem;">مطلوب تعديل</span>' :
+                                               '<span style="background:rgba(56,189,248,0.2);color:#38bdf8;padding:2px 8px;border-radius:4px;font-size:0.75rem;">جديد بانتظار المراجعة</span>';
+
+                var safeTitle = escapeHtml(item.title || "بدون عنوان");
+                var safeAuthor = escapeHtml(item.studentDisplayName || "طالب");
+                var safeLoc = escapeHtml(item.locationName || "");
+                var safeSummary = escapeHtml(item.summary || "");
+                var safeCitation = escapeHtml(item.citation || "");
+
+                card.innerHTML = `
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+                        <div>
+                            <strong style="color:#f8fafc;font-size:0.95rem;">${safeTitle}</strong>
+                            <div style="font-size:0.8rem;color:#94a3b8;margin-top:2px;">
+                                <span>🎓 ${safeAuthor}</span> • <span>📍 ${safeLoc}</span>
+                            </div>
+                        </div>
+                        <div>${statusBadge}</div>
+                    </div>
+                    <p style="margin:0;font-size:0.85rem;color:#cbd5e1;line-height:1.4;">${safeSummary}</p>
+                    ${safeCitation ? `<div style="font-size:0.78rem;color:#94a3b8;">📚 <em>${safeCitation}</em></div>` : ''}
+                    ${item.sourceUrl ? `<div><a href="${escapeHtml(item.sourceUrl)}" target="_blank" rel="noopener" style="font-size:0.78rem;color:#38bdf8;">المصدر الأكاديمي ↗</a></div>` : ''}
+                    
+                    <div style="margin-top:4px;">
+                        <label style="font-size:0.75rem;color:#94a3b8;display:block;margin-bottom:4px;">ملاحظات المعلم وتوجيهات التعديل (تظهر للطالب):</label>
+                        <textarea class="quiz-input queue-feedback-input" rows="2" placeholder="اكتب توجيهاتك للطالب هنا في حال طلب التعديل..." style="width:100%;font-size:0.8rem;resize:vertical;">${escapeHtml(item.teacherFeedback || '')}</textarea>
+                    </div>
+
+                    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px;">
+                        <button type="button" class="btn btn-sm btn-approve-research" style="background:#059669;color:#fff;font-size:0.8rem;padding:4px 10px;border-radius:6px;font-weight:600;">
+                            اعتماد للنشر ✓
+                        </button>
+                        <button type="button" class="btn btn-sm btn-revise-research" style="background:#d97706;color:#fff;font-size:0.8rem;padding:4px 10px;border-radius:6px;font-weight:600;">
+                            طلب تعديل ✍️
+                        </button>
+                    </div>
+                `;
+
+                var approveBtn = card.querySelector(".btn-approve-research");
+                var reviseBtn = card.querySelector(".btn-revise-research");
+                var feedbackArea = card.querySelector(".queue-feedback-input");
+
+                if (approveBtn) {
+                    approveBtn.onclick = async function() {
+                        approveBtn.disabled = true;
+                        approveBtn.textContent = "جارٍ الاعتماد...";
+                        var res = await window.firebaseReviewResearch(item.id, 'approved', null);
+                        if (res && res.ok) {
+                            if (typeof Go === "function") Go("تم اعتماد البحث ونشره للدفعة بنجاح ✓");
+                            await refreshResearchData();
+                        } else {
+                            approveBtn.disabled = false;
+                            approveBtn.textContent = "اعتماد للنشر ✓";
+                            alert((res && res.message) ? res.message : "فشل اعتماد البحث");
+                        }
+                    };
+                }
+
+                if (reviseBtn) {
+                    reviseBtn.onclick = async function() {
+                        var fb = (feedbackArea ? feedbackArea.value : "").trim();
+                        if (!fb) {
+                            alert("يرجى كتابة ملاحظات وتوجيهات للطالب لتوضيح المطلوب تعديله.");
+                            if (feedbackArea) feedbackArea.focus();
+                            return;
+                        }
+                        reviseBtn.disabled = true;
+                        reviseBtn.textContent = "جارٍ الإرسال...";
+                        var res = await window.firebaseReviewResearch(item.id, 'needs_revision', fb);
+                        if (res && res.ok) {
+                            if (typeof Go === "function") Go("تمت إعادة البحث للطالب مع الملاحظات للتعديل ✍️");
+                            await refreshResearchData();
+                        } else {
+                            reviseBtn.disabled = false;
+                            reviseBtn.textContent = "طلب تعديل ✍️";
+                            alert((res && res.message) ? res.message : "فشل إرسال طلب التعديل");
+                        }
+                    };
+                }
+
+                listEl.appendChild(card);
+            });
+        }
+
+        function renderStudentMySubmissions() {
+            var listEl = document.getElementById("studentMySubmissionsList");
+            if (!listEl) return;
+            listEl.innerHTML = "";
+
+            if (studentMySubmissions.length === 0) {
+                listEl.innerHTML = '<div style="color:#94a3b8;font-size:0.85rem;text-align:center;padding:12px;">لم تقدم أي بحوث بعد. انقر على الزر أعلاه لإضافة أول بحث!</div>';
+                return;
+            }
+
+            studentMySubmissions.forEach(function(item) {
+                var card = document.createElement("div");
+                card.className = "student-submission-item";
+                card.style.cssText = "background:rgba(15,23,42,0.8);border:1px solid #334155;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px;";
+
+                var isNeedsRev = item.status === 'needs_revision';
+                var isApproved = item.status === 'approved';
+                var statusBadge = isApproved ? '<span style="background:rgba(16,185,129,0.2);color:#34d399;padding:2px 8px;border-radius:4px;font-size:0.75rem;">معتمد ومنشور ✅</span>' :
+                                  (isNeedsRev ? '<span style="background:rgba(239,68,68,0.2);color:#f87171;padding:2px 8px;border-radius:4px;font-size:0.75rem;">مطلوب تعديله ⚠️</span>' :
+                                                '<span style="background:rgba(56,189,248,0.2);color:#38bdf8;padding:2px 8px;border-radius:4px;font-size:0.75rem;">قيد مراجعة المعلم ⏳</span>');
+
+                var safeTitle = escapeHtml(item.title || "بدون عنوان");
+                var safeLoc = escapeHtml(item.locationName || "");
+
+                var html = `
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <strong style="color:#f8fafc;font-size:0.9rem;">${safeTitle}</strong>
+                        <div>${statusBadge}</div>
+                    </div>
+                    <div style="font-size:0.8rem;color:#94a3b8;">📍 ${safeLoc}</div>
+                `;
+
+                if (isNeedsRev) {
+                    html += `
+                        <div style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);border-radius:6px;padding:8px 10px;margin-top:4px;">
+                            <div style="font-size:0.78rem;font-weight:700;color:#f87171;margin-bottom:2px;">⚠️ ملاحظات المعلم:</div>
+                            <div style="font-size:0.82rem;color:#fca5a5;">${escapeHtml(item.teacherFeedback || 'يرجى مراجعة البحث')}</div>
+                            <button type="button" class="btn btn-sm btn-student-edit-revision" style="margin-top:8px;background:#d97706;color:#fff;font-size:0.8rem;padding:4px 10px;border-radius:6px;font-weight:600;">
+                                ✏️ تعديل وإعادة التقديم
+                            </button>
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = html;
+
+                if (isNeedsRev) {
+                    var editBtn = card.querySelector(".btn-student-edit-revision");
+                    if (editBtn) {
+                        editBtn.onclick = function() {
+                            openResearchSubmitModal(item);
+                        };
+                    }
+                }
+
+                listEl.appendChild(card);
+            });
+        }
+
+        function openResearchSubmitModal(editItem) {
+            var modal = document.getElementById("studentResearchSubmitModal");
+            var titleEl = document.getElementById("researchSubmitModalTitle");
+            var idInput = document.getElementById("researchSubmitEditingId");
+            var errEl = document.getElementById("researchSubmitError");
+
+            if (errEl) errEl.style.display = "none";
+
+            var tInput = document.getElementById("researchInputTitle");
+            var lInput = document.getElementById("researchInputLocation");
+            var lngInput = document.getElementById("researchInputLng");
+            var latInput = document.getElementById("researchInputLat");
+            var sInput = document.getElementById("researchInputSummary");
+            var cInput = document.getElementById("researchInputCitation");
+            var uInput = document.getElementById("researchInputUrl");
+
+            if (editItem) {
+                if (titleEl) titleEl.textContent = "تعديل وإعادة تقديم البحث ✍️";
+                if (idInput) idInput.value = editItem.id;
+                if (tInput) tInput.value = editItem.title || "";
+                if (lInput) lInput.value = editItem.locationName || "";
+                if (lngInput) lngInput.value = (editItem.coords && editItem.coords[0] != null) ? editItem.coords[0] : "";
+                if (latInput) latInput.value = (editItem.coords && editItem.coords[1] != null) ? editItem.coords[1] : "";
+                if (sInput) sInput.value = editItem.summary || "";
+                if (cInput) cInput.value = editItem.citation || "";
+                if (uInput) uInput.value = editItem.sourceUrl || "";
+            } else {
+                if (titleEl) titleEl.textContent = "تقديم بحث جغرافي/تاريخي جديد 📝";
+                if (idInput) idInput.value = "";
+                if (tInput) tInput.value = "";
+                if (lInput) lInput.value = "";
+                if (lngInput) lngInput.value = "";
+                if (latInput) latInput.value = "";
+                if (sInput) sInput.value = "";
+                if (cInput) cInput.value = "";
+                if (uInput) uInput.value = "";
+            }
+
+            if (modal) modal.style.display = "flex";
+            if (tInput) tInput.focus();
+        }
+
+        function closeResearchSubmitModal() {
+            var modal = document.getElementById("studentResearchSubmitModal");
+            if (modal) modal.style.display = "none";
+        }
+
+        function setupLocationAutocomplete() {
+            var lInput = document.getElementById("researchInputLocation");
+            var sugList = document.getElementById("researchLocationSuggestions");
+            var lngInput = document.getElementById("researchInputLng");
+            var latInput = document.getElementById("researchInputLat");
+            if (!lInput || !sugList) return;
+
+            var placesDb = [
+                { name: "مكة المكرمة", coords: [39.82, 21.42] },
+                { name: "المدينة المنورة", coords: [39.61, 24.47] },
+                { name: "واحة تيماء", coords: [38.53, 27.63] },
+                { name: "مدائن صالح (العلا)", coords: [37.95, 26.80] },
+                { name: "سد مأرب", coords: [45.34, 15.42] },
+                { name: "صنعاء", coords: [44.20, 15.35] },
+                { name: "الرياض", coords: [46.67, 24.71] },
+                { name: "جدة", coords: [39.19, 21.54] },
+                { name: "الدرعية", coords: [46.57, 24.73] },
+                { name: "الأحساء (هجر)", coords: [49.58, 25.38] },
+                { name: "نجران (الأخدود)", coords: [44.13, 17.49] },
+                { name: "القدس الشريف", coords: [35.21, 31.76] },
+                { name: "دمشق", coords: [36.29, 33.51] },
+                { name: "بغداد", coords: [44.36, 33.31] },
+                { name: "القاهرة", coords: [31.23, 30.04] },
+                { name: "الإسكندرية", coords: [29.91, 31.20] },
+                { name: "البصرة", coords: [47.78, 30.50] },
+                { name: "الكوفة", coords: [44.40, 32.03] },
+                { name: "فاس", coords: [-4.99, 34.03] },
+                { name: "مراكش", coords: [-7.98, 31.62] },
+                { name: "القيروان", coords: [10.10, 35.67] },
+                { name: "قرطبة", coords: [-4.77, 37.88] },
+                { name: "غرناطة", coords: [-3.59, 37.17] },
+                { name: "إشبيلية", coords: [-5.98, 37.38] },
+                { name: "سمرقند", coords: [66.97, 39.65] },
+                { name: "بخارى", coords: [64.42, 39.77] },
+                { name: "نيسابور", coords: [58.79, 36.21] },
+                { name: "إصفهان", coords: [51.66, 32.65] },
+                { name: "مسقط", coords: [58.40, 23.58] },
+                { name: "بيروت", coords: [35.50, 33.89] },
+                { name: "طرابلس", coords: [13.19, 32.88] },
+                { name: "تونس", coords: [10.18, 36.80] },
+                { name: "الجزائر", coords: [3.05, 36.75] },
+                { name: "عمان", coords: [35.92, 31.95] },
+                { name: "الكويت", coords: [47.97, 29.37] },
+                { name: "المنامة", coords: [50.58, 26.22] },
+                { name: "الدوحة", coords: [51.53, 25.28] },
+                { name: "أبوظبي", coords: [54.37, 24.45] },
+                { name: "إسطنبول", coords: [28.97, 41.00] }
+            ];
+
+            lInput.addEventListener("input", function() {
+                var val = lInput.value.trim().toLowerCase();
+                sugList.innerHTML = "";
+                if (!val || val.length < 2) {
+                    sugList.style.display = "none";
+                    return;
+                }
+
+                var matches = placesDb.filter(function(p) {
+                    return p.name.toLowerCase().indexOf(val) !== -1;
+                }).slice(0, 6);
+
+                if (matches.length === 0) {
+                    sugList.style.display = "none";
+                    return;
+                }
+
+                matches.forEach(function(m) {
+                    var li = document.createElement("li");
+                    li.style.cssText = "padding:6px 12px;cursor:pointer;color:#e2e8f0;font-size:0.85rem;border-bottom:1px solid #1e293b;";
+                    li.textContent = "📍 " + m.name;
+                    li.onmouseover = function() { li.style.background = "#1e293b"; };
+                    li.onmouseout = function() { li.style.background = "none"; };
+                    li.onclick = function() {
+                        lInput.value = m.name;
+                        sugList.style.display = "none";
+                        if (lngInput) lngInput.value = m.coords[0].toFixed(2);
+                        if (latInput) latInput.value = m.coords[1].toFixed(2);
+                    };
+                    sugList.appendChild(li);
+                });
+                sugList.style.display = "block";
+            });
+
+            document.addEventListener("click", function(e) {
+                if (e.target !== lInput && !sugList.contains(e.target)) {
+                    sugList.style.display = "none";
+                }
+            });
+        }
+
+        function setupResearchFormSubmit() {
+            var form = document.getElementById("studentResearchForm");
+            var errEl = document.getElementById("researchSubmitError");
+            var saveBtn = document.getElementById("researchSubmitSaveBtn");
+            var cancelBtn = document.getElementById("researchSubmitCancelBtn");
+            var closeBtn = document.getElementById("studentResearchSubmitModalClose");
+            var backdrop = document.getElementById("studentResearchSubmitModalBackdrop");
+            var newSubBtn = document.getElementById("studentNewSubmissionBtn");
+            var refreshReviewBtn = document.getElementById("teacherRefreshReviewBtn");
+
+            if (cancelBtn) cancelBtn.onclick = closeResearchSubmitModal;
+            if (closeBtn) closeBtn.onclick = closeResearchSubmitModal;
+            if (backdrop) backdrop.onclick = closeResearchSubmitModal;
+            if (newSubBtn) newSubBtn.onclick = function() { openResearchSubmitModal(null); };
+            if (refreshReviewBtn) refreshReviewBtn.onclick = function() { refreshResearchData(); };
+
+            var isSubmitting = false;
+            var handleFormSubmit = async function(e) {
+                if (e && e.preventDefault) e.preventDefault();
+                if (isSubmitting) return;
+                isSubmitting = true;
+                if (errEl) errEl.style.display = "none";
+                if (saveBtn) saveBtn.disabled = true;
+
+                var idInput = document.getElementById("researchSubmitEditingId");
+                var tInput = document.getElementById("researchInputTitle");
+                var lInput = document.getElementById("researchInputLocation");
+                var lngEl = document.getElementById("researchInputLng");
+                var latEl = document.getElementById("researchInputLat");
+                var sInput = document.getElementById("researchInputSummary");
+                var cInput = document.getElementById("researchInputCitation");
+                var uInput = document.getElementById("researchInputUrl");
+
+                var editingId = (idInput && idInput.value ? idInput.value : "").trim();
+                var title = (tInput && tInput.value ? tInput.value : "").trim();
+                var locationName = (lInput && lInput.value ? lInput.value : "").trim();
+                var lng = lngEl ? parseFloat(lngEl.value) : NaN;
+                var lat = latEl ? parseFloat(latEl.value) : NaN;
+                var summary = (sInput && sInput.value ? sInput.value : "").trim();
+                var citation = (cInput && cInput.value ? cInput.value : "").trim();
+                var sourceUrl = (uInput && uInput.value ? uInput.value : "").trim();
+
+                if (!title || !locationName || isNaN(lng) || isNaN(lat) || !summary) {
+                    if (errEl) {
+                        errEl.textContent = "يرجى تعبئة جميع الحقول المطلوبة والتأكد من صحة الإحداثيات.";
+                        errEl.style.display = "block";
+                    }
+                    isSubmitting = false;
+                    if (saveBtn) saveBtn.disabled = false;
+                    return;
+                }
+
+                var payload = {
+                    title: title,
+                    locationName: locationName,
+                    coords: [lng, lat],
+                    summary: summary,
+                    citation: citation,
+                    sourceUrl: sourceUrl
+                };
+
+                try {
+                    var res;
+                    if (editingId) {
+                        res = await window.firebaseReviseResearch(editingId, payload);
+                    } else {
+                        res = await window.firebaseSubmitResearch(payload);
+                    }
+
+                    if (res && res.ok) {
+                        closeResearchSubmitModal();
+                        if (typeof Go === "function") Go(editingId ? "تمت إعادة تقديم البحث بنجاح ✓" : "تم تقديم البحث للمراجعة بنجاح 🚀");
+                        await refreshResearchData();
+                    } else {
+                        if (errEl) {
+                            errEl.textContent = (res && res.message) ? res.message : "فشل تقديم البحث.";
+                            errEl.style.display = "block";
+                        }
+                    }
+                } catch(err) {
+                    if (errEl) {
+                        errEl.textContent = "خطأ: " + (err.message || String(err));
+                        errEl.style.display = "block";
+                    }
+                } finally {
+                    isSubmitting = false;
+                    if (saveBtn) saveBtn.disabled = false;
+                }
+            };
+
+            if (form) {
+                form.addEventListener("submit", handleFormSubmit);
+                form.onsubmit = handleFormSubmit;
+            }
+            if (saveBtn) {
+                saveBtn.addEventListener("click", function(e) {
+                    handleFormSubmit(e);
+                });
+            }
+        }
 
         function updateControllerUI() {
             if (activeController.type === "teacher") {
@@ -14354,12 +14798,25 @@
 
         function openResearchModal(item) {
             if (!studentResearchModal || !item) return;
-            if (studentResearchModalTitle) studentResearchModalTitle.textContent = item.title;
-            if (researchAuthorName) researchAuthorName.textContent = item.studentName;
-            if (researchDateText) researchDateText.textContent = item.dateLabel;
-            if (researchLocationText) researchLocationText.textContent = item.locationName;
-            if (researchSummaryContent) researchSummaryContent.textContent = item.summary;
-            if (researchCitationText) researchCitationText.textContent = item.citation;
+            var authorName = item.studentDisplayName || item.studentName || "طالب";
+            var dateStr = item.dateLabel || "";
+            if (!dateStr && item.createdAt) {
+                var d = null;
+                if (typeof item.createdAt.toDate === "function") d = item.createdAt.toDate();
+                else if (typeof item.createdAt === "number") d = new Date(item.createdAt);
+                else d = new Date(item.createdAt);
+                if (d && !isNaN(d.getTime())) {
+                    dateStr = d.toLocaleDateString("ar-SA", { year: "numeric", month: "short", day: "numeric" });
+                }
+            }
+            if (!dateStr) dateStr = "حديثاً";
+
+            if (studentResearchModalTitle) studentResearchModalTitle.textContent = item.title || "";
+            if (researchAuthorName) researchAuthorName.textContent = authorName;
+            if (researchDateText) researchDateText.textContent = dateStr;
+            if (researchLocationText) researchLocationText.textContent = item.locationName || "";
+            if (researchSummaryContent) researchSummaryContent.textContent = item.summary || "";
+            if (researchCitationText) researchCitationText.textContent = item.citation || "بدون توثيق إضافي";
             if (researchSourceLink) {
                 researchSourceLink.href = item.sourceUrl || "#";
                 researchSourceLink.style.display = item.sourceUrl ? "inline-flex" : "none";
@@ -14375,21 +14832,42 @@
         function getFilteredResearchData() {
             var q = (researchSearchInput ? researchSearchInput.value : "").trim().toLowerCase();
             var dateF = researchDateFilter ? researchDateFilter.value : "all";
+            var now = Date.now();
+            var oneWeekMs = 7 * 24 * 60 * 60 * 1000;
+            var oneMonthMs = 30 * 24 * 60 * 60 * 1000;
 
-            return studentResearchData.filter(function(item) {
+            return activeApprovedResearch.filter(function(item) {
+                var author = (item.studentDisplayName || item.studentName || "").toLowerCase();
+                var title = (item.title || "").toLowerCase();
+                var loc = (item.locationName || "").toLowerCase();
+                var sum = (item.summary || "").toLowerCase();
+
                 if (q) {
-                    var matchesQ = item.title.toLowerCase().indexOf(q) !== -1 ||
-                                   item.studentName.toLowerCase().indexOf(q) !== -1 ||
-                                   item.locationName.toLowerCase().indexOf(q) !== -1 ||
-                                   item.summary.toLowerCase().indexOf(q) !== -1;
+                    var matchesQ = title.indexOf(q) !== -1 ||
+                                   author.indexOf(q) !== -1 ||
+                                   loc.indexOf(q) !== -1 ||
+                                   sum.indexOf(q) !== -1;
                     if (!matchesQ) return false;
                 }
-                if (dateF === "this_week") {
-                    return item.date >= "2026-09-14";
-                } else if (dateF === "this_month") {
-                    return item.date >= "2026-09-01";
-                } else if (dateF === "older") {
-                    return item.date < "2026-09-01";
+                if (dateF !== "all") {
+                    var itemTime = null;
+                    if (item.createdAt) {
+                        if (typeof item.createdAt.toMillis === "function") {
+                            itemTime = item.createdAt.toMillis();
+                        } else if (typeof item.createdAt.toDate === "function") {
+                            itemTime = item.createdAt.toDate().getTime();
+                        } else if (typeof item.createdAt === "number") {
+                            itemTime = item.createdAt;
+                        } else {
+                            itemTime = new Date(item.createdAt).getTime();
+                        }
+                    }
+                    if (itemTime) {
+                        var diff = now - itemTime;
+                        if (dateF === "this_week" && diff > oneWeekMs) return false;
+                        if (dateF === "this_month" && diff > oneMonthMs) return false;
+                        if (dateF === "older" && diff <= oneMonthMs) return false;
+                    }
                 }
                 return true;
             });
@@ -14402,11 +14880,18 @@
             // Render mini cards in side panel
             if (researchCardsMiniList) {
                 researchCardsMiniList.innerHTML = "";
+                if (filtered.length === 0) {
+                    var emptyDiv = document.createElement("div");
+                    emptyDiv.style.cssText = "text-align:center;padding:12px;font-size:0.8rem;color:#94a3b8;";
+                    emptyDiv.textContent = "لا توجد أبحاث معتمدة مطابقة للبحث";
+                    researchCardsMiniList.appendChild(emptyDiv);
+                }
                 filtered.forEach(function(item) {
+                    var author = item.studentDisplayName || item.studentName || "طالب";
                     var card = document.createElement("div");
                     card.className = "research-mini-card";
-                    card.innerHTML = '<div class="research-mini-title">' + item.title + '</div>' +
-                                     '<div class="research-mini-meta"><span>🎓 ' + item.studentName + '</span><span>📍 ' + item.locationName + '</span></div>';
+                    card.innerHTML = '<div class="research-mini-title">' + (item.title || "") + '</div>' +
+                                     '<div class="research-mini-meta"><span>🎓 ' + author + '</span><span>📍 ' + (item.locationName || "") + '</span></div>';
                     card.onclick = function() {
                         openResearchModal(item);
                     };
@@ -14434,15 +14919,17 @@
             var t = (typeof li !== "undefined" && li && li.k) || (window.currentTransform && window.currentTransform.k) || 1;
 
             filtered.forEach(function(item) {
+                if (!item.coords || !Array.isArray(item.coords)) return;
                 var pos = proj(item.coords);
                 if (!pos || isNaN(pos[0]) || isNaN(pos[1])) return;
+                var author = item.studentDisplayName || item.studentName || "طالب";
 
                 var g = researchLayer.append("g")
                     .attr("class", "student-research-pin-group")
                     .attr("transform", "translate(" + pos[0] + "," + pos[1] + ")")
                     .attr("tabindex", "0")
                     .attr("role", "button")
-                    .attr("aria-label", "بحث الطالب " + item.studentName + ": " + item.title);
+                    .attr("aria-label", "بحث الطالب " + author + ": " + (item.title || ""));
 
                 // Pulse ring
                 g.append("circle")
@@ -14470,7 +14957,7 @@
                     .attr("stroke", "#0f172a")
                     .attr("stroke-width", 2 / t)
                     .attr("stroke-linejoin", "round")
-                    .text(item.studentName);
+                    .text(author);
 
                 g.on("click", function() {
                     openResearchModal(item);
@@ -14511,6 +14998,7 @@
                     collabBtn.setAttribute("aria-expanded", "true");
                     renderQueueList();
                     renderResearchPins();
+                    refreshResearchData();
                     if (window.lucide && lucide.createIcons) lucide.createIcons();
                 }
             });
@@ -14550,6 +15038,7 @@
                 if (sectionCollabResearch) sectionCollabResearch.style.display = "flex";
                 if (sectionCollabControl) sectionCollabControl.style.display = "none";
                 renderResearchPins();
+                refreshResearchData();
             });
         }
 
@@ -14601,9 +15090,19 @@
             studentResearchModalBackdrop.addEventListener("click", closeResearchModal);
         }
 
+        setupLocationAutocomplete();
+        setupResearchFormSubmit();
         updateControllerUI();
         renderQueueList();
         renderResearchPins();
+        refreshResearchData();
+
+        if (typeof window.firebaseOnAuthChange === "function") {
+            window.firebaseOnAuthChange(function() {
+                refreshResearchData();
+            });
+        }
+        window.refreshExplanationResearch = refreshResearchData;
     }();
 
     // ══════════════════════════════════════════════════════════════════════════════

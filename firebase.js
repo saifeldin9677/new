@@ -1562,4 +1562,132 @@ window.firebaseListOrganizations = async function() {
     }
 };
 
+// ══════════════════════════════════════════════════════════════════════════════
+// EXPLANATION MODE: RESEARCH SUBMISSION, REVISION & APPROVAL (Stage 2a)
+// ══════════════════════════════════════════════════════════════════════════════
+
+window.firebaseSubmitResearch = async function(data) {
+    if (!auth.currentUser) return { ok: false, error: 'unauthenticated', message: 'يرجى تسجيل الدخول أولاً.' };
+    const uid = auth.currentUser.uid;
+    try {
+        const userSnap = await getDoc(doc(db, 'users', uid));
+        if (!userSnap.exists()) return { ok: false, error: 'user-not-found', message: 'مستند المستخدم غير موجود.' };
+        const userData = userSnap.data();
+        if (userData.role !== 'student') {
+            return { ok: false, error: 'permission-denied', message: 'فقط الطلاب يمكنهم تقديم بحوث جغرافية.' };
+        }
+        if (!userData.teacherId) {
+            return { ok: false, error: 'no-teacher-assigned', message: 'لا يوجد معلم معين لهذا الطالب.' };
+        }
+
+        const submissionDoc = {
+            studentUid: uid,
+            studentDisplayName: data.studentDisplayName || userData.displayName || userData.username || 'طالب',
+            teacherId: userData.teacherId,
+            orgId: userData.orgId || null,
+            title: String(data.title || '').trim(),
+            summary: String(data.summary || '').trim(),
+            locationName: String(data.locationName || '').trim(),
+            coords: Array.isArray(data.coords) ? data.coords.map(Number) : [0, 0],
+            citation: String(data.citation || '').trim(),
+            sourceUrl: String(data.sourceUrl || '').trim(),
+            status: 'submitted',
+            teacherFeedback: null,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+        };
+
+        const docRef = await addDoc(collection(db, 'researchSubmissions'), submissionDoc);
+        return { ok: true, id: docRef.id, submission: submissionDoc };
+    } catch(err) {
+        console.error('Failed to submit research:', err);
+        return { ok: false, error: err.code || 'submit-failed', message: err.message || String(err) };
+    }
+};
+
+window.firebaseReviseResearch = async function(submissionId, updateData) {
+    if (!auth.currentUser) return { ok: false, error: 'unauthenticated', message: 'يرجى تسجيل الدخول أولاً.' };
+    try {
+        const subRef = doc(db, 'researchSubmissions', submissionId);
+        const patch = {
+            title: String(updateData.title || '').trim(),
+            summary: String(updateData.summary || '').trim(),
+            locationName: String(updateData.locationName || '').trim(),
+            coords: Array.isArray(updateData.coords) ? updateData.coords.map(Number) : [0, 0],
+            citation: String(updateData.citation || '').trim(),
+            sourceUrl: String(updateData.sourceUrl || '').trim(),
+            status: 'submitted',
+            updatedAt: serverTimestamp()
+        };
+        await updateDoc(subRef, patch);
+        return { ok: true, id: submissionId };
+    } catch(err) {
+        console.error('Failed to revise research:', err);
+        return { ok: false, error: err.code || 'revise-failed', message: err.message || String(err) };
+    }
+};
+
+window.firebaseReviewResearch = async function(submissionId, reviewStatus, feedback) {
+    if (!auth.currentUser) return { ok: false, error: 'unauthenticated', message: 'يرجى تسجيل الدخول أولاً.' };
+    try {
+        const subRef = doc(db, 'researchSubmissions', submissionId);
+        const patch = {
+            status: reviewStatus,
+            teacherFeedback: (reviewStatus === 'needs_revision') ? (String(feedback || '').trim() || 'يرجى مراجعة البحث وتعديل الملاحظات.') : null,
+            updatedAt: serverTimestamp()
+        };
+        await updateDoc(subRef, patch);
+        return { ok: true, id: submissionId, status: reviewStatus };
+    } catch(err) {
+        console.error('Failed to review research:', err);
+        return { ok: false, error: err.code || 'review-failed', message: err.message || String(err) };
+    }
+};
+
+window.firebaseGetClassApprovedResearch = async function(teacherId) {
+    try {
+        const q = query(
+            collection(db, 'researchSubmissions'),
+            where('status', '==', 'approved'),
+            where('teacherId', '==', teacherId)
+        );
+        const snap = await getDocs(q);
+        const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        return { ok: true, submissions: list };
+    } catch(err) {
+        console.error('Failed to get approved research:', err);
+        return { ok: false, error: err.code || 'get-approved-failed', message: err.message || String(err), submissions: [] };
+    }
+};
+
+window.firebaseGetTeacherReviewQueue = async function(teacherId) {
+    try {
+        const q = query(
+            collection(db, 'researchSubmissions'),
+            where('teacherId', '==', teacherId)
+        );
+        const snap = await getDocs(q);
+        const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        return { ok: true, submissions: list };
+    } catch(err) {
+        console.error('Failed to get teacher review queue:', err);
+        return { ok: false, error: err.code || 'get-queue-failed', message: err.message || String(err), submissions: [] };
+    }
+};
+
+window.firebaseGetStudentSubmissions = async function(studentUid) {
+    try {
+        const q = query(
+            collection(db, 'researchSubmissions'),
+            where('studentUid', '==', studentUid)
+        );
+        const snap = await getDocs(q);
+        const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        return { ok: true, submissions: list };
+    } catch(err) {
+        console.error('Failed to get student submissions:', err);
+        return { ok: false, error: err.code || 'get-student-submissions-failed', message: err.message || String(err), submissions: [] };
+    }
+};
+
 console.log('Firebase initialized for project:', firebaseConfig.projectId);

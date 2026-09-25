@@ -1,6 +1,6 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, addDoc, collection, query, orderBy, getDocs, getDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, runTransaction, writeBatch } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInAnonymously, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, addDoc, collection, query, orderBy, where, getDocs, getDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, runTransaction, writeBatch } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyC_o_-C7NFeTQwFb-kZRCI59HnTc2DDTUA",
@@ -16,9 +16,21 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+// Secondary Firebase App instance dedicated purely to user creation (prevents session hijacking)
+let secondaryApp = (typeof getApps === 'function' ? getApps() : []).find(a => a && a.name === "AccountCreation");
+if (!secondaryApp) {
+    try {
+        secondaryApp = initializeApp(firebaseConfig, "AccountCreation");
+    } catch(e) {
+        secondaryApp = (typeof getApps === 'function' ? getApps() : []).find(a => a && a.name === "AccountCreation") || app;
+    }
+}
+const secondaryAuth = getAuth(secondaryApp);
+
 window.firebaseApp = app;
 window.firebaseAuth = auth;
 window.firebaseDb = db;
+window.firebaseSecondaryAuth = secondaryAuth;
 
 // --- Step 1a: Teacher Auth Helpers ---
 window.firebaseTeacherSignIn = async function(email, password) {
@@ -1144,6 +1156,409 @@ window.firebaseDeleteSimScout = async function(gameId, scoutId) {
     } catch(e) {
         console.error('Failed to delete scout:', e);
         return { ok: false, error: e.message || String(e) };
+    }
+};
+
+// ──────────────────────────────────────────────────────────────
+// Account System — Stage 1: Permanent Multi-Tenant Foundation
+// ──────────────────────────────────────────────────────────────
+
+window.firebaseToSyntheticEmail = function(username) {
+    const clean = String(username || '').toLowerCase().trim().replace(/[^a-z0-9._-]/g, '');
+    return `${clean}@accounts.lepidos.internal`;
+};
+
+window.firebaseGenerateCredentials = function(role) {
+    const prefixMap = {
+        admin: 'a-',
+        itStaff: 'it-',
+        teacher: 't-',
+        student: 's-'
+    };
+    const prefix = prefixMap[role] || 'u-';
+    const chars = '23456789abcdefghjkmnpqrstuvwxyz';
+    let randomPart = '';
+    for (let i = 0; i < 6; i++) {
+        randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    const username = prefix + randomPart;
+
+    const passChars = '23456789abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ';
+    let password = '';
+    for (let i = 0; i < 8; i++) {
+        password += passChars.charAt(Math.floor(Math.random() * passChars.length));
+    }
+    return { username, password };
+};
+
+window.firebaseAccountCreateUser = async function(params) {
+    const { username, password, role, orgId, displayName, classIds, teacherId, classId } = params;
+    if (!username || !password || !role) {
+        return { ok: false, error: 'missing-parameters', message: 'يرجى إدخال اسم المستخدم وكلمة المرور والدور.' };
+    }
+
+    const cleanUsername = String(username).toLowerCase().trim();
+    const syntheticEmail = window.firebaseToSyntheticEmail(cleanUsername);
+
+    let newUid;
+    try {
+        const userCred = await createUserWithEmailAndPassword(secondaryAuth, syntheticEmail, password);
+        newUid = userCred.user.uid;
+    } catch(err) {
+        if (err.code === 'auth/email-already-in-use') {
+            return {
+                ok: false,
+                error: 'username-already-in-use',
+                message: 'اسم المستخدم مستخدم بالفعل، يرجى اختيار اسم آخر.'
+            };
+        }
+        return {
+            ok: false,
+            error: err.code || 'create-auth-failed',
+            message: err.message || String(err)
+        };
+    } finally {
+        try {
+            await signOut(secondaryAuth);
+        } catch(e) {}
+    }
+
+    // Write new users/{newUid} Firestore document using the primary app's Firestore reference
+    try {
+        const creatorUid = auth.currentUser ? auth.currentUser.uid : null;
+        const userDocData = {
+            role: role,
+            orgId: role === 'superAdmin' ? null : orgId,
+            username: cleanUsername,
+            displayName: displayName || cleanUsername,
+            active: true,
+            createdAt: serverTimestamp(),
+            createdByUid: creatorUid,
+            classIds: (role === 'teacher' && Array.isArray(classIds)) ? classIds : null,
+            teacherId: (role === 'student') ? (teacherId || creatorUid) : null,
+            classId: (role === 'student' && classId) ? classId : null
+        };
+
+        if (role === 'admin' && orgId) {
+            // When an admin is added to an existing organization, increment adminCount inside a transaction
+            const orgRef = doc(db, 'organizations', orgId);
+            const userRef = doc(db, 'users', newUid);
+            await runTransaction(db, async (transaction) => {
+                const orgDoc = await transaction.get(orgRef);
+                if (orgDoc.exists()) {
+                    const currentCount = Number(orgDoc.data().adminCount) || 1;
+                    transaction.update(orgRef, { adminCount: currentCount + 1 });
+                }
+                transaction.set(userRef, userDocData);
+            });
+        } else {
+            await setDoc(doc(db, 'users', newUid), userDocData);
+        }
+
+        return {
+            ok: true,
+            uid: newUid,
+            user: { ...userDocData, uid: newUid }
+        };
+    } catch(err) {
+        console.error('Failed to create user doc in Firestore:', err);
+        return {
+            ok: false,
+            error: err.code || 'firestore-create-failed',
+            message: err.message || String(err)
+        };
+    }
+};
+
+window.firebaseCreateOrganization = async function(orgData, adminData) {
+    try {
+        const orgId = orgData.orgId || ('org_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6));
+        const tier = orgData.tier || 'individual';
+        const demoExpiresAt = tier === 'demo' ? (orgData.demoExpiresAt || (Date.now() + 7 * 86400000)) : null;
+
+        const cleanAdminUsername = String(adminData.username).toLowerCase().trim();
+        const adminEmail = window.firebaseToSyntheticEmail(cleanAdminUsername);
+
+        let adminUid;
+        try {
+            const userCred = await createUserWithEmailAndPassword(secondaryAuth, adminEmail, adminData.password);
+            adminUid = userCred.user.uid;
+        } catch(err) {
+            if (err.code === 'auth/email-already-in-use') {
+                return {
+                    ok: false,
+                    error: 'username-already-in-use',
+                    message: 'اسم المستخدم مستخدم بالفعل، يرجى اختيار اسم آخر لمسؤول المنظمة.'
+                };
+            }
+            return {
+                ok: false,
+                error: err.code || 'create-admin-failed',
+                message: err.message || String(err)
+            };
+        } finally {
+            try {
+                await signOut(secondaryAuth);
+            } catch(e) {}
+        }
+
+        const superAdminUid = auth.currentUser ? auth.currentUser.uid : 'superadmin';
+        const orgDocData = {
+            id: orgId,
+            name: orgData.name,
+            tier: tier,
+            createdAt: serverTimestamp(),
+            createdBySuperAdminUid: superAdminUid,
+            adminCount: 1,
+            demoExpiresAt: demoExpiresAt
+        };
+
+        const adminDocData = {
+            uid: adminUid,
+            role: 'admin',
+            orgId: orgId,
+            username: cleanAdminUsername,
+            displayName: adminData.displayName || cleanAdminUsername,
+            active: true,
+            createdAt: serverTimestamp(),
+            createdByUid: superAdminUid,
+            classIds: null,
+            teacherId: null,
+            classId: null
+        };
+
+        const batch = writeBatch(db);
+        batch.set(doc(db, 'organizations', orgId), orgDocData);
+        batch.set(doc(db, 'users', adminUid), adminDocData);
+        await batch.commit();
+
+        return {
+            ok: true,
+            orgId: orgId,
+            org: orgDocData,
+            admin: adminDocData
+        };
+    } catch(err) {
+        console.error('Failed to create organization:', err);
+        return {
+            ok: false,
+            error: err.code || 'create-org-failed',
+            message: err.message || String(err)
+        };
+    }
+};
+
+window.firebaseRemoveAdmin = async function(orgId, adminUid) {
+    try {
+        const orgRef = doc(db, 'organizations', orgId);
+        const userRef = doc(db, 'users', adminUid);
+
+        const result = await runTransaction(db, async (transaction) => {
+            const orgDoc = await transaction.get(orgRef);
+            if (!orgDoc.exists()) {
+                throw new Error('Organization not found');
+            }
+            const orgData = orgDoc.data();
+            const currentAdminCount = Number(orgData.adminCount) || 1;
+
+            // Refuse if only 1 admin remaining
+            if (currentAdminCount <= 1) {
+                return {
+                    ok: false,
+                    refused: true,
+                    error: 'cannot-remove-last-admin',
+                    message: 'لا يمكن حذف آخر مسؤول في المنظمة. يجب أن تضم المنظمة مسؤولاً واحداً على الأقل.'
+                };
+            }
+
+            const userDoc = await transaction.get(userRef);
+            if (!userDoc.exists()) {
+                throw new Error('User not found');
+            }
+            const userData = userDoc.data();
+            if (userData.role !== 'admin' || userData.orgId !== orgId) {
+                throw new Error('Target user is not an admin of this organization');
+            }
+
+            transaction.delete(userRef);
+            transaction.update(orgRef, {
+                adminCount: currentAdminCount - 1
+            });
+
+            return {
+                ok: true,
+                newAdminCount: currentAdminCount - 1
+            };
+        });
+
+        return result;
+    } catch(err) {
+        console.error('Failed to remove admin:', err);
+        return {
+            ok: false,
+            error: err.code || err.message || String(err),
+            message: err.message || String(err)
+        };
+    }
+};
+
+window.firebaseDeleteAccountUser = async function(orgId, uid) {
+    try {
+        const userRef = doc(db, 'users', uid);
+        const userSnap = await getDoc(userRef);
+        if (!userSnap.exists()) return { ok: false, error: 'not-found' };
+        if (userSnap.data().role === 'admin') {
+            return await window.firebaseRemoveAdmin(orgId, uid);
+        }
+        await deleteDoc(userRef);
+        return { ok: true };
+    } catch(err) {
+        console.error('Failed to delete user:', err);
+        return { ok: false, error: err.code || err.message || String(err) };
+    }
+};
+
+window.firebaseAccountSignIn = async function(username, password) {
+    try {
+        const syntheticEmail = window.firebaseToSyntheticEmail(username);
+        const userCred = await signInWithEmailAndPassword(auth, syntheticEmail, password);
+        const uid = userCred.user.uid;
+
+        // Fetch user document from Firestore
+        let userData = null;
+        try {
+            const userSnap = await getDoc(doc(db, 'users', uid));
+            if (userSnap.exists()) {
+                userData = { uid, ...userSnap.data() };
+            }
+        } catch(e) {
+            console.warn('Could not read user profile:', e);
+        }
+
+        // Fetch organization document if applicable
+        let orgData = null;
+        let isExpiredDemo = false;
+        if (userData && userData.orgId) {
+            try {
+                const orgSnap = await getDoc(doc(db, 'organizations', userData.orgId));
+                if (orgSnap.exists()) {
+                    orgData = orgSnap.data();
+                    if (orgData.tier === 'demo' && orgData.demoExpiresAt && Date.now() >= orgData.demoExpiresAt) {
+                        isExpiredDemo = true;
+                    }
+                }
+            } catch(e) {
+                // If read failed due to permission-denied on demo expiry
+                if (e.code === 'permission-denied' || String(e).includes('permission-denied')) {
+                    isExpiredDemo = true;
+                }
+            }
+        }
+
+        return {
+            ok: true,
+            uid: uid,
+            user: userData,
+            org: orgData,
+            isExpiredDemo: isExpiredDemo,
+            message: isExpiredDemo ? 'انتهت صلاحية الحساب التجريبي لهذه المنظمة. يرجى التواصل مع إدارة المنصة للترقية.' : null
+        };
+    } catch(err) {
+        let msg = 'فشل تسجيل الدخول: ' + (err.message || String(err));
+        if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
+            msg = 'اسم المستخدم أو كلمة المرور غير صحيحة.';
+        }
+        return {
+            ok: false,
+            error: err.code || 'sign-in-failed',
+            message: msg
+        };
+    }
+};
+
+window.firebaseAccountSignOut = async function() {
+    try {
+        await signOut(auth);
+        return { ok: true };
+    } catch(err) {
+        return { ok: false, error: err.message || String(err) };
+    }
+};
+
+window.firebaseAccountGetProfile = async function() {
+    if (!auth.currentUser) return { ok: false, error: 'unauthenticated' };
+    const uid = auth.currentUser.uid;
+    try {
+        const userSnap = await getDoc(doc(db, 'users', uid));
+        if (!userSnap.exists()) return { ok: false, error: 'user-doc-not-found' };
+        const userData = { uid, ...userSnap.data() };
+
+        let orgData = null;
+        let isExpiredDemo = false;
+        if (userData.orgId) {
+            try {
+                const orgSnap = await getDoc(doc(db, 'organizations', userData.orgId));
+                if (orgSnap.exists()) {
+                    orgData = orgSnap.data();
+                    if (orgData.tier === 'demo' && orgData.demoExpiresAt && Date.now() >= orgData.demoExpiresAt) {
+                        isExpiredDemo = true;
+                    }
+                }
+            } catch(e) {
+                if (e.code === 'permission-denied' || String(e).includes('permission-denied')) {
+                    isExpiredDemo = true;
+                }
+            }
+        }
+        return {
+            ok: true,
+            user: userData,
+            org: orgData,
+            isExpiredDemo: isExpiredDemo,
+            message: isExpiredDemo ? 'انتهت صلاحية الحساب التجريبي لهذه المنظمة. يرجى التواصل مع إدارة المنصة للترقية.' : null
+        };
+    } catch(err) {
+        const isPerm = err.code === 'permission-denied' || String(err).includes('permission-denied');
+        return {
+            ok: isPerm,
+            error: isPerm ? null : (err.code || 'get-profile-failed'),
+            user: (isPerm && auth.currentUser) ? { uid: auth.currentUser.uid, role: 'demo' } : null,
+            isExpiredDemo: isPerm,
+            message: isPerm ? 'انتهت صلاحية الحساب التجريبي لهذه المنظمة. يرجى التواصل مع إدارة المنصة للترقية.' : (err.message || String(err))
+        };
+    }
+};
+
+window.firebaseListOrgUsers = async function(orgId) {
+    try {
+        const q = query(collection(db, 'users'), where('orgId', '==', orgId));
+        const snap = await getDocs(q);
+        return {
+            ok: true,
+            users: snap.docs.map(d => ({ uid: d.id, ...d.data() }))
+        };
+    } catch(err) {
+        return {
+            ok: false,
+            error: err.code || 'list-users-failed',
+            message: err.message || String(err)
+        };
+    }
+};
+
+window.firebaseListOrganizations = async function() {
+    try {
+        const snap = await getDocs(collection(db, 'organizations'));
+        return {
+            ok: true,
+            organizations: snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        };
+    } catch(err) {
+        return {
+            ok: false,
+            error: err.code || 'list-orgs-failed',
+            message: err.message || String(err)
+        };
     }
 };
 

@@ -296,6 +296,108 @@ service cloud.firestore {
     }
 
     // ──────────────────────────────────────────────────────────────
+    // Permanent Multi-Tenant Account System (Stage 1)
+    // ──────────────────────────────────────────────────────────────
+    function isSuperAdmin(uid) {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/users/$(uid))
+        && get(/databases/$(database)/documents/users/$(uid)).data.role == "superAdmin";
+    }
+
+    function getUserData(uid) {
+      return get(/databases/$(database)/documents/users/$(uid)).data;
+    }
+
+    function isOrgActive(orgId) {
+      let org = get(/databases/$(database)/documents/organizations/$(orgId)).data;
+      return org.tier != "demo" || (org.demoExpiresAt != null && request.time < org.demoExpiresAt);
+    }
+
+    match /organizations/{orgId} {
+      allow read: if isSignedIn() && (
+        isSuperAdmin(request.auth.uid)
+        || (getUserData(request.auth.uid).orgId == orgId && (resource.data.tier != "demo" || (resource.data.demoExpiresAt != null && request.time < resource.data.demoExpiresAt)))
+      );
+
+      allow create: if isSuperAdmin(request.auth.uid);
+
+      allow update: if isSuperAdmin(request.auth.uid)
+        || (isSignedIn()
+             && getUserData(request.auth.uid).role == "admin"
+             && getUserData(request.auth.uid).orgId == orgId
+             && isOrgActive(orgId)
+             && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["name", "adminCount"]));
+
+      allow delete: if isSuperAdmin(request.auth.uid);
+    }
+
+    match /users/{uid} {
+      allow read: if isSignedIn() && (
+        isSuperAdmin(request.auth.uid)
+        || (
+          (request.auth.uid == uid || getUserData(request.auth.uid).orgId == resource.data.orgId)
+          && (resource.data.orgId == null || isOrgActive(resource.data.orgId))
+        )
+      );
+
+      // Scoped creation based on creator role and target role/org
+      allow create: if isSignedIn() && (
+        isSuperAdmin(request.auth.uid)
+        || (
+          // Admin creating admin, itStaff, teacher, or student within their own active org
+          getUserData(request.auth.uid).role == "admin"
+          && getUserData(request.auth.uid).orgId == request.resource.data.orgId
+          && isOrgActive(request.resource.data.orgId)
+          && request.resource.data.role in ["admin", "itStaff", "teacher", "student"]
+          && request.resource.data.createdByUid == request.auth.uid
+        )
+        || (
+          // IT Staff creating teacher or student within their own active org
+          getUserData(request.auth.uid).role == "itStaff"
+          && getUserData(request.auth.uid).orgId == request.resource.data.orgId
+          && isOrgActive(request.resource.data.orgId)
+          && request.resource.data.role in ["teacher", "student"]
+          && request.resource.data.createdByUid == request.auth.uid
+        )
+        || (
+          // Teacher creating student for their own active org
+          getUserData(request.auth.uid).role == "teacher"
+          && getUserData(request.auth.uid).orgId == request.resource.data.orgId
+          && isOrgActive(request.resource.data.orgId)
+          && request.resource.data.role == "student"
+          && request.resource.data.teacherId == request.auth.uid
+          && request.resource.data.createdByUid == request.auth.uid
+        )
+      );
+
+      allow update: if isSignedIn() && (
+        isSuperAdmin(request.auth.uid)
+        || (
+          request.auth.uid == uid
+          && (resource.data.orgId == null || isOrgActive(resource.data.orgId))
+        )
+        || (
+          getUserData(request.auth.uid).role == "admin"
+          && getUserData(request.auth.uid).orgId == resource.data.orgId
+          && isOrgActive(resource.data.orgId)
+        )
+      );
+
+      allow delete: if isSignedIn() && (
+        isSuperAdmin(request.auth.uid)
+        || (
+          getUserData(request.auth.uid).orgId == resource.data.orgId
+          && getUserData(request.auth.uid).role == "admin"
+          && isOrgActive(resource.data.orgId)
+          && (
+            resource.data.role != "admin"
+            || get(/databases/$(database)/documents/organizations/$(resource.data.orgId)).data.adminCount > 1
+          )
+        )
+      );
+    }
+
+    // ──────────────────────────────────────────────────────────────
     // Everything else
     // ──────────────────────────────────────────────────────────────
     // Default: every other collection/path is DENIED.

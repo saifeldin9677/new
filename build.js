@@ -83,7 +83,7 @@ if (fs.existsSync(path.join(SRC, 'fonts'))) {
 } else {
     console.log('  Skipped fonts/ (directory not found)');
 }
-['boot.js', 'firebase.js', 'teacher-auth-gate.js'].forEach(function(f) {
+['boot.js', 'firebase.js', 'teacher-auth-gate.js', 'account-system.js'].forEach(function(f) {
     var srcPath = path.join(SRC, f);
     if (fs.existsSync(srcPath)) {
         fs.copyFileSync(srcPath, path.join(DIST, f));

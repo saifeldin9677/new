@@ -62,6 +62,7 @@
                         <button class="tool-card" id="blankMapWorksheetBtn" title="خرائط صامتة وأوراق عمل مدرسية" aria-label="خرائط صامتة وأوراق عمل مدرسية" data-i18n-title="blankMapWorksheetTitle" data-i18n-aria-label="blankMapWorksheetTitle" role="menuitem"><i data-lucide="printer" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="blankMapWorksheetBtn">خرائط صامتة</span></button>
                         <button class="tool-card" id="teacherHubBtn" title="لوحة المعلم والواجبات المدرسية" aria-label="لوحة المعلم والواجبات المدرسية" data-i18n-title="teacherHubTitle" data-i18n-aria-label="teacherHubTitle" role="menuitem"><i data-lucide="graduation-cap" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="teacherHubBtn">لوحة المعلم</span></button>
                         <button class="tool-card" id="studentHubBtn" title="لوحة الطالب والواجبات المدرسية" aria-label="لوحة الطالب والواجبات المدرسية" data-i18n-title="studentHubTitle" data-i18n-aria-label="studentHubTitle" role="menuitem"><i data-lucide="book-open" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="studentHubBtn">لوحة الطالب</span></button>
+                        <button class="tool-card" id="accountSystemBtn" title="نظام الحسابات وإدارة المؤسسات والمدارس" aria-label="نظام الحسابات وإدارة المؤسسات" role="menuitem"><i data-lucide="users" class="tool-icon lucide-icon"></i><span class="tool-label btn-text">الحسابات</span></button>
                         <button class="tool-card" id="nationSimBtn" title="محاكاة الأمم: صراع وازدهار الحضارات" aria-label="محاكاة الأمم: صراع وازدهار الحضارات" data-i18n-title="nationSimTitle" data-i18n-aria-label="nationSimTitle" role="menuitem"><i data-lucide="swords" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="nationSimBtn">محاكاة الأمم</span></button>
                         <button class="tool-card" id="academicSourcesBtn" title="المصادر والمراجع الأكاديمية المعتمدة" aria-label="المصادر والمراجع الأكاديمية المعتمدة" data-i18n-title="academicSourcesTitle" data-i18n-aria-label="academicSourcesTitle" role="menuitem"><i data-lucide="book-marked" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="academicSourcesBtn">المراجع الأكاديمية</span></button>
                         <button class="tool-card" id="termsOfServiceBtn" title="شروط الاستخدام والخصوصية" aria-label="شروط الاستخدام والخصوصية" data-i18n-title="termsTitle" data-i18n-aria-label="termsTitle" role="menuitem"><i data-lucide="shield-check" class="tool-icon lucide-icon"></i><span class="tool-label btn-text" data-i18n="termsBtn">شروط الاستخدام</span></button>
@@ -3173,6 +3174,32 @@
             <svg id="projectionCompareSvg"></svg>
         </div>
     </div>
+ 
+    <!-- Permanent Multi-Tenant Account System Modal (Stage 1) -->
+    <div class="teacher-hub-overlay" id="accountSystemOverlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="accountSystemTitle">
+        <div class="teacher-hub-box" style="width:780px;max-width:95vw;max-height:92vh;display:flex;flex-direction:column;">
+            <div class="teacher-hub-header">
+                <div class="academic-header-titles">
+                    <i data-lucide="users" class="lucide-icon modal-header-icon" style="color:#38bdf8;"></i>
+                    <div>
+                        <h3 id="accountSystemTitle" style="margin:0;font-size:1.25rem;color:#f8fafc;">نظام الحسابات وإدارة المؤسسات</h3>
+                        <p class="academic-sources-subtitle" style="margin:2px 0 0;font-size:0.8rem;color:#94a3b8;">إدارة المنظمات والمدارس، صلاحيات المسؤولين، والمعلمين والطلاب</p>
+                    </div>
+                </div>
+                <button class="close-btn" id="accountSystemCloseBtn" aria-label="إغلاق"><i data-lucide="x" class="lucide-icon"></i></button>
+            </div>
+            <div class="teacher-hub-body" id="accountSystemModalBody" style="padding:20px;overflow-y:auto;flex:1;">
+                <!-- Dynamically rendered by account-system.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Credentials Display Modal (Shows Single-View Generated Credentials) -->
+    <div class="teacher-hub-overlay" id="accountCredentialModal" style="display:none;z-index:11000;" role="dialog" aria-modal="true">
+        <div class="teacher-hub-box" id="accountCredentialModalBody" style="width:460px;max-width:92vw;padding:0;background:transparent;box-shadow:none;">
+            <!-- Dynamically populated by showCredentialDisplayModal -->
+        </div>
+    </div>
 
     </div>  <!-- closing content-row -->
 
@@ -3183,5 +3210,6 @@
     <script src="historical-polities-data.js?v=2026-09-16G"></script>
     <script src="app.js?v=2026-09-16G"></script>
     <script src="teacher-auth-gate.js?v=2026-09-16G"></script>
+    <script src="account-system.js?v=2026-09-25"></script>
 </body>
 </html>

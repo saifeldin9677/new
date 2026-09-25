@@ -12705,8 +12705,6 @@
             spatialReviewCloseBtn = document.getElementById("spatialReviewCloseBtn"),
             teacherInquiriesList = document.getElementById("teacherInquiriesList"),
             studentAssignmentOverlay = document.getElementById("studentAssignmentOverlay"),
-            studentFullNameInput = document.getElementById("studentFullNameInput"),
-            studentStartAssignmentBtn = document.getElementById("studentStartAssignmentBtn"),
             SESSIONS_STORAGE_KEY = "lepidos_teacher_sessions_v1",
             INQUIRIES_STORAGE_KEY = "lepidos_student_inquiries_v1",
             GRADES_STORAGE_KEY = "lepidos_student_grades_v1";
@@ -13286,7 +13284,7 @@
                     studentAssignmentOverlay.style.display = "flex";
                     var desc = document.getElementById("studentAssignmentDescDisplay");
                     if (desc) {
-                        desc.innerHTML = (zi("studentAssignmentPrompt") || "طلب منك معلمك حل الواجب الصفي (رمز: <strong>{code}</strong>). اكتب اسمك الكامل للبدء:").replace("{code}", code);
+                        desc.innerHTML = (zi("studentAssignmentPrompt") || "طلب منك معلمك حل الواجب الصفي (رمز: <strong>{code}</strong>). يرجى تسجيل الدخول بحسابك المدرسي للبدء:").replace("{code}", code);
                     }
                     
                     // Update Account Option Box state
@@ -13305,21 +13303,17 @@
                 }
 
                 function launchAssignmentForStudent(studentName, studentUid, studentDisplayName) {
+                    if (!studentUid || !studentDisplayName) {
+                        console.warn("Cannot launch assignment without student account identity.");
+                        return;
+                    }
                     try {
                         localStorage.setItem("lepidos_student_name_v1", studentName);
-                        if (studentUid) {
-                            localStorage.setItem("lepidos_student_uid_v1", studentUid);
-                        } else {
-                            localStorage.removeItem("lepidos_student_uid_v1");
-                        }
-                        if (studentDisplayName) {
-                            localStorage.setItem("lepidos_student_account_name_v1", studentDisplayName);
-                        } else {
-                            localStorage.removeItem("lepidos_student_account_name_v1");
-                        }
+                        localStorage.setItem("lepidos_student_uid_v1", studentUid);
+                        localStorage.setItem("lepidos_student_account_name_v1", studentDisplayName);
                     } catch(e){}
-                    window._currentStudentUid = studentUid || null;
-                    window._currentStudentDisplayName = studentDisplayName || null;
+                    window._currentStudentUid = studentUid;
+                    window._currentStudentDisplayName = studentDisplayName;
                     if (studentAssignmentOverlay) studentAssignmentOverlay.style.display = "none";
                     var sessions = getSessions();
                     var foundSession = sessions.find(function(s) { return s.code === code; });
@@ -13327,18 +13321,6 @@
                         openStudentHub("assignments");
                         if (typeof openAssignmentSolver === "function") openAssignmentSolver(foundSession);
                     }
-                }
-
-                // Path 1: Plain name-only flow (Existing)
-                if (studentStartAssignmentBtn) {
-                    studentStartAssignmentBtn.onclick = function() {
-                        var name = (studentFullNameInput && studentFullNameInput.value.trim()) || zi("studentDefaultName") || "طالب";
-                        if (name) {
-                            launchAssignmentForStudent(name, null, null);
-                        } else if (studentFullNameInput) {
-                            studentFullNameInput.focus();
-                        }
-                    };
                 }
 
                 // Path 2A: Continue with already logged-in account

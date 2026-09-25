@@ -2194,25 +2194,10 @@
             <div class="student-assignment-box" style="max-width:440px;">
                 <div class="student-box-icon"><i data-lucide="graduation-cap" class="lucide-icon"></i></div>
                 <h3 id="studentAssignmentTitleDisplay" data-i18n="studentModeTitle">واجب مدرسي تفاعلي</h3>
-                <p id="studentAssignmentDescDisplay" data-i18n="studentWelcome">أهلاً بك! يرجى إدخال اسمك الكامل لبدء الواجب المدرسي:</p>
+                <p id="studentAssignmentDescDisplay" data-i18n="studentWelcome">أهلاً بك! يرجى تسجيل الدخول بحسابك المدرسي لبدء الواجب:</p>
 
-                <!-- OPTION 1: Plain Name-Only Flow (Legacy / Guest) -->
-                <div id="studentNameOnlySection" style="margin-top:16px;">
-                    <div class="worksheet-form-group" style="margin-bottom:12px;">
-                        <input type="text" id="studentFullNameInput" class="quiz-input" placeholder="اكتب اسمك الثلاثي هنا..." data-i18n-placeholder="studentNamePlaceholder" aria-label="اكتب اسمك الثلاثي هنا..." data-i18n-aria-label="studentNamePlaceholder" style="font-size:1.05rem;text-align:center;">
-                    </div>
-                    <button class="btn btn-primary btn-lg" id="studentStartAssignmentBtn" style="width:100%;font-size:1rem;" data-i18n="studentStartAssignment">بدء الواجب الآن</button>
-                </div>
-
-                <!-- SEPARATOR -->
-                <div class="student-join-divider" style="display:flex;align-items:center;margin:18px 0;text-align:center;">
-                    <div style="flex:1;border-bottom:1px solid rgba(255,255,255,0.15);"></div>
-                    <span style="padding:0 12px;color:var(--text-muted, #94a3b8);font-size:0.85rem;font-weight:600;">أو</span>
-                    <div style="flex:1;border-bottom:1px solid rgba(255,255,255,0.15);"></div>
-                </div>
-
-                <!-- OPTION 2: Unified Account Login Flow -->
-                <div id="studentAccountSection">
+                <!-- OPTION: Unified Account Login Flow -->
+                <div id="studentAccountSection" style="margin-top:16px;">
                     <!-- State A: Already logged in as account -->
                     <div id="studentAccountLoggedInBox" style="display:none;background:rgba(45,212,191,0.08);border:1px solid rgba(45,212,191,0.25);border-radius:10px;padding:12px;text-align:center;margin-bottom:10px;">
                         <div style="font-size:0.85rem;color:var(--text-muted, #94a3b8);margin-bottom:4px;">مسجل الدخول بحسابك المدرسي:</div>

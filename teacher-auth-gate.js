@@ -10,7 +10,7 @@
 
     // 1. Wait for Firebase Auth to become ready on window
     function initAuthListener() {
-        if (typeof window.firebaseOnAuthChange === 'function' && typeof window.firebaseCheckIsTeacher === 'function') {
+        if (typeof window.firebaseOnAuthChange === 'function' && typeof window.firebaseCheckIsAccountTeacher === 'function') {
             window.firebaseOnAuthChange(async function(user) {
                 currentAuthUser = user;
                 if (!user) {
@@ -19,15 +19,11 @@
                     return;
                 }
                 try {
-                    let isLegacy = false;
-                    if (typeof window.firebaseCheckIsTeacher === 'function') {
-                        isLegacy = await window.firebaseCheckIsTeacher(user.uid);
-                    }
                     let isAccount = false;
                     if (typeof window.firebaseCheckIsAccountTeacher === 'function') {
                         isAccount = await window.firebaseCheckIsAccountTeacher(user.uid);
                     }
-                    isConfirmedTeacher = isLegacy || isAccount;
+                    isConfirmedTeacher = isAccount;
                 } catch(e) {
                     console.warn('Teacher auth check failed:', e);
                     isConfirmedTeacher = false;
@@ -143,18 +139,12 @@
                     return;
                 }
 
-                // Verify teacher status: either legacy marker or account role == teacher
+                // Verify teacher status via account system role == teacher
                 let isTeacher = false;
                 try {
-                    let isLegacy = false;
-                    if (typeof window.firebaseCheckIsTeacher === 'function') {
-                        isLegacy = await window.firebaseCheckIsTeacher(res.uid);
-                    }
-                    let isAccount = false;
                     if (typeof window.firebaseCheckIsAccountTeacher === 'function') {
-                        isAccount = await window.firebaseCheckIsAccountTeacher(res.uid);
+                        isTeacher = await window.firebaseCheckIsAccountTeacher(res.uid);
                     }
-                    isTeacher = isLegacy || isAccount;
                 } catch(e) {
                     console.warn('Teacher check error:', e);
                     isTeacher = false;

@@ -130,6 +130,15 @@ window.firebaseCreateSession = async function(sessionCode, config) {
 };
 
 window.firebaseSaveQuizResult = async function(sessionCode, studentName, score, total, timeTaken, answers, studentUid, studentDisplayName) {
+    if (!studentUid || typeof studentUid !== 'string' || !studentUid.trim() ||
+        !studentDisplayName || typeof studentDisplayName !== 'string' || !studentDisplayName.trim()) {
+        console.warn('firebaseSaveQuizResult: Missing required student identity (studentUid and studentDisplayName required).');
+        if (typeof alert === 'function') {
+            alert('يجب تسجيل الدخول بحساب طالب لتسليم الإجابات.');
+        }
+        return false;
+    }
+
     try {
         const payload = {
             sessionCode: sessionCode.toUpperCase(),
@@ -138,14 +147,10 @@ window.firebaseSaveQuizResult = async function(sessionCode, studentName, score, 
             total: total,
             timeTaken: timeTaken || null,
             answers: answers || [],
-            completedAt: serverTimestamp()
+            completedAt: serverTimestamp(),
+            studentUid: studentUid.trim(),
+            studentDisplayName: studentDisplayName.trim()
         };
-        if (studentUid) {
-            payload.studentUid = studentUid;
-        }
-        if (studentDisplayName) {
-            payload.studentDisplayName = studentDisplayName;
-        }
         await addDoc(collection(db, 'quizSessions', sessionCode.toUpperCase(), 'results'), payload);
         return true;
     } catch(e) { console.error('Failed to save result:', e); return false; }

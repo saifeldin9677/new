@@ -110,12 +110,7 @@ service cloud.firestore {
       let gameData = get(/databases/$(database)/documents/simGames/$(gameId)).data;
       return (isTeacher() && gameData.teacherId == request.auth.uid)
           || (exists(/databases/$(database)/documents/users/$(request.auth.uid))
-               && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.teacherId == gameData.teacherId)
-          || !exists(/databases/$(database)/documents/users/$(request.auth.uid));
-          // ^ the last branch is a deliberate, temporary allowance for legacy anonymous
-          // join-code players, who have no account document at all. Remove this branch
-          // when the join-code path itself is removed in Stage 2 of this migration —
-          // leave a comment saying exactly this, so it isn't mistaken for a permanent policy.
+               && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.teacherId == gameData.teacherId);
     }
 
     match /simGames/{gameId} {

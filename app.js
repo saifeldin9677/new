@@ -15957,15 +15957,11 @@
             simMpTeamCountSelect = document.getElementById("simMpTeamCountSelect"),
             simMpTeacherAlert = document.getElementById("simMpTeacherAlert"),
             simMpTeamsList = document.getElementById("simMpTeamsList"),
-            simMpCopyAllCodesBtn = document.getElementById("simMpCopyAllCodesBtn"),
             simMpSwitchToDrawingBtn = document.getElementById("simMpSwitchToDrawingBtn"),
             simMpSaveGameBtn = document.getElementById("simMpSaveGameBtn"),
             simPlayerLoginModal = document.getElementById("simPlayerLoginModal"),
             simPlayerLoginCloseBtn = document.getElementById("simPlayerLoginCloseBtn"),
-            simLoginGameCode = document.getElementById("simLoginGameCode"),
-            simLoginJoinCode = document.getElementById("simLoginJoinCode"),
             simLoginStatusAlert = document.getElementById("simLoginStatusAlert"),
-            simSubmitPlayerLoginBtn = document.getElementById("simSubmitPlayerLoginBtn"),
             simCancelPlayerLoginBtn = document.getElementById("simCancelPlayerLoginBtn");
 
         // Historical Core Nations Template (Available as an optional preset/reference)
@@ -20613,12 +20609,13 @@
                 var tId = "team_" + (i + 1);
                 var members = {};
                 ["leader", "military", "intelligence", "economy", "planner"].forEach(function(r) {
-                    var rAr = getRoleArabicTitle(r);
                     members[r] = {
-                        name: "طالب " + (i + 1) + " (" + rAr + ")",
-                        rawCode: generateSimJoinCode(),
-                        joinCodeHash: "",
-                        claimedByUid: null
+                        studentUid: null,
+                        displayName: null,
+                        claimedByUid: null,
+                        name: null,
+                        rawCode: null,
+                        joinCodeHash: null
                     };
                 });
                 mpTeacherTeams.push({
@@ -20668,6 +20665,9 @@
 
         function renderMultiplayerTeacherTeams() {
             if (!simMpTeamsList) return;
+            if (window.mpTeacherTeams && Array.isArray(window.mpTeacherTeams) && window.mpTeacherTeams !== mpTeacherTeams) {
+                mpTeacherTeams = window.mpTeacherTeams;
+            }
             if (mpTeacherRosterStudents.length === 0) {
                 loadTeacherRosterStudents();
             }
@@ -20692,7 +20692,7 @@
 
                 html += '  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));gap:8px;">';
                 ["leader", "military", "intelligence", "economy", "planner"].forEach(function(r) {
-                    var m = t.members[r];
+                    var m = t.members[r] || {};
                     var isClaimed = !!m.claimedByUid;
                     var isRosterStudent = !!m.studentUid;
 
@@ -20701,34 +20701,38 @@
                     html += '        <div style="font-size:0.75rem;font-weight:700;color:#93c5fd;">' + getRoleArabicTitle(r) + '</div>';
                     if (isRosterStudent) {
                         html += '        <span style="font-size:0.65rem;background:#0369a1;color:#e0f2fe;padding:1px 5px;border-radius:4px;font-weight:700;">🎓 مسند بحساب</span>';
+                    } else if (isClaimed) {
+                        html += '        <span style="font-size:0.65rem;background:#059669;color:#ecfdf5;padding:1px 5px;border-radius:4px;font-weight:700;">✅ متصل (سابق)</span>';
+                    } else {
+                        html += '        <span style="font-size:0.65rem;background:#475569;color:#cbd5e1;padding:1px 5px;border-radius:4px;font-weight:700;">⏳ شاغر</span>';
                     }
                     html += '      </div>';
 
                     if (isRosterStudent) {
                         html += '      <div style="background:rgba(2,132,199,0.15);border:1px solid rgba(2,132,199,0.35);border-radius:6px;padding:6px;margin:2px 0;">';
                         html += '        <div style="font-size:0.82rem;font-weight:700;color:#38bdf8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + (m.displayName || m.name) + '</div>';
-                        html += '        <div style="font-size:0.68rem;color:#94a3b8;margin-top:2px;">دخول مباشر بحساب الطالب (بدون رمز)</div>';
+                        html += '        <div style="font-size:0.68rem;color:#94a3b8;margin-top:2px;">دخول مباشر بحساب الطالب</div>';
                         html += '      </div>';
-                        html += '      <button type="button" class="btn btn-secondary sim-mp-unassign-student-btn" data-team="' + t.id + '" data-role="' + r + '" style="font-size:0.68rem;padding:2px 6px;margin-top:2px;color:#cbd5e1;">↩️ إلغاء التعيين / استخدام رمز</button>';
-                        html += '      <div style="font-size:0.7rem;margin-top:2px;"><span style="color:#34d399;font-weight:700;">✅ جاهز للدخول</span></div>';
+                        html += '      <button type="button" class="btn btn-secondary sim-mp-unassign-student-btn" data-team="' + t.id + '" data-role="' + r + '" style="font-size:0.68rem;padding:2px 6px;margin-top:2px;color:#cbd5e1;">↩️ إلغاء التعيين</button>';
+                        html += '      <div style="font-size:0.7rem;margin-top:2px;"><span style="color:#34d399;font-weight:700;">✅ مسند للطالب</span></div>';
+                    } else if (isClaimed) {
+                        html += '      <div style="background:rgba(5,150,105,0.15);border:1px solid rgba(5,150,105,0.35);border-radius:6px;padding:6px;margin:2px 0;">';
+                        html += '        <div style="font-size:0.82rem;font-weight:700;color:#6ee7b7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + (m.displayName || m.name || 'طالب سابق') + '</div>';
+                        html += '        <div style="font-size:0.68rem;color:#94a3b8;margin-top:2px;">جلسة متصلة سابقة</div>';
+                        html += '      </div>';
+                        html += '      <button type="button" class="btn btn-secondary sim-mp-unassign-student-btn" data-team="' + t.id + '" data-role="' + r + '" style="font-size:0.68rem;padding:2px 6px;margin-top:2px;color:#cbd5e1;">↩️ إعادة تعيين من السجل</button>';
                     } else {
-                        html += '      <input type="text" class="sim-input sim-mp-name-input" data-team="' + t.id + '" data-role="' + r + '" value="' + (m.name || "") + '" style="font-size:0.78rem;padding:3px 6px;width:100%;border-radius:4px;background:rgba(0,0,0,0.5);color:#fff;border:1px solid #334155;" placeholder="اسم الطالب">';
                         if (mpTeacherRosterStudents && mpTeacherRosterStudents.length > 0) {
-                            html += '      <select class="sim-select sim-mp-roster-assign-select" data-team="' + t.id + '" data-role="' + r + '" style="font-size:0.72rem;padding:2px 4px;margin-top:2px;background:rgba(15,23,42,0.9);color:#7dd3fc;border:1px solid #0284c7;border-radius:4px;width:100%;">';
-                            html += '        <option value="">🎓 تعيين طالب من سجلي...</option>';
+                            html += '      <select class="sim-select sim-mp-roster-assign-select" data-team="' + t.id + '" data-role="' + r + '" style="font-size:0.75rem;padding:4px 6px;margin-top:4px;background:rgba(15,23,42,0.9);color:#7dd3fc;border:1px solid #0284c7;border-radius:4px;width:100%;">';
+                            html += '        <option value="">🎓 اختر طالباً من سجلك...</option>';
                             mpTeacherRosterStudents.forEach(function(st) {
                                 html += '        <option value="' + st.uid + '">' + (st.displayName || st.username) + '</option>';
                             });
                             html += '      </select>';
+                        } else {
+                            html += '      <div style="font-size:0.7rem;color:#94a3b8;margin-top:4px;">لم يتم العثور على طلاب في سجلك.</div>';
                         }
-                        html += '      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:3px;">';
-                        html += '        <code style="font-family:monospace;font-weight:800;font-size:0.85rem;color:#38bdf8;letter-spacing:1px;">' + (m.rawCode || '******') + '</code>';
-                        html += '        <div style="display:flex;gap:3px;">';
-                        html += '          <button type="button" class="btn btn-secondary sim-mp-copy-code-btn" data-code="' + (m.rawCode || '') + '" title="نسخ رمز الانضمام" style="padding:2px 5px;font-size:0.7rem;">📋</button>';
-                        html += '          <button type="button" class="btn btn-secondary sim-mp-regen-code-btn" data-team="' + t.id + '" data-role="' + r + '" title="تجديد هذا الرمز" style="padding:2px 5px;font-size:0.7rem;">🔄</button>';
-                        html += '        </div>';
-                        html += '      </div>';
-                        html += '      <div style="font-size:0.7rem;margin-top:2px;">' + (isClaimed ? '<span style="color:#34d399;font-weight:700;">✅ متصل</span>' : '<span style="color:#94a3b8;">⏳ لم ينضم</span>') + '</div>';
+                        html += '      <div style="font-size:0.7rem;margin-top:4px;color:#94a3b8;">يرجى اختيار طالب من السجل لإسناد الدور.</div>';
                     }
                     html += '    </div>';
                 });
@@ -20736,17 +20740,6 @@
                 html += '</div>';
             });
             simMpTeamsList.innerHTML = html;
-
-            simMpTeamsList.querySelectorAll(".sim-mp-name-input").forEach(function(inp) {
-                inp.addEventListener("change", function() {
-                    var tId = this.dataset.team;
-                    var role = this.dataset.role;
-                    var team = mpTeacherTeams.find(function(x) { return x.id === tId; });
-                    if (team && team.members[role]) {
-                        team.members[role].name = this.value.trim();
-                    }
-                });
-            });
 
             simMpTeamsList.querySelectorAll(".sim-mp-roster-assign-select").forEach(function(sel) {
                 sel.addEventListener("change", function() {
@@ -20778,30 +20771,11 @@
                         mem.studentUid = null;
                         mem.displayName = null;
                         mem.claimedByUid = null;
-                        mem.rawCode = generateSimJoinCode();
-                        mem.joinCodeHash = "";
-                        mem.name = "طالب (" + getRoleArabicTitle(role) + ")";
+                        mem.rawCode = null;
+                        mem.joinCodeHash = null;
+                        mem.name = null;
                         renderMultiplayerTeacherTeams();
                     }
-                });
-            });
-
-            simMpTeamsList.querySelectorAll(".sim-mp-copy-code-btn").forEach(function(btn) {
-                btn.addEventListener("click", function() {
-                    var code = this.dataset.code;
-                    if (code && navigator.clipboard) {
-                        navigator.clipboard.writeText(code).then(function() {
-                            if (typeof Go === "function") Go("تم نسخ رمز الانضمام: " + code);
-                        });
-                    }
-                });
-            });
-
-            simMpTeamsList.querySelectorAll(".sim-mp-regen-code-btn").forEach(function(btn) {
-                btn.addEventListener("click", function() {
-                    var tId = this.dataset.team;
-                    var role = this.dataset.role;
-                    regenerateMemberJoinCode(tId, role);
                 });
             });
         }
@@ -20825,16 +20799,14 @@
             }
 
             var currentUser = window.firebaseAuth ? window.firebaseAuth.currentUser : null;
-            if (!currentUser && window.firebaseSignInAnonymous) {
-                var anonRes = await window.firebaseSignInAnonymous();
-                if (!anonRes.ok) {
-                    if (simMpTeacherAlert) {
-                        simMpTeacherAlert.style.background = "rgba(239,68,68,0.2)";
-                        simMpTeacherAlert.style.color = "#f87171";
-                        simMpTeacherAlert.textContent = "تعذر الاتصال بالمصادقة السحابية.";
-                    }
-                    return;
+            if (!currentUser) {
+                if (simMpTeacherAlert) {
+                    simMpTeacherAlert.style.display = "block";
+                    simMpTeacherAlert.style.background = "rgba(239,68,68,0.2)";
+                    simMpTeacherAlert.style.color = "#f87171";
+                    simMpTeacherAlert.textContent = "يجب تسجيل الدخول بحساب المعلم لتدشين اللعبة الجماعية.";
                 }
+                return;
             }
 
             for (var t of mpTeacherTeams) {
@@ -20844,8 +20816,6 @@
                         m.claimedByUid = m.studentUid;
                         m.joinCodeHash = null;
                         m.rawCode = null;
-                    } else if (m && m.rawCode && !m.joinCodeHash) {
-                        m.joinCodeHash = await window.firebaseHashJoinCode(m.rawCode);
                     }
                 }
             }
@@ -20870,17 +20840,29 @@
                     var mem = teamObj.members[rk] || {};
                     if (mem.studentUid) {
                         cleanMembers[rk] = {
-                            name: mem.name || mem.displayName || "طالب",
+                            name: mem.displayName || mem.name || "طالب",
                             displayName: mem.displayName || mem.name || "طالب",
                             studentUid: mem.studentUid,
                             claimedByUid: mem.studentUid,
                             joinCodeHash: null
                         };
-                    } else {
+                    } else if (mem.claimedByUid && !mem.studentUid) {
+                        // Preserve historical pre-existing games with legacy anonymous claimed members
                         cleanMembers[rk] = {
-                            name: mem.name,
-                            joinCodeHash: mem.joinCodeHash || null,
-                            claimedByUid: mem.claimedByUid || null
+                            name: mem.name || "طالب",
+                            displayName: mem.displayName || mem.name || "طالب",
+                            studentUid: null,
+                            claimedByUid: mem.claimedByUid,
+                            joinCodeHash: mem.joinCodeHash || null
+                        };
+                    } else {
+                        // Unassigned slot
+                        cleanMembers[rk] = {
+                            name: null,
+                            displayName: null,
+                            studentUid: null,
+                            claimedByUid: null,
+                            joinCodeHash: null
                         };
                     }
                 });
@@ -20962,7 +20944,7 @@
             if (simMpTeacherAlert) {
                 simMpTeacherAlert.style.background = "rgba(16,185,129,0.2)";
                 simMpTeacherAlert.style.color = "#34d399";
-                simMpTeacherAlert.textContent = "✅ تم تدشين وحفظ اللعبة برمز: " + gId + ". الرموز جاهزة للمشاركة مع طلابك!";
+                simMpTeacherAlert.textContent = "✅ تم تدشين وحفظ اللعبة برمز: " + gId + ". يمكن للطلاب المسندين الدخول مباشرة بحساباتهم!";
             }
 
             if (simMultiplayerBadge) {
@@ -20973,71 +20955,6 @@
             }
 
             if (typeof Go === "function") Go("تم نشر وتدشين اللعبة السحابية بنجاح! رمز اللعبة: " + gId);
-        }
-
-        async function regenerateMemberJoinCode(teamId, roleKey) {
-            var targetTeam = mpTeacherTeams.find(function(t) { return t.id === teamId; });
-            if (!targetTeam || !targetTeam.members[roleKey]) return;
-            var newCode = generateSimJoinCode();
-            var newHash = await window.firebaseHashJoinCode(newCode);
-
-            targetTeam.members[roleKey].rawCode = newCode;
-            targetTeam.members[roleKey].joinCodeHash = newHash;
-            targetTeam.members[roleKey].claimedByUid = null;
-
-            if (simState.gameId && window.firebaseRegenerateMemberCode) {
-                await window.firebaseRegenerateMemberCode(simState.gameId, teamId, roleKey, newHash);
-            }
-            window.mpTeacherTeams = mpTeacherTeams;
-            renderMultiplayerTeacherTeams();
-            if (typeof Go === "function") Go("تم تجديد رمز دور " + getRoleArabicTitle(roleKey) + ": " + newCode);
-            return newCode;
-        }
-
-        async function submitStudentLogin() {
-            var gId = simLoginGameCode ? simLoginGameCode.value.trim().toUpperCase() : "";
-            var jCode = simLoginJoinCode ? simLoginJoinCode.value.trim().toUpperCase() : "";
-            if (!gId || !jCode) {
-                if (simLoginStatusAlert) {
-                    simLoginStatusAlert.style.display = "block";
-                    simLoginStatusAlert.style.background = "rgba(239,68,68,0.2)";
-                    simLoginStatusAlert.style.color = "#f87171";
-                    simLoginStatusAlert.textContent = "يرجى إدخال رمز اللعبة ورمز الانضمام الشخصي.";
-                }
-                return;
-            }
-
-            if (simLoginStatusAlert) {
-                simLoginStatusAlert.style.display = "block";
-                simLoginStatusAlert.style.background = "rgba(59,130,246,0.2)";
-                simLoginStatusAlert.style.color = "#60a5fa";
-                simLoginStatusAlert.textContent = "جاري التحقق من الرمز وحجز مقعد الوزارة على السحابة...";
-            }
-
-            var res = await window.firebaseLookupAndClaimJoinCode(gId, jCode);
-            if (!res.ok) {
-                if (simLoginStatusAlert) {
-                    simLoginStatusAlert.style.display = "block";
-                    simLoginStatusAlert.style.background = "rgba(239,68,68,0.2)";
-                    simLoginStatusAlert.style.color = "#f87171";
-                    simLoginStatusAlert.textContent = res.message || "رمز الانضمام غير صالح أو اللعبة غير موجودة.";
-                }
-                return;
-            }
-
-            try {
-                localStorage.setItem("agy_sim_session", JSON.stringify({
-                    gameId: res.gameId,
-                    teamId: res.teamId,
-                    role: res.role,
-                    uid: res.uid,
-                    memberName: res.memberName,
-                    teamName: res.teamName,
-                    joinCode: jCode
-                }));
-            } catch(e) {}
-
-            startMultiplayerSession(res);
         }
 
         function startMultiplayerSession(res) {
@@ -21253,13 +21170,23 @@
             }
 
             if (!currentStudentUid || !window.firebaseGetAssignedSimGamesForStudent) {
-                wrap.style.display = "none";
+                wrap.style.display = "block";
+                list.innerHTML = '<div style="text-align:center;padding:16px;color:#94a3b8;font-size:0.88rem;">' +
+                    '<div style="font-size:1.8rem;margin-bottom:8px;">🔒</div>' +
+                    '<div style="color:#f8fafc;font-weight:700;margin-bottom:4px;">تسجيل الدخول مطلوب</div>' +
+                    '<div>يرجى تسجيل الدخول بحساب الطالب المدرسي لعرض ألعابك الجماعية المسندة.</div>' +
+                    '</div>';
                 return;
             }
 
             var res = await window.firebaseGetAssignedSimGamesForStudent(currentStudentUid);
             if (!res || !res.ok || !res.games || res.games.length === 0) {
-                wrap.style.display = "none";
+                wrap.style.display = "block";
+                list.innerHTML = '<div style="text-align:center;padding:16px;color:#94a3b8;font-size:0.88rem;">' +
+                    '<div style="font-size:1.8rem;margin-bottom:8px;">📭</div>' +
+                    '<div style="color:#f8fafc;font-weight:700;margin-bottom:4px;">لا توجد ألعاب مسندة حالياً</div>' +
+                    '<div>لم يقم المعلم بإسناد دور لك في لعبة محاكاة بعد. تواصل مع معلمك لإسناد دور لك في فريقه.</div>' +
+                    '</div>';
                 return;
             }
 
@@ -21400,19 +21327,6 @@
             });
         }
 
-        if (simSubmitPlayerLoginBtn) {
-            simSubmitPlayerLoginBtn.addEventListener("click", submitStudentLogin);
-        }
-
-        if (simLoginJoinCode) {
-            simLoginJoinCode.addEventListener("keydown", function(e) {
-                if (e.key === "Enter") {
-                    e.preventDefault();
-                    submitStudentLogin();
-                }
-            });
-        }
-
         if (simMpRegenGameCodeBtn) {
             simMpRegenGameCodeBtn.addEventListener("click", function() {
                 var code = "SIM" + Math.floor(100 + Math.random() * 900);
@@ -21428,30 +21342,6 @@
 
         if (simMpSaveGameBtn) {
             simMpSaveGameBtn.addEventListener("click", saveMultiplayerGame);
-        }
-
-        if (simMpCopyAllCodesBtn) {
-            simMpCopyAllCodesBtn.addEventListener("click", function() {
-                var gCode = (simMpGameCodeInput ? simMpGameCodeInput.value.trim().toUpperCase() : "") || "SIM101";
-                var text = "👑 بيانات الانضمام لمحاكاة الأمم الجماعية\n🏷️ رمز اللعبة: " + gCode + "\n════════════════════════════════════\n";
-                mpTeacherTeams.forEach(function(t) {
-                    text += "🚩 " + t.name + ":\n";
-                    ["leader", "military", "intelligence", "economy", "planner"].forEach(function(r) {
-                        var m = t.members[r];
-                        if (m && m.studentUid) {
-                            text += "  • " + getRoleArabicTitle(r) + " (" + (m.displayName || m.name) + "): [دخول مباشر بحساب الطالب 🎓]\n";
-                        } else {
-                            text += "  • " + getRoleArabicTitle(r) + " (" + m.name + "): " + (m.rawCode || '******') + "\n";
-                        }
-                    });
-                    text += "\n";
-                });
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText(text).then(function() {
-                        if (typeof Go === "function") Go("تم نسخ رموز انضمام كافة الفرق بنجاح!");
-                    });
-                }
-            });
         }
 
         if (simMpSwitchToDrawingBtn) {
@@ -21491,8 +21381,6 @@
         window.loadSandboxSimulationState = loadSandboxSimulationState;
         window.startMultiplayerSession = startMultiplayerSession;
         window.saveMultiplayerGame = saveMultiplayerGame;
-        window.submitStudentLogin = submitStudentLogin;
-        window.regenerateMemberJoinCode = regenerateMemberJoinCode;
         window.initDefaultMpTeacherTeams = initDefaultMpTeacherTeams;
         if (typeof window.firebaseOnAuthChange === "function") {
             window.firebaseOnAuthChange(function(u) {

@@ -11827,7 +11827,10 @@
         try {
             e = localStorage.getItem("lepidosSection");
         } catch (e) {}
-        if ("history" !== e && Pd("geo"), "geo" !== e && "history" !== e) {
+        if ("history" !== e) {
+            Pd("geo");
+        }
+        if ("geo" !== e && "history" !== e) {
             var t = document.getElementById("sectionPickerOverlay");
             if (t) {
                 t.style.display = "flex";

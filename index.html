@@ -2058,6 +2058,10 @@
                         <i data-lucide="award" class="lucide-icon"></i>
                         <span>كشف درجاتي وملاحظات المعلم</span>
                     </button>
+                    <button class="student-hub-tab-btn" id="studentTabSimGamesBtn" data-tab="simGames">
+                        <i data-lucide="shield" class="lucide-icon"></i>
+                        <span>محاكاة الأمم (أدواري المسندة)</span>
+                    </button>
                 </div>
 
                 <div class="student-hub-body">
@@ -2161,6 +2165,20 @@
                             <div class="student-grades-records" id="studentGradesRecordsList" style="display:flex;flex-direction:column;gap:12px;">
                                 <!-- Populated dynamically -->
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Sim Games Tab Panel -->
+                    <div class="student-tab-panel" id="studentTabSimGamesPanel" style="display:none">
+                        <div class="student-hub-panel-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+                            <div>
+                                <h4 style="margin:0 0 4px;font-size:1.05rem;font-weight:800;">أدواري المسندة في محاكاة الأمم (Nation Simulation)</h4>
+                                <p style="margin:0;font-size:0.84rem;color:var(--text-muted);">الألعاب التي أسند لك المعلم فيها منصباً وزارياً أو قيادياً بحسابك المدرسي — ادخل مباشرة بنقرة واحدة</p>
+                            </div>
+                            <span class="badge" id="studentActiveSimGamesBadge" style="background:#4338ca;color:#fff;padding:4px 12px;border-radius:999px;font-size:0.82rem;font-weight:800;">الألعاب المسندة</span>
+                        </div>
+                        <div class="student-simgames-cards" id="studentSimGamesCardsList" style="display:flex;flex-direction:column;gap:12px;">
+                            <!-- Populated dynamically via JS -->
                         </div>
                     </div>
                 </div>
@@ -3077,6 +3095,18 @@
                     </div>
 
                     <div class="sim-teacher-modal-body" style="padding:22px;gap:16px;">
+                        <!-- Quick Assigned Games for Account Students -->
+                        <div id="simQuickAssignedGamesWrap" style="display:none;background:rgba(15,23,42,0.85);border:1.5px solid #0284c7;border-radius:10px;padding:12px;margin-bottom:6px;">
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                                <div style="display:flex;align-items:center;gap:6px;">
+                                    <span style="font-size:1.1rem;">🎓</span>
+                                    <strong style="font-size:0.88rem;color:#38bdf8;">ألعابك المسندة بحسابك المدرسي:</strong>
+                                </div>
+                                <span style="font-size:0.75rem;background:#0369a1;color:#e0f2fe;padding:2px 8px;border-radius:999px;font-weight:700;">دخول مباشر</span>
+                            </div>
+                            <div id="simQuickAssignedGamesList" style="display:flex;flex-direction:column;gap:8px;"></div>
+                        </div>
+
                         <div>
                             <label for="simLoginGameCode" style="display:block;font-size:0.85rem;color:#cbd5e1;margin-bottom:6px;font-weight:700;">
                                 🏷️ رمز اللعبة الجماعية (Game Code):

@@ -424,13 +424,122 @@ window.firebaseCheckSimSession = async function(gameId, teamId, role) {
                 teamColor: tData.color,
                 nationId: tData.nationId || null,
                 role: role,
-                memberName: mem.name,
+                memberName: mem.displayName || mem.name || 'طالب',
                 uid: currentUid
             };
         }
         return { valid: false };
     } catch(e) {
         return { valid: false, error: e };
+    }
+};
+
+// Stage 1 Additive: Teacher Roster Queries & Student Assigned Sim Games
+window.firebaseGetTeacherStudents = async function(teacherUid) {
+    try {
+        let tUid = teacherUid;
+        if (!tUid && auth.currentUser) {
+            tUid = auth.currentUser.uid;
+        }
+        if (!tUid) return { ok: false, error: 'no_teacher_uid', students: [] };
+
+        const q = query(collection(db, 'users'), where('teacherId', '==', tUid));
+        const snap = await getDocs(q);
+        const students = [];
+        snap.forEach(docSnap => {
+            const data = docSnap.data();
+            if (data.role === 'student') {
+                students.push({
+                    uid: docSnap.id,
+                    displayName: data.displayName || data.username || 'طالب',
+                    username: data.username || '',
+                    classId: data.classId || '',
+                    orgId: data.orgId || '',
+                    active: data.active !== false
+                });
+            }
+        });
+        students.sort((a, b) => (a.displayName || '').localeCompare(b.displayName || ''));
+        return { ok: true, students: students };
+    } catch(err) {
+        console.error('Failed to get teacher students:', err);
+        return { ok: false, error: err.message || String(err), students: [] };
+    }
+};
+
+window.firebaseGetAssignedSimGamesForStudent = async function(studentUid) {
+    try {
+        let sUid = studentUid;
+        if (!sUid && auth.currentUser) {
+            sUid = auth.currentUser.uid;
+        }
+        if (!sUid) return { ok: false, error: 'no_student_uid', games: [] };
+
+        // 1. Get student profile if possible to check their teacherId
+        let teacherId = null;
+        try {
+            const userSnap = await getDoc(doc(db, 'users', sUid));
+            if (userSnap.exists()) {
+                const sData = userSnap.data();
+                teacherId = sData.teacherId || null;
+            }
+        } catch(e) {
+            console.warn('Could not read user profile for teacherId:', e);
+        }
+
+        // 2. Query simGames (scoped by teacherId if known, otherwise all simGames)
+        let gamesSnap = null;
+        if (teacherId) {
+            try {
+                gamesSnap = await getDocs(query(collection(db, 'simGames'), where('teacherId', '==', teacherId)));
+            } catch(e) {
+                console.warn('Query by teacherId failed, falling back to all simGames:', e);
+            }
+        }
+        if (!gamesSnap) {
+            gamesSnap = await getDocs(collection(db, 'simGames'));
+        }
+
+        const assignedGames = [];
+
+        // 3. For each game, inspect the teams subcollection
+        for (const gDoc of gamesSnap.docs) {
+            const gData = gDoc.data();
+            const gameId = gDoc.id;
+            if (gData.status === 'archived') continue;
+
+            const teamsSnap = await getDocs(collection(db, 'simGames', gameId, 'teams'));
+            for (const tDoc of teamsSnap.docs) {
+                const tData = tDoc.data();
+                const members = tData.members || {};
+                for (const roleKey of ['leader', 'military', 'intelligence', 'economy', 'planner']) {
+                    const m = members[roleKey];
+                    if (m && (m.studentUid === sUid || m.claimedByUid === sUid)) {
+                        assignedGames.push({
+                            gameId: gameId,
+                            gameStatus: gData.status || 'setup',
+                            gamePace: gData.gamePace || 'weekly_semester',
+                            year: gData.year || 1250,
+                            seasonIdx: gData.seasonIdx || 0,
+                            createdAt: gData.createdAt,
+                            teamId: tDoc.id,
+                            teamName: tData.name,
+                            teamColor: tData.color || '#3b82f6',
+                            nationId: tData.nationId || null,
+                            role: roleKey,
+                            roleName: m.displayName || m.name || roleKey,
+                            studentUid: m.studentUid || m.claimedByUid,
+                            claimedByUid: m.claimedByUid
+                        });
+                    }
+                }
+            }
+        }
+
+        return { ok: true, games: assignedGames };
+    } catch(err) {
+        console.error('Failed to get assigned sim games for student:', err);
+        return { ok: false, error: err.message || String(err), games: [] };
     }
 };
 

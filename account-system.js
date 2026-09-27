@@ -16,17 +16,17 @@
     };
 
     var roleTitles = {
-        superAdmin: 'المسؤول العام للمنصة (Super Admin)',
-        admin: 'مدير المنظمة (Admin)',
-        itStaff: 'مسؤول تقنية المعلومات (IT Staff)',
-        teacher: 'معلم (Teacher)',
-        student: 'طالب (Student)'
+        get superAdmin() { return (typeof window.zi === 'function' ? window.zi('roleSuperAdmin') : null) || 'المسؤول العام للمنصة (Super Admin)'; },
+        get admin() { return (typeof window.zi === 'function' ? window.zi('roleAdmin') : null) || 'مدير المنظمة (Admin)'; },
+        get itStaff() { return (typeof window.zi === 'function' ? window.zi('roleItStaff') : null) || 'مسؤول تقنية المعلومات (IT Staff)'; },
+        get teacher() { return (typeof window.zi === 'function' ? window.zi('roleTeacher') : null) || 'معلم (Teacher)'; },
+        get student() { return (typeof window.zi === 'function' ? window.zi('roleStudent') : null) || 'طالب (Student)'; }
     };
 
     var tierTitles = {
-        demo: 'تجريبي (Demo)',
-        individual: 'فردي (Individual)',
-        institutional: 'مؤسسي (Institutional)'
+        get demo() { return (typeof window.zi === 'function' ? window.zi('tierDemo') : null) || 'تجريبي (Demo)'; },
+        get individual() { return (typeof window.zi === 'function' ? window.zi('tierIndividual') : null) || 'فردي (Individual)'; },
+        get institutional() { return (typeof window.zi === 'function' ? window.zi('tierInstitutional') : null) || 'مؤسسي (Institutional)'; }
     };
 
     function escapeHtml(str) {
@@ -115,7 +115,7 @@
             label.textContent = state.currentUser.displayName ? (state.currentUser.displayName + ' (' + roleShort + ')') : roleShort;
             btn.style.color = '#38bdf8';
         } else {
-            label.textContent = 'الحسابات';
+            label.textContent = (typeof window.zi === 'function' ? window.zi('accountBtnLabel') : null) || 'الحسابات';
             btn.style.color = '';
         }
     }
@@ -144,10 +144,10 @@
             body.innerHTML = `
                 <div style="background:rgba(15,23,42,0.95);border:1px solid #334155;border-radius:12px;padding:20px;text-align:right;">
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;border-bottom:1px solid #334155;padding-bottom:8px;">
-                        <h4 style="margin:0;color:#38bdf8;font-size:1.1rem;">🔑 بيانات الحساب الجديد</h4>
+                        <h4 style="margin:0;color:#38bdf8;font-size:1.1rem;">${(typeof window.zi === 'function' ? window.zi('accountCredTitle') : null) || '🔑 بيانات الحساب الجديد'}</h4>
                         <span style="font-size:0.8rem;background:rgba(56,189,248,0.2);color:#38bdf8;padding:2px 8px;border-radius:4px;">${escapeHtml(roleTitles[creds.role] || creds.role)}</span>
                     </div>
-                    <p style="font-size:0.85rem;color:#94a3b8;margin-bottom:14px;">يرجى نسخ وحفظ هذه البيانات ومشاركتها مع صاحب الحساب مباشرة؛ لن تظهر كلمة المرور مرة أخرى!</p>
+                    <p style="font-size:0.85rem;color:#94a3b8;margin-bottom:14px;">${(typeof window.zi === 'function' ? window.zi('accountCredNotice') : null) || 'يرجى نسخ وحفظ هذه البيانات ومشاركتها مع صاحب الحساب مباشرة؛ لن تظهر كلمة المرور مرة أخرى!'}</p>
                     
                     <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
                         <div style="display:flex;justify-content:space-between;background:rgba(30,41,59,0.7);padding:8px 12px;border-radius:6px;">
@@ -158,9 +158,12 @@
                             <span style="color:#cbd5e1;font-weight:600;">اسم المستخدم:</span>
                             <span id="credUsernameVal" style="color:#38bdf8;font-weight:700;font-family:monospace;direction:ltr;">${escapeHtml(creds.username)}</span>
                         </div>
-                        <div style="display:flex;justify-content:space-between;background:rgba(30,41,59,0.7);padding:8px 12px;border-radius:6px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(30,41,59,0.7);padding:8px 12px;border-radius:6px;">
                             <span style="color:#cbd5e1;font-weight:600;">كلمة المرور:</span>
-                            <span id="credPasswordVal" style="color:#fbbf24;font-weight:700;font-family:monospace;direction:ltr;">${escapeHtml(creds.password)}</span>
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <span id="credPasswordVal" style="color:#fbbf24;font-weight:700;font-family:monospace;direction:ltr;">••••••••</span>
+                                <button type="button" id="togglePasswordVisibilityBtn" class="btn btn-secondary btn-xs" style="padding:2px 6px;font-size:0.75rem;" title="إظهار / إخفاء" aria-label="إظهار أو إخفاء كلمة المرور">👁️</button>
+                            </div>
                         </div>
                         ${creds.classId ? `
                         <div style="display:flex;justify-content:space-between;background:rgba(30,41,59,0.7);padding:8px 12px;border-radius:6px;">
@@ -171,7 +174,7 @@
 
                     <div style="display:flex;gap:10px;">
                         <button type="button" id="copyCredsBtn" class="quiz-submit-btn" style="flex:1;background:#0284c7;">
-                            📋 نسخ بيانات الدخول
+                            ${(typeof window.zi === 'function' ? window.zi('accountCopyBtn') : null) || '📋 نسخ بيانات الدخول'}
                         </button>
                         <button type="button" id="closeCredModalBtn" class="btn btn-secondary" style="padding:8px 16px;">
                             إغلاق
@@ -179,6 +182,17 @@
                     </div>
                 </div>
             `;
+
+            var passValEl = document.getElementById('credPasswordVal');
+            var togglePassBtn = document.getElementById('togglePasswordVisibilityBtn');
+            var isPassMasked = true;
+            if (togglePassBtn && passValEl) {
+                togglePassBtn.onclick = function() {
+                    isPassMasked = !isPassMasked;
+                    passValEl.textContent = isPassMasked ? '••••••••' : creds.password;
+                    togglePassBtn.textContent = isPassMasked ? '👁️' : '🙈';
+                };
+            }
 
             var copyBtn = document.getElementById('copyCredsBtn');
             if (copyBtn) {

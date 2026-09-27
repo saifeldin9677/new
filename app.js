@@ -50,92 +50,169 @@
             t && (t.textContent = e);
         }, 50));
     }
+    var activeModalStack = [];
+    function registerModalOpen(id) {
+        if (!id) return;
+        var idx = activeModalStack.indexOf(id);
+        if (idx !== -1) activeModalStack.splice(idx, 1);
+        activeModalStack.push(id);
+    }
+    function registerModalClose(id) {
+        if (!id) return;
+        var idx = activeModalStack.indexOf(id);
+        if (idx !== -1) activeModalStack.splice(idx, 1);
+    }
     function J(e) {
         if (e) {
             var t = null;
             new MutationObserver(function() {
                 var n = e.classList.contains("visible") || e.classList.contains("open") || !e.hasAttribute("hidden") && "none" !== e.style.display && (e.offsetWidth > 0 || e.offsetHeight > 0);
-                n && !t ? t = function(e) {
-                    function t() {
-                        return Array.prototype.slice.call(e.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])')).filter(function(e) {
-                            return null !== e.offsetParent;
-                        });
-                    }
-                    var n = document.activeElement;
-                    function i(n) {
-                        if ("Tab" === n.key) {
-                            var i = t();
-                            if (i.length) {
-                                var a = i[0], r = i[i.length - 1];
-                                n.shiftKey && document.activeElement === a ? (n.preventDefault(), r.focus()) : n.shiftKey || document.activeElement !== r && e.contains(document.activeElement) || (n.preventDefault(), 
-                                a.focus());
+                if (n) {
+                    registerModalOpen(e.id);
+                    if (!t) {
+                        t = function(e) {
+                            function t() {
+                                return Array.prototype.slice.call(e.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])')).filter(function(e) {
+                                    return null !== e.offsetParent;
+                                });
                             }
-                        }
+                            var n = document.activeElement;
+                            function i(n) {
+                                if ("Tab" === n.key) {
+                                    var i = t();
+                                    if (i.length) {
+                                        var a = i[0], r = i[i.length - 1];
+                                        n.shiftKey && document.activeElement === a ? (n.preventDefault(), r.focus()) : n.shiftKey || document.activeElement !== r && e.contains(document.activeElement) || (n.preventDefault(), 
+                                        a.focus());
+                                    }
+                                }
+                            }
+                            if (e.addEventListener("keydown", i), !e.contains(document.activeElement)) {
+                                var a = t();
+                                a.length && a[0].focus();
+                            }
+                            return function() {
+                                e.removeEventListener("keydown", i), n && "function" == typeof n.focus && n.isConnected && null !== n.offsetParent && n.focus();
+                            };
+                        }(e);
                     }
-                    if (e.addEventListener("keydown", i), !e.contains(document.activeElement)) {
-                        var a = t();
-                        a.length && a[0].focus();
+                } else {
+                    registerModalClose(e.id);
+                    if (t) {
+                        t();
+                        t = null;
                     }
-                    return function() {
-                        e.removeEventListener("keydown", i), n && "function" == typeof n.focus && n.isConnected && null !== n.offsetParent && n.focus();
-                    };
-                }(e) : !n && t && (t(), t = null);
+                }
             }).observe(e, {
                 attributes: !0,
                 attributeFilter: [ "class", "style", "hidden" ]
             });
         }
     }
-    window.announceToScreenReader = X, [ "countryPanel", "layersModal", "divisionPopover", "annotationsModal", "annotationLabelModal", "annotationPlaceModal", "mobileModeSheet", "shortcutsOverlay", "dataTableOverlay", "histPolityCompareModal", "histSourcesPanel", "histWaypointPopup", "histTravelerCard", "eraQuizModal", "eraCompareModal" ].forEach(function(e) {
+    const allAccessibleModals = [
+        "countryPanel", "layersModal", "divisionPopover", "annotationsModal",
+        "annotationLabelModal", "annotationPlaceModal", "mobileModeSheet",
+        "mobileActivitiesSheet", "mobileSideDrawer", "shortcutsOverlay",
+        "dataTableOverlay", "sectionPickerOverlay", "langOverlay", "projectionOverlay",
+        "projectionCompareOverlay", "onboardOverlay", "histPolityCompareModal",
+        "histSourcesPanel", "histWaypointPopup", "histTravelerCard",
+        "histCrossroadsModal", "eraQuizModal", "eraCompareModal",
+        "academicSourcesOverlay", "termsOverlay", "classWorksheetOverlay",
+        "quizSetupOverlay", "quizHudOverlay", "quizEndOverlay",
+        "quizModeChoiceOverlay", "quizCustomSetupOverlay", "quizAuthoringOverlay",
+        "quizReviewOverlay", "quizResultsOverlay", "teacherLoginOverlay",
+        "teacherHubOverlay", "teacherSpatialReviewModal", "studentHubOverlay",
+        "studentAssignmentOverlay", "studentResearchModal", "studentResearchSubmitModal",
+        "simTeacherModal", "simWorldSetupModal", "simTeacherMultiplayerModal",
+        "simPlayerLoginModal", "simQuickTradeModal", "simCountryDossierModal",
+        "accountSystemOverlay", "accountCredentialModal", "infoOverlay",
+        "annotationSidePanel", "exportBlockingOverlay"
+    ];
+    window.announceToScreenReader = X;
+    allAccessibleModals.forEach(function(e) {
         J(document.getElementById(e));
-    }), document.addEventListener("keydown", function(e) {
+    });
+    document.addEventListener("keydown", function(e) {
         if ("Escape" === e.key) {
-            var t = c("layersModal") || c("divisionPopover") || c("annotationsModal") || c("annotationLabelModal");
+            function c(id) {
+                var t = document.getElementById(id);
+                return !!t && (t.classList.contains("visible") || t.classList.contains("open") || (!t.hasAttribute("hidden") && "none" !== t.style.display && null !== t.offsetParent));
+            }
+            function dismissModalById(dId) {
+                e.stopImmediatePropagation();
+                registerModalClose(dId);
+                if ("countryPanel" === dId) {
+                    Eo();
+                    return;
+                }
+                var modalEl = document.getElementById(dId);
+                if (modalEl) {
+                    var closeBtn = modalEl.querySelector(".close-btn, .modal-close, .layers-modal-close, .mobile-mode-sheet-close, .drawer-close-btn, .hist-crossroads-modal-close, [id$='CloseBtn'], [id$='Close'], [id$='close'], button[data-i18n$='Close'], button[data-i18n$='close']");
+                    if (closeBtn && "function" == typeof closeBtn.click) {
+                        closeBtn.click();
+                    } else {
+                        modalEl.style.display = "none";
+                        modalEl.classList.remove("visible", "open");
+                        modalEl.setAttribute("hidden", "");
+                    }
+                }
+            }
+            if (c("annotationPlaceModal")) {
+                var o = document.getElementById("annotationPlaceModal");
+                return o && "function" == typeof o._placeCleanup && o._placeCleanup(), void e.stopImmediatePropagation();
+            }
+            if (c("annotationLabelModal")) {
+                var s = document.getElementById("annotationLabelInput");
+                return s && "function" == typeof s.onkeydown && s.onkeydown({
+                    key: "Escape",
+                    preventDefault: function() {}
+                }), void e.stopImmediatePropagation();
+            }
+            if (c("histWaypointPopup")) return e.stopImmediatePropagation(), void lc();
+            if (c("histTravelerCard")) {
+                e.stopImmediatePropagation();
+                var i = document.getElementById("histTravelerCard");
+                return void (i && (i.style.display = "none"));
+            }
+            if (c("histSourcesPanel")) {
+                e.stopImmediatePropagation();
+                var a = document.getElementById("histSourcesPanel");
+                return void (a && (a.style.display = "none"));
+            }
             if (c("histPolityCompareModal")) {
                 e.stopImmediatePropagation();
                 var n = document.getElementById("histPolityCompareModal");
-                n && (n.setAttribute("hidden", ""), n.style.display = "none", n.classList.remove("visible"));
-            } else {
-                if (c("histWaypointPopup")) return e.stopImmediatePropagation(), void lc();
-                if (c("histTravelerCard")) {
-                    e.stopImmediatePropagation();
-                    var i = document.getElementById("histTravelerCard");
-                    i && (i.style.display = "none");
-                } else if (c("histSourcesPanel")) {
-                    e.stopImmediatePropagation();
-                    var a = document.getElementById("histSourcesPanel");
-                    a && (a.style.display = "none");
-                } else if (c("eraQuizModal")) {
-                    e.stopImmediatePropagation();
-                    var r = document.getElementById("eraQuizModal");
-                    r && (r.style.display = "none", r.classList.remove("visible"));
+                return void (n && (n.setAttribute("hidden", ""), n.style.display = "none", n.classList.remove("visible")));
+            }
+            if (c("eraQuizModal")) {
+                e.stopImmediatePropagation();
+                var r = document.getElementById("eraQuizModal");
+                return void (r && (r.style.display = "none", r.classList.remove("visible")));
+            }
+            if (c("eraCompareModal")) {
+                e.stopImmediatePropagation();
+                var l = document.getElementById("eraCompareModal");
+                return void (l && (l.style.display = "none", l.classList.remove("visible")));
+            }
+            // Check dynamic LIFO stack first
+            while (activeModalStack.length > 0) {
+                var topId = activeModalStack[activeModalStack.length - 1];
+                if (c(topId)) {
+                    dismissModalById(topId);
+                    return;
                 } else {
-                    if (!c("eraCompareModal")) {
-                        if (!t && c("dataTableOverlay")) return e.stopImmediatePropagation(), void document.getElementById("dataTableOverlay").classList.remove("visible");
-                        if (!t && c("shortcutsOverlay")) return e.stopImmediatePropagation(), void document.getElementById("shortcutsOverlay").classList.remove("visible");
-                        if (c("annotationPlaceModal")) {
-                            var o = document.getElementById("annotationPlaceModal");
-                            return o && "function" == typeof o._placeCleanup && o._placeCleanup(), void e.stopImmediatePropagation();
-                        }
-                        if (c("annotationLabelModal")) {
-                            var s = document.getElementById("annotationLabelInput");
-                            return s && "function" == typeof s.onkeydown && s.onkeydown({
-                                key: "Escape",
-                                preventDefault: function() {}
-                            }), void e.stopImmediatePropagation();
-                        }
-                        return !t && c("countryPanel") ? (e.stopImmediatePropagation(), void Eo()) : !t && c("mobileModeSheet") ? (e.stopImmediatePropagation(), 
-                        void document.getElementById("mobileModeSheet").classList.remove("visible")) : void cl(!0);
-                    }
-                    e.stopImmediatePropagation();
-                    var l = document.getElementById("eraCompareModal");
-                    l && (l.style.display = "none", l.classList.remove("visible"));
+                    activeModalStack.pop();
                 }
             }
-        }
-        function c(e) {
-            var t = document.getElementById(e);
-            return !!t && (t.classList.contains("visible") || t.classList.contains("open") || !t.hasAttribute("hidden") && "none" !== t.style.display && null !== t.offsetParent);
+            // Check other open dialogs in reverse order
+            for (var dIdx = allAccessibleModals.length - 1; dIdx >= 0; dIdx--) {
+                var dId = allAccessibleModals[dIdx];
+                if (c(dId)) {
+                    dismissModalById(dId);
+                    return;
+                }
+            }
+            cl(!0);
         }
     }, !0);
     const Z = document.getElementById("densityCanvas");
@@ -1181,8 +1258,13 @@
                 var a = MAP_COLORS.routes[i.type] || MAP_COLORS.routes.other, r = i.coords, o = ni.append("path").datum({
                     type: "LineString",
                     coordinates: r
-                }).attr("d", Gn).attr("fill", "none").attr("stroke", a).attr("stroke-width", xi ? 7 : 10).attr("vector-effect", "non-scaling-stroke").style("cursor", "pointer").on("click", function() {
+                }).attr("d", Gn).attr("fill", "none").attr("stroke", a).attr("stroke-width", xi ? 7 : 10).attr("vector-effect", "non-scaling-stroke").attr("role", "button").attr("tabindex", "0").attr("aria-label", (zi("corridors") || "ممر مائي") + ": " + (Ai(i, "name") || i.name)).style("cursor", "pointer").on("click", function() {
                     Aa(i);
+                }).on("keydown", function(evt) {
+                    if ("Enter" === evt.key || " " === evt.key) {
+                        evt.preventDefault && evt.preventDefault();
+                        Aa(i);
+                    }
                 });
                 e ? o.attr("opacity", .35) : o.attr("opacity", 0).transition().duration(n() ? 0 : 300).attr("opacity", .35), 
                 o = ni.append("path").datum({
@@ -1314,7 +1396,7 @@
         var e = ao();
         const t = "terrain" === ae, i = "terrain" === ae || ce;
         (t || i) && (t && mountainRanges.forEach(t => {
-            const i = Da(t.coords[Math.floor(t.coords.length / 2)]), a = "all" === ie || i === ie ? 1 : .35, r = t.weight || 1, o = ii.append("g").attr("class", "terrain-feature").style("cursor", "pointer");
+            const i = Da(t.coords[Math.floor(t.coords.length / 2)]), a = "all" === ie || i === ie ? 1 : .35, r = t.weight || 1, o = ii.append("g").attr("class", "terrain-feature").attr("role", "button").attr("tabindex", "0").attr("aria-label", (zi("mountains") || "سلسلة جبلية") + ": " + (Ai(t, "name") || t.name)).style("cursor", "pointer");
             o.append("path").datum({
                 type: "LineString",
                 coordinates: t.coords
@@ -1335,10 +1417,16 @@
                 s.attr("stroke", 3 === r ? MAP_COLORS.physical.mountainMajor : 2 === r ? MAP_COLORS.physical.mountainImportant : MAP_COLORS.physical.mountainMinor).attr("opacity", .95 * a);
             }).on("click", function(e) {
                 e.stopPropagation(), Ar("mountain", t);
+            }).on("keydown", function(evt) {
+                if ("Enter" === evt.key || " " === evt.key) {
+                    evt.preventDefault && evt.preventDefault();
+                    evt.stopPropagation && evt.stopPropagation();
+                    Ar("mountain", t);
+                }
             });
         }), i && [ 1, 2, 3 ].forEach(e => {
             rivers.filter(t => (t.weight || 1) === e).forEach(e => {
-                const t = Da(e.coords[Math.floor(e.coords.length / 2)]), i = "all" === ie || t === ie ? 1 : .35, a = e.weight || 1, r = ii.append("g").attr("class", "terrain-feature").style("cursor", "pointer");
+                const t = Da(e.coords[Math.floor(e.coords.length / 2)]), i = "all" === ie || t === ie ? 1 : .35, a = e.weight || 1, r = ii.append("g").attr("class", "terrain-feature").attr("role", "button").attr("tabindex", "0").attr("aria-label", (zi("rivers") || "نهر") + ": " + (Ai(e, "name") || e.name)).style("cursor", "pointer");
                 r.append("path").datum({
                     type: "LineString",
                     coordinates: e.coords
@@ -1353,6 +1441,12 @@
                     o.attr("stroke", 3 === a ? MAP_COLORS.physical.riverMajor : 2 === a ? MAP_COLORS.physical.riverImportant : MAP_COLORS.physical.riverMinor).attr("opacity", .88 * i);
                 }).on("click", function(t) {
                     t.stopPropagation(), Ar("river", e);
+                }).on("keydown", function(evt) {
+                    if ("Enter" === evt.key || " " === evt.key) {
+                        evt.preventDefault && evt.preventDefault();
+                        evt.stopPropagation && evt.stopPropagation();
+                        Ar("river", e);
+                    }
                 });
             });
         }));
@@ -1386,7 +1480,7 @@
                 if (s && !isNaN(s[0])) {
                     var l = t[o.type] || MAP_COLORS.naturalResources.default;
                     Gt.append("circle").attr("cx", s[0]).attr("cy", s[1]).attr("r", 1.5 * i).attr("fill", l).style("pointer-events", "none").attr("opacity", 0).transition().duration(n() ? 0 : 300).attr("opacity", .2), 
-                    Gt.append("circle").datum(o).attr("cx", s[0]).attr("cy", s[1]).attr("r", i).attr("fill", l).attr("stroke", "#fff").attr("stroke-width", 1.2 / e).style("cursor", "pointer").attr("opacity", 0).transition().duration(n() ? 0 : 300).attr("opacity", .88), 
+                    Gt.append("circle").datum(o).attr("cx", s[0]).attr("cy", s[1]).attr("r", i).attr("fill", l).attr("stroke", "#fff").attr("stroke-width", 1.2 / e).attr("role", "button").attr("tabindex", "0").attr("aria-label", (zi("naturalResources") || "مورد طبيعي") + ": " + (Ai(o, "name") || o.name)).style("cursor", "pointer").on("keydown", function(e) { if ("Enter" === e.key || " " === e.key) { e.preventDefault && e.preventDefault(); Ha(o); } }).attr("opacity", 0).transition().duration(n() ? 0 : 300).attr("opacity", .88), 
                     Gt.append("text").attr("x", s[0] + i + 5 / e).attr("y", s[1] + 4.5 / e).text(function() {
                         return "ar" === Ht ? o.name : "ru" === Ht ? o.name_ru || o.name_en : "uz" === Ht ? o.name_uz || o.name_en : "es" === Ht && o.name_es || o.name_en;
                     }).attr("fill", "#fff").attr("font-size", a + "px").attr("font-weight", "bold").style("pointer-events", "none").style("text-shadow", "0 1px 3px rgba(0,0,0,0.95), 0 0 4px rgba(0,0,0,0.85)");
@@ -1409,7 +1503,7 @@
                 if (l && !isNaN(l[0])) {
                     var c = e[s % e.length];
                     Yt.append("circle").attr("cx", l[0]).attr("cy", l[1]).attr("r", 1.5 * a).attr("fill", c).style("pointer-events", "none").attr("opacity", 0).transition().duration(n() ? 0 : 300).attr("opacity", .2), 
-                    Yt.append("circle").datum(t).attr("cx", l[0]).attr("cy", l[1]).attr("r", a).attr("fill", c).attr("stroke", "#fff").attr("stroke-width", 1.2 / i).style("cursor", "pointer").attr("opacity", 0).transition().duration(n() ? 0 : 300).attr("opacity", .7), 
+                    Yt.append("circle").datum(t).attr("cx", l[0]).attr("cy", l[1]).attr("r", a).attr("fill", c).attr("stroke", "#fff").attr("stroke-width", 1.2 / i).attr("role", "button").attr("tabindex", "0").attr("aria-label", (zi("ethnicGroups") || "مجموعة عرقية") + ": " + (Ai(t, "name") || t.name)).style("cursor", "pointer").on("keydown", function(e) { if ("Enter" === e.key || " " === e.key) { e.preventDefault && e.preventDefault(); xa(t); } }).attr("opacity", 0).transition().duration(n() ? 0 : 300).attr("opacity", .7), 
                     Yt.append("text").attr("x", l[0] + a + 5 / i).attr("y", l[1] + 4.5 / i).text(function() {
                         return "ar" === Ht ? t.name : "ru" === Ht ? t.name_ru || t.name_en : "uz" === Ht ? t.name_uz || t.name_en : "es" === Ht && t.name_es || t.name_en;
                     }).attr("fill", "#fff").attr("font-size", r + "px").attr("font-weight", "bold").style("pointer-events", "none").style("text-shadow", "0 1px 3px rgba(0,0,0,0.95), 0 0 4px rgba(0,0,0,0.85)");
@@ -1440,8 +1534,10 @@
                 if ("trench" === a.type) {
                     if (!(l = t(Array.isArray(a.coords[0]) ? a.coords[0] : a.coords)) || isNaN(l[0])) return;
                     var r = (xi ? 4.5 : 6.5) / i;
-                    Vt.append("rect").attr("x", l[0] - r - 4 / i).attr("y", l[1] - r - 4 / i).attr("width", 2 * (r + 4 / i)).attr("height", 2 * (r + 4 / i)).attr("fill", "transparent").style("cursor", "pointer").on("click", function() {
+                    Vt.append("rect").attr("x", l[0] - r - 4 / i).attr("y", l[1] - r - 4 / i).attr("width", 2 * (r + 4 / i)).attr("height", 2 * (r + 4 / i)).attr("fill", "transparent").attr("role", "button").attr("tabindex", "0").attr("aria-label", (zi("oceanCurrents") || "تيار محيطي") + ": " + (Ai(a, "name") || a.name)).style("cursor", "pointer").on("click", function() {
                         Ua(a);
+                    }).on("keydown", function(e) {
+                        if ("Enter" === e.key || " " === e.key) { e.preventDefault && e.preventDefault(); Ua(a); }
                     });
                     var o = Vt.append("path").attr("d", "M" + (l[0] - r) + "," + (l[1] - r) + " L" + (l[0] + r) + "," + (l[1] + r) + " M" + (l[0] - r) + "," + (l[1] + r) + " L" + (l[0] + r) + "," + (l[1] - r)).attr("stroke", MAP_COLORS.oceanCurrents.trench).attr("stroke-width", (xi ? 1.5 : 2) / i).style("pointer-events", "none");
                     return e ? o.attr("opacity", .9) : o.attr("opacity", 0).transition().duration(n() ? 0 : 300).attr("opacity", .9), 
@@ -1485,8 +1581,10 @@
                     var f = MAP_COLORS.oceanCurrents.gyre, h = Vt.append("path").datum({
                         type: "LineString",
                         coordinates: a.coords
-                    }).attr("d", Gn).attr("fill", "none").attr("stroke", f).attr("stroke-width", xi ? 2.5 : 4).attr("stroke-dasharray", "4,8").attr("vector-effect", "non-scaling-stroke").style("cursor", "pointer").on("click", function() {
+                    }).attr("d", Gn).attr("fill", "none").attr("stroke", f).attr("stroke-width", xi ? 2.5 : 4).attr("stroke-dasharray", "4,8").attr("vector-effect", "non-scaling-stroke").attr("role", "button").attr("tabindex", "0").attr("aria-label", (zi("oceanCurrents") || "تيار محيطي") + ": " + (Ai(a, "name") || a.name)).style("cursor", "pointer").on("click", function() {
                         Ua(a);
+                    }).on("keydown", function(e) {
+                        if ("Enter" === e.key || " " === e.key) { e.preventDefault && e.preventDefault(); Ua(a); }
                     });
                     e ? h.attr("opacity", .6) : h.attr("opacity", 0).transition().duration(n() ? 0 : 300).attr("opacity", .6);
                     var y = a.coords.slice();
@@ -1515,8 +1613,10 @@
                 var r = "trade" === a.type ? MAP_COLORS.winds.trade : "westerly" === a.type ? MAP_COLORS.winds.westerly : "polar" === a.type ? MAP_COLORS.winds.polar : "monsoon" === a.type ? MAP_COLORS.winds.monsoon : MAP_COLORS.winds.other, o = Qt.append("path").datum({
                     type: "LineString",
                     coordinates: a.coords
-                }).attr("d", Gn).attr("fill", "none").attr("stroke", r).attr("stroke-width", xi ? 3 : 5).attr("stroke-dasharray", "5,5").attr("vector-effect", "non-scaling-stroke").style("cursor", "pointer").on("click", function() {
+                }).attr("d", Gn).attr("fill", "none").attr("stroke", r).attr("stroke-width", xi ? 3 : 5).attr("stroke-dasharray", "5,5").attr("vector-effect", "non-scaling-stroke").attr("role", "button").attr("tabindex", "0").attr("aria-label", (zi("winds") || "رياح") + ": " + (Ai(a, "name") || a.name)).style("cursor", "pointer").on("click", function() {
                     Ar("wind", a);
+                }).on("keydown", function(e) {
+                    if ("Enter" === e.key || " " === e.key) { e.preventDefault && e.preventDefault(); Ar("wind", a); }
                 });
                 e ? o.attr("opacity", .7) : o.attr("opacity", 0).transition().duration(n() ? 0 : 300).attr("opacity", .7), 
                 Qt.append("path").datum({
@@ -1571,8 +1671,10 @@
                     coordinates: [ r.coords ]
                 });
                 if (s) {
-                    var l = Xt.append("path").attr("d", s).attr("fill", a[o % a.length]).attr("stroke", a[o % a.length]).attr("stroke-width", 1).attr("stroke-dasharray", "3,3").attr("vector-effect", "non-scaling-stroke").style("cursor", "pointer").on("click", function() {
+                    var l = Xt.append("path").attr("d", s).attr("fill", a[o % a.length]).attr("stroke", a[o % a.length]).attr("stroke-width", 1).attr("stroke-dasharray", "3,3").attr("vector-effect", "non-scaling-stroke").attr("role", "button").attr("tabindex", "0").attr("aria-label", (zi("tectonicPlates") || "صفيحة تكتونية") + ": " + (Ai(r, "name") || r.name)).style("cursor", "pointer").on("click", function() {
                         Ya(r);
+                    }).on("keydown", function(e) {
+                        if ("Enter" === e.key || " " === e.key) { e.preventDefault && e.preventDefault(); Ya(r); }
                     });
                     e ? l.attr("opacity", .04) : l.attr("opacity", 0).transition().duration(n() ? 0 : 300).attr("opacity", .04);
                     var c = r.coords[Math.floor(r.coords.length / 2)], d = t(c);
@@ -1586,8 +1688,10 @@
             }), earthquakesData.forEach(function(a) {
                 var r = (Array.isArray(a.coords[0]) ? a.coords : [ a.coords ])[0], o = t(r);
                 if (o && !isNaN(o[0])) {
-                    var s = a.magnitude >= 9 ? MAP_COLORS.earthquakes.major9 : a.magnitude >= 8 ? MAP_COLORS.earthquakes.major8 : a.magnitude >= 7 ? MAP_COLORS.earthquakes.major7 : a.magnitude >= 6 ? MAP_COLORS.earthquakes.major6 : MAP_COLORS.earthquakes.below6, l = (xi ? 3.5 : 5) / i, c = Xt.append("circle").attr("cx", o[0]).attr("cy", o[1]).attr("r", l).attr("fill", s).attr("stroke", "#fff").attr("stroke-width", .8 / i).style("cursor", "pointer").on("click", function() {
+                    var s = a.magnitude >= 9 ? MAP_COLORS.earthquakes.major9 : a.magnitude >= 8 ? MAP_COLORS.earthquakes.major8 : a.magnitude >= 7 ? MAP_COLORS.earthquakes.major7 : a.magnitude >= 6 ? MAP_COLORS.earthquakes.major6 : MAP_COLORS.earthquakes.below6, l = (xi ? 3.5 : 5) / i, c = Xt.append("circle").attr("cx", o[0]).attr("cy", o[1]).attr("r", l).attr("fill", s).attr("stroke", "#fff").attr("stroke-width", .8 / i).attr("role", "button").attr("tabindex", "0").attr("aria-label", (zi("earthquakes") || "زلزال") + ": " + (Ai(a, "name") || a.name)).style("cursor", "pointer").on("click", function() {
                         Ga(a);
+                    }).on("keydown", function(e) {
+                        if ("Enter" === e.key || " " === e.key) { e.preventDefault && e.preventDefault(); Ga(a); }
                     });
                     e ? c.attr("opacity", .85) : c.attr("opacity", 0).transition().duration(n() ? 0 : 300).attr("opacity", .85), 
                     Xt.append("circle").attr("cx", o[0]).attr("cy", o[1]).attr("r", l + 3.5 / i).attr("fill", "transparent").style("cursor", "pointer").on("click", function() {
@@ -1616,8 +1720,10 @@
             volcanoesData.forEach(function(a) {
                 var r = t(Array.isArray(a.coords[0]) ? a.coords[0] : a.coords);
                 if (r && !isNaN(r[0])) {
-                    var o = r[0], s = r[1], l = (xi ? 3.5 : 5) / i, c = Jt.append("g").style("cursor", "pointer").on("click", function() {
+                    var o = r[0], s = r[1], l = (xi ? 3.5 : 5) / i, c = Jt.append("g").attr("role", "button").attr("tabindex", "0").attr("aria-label", (zi("volcanoes") || "بركان") + ": " + (Ai(a, "name") || a.name)).style("cursor", "pointer").on("click", function() {
                         Qa(a);
+                    }).on("keydown", function(e) {
+                        if ("Enter" === e.key || " " === e.key) { e.preventDefault && e.preventDefault(); Qa(a); }
                     }), d = c.append("path").attr("d", "M" + o + "," + (s - l) + " L" + (o - .7 * l) + "," + (s + .5 * l) + " L" + (o + .7 * l) + "," + (s + .5 * l) + " Z").attr("fill", MAP_COLORS.volcanoes.fill).attr("stroke", MAP_COLORS.volcanoes.stroke).attr("stroke-width", .8 / i);
                     e ? d.attr("opacity", .9) : d.attr("opacity", 0).transition().duration(n() ? 0 : 300).attr("opacity", .9), 
                     d = c.append("circle").attr("cx", o).attr("cy", s - .2 * l).attr("r", (xi ? 1.5 : 2.2) / i).attr("fill", MAP_COLORS.volcanoes.glow), 
@@ -1719,8 +1825,10 @@
                         type: "Polygon",
                         coordinates: [ l ],
                         _data: a
-                    }).attr("d", Gn).attr("fill", "none").attr("stroke", r).attr("stroke-width", xi ? 2 : 4).attr("stroke-opacity", 1).attr("stroke-dasharray", "6,3").attr("vector-effect", "non-scaling-stroke").style("cursor", "pointer").on("click", function(e, t) {
+                    }).attr("d", Gn).attr("fill", "none").attr("stroke", r).attr("stroke-width", xi ? 2 : 4).attr("stroke-opacity", 1).attr("stroke-dasharray", "6,3").attr("vector-effect", "non-scaling-stroke").attr("role", "button").attr("tabindex", "0").attr("aria-label", ("desert" === a.type ? (zi("desert") || "صحراء") : (zi("forest") || "غابة")) + ": " + (Ai(a, "name") || a.name)).style("cursor", "pointer").on("click", function(e, t) {
                         er(t._data);
+                    }).on("keydown", function(e) {
+                        if ("Enter" === e.key || " " === e.key) { e.preventDefault && e.preventDefault(); er(a); }
                     });
                     var c = a.coords[Math.floor(a.coords.length / 2)], d = t(c);
                     if (d && !isNaN(d[0])) {
@@ -1746,7 +1854,7 @@
                     e ? d.attr("opacity", .12) : d.attr("opacity", 0).transition().duration(n() ? 0 : 300).attr("opacity", .12), 
                     d = Zt.append("circle").attr("cx", l).attr("cy", c).attr("r", 1.4 * s).attr("fill", r).style("pointer-events", "none"), 
                     e ? d.attr("opacity", .2) : d.attr("opacity", 0).transition().duration(n() ? 0 : 300).attr("opacity", .2), 
-                    d = Zt.append("circle").datum(t).attr("cx", l).attr("cy", c).attr("r", s).attr("fill", r).attr("stroke", "#fff").attr("stroke-width", (xi ? .7 : 1) / o).style("cursor", "pointer").on("click", function(e, t) {
+                    d = Zt.append("circle").datum(t).attr("cx", l).attr("cy", c).attr("r", s).attr("fill", r).attr("stroke", "#fff").attr("stroke-width", (xi ? .7 : 1) / o).attr("role", "button").attr("tabindex", "0").attr("aria-label", (zi("borderDisputes") || "نزاع حدودي") + ": " + (Ai(t, "name") || t.name)).style("cursor", "pointer").on("keydown", function(e) { if ("Enter" === e.key || " " === e.key) { e.preventDefault && e.preventDefault(); !function(e) { if (!e) return; var t = document.getElementById("panelContent"); if (!t) return; var n = "active" === e.type ? "⚔️" : "ceasefire" === e.type ? "☮️" : "🌊", i = "active" === e.type ? "ar" === Ht ? "نزاع نشط" : "ru" === Ht ? "Активный конфликт" : "uz" === Ht ? "Faol nizo" : "es" === Ht ? "Conflicto activo" : "Active Conflict" : "ceasefire" === e.type ? "ar" === Ht ? "وقف إطلاق نار" : "ru" === Ht ? "Перемирие" : "uz" === Ht ? "O't ochishni to'xtatish" : "es" === Ht ? "Alto el fuego" : "Ceasefire" : "ar" === Ht ? "نزاع بحري" : "ru" === Ht ? "Морской спор" : "uz" === Ht ? "Dengiz nizosi" : "es" === Ht ? "Disputa marítima" : "Maritime Dispute", a = "<h3>" + ("ar" === Ht ? e.name_ar : "ru" === Ht ? e.name_ru || e.name_en : "uz" === Ht ? e.name_uz || e.name_en : "es" === Ht && e.name_es || e.name_en) + "</h3>"; a += '<div style="margin-bottom:8px"><span style="font-size:1.4em">' + n + '</span> <strong style="color:' + ("active" === e.type ? MAP_COLORS.borderDisputes.active : "ceasefire" === e.type ? MAP_COLORS.borderDisputes.ceasefire : MAP_COLORS.borderDisputes.maritime) + '">' + i + "</strong></div>", a += "<p><strong>" + zi("featureCountries") + ":</strong> " + ("ar" === Ht ? e.countries_ar : "ru" === Ht ? e.countries_ru || e.countries_en : "uz" === Ht ? e.countries_uz || e.countries_en : "es" === Ht && e.countries_es || e.countries_en) + "</p>", a += "<p><strong>" + ("ar" === Ht ? "الأسباب" : "ru" === Ht ? "Причины" : "uz" === Ht ? "Sabablar" : "es" === Ht ? "Causas" : "Causes") + ":</strong> " + ("ar" === Ht ? e.causes_ar : "ru" === Ht ? e.causes_ru || e.causes_en : "uz" === Ht ? e.causes_uz || e.causes_en : "es" === Ht && e.causes_es || e.causes_en) + "</p>", wn = performance.now(), t.innerHTML = a; var r = document.getElementById("countryPanel"); r && (r.style.display = "block", requestAnimationFrame(function() { requestAnimationFrame(function() { r.classList.add("visible"); }); })); En = e, _n = "borderDispute"; }(t); } }).on("click", function(e, t) {
                         !function(e) {
                             if (!e) return;
                             var t = document.getElementById("panelContent");
@@ -2766,6 +2874,12 @@
             i && (i.textContent = Wc(jn));
         }
         En && T && T.classList.contains("visible") && ("histPhysical" === _n ? Yc(En, jn) : "histSacredSite" === _n && Pc(En));
+        if (typeof window.renderStudentAssignmentsList === "function" && document.getElementById("studentHubOverlay") && !document.getElementById("studentHubOverlay").hasAttribute("hidden") && document.getElementById("studentHubOverlay").style.display !== "none") {
+            window.renderStudentAssignmentsList();
+        }
+        if (typeof window.renderSimMapLayers === "function" && typeof isSimActive === "function" && isSimActive()) {
+            window.renderSimMapLayers();
+        }
     }
     function go() {
         s.textContent = zi("infoOverlay", {
@@ -3688,9 +3802,11 @@
         } catch (e) {}
     }
     function Go(e) {
-        c && (c.textContent = e, c.classList.add("show"), setTimeout(function() {
+        var msg = (typeof zi === "function" ? zi(e) : null) || e;
+        c && (c.textContent = msg, c.classList.add("show"), setTimeout(function() {
             c.classList.remove("show");
         }, 2e3));
+        if (typeof X === "function") X(msg);
     }
     function Yo() {
         Ko();
@@ -5007,12 +5123,22 @@
                 const d = t * a + r, u = s * a + o, p = Math.sqrt((n - d) ** 2 + (i - u) ** 2);
                 p < c && (c = p, l = e);
             }), l && (e.stopPropagation(), Za(l));
-        }, !0), sessionStorage.getItem("map_onboarded") ? V.style.display = "none" : (V.style.display = "block", 
-        setTimeout(() => {
-            V.classList.add("fade-out"), setTimeout(() => {
+        }, !0), function() {
+            var hasOnboarded = false;
+            try { hasOnboarded = !!sessionStorage.getItem("map_onboarded"); } catch(e) {}
+            if (hasOnboarded) {
                 V.style.display = "none";
-            }, 600);
-        }, 5e3), sessionStorage.setItem("map_onboarded", "1")), function() {
+            } else {
+                V.style.display = "block";
+                setTimeout(() => {
+                    V.classList.add("fade-out");
+                    setTimeout(() => {
+                        V.style.display = "none";
+                    }, 600);
+                }, 5e3);
+                try { sessionStorage.setItem("map_onboarded", "1"); } catch(e) {}
+            }
+        }(), function() {
             var e = document.getElementById("onboardOverlay"), t = document.getElementById("onboardGlow"), n = document.getElementById("onboardCard"), i = document.getElementById("onboardCardIcon"), a = document.getElementById("onboardCardTitle"), r = document.getElementById("onboardCardText"), o = document.getElementById("onboardCardDots"), s = document.getElementById("onboardSkip"), l = document.getElementById("onboardNext");
             if (e && t && n) {
                 var c = [ {
@@ -11208,8 +11334,12 @@
             n.stopPropagation(), t.classList.contains("visible") ? (t.classList.remove("visible"), 
             t.setAttribute("hidden", ""), e.setAttribute("aria-expanded", "false")) : (t.classList.add("visible"), 
             t.removeAttribute("hidden"), e.setAttribute("aria-expanded", "true"));
-        }), t.addEventListener("click", e => {
-            e.stopPropagation();
+        }), t.addEventListener("click", n => {
+            if (n.target.closest("button")) {
+                t.classList.remove("visible"), t.setAttribute("hidden", ""), e.setAttribute("aria-expanded", "false");
+            } else {
+                n.stopPropagation();
+            }
         }), document.addEventListener("click", () => {
             t.classList.remove("visible"), t.setAttribute("hidden", ""), e.setAttribute("aria-expanded", "false");
         })) : console.error("Tools elements not found:", {
@@ -13163,18 +13293,20 @@
             }
             
             if (inquiries.length === 0) {
-                teacherInquiriesList.innerHTML = '<div style="text-align:center;padding:32px;color:var(--text-muted);font-size:0.92rem;">لا توجد استفسارات مرسلة من الطلاب بعد.</div>';
+                teacherInquiriesList.innerHTML = '<div style="text-align:center;padding:32px;color:var(--text-muted);font-size:0.92rem;">' + ((typeof zi === "function" ? zi("inquiriesEmpty") : null) || 'لا توجد استفسارات مرسلة من الطلاب بعد.') + '</div>';
                 return;
             }
             
             var html = "";
             inquiries.forEach(function(inq) {
                 var isPending = (inq.status === "pending");
+                var statusText = isPending ? ((typeof zi === "function" ? zi("inquiryPending") : null) || "بانتظار ردك") : ((typeof zi === "function" ? zi("inquiryAnswered") : null) || "تم الرد");
                 var statusBadge = isPending 
-                    ? '<span class="inquiry-status-badge inquiry-status-pending"><i data-lucide="clock" style="width:12px;height:12px;"></i> بانتظار ردك</span>'
-                    : '<span class="inquiry-status-badge inquiry-status-answered"><i data-lucide="check-circle" style="width:12px;height:12px;"></i> تم الرد</span>';
+                    ? '<span class="inquiry-status-badge inquiry-status-pending"><i data-lucide="clock" style="width:12px;height:12px;"></i> ' + statusText + '</span>'
+                    : '<span class="inquiry-status-badge inquiry-status-answered"><i data-lucide="check-circle" style="width:12px;height:12px;"></i> ' + statusText + '</span>';
                     
-                var dateStr = inq.createdAt ? new Date(inq.createdAt).toLocaleDateString("ar-EG", { hour: "2-digit", minute: "2-digit", day: "numeric", month: "short" }) : "";
+                var dateLocale = ("ar" === Ht ? "ar-EG" : ("ru" === Ht ? "ru-RU" : ("uz" === Ht ? "uz-UZ" : ("es" === Ht ? "es-ES" : "en-US"))));
+                var dateStr = inq.createdAt ? new Date(inq.createdAt).toLocaleDateString(dateLocale, { hour: "2-digit", minute: "2-digit", day: "numeric", month: "short" }) : "";
                 
                 var locationHtml = "";
                 if (inq.coords && inq.coords.length >= 2) {
@@ -13188,7 +13320,7 @@
                 var replyHtml = "";
                 if (inq.reply) {
                     replyHtml = '<div class="inquiry-reply-box" style="margin-top:8px;">' +
-                        '<strong>ردك المرسل للطالب:</strong> ' + Ti(inq.reply) +
+                        '<strong>' + ((typeof zi === "function" ? zi("inquiryYourReply") : null) || 'ردك المرسل للطالب:') + ' </strong> ' + Ti(inq.reply) +
                         '</div>';
                 }
                 
@@ -13198,12 +13330,14 @@
                         statusBadge +
                     '</div>' +
                     '<div style="font-weight:700;font-size:0.98rem;margin-top:4px;">' + Ti(inq.title) + '</div>' +
-                    '<div style="font-size:0.9rem;line-height:1.55;color:var(--text-color,#e2e8f0);">' + Ti(inq.text) + '</div>' +
-                    locationHtml +
+                    '<div style="font-size:0.9rem;line-height:1.55;color:var(--text-color,#e2e8f0);">' + Ti(inq.text) + '</div>';
+                    var replyPlaceholder = (typeof zi === "function" ? zi("inquiryReplyPlaceholder") : null) || "اكتب ردك التوجيهي أو الشرح للطالب هنا...";
+                    var sendReplyText = inq.reply ? ((typeof zi === "function" ? zi("inquiryUpdateReply") : null) || 'تحديث الرد') : ((typeof zi === "function" ? zi("inquirySendReply") : null) || 'إرسال الرد');
+                    html += locationHtml +
                     replyHtml +
                     '<div style="display:flex;gap:8px;margin-top:8px;align-items:flex-end;">' +
-                        '<input type="text" class="quiz-input teacher-reply-input" placeholder="اكتب ردك التوجيهي أو الشرح للطالب هنا..." style="font-size:0.88rem;flex:1;min-height:40px;" value="' + (inq.reply ? Ti(inq.reply) : '') + '">' +
-                        '<button type="button" class="btn btn-primary btn-sm teacher-send-reply-btn" data-inq-id="' + inq.id + '" style="min-height:40px;white-space:nowrap;"><i data-lucide="send" style="width:14px;height:14px;"></i> <span>' + (inq.reply ? 'تحديث الرد' : 'إرسال الرد') + '</span></button>' +
+                        '<input type="text" class="quiz-input teacher-reply-input" placeholder="' + replyPlaceholder + '" style="font-size:0.88rem;flex:1;min-height:40px;" value="' + (inq.reply ? Ti(inq.reply) : '') + '">' +
+                        '<button type="button" class="btn btn-primary btn-sm teacher-send-reply-btn" data-inq-id="' + inq.id + '" style="min-height:40px;white-space:nowrap;"><i data-lucide="send" style="width:14px;height:14px;"></i> <span>' + sendReplyText + '</span></button>' +
                     '</div>' +
                 '</div>';
             });
@@ -13450,7 +13584,10 @@
                 };
 
                 if ("function" == typeof window.firebaseCreateSession) try {
-                    await window.firebaseCreateSession(sessionCode, sessionObj);
+                    await Promise.race([
+                        window.firebaseCreateSession(sessionCode, sessionObj),
+                        new Promise(function(resolve) { setTimeout(resolve, 250); })
+                    ]);
                 } catch (e) {
                     console.warn("Firebase session creation fallback to local:", e);
                 }
@@ -13739,7 +13876,7 @@
             var completedCodes = new Set(grades.map(function(g) { return g.sessionCode; }));
 
             if (sessions.length === 0) {
-                studentAssignmentsCardsList.innerHTML = '<div style="text-align:center;padding:36px;color:var(--text-muted);font-size:0.95rem;">لا توجد واجبات صفية متاحة حالياً.</div>';
+                studentAssignmentsCardsList.innerHTML = '<div style="text-align:center;padding:36px;color:var(--text-muted);font-size:0.95rem;">' + (zi("studentNoAssignments") || "لا توجد واجبات صفية متاحة حالياً.") + '</div>';
                 return;
             }
 
@@ -13747,32 +13884,33 @@
             sessions.forEach(function(asg) {
                 var isCompleted = completedCodes.has(asg.code);
                 var spatialBadge = asg.spatialTask 
-                    ? '<span class="student-badge-tag student-badge-spatial"><i data-lucide="edit-3" style="width:12px;height:12px;"></i> مهمة مكانية</span>'
+                    ? '<span class="student-badge-tag student-badge-spatial"><i data-lucide="edit-3" style="width:12px;height:12px;"></i> ' + (zi("studentSpatialBadge") || "مهمة مكانية") + '</span>'
                     : '';
                 var statusBadge = isCompleted
-                    ? '<span class="student-badge-tag student-badge-completed"><i data-lucide="check" style="width:12px;height:12px;"></i> تم التسليم</span>'
+                    ? '<span class="student-badge-tag student-badge-completed"><i data-lucide="check" style="width:12px;height:12px;"></i> ' + (zi("studentSubmittedBadge") || "تم التسليم") + '</span>'
                     : '';
 
                 var actionBtn = isCompleted
-                    ? '<button type="button" class="btn btn-secondary btn-sm student-view-grade-btn" data-code="' + asg.code + '"><i data-lucide="award" style="width:14px;height:14px;"></i> <span>عرض نتيجتي وملاحظات المعلم</span></button>'
-                    : '<button type="button" class="btn btn-primary btn-sm student-start-solve-btn" data-code="' + asg.code + '"><i data-lucide="edit" style="width:14px;height:14px;"></i> <span>بدء حل الواجب ✎</span></button>';
+                    ? '<button type="button" class="btn btn-secondary btn-sm student-view-grade-btn" data-code="' + asg.code + '"><i data-lucide="award" style="width:14px;height:14px;"></i> <span>' + (zi("studentViewGradeBtn") || "عرض نتيجتي وملاحظات المعلم") + '</span></button>'
+                    : '<button type="button" class="btn btn-primary btn-sm student-start-solve-btn" data-code="' + asg.code + '"><i data-lucide="edit" style="width:14px;height:14px;"></i> <span>' + (zi("studentStartSolveBtn") || "بدء حل الواجب ✎") + '</span></button>';
 
                 html += '<div class="student-assignment-card" data-code="' + asg.code + '">' +
                     '<div class="student-card-header">' +
                         '<div>' +
                             '<h4 class="student-card-title">' + Ti(asg.title) + '</h4>' +
-                            '<p class="student-card-desc" style="margin-top:4px;">' + Ti(asg.className || "واجب صفي تفاعلي") + '</p>' +
+                            '<p class="student-card-desc" style="margin-top:4px;">' + Ti(asg.className || (zi("studentInteractiveAssignment") || "واجب صفي تفاعلي")) + '</p>' +
                         '</div>' +
                         '<div style="display:flex;gap:6px;flex-wrap:wrap;">' + spatialBadge + statusBadge + '</div>' +
                     '</div>' +
                     '<div class="student-card-meta">' +
-                        '<span>رمز الواجب: <strong>' + asg.code + '</strong></span>' +
-                        '<span>عدد الأسئلة: ' + (asg.numQuestions || 2) + '</span>' +
-                        (asg.spatialTask ? '<span>المهمة المكانية: ' + Ti(asg.spatialTask.targetRegion || "رسم جغرافي") + '</span>' : '') +
+                        '<span>' + (zi("studentCodeLabel") || "رمز الواجب: ") + '<strong>' + asg.code + '</strong></span>' +
+                        '<span>' + (zi("studentNumQuestionsLabel") || "عدد الأسئلة: ") + (asg.numQuestions || 2) + '</span>' +
+                        (asg.spatialTask ? '<span>' + (zi("studentSpatialTaskLabel") || "المهمة المكانية: ") + Ti(asg.spatialTask.targetRegion || (zi("spatialTaskDrawGeo") || "رسم جغرافي")) + '</span>' : '') +
                     '</div>' +
                     '<div style="display:flex;justify-content:flex-end;margin-top:10px;">' + actionBtn + '</div>' +
                 '</div>';
             });
+            window.renderStudentAssignmentsList = renderStudentAssignmentsList;
 
             studentAssignmentsCardsList.innerHTML = html;
 
@@ -15409,7 +15547,7 @@
                 } else {
                     handRaiseQueue = handRaiseQueue.filter(function(s) { return s.uid !== user.uid; });
                     if (studentHandRaiseBtn) studentHandRaiseBtn.classList.remove("active-raised");
-                    if (studentHandRaiseText) studentHandRaiseText.textContent = "✋ ارفع يدك لطلب المشاركة";
+                    if (studentHandRaiseText) studentHandRaiseText.textContent = (typeof zi === "function" ? zi("studentHandRaiseReq") : null) || "✋ ارفع يدك لطلب المشاركة";
                     if (typeof Go === "function") Go("تم إلغاء طلب المشاركة");
                 }
                 renderQueueList();
@@ -15566,7 +15704,7 @@
                 if (filtered.length === 0) {
                     var emptyDiv = document.createElement("div");
                     emptyDiv.style.cssText = "text-align:center;padding:12px;font-size:0.8rem;color:#94a3b8;";
-                    emptyDiv.textContent = "لا توجد أبحاث معتمدة مطابقة للبحث";
+                    emptyDiv.textContent = (typeof zi === "function" ? zi("researchEmptySearch") : null) || "لا توجد أبحاث معتمدة مطابقة للبحث";
                     researchCardsMiniList.appendChild(emptyDiv);
                 }
                 filtered.forEach(function(item) {
@@ -15758,7 +15896,7 @@
                 toggleResearchPinsBtn.classList.toggle("active", showResearchPins);
                 toggleResearchPinsBtn.setAttribute("aria-pressed", String(showResearchPins));
                 if (toggleResearchPinsText) {
-                    toggleResearchPinsText.textContent = showResearchPins ? "إظهار دبابيس البحوث على الخريطة" : "إخفاء دبابيس البحوث من الخريطة";
+                    toggleResearchPinsText.textContent = showResearchPins ? ((typeof zi === "function" ? zi("researchTogglePinsOn") : null) || "إظهار دبابيس البحوث على الخريطة") : ((typeof zi === "function" ? zi("researchTogglePinsOff") : null) || "إخفاء دبابيس البحوث من الخريطة");
                 }
                 renderResearchPins();
                 if (typeof Go === "function") Go(showResearchPins ? "تم تفعيل طبقة بحوث الطلاب" : "تم إخفاء طبقة بحوث الطلاب");
@@ -17250,68 +17388,68 @@
             }
         }
 
-        // Dynamic Imperial Council Advisor Insights
+        // Dynamic Imperial Council Advisor Insights (Fully Localized)
         function updateCouncilAdvice() {
             var n = nationsData[simState.activeNationId];
             if (!n || !simCouncilAdvisorBanner) return;
 
             var role = simState.activeRole || "leader";
             var icon = "👑";
-            var title = "المستشار الإمبراطوري";
+            var title = (typeof zi === "function" ? zi("simCouncilTitleLeader") : null) || "المستشار الإمبراطوري";
             var text = "";
 
             if (role === "leader") {
                 icon = "👑";
-                title = "مستشار القيادة والسيادة العليا";
+                title = (typeof zi === "function" ? zi("simCouncilTitleLeader") : null) || "مستشار القيادة والسيادة العليا";
                 var months = Math.round(n.food / Math.max(1, n.consumption));
                 if (months < 4) {
-                    text = "مولاي الحاكم: صوامع الغلال تقترب من مرحلة الخطر (" + months + " أشهر فقط). سارع بإبرام تحالف تجاري أو إعلان هدنة لتأمين واردات القمح.";
+                    text = (typeof zi === "function" ? zi("simCouncilLeaderFood", { months: months }) : null) || ("مولاي الحاكم: صوامع الغلال تقترب من مرحلة الخطر (" + months + " أشهر فقط). سارع بإبرام تحالف تجاري أو إعلان هدنة لتأمين واردات القمح.");
                 } else if (n.enemies && n.enemies.length > 0) {
-                    text = "مولاي الحاكم: طبول الحرب تدق على الحدود. وقّع ميثاق دفاع مشترك لتأمين عاصمتنا من أي هجوم غادر.";
+                    text = (typeof zi === "function" ? zi("simCouncilLeaderWar") : null) || "مولاي الحاكم: طبول الحرب تدق على الحدود. وقّع ميثاق دفاع مشترك لتأمين عاصمتنا من أي هجوم غادر.";
                 } else if (n.allies && n.allies.length > 0) {
-                    text = "مولاي الحاكم: حبال الود متصلة مع حلفائنا. استثمر هذا الاستقرار في إبرام اتفاقيات تجارية ترفع سيولة الخزينة.";
+                    text = (typeof zi === "function" ? zi("simCouncilLeaderPeace") : null) || "مولاي الحاكم: حبال الود متصلة مع حلفائنا. استثمر هذا الاستقرار في إبرام اتفاقيات تجارية ترفع سيولة الخزينة.";
                 } else {
-                    text = "مولاي الحاكم: أمتك ترنو لحكمتك. وازن بين إطعام الرعية وحماية الثغور بالفرسان.";
+                    text = (typeof zi === "function" ? zi("simCouncilLeaderDefault") : null) || "مولاي الحاكم: أمتك ترنو لحكمتك. وازن بين إطعام الرعية وحماية الثغور بالفرسان.";
                 }
             } else if (role === "economy") {
                 icon = "⚖️";
-                title = "وزير التجارة والخزينة الإمبراطورية";
+                title = (typeof zi === "function" ? zi("simCouncilTitleEconomy") : null) || "وزير التجارة والخزينة الإمبراطورية";
                 var activeCaravans = simState.caravans.filter(function(c) { return c.from === n.id; });
                 if (n.food > 800 && n.gold < 500) {
-                    text = "يا وزير المال: مخزون القمح وفير بينما تنقصنا السيولة الذهبية؛ أرسل قوافل حبوب للمدن المجاورة لمقايضتها بالذهب.";
+                    text = (typeof zi === "function" ? zi("simCouncilEconGrainGold") : null) || "يا وزير المال: مخزون القمح وفير بينما تنقصنا السيولة الذهبية؛ أرسل قوافل حبوب للمدن المجاورة لمقايضتها بالذهب.";
                 } else if (n.metals < 300) {
-                    text = "يا وزير المال: ورش الحدادة تشكو شح المعادن؛ وجّه قوافل مقايضة إلى إمارة الأناضول لاستيراد سبائك الحديد.";
+                    text = (typeof zi === "function" ? zi("simCouncilEconMetals") : null) || "يا وزير المال: ورش الحدادة تشكو شح المعادن؛ وجّه قوافل مقايضة إلى إمارة الأناضول لاستيراد سبائك الحديد.";
                 } else if (activeCaravans.length > 0) {
-                    text = "يا وزير المال: قوافلنا تمخر الدروب بنجاح (" + activeCaravans.length + " قافلة). راقب رسوم الترانزيت عند المضائق لحماية الأرباح.";
+                    text = (typeof zi === "function" ? zi("simCouncilEconDefault") : null) || ("يا وزير المال: قوافلنا تمخر الدروب بنجاح (" + activeCaravans.length + " قافلة). راقب رسوم الترانزيت عند المضائق لحماية الأرباح.");
                 } else {
-                    text = "يا وزير المال: تجارة الأمة هي شريان الحياة؛ انقر على عاصمة شريك على الخريطة وسيّر قافلة لتبادل الفوائض.";
+                    text = (typeof zi === "function" ? zi("simCouncilEconDefault") : null) || "يا وزير المال: تجارة الأمة هي شريان الحياة؛ انقر على عاصمة شريك على الخريطة وسيّر قافلة لتبادل الفوائض.";
                 }
             } else if (role === "military") {
                 icon = "⚔️";
-                title = "القائد العام للجيوش والحاميات";
+                title = (typeof zi === "function" ? zi("simCouncilTitleMilitary") : null) || "القائد العام للجيوش والحاميات";
                 if (n.troops < 1000) {
-                    text = "أيها القائد: فيالق الدفاع بحاجة لتعزيز عاجل لحماية قلاعنا ودرء خطر الغارات المفاجئة.";
+                    text = (typeof zi === "function" ? zi("simCouncilMilTroops") : null) || "أيها القائد: فيالق الدفاع بحاجة لتعزيز عاجل لحماية قلاعنا ودرء خطر الغارات المفاجئة.";
                 } else if (n.food < 400) {
-                    text = "أيها القائد: الجيوش تزحف على بطونها؛ تناقص الحبوب يهدد بضعف الروح المعنوية في صفوف المقاتلين.";
+                    text = (typeof zi === "function" ? zi("simCouncilMilFood") : null) || "أيها القائد: الجيوش تزحف على بطونها؛ تناقص الحبوب يهدد بضعف الروح المعنوية في صفوف المقاتلين.";
                 } else {
-                    text = "أيها القائد: كتائب الفرسان والمشاة على أهبة الاستعداد. احرص على مرافقة القوافل بفرسان مدربين لردع قطاع الطرق.";
+                    text = (typeof zi === "function" ? zi("simCouncilMilDefault") : null) || "أيها القائد: كتائب الفرسان والمشاة على أهبة الاستعداد. احرص على مرافقة القوافل بفرسان مدربين لردع قطاع الطرق.";
                 }
             } else if (role === "planner") {
                 icon = "🧭";
-                title = "كبير المهندسين والجغرافيين الإمبراطوريين";
+                title = (typeof zi === "function" ? zi("simCouncilTitlePlanner") : null) || "كبير المهندسين والجغرافيين الإمبراطوريين";
                 if (simState.safeRoutes && simState.safeRoutes[n.id]) {
-                    text = "أيها المهندس: المسار الالتفافي المعتمد يحمي قوافلنا حالياً من كمائن قطاع الطرق وتكاليف المضائق بنسبة 100%.";
+                    text = (typeof zi === "function" ? zi("simCouncilPlanSafe") : null) || "أيها المهندس: المسار الالتفافي المعتمد يحمي قوافلنا حالياً من كمائن قطاع الطرق وتكاليف المضائق بنسبة 100%.";
                 } else {
-                    text = "أيها المهندس: دروب التجارة تعبرها مضائق خطرة؛ استخدم أداة رسم المسار لاعتماد طريق بديل آمن يضمن سلامة القوافل.";
+                    text = (typeof zi === "function" ? zi("simCouncilPlanDefault") : null) || "أيها المهندس: دروب التجارة تعبرها مضائق خطرة؛ استخدم أداة رسم المسار لاعتماد طريق بديل آمن يضمن سلامة القوافل.";
                 }
             } else if (role === "intelligence") {
                 icon = "👁️";
-                title = "رئيس ديوان العيون والاستطلاع السري";
+                title = (typeof zi === "function" ? zi("simCouncilTitleIntelligence") : null) || "رئيس ديوان العيون والاستطلاع السري";
                 var myScouts = simState.scouts.filter(function(s) { return s.nation === n.id; });
                 if (myScouts.length === 0) {
-                    text = "يا صاحب العيون: دروبنا بلا رصد واستطلاع؛ انشر طليعة في الميدان لتفعيل دوائر المراقبة وكشف تحركات الخصوم.";
+                    text = (typeof zi === "function" ? zi("simCouncilIntelNoScouts") : null) || "يا صاحب العيون: دروبنا بلا رصد واستطلاع؛ انشر طليعة في الميدان لتفعيل دوائر المراقبة وكشف تحركات الخصوم.";
                 } else {
-                    text = "يا صاحب العيون: مراصدنا (" + myScouts.length + ") تراقب الممرات بنجاح؛ فعّل دوائر الرصد للقبض على عيون الخصوم ومقايضتهم.";
+                    text = (typeof zi === "function" ? zi("simCouncilIntelActive", { count: myScouts.length }) : null) || ("يا صاحب العيون: مراصدنا (" + myScouts.length + ") تراقب الممرات بنجاح؛ فعّل دوائر الرصد للقبض على عيون الخصوم ومقايضتهم.");
                 }
             }
 
@@ -17402,24 +17540,27 @@
                 debouncedSyncNation(simState.activeNationId);
             }
 
-            if (simMonthlyConsumptionDisplay) simMonthlyConsumptionDisplay.textContent = n.consumption + " كيس / شهر";
+            if (simMonthlyConsumptionDisplay) simMonthlyConsumptionDisplay.textContent = (typeof zi === "function" ? zi("simConsumptionBagMonth", { count: n.consumption }) : null) || (n.consumption + " كيس / شهر");
             if (simFoodSecurityStatus) {
                 var months = Math.round(n.food / Math.max(1, n.consumption));
                 if (months >= 10) {
-                    simFoodSecurityStatus.textContent = "🟢 آمن ومستقر (يكفي لـ " + months + " شهراً)";
+                    simFoodSecurityStatus.textContent = (typeof zi === "function" ? zi("simFoodSecure", { months: months }) : null) || ("🟢 آمن ومستقر (يكفي لـ " + months + " شهراً)");
                     simFoodSecurityStatus.className = "sim-status-safe";
                 } else if (months >= 4) {
-                    simFoodSecurityStatus.textContent = "🟡 متوسط المخزون (يكفي لـ " + months + " أشهر)";
+                    simFoodSecurityStatus.textContent = (typeof zi === "function" ? zi("simFoodModerate", { months: months }) : null) || ("🟡 متوسط المخزون (يكفي لـ " + months + " أشهر)");
                     simFoodSecurityStatus.className = "sim-status-safe";
                 } else {
-                    simFoodSecurityStatus.textContent = "🔴 خطر مجاعة وشيك! (يكفي لـ " + months + " أشهر فقط)";
+                    simFoodSecurityStatus.textContent = (typeof zi === "function" ? zi("simFoodDanger", { months: months }) : null) || ("🔴 خطر مجاعة وشيك! (يكفي لـ " + months + " أشهر فقط)");
                     simFoodSecurityStatus.style.color = "#ef4444";
                 }
             }
 
-            if (simInfantryCount) simInfantryCount.textContent = ((n.infantry != null) ? n.infantry : Math.round((n.troops || 0) * 0.5)).toLocaleString() + " مقاتل";
-            if (simArchersCount) simArchersCount.textContent = ((n.archers != null) ? n.archers : Math.round((n.troops || 0) * 0.3)).toLocaleString() + " مقاتل";
-            if (simCavalryCount) simCavalryCount.textContent = ((n.cavalry != null) ? n.cavalry : Math.round((n.troops || 0) * 0.2)).toLocaleString() + " فارس";
+            var warriorUnit = (typeof zi === "function" ? zi("simInfantryUnit") : null) || "مقاتل";
+            var archerUnit = (typeof zi === "function" ? zi("simArchersUnit") : null) || "مقاتل";
+            var knightUnit = (typeof zi === "function" ? zi("simCavalryUnit") : null) || "فارس";
+            if (simInfantryCount) simInfantryCount.textContent = ((n.infantry != null) ? n.infantry : Math.round((n.troops || 0) * 0.5)).toLocaleString() + " " + warriorUnit;
+            if (simArchersCount) simArchersCount.textContent = ((n.archers != null) ? n.archers : Math.round((n.troops || 0) * 0.3)).toLocaleString() + " " + archerUnit;
+            if (simCavalryCount) simCavalryCount.textContent = ((n.cavalry != null) ? n.cavalry : Math.round((n.troops || 0) * 0.2)).toLocaleString() + " " + knightUnit;
 
             // Relations List
             if (simRelationsList) {
@@ -17460,13 +17601,15 @@
                     return c.from === n.id || c.to === n.id;
                 });
                 if (natCaravans.length === 0) {
-                    simActiveCaravansList.innerHTML = '<p class="sim-card-hint">لا توجد قوافل سارية حالياً. استخدم النموذج أعلاه لتسيير قافلة.</p>';
+                    simActiveCaravansList.innerHTML = '<p class="sim-card-hint">' + ((typeof zi === "function" ? zi("simNoCaravans") : null) || 'لا توجد قوافل سارية حالياً. استخدم النموذج أعلاه لتسيير قافلة.') + '</p>';
                 } else {
                     natCaravans.forEach(function(c) {
                         var targetNat = nationsData[c.to];
                         var item = document.createElement("div");
                         item.className = "sim-item-card";
-                        item.innerHTML = '<div class="sim-item-info"><span class="sim-item-title">🐫 قافلة إلى: ' + (targetNat ? targetNat.name : c.to) + '</span>' +
+                        var targetName = targetNat ? targetNat.name : c.to;
+                        var caravanTitle = (typeof zi === "function" ? zi("simCaravanTo", { target: targetName }) : null) || ('🐫 قافلة إلى: ' + targetName);
+                        item.innerHTML = '<div class="sim-item-info"><span class="sim-item-title">' + caravanTitle + '</span>' +
                                          '<span class="sim-item-meta">الحمولة: ' + c.cargo + ' | المقايضة: ' + c.requested + '</span></div>' +
                                          '<span class="sim-tag" style="background:rgba(245, 158, 11, 0.2);">' + c.status + '</span>';
                         simActiveCaravansList.appendChild(item);
@@ -17495,7 +17638,7 @@
                 var foreignCaravans = (simState.caravans || []).filter(function(c) { return c.from !== n.id; });
 
                 if (natScouts.length === 0) {
-                    simActiveScoutsFeed.innerHTML = '<p class="sim-card-hint">لا توجد فرق استطلاع في الميدان حالياً. اضغط الزر أعلاه لنشر طليعة.</p>';
+                    simActiveScoutsFeed.innerHTML = '<p class="sim-card-hint">' + ((typeof zi === "function" ? zi("simNoScouts") : null) || 'لا توجد فرق استطلاع في الميدان حالياً. اضغط الزر أعلاه لنشر طليعة.') + '</p>';
                 } else {
                     natScouts.forEach(function(s) {
                         var item = document.createElement("div");
@@ -17625,7 +17768,7 @@
                 });
 
                 if (myCaptures.length === 0 && myLostSpies.length === 0) {
-                    simCapturedSpiesList.innerHTML = '<p class="sim-card-hint">لا يوجد جواسيس معتقلون حالياً في السجون أو مأسورون لدى الخصوم.</p>';
+                    simCapturedSpiesList.innerHTML = '<p class="sim-card-hint">' + ((typeof zi === "function" ? zi("simNoCapturedSpies") : null) || 'لا يوجد جواسيس معتقلون حالياً في السجون أو مأسورون لدى الخصوم.') + '</p>';
                 } else {
                     // 1. Spies our nation has captured in our prisons (with ransom/execute buttons)
                     myCaptures.forEach(function(cs) {
@@ -17754,10 +17897,11 @@
                     if (simRecallExpeditionBtn) simRecallExpeditionBtn.style.display = "";
                     if (n.expeditionaryForce) {
                         var targetNat = nationsData[n.expeditionaryForce.target];
-                        simDispatchedForcesStatus.textContent = "🛡️ تم إرسال " + n.expeditionaryForce.count + " مقاتلاً لحماية " + (targetNat ? targetNat.name : n.expeditionaryForce.target) + " (استهلاك الحليف: +" + n.expeditionaryForce.foodBurden + " قمح/شهر، وفر الصوامع: -" + n.expeditionaryForce.foodBurden + ").";
+                        var targetName = targetNat ? targetNat.name : n.expeditionaryForce.target;
+                        simDispatchedForcesStatus.textContent = (typeof zi === "function" ? zi("simExpeditionSent", { count: n.expeditionaryForce.count, target: targetName }) : null) || ("🛡️ تم إرسال " + n.expeditionaryForce.count + " مقاتلاً لحماية " + targetName + " (استهلاك الحليف: +" + n.expeditionaryForce.foodBurden + " قمح/شهر، وفر الصوامع: -" + n.expeditionaryForce.foodBurden + ").");
                         simDispatchedForcesStatus.style.color = "#38bdf8";
                     } else {
-                        simDispatchedForcesStatus.textContent = "لا توجد قوات إسناد مرسلة في الخارج حالياً.";
+                        simDispatchedForcesStatus.textContent = (typeof zi === "function" ? zi("simNoExpeditionForces") : null) || "لا توجد قوات إسناد مرسلة في الخارج حالياً.";
                         simDispatchedForcesStatus.style.color = "";
                     }
                 }
@@ -18219,8 +18363,17 @@
                         .text("🪙");
                 }
 
-                g.on("click", function() {
+                g.attr("role", "button")
+                 .attr("tabindex", "0")
+                 .attr("aria-label", "مضيق استراتيجي: " + cp.name + " (" + cp.bonus + ")")
+                 .style("cursor", "pointer")
+                 .on("click", function() {
                     if (typeof Go === "function") Go(cp.name + " (" + cp.bonus + ")");
+                }).on("keydown", function(evt) {
+                    if ("Enter" === evt.key || " " === evt.key) {
+                        evt.preventDefault && evt.preventDefault();
+                        if (typeof Go === "function") Go(cp.name + " (" + cp.bonus + ")");
+                    }
                 });
             });
 
@@ -18319,9 +18472,20 @@
                         .attr("font-size", (10 / t) + "px")
                         .text(isAlly ? "🤝" : "🛡️");
 
-                    gSeal.on("click", function() {
+                    gSeal.attr("role", "button")
+                         .attr("tabindex", "0")
+                         .attr("aria-label", (isAlly ? "ميثاق تحالف: " : "هدنة موسمية: ") + otherNat.name)
+                         .style("cursor", "pointer")
+                         .on("click", function() {
                         if (typeof Go === "function") {
                             Go((isAlly ? "ميثاق تحالف تجاري ودفاعي مع " : "هدنة موسمية مع ") + otherNat.name);
+                        }
+                    }).on("keydown", function(evt) {
+                        if ("Enter" === evt.key || " " === evt.key) {
+                            evt.preventDefault && evt.preventDefault();
+                            if (typeof Go === "function") {
+                                Go((isAlly ? "ميثاق تحالف تجاري ودفاعي مع " : "هدنة موسمية مع ") + otherNat.name);
+                            }
                         }
                     });
                 });
@@ -18360,8 +18524,17 @@
                     .attr("stroke-linejoin", "round")
                     .text(otherNat.flag + " " + otherNat.capital);
 
-                gPartner.on("click", function() {
+                gPartner.attr("role", "button")
+                        .attr("tabindex", "0")
+                        .attr("aria-label", "عاصمة تجارية: " + otherNat.name + " (" + otherNat.capital + ")")
+                        .style("cursor", "pointer")
+                        .on("click", function() {
                     openQuickTradeModal(otherNat.id);
+                }).on("keydown", function(evt) {
+                    if ("Enter" === evt.key || " " === evt.key) {
+                        evt.preventDefault && evt.preventDefault();
+                        openQuickTradeModal(otherNat.id);
+                    }
                 });
             });
 

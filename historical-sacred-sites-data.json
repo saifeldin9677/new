@@ -116,7 +116,27 @@
       "name_es": "Jerusalén (Al-Aqsa, Monte del Templo y Santo Sepulcro)",
       "location_es": "Jerusalén, Palestina",
       "current_status_es": "Status quo histórico bajo custodia del Waqf jordano: los musulmanes oran en la Explanada de las Mezquitas, los judíos en el Muro de las Lamentaciones, y el Santo Sepulcro es compartido por seis confesiones cristianas.",
-      "summary_es": "El enclave sagrado más disputado y de mayor resonancia espiritual en la historia humana, confluencia de las tres religiones abrahámicas."
+      "summary_es": "El enclave sagrado más disputado y de mayor resonancia espiritual en la historia humana, confluencia de las tres religiones abrahámicas.",
+      "religions_involved_en": [
+        "Islam",
+        "Judaism",
+        "Christianity"
+      ],
+      "religions_involved_ru": [
+        "Ислам",
+        "Иудаизм",
+        "Христианство"
+      ],
+      "religions_involved_uz": [
+        "Islom",
+        "Yahudiylik",
+        "Xristianlik"
+      ],
+      "religions_involved_es": [
+        "Islam",
+        "Judaísmo",
+        "Cristianismo"
+      ]
     },
     {
       "id": "cave-of-the-patriarchs",
@@ -214,7 +234,23 @@
       "name_es": "Tumba de los Patriarcas (Mezquita de Ibrahimi / Cueva de Macpela)",
       "location_es": "Hebrón (Al-Jalil), Palestina",
       "current_status_es": "Dividido físicamente por barreras militares en mezquita (40%) y sinagoga (60%), con alternancia exclusiva de accesos durante las festividades religiosas.",
-      "summary_es": "Lugar de enterramiento venerado de los patriarcas y matriarcas del monoteísmo: Abraham, Sara, Isaac, Rebeca, Jacob y Lea."
+      "summary_es": "Lugar de enterramiento venerado de los patriarcas y matriarcas del monoteísmo: Abraham, Sara, Isaac, Rebeca, Jacob y Lea.",
+      "religions_involved_en": [
+        "Islam",
+        "Judaism"
+      ],
+      "religions_involved_ru": [
+        "Ислам",
+        "Иудаизм"
+      ],
+      "religions_involved_uz": [
+        "Islom",
+        "Yahudiylik"
+      ],
+      "religions_involved_es": [
+        "Islam",
+        "Judaísmo"
+      ]
     },
     {
       "id": "ayodhya-ram-mandir",
@@ -312,7 +348,23 @@
       "name_es": "Ayodhya: Ram Janmabhoomi y Mezquita de Babri",
       "location_es": "Ayodhya, Uttar Pradesh, India",
       "current_status_es": "Sobre el solar se erige el nuevo y monumental templo Ram Mandir (inaugurado en 2024); se otorgó a la comunidad musulmana una parcela alternativa en Dhannipur.",
-      "summary_es": "El epicentro de disputa comunal e histórico-religiosa más significativo de la India contemporánea."
+      "summary_es": "El epicentro de disputa comunal e histórico-religiosa más significativo de la India contemporánea.",
+      "religions_involved_en": [
+        "Hinduism",
+        "Islam"
+      ],
+      "religions_involved_ru": [
+        "Индуизм",
+        "Ислам"
+      ],
+      "religions_involved_uz": [
+        "Hinduiylik",
+        "Islom"
+      ],
+      "religions_involved_es": [
+        "Hinduismo",
+        "Islam"
+      ]
     },
     {
       "id": "hagia-sophia",
@@ -422,7 +474,23 @@
       "location_es": "Estambul, Turquía",
       "current_status_es": "Mezquita activa bajo la autoridad del Diyanet; los mosaicos figurativos se cubren durante la oración y las galerías superiores acogen turistas.",
       "summary_es": "Eje arquitectónico cumbre entre Oriente y Occidente: catedral imperial bizantina, gran mezquita otomana y patrimonio universal.",
-      "summary_ru": "Архитектурный шедевр и символ смены империй: главный собор Византии, великая мечеть османов и памятник всемирного значения."
+      "summary_ru": "Архитектурный шедевр и символ смены империй: главный собор Византии, великая мечеть османов и памятник всемирного значения.",
+      "religions_involved_en": [
+        "Christianity (Orthodox)",
+        "Islam"
+      ],
+      "religions_involved_ru": [
+        "Христианство (Православие)",
+        "Ислам"
+      ],
+      "religions_involved_uz": [
+        "Xristianlik (Pravoslavie)",
+        "Islom"
+      ],
+      "religions_involved_es": [
+        "Cristianismo (Ortodoxo)",
+        "Islam"
+      ]
     },
     {
       "id": "mosque-cathedral-cordoba",
@@ -520,7 +588,23 @@
       "name_es": "Mezquita-Catedral de Córdoba",
       "location_es": "Córdoba, Andalucía, España",
       "current_status_es": "De titularidad eclesiástica de la Diócesis de Córdoba como catedral; se prohíbe el rezo a otras confesiones en medio de debates sobre su estatus público.",
-      "summary_es": "El palimpsesto arquitectónico más deslumbrante del mundo, donde confluyen la mezquita califal omeya y la catedral renacentista."
+      "summary_es": "El palimpsesto arquitectónico más deslumbrante del mundo, donde confluyen la mezquita califal omeya y la catedral renacentista.",
+      "religions_involved_en": [
+        "Islam",
+        "Christianity (Catholic)"
+      ],
+      "religions_involved_ru": [
+        "Ислам",
+        "Христианство (Католицизм)"
+      ],
+      "religions_involved_uz": [
+        "Islom",
+        "Xristianlik (Katolitsizm)"
+      ],
+      "religions_involved_es": [
+        "Islam",
+        "Cristianismo (Católico)"
+      ]
     },
     {
       "id": "kashi-vishwanath-gyanvapi",
@@ -618,7 +702,23 @@
       "name_es": "Varanasi: Templo Kashi Vishwanath y Mezquita Gyanvapi",
       "location_es": "Varanasi (Benarés), Uttar Pradesh, India",
       "current_status_es": "Perímetro de alta seguridad militar que separa el corredor del templo de la mezquita histórica, con litigios activos sobre derechos de culto.",
-      "summary_es": "El corazón devocional de Shiva junto al río Ganges, cuyo muro occidental conserva las molduras del templo medieval previo."
+      "summary_es": "El corazón devocional de Shiva junto al río Ganges, cuyo muro occidental conserva las molduras del templo medieval previo.",
+      "religions_involved_en": [
+        "Hinduism",
+        "Islam"
+      ],
+      "religions_involved_ru": [
+        "Индуизм",
+        "Ислам"
+      ],
+      "religions_involved_uz": [
+        "Hinduiylik",
+        "Islom"
+      ],
+      "religions_involved_es": [
+        "Hinduismo",
+        "Islam"
+      ]
     },
     {
       "id": "mount-kailash",
@@ -724,7 +824,31 @@
       "name_es": "Monte Kailash (Gang Rinpoche)",
       "location_es": "Región Autónoma del Tíbet, Himalaya (China)",
       "current_status_es": "Cumbre virgen inescalable protegida por consenso internacional; los devotos realizan la circunvalación sagrada (Kora) de 52 km.",
-      "summary_es": "El eje cosmológico (Monte Meru) supremo compartido por cuatro religiones vivas: hinduismo, budismo, jainismo y bön."
+      "summary_es": "El eje cosmológico (Monte Meru) supremo compartido por cuatro religiones vivas: hinduismo, budismo, jainismo y bön.",
+      "religions_involved_en": [
+        "Hinduism",
+        "Buddhism (Tibetan)",
+        "Jainism",
+        "Bön Tradition"
+      ],
+      "religions_involved_ru": [
+        "Индуизм",
+        "Буддизм (Тибетский)",
+        "Джайнизм",
+        "Традиция Бон"
+      ],
+      "religions_involved_uz": [
+        "Hinduiylik",
+        "Buddaviylik (Tibet)",
+        "Jaynizm",
+        "Bon an’anasi"
+      ],
+      "religions_involved_es": [
+        "Hinduismo",
+        "Budismo (Tibetano)",
+        "Jainismo",
+        "Tradición Bön"
+      ]
     },
     {
       "id": "angkor-wat",
@@ -820,7 +944,23 @@
       "name_es": "Complejo de templos de Angkor Wat",
       "location_es": "Siem Riep, Camboya",
       "current_status_es": "Patrimonio de la Humanidad por la UNESCO y activo centro de peregrinación budista Theravada.",
-      "summary_es": "La mayor estructura religiosa jamás erigida en la historia, nacida como santuario hindú a Vishnu y convertida pacíficamente al budismo."
+      "summary_es": "La mayor estructura religiosa jamás erigida en la historia, nacida como santuario hindú a Vishnu y convertida pacíficamente al budismo.",
+      "religions_involved_en": [
+        "Hinduism",
+        "Buddhism (Theravada)"
+      ],
+      "religions_involved_ru": [
+        "Индуизм",
+        "Буддизм (Тхеравада)"
+      ],
+      "religions_involved_uz": [
+        "Hinduiylik",
+        "Buddaviylik (Theravada)"
+      ],
+      "religions_involved_es": [
+        "Hinduismo",
+        "Budismo (Theravada)"
+      ]
     }
   ]
 }

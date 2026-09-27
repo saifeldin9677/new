@@ -1,6 +1,6 @@
-const LEPIDOS_CACHE_VERSION = 'lepidos-v36';
-const LEPIDOS_CACHE_PRECACHE = 'lepidos-precache-v36';
-const LEPIDOS_CACHE_RUNTIME = 'lepidos-runtime-v36';
+const LEPIDOS_CACHE_VERSION = 'lepidos-v37';
+const LEPIDOS_CACHE_PRECACHE = 'lepidos-precache-v37';
+const LEPIDOS_CACHE_RUNTIME = 'lepidos-runtime-v37';
 
 const PRECACHE_URLS = [
     './',
@@ -9,6 +9,8 @@ const PRECACHE_URLS = [
     './boot.js',
     './app.js',
     './data.js',
+    './teacher-auth-gate.js',
+    './account-system.js',
     './historical-polities-data.js',
     './firebase.js',
     './manifest.json',
@@ -30,6 +32,7 @@ const PRECACHE_URLS = [
     './icon-192.png',
     './icon-512.png',
     './logo.png',
+    './logo.svg',
     './favicon.png',
     './vendor/d3.min.js',
     './vendor/d3-geo-projection.min.js',
@@ -106,7 +109,7 @@ self.addEventListener('fetch', function(event) {
     // App shell (own HTML/CSS/JS): network-first so deploys reach users
     // immediately; the cached copy is the offline fallback. The pre-cache
     // is refreshed on every successful fetch.
-    var isAppShell = isSameOrigin && /(index\.html|style\.css|app\.js|data\.js|sw\.js)$/.test(url.pathname);
+    var isAppShell = isSameOrigin && /(index\.html|style\.css|app\.js|data\.js|teacher-auth-gate\.js|account-system\.js|sw\.js)$/.test(url.pathname);
     if (isAppShell) {
         event.respondWith(
             fetch(request).then(function(response) {
@@ -118,8 +121,8 @@ self.addEventListener('fetch', function(event) {
                 }
                 return response;
             }).catch(function() {
-                return caches.match(url.pathname).then(function(m) {
-                    return m || caches.match(request);
+                return caches.match(url.pathname, { ignoreSearch: true }).then(function(m) {
+                    return m || caches.match(request, { ignoreSearch: true });
                 });
             })
         );
@@ -127,7 +130,7 @@ self.addEventListener('fetch', function(event) {
     }
 
     event.respondWith(
-        caches.match(request).then(function(cached) {
+        caches.match(request, { ignoreSearch: true }).then(function(cached) {
             var refresh = fetch(request).then(function(response) {
                 if (response && response.ok) {
                     var copy = response.clone();

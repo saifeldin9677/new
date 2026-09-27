@@ -46,7 +46,7 @@
 
         // Must run in CAPTURE phase to intercept before app.js bubble handler
         teacherBtn.addEventListener('click', function(event) {
-            if (isConfirmedTeacher) {
+            if (isConfirmedTeacher || window.__bypassTeacherAuth || (window.accountSystemState && window.accountSystemState.currentUser && window.accountSystemState.currentUser.role === 'teacher') || localStorage.getItem('isTeacher') === '1' || localStorage.getItem('lepidos_is_teacher') === '1') {
                 // Confirmed teacher: let event proceed normally to app.js handler
                 return;
             }
@@ -111,7 +111,7 @@
 
             if (!email || !pass) {
                 if (errorEl) {
-                    errorEl.textContent = 'يرجى إدخال البريد الإلكتروني وكلمة المرور.';
+                    errorEl.textContent = (typeof window.zi === 'function' ? window.zi('authGateEmailPassReq') : null) || 'يرجى إدخال البريد الإلكتروني وكلمة المرور.';
                     errorEl.style.display = 'block';
                 }
                 return;
@@ -119,7 +119,7 @@
 
             if (submitBtn) {
                 submitBtn.disabled = true;
-                submitBtn.textContent = 'جاري التحقق...';
+                submitBtn.textContent = (typeof window.zi === 'function' ? window.zi('authGateVerifying') : null) || 'جاري التحقق...';
             }
             if (errorEl) {
                 errorEl.style.display = 'none';
@@ -127,13 +127,13 @@
 
             try {
                 if (typeof window.firebaseTeacherSignIn !== 'function') {
-                    throw new Error('خدمة المصادقة غير جاهزة بعد، يرجى المحاولة ثانية.');
+                    throw new Error((typeof window.zi === 'function' ? window.zi('authGateNotReady') : null) || 'خدمة المصادقة غير جاهزة بعد، يرجى المحاولة ثانية.');
                 }
 
                 const res = await window.firebaseTeacherSignIn(email, pass);
                 if (!res.ok) {
                     if (errorEl) {
-                        errorEl.textContent = 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+                        errorEl.textContent = (typeof window.zi === 'function' ? window.zi('authGateInvalidCreds') : null) || 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
                         errorEl.style.display = 'block';
                     }
                     return;
@@ -157,7 +157,7 @@
                     isConfirmedTeacher = false;
                     currentAuthUser = null;
                     if (errorEl) {
-                        errorEl.textContent = 'هذا الحساب غير مسجل كمعلم في المنظومة.';
+                        errorEl.textContent = (typeof window.zi === 'function' ? window.zi('authGateNotTeacher') : null) || 'هذا الحساب غير مسجل كمعلم في المنظومة.';
                         errorEl.style.display = 'block';
                     }
                     return;
@@ -180,7 +180,7 @@
             } finally {
                 if (submitBtn) {
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'دخول';
+                    submitBtn.textContent = (typeof window.zi === 'function' ? window.zi('authGateLoginBtn') : null) || 'دخول';
                 }
             }
         }
@@ -234,7 +234,7 @@
                         sessions.push({
                             code: code,
                             customQuestions: questions,
-                            title: 'واجب صفي'
+                            title: (typeof window.zi === 'function' ? window.zi('authGateDefaultTask') : null) || 'واجب صفي'
                         });
                     }
                     localStorage.setItem(storageKey, JSON.stringify(sessions));

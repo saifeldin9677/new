@@ -1,0 +1,36 @@
+{
+  "html": [],
+  "i18n": [],
+  "jsRuntime": [],
+  "storageSafety": [
+    {
+      "file": "app.js",
+      "lineNum": 262,
+      "line": "let Bt = !1, St = !1, It = null, zt = null, At = null, Mt = !0, Tt = null, Pt = null, qt = null, Ot = null, Rt = null, Nt = null, Dt = null, Ft = null, Ht = (jt = localStorage.getItem(\"mapLang\")) && [ \"ar\", \"en\", \"ru\", \"uz\", \"es\" ].includes(jt) ? jt : \"ar\";"
+    },
+    {
+      "file": "app.js",
+      "lineNum": 14031,
+      "line": "var studentName = localStorage.getItem(\"lepidos_student_name_v1\") || \"أحمد محمود\";"
+    },
+    {
+      "file": "app.js",
+      "lineNum": 14050,
+      "line": "var studentUid = window._currentStudentUid || localStorage.getItem(\"lepidos_student_uid_v1\") || null;"
+    },
+    {
+      "file": "app.js",
+      "lineNum": 14450,
+      "line": "var studentName = localStorage.getItem(\"lepidos_student_name_v1\") || \"أحمد محمود\";"
+    },
+    {
+      "file": "teacher-auth-gate.js",
+      "lineNum": 49,
+      "line": "if (isConfirmedTeacher || window.__bypassTeacherAuth || (window.accountSystemState && window.accountSystemState.currentUser && window.accountSystemState.currentUser.role === 'teacher') || localStorage.getItem('isTeacher') === '1' || localStorage.getItem('lepidos_is_teacher') === '1') {"
+    }
+  ],
+  "securityXSS": [],
+  "dataIntegrity": [],
+  "missingFiles": [],
+  "ariaAndA11y": []
+}

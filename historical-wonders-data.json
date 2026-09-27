@@ -34,9 +34,9 @@
       "purpose_ru": "Царская усыпальница и монументальная лестница для вознесения души фараона на небеса.",
       "purpose_uz": "Shohona daxma va fir’avn ruhining osmonga ko‘tarilishi uchun ulug‘vor diniy inshoot.",
       "purpose_es": "Tumba real y monumento funerario cósmico para el ascenso del alma del faraón hacia el cielo.",
-      "disputes_ru": "Оставалась высочайшим рукотворным сооружением на протяжении 3800 лет; инженерные методы подъема мегалитов продолжают исследоваться.",
-      "disputes_uz": "3800 yil davomida inson qo‘li bilan qurilgan eng baland inshoot bo‘lib qoldi; bahaybat toshlarni ko‘tarish usullari hanuz o‘rganilmoqda.",
-      "disputes_es": "Fue la construcción humana más alta del planeta durante 3.800 años; su extraordinaria precisión astronómica y técnicas constructivas siguen asombrando."
+      "disputes_ru": "Была самым высоким сооружением человечества на протяжении 3800 лет; методы ее возведения продолжают активно исследоваться.",
+      "disputes_uz": "3800 yil davomida insoniyat yaratgan eng baland inshoot bo‘lib turgan; muhandislik usullari hanuz chuqur o‘rganilmoqda.",
+      "disputes_es": "Fue la estructura más alta hecha por el hombre durante 3.800 años; sus métodos de construcción siguen siendo intensamente investigados."
     },
     {
       "id": "hanging-gardens-babylon",
@@ -72,9 +72,9 @@
       "purpose_ru": "Построены царем для супруги Амитис, тосковавшей по зеленым холмам и лесам родной Мидии.",
       "purpose_uz": "Shoh o‘z vatani Midiya tog‘lari va yam-yashil o‘rmonlarini sog‘ingan rafiqasi Amitis uchun qurdirgan.",
       "purpose_es": "Construidos para reconfortar a la reina consorte Amytis, quien añoraba las colinas boscosas de su Media natal.",
-      "disputes_ru": "Единственное древнее чудо, археологические следы которого не найдены в Вавилоне; ряд исследователей предполагает, что сады были в Ниневии.",
-      "disputes_uz": "Bobil hududida aniq arxeologik qoldiqlari topilmagan yagona mo‘jiza; ayrim olimlar uni Ossuriya poytaxti Nineviyada qurilgan deb hisoblaydi.",
-      "disputes_es": "Es la única maravilla antigua sin confirmación arqueológica concluyente en Babilonia; algunos expertos sostienen que se erigió en Nínive."
+      "disputes_ru": "Единственное древнее чудо без окончательного археологического подтверждения в Вавилоне; часть ученых считает, что оно находилось в Ниневии.",
+      "disputes_uz": "Bobil shahrida aniq arxeologik tasdig‘i topilmagan yagona qadimgi mo‘jiza; ayrim olimlar uni Ninaviyada bo‘lgan deb hisoblaydi.",
+      "disputes_es": "La única maravilla antigua sin confirmación arqueológica definitiva en Babilonia; algunos académicos argumentan que estuvo en Nínive."
     },
     {
       "id": "temple-artemis-ephesus",
@@ -109,7 +109,10 @@
       "status_es": "Destruido (incendiado por Eróstrato en 356 a.C. y arrasado por los godos en 262 d.C.)",
       "purpose_ru": "Величественное греческое святилище в честь богини Артемиды, покровительницы охоты и плодородия.",
       "purpose_uz": "Ov va unumdorlik ma’budasi Artemida sharafiga bunyod etilgan ulug‘vor yunon ibodatxonasi.",
-      "purpose_es": "Gran santuario religioso griego dedicado a la diosa Artemisa, protectora de la caza y la fecundidad."
+      "purpose_es": "Gran santuario religioso griego dedicado a la diosa Artemisa, protectora de la caza y la fecundidad.",
+      "disputes_ru": "Дважды грандиозно перестраивался; был сожжен Геростратом, стремившимся к вечной известности.",
+      "disputes_uz": "Ikki marta ulkan miqyosda qayta qurilgan; abadiy shon-shuhratga erishmoqchi bo‘lgan Gerostrat tomonidan yoqib yuborilgan.",
+      "disputes_es": "Reconstruido dos veces a gran escala; fue incendiado por Eróstrato en busca de infamia eterna."
     },
     {
       "id": "statue-zeus-olympia",
@@ -144,7 +147,10 @@
       "status_es": "Destruida (arrasada por un incendio en Constantinopla en el siglo V d.C.)",
       "purpose_ru": "Хрисоэлефантинная колоссальная статуя Зевса из слоновой кости и золота на месте античных Олимпийских игр.",
       "purpose_uz": "Antik Olimpiya o‘yinlari o‘tkaziladigan maskanda Zevs sharafiga fil suyagi va sof oltindan yasalgan bahaybat haykal.",
-      "purpose_es": "Colosal escultura criselefantina de marfil y oro en honor a Zeus en la sede de los Juegos Olímpicos de la Antigüedad."
+      "purpose_es": "Colosal escultura criselefantina de marfil y oro en honor a Zeus en la sede de los Juegos Olímpicos de la Antigüedad.",
+      "disputes_ru": "Была настолько велика, что сидящий Зевс почти касался потолка; позже перевезена в Константинополь, где погибла в пожаре.",
+      "disputes_uz": "Shunchalik ulkan ediki, o‘tirgan Zevs deyarli shiftga tegib turardi; keyinchalik Konstantinopolga ko‘chirilib, yong‘inda yo‘q bo‘lgan.",
+      "disputes_es": "Tan grande que Zeus sentado casi tocaba el techo; posteriormente fue trasladada a Constantinopla, donde ardió."
     },
     {
       "id": "mausoleum-halicarnassus",
@@ -179,7 +185,10 @@
       "status_es": "Destruido (por sucesivos terremotos medievales entre los siglos XII y XV)",
       "purpose_ru": "Роскошная гробница, объединившая греческий, египетский и восточный стили; дала начало слову 'мавзолей'.",
       "purpose_uz": "Yunon, Misr va Sharq me’moriy uslublarini uyg‘unlashtirgan daxma; barcha muhtasham qabrlarni ifodalovchi 'mavzoley' so‘zi shundan kelib chiqqan.",
-      "purpose_es": "Suntuosa tumba monumental que aunó los estilos griego, oriental y egipcio, originando el término 'mausoleo'."
+      "purpose_es": "Suntuosa tumba monumental que aunó los estilos griego, oriental y egipcio, originando el término 'mausoleo'.",
+      "disputes_ru": "Его руины использовались рыцарями-госпитальерами для укрепления замка Бодрум в 1404 году.",
+      "disputes_uz": "Uning xarobalaridan 1404 yilda gospitalyer ritsarlari Bodrum qalasini mustahkamlashda foydalanishgan.",
+      "disputes_es": "Sus ruinas fueron reutilizadas por los Caballeros de San Juan para reforzar el Castillo de Bodrum en 1404."
     },
     {
       "id": "colossus-rhodes",
@@ -214,7 +223,10 @@
       "status_es": "Destruido (derribado por el terremoto del 226 a.C. tras apenas 54 años en pie)",
       "purpose_ru": "Гигантская бронзовая статуя бога солнца Гелиоса в честь победы над осадой Деметрия Полиоркета.",
       "purpose_uz": "Rodos orolining qamaldan omon qolishi sharafiga quyosh xudosi Geliosga bag‘ishlangan ulkan bronza haykal.",
-      "purpose_es": "Estatua colosal de bronce dedicada al dios sol Helios para celebrar la resistencia de Rodas frente al asedio de Demetrio Poliorcetes."
+      "purpose_es": "Estatua colosal de bronce dedicada al dios sol Helios para celebrar la resistencia de Rodas frente al asedio de Demetrio Poliorcetes.",
+      "disputes_ru": "Миф о том, что статуя стояла над входом в гавань, опровергнут; она находилась сбоку от входа.",
+      "disputes_uz": "Haykalning bandargoh og‘zi ustida turganligi haqidagi afsona rad etilgan; u kirish joyining yonida qad rostlagan.",
+      "disputes_es": "El mito de que se alzaba sobre la boca del puerto es físicamente imposible; se erguía junto a la entrada del puerto."
     },
     {
       "id": "lighthouse-alexandria",
@@ -249,7 +261,10 @@
       "status_es": "Destruido (por terremotos entre 956 y 1323 d.C.; en su emplazamiento se alza la Fortaleza de Qaitbay)",
       "purpose_ru": "Навигационный ориентир для судов в гавани Александрии с гигантским зеркалом и огнем.",
       "purpose_uz": "Iskandariya portiga yaqinlashayotgan kemalarga yo‘l ko‘rsatuvchi ulkan qaytaruvchi ko‘zgu va olovli mayoq.",
-      "purpose_es": "Faro de guía marina para la concurrida rada de Alejandría, dotado de un gran espejo ustorio y fuego perpetuo."
+      "purpose_es": "Faro de guía marina para la concurrida rada de Alejandría, dotado de un gran espejo ustorio y fuego perpetuo.",
+      "disputes_ru": "Посещен Ибн Баттутой в руинах в 1349 году; его основание покоится под цитаделью Кайтбей.",
+      "disputes_uz": "1349 yilda Ibn Battuta xarobalarini ziyorat qilgan; poydevor toshlari Qaytboy qal’asi ostida saqlanib qolgan.",
+      "disputes_es": "Visitado en ruinas por Ibn Battuta en 1349 d.C.; sus cimientos permanecen bajo la Ciudadela de Qaitbay."
     },
     {
       "id": "great-wall-china",
@@ -284,7 +299,10 @@
       "status_es": "En pie hoy en día (la fortificación militar más extensa de la Tierra con 21.196 km)",
       "purpose_ru": "Защита границ китайской земледельческой цивилизации от набегов кочевников Великой Степи.",
       "purpose_uz": "Xitoy dehqonchilik sivilizatsiyasi chegaralarini shimoliy ko‘chmanchi qabilalar bosqinidan himoya qilish.",
-      "purpose_es": "Proteger las fronteras del imperio agrario chino frente a las incursiones de los pueblos nómadas del norte."
+      "purpose_es": "Proteger las fronteras del imperio agrario chino frente a las incursiones de los pueblos nómadas del norte.",
+      "disputes_ru": "Миф о том, что стена видна невооруженным глазом из космоса или с Луны, научно опровергнут.",
+      "disputes_uz": "Devorning kosmosdan yoki Oydan oddiy ko‘z bilan ko‘rinishi haqidagi afsona ilmiy jihatdan rad etilgan.",
+      "disputes_es": "El mito de que es visible a simple vista desde el espacio o la Luna ha sido científicamente refutado."
     },
     {
       "id": "petra-jordan",
@@ -319,7 +337,10 @@
       "status_es": "En pie hoy en día (portentosa ciudad excavada en roca, Patrimonio de la Humanidad)",
       "purpose_ru": "Столица набатеев и перекресток караванных путей ладана и пряностей между Аравией, Сирией и Египтом.",
       "purpose_uz": "Nabatiylar poytaxti hamda Arabiston, Shom va Misr o‘rtasidagi xushbo‘y ladan va ziravorlar savdo yo‘llari chorrahasi.",
-      "purpose_es": "Capital de los nabateos y encrucijada caravanera del incienso y las especias entre Arabia, Levante y Egipto."
+      "purpose_es": "Capital de los nabateos y encrucijada caravanera del incienso y las especias entre Arabia, Levante y Egipto.",
+      "disputes_ru": "Знаменита уникальными гидравлическими плотинами и резервуарами для сбора воды в засушливой пустыне.",
+      "disputes_uz": "Qurg‘oqchil cho‘lda suv to‘plash uchun ajoyib gidravlik to‘g‘onlar va hovuzlari bilan mashhur.",
+      "disputes_es": "Famosa por sus presas y cisternas hidráulicas para la captación de agua en un desierto árido."
     },
     {
       "id": "colosseum-rome",
@@ -354,7 +375,10 @@
       "status_es": "En pie hoy en día (emblema parcialmente en ruinas de la Roma imperial)",
       "purpose_ru": "Грандиозный амфитеатр на 50 000 зрителей для гладиаторских боев, травли зверей и навмахий.",
       "purpose_uz": "Gladiatorlar jangi, yirtqich hayvonlar ovi va teatr tomoshalari uchun 50 ming tomoshabinga mo‘ljallangan ulkan amfiteatr.",
-      "purpose_es": "Grandioso anfiteatro con capacidad para 50.000 espectadores para combates de gladiadores, cacerías y naumaquias."
+      "purpose_es": "Grandioso anfiteatro con capacidad para 50.000 espectadores para combates de gladiadores, cacerías y naumaquias.",
+      "disputes_ru": "Поврежден землетрясениями; его камень и мрамор использовались для строительства ренессансных церквей.",
+      "disputes_uz": "Zilzilalardan zarar ko‘rgan; tosh va marmarlaridan Uyg‘onish davri cherkovlarini qurishda foydalanilgan.",
+      "disputes_es": "Dañado por terremotos; su piedra y mármol se extrajeron para construir iglesias renacentistas."
     },
     {
       "id": "machu-picchu",
@@ -389,7 +413,10 @@
       "status_es": "En pie hoy en día (ciudadela inca intacta sobre la cumbre de los Andes)",
       "purpose_ru": "Царское поместье и религиозно-астрономическое святилище высоко в Андах.",
       "purpose_uz": "And tog‘larining baland cho‘qqisida barpo etilgan shohona qarorgoh va diniy-astronomik maskan.",
-      "purpose_es": "Finca real de recreo y santuario religioso y astronómico a 2.430 metros de altitud."
+      "purpose_es": "Finca real de recreo y santuario religioso y astronómico a 2.430 metros de altitud.",
+      "disputes_ru": "Не был обнаружен испанскими конкистадорами; открыт внешнему миру Хайрамом Бингемом в 1911 году.",
+      "disputes_uz": "Ispan konkistadorlari tomonidan topilmagan; 1911 yilda Xayram Bingem tomonidan dunyoga ma’lum qilingan.",
+      "disputes_es": "Nunca fue encontrado por los conquistadores españoles; fue revelado al mundo por Hiram Bingham en 1911."
     },
     {
       "id": "taj-mahal",
@@ -424,7 +451,10 @@
       "status_es": "En pie hoy en día (joya cumbre de la arquitectura mogol e indo-islámica)",
       "purpose_ru": "Мавзолей из белого мрамора, украшенный драгоценными камнями, в знак вечной любви к супруге.",
       "purpose_uz": "Vafot etgan rafiqasiga bo‘lgan cheksiz muhabbat va vafo ramzi sifatida qimmatbaho toshlar qadalgan oq marmar maqbara.",
-      "purpose_es": "Mausoleo de mármol blanco puro incrustado con piedras semipreciosas como testimonio de amor eterno hacia su esposa."
+      "purpose_es": "Mausoleo de mármol blanco puro incrustado con piedras semipreciosas como testimonio de amor eterno hacia su esposa.",
+      "disputes_ru": "Всемирно известен идеальной билатеральной симметрией и оптическими иллюзиями минаретов.",
+      "disputes_uz": "Mukammal ikki tomonlama simmetriyasi va minoralardagi optik illyuziyalari bilan jahonga mashhur.",
+      "disputes_es": "Mundialmente famoso por su perfecta simetría bilateral y las ilusiones ópticas diseñadas en sus minaretes."
     },
     {
       "id": "hagia-sophia",
@@ -459,7 +489,10 @@
       "status_es": "En pie hoy en día (mezquita activa y monumento histórico)",
       "purpose_ru": "Главный патриарший собор христианского мира на протяжении почти тысячи лет, обращенный в мечеть Мехмедом II.",
       "purpose_uz": "Ming yil davomida xristian dunyosining eng buyuk pravoslav sobori, Fotih Sulton Muhammad davrida masjidga aylantirilgan.",
-      "purpose_es": "La mayor catedral del mundo cristiano durante casi un milenio, convertida en mezquita imperial por Mehmed II."
+      "purpose_es": "La mayor catedral del mundo cristiano durante casi un milenio, convertida en mezquita imperial por Mehmed II.",
+      "disputes_ru": "Ее гигантский купол словно «подвешен на золотой цепи к небесам» — триумф средневековой инженерии.",
+      "disputes_uz": "Uning ulkan gumbazi «osmonga oltin zanjir bilan osib qo‘yilgandek» tuyuladi — o‘rta asr muhandislik cho‘qqisi.",
+      "disputes_es": "Su enorme cúpula parecía \"colgar de una cadena de oro del cielo\", un triunfo de la ingeniería medieval."
     },
     {
       "id": "dome-of-the-rock",
@@ -494,7 +527,10 @@
       "status_es": "En pie hoy en día (el monumento islámico más antiguo que conserva su estructura original)",
       "purpose_ru": "Увековечение места вознесения (Мирадж) пророка Мухаммада и утверждение величия исламского зодчества в Иерусалиме.",
       "purpose_uz": "Payg‘ambar Muhammad ﷺ ning Me’roj kechasidagi muborak qoyalarini e’zozlash va Quddusda islom me’morchiligining ulug‘vorligini ko‘rsatish.",
-      "purpose_es": "Conmemorar la roca del Mirach (Ascensión del Profeta Mahoma) y plasmar la magnificencia del arte islámico en Jerusalén."
+      "purpose_es": "Conmemorar la roca del Mirach (Ascensión del Profeta Mahoma) y plasmar la magnificencia del arte islámico en Jerusalén.",
+      "disputes_ru": "Славится восьмиугольным планом, омейядской каллиграфией и золотым куполом, определяющим панораму Иерусалима.",
+      "disputes_uz": "Sakkizburchak tarhi, Umaviylar xattotligi va Quddus qiyofasini belgilovchi oltin gumbazi bilan mashhur.",
+      "disputes_es": "Célebre por su planta octogonal, caligrafía omeya original y cúpula dorada que define el horizonte de Jerusalén."
     },
     {
       "id": "alhambra-granada",
@@ -529,7 +565,10 @@
       "status_es": "En pie hoy en día (cumbre del patrimonio andalusí en Europa)",
       "purpose_ru": "Царская крепость и дворцово-парковый ансамбль насридских правителей Гранадского эмирата.",
       "purpose_uz": "Andalusning so‘nggi davridagi G‘arnota musulmon podsholigi hukmdorlarining saroy-qal’asi va Xeneralife bog‘lari majmuasi.",
-      "purpose_es": "Alcázar real y conjunto palaciego y ajardinado del Generalife para los sultanes nazaríes de Granada."
+      "purpose_es": "Alcázar real y conjunto palaciego y ajardinado del Generalife para los sultanes nazaríes de Granada.",
+      "disputes_ru": "Знаменита сталактитовыми сводами-мукарнасами, арабесками и девизом Насридов: «Нет победителя, кроме Бога».",
+      "disputes_uz": "Muqarnas gumbazlari, arabesk naqshlari va Nasrilar shiori «G‘olib faqat Allohdir» bilan mashhur.",
+      "disputes_es": "Famosa por sus bóvedas de mocárabes, arabescos y el omnipresente lema nazarí: \"No hay vencedor sino Dios\"."
     }
   ]
 }

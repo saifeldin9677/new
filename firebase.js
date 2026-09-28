@@ -1991,4 +1991,32 @@ window.firebaseListenLiveAnnotations = function(classId, callback) {
     });
 };
 
+window.firebaseSaveUserSimulationProgress = async function(uid, progress) {
+    if (!uid || !db) return { ok: false };
+    try {
+        await setDoc(doc(db, 'users', uid), {
+            simulationProgress: progress,
+            lastSimSavedAt: serverTimestamp ? serverTimestamp() : new Date().toISOString()
+        }, { merge: true });
+        return { ok: true };
+    } catch(err) {
+        console.warn('firebaseSaveUserSimulationProgress failed:', err);
+        return { ok: false, error: err.code || err.message };
+    }
+};
+
+window.firebaseGetUserSimulationProgress = async function(uid) {
+    if (!uid || !db) return null;
+    try {
+        const snap = await getDoc(doc(db, 'users', uid));
+        if (snap.exists()) {
+            return snap.data()?.simulationProgress || null;
+        }
+        return null;
+    } catch(err) {
+        console.warn('firebaseGetUserSimulationProgress failed:', err);
+        return null;
+    }
+};
+
 console.log('Firebase initialized for project:', firebaseConfig.projectId);

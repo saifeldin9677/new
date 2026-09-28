@@ -2274,6 +2274,7 @@ body.section-geo #mobileHistoryNav {
     }
     .history-epoch-tabs {
         flex-shrink: 0 !important;
+        display: flex !important;
         overflow-x: auto !important;
         flex-wrap: nowrap !important;
         -webkit-overflow-scrolling: touch !important;
@@ -2283,6 +2284,12 @@ body.section-geo #mobileHistoryNav {
     }
     .history-epoch-tabs::-webkit-scrollbar {
         display: none !important;
+    }
+    .history-epoch-tabs .war-epoch-tab,
+    .history-epoch-tabs .era-epoch-tab {
+        flex: 0 0 auto !important;
+        width: auto !important;
+        padding: 5px 12px !important;
     }
     .history-filter-row,
     .history-era-pop-filter-row,
@@ -6056,12 +6063,12 @@ body,
 [data-theme="light"] .arctic-ice,
 [data-theme="light"] .antarctica-path,
 [data-theme="light"] .history-antarctica-path {
-    fill: #ffffff !important;
-    stroke: rgba(180, 210, 235, 0.6) !important;
+    fill: #e8f4fc !important;
+    stroke: rgba(110, 155, 190, 0.6) !important;
 }
 [data-theme="light"] .arctic-ice:hover,
 [data-theme="light"] .antarctica-path:hover {
-    fill: #f0f8ff !important;
+    fill: #f4faff !important;
 }
 
 /* ── History Mode (WWI & WWII alignment scenarios) ── */
@@ -7475,27 +7482,33 @@ body.section-history #modeRow {
     text-align: center;
 }
 .history-epoch-tabs {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 6px;
     width: 100%;
     margin-bottom: 8px;
-    padding: 2px 2px 4px;
+    padding: 0;
     flex-shrink: 0;
     box-sizing: border-box;
 }
 .war-epoch-tab,
 .era-epoch-tab {
-    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
     font-size: 0.76rem !important;
-    padding: 4px 10px !important;
+    font-weight: 500;
+    padding: 5px 4px !important;
+    min-height: 32px;
     border-radius: var(--radius-sm, 8px) !important;
     background: rgba(255, 255, 255, 0.05) !important;
     border: 1px solid rgba(255, 255, 255, 0.12) !important;
     color: var(--text-secondary, #9aa5b1) !important;
     cursor: pointer;
     white-space: nowrap;
+    text-align: center;
     transition: all 0.15s ease;
 }
 .war-epoch-tab:hover,
@@ -13390,23 +13403,62 @@ th {
     overflow: hidden;
 }
 
+/* --- Simulation Floating Pinned Exit Button --- */
+.sim-floating-exit-btn {
+    position: fixed;
+    top: 62px;
+    inset-inline-end: 14px;
+    z-index: 10020;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    color: #ffffff !important;
+    border: 1.5px solid #f87171;
+    font-size: 0.85rem;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 10px rgba(239, 68, 68, 0.35);
+    pointer-events: auto;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+}
+
+.sim-floating-exit-btn:hover {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.6);
+    transform: translateY(-1px);
+}
+
+[data-theme="light"] .sim-floating-exit-btn {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #ffffff !important;
+    border-color: #b91c1c;
+}
+
 /* --- Simulation Top HUD --- */
 .sim-top-hud {
     pointer-events: auto;
     background: rgba(15, 28, 46, 0.96);
     backdrop-filter: blur(16px);
     border-bottom: 1.5px solid rgba(255, 255, 255, 0.14);
-    padding: 8px 16px;
+    padding: 6px 14px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     flex-wrap: nowrap;
-    overflow-x: auto;
+    overflow: visible;
     color: #ffffff;
     min-height: 56px;
     box-sizing: border-box;
+    width: 100%;
+    position: relative;
+    z-index: 10;
 }
 
 [data-theme="light"] .sim-top-hud {
@@ -13553,9 +13605,22 @@ th {
 .sim-hud-center {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     flex-wrap: nowrap;
-    flex-shrink: 0;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+    padding: 2px 6px;
+}
+.sim-hud-center::-webkit-scrollbar {
+    height: 4px;
+}
+.sim-hud-center::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
 }
 
 .sim-nation-picker-wrap {
@@ -13654,8 +13719,9 @@ th {
 .sim-hud-right {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     flex-shrink: 0;
+    margin-inline-start: auto;
 }
 
 .sim-next-turn-btn {
@@ -13712,7 +13778,7 @@ th {
 }
 
 .sim-hud-action-btn {
-    min-height: 44px;
+    min-height: 40px;
     font-weight: 700;
     display: inline-flex;
     align-items: center;
@@ -13720,24 +13786,37 @@ th {
 }
 
 .sim-exit-btn {
-    background: rgba(239, 68, 68, 0.16) !important;
-    color: #fca5a5 !important;
-    border-color: rgba(239, 68, 68, 0.4) !important;
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    color: #ffffff !important;
+    border: 1px solid #f87171 !important;
+    font-weight: 800 !important;
+    font-size: 0.85rem !important;
+    padding: 6px 14px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 10px rgba(239, 68, 68, 0.45) !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    transition: all 0.18s ease !important;
 }
 
 .sim-exit-btn:hover {
-    background: #dc2626 !important;
-    color: #ffffff !important;
+    background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.65) !important;
+    transform: translateY(-1px);
 }
 
 [data-theme="light"] .sim-exit-btn {
-    background: #fee2e2 !important;
-    color: #7f1d1d !important;
-    border-color: #ef4444 !important;
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    color: #ffffff !important;
+    border-color: #b91c1c !important;
 }
 
 [data-theme="light"] .sim-exit-btn:hover {
-    background: #7f1d1d !important;
+    background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
     color: #ffffff !important;
 }
 
@@ -14475,38 +14554,53 @@ th {
 
 /* Mobile Responsiveness for Sim */
 @media (max-width: 768px) {
+    .sim-floating-exit-btn {
+        top: 56px;
+        inset-inline-end: 8px;
+        padding: 4px 10px;
+        font-size: 0.78rem;
+    }
     .sim-top-hud {
-        padding: 8px 12px;
-        gap: 8px;
+        padding: 6px 10px;
+        gap: 6px;
+        flex-wrap: wrap;
     }
-    .sim-brand-title {
-        width: 100%;
-        justify-content: space-between;
+    .sim-hud-left {
+        flex: 1 1 auto;
+        gap: 6px;
+        width: auto;
     }
-    .sim-calendar-badge {
-        font-size: 0.76rem;
-        padding: 4px 8px;
+    .sim-hud-right {
+        margin-inline-start: auto;
+        flex-shrink: 0;
+        width: auto;
+        gap: 6px;
     }
     .sim-hud-center {
         width: 100%;
-        flex-direction: column;
-        align-items: stretch;
+        order: 3;
+        flex-direction: row;
+        overflow-x: auto;
         gap: 8px;
+        padding-bottom: 2px;
+    }
+    .sim-brand-title {
+        width: auto;
+    }
+    .sim-calendar-badge {
+        font-size: 0.74rem;
+        padding: 3px 6px;
     }
     .sim-role-tabs-group {
         overflow-x: auto;
-        padding: 4px;
-        width: 100%;
-        justify-content: flex-start;
+        padding: 3px;
+        width: auto;
+        flex-shrink: 0;
     }
     .sim-role-tab {
-        font-size: 0.78rem;
-        padding: 6px 8px;
-        min-height: 44px;
-    }
-    .sim-hud-right {
-        width: 100%;
-        justify-content: flex-end;
+        font-size: 0.76rem;
+        padding: 4px 6px;
+        min-height: 38px;
     }
     .sim-nation-panel {
         top: auto;

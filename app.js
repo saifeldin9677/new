@@ -4800,7 +4800,7 @@
                 var isLight = "light" === document.documentElement.getAttribute("data-theme");
                 var e = document.getElementById("oceanGradient"), t = e ? e.querySelectorAll("stop") : [], n = t[t.length - 1], i = n ? n.getAttribute("stop-color") : null;
                 if (!i || "none" === i) {
-                    i = isLight ? "#d0e3f4" : "#091520";
+                    i = isLight ? "#7099b4" : "#091520";
                 }
                 var a = document.getElementById("mapContainer");
                 a && (a.style.backgroundColor = i), document.body.style.backgroundColor = i;
@@ -9505,10 +9505,16 @@
     });
     var Zs = document.getElementById("sectionGeoBtn");
     Zs && Zs.addEventListener("click", function() {
+        if (window.simState && window.simState.isOpen && typeof window.closeNationSim === "function") {
+            window.closeNationSim();
+        }
         window.applySection && window.applySection("geo");
     });
     var el = document.getElementById("sectionHistoryBtn");
     el && el.addEventListener("click", function() {
+        if (window.simState && window.simState.isOpen && typeof window.closeNationSim === "function") {
+            window.closeNationSim();
+        }
         Te || window.applySection && window.applySection("history");
     });
     var tl = document.getElementById("histTerrainBtn");
@@ -17257,27 +17263,74 @@
             }
         }
 
-        // Persistence across semesters
+        // Persistence across semesters & user accounts
         function saveSandboxSimulationState() {
             try {
+                // Synchronize any updated stats/resources from memory into customNations
+                if (typeof nationsData !== "undefined") {
+                    Object.keys(nationsData).forEach(function(nId) {
+                        simState.customNations[nId] = Object.assign({}, simState.customNations[nId] || {}, nationsData[nId]);
+                    });
+                }
+
+                var currentUser = (window.accountSystemState && window.accountSystemState.currentUser) ||
+                                  (window.accountSystem && typeof window.accountSystem.getState === "function" && window.accountSystem.getState().currentUser) ||
+                                  (window.firebaseAuth && window.firebaseAuth.currentUser) || null;
+
                 var payload = {
                     customNations: simState.customNations,
                     isSandboxMode: simState.isSandboxMode,
+                    activeNationId: simState.activeNationId,
+                    activeRole: simState.activeRole,
                     gamePace: simState.gamePace,
                     seasonDuration: simState.seasonDuration,
                     seasonTimeRemaining: simState.seasonTimeRemaining,
                     year: simState.year,
                     seasonIdx: simState.seasonIdx,
                     teamAssignments: simState.teamAssignments,
-                    lastSavedTimestamp: Date.now()
+                    safeRoutes: simState.safeRoutes || {},
+                    eventsLog: (simState.eventsLog || []).slice(0, 50),
+                    alliedGarrisons: simState.alliedGarrisons || {},
+                    taxPolicy: simState.taxPolicy || null,
+                    budgetAllocation: simState.budgetAllocation || null,
+                    lastSavedTimestamp: Date.now(),
+                    savedByUser: currentUser ? {
+                        uid: currentUser.uid,
+                        username: currentUser.username || null,
+                        displayName: currentUser.displayName || null,
+                        role: currentUser.role || 'student',
+                        orgId: currentUser.orgId || null
+                    } : null
                 };
+
+                // General key for single player
                 localStorage.setItem("agy_sandbox_sim_epoch", JSON.stringify(payload));
-            } catch (e) {}
+
+                // Account-linked key if user is signed in
+                if (currentUser && currentUser.uid) {
+                    localStorage.setItem("agy_sim_progress_uid_" + currentUser.uid, JSON.stringify(payload));
+                    if (typeof window.firebaseSaveUserSimulationProgress === "function") {
+                        window.firebaseSaveUserSimulationProgress(currentUser.uid, payload);
+                    }
+                }
+            } catch (e) {
+                console.warn("saveSandboxSimulationState failed:", e);
+            }
         }
 
         function loadSandboxSimulationState() {
             try {
-                var raw = localStorage.getItem("agy_sandbox_sim_epoch");
+                var currentUser = (window.accountSystemState && window.accountSystemState.currentUser) ||
+                                  (window.accountSystem && typeof window.accountSystem.getState === "function" && window.accountSystem.getState().currentUser) ||
+                                  (window.firebaseAuth && window.firebaseAuth.currentUser) || null;
+
+                var raw = null;
+                if (currentUser && currentUser.uid) {
+                    raw = localStorage.getItem("agy_sim_progress_uid_" + currentUser.uid);
+                }
+                if (!raw) {
+                    raw = localStorage.getItem("agy_sandbox_sim_epoch");
+                }
                 if (!raw) return;
                 var data = JSON.parse(raw);
                 if (data && data.customNations && Object.keys(data.customNations).length > 0) {
@@ -17288,6 +17341,13 @@
                     simState.year = data.year || 1250;
                     simState.seasonIdx = data.seasonIdx || 0;
                     simState.teamAssignments = data.teamAssignments || {};
+                    if (data.activeNationId) simState.activeNationId = data.activeNationId;
+                    if (data.activeRole) simState.activeRole = data.activeRole;
+                    if (data.safeRoutes) simState.safeRoutes = data.safeRoutes;
+                    if (data.eventsLog) simState.eventsLog = data.eventsLog;
+                    if (data.alliedGarrisons) simState.alliedGarrisons = data.alliedGarrisons;
+                    if (data.taxPolicy) simState.taxPolicy = data.taxPolicy;
+                    if (data.budgetAllocation) simState.budgetAllocation = data.budgetAllocation;
 
                     Object.keys(simState.customNations).forEach(function(cId) {
                         nationsData[cId] = simState.customNations[cId];
@@ -18932,6 +18992,9 @@
             if (simState.isDrawingTerritory) {
                 cleanupDrawingTerritoryMode();
             }
+            // Auto-save and link progress to account before closing
+            saveSandboxSimulationState();
+
             simState.isOpen = false;
             stopSeasonalClock();
             if (nationSimContainer) nationSimContainer.style.display = "none";
@@ -18967,6 +19030,16 @@
                     Vn.select(".student-research-layer").style("display", "");
                 }
             }
+
+            var currentUser = (window.accountSystemState && window.accountSystemState.currentUser) ||
+                              (window.accountSystem && typeof window.accountSystem.getState === "function" && window.accountSystem.getState().currentUser) ||
+                              (window.firebaseAuth && window.firebaseAuth.currentUser) || null;
+
+            var toastMsg = (typeof zi === "function" ? zi("simProgressSavedToast") : null) || "تم حفظ تقدمك في المحاكاة وربطه بحسابك بنجاح ✓";
+            if (currentUser && (currentUser.displayName || currentUser.username)) {
+                toastMsg = "تم حفظ تقدمك وربطه بحسابك (" + (currentUser.displayName || currentUser.username) + ") والعودة للخريطة الطبيعية ✓";
+            }
+            if (typeof Go === "function") Go(toastMsg);
         }
 
         // Event Handlers Wiring
@@ -18984,6 +19057,43 @@
         if (simExitBtn) {
             simExitBtn.addEventListener("click", closeNationSim);
         }
+
+        var simFloatingExitBtn = document.getElementById("simFloatingExitBtn");
+        if (simFloatingExitBtn) {
+            simFloatingExitBtn.addEventListener("click", closeNationSim);
+        }
+
+        var simPanelExitBtn = document.getElementById("simPanelExitBtn");
+        if (simPanelExitBtn) {
+            simPanelExitBtn.addEventListener("click", closeNationSim);
+        }
+
+        var simWorldSetupExitBtn = document.getElementById("simWorldSetupExitBtn");
+        if (simWorldSetupExitBtn) {
+            simWorldSetupExitBtn.addEventListener("click", closeNationSim);
+        }
+
+        // Keyboard Shortcut: Escape to exit cleanly back to normal map
+        window.addEventListener("keydown", function(e) {
+            if (e.key === "Escape" && simState.isOpen) {
+                if (simTeacherModal && simTeacherModal.style.display === "flex") {
+                    simTeacherModal.style.display = "none";
+                    return;
+                }
+                if (simCountryDossierModal && simCountryDossierModal.style.display === "flex") {
+                    simCountryDossierModal.style.display = "none";
+                    return;
+                }
+                if (simWorldSetupModal && simWorldSetupModal.style.display === "flex") {
+                    closeNationSim();
+                    return;
+                }
+                closeNationSim();
+            }
+        });
+
+        window.closeNationSim = closeNationSim;
+        window.openNationSim = openNationSim;
 
         if (simNationSelect) {
             simNationSelect.addEventListener("change", function() {

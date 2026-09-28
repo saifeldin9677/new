@@ -4171,7 +4171,7 @@
                 cities: { tourist: '#e91e63', commercial: '#2196f3', industrial: '#ff9800', agricultural: '#4caf50', other: '#ff4081' },
                 corridor: { terrain: '#ffeb3b', density: '#00e5ff', precipitation: '#00e5ff', temperature: '#00ffcc', normal: '#ff1744', other: '#ff9100' },
                 oceanGradient: ['#1a334a','#152b3f','#091520','#091520'],
-                oceanGradientLight: ['#eef6fc', '#e2eef8', '#d0e3f4', '#d0e3f4'],
+                oceanGradientLight: ['#9fc2d8', '#8eb5cd', '#7ea7c1', '#7099b4'],
                 graticule: { line: 'rgba(255,255,255,0.08)', equator: '#ff6f00', tropic: '#ffa726', meridian: '#4fc3f7', polar: '#81d4fa', sphere: 'rgba(255,255,255,0.15)' },
                 graticuleLight: { line: 'rgba(15, 23, 42, 0.08)', equator: '#e65100', tropic: '#f57c00', meridian: '#0288d1', polar: '#03a9f4', sphere: 'rgba(15, 23, 42, 0.12)' },
                 physical: { mountainShadow: '#4a2d00', mountainMajor: '#e8c06a', mountainImportant: '#c8983e', mountainMinor: '#a87830', mountainPeakMajor: '#ffe088', mountainPeakImportant: '#d4a84c', mountainPeakMinor: '#b08830', mountainHover: '#fff', riverHalo: '#1a5f7a', riverMajor: '#56d0f0', riverImportant: '#3eaed0', riverMinor: '#2898c0', riverHover: '#fff' },
@@ -9854,10 +9854,10 @@ const featureSpanish = {
     "histNoDataForPeriod": "لا توجد بيانات تاريخية مسجلة عن {country} حول {year} — لا يعني هذا بالضرورة عدم حدوث أي شيء هنا، بل أنه ليس جزءًا من مجموعة البيانات الحالية.",
     "histSelectToBegin": "اختر حربًا أو حقبة لبدء العرض",
     "histSelectCue": "اختر حربًا أو حقبة من القائمة أدناه لعرضها على الخريطة",
-    "sectionGeo": "الجغرافيا",
-    "sectionHistory": "التاريخ",
-    "sectionGeo_title": "قسم الجغرافيا: الخريطة التفاعلية والطبقات",
-    "sectionHistory_title": "قسم التاريخ: الحقب والحروب والتحالفات",
+    "sectionGeo": "جغرافيا معاصرة",
+    "sectionHistory": "أطلس تاريخي",
+    "sectionGeo_title": "قسم الجغرافيا المعاصرة: الخريطة التفاعلية والطبقات",
+    "sectionHistory_title": "قسم الأطلس التاريخي: الحقب والحروب والتحالفات",
     "sectionPickerTitle": "بأي قسم تريد البدء؟",
     "sectionPickerSubtitle": "يمكنك التبديل بين القسمين في أي وقت من الزر في الأعلى.",
     "sectionPickerGeoDesc": "الخريطة التفاعلية: الديانات والتضاريس والمناخ وطبقات البيانات.",
@@ -10218,6 +10218,8 @@ const featureSpanish = {
     "simPowerBadgeTitle": "مؤشر القوة الوطنية الشاملة",
     "simTeacherConsoleTitle": "فتح لوحة تحكم المعلم للتحكم بأحداث المحاكاة",
     "simExitBtnTitle": "الخروج من وضع محاكاة الأمم",
+    "simExitToMap": "الخروج من المحاكاة",
+    "simProgressSavedToast": "تم حفظ تقدمك في المحاكاة وربطه بحسابك بنجاح ✓",
     "simResourceFoodTitle": "مخزون الغذاء والإنتاج الزراعي",
     "simResourceFood": "غذاء",
     "simResourceMetalsTitle": "المعادن الاستراتيجية والحديد للسلاح",
@@ -10329,7 +10331,10 @@ const featureSpanish = {
     "histOnboard7Title": "📚 المصادر والأدوات المتقدمة",
     "histOnboard7Text": "اطّلع على المراجع الأكاديمية الموثقة لكل حقبة، أو صدّر الخريطة كملف عالي الدقة، واستفد من اختصارات لوحة المفاتيح.",
     "histOnboardLangTitle": "🌐 لغات الأطلس التاريخي",
-    "histOnboardLangText": "يدعم الأطلس 5 لغات عالمية بدقة تاريخية كاملة لأسماء الإمبراطوريات والحضارات والمعارك."
+    "histOnboardLangText": "يدعم الأطلس 5 لغات عالمية بدقة تاريخية كاملة لأسماء الإمبراطوريات والحضارات والمعارك.",
+    "histReligionAll": "كل الأديان",
+    "histItemCountWars": "حرب",
+    "histItemCountEras": "حقبة"
   },
   "en": {
     "langLabel": "🌐 Language:",
@@ -11345,6 +11350,8 @@ const featureSpanish = {
     "simPowerBadgeTitle": "Composite National Power Index",
     "simTeacherConsoleTitle": "Open Teacher Console to inject global simulation events",
     "simExitBtnTitle": "Exit Nation Simulation Mode",
+    "simExitToMap": "Exit Simulation",
+    "simProgressSavedToast": "Simulation progress saved and linked to your account ✓",
     "simResourceFoodTitle": "Food Reserves & Agricultural Output",
     "simResourceFood": "Food",
     "simResourceMetalsTitle": "Strategic Metals & Iron for Armaments",
@@ -11456,7 +11463,10 @@ const featureSpanish = {
     "histOnboard7Title": "📚 Sources & Advanced Tools",
     "histOnboard7Text": "Review verified academic citations for each era, export high-resolution maps, and access helpful keyboard shortcuts.",
     "histOnboardLangTitle": "🌐 Historical Atlas Languages",
-    "histOnboardLangText": "The atlas fully supports 5 languages with historically accurate names for empires, civilizations, and battles."
+    "histOnboardLangText": "The atlas fully supports 5 languages with historically accurate names for empires, civilizations, and battles.",
+    "histReligionAll": "All Religions",
+    "histItemCountWars": "wars",
+    "histItemCountEras": "eras"
   },
   "ru": {
     "langLabel": "🌐 Язык:",
@@ -12472,6 +12482,8 @@ const featureSpanish = {
     "simPowerBadgeTitle": "Индекс совокупной национальной мощи",
     "simTeacherConsoleTitle": "Открыть консоль учителя для управления событиями",
     "simExitBtnTitle": "Выйти из режима симуляции наций",
+    "simExitToMap": "Выйти из симуляции",
+    "simProgressSavedToast": "Прогресс симуляции сохранен и привязан к вашему аккаунту ✓",
     "simResourceFoodTitle": "Запасы продовольствия и сельское хозяйство",
     "simResourceFood": "Пища",
     "simResourceMetalsTitle": "Стратегические металлы и железо",
@@ -12583,7 +12595,10 @@ const featureSpanish = {
     "histOnboard7Title": "📚 Источники и расширенные инструменты",
     "histOnboard7Text": "Изучайте академические источники по каждой эпохе, экспортируйте карты высокого качества и используйте горячие клавиши.",
     "histOnboardLangTitle": "🌐 Языки исторического атласа",
-    "histOnboardLangText": "Атлас полностью поддерживает 5 языков с исторически точными названиями империй, цивилизаций и битв."
+    "histOnboardLangText": "Атлас полностью поддерживает 5 языков с исторически точными названиями империй, цивилизаций и битв.",
+    "histReligionAll": "Все религии",
+    "histItemCountWars": "войн",
+    "histItemCountEras": "эпох"
   },
   "uz": {
     "langLabel": "🌐 Til:",
@@ -13599,6 +13614,8 @@ const featureSpanish = {
     "simPowerBadgeTitle": "Milliy qudratning umumiy ko‘rsatkichi",
     "simTeacherConsoleTitle": "Voqealarni boshqarish uchun o‘qituvchi panelini ochish",
     "simExitBtnTitle": "Millatlar simulyatsiyasidan chiqish",
+    "simExitToMap": "Simulyatsiyadan chiqish",
+    "simProgressSavedToast": "Simulyatsiya yutuqlari saqlandi va hisobingizga biriktirildi ✓",
     "simResourceFoodTitle": "Oziq-ovqat zaxiralari va qishloq xo‘jaligi",
     "simResourceFood": "Oziq-ovqat",
     "simResourceMetalsTitle": "Strategik metallar va qurol uchun temir",
@@ -13710,7 +13727,10 @@ const featureSpanish = {
     "histOnboard7Title": "📚 Manbalar va ilg'or vositalar",
     "histOnboard7Text": "Har bir davr bo'yicha akademik manbalarni ko'ring, yuqori sifatli xaritalarni eksport qiling va tezkor tugmalardan foydalaning.",
     "histOnboardLangTitle": "🌐 Tarixiy atlas tillari",
-    "histOnboardLangText": "Atlas imperiyalar, sivilizatsiyalar va janglarning aniq tarixiy nomlari bilan 5 ta tilni to'liq qo'llab-quvvatlaydi."
+    "histOnboardLangText": "Atlas imperiyalar, sivilizatsiyalar va janglarning aniq tarixiy nomlari bilan 5 ta tilni to'liq qo'llab-quvvatlaydi.",
+    "histReligionAll": "Barcha dinlar",
+    "histItemCountWars": "urush",
+    "histItemCountEras": "davr"
   },
   "es": {
     "langLabel": "🌐 Idioma:",
@@ -14726,6 +14746,8 @@ const featureSpanish = {
     "simPowerBadgeTitle": "Índice de poder nacional compuesto",
     "simTeacherConsoleTitle": "Abrir consola del profesor para introducir eventos globales",
     "simExitBtnTitle": "Salir de la simulación de naciones",
+    "simExitToMap": "Salir de la simulación",
+    "simProgressSavedToast": "Progreso de la simulación guardado y vinculado a tu cuenta ✓",
     "simResourceFoodTitle": "Reservas de alimentos y producción agrícola",
     "simResourceFood": "Alimentos",
     "simResourceMetalsTitle": "Metales estratégicos e hierro",
@@ -14837,7 +14859,10 @@ const featureSpanish = {
     "histOnboard7Title": "📚 Fuentes y herramientas avanzadas",
     "histOnboard7Text": "Consulta referencias académicas verificadas de cada época, exporta mapas en alta resolución y usa atajos de teclado.",
     "histOnboardLangTitle": "🌐 Idiomas del atlas histórico",
-    "histOnboardLangText": "El atlas admite 5 idiomas con denominaciones históricamente precisas para imperios, civilizaciones y batallas."
+    "histOnboardLangText": "El atlas admite 5 idiomas con denominaciones históricamente precisas para imperios, civilizaciones y batallas.",
+    "histReligionAll": "Todas las religiones",
+    "histItemCountWars": "guerras",
+    "histItemCountEras": "eras"
   }
 };
   for (const [lang, translations] of Object.entries(comprehensiveTranslations)) {

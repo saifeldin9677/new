@@ -18142,7 +18142,7 @@
             }
             var myScore = (myRankIdx !== -1) ? scores[myRankIdx].score : 0;
             if (simPowerScore) simPowerScore.textContent = myScore.toLocaleString();
-            if (simPowerRank) simPowerRank.textContent = "#" + (myRankIdx + 1) + " من 5";
+            if (simPowerRank) simPowerRank.textContent = "#" + (myRankIdx + 1) + " من " + Math.max(1, scores.length);
 
             // Camera focus & pan to active nation's capital
             if (typeof ic === "function" && n.coords) {
@@ -18322,6 +18322,13 @@
             });
             updateCouncilAdvice();
             if (window.lucide && lucide.createIcons) lucide.createIcons();
+
+            var assigned = simState.playerRole || simState.studentRole;
+            if (simState.isMultiplayer && assigned && assigned !== roleName) {
+                if (typeof Go === "function") {
+                    Go("ℹ️ دورك المسند هو (" + getRoleArabicTitle(assigned) + "). يمكنك الاطلاع على هذا القسم، لكن القرارات الوزارية فيه من مسؤولية زميلك المكلف به.");
+                }
+            }
         }
 
         // Dynamic Zoom Scaler for Simulation & Research Layers (Inverse Screen-Pixel Size Preservation & Semantic LOD)
@@ -19142,12 +19149,18 @@
                     if (typeof Go === "function") Go("⚠️ لا توجد دول أخرى في العالم لتوقيع ميثاق الدفاع معها!");
                     return;
                 }
-                var targetId = otherKeys[0];
-                if (n.allies.indexOf(targetId) === -1) n.allies.push(targetId);
-                var decree = "🤝 تم توقيع ميثاق دفاع مشترك ومساعدة متبادلة مع " + nationsData[targetId].name + ".";
+                if (!n.allies) n.allies = [];
+                var unalliedKey = otherKeys.find(function(k) { return n.allies.indexOf(k) === -1; });
+                if (!unalliedKey) {
+                    if (typeof Go === "function") Go("🤝 دولتك ترتبط بمواثيق دفاع مشترك مع كافة الدول القائمة بالفعل!");
+                    return;
+                }
+                var targetId = unalliedKey;
+                n.allies.push(targetId);
+                var decree = "🤝 تم توقيع ميثاق دفاع مشترك ومساعدة متبادلة مع " + (nationsData[targetId] ? nationsData[targetId].name : targetId) + ".";
                 n.decrees.unshift(decree);
                 simState.eventsLog.unshift(decree);
-                if (typeof Go === "function") Go("تم توقيع ميثاق الدفاع المشترك بنجاح!");
+                if (typeof Go === "function") Go("تم توقيع ميثاق الدفاع المشترك مع " + (nationsData[targetId] ? nationsData[targetId].name : targetId) + " بنجاح!");
                 if (typeof simSyncDebounceTimers !== "undefined" && simSyncDebounceTimers[simState.activeNationId]) {
                     clearTimeout(simSyncDebounceTimers[simState.activeNationId]);
                     delete simSyncDebounceTimers[simState.activeNationId];
@@ -19175,11 +19188,17 @@
             simSignTradeAgreementBtn.addEventListener("click", async function() {
                 var n = nationsData[simState.activeNationId];
                 if (!n) return;
-                var decree = "📜 تم إبرام اتفاقية تجارية تمنح تخفيضاً في رسوم العبور بنسبة 40%.";
+                var seasonKey = (simState.year || 1) + "_" + (simState.seasonIdx !== undefined ? simState.seasonIdx : 0);
+                if (n.lastTradeAgreementSeasonKey === seasonKey) {
+                    if (typeof Go === "function") Go("⚠️ تم إبرام اتفاقية تجارية لهذا الفصل بالفعل! تتجدد فرصة توقيع الاتفاقيات مع حلول الفصل القادم.");
+                    return;
+                }
+                n.lastTradeAgreementSeasonKey = seasonKey;
+                var decree = "📜 تم إبرام اتفاقية تجارية تمنح تخفيضاً في رسوم العبور بنسبة 40% وضخ سيولة في الخزينة (+80 ذهب).";
                 n.decrees.unshift(decree);
-                n.gold += 80;
+                n.gold = (n.gold || 0) + 80;
                 simState.eventsLog.unshift(decree);
-                if (typeof Go === "function") Go("تم توقيع الاتفاقية التجارية وازدهار الخزينة!");
+                if (typeof Go === "function") Go("تم توقيع الاتفاقية التجارية وازدهار الخزينة (+80 ذهب)!");
                 if (typeof simSyncDebounceTimers !== "undefined" && simSyncDebounceTimers[simState.activeNationId]) {
                     clearTimeout(simSyncDebounceTimers[simState.activeNationId]);
                     delete simSyncDebounceTimers[simState.activeNationId];
@@ -19251,20 +19270,25 @@
                 }
 
                 n.food -= 100;
+                var cargoVal = simCaravanCargoType ? simCaravanCargoType.value : "wheat";
+                var returnVal = simCaravanRequestedReturn ? simCaravanRequestedReturn.value : "metals";
+                var escortVal = simCaravanEscortOption ? simCaravanEscortOption.value : "none";
                 var cargoName = simCaravanCargoType ? simCaravanCargoType.options[simCaravanCargoType.selectedIndex].text : "100 كيس قمح";
                 var returnName = simCaravanRequestedReturn ? simCaravanRequestedReturn.options[simCaravanRequestedReturn.selectedIndex].text : "خام معادن";
-                var escortName = simCaravanEscortOption ? simCaravanEscortOption.options[simCaravanEscortOption.selectedIndex].text : "حراسة خفيفة";
+                var escortName = simCaravanEscortOption ? simCaravanEscortOption.options[simCaravanEscortOption.selectedIndex].text : "بدون حراسة";
 
                 // Cavalry Escort Garrison Deduction: troops are deducted from home defense until arrival!
                 var escortCavalry = 0;
-                if (simCaravanEscortOption) {
-                    var val = simCaravanEscortOption.value;
-                    if (val === "cavalry_heavy" || escortName.indexOf("60") !== -1) {
-                        escortCavalry = 60;
-                    } else if (val === "cavalry_light" || escortName.indexOf("30") !== -1 || escortName.indexOf("فرسان") !== -1) {
-                        escortCavalry = 30;
-                    }
+                if (escortVal === "heavy" || escortVal === "cavalry_heavy") {
+                    escortCavalry = 80;
+                } else if (escortVal === "light" || escortVal === "cavalry_light") {
+                    escortCavalry = 30;
+                } else if (escortName.indexOf("60") !== -1) {
+                    escortCavalry = 60;
+                } else if (escortName.indexOf("30") !== -1 || (escortName.indexOf("فرسان") !== -1 && escortName.indexOf("بدون") === -1)) {
+                    escortCavalry = 30;
                 }
+
                 if (escortCavalry > 0) {
                     if (n.cavalry < escortCavalry) {
                         if (typeof Go === "function") Go("⚠️ تحذير: فرسان الحامية لا يكفون لتأمين القافلة (" + n.cavalry + " متاح فقط)!");
@@ -19279,8 +19303,11 @@
                     from: n.id,
                     to: targetNat.id,
                     cargo: cargoName,
+                    cargoType: cargoVal,
                     requested: returnName,
+                    returnType: returnVal,
                     escort: escortName,
+                    escortType: escortVal,
                     escortCavalry: escortCavalry,
                     status: "انطلقت حديثاً (10% من الطريق)",
                     progress: 0.15,
@@ -19673,8 +19700,11 @@
                     from: n.id,
                     to: targetNat.id,
                     cargo: cargoLabel,
+                    cargoType: quickSelectedCargo,
                     requested: returnLabel,
-                    escort: quickEscort > 0 ? "حراسة 30 فارساً" : "حراسة مشاة خفيفة",
+                    returnType: quickSelectedRequested,
+                    escort: quickEscort > 0 ? "حراسة 30 فارساً" : "بدون حراسة فرسان",
+                    escortType: quickEscort > 0 ? "light" : "none",
                     escortCavalry: quickEscort,
                     status: "انطلقت حديثاً (10% من الطريق)",
                     progress: 0.15,
@@ -19770,14 +19800,31 @@
                     turnLog.push("🛡️ نقص عتاد ودروع وتراجع جاهزية حاميات " + nat.name + " بنسبة 25%.");
                 }
 
-                // Ministry of Infrastructure Impact
+                // Ministry of Infrastructure & Roads Impact
                 if (b.planning === 0) {
-                    turnLog.push("🧭 اندثار الآبار وتدهور المسالك في " + nat.name + " لغياب موازنة الطرق والممرات.");
+                    var roadDecayLoss = Math.min(nat.gold || 0, 30);
+                    nat.gold = Math.max(0, (nat.gold || 0) - roadDecayLoss);
+                    var planAlert = "🧭 تدهور دروب القوافل واندثار الآبار في " + nat.name + " لحجب موازنة الطرق (خسائر تلف وتأخر: -" + roadDecayLoss + " ذهب)!";
+                    nat.decrees.unshift(planAlert);
+                    turnLog.push(planAlert);
+                } else if (b.planning === 50) {
+                    turnLog.push("🧭 وعورة بعض المسالك وبطء سير القوافل في " + nat.name + " لتقليص موازنة الطرق.");
+                } else if (b.planning === 100) {
+                    nat.gold = (nat.gold || 0) + 15;
+                    turnLog.push("🏛️ كفاءة شبكة الطرق الممهدة في " + nat.name + " أنعشت التجارة وسرعة وصول السلع (+15 ذهب).");
                 }
 
                 // Ministry of Intelligence Impact
                 if (b.intelligence === 0) {
-                    turnLog.push("👁️ عمى استخباري تام في " + nat.name + " لغياب تمويل العيون وشبكات الرصد.");
+                    var raidLoss = Math.min(nat.gold || 0, 40);
+                    nat.gold = Math.max(0, (nat.gold || 0) - raidLoss);
+                    var intelAlert = "👁️ عمى استخباري تام في " + nat.name + "! تسلل لصوص وجواسيس أجانب لسرقة " + raidLoss + " دينار من الخزائن لغياب الرصد!";
+                    nat.decrees.unshift(intelAlert);
+                    turnLog.push(intelAlert);
+                } else if (b.intelligence === 50) {
+                    turnLog.push("👁️ رصد استخباري محدود في " + nat.name + "؛ شبكات العيون غير مكتملة في الأقاليم الحدودية.");
+                } else if (b.intelligence === 100) {
+                    turnLog.push("👁️ يقظة شبكة العيون والاستطلاع السري في " + nat.name + " تحمي القوافل وتكشف مؤامرات الخصوم مبكراً.");
                 }
 
                 // Tax Policy Revenue & Economic Health
@@ -19843,6 +19890,12 @@
                                         controllerNat.gold = (controllerNat.gold || 0) + tollAmount;
                                         var tollMsg = "🪙 دفعت قافلة " + fromNat.name + " رسم ترانزيت قدره " + tollAmount + " دينار لـ " + controllerNat.name + " عند " + cp.name + (hasTreaty ? " (مخفّض بالمعاهدة)" : "") + ".";
                                         turnLog.push(tollMsg);
+                                    } else {
+                                        var seizedFood = Math.min(fromNat.food || 0, 40);
+                                        fromNat.food = Math.max(0, (fromNat.food || 0) - seizedFood);
+                                        controllerNat.food = (controllerNat.food || 0) + seizedFood;
+                                        var tollMsg = "⛔ عجزت قافلة " + fromNat.name + " عن دفع رسم العبور (" + tollAmount + " ذهب) عند " + cp.name + "؛ صادرت حامية " + controllerNat.name + " " + seizedFood + " كيس مؤونة كرسوم جمركية تعويضية!";
+                                        turnLog.push(tollMsg);
                                     }
                                 }
                             }
@@ -19852,7 +19905,9 @@
 
                 // Bandit Ambush Check:
                 var isSafeRoute = !!(simState.safeRoutes && simState.safeRoutes[c.from]);
-                var isEscorted = c.escort && (c.escort.indexOf("فرسان") !== -1 || c.escort.indexOf("حراسة") !== -1 || (c.escortCavalry && c.escortCavalry > 0));
+                var isEscorted = (c.escortType ? (c.escortType === "light" || c.escortType === "heavy") : false) ||
+                                 (c.escortCavalry && c.escortCavalry > 0) ||
+                                 (c.escort && (c.escort.indexOf("فرسان") !== -1 || (c.escort.indexOf("حراسة") !== -1 && c.escort.indexOf("بدون") === -1)));
                 var ambushChance = isSafeRoute ? 0 : (isEscorted ? 0.08 : 0.35);
 
                 if (!c.ambushChecked && c.progress >= 0.4 && c.progress < 0.9) {
@@ -19873,10 +19928,11 @@
                     var sender = targetNations[c.from];
                     var receiver = targetNations[c.to];
                     if (sender && receiver) {
-                        var req = c.requested || "";
-                        if (req.indexOf("حديد") !== -1 || req.indexOf("معادن") !== -1) {
+                        var req = (c.requested || "").toLowerCase();
+                        var reqType = c.returnType || "";
+                        if (reqType === "metals" || req.indexOf("حديد") !== -1 || req.indexOf("معادن") !== -1 || req.indexOf("iron") !== -1 || req.indexOf("metal") !== -1) {
                             sender.metals = (sender.metals || 0) + 90;
-                        } else if (req.indexOf("خيل") !== -1 || req.indexOf("مواشي") !== -1) {
+                        } else if (reqType === "livestock" || req.indexOf("خيل") !== -1 || req.indexOf("مواشي") !== -1 || req.indexOf("horse") !== -1 || req.indexOf("timber") !== -1) {
                             sender.livestock = (sender.livestock || 0) + 70;
                             sender.cavalry = (sender.cavalry || 0) + 40;
                         } else {
@@ -21080,6 +21136,76 @@
                 generatePresetNationsForTeams(count || 5);
             });
         }
+
+        // Civilization Standings & Leaderboard Modal Handler
+        var simPowerBadge = document.getElementById("simPowerBadge");
+        var simCivilizationRankingModal = document.getElementById("simCivilizationRankingModal");
+        var simCivRankingCloseBtn = document.getElementById("simCivRankingCloseBtn");
+        var simCivRankingList = document.getElementById("simCivRankingList");
+
+        function openCivilizationRankingModal() {
+            if (!simCivilizationRankingModal || !simCivRankingList) return;
+            var scores = calculateCivilizationScores();
+            simCivRankingList.innerHTML = "";
+            if (scores.length === 0) {
+                simCivRankingList.innerHTML = '<div style="text-align:center;padding:24px;color:#94a3b8;">لا توجد أمم مسجلة في المحاكاة حالياً لحساب النتائج.</div>';
+            } else {
+                var medals = ["🥇", "🥈", "🥉", "🏅", "🎖️"];
+                scores.forEach(function(item, idx) {
+                    var n = nationsData[item.id];
+                    var medal = medals[idx] || ("#" + (idx + 1));
+                    var isMe = (simState.activeNationId === item.id);
+                    var card = document.createElement("div");
+                    card.style.cssText = "background:" + (isMe ? "rgba(59,130,246,0.15)" : "rgba(255,255,255,0.04)") + ";" +
+                        "border:1px solid " + (isMe ? "#3b82f6" : "rgba(255,255,255,0.1)") + ";" +
+                        "border-radius:10px;padding:12px 16px;display:flex;flex-direction:column;gap:8px;";
+                    
+                    var headerHtml = '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+                        '<div style="display:flex;align-items:center;gap:10px;">' +
+                            '<span style="font-size:1.6rem;">' + medal + '</span>' +
+                            '<div>' +
+                                '<div style="font-weight:800;font-size:1.05rem;color:#f8fafc;">' + (n ? n.flag + " " + n.name : item.id) + (isMe ? ' <span style="font-size:0.75rem;background:#3b82f6;color:#fff;padding:2px 6px;border-radius:10px;">أمتك</span>' : '') + '</div>' +
+                                '<div style="font-size:0.8rem;color:#94a3b8;">العاصمة: ' + (n ? n.capital : "---") + ' | الإقليم: ' + (n ? n.biome : "---") + '</div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div style="text-align:end;">' +
+                            '<div style="font-size:1.3rem;font-weight:900;color:#fbbf24;">' + item.score.toLocaleString() + ' <span style="font-size:0.75rem;color:#94a3b8;">نقطة</span></div>' +
+                            '<div style="font-size:0.75rem;color:#a3e635;">الترتيب: #' + (idx + 1) + ' من ' + scores.length + '</div>' +
+                        '</div>' +
+                    '</div>';
+
+                    var statsHtml = '';
+                    if (n) {
+                        var cpCount = (typeof chokePointsData !== "undefined" && Array.isArray(chokePointsData)) ? chokePointsData.filter(function(cp) { return cp.controller === n.id; }).length : 0;
+                        var alliesCount = (n.allies ? n.allies.length : 0);
+                        statsHtml = '<div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(110px, 1fr));gap:6px;font-size:0.78rem;color:#cbd5e1;background:rgba(0,0,0,0.2);padding:6px 10px;border-radius:6px;">' +
+                            '<div>🌾 غذاء: <strong>' + (n.food || 0).toLocaleString() + '</strong></div>' +
+                            '<div>⛏️ معادن: <strong>' + (n.metals || 0).toLocaleString() + '</strong></div>' +
+                            '<div>🐎 خيل: <strong>' + (n.livestock || 0).toLocaleString() + '</strong></div>' +
+                            '<div>🪙 ذهب: <strong>' + (n.gold || 0).toLocaleString() + '</strong></div>' +
+                            '<div>⚔️ جند: <strong>' + (n.troops || 0).toLocaleString() + '</strong></div>' +
+                            '<div>🏰 مضائق: <strong>' + cpCount + '</strong></div>' +
+                            '<div>🤝 تحالفات: <strong>' + alliesCount + '</strong></div>' +
+                        '</div>';
+                    }
+
+                    card.innerHTML = headerHtml + statsHtml;
+                    simCivRankingList.appendChild(card);
+                });
+            }
+            simCivilizationRankingModal.style.display = "flex";
+        }
+
+        if (simPowerBadge) {
+            simPowerBadge.style.cursor = "pointer";
+            simPowerBadge.addEventListener("click", openCivilizationRankingModal);
+        }
+        if (simCivRankingCloseBtn) {
+            simCivRankingCloseBtn.addEventListener("click", function() {
+                if (simCivilizationRankingModal) simCivilizationRankingModal.style.display = "none";
+            });
+        }
+        window.openCivilizationRankingModal = openCivilizationRankingModal;
 
         // ──────────────────────────────────────────────────────────────
         // Nation Simulation — Stage 1: Multiplayer Foundation Module

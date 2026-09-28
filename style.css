@@ -13606,28 +13606,35 @@ th {
 .sim-hud-center {
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: center;
+    gap: 8px;
     flex-wrap: nowrap;
     flex: 1 1 auto;
     min-width: 0;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scrollbar-width: thin;
-    -webkit-overflow-scrolling: touch;
     padding: 2px 6px;
-}
-.sim-hud-center::-webkit-scrollbar {
-    height: 4px;
-}
-.sim-hud-center::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
 }
 
 .sim-nation-picker-wrap {
     display: flex;
     align-items: center;
     gap: 6px;
+    flex-shrink: 0;
+}
+
+.sim-hud-setup-tools {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 1450px) {
+    .sim-hud-setup-tools {
+        display: none !important;
+    }
+    .sim-seasonal-cycle-box {
+        display: none !important;
+    }
 }
 
 .sim-picker-label {
@@ -13661,11 +13668,12 @@ th {
 .sim-role-tabs-group {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     background: rgba(255, 255, 255, 0.05);
     padding: 4px;
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
 }
 
 [data-theme="light"] .sim-role-tabs-group {

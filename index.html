@@ -2320,16 +2320,18 @@
                         <select id="simNationSelect" class="sim-select" aria-label="اختيار الدولة / الفريق" data-i18n-aria-label="simSelectNationAria">
                             <!-- Populated dynamically via JS from teacher-defined nations -->
                         </select>
-                        <button type="button" class="btn btn-primary sim-hud-action-btn" id="simQuickDrawTerritoryBtn" title="رسم حدود دولة جديدة لهذا الفريق على الخريطة" data-i18n-title="simDrawTerritoryTitle" style="background:linear-gradient(135deg,#3b82f6,#2563eb);border-color:#60a5fa;color:#fff;font-weight:700;display:inline-flex;align-items:center;gap:4px;padding:4px 9px;font-size:0.8rem;white-space:nowrap;">
-                            <i data-lucide="pen-tool" class="lucide-icon"></i>
-                            <span data-i18n="simDrawTerritoryBtn">🎨 رسم دولة</span>
-                        </button>
-                        <button type="button" class="btn btn-secondary sim-hud-action-btn" id="simQuickAutoGenerateBtn" title="توليد وتوزيع أقاليم مقترحة بالقرعة لفرق الصف" data-i18n-title="simAutoGenerateTitle" style="font-size:0.8rem;padding:4px 8px;gap:4px;white-space:nowrap;">
-                            <span data-i18n="simAutoGenerateBtn">✨ أقاليم الفرق</span>
-                        </button>
-                        <button type="button" class="btn btn-secondary sim-hud-action-btn" id="simViewDossierHudBtn" title="عرض وثيقة تأسيس الأمة والتقرير الجيوسياسي للفريق" data-i18n-title="simViewDossierTitle" style="font-size:0.8rem;padding:4px 8px;gap:4px;white-space:nowrap;">
-                            <span data-i18n="simViewDossierBtn">📜 وثيقة الأمة</span>
-                        </button>
+                        <div class="sim-hud-setup-tools" style="display:flex;gap:6px;align-items:center;">
+                            <button type="button" class="btn btn-primary sim-hud-action-btn" id="simQuickDrawTerritoryBtn" title="رسم حدود دولة جديدة لهذا الفريق على الخريطة" data-i18n-title="simDrawTerritoryTitle" style="background:linear-gradient(135deg,#3b82f6,#2563eb);border-color:#60a5fa;color:#fff;font-weight:700;display:inline-flex;align-items:center;gap:4px;padding:4px 9px;font-size:0.8rem;white-space:nowrap;">
+                                <i data-lucide="pen-tool" class="lucide-icon"></i>
+                                <span data-i18n="simDrawTerritoryBtn">🎨 رسم دولة</span>
+                            </button>
+                            <button type="button" class="btn btn-secondary sim-hud-action-btn" id="simQuickAutoGenerateBtn" title="توليد وتوزيع أقاليم مقترحة بالقرعة لفرق الصف" data-i18n-title="simAutoGenerateTitle" style="font-size:0.8rem;padding:4px 8px;gap:4px;white-space:nowrap;">
+                                <span data-i18n="simAutoGenerateBtn">✨ أقاليم الفرق</span>
+                            </button>
+                            <button type="button" class="btn btn-secondary sim-hud-action-btn" id="simViewDossierHudBtn" title="عرض وثيقة تأسيس الأمة والتقرير الجيوسياسي للفريق" data-i18n-title="simViewDossierTitle" style="font-size:0.8rem;padding:4px 8px;gap:4px;white-space:nowrap;">
+                                <span data-i18n="simViewDossierBtn">📜 وثيقة الأمة</span>
+                            </button>
+                        </div>
                     </div>
 
                     <nav class="sim-role-tabs-group" id="simRoleSelectGroup" role="tablist" aria-label="أدوار الفريق الخمسة" data-i18n-aria-label="simRoleGroupAria">
@@ -2339,7 +2341,7 @@
                         </button>
                         <button type="button" class="sim-role-tab" id="simRoleEconomyBtn" data-role="economy" role="tab" aria-selected="false" aria-controls="simEconomyView">
                             <i data-lucide="wheat" class="lucide-icon"></i>
-                            <span data-i18n="onboardStep6Text">الموارد</span>
+                            <span data-i18n="simEconomyRoleBadge">وزير الاقتصاد 💰</span>
                         </button>
                         <button type="button" class="sim-role-tab" id="simRoleMilitaryBtn" data-role="military" role="tab" aria-selected="false" aria-controls="simMilitaryView">
                             <i data-lucide="shield" class="lucide-icon"></i>
@@ -2388,10 +2390,10 @@
                     <div class="sim-nation-emblem-wrap">
                         <span class="sim-nation-flag" id="simNationFlag">🦅</span>
                         <div>
-                            <h3 class="sim-nation-name" id="simNationName" data-i18n="precipitationUnit">مملكة النيل والرافدين الفيضية</h3>
+                            <h3 class="sim-nation-name" id="simNationName">مملكة النيل والرافدين الفيضية</h3>
                             <div class="sim-nation-tags">
-                                <span class="sim-tag" id="simNationCapital" data-i18n="capital">العاصمة: الفسطاط</span>
-                                <span class="sim-tag sim-tag-biome" id="simNationBiome" data-i18n="river">إقليم فيضي نهري</span>
+                                <span class="sim-tag" id="simNationCapital">العاصمة: الفسطاط</span>
+                                <span class="sim-tag sim-tag-biome" id="simNationBiome">إقليم فيضي نهري</span>
                                 <span class="sim-tag sim-tag-climate" id="simNationClimate">المناخ: فيضان أواخر الصيف</span>
                             </div>
                         </div>
@@ -2616,7 +2618,7 @@
                             <div class="sim-sovereign-decrees-box">
                                 <h5 class="sim-sub-heading">المراسيم السيادية العليا المعتمدة:</h5>
                                 <div class="sim-decrees-feed" id="simDecreesFeed">
-                                    <div class="sim-feed-item" data-i18n="precipitationUnit">📜 تم اعتماد تحالف تجاري مع مملكة المتوسط لتخفيض رسوم الترانزيت بنسبة 50%.</div>
+                                    <div class="sim-feed-item">📜 تم اعتماد تحالف تجاري مع مملكة المتوسط لتخفيض رسوم الترانزيت بنسبة 50%.</div>
                                 </div>
                             </div>
                         </div>
@@ -2633,13 +2635,13 @@
 
                             <!-- Tax & Revenue Policy -->
                             <div class="sim-tax-policy-card" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px;margin-bottom:12px;">
-                                <h5 class="sim-sub-heading" data-i18n="catPolitics">⚖️ سياسة الجباية والضرائب الموسمية:</h5>
+                                <h5 class="sim-sub-heading" data-i18n="simTaxPolicyTitle">⚖️ سياسة الجباية والضرائب الموسمية:</h5>
                                 <div class="sim-field">
                                     <label for="simTaxPolicySelect">مستوى الضرائب والرسوم:</label>
                                     <select id="simTaxPolicySelect" class="sim-select">
-                                        <option value="low" data-i18n="resourceGold">ضرائب منخفضة 5% (رضا شعبي وازدهار قوافل +40 ذهب)</option>
-                                        <option value="moderate" selected data-i18n="resourceGold">ضرائب متوازنة 10% (استقرار اقتصادي +80 ذهب)</option>
-                                        <option value="high" data-i18n="resourceGold">ضرائب مرتفعة 20% (ذهب سريع +150، مع تراجع إنتاج 20% وسخط)</option>
+                                        <option value="low" data-i18n="simTaxOptionLow">ضرائب منخفضة 5% (رضا شعبي وازدهار قوافل +40 ذهب)</option>
+                                        <option value="moderate" selected data-i18n="simTaxOptionModerate">ضرائب متوازنة 10% (استقرار اقتصادي +80 ذهب)</option>
+                                        <option value="high" data-i18n="simTaxOptionHigh">ضرائب مرتفعة 20% (ذهب سريع +150، مع تراجع إنتاج 20% وسخط)</option>
                                     </select>
                                 </div>
                                 <div class="sim-tax-policy-hint" id="simTaxPolicyHint" style="font-size:0.8rem;color:var(--text-muted);margin-top:4px;">
@@ -2661,10 +2663,10 @@
 
                             <!-- Caravan Dispatcher -->
                             <div class="sim-caravan-composer-card">
-                                <h5 class="sim-sub-heading" data-i18n="cityCategoryCommercial">تسيير قافلة تجارية ومقايضة عبر الخريطة:</h5>
+                                <h5 class="sim-sub-heading" data-i18n="simCaravanDispatchTitle">تسيير قافلة تجارية ومقايضة عبر الخريطة:</h5>
                                 <div class="sim-form-grid">
                                     <div class="sim-field">
-                                        <label for="simCaravanDestSelect" data-i18n="featureCountry">وجهة القافلة (الدولة والميناء):</label>
+                                        <label for="simCaravanDestSelect">وجهة القافلة (الدولة والميناء):</label>
                                         <select id="simCaravanDestSelect" class="sim-select">
                                             <!-- Populated via JS -->
                                         </select>
@@ -2673,18 +2675,18 @@
                                         <label for="simCaravanCargoType">نوع الشحنة المصدرة:</label>
                                         <select id="simCaravanCargoType" class="sim-select">
                                             <option value="wheat">🌾 قمح وغذاء (100 كيس)</option>
-                                            <option value="metals" data-i18n="resourceCopper">⛏️ خام حديد ونحاس (50 سبيكة)</option>
-                                            <option value="livestock" data-i18n="simTradeOptionLivestock">🐎 خيول وإبل (30 رأس)</option>
-                                            <option value="gold" data-i18n="resourceGold">💰 ذهب وعملات (100 دينار)</option>
+                                            <option value="metals">⛏️ خام حديد ونحاس (50 سبيكة)</option>
+                                            <option value="livestock">🐎 خيول وإبل (30 رأس)</option>
+                                            <option value="gold">💰 ذهب وعملات (100 دينار)</option>
                                         </select>
                                     </div>
                                     <div class="sim-field">
                                         <label for="simCaravanRequestedReturn">المطلوب بالمقايضة من الوجهة:</label>
                                         <select id="simCaravanRequestedReturn" class="sim-select">
-                                            <option value="metals" data-i18n="resourceCopper">⛏️ خام حديد ونحاس</option>
+                                            <option value="metals">⛏️ خام حديد ونحاس</option>
                                             <option value="wheat">🌾 قمح وغذاء</option>
-                                            <option value="livestock" data-i18n="simTradeOptionTimber">🐎 خيول وأخشاب</option>
-                                            <option value="gold" data-i18n="resourceGold">💰 ذهب وتوابل</option>
+                                            <option value="livestock">🐎 خيول وأخشاب</option>
+                                            <option value="gold">💰 ذهب وتوابل</option>
                                         </select>
                                     </div>
                                     <div class="sim-field">
@@ -2703,7 +2705,7 @@
 
                             <!-- Active Caravans List -->
                             <div class="sim-active-caravans-wrap">
-                                <h5 class="sim-sub-heading" data-i18n="cityCategoryCommercial">القوافل التجارية السارية في الطريق:</h5>
+                                <h5 class="sim-sub-heading" data-i18n="simActiveCaravansHeading">القوافل التجارية السارية في الطريق:</h5>
                                 <div class="sim-caravans-list" id="simActiveCaravansList">
                                     <!-- Populated via JS -->
                                 </div>
@@ -2783,8 +2785,8 @@
                                         <strong id="simCalcDistanceKm">840 كم</strong>
                                     </div>
                                     <div class="sim-calc-metric">
-                                        <span data-i18n="catGeneral">معامل وعورة التضاريس:</span>
-                                        <strong id="simCalcTerrainFriction" data-i18n="precipitationUnit">1.3x (ممرات جبلية وصحاري)</strong>
+                                        <span data-i18n="simTerrainFrictionLabel">معامل وعورة التضاريس:</span>
+                                        <strong id="simCalcTerrainFriction">1.3x (ممرات جبلية وصحاري)</strong>
                                     </div>
                                     <div class="sim-calc-metric">
                                         <span>زمن مسير القافلة المقدر:</span>
@@ -2803,7 +2805,7 @@
 
                             <!-- Alternative Routing Tool -->
                             <div class="sim-alt-routing-box">
-                                <h5 class="sim-sub-heading" data-i18n="onboardSkip">رسم وتخطيط مسار التفافي بديل على الخريطة:</h5>
+                                <h5 class="sim-sub-heading" data-i18n="simAltRoutingTitle">رسم وتخطيط مسار التفافي بديل على الخريطة:</h5>
                                 <p class="sim-card-hint">إذا تم رصد كمين أو ثلوج عاتقة في الطريق المعتاد، ارسم درباً بديلاً لتوجيه القوافل والكتائب بأمان.</p>
                                 <button type="button" class="btn btn-primary sim-action-btn" id="simDrawAltRouteBtn"><i data-lucide="pen-tool" class="lucide-icon"></i> <span>رسم مسار التفافي بديل على الخريطة الحرة</span></button>
                             </div>
@@ -2914,7 +2916,7 @@
                                 <button type="button" class="btn btn-secondary sim-crisis-btn" data-crisis="drought"><i data-lucide="sun" class="lucide-icon"></i> <span>موجة جفاف وانحسار مياه ☀️</span></button>
                                 <button type="button" class="btn btn-secondary sim-crisis-btn" data-crisis="flood"><i data-lucide="droplets" class="lucide-icon"></i> <span>فيضان موسمي عارم 🌊</span></button>
                                 <button type="button" class="btn btn-secondary sim-crisis-btn" data-crisis="goldrush"><i data-lucide="sparkles" class="lucide-icon"></i> <span>اكتشاف عرق ذهب جديد 🪙</span></button>
-                                <button type="button" class="btn btn-secondary sim-crisis-btn" data-crisis="frost"><i data-lucide="snowflake" class="lucide-icon"></i> <span data-i18n="precipitationUnit">صقيع قارس وتجمد ممرات ❄️</span></button>
+                                <button type="button" class="btn btn-secondary sim-crisis-btn" data-crisis="frost"><i data-lucide="snowflake" class="lucide-icon"></i> <span data-i18n="simCrisisFrost">صقيع قارس وتجمد ممرات ❄️</span></button>
                             </div>
                         </div>
 
@@ -2927,9 +2929,9 @@
                                     <!-- Populated via JS -->
                                 </select>
                                 <select id="simRewardTypeSelect" class="sim-select" aria-label="نوع المكافأة" data-i18n-aria-label="simRewardTypeSelectAria">
-                                    <option value="wheat" data-i18n="simResourceFood">🌾 منحة صوامع (+150 كيس قمح)</option>
-                                    <option value="metals" data-i18n="resourceIron">⛏️ منحة عتاد (+80 سبيكة حديد)</option>
-                                    <option value="gold" data-i18n="simResourceGold">💰 منحة مالية (+120 دينار ذهبي)</option>
+                                    <option value="wheat">🌾 منحة صوامع (+150 كيس قمح)</option>
+                                    <option value="metals">⛏️ منحة عتاد (+80 سبيكة حديد)</option>
+                                    <option value="gold">💰 منحة مالية (+120 دينار ذهبي)</option>
                                     <option value="horses">🐎 منحة فرسان (+50 رأس خيل)</option>
                                 </select>
                                 <button type="button" class="btn btn-primary" id="simGrantRewardBtn">منح المكافأة للدولة الآن ✓</button>
@@ -2939,7 +2941,7 @@
                         <!-- Section 4: Sandbox World Architect & Freeform Borders -->
                         <div class="sim-teacher-section" id="simTeacherSandboxSection">
                             <h4 class="sim-sub-heading">🗺️ محرر العوالم الرملية ورسم حدود الأمم الحرة (Sandbox GIS Architect):</h4>
-                            <p class="sim-card-hint" data-i18n="quizRivers">ارسم حدوداً مخصصة ومضلعات حرة لأي عدد من الفرق على الخريطة مباشرة؛ يستنتج محرك الخريطة المناخ والطقس والثروات والمضائق تلقائياً وفق الإحداثيات والتضاريس والأنهار:</p>
+                            <p class="sim-card-hint" data-i18n="simSandboxArchitectDesc">ارسم حدوداً مخصصة ومضلعات حرة لأي عدد من الفرق على الخريطة مباشرة؛ يستنتج محرك الخريطة المناخ والطقس والثروات والمضائق تلقائياً وفق الإحداثيات والتضاريس والأنهار:</p>
                             <div class="sim-sandbox-controls-row" style="display:flex;gap:8px;flex-wrap:wrap;">
                                 <button type="button" class="btn btn-primary sim-sandbox-btn" id="simStartDrawTerritoryBtn">
                                     <i data-lucide="pen-tool" class="lucide-icon"></i>
@@ -2971,7 +2973,7 @@
                             <div class="sim-drawn-nations-container" style="margin-top:10px;background:rgba(0,0,0,0.25);border-radius:8px;padding:10px;">
                                 <div class="sim-drawn-nations-header" style="display:flex;justify-content:space-between;align-items:center;font-size:0.85rem;font-weight:700;margin-bottom:6px;">
                                     <span>الأقاليم المعتمدة في الخريطة الرملية:</span>
-                                    <span class="sim-badge" id="simDrawnNationsCount" style="background:#3b82f6;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75rem;" data-i18n="simNationsCountZero">0 دول</span>
+                                    <span class="sim-badge" id="simDrawnNationsCount" style="background:#3b82f6;color:#fff;padding:2px 8px;border-radius:12px;font-size:0.75rem;">0 دول</span>
                                 </div>
                                 <div class="sim-drawn-nations-list" id="simDrawnNationsList" style="display:flex;flex-wrap:wrap;gap:6px;">
                                     <span class="sim-empty-hint" style="font-size:0.8rem;color:#94a3b8;">لم يتم رسم أقاليم مخصصة بعد؛ المحاكاة بانتظار تحديد أقاليم الفرق.</span>
@@ -2989,8 +2991,8 @@
                         <div class="sim-modal-header-title">
                             <span style="font-size:1.8rem;">🗺️</span>
                             <div>
-                                <h3 id="simWorldSetupTitle" style="margin:0;font-size:1.2rem;color:#f8fafc;" data-i18n="resourceIron">تدشين عصر المحاكاة: تحديد أقاليم فرق الصف</h3>
-                                <div style="font-size:0.82rem;color:#93c5fd;">المحاكاة مفتوحة بالكامل؛ ارسم حدود دول الفرق أو ولّد أقاليم مقترحة تلقائياً</div>
+                                <h3 id="simWorldSetupTitle" style="margin:0;font-size:1.2rem;color:#f8fafc;" data-i18n="simWorldSetupTitle">تدشين عصر المحاكاة: تحديد أقاليم فرق الصف</h3>
+                                <div style="font-size:0.82rem;color:#93c5fd;" data-i18n="simWorldSetupSubtitle">المحاكاة مفتوحة بالكامل؛ ارسم حدود دول الفرق أو ولّد أقاليم مقترحة تلقائياً</div>
                             </div>
                         </div>
                         <div style="display:flex;align-items:center;gap:8px;">
@@ -3011,7 +3013,7 @@
                             <div class="sim-dossier-card" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(59,130,246,0.1);border:1px solid #3b82f6;border-radius:8px;">
                                 <div>
                                     <div style="font-weight:700;color:#60a5fa;font-size:0.95rem;">🎨 الخيار 1: رسم حدود الفرق بيدك على الخريطة</div>
-                                    <div style="font-size:0.82rem;color:#94a3b8;" data-i18n="annotationRegion">انقر على أي منطقة في العالم لرسم مضلع حر لأي عدد تريده من الفرق.</div>
+                                    <div style="font-size:0.82rem;color:#94a3b8;">انقر على أي منطقة في العالم لرسم مضلع حر لأي عدد تريده من الفرق.</div>
                                 </div>
                                 <button type="button" class="btn btn-primary" id="simSetupStartDrawBtn" style="padding:8px 16px;font-weight:700;white-space:nowrap;">
                                     <span data-i18n="simStartDrawingBtn">ابدأ بالرسم الآن 🎨</span>
@@ -3067,7 +3069,7 @@
                         <div class="sim-modal-header-title">
                             <span style="font-size:1.8rem;">🌐</span>
                             <div>
-                                <h3 id="simTeacherMpTitle" style="margin:0;font-size:1.2rem;color:#f8fafc;" data-i18n="annotationManage">إدارة اللعبة الجماعية السحابية (Stage 1: Multiplayer Engine)</h3>
+                                <h3 id="simTeacherMpTitle" style="margin:0;font-size:1.2rem;color:#f8fafc;" data-i18n="simTeacherMpTitle">إدارة اللعبة الجماعية السحابية (Stage 1: Multiplayer Engine)</h3>
                                 <div style="font-size:0.82rem;color:#c084fc;">تكوين فرق الصف وإسناد الأدوار الوزارية الخمسة لطلابك المعتمدين</div>
                             </div>
                         </div>
@@ -3172,14 +3174,14 @@
                     <div class="sim-modal-header">
                         <div class="sim-modal-header-title">
                             <span class="sim-trade-modal-icon">🐫</span>
-                            <h3 id="simQuickTradeTitle" data-i18n="cityCategoryCommercial">تسيير قافلة تجارية سريعة</h3>
+                            <h3 id="simQuickTradeTitle" data-i18n="simQuickTradeTitle">تسيير قافلة تجارية سريعة</h3>
                         </div>
                         <button type="button" class="close-btn" id="simQuickTradeCloseBtn" aria-label="إغلاق" data-i18n-aria-label="histCrossroadsCloseLabel"><i data-lucide="x" class="lucide-icon"></i></button>
                     </div>
                     <div class="sim-quick-trade-body">
                         <div class="sim-trade-route-summary">
                             <span id="simQuickTradeOriginFlag">🦅</span>
-                            <span id="simQuickTradeOriginName" data-i18n="precipitationUnit">مملكة النيل</span>
+                            <span id="simQuickTradeOriginName">مملكة النيل</span>
                             <span class="sim-route-arrow">➔</span>
                             <span id="simQuickTradeTargetFlag">🏔️</span>
                             <strong id="simQuickTradeTargetName">إمارة الأناضول</strong>
@@ -3188,7 +3190,7 @@
                         <div class="sim-trade-cards-grid" id="simExportCardsGrid">
                             <button type="button" class="sim-trade-card active" data-cargo="wheat">
                                 <span class="sim-card-emoji">🌾</span>
-                                <span class="sim-card-title" data-i18n="simResourceFood">100 كيس قمح</span>
+                                <span class="sim-card-title">100 كيس قمح</span>
                                 <span class="sim-card-sub">غذاء الصوامع</span>
                             </button>
                             <button type="button" class="sim-trade-card" data-cargo="metals">
@@ -3203,7 +3205,7 @@
                             </button>
                             <button type="button" class="sim-trade-card" data-cargo="gold">
                                 <span class="sim-card-emoji">💰</span>
-                                <span class="sim-card-title" data-i18n="simResourceGold">100 دينار ذهبي</span>
+                                <span class="sim-card-title">100 دينار ذهبي</span>
                                 <span class="sim-card-sub">سيولة مالية</span>
                             </button>
                         </div>
@@ -3245,11 +3247,11 @@
             <div class="map-floating-mode-banner sim-draw-territory-banner" id="simDrawTerritoryBanner" style="display:none; pointer-events:auto !important; z-index:10005 !important;">
                 <div class="banner-content" style="display:flex;align-items:center;gap:8px;">
                     <i data-lucide="pen-tool" class="lucide-icon" style="color:#2dd4bf;"></i>
-                    <span data-i18n="featureCountry">وضع رسم حدود الدولة: انقر على الخريطة لتحديد زوايا الإقليم (<strong id="simDrawnPointsCount">0</strong> نقاط).</span>
+                    <span id="simDrawTerritoryPromptText">وضع رسم حدود الدولة: انقر على الخريطة لتحديد زوايا الإقليم (<strong id="simDrawnPointsCount">0</strong> نقاط).</span>
                 </div>
                 <div class="banner-actions" style="display:flex;gap:8px;align-items:center;">
                     <input type="text" id="simCustomNationNameInput" class="sim-input" placeholder="اسم الدولة (اختياري)" data-i18n-placeholder="simCustomNationPlaceholder" aria-label="اسم الدولة (اختياري)" data-i18n-aria-label="simCustomNationPlaceholder" style="padding:6px 12px;font-size:0.85rem;width:180px;border-radius:6px;border:1px solid #475569;background:#1e293b;color:#f8fafc;pointer-events:auto;" />
-                    <button type="button" class="btn btn-primary btn-sm" id="simConfirmTerritoryBtn" style="pointer-events:auto;cursor:pointer;" data-i18n="featureCountry">اعتماد مضلع الدولة ✓</button>
+                    <button type="button" class="btn btn-primary btn-sm" id="simConfirmTerritoryBtn" style="pointer-events:auto;cursor:pointer;" data-i18n="simConfirmTerritoryBtn">اعتماد مضلع الدولة ✓</button>
                     <button type="button" class="btn btn-secondary btn-sm" id="simCancelTerritoryBtn" style="pointer-events:auto;cursor:pointer;" data-i18n="quizCancel">إلغاء ✕</button>
                 </div>
             </div>
@@ -3272,7 +3274,7 @@
                             <!-- Section 1: Geography & Climate -->
                             <div class="sim-dossier-card" style="background:rgba(255,255,255,0.04);padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);">
                                 <h4 class="sim-sub-heading" style="margin:0 0 4px 0;font-size:0.9rem;">🗺️ الإقليم المناخي والجغرافي:</h4>
-                                <div id="simDossierBiome" style="font-weight:700;color:#38bdf8;font-size:0.95rem;margin-bottom:4px;" data-i18n="river">إقليم فيضي نهري</div>
+                                <div id="simDossierBiome" style="font-weight:700;color:#38bdf8;font-size:0.95rem;margin-bottom:4px;">إقليم فيضي نهري</div>
                                 <p id="simDossierClimateDesc" class="sim-card-hint" style="margin:0;font-size:0.82rem;color:#cbd5e1;">شتاء معتدل وصيف دافئ مع وفرة في مياه الري وطمي فيضي عالي الخصوبة.</p>
                             </div>
                             <!-- Section 2: 4-Seasons Forecast -->
@@ -3299,6 +3301,25 @@
                             <button type="button" class="btn btn-primary" id="simAcceptDossierBtn" style="padding:8px 20px;font-size:0.95rem;font-weight:700;">
                                 <span>استلام راية الأمة وبدء المحاكاة 👑</span>
                             </button>
+                        </div>
+                    </div>
+                </div>
+            <!-- Civilization Power Standings & Coronation Modal -->
+            <div class="sim-teacher-modal-overlay" id="simCivilizationRankingModal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="simCivRankingTitle">
+                <div class="sim-teacher-modal-box" style="max-width:720px;width:95vw;">
+                    <div class="sim-modal-header" style="background:linear-gradient(135deg, rgba(217,119,6,0.9), rgba(15,23,42,0.95));">
+                        <div class="sim-modal-header-title">
+                            <span style="font-size:1.8rem;">🏆</span>
+                            <div>
+                                <h3 id="simCivRankingTitle" style="margin:0;font-size:1.2rem;color:#f8fafc;" data-i18n="simCivilizationRankingTitle">تتويج الحضارات وموازين القوى النهائية</h3>
+                                <div style="font-size:0.82rem;color:#fde68a;">ترتيب الأمم الشامل وفق رصيد الغذاء والمعادن والذهب والجيوش والمضائق والمعاهدات</div>
+                            </div>
+                        </div>
+                        <button type="button" class="close-btn" id="simCivRankingCloseBtn" aria-label="إغلاق"><i data-lucide="x" class="lucide-icon"></i></button>
+                    </div>
+                    <div class="sim-teacher-modal-body" style="padding:18px;max-height:75vh;overflow-y:auto;">
+                        <div id="simCivRankingList" style="display:flex;flex-direction:column;gap:12px;">
+                            <!-- Populated via JS -->
                         </div>
                     </div>
                 </div>

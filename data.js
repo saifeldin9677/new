@@ -13317,7 +13317,8 @@ const featureSpanish = {
     "ar": "الكارتوغرافيا والمحتوى",
     "en": "Cartography & Content",
     "ru": "Картография и контент",
-    "uz": "Kartografiya va kontent"
+    "uz": "Kartografiya va kontent",
+    "es": "Cartografía y contenido"
   },
   "termsTabLiability": {
     "ar": "المسؤولية القانونية",
@@ -13675,6 +13676,13 @@ const featureSpanish = {
     "ru": "Название источника, автор, год, страница...",
     "uz": "Manba nomi, muallif, nashr yili, sahifa raqami...",
     "es": "Nombre de referencia, autor, año, página..."
+  },
+  "defaultStudentName": {
+    "ar": "طالب",
+    "en": "Student",
+    "ru": "Студент",
+    "uz": "O‘quvchi",
+    "es": "Estudiante"
   }
 };
   const langs = ['ar', 'en', 'ru', 'uz', 'es'];
@@ -13694,6 +13702,177 @@ const featureSpanish = {
           i18n[l][key] = trans[l];
         }
       }
+    }
+  }
+})();
+
+
+
+// --- Auto-Enriched featureRussian Layers to match Uzbek & Spanish ---
+(function() {
+  const ruPatch = {
+  "biomes": {
+    "Hot desert": "Жаркая пустыня",
+    "Tropical rainforest": "Тропический дождевой лес",
+    "Cold desert": "Холодная пустыня",
+    "Boreal coniferous forest": "Бореальный хвойный лес (тайга)",
+    "Arid desert": "Засушливая пустыня",
+    "Coastal desert": "Прибрежная пустыня",
+    "Semi-arid desert": "Полузасушливая пустыня",
+    "Tropical savanna": "Тропическая саванна",
+    "Temperate deciduous forest": "Умеренный широколиственный лес",
+    "Tundra": "Тундра",
+    "Temperate grassland": "Умеренная степь",
+    "Mediterranean": "Средиземноморский биом",
+    "Montane": "Горный биом"
+  },
+  "earthquakePlates": {
+    "Pacific Plate": "Тихоокеанская плита",
+    "Pacific and North American Plates": "Тихоокеанская и Северо-Американская плиты",
+    "Anatolian and Arabian Plates": "Анатолийская и Аравийская плиты",
+    "Eurasian and Indian Plates": "Евразийская и Индостанская плиты",
+    "Eurasian and African Plates": "Евразийская и Африканская плиты",
+    "Nazca and South American Plates": "Плита Наска и Южно-Американская плита",
+    "Cocos and Caribbean Plates": "Плита Кокос и Карибская плита",
+    "Indo-Australian Plate": "Индо-Австралийская плита"
+  },
+  "volcanoTypes": {
+    "Stratovolcano": "Стратовулкан",
+    "Caldera": "Кальдера",
+    "Shield": "Щитовой вулкан",
+    "Complex": "Сложный вулкан",
+    "Submarine": "Подводный вулкан"
+  },
+  "riverSources": {
+    "Lake Victoria": "Озеро Виктория",
+    "Lake Tana": "Озеро Тана",
+    "Nevado Mismi": "Невадо-Мисми",
+    "Guiana Highlands": "Гвианское нагорье",
+    "Tibetan Plateau": "Тибетское нагорье",
+    "Lake Baikal": "Озеро Байкал",
+    "Valdai Hills": "Валдайская возвышенность",
+    "Altai Mountains": "Алтайские горы",
+    "Black Forest": "Шварцвальд",
+    "Swiss Alps": "Швейцарские Альпы"
+  },
+  "riverMouths": {
+    "Mediterranean Sea": "Средиземное море",
+    "Atlantic Ocean": "Атлантический океан",
+    "Rio de la Plata": "Ла-Плата",
+    "Gulf of Mexico": "Мексиканский залив",
+    "East China Sea": "Восточно-Китайское море",
+    "Bohai Sea": "Бохайское море",
+    "Bay of Bengal": "Бенгальский залив",
+    "Arabian Sea": "Аравийское море",
+    "Arctic Ocean": "Северный Ледовитый океан",
+    "Caspian Sea": "Каспийское море",
+    "Black Sea": "Чёрное море",
+    "North Sea": "Северное море"
+  },
+  "mountainPeaks": {
+    "Mount Everest": "Эверест (Джомолунгма)",
+    "K2": "Чогори (К2)",
+    "Kangchenjunga": "Канченджанга",
+    "Lhotse": "Лхоцзе",
+    "Makalu": "Макалу",
+    "Cho Oyu": "Чо-Ойю",
+    "Dhaulagiri": "Дхаулагири",
+    "Manaslu": "Манаслу",
+    "Nanga Parbat": "Нангапарбат",
+    "Annapurna": "Аннапурна",
+    "Aconcagua": "Аконкагуа",
+    "Denali": "Денали",
+    "Kilimanjaro": "Килиманджаро",
+    "Mont Blanc": "Монблан",
+    "Mount Elbrus": "Эльбрус",
+    "Tirich Mir": "Тиричмир",
+    "Kongur Tagh": "Конгур",
+    "Jengish Chokusu": "Пик Победы"
+  },
+  "oceanCurrentDescriptions": {
+    "Strong warm current carrying warm water from the Gulf of Mexico to the North Atlantic.": "Мощное тёплое течение, переносящее тёплые воды из Мексиканского залива в Северную Атлантику.",
+    "Cold current that flows along the western coast of South America.": "Холодное течение, проходящее вдоль западного побережья Южной Америки.",
+    "Warm ocean current in the western North Pacific Ocean.": "Тёплое океаническое течение в северо-западной части Тихого океана.",
+    "Cold subarctic ocean current that flows south in the northwestern Pacific.": "Холодное субарктическое течение, текущее на юг в северо-западной части Тихого океана.",
+    "Cold ocean current that flows north along the western coast of Southern Africa.": "Холодное океаническое течение, текущее на север вдоль западного побережья Южной Африки.",
+    "Cold ocean current that flows south along the west coast of North America.": "Холодное течение, текущее на юг вдоль западного побережья Северной Америки.",
+    "Cold current that flows south along the Atlantic coast of North America.": "Холодное течение, текущее на юг вдоль атлантического побережья Северной Америки.",
+    "Major eastward-flowing ocean current that encircles Antarctica.": "Мощное океаническое течение, циркулирующее с запада на восток вокруг Антарктиды."
+  },
+  "resourceDescriptions": {
+    "The world's primary fossil fuel.": "Основное ископаемое топливо в мире.",
+    "A cleaner fossil fuel alternative.": "Более экологичная альтернатива ископаемому топливу.",
+    "Historically significant for industrialization.": "Исторически важнейший ресурс для индустриализации.",
+    "Crucial for electrical wiring and electronics.": "Критически важный металл для электропроводки и электроники.",
+    "Precious metal used in currency and jewelry.": "Драгоценный металл, используемый в валютных резервах и ювелирном деле.",
+    "Essential for steel production and construction.": "Основа для производства стали и строительства.",
+    "Used in industrial cutting and luxury goods.": "Используется в промышленной обработке и предметах роскоши.",
+    "Precious metal and industrial conductor.": "Драгоценный металл и превосходный промышленный проводник.",
+    "Vital for stainless steel and batteries.": "Жизненно важен для нержавеющей стали и аккумуляторов.",
+    "Essential for bronze, soldering, and plating.": "Необходим для выплавки бронзы, пайки и антикоррозийных покрытий.",
+    "Used in galvanizing steel and alloys.": "Используется для оцинковки стали и в сплавах.",
+    "Key fertilizer component for agriculture.": "Ключевой компонент удобрений для мирового сельского хозяйства.",
+    "Vital for biodiversity, timber, and climate regulation.": "Жизненно важен для биоразнообразия, древесины и климатического баланса."
+  },
+  "ethnicPopulation": {
+    "Over 1.3 billion": "Более 1,3 млрд",
+    "Over 420 million": "Более 420 млн",
+    "Over 350 million": "Более 350 млн",
+    "Over 900 million": "Более 900 млн",
+    "Over 250 million": "Более 250 млн",
+    "Over 200 million": "Более 200 млн",
+    "Over 100 million": "Более 100 млн",
+    "Over 120 million": "Более 120 млн",
+    "Over 50 million": "Более 50 млн",
+    "Over 40 million": "Более 40 млн",
+    "Over 30 million": "Более 30 млн"
+  },
+  "ethnicLanguages": {
+    "Mandarin Chinese": "Китайский (мандарин)",
+    "Arabic": "Арабский",
+    "Bantu languages": "Языки банту",
+    "Hindi, Urdu, Bengali": "Хинди, урду, бенгали",
+    "Russian, Slavic languages": "Русский, славянские языки",
+    "Spanish, Portuguese": "Испанский, португальский",
+    "English, Germanic languages": "Английский, германские языки",
+    "Japanese": "Японский",
+    "Javanese, Indonesian": "Яванский, индонезийский",
+    "Turkish, Turkic languages": "Турецкий, тюркские языки",
+    "Persian (Farsi)": "Персидский (фарси)"
+  },
+  "ethnicReligions": {
+    "Buddhism, Taoism": "Буддизм, даосизм",
+    "Islam": "Ислам",
+    "Christianity, traditional beliefs": "Христианство, традиционные верования",
+    "Hinduism, Islam": "Индуизм, ислам",
+    "Orthodox Christianity": "Православное христианство",
+    "Catholicism, Protestantism": "Католицизм, протестантизм",
+    "Shinto, Buddhism": "Синтоизм, буддизм"
+  },
+  "disputeCauses": {
+    "Halayeb Triangle": "Треугольник Халаиба",
+    "Kashmir": "Кашмир",
+    "Crimea": "Крым",
+    "Donbas": "Донбасс",
+    "South China Sea": "Южно-Китайское море",
+    "Falkland Islands": "Фолклендские (Мальвинские) острова",
+    "Gibraltar": "Гибралтар",
+    "Kuril Islands": "Курильские острова",
+    "Western Sahara": "Западная Сахара",
+    "Golan Heights": "Голанские высоты",
+    "Abyei": "Абьей"
+  }
+};
+  if (typeof featureRussian !== 'undefined') {
+    for (const [cat, items] of Object.entries(ruPatch)) {
+      if (!featureRussian[cat]) featureRussian[cat] = {};
+      Object.assign(featureRussian[cat], items);
+    }
+  }
+  if (typeof window !== 'undefined' && window.featureRussian) {
+    for (const [cat, items] of Object.entries(ruPatch)) {
+      if (!window.featureRussian[cat]) window.featureRussian[cat] = {};
+      Object.assign(window.featureRussian[cat], items);
     }
   }
 })();

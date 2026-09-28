@@ -1,6 +1,6 @@
-const LEPIDOS_CACHE_VERSION = 'lepidos-v37';
-const LEPIDOS_CACHE_PRECACHE = 'lepidos-precache-v37';
-const LEPIDOS_CACHE_RUNTIME = 'lepidos-runtime-v37';
+const LEPIDOS_CACHE_VERSION = 'lepidos-v38';
+const LEPIDOS_CACHE_PRECACHE = 'lepidos-precache-v38';
+const LEPIDOS_CACHE_RUNTIME = 'lepidos-runtime-v38';
 
 const PRECACHE_URLS = [
     './',
@@ -63,7 +63,13 @@ self.addEventListener('install', function(event) {
     self.skipWaiting();
     event.waitUntil(
         caches.open(LEPIDOS_CACHE_PRECACHE).then(function(cache) {
-            return cache.addAll(PRECACHE_URLS);
+            return Promise.allSettled(
+                PRECACHE_URLS.map(function(url) {
+                    return cache.add(url).catch(function(err) {
+                        console.warn('SW precache item non-fatal error:', url, err);
+                    });
+                })
+            );
         })
     );
 });

@@ -46,7 +46,10 @@
 
         // Must run in CAPTURE phase to intercept before app.js bubble handler
         teacherBtn.addEventListener('click', function(event) {
-            if (isConfirmedTeacher || window.__bypassTeacherAuth || (window.accountSystemState && window.accountSystemState.currentUser && window.accountSystemState.currentUser.role === 'teacher') || localStorage.getItem('isTeacher') === '1' || localStorage.getItem('lepidos_is_teacher') === '1') {
+            var isLocalTest = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+            if (isConfirmedTeacher ||
+                (window.accountSystemState && window.accountSystemState.currentUser && window.accountSystemState.currentUser.role === 'teacher') ||
+                (isLocalTest && (window.__bypassTeacherAuth || localStorage.getItem('isTeacher') === '1' || localStorage.getItem('lepidos_is_teacher') === '1'))) {
                 // Confirmed teacher: let event proceed normally to app.js handler
                 return;
             }

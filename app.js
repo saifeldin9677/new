@@ -672,7 +672,13 @@
         return t.textContent = e, t.innerHTML;
     }
     function Pi(e) {
-        return e ? e.replace(/^(Islamic Republic of|Republic of|State of|Kingdom of|Federal Republic of|Democratic Republic of|Commonwealth of|People's Republic of|United States of America|United Kingdom of Great Britain and Northern Ireland)\s+/i, "").replace(/\s*\(.*\)\s*/g, "").replace(/^Rep\.\s*/i, "").trim() : "";
+        if (!e) return "";
+        var cleaned = e.replace(/\s*\([^)]*\)\s*/g, "").trim();
+        var lower = cleaned.toLowerCase();
+        if (lower === "united states of america" || lower === "united states") return "United States";
+        if (lower.indexOf("united kingdom") !== -1) return "United Kingdom";
+        var res = cleaned.replace(/^(Islamic Republic of|Republic of|State of|Kingdom of|Federal Republic of|Democratic Republic of|Commonwealth of|People's Republic of|Rep\.)\s+/i, "").trim();
+        return res || cleaned;
     }
     window.toggleLayerByName = Si, window.toggleLayer = Ii;
     const qi = {
@@ -14031,7 +14037,7 @@
             // Wire submit button
             if (studentSubmitAssignmentBtn) {
                 studentSubmitAssignmentBtn.onclick = function() {
-                    var studentName = localStorage.getItem("lepidos_student_name_v1") || "أحمد محمود";
+                    var studentName = localStorage.getItem("lepidos_student_name_v1") || (typeof zi === "function" ? zi("defaultStudentName") : null) || "أحمد محمود";
                     var correctCount = 0;
                     questions.forEach(function(q, qIdx) {
                         if (currentStudentDraft.answers[qIdx] === (q.correctIndex !== undefined ? q.correctIndex : 0)) {
@@ -14450,7 +14456,7 @@
                     return;
                 }
 
-                var studentName = localStorage.getItem("lepidos_student_name_v1") || "أحمد محمود";
+                var studentName = localStorage.getItem("lepidos_student_name_v1") || (typeof zi === "function" ? zi("defaultStudentName") : null) || "أحمد محمود";
                 var newInquiry = {
                     id: "inq_" + Date.now(),
                     studentName: studentName,

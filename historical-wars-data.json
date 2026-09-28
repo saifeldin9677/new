@@ -75,9 +75,9 @@
             },
             {
               "c": "Pakistan",
-              "side": "delian",
-              "role": "ally",
-              "polity_id": "macedonian-empire"
+              "side": "persia",
+              "role": "occupied",
+              "polity_id": "achaemenid"
             }
           ],
           "empires": [],
@@ -378,7 +378,7 @@
     },
     {
       "id": "american-rev-1775",
-      "epoch": "nineteenth",
+      "epoch": "early-modern",
       "region": "americas",
       "name_ar": "حرب الاستقلال الأمريكية",
       "name_en": "American Revolutionary War",
@@ -2576,7 +2576,7 @@
     },
     {
       "id": "french-egypt-1798",
-      "epoch": "nineteenth",
+      "epoch": "early-modern",
       "region": "me",
       "name_ar": "الحملة الفرنسية على مصر والشام (نابليون)",
       "name_en": "French Campaign in Egypt and Syria",
@@ -2974,7 +2974,7 @@
     },
     {
       "id": "great-northern-1700",
-      "epoch": "nineteenth",
+      "epoch": "early-modern",
       "region": "europe",
       "name_ar": "حرب الشمال العظمى وصعود روسيا",
       "name_en": "Great Northern War",
@@ -3266,7 +3266,7 @@
     },
     {
       "id": "haitian-rev-1791",
-      "epoch": "nineteenth",
+      "epoch": "early-modern",
       "region": "americas",
       "name_ar": "الثورة الهايتية (ثورة العبيد الكبرى)",
       "name_en": "Haitian Revolution",
@@ -3691,7 +3691,7 @@
     },
     {
       "id": "hussite-1419",
-      "epoch": "early-modern",
+      "epoch": "medieval",
       "region": "europe",
       "name_ar": "حروب الهوسيين (تكتيكات العربات الحربية)",
       "name_en": "Hussite Wars",
@@ -7824,7 +7824,7 @@
     },
     {
       "id": "seven-years-1756",
-      "epoch": "nineteenth",
+      "epoch": "early-modern",
       "region": "world",
       "name_ar": "حرب السنوات السبع (أول حرب كروية)",
       "name_en": "Seven Years' War",
@@ -8436,7 +8436,7 @@
     },
     {
       "id": "spanish-succ-1701",
-      "epoch": "nineteenth",
+      "epoch": "early-modern",
       "region": "europe",
       "name_ar": "حرب الخلافة الإسبانية",
       "name_en": "War of the Spanish Succession",
@@ -8784,7 +8784,7 @@
     },
     {
       "id": "tamerlane-ankara-1402",
-      "epoch": "early-modern",
+      "epoch": "medieval",
       "region": "me",
       "name_ar": "معركة أنقرة وفتوحات تيمورلنك",
       "name_en": "Battle of Ankara (Timur vs Bayezid)",

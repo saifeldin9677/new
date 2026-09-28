@@ -1439,6 +1439,13 @@ header,
     height: 100%;
     min-height: 44px;
 }
+.mobile-search-inner:focus-within {
+    border-color: var(--brand-accent, #38bdf8);
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.4), 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+.mobile-search-inner input:focus-visible {
+    outline: none;
+}
 .mobile-search-clear {
     background: none;
     border: none;

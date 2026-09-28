@@ -43,23 +43,7 @@ console.log('\nDone. Output in dist/');
 // Copy all runtime data JSON files from the source root so the built app can
 // fetch them. Done dynamically (list all *.json except package metadata) so a
 // new/renamed data file can never be silently left out of the deploy again.
-const dataJsonFiles = [
-    'countries-110m.json',
-    'admin-boundaries-data.json',
-    'glaciated-areas-data.json',
-    'admin-name-translations.json',
-    'historical-eras-data.json',
-    'historical-wars-data.json',
-    'religions-history-data.json',
-    'timezone-data.json',
-    'historical-travelers-data.json',
-    'historical-capitals-data.json',
-    'historical-battles-data.json',
-    'historical-wonders-data.json',
-    'historical-sacred-sites-data.json',
-    'historical-terrain-data.json',
-    'microstates-data.json'
-];
+const dataJsonFiles = fs.readdirSync(SRC).filter(f => f.endsWith('.json') && f !== 'package.json' && f !== 'package-lock.json' && !f.startsWith('.'));
 dataJsonFiles.forEach(function(f) {
     if (!fs.existsSync(path.join(SRC, f))) {
         console.log('  MISSING ' + f + ' (expected at source root)');

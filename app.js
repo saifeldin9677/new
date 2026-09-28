@@ -13,6 +13,9 @@
         try {
             localStorage.setItem("theme", e);
         } catch (e) {}
+        if (typeof window.updateThemeOcean === "function") {
+            try { window.updateThemeOcean(); } catch (err) {}
+        }
     }
     window.APP_BUILD && "2026-09-16D" !== window.APP_BUILD && "1" !== sessionStorage.getItem("lepidosBuildChecked") && (sessionStorage.setItem("lepidosBuildChecked", "1"), 
     location.reload()), window.refreshLucideIcons = t, window.switchSection = function(e) {
@@ -29,8 +32,22 @@
     function p() {
         if (d && u) {
             var e = d.getBoundingClientRect();
-            u.style.top = e.bottom + 4 + "px", "rtl" === document.documentElement.dir ? (u.style.right = window.innerWidth - e.right + "px", 
-            u.style.left = "auto") : (u.style.left = e.left + "px", u.style.right = "auto");
+            var menuWidth = u.offsetWidth || 140;
+            var top = e.bottom + 4;
+            var left;
+            if ("rtl" === document.documentElement.dir) {
+                left = e.right - menuWidth;
+                if (left < 8) left = e.left;
+            } else {
+                left = e.left;
+                if (left + menuWidth > window.innerWidth - 8) {
+                    left = e.right - menuWidth;
+                }
+            }
+            left = Math.max(8, Math.min(left, window.innerWidth - menuWidth - 8));
+            u.style.top = top + "px";
+            u.style.left = left + "px";
+            u.style.right = "auto";
         }
     }
     function m(e, t) {
@@ -1141,6 +1158,7 @@
         return i;
     }
     function Sa() {
+        if (!Zn) return;
         Zn.selectAll("*").remove();
         const isLight = "light" === document.documentElement.getAttribute("data-theme");
         const grat = isLight && MAP_COLORS.graticuleLight ? MAP_COLORS.graticuleLight : MAP_COLORS.graticule;
@@ -2830,7 +2848,7 @@
         yo();
     }
     function ho(e, t) {
-        if (e) {
+        if (e && t && t !== e.dataset.i18n) {
             var n = e.querySelector(".btn-text");
             n ? n.textContent = t : e.textContent = t;
         }
@@ -2840,15 +2858,25 @@
             ho(e, zi(e.dataset.i18n));
         }), document.querySelectorAll("[data-i18n-title]").forEach(function(e) {
             var t = e.dataset.i18nTitle;
-            e.title = zi(t), e.setAttribute("data-tooltip", zi(t));
+            var trans = zi(t);
+            if (trans && trans !== t) {
+                e.title = trans;
+                e.setAttribute("data-tooltip", trans);
+            }
         }), document.querySelectorAll(".btn[title]").forEach(function(e) {
             e.getAttribute("data-tooltip") || e.setAttribute("data-tooltip", e.title);
         }), document.querySelectorAll("[data-i18n-placeholder]").forEach(function(e) {
             var t = e.dataset.i18nPlaceholder;
-            e.placeholder = zi(t);
+            var trans = zi(t);
+            if (trans && trans !== t) {
+                e.placeholder = trans;
+            }
         }), document.querySelectorAll("[data-i18n-aria-label]").forEach(function(e) {
             var t = e.dataset.i18nAriaLabel;
-            e.setAttribute("aria-label", zi(t));
+            var trans = zi(t);
+            if (trans && trans !== t) {
+                e.setAttribute("aria-label", trans);
+            }
         }), document.documentElement.setAttribute("lang", "ar" === Ht ? "ar" : "ru" === Ht ? "ru" : "uz" === Ht ? "uz" : "es" === Ht ? "es" : "en"), 
         document.documentElement.setAttribute("dir", "ar" === Ht ? "rtl" : "ltr"), document.title = zi("appName"), 
         document.querySelectorAll(".lang-option").forEach(function(e) {
@@ -4769,14 +4797,17 @@
             Zn = Yn.append("g"), ei = Yn.append("g"), Jn = Yn.append("g").attr("id", "gHistoryLand").style("display", "none"), 
             Qn = Yn.append("g").attr("id", "gCountries"), gn = Yn.append("g").attr("id", "gColorblindPatterns"), 
             Xn = Yn.append("g"), window.syncOceanBackground = function() {
+                var isLight = "light" === document.documentElement.getAttribute("data-theme");
                 var e = document.getElementById("oceanGradient"), t = e ? e.querySelectorAll("stop") : [], n = t[t.length - 1], i = n ? n.getAttribute("stop-color") : null;
-                if (i && "none" !== i) {
-                    var a = document.getElementById("mapContainer");
-                    a && (a.style.backgroundColor = i), document.body.style.backgroundColor = i;
+                if (!i || "none" === i) {
+                    i = isLight ? "#d0e3f4" : "#091520";
                 }
+                var a = document.getElementById("mapContainer");
+                a && (a.style.backgroundColor = i), document.body.style.backgroundColor = i;
             }, window.updateThemeOcean = function() {
                 var isLight = "light" === document.documentElement.getAttribute("data-theme");
-                var stops = isLight && MAP_COLORS.oceanGradientLight ? MAP_COLORS.oceanGradientLight : MAP_COLORS.oceanGradient;
+                var oceanColors = (typeof MAP_COLORS !== "undefined" && MAP_COLORS) || window.MAP_COLORS || {};
+                var stops = isLight && oceanColors.oceanGradientLight ? oceanColors.oceanGradientLight : (oceanColors.oceanGradient || ['#1a334a','#152b3f','#091520','#091520']);
                 var grad = d3.select("#oceanGradient");
                 if (!grad.empty()) {
                     grad.selectAll("stop").data(stops.map(function(e, t) {
@@ -4805,7 +4836,7 @@
             ri = Yn.append("g").attr("id", "authoringMarkersLayer"), oi = Yn.append("g").attr("id", "quizMarkersLayer"), 
             Vn = Yn.append("g").attr("class", "map-transform-group"), [ ti, Zn, ei, Jn, Qn, gn, en, tn, Xn, ii, ni, sn, ai, Ut, $t, Kt, Gt, Yt, Vt, Qt, Xt, Jt, nn, rn, on, ln, cn, dn, un, pn, mn, an, Zt, ri, oi ].forEach(e => Vn.append(() => e.node())), 
             Kn = Ba(e, t), Gn = d3.geoPath(Kn), Gn.pointRadius(xi ? 1.5 : 3);
-        }(), "function" == typeof window.syncOceanBackground && window.syncOceanBackground(), 
+        }(), "function" == typeof window.updateThemeOcean && window.updateThemeOcean(), "function" == typeof window.syncOceanBackground && window.syncOceanBackground(), 
         function() {
             const e = Q.getBoundingClientRect(), t = window.devicePixelRatio || 1;
             Z.width = e.width * t, Z.height = e.height * t, Z.style.width = e.width + "px", 
@@ -5145,475 +5176,664 @@
                 try { sessionStorage.setItem("map_onboarded", "1"); } catch(e) {}
             }
         }(), function() {
-            var e = document.getElementById("onboardOverlay"), t = document.getElementById("onboardGlow"), n = document.getElementById("onboardCard"), i = document.getElementById("onboardCardIcon"), a = document.getElementById("onboardCardTitle"), r = document.getElementById("onboardCardText"), o = document.getElementById("onboardCardDots"), s = document.getElementById("onboardSkip"), l = document.getElementById("onboardNext");
+            var e = document.getElementById("onboardOverlay"),
+                t = document.getElementById("onboardGlow"),
+                n = document.getElementById("onboardCard"),
+                i = document.getElementById("onboardCardIcon"),
+                a = document.getElementById("onboardCardTitle"),
+                r = document.getElementById("onboardCardText"),
+                o = document.getElementById("onboardCardDots"),
+                s = document.getElementById("onboardSkip"),
+                l = document.getElementById("onboardNext");
+
             if (e && t && n) {
-                var c = [ {
-                    getEl: function() {
-                        var e = window.innerWidth <= 768;
-                        return document.querySelector(e ? "#mobileSearchInput" : ".search-box");
-                    },
-                    icon: "🔍",
-                    titleKey: "onboardStep1Title",
-                    textKey: "onboardStep1Text"
-                }, {
-                    getEl: function() {
-                        return document.querySelector("#sectionToggle") || document.querySelector("#sectionGeoBtn");
-                    },
-                    icon: "🗺️",
-                    titleKey: "onboardSectionToggleTitle",
-                    textKey: "onboardSectionToggleText"
-                }, {
-                    getEl: function() {
-                        var e = window.innerWidth <= 768;
-                        return document.querySelector(e ? "#mobileLangToggle" : "#langToggle");
-                    },
-                    icon: "🌐",
-                    titleKey: "onboardStep2Title",
-                    textKey: "onboardStep2Text"
-                }, {
-                    getEl: function() {
-                        return document.querySelector("#themeToggleBtn");
-                    },
-                    icon: "🌓",
-                    titleKey: "onboardThemeToggleTitle",
-                    textKey: "onboardThemeToggleText"
-                }, {
-                    getEl: function() {
-                        return document.querySelector("#colorblindToggle");
-                    },
-                    icon: "👁️",
-                    titleKey: "onboardColorblindTitle",
-                    textKey: "onboardColorblindText"
-                }, {
-                    getEl: function() {
-                        if (window.innerWidth <= 768) return document.querySelector("#mobileToolsBtn");
-                        var e = document.querySelector("#toolsBtn"), t = document.querySelector("#toolsBtn");
-                        if (!e || !t) return null;
-                        var n = e.getBoundingClientRect(), i = t.getBoundingClientRect(), a = document.getElementById("onboardToolZone");
-                        a || ((a = document.createElement("div")).id = "onboardToolZone", a.style.cssText = "position:fixed;pointer-events:none;z-index:-1;", 
-                        document.body.appendChild(a));
-                        var r = Math.min(n.left, i.left), o = Math.min(n.top, i.top), s = Math.max(n.right, i.right) - r, l = Math.max(n.bottom, i.bottom) - o;
-                        return a.style.left = r + "px", a.style.top = o + "px", a.style.width = s + "px", 
-                        a.style.height = l + "px", a;
-                    },
-                    icon: "🔧",
-                    titleKey: "onboardStep3Title",
-                    textKey: "onboardStep3Text"
-                }, {
-                    getEl: function() {
-                        var e = window.innerWidth <= 768;
-                        return document.querySelector(e ? "#mobileModeBtn" : "#modeButtons");
-                    },
-                    icon: "🎨",
-                    titleKey: "onboardStep4Title",
-                    textKey: "onboardStep4Text"
-                }, {
-                    getEl: function() {
-                        return window.innerWidth <= 768 ? document.querySelector("#mobileModeBtn") : document.querySelector("#barDivisionBtn") || document.querySelector("#filterRow");
-                    },
-                    icon: "🎯",
-                    titleKey: "onboardStep5Title",
-                    textKey: "onboardStep5Text"
-                }, {
-                    getEl: function() {
-                        return window.innerWidth <= 768 ? document.querySelector("#mobileLayersBtn") : document.querySelector("#barLayersBtn") || document.querySelector("#layersToggleBtn");
-                    },
-                    icon: "🗂️",
-                    titleKey: "onboardStep6Title",
-                    textKey: "onboardStep6Text"
-                }, {
-                    getEl: function() {
-                        return document.getElementById("legend") || document.querySelector("#mapSvg");
-                    },
-                    icon: "📋",
-                    titleKey: "onboardStep7Title",
-                    textKey: "onboardStep7Text"
-                }, {
-                    getEl: function() {
-                        return document.querySelector(".zoom-controls");
-                    },
-                    icon: "🔍",
-                    titleKey: "onboardStep8Title",
-                    textKey: "onboardStep8Text"
-                }, {
-                    getEl: function() {
-                        var e = document.querySelector(".country-panel");
-                        return e && "none" !== getComputedStyle(e).display ? e : document.querySelector("#mapSvg");
-                    },
-                    icon: "🌍",
-                    titleKey: "onboardStep9Title",
-                    textKey: "onboardStep9Text"
-                }, {
-                    getEl: function() {
-                        var e = window.innerWidth <= 768;
-                        return document.querySelector(e ? "#mobileToolsBtn" : "#quizBtn");
-                    },
-                    icon: "🎯",
-                    titleKey: "onboardStep10Title",
-                    textKey: "onboardStep10Text"
-                }, {
-                    getEl: function() {
-                        var e = window.innerWidth <= 768;
-                        return document.querySelector(e ? "#mobileToolsBtn" : "#globeViewBtn");
-                    },
-                    icon: "🌏",
-                    titleKey: "onboardStep11Title",
-                    textKey: "onboardStep11Text"
-                }, {
-                    getEl: function() {
-                        var e = window.innerWidth <= 768;
-                        return document.querySelector(e ? "#mobileToolsBtn" : "#compareProjectionsBtn");
-                    },
-                    icon: "📐",
-                    titleKey: "onboardStep12Title",
-                    textKey: "onboardStep12Text"
-                }, {
-                    getEl: function() {
-                        var e = window.innerWidth <= 768;
-                        return document.querySelector(e ? "#mobileToolsBtn" : "#annotateBtn");
-                    },
-                    icon: "✏️",
-                    titleKey: "onboardStep13Title",
-                    textKey: "onboardStep13Text"
-                } ], d = [ {
-                    getEl: function() {
-                        window.innerWidth;
-                        return document.querySelector("#historyModeDock") || document.querySelector("#histErasPopoverBtn");
-                    },
-                    icon: "📜",
-                    titleKey: "histOnboard1Title",
-                    textKey: "histOnboard1Text"
-                }, {
-                    getEl: function() {
-                        var e = document.getElementById("historyBottomBar");
-                        if (e) {
-                            if ("none" === getComputedStyle(e).display) {
-                                e.style.display = "flex", e.setAttribute("data-onboard-forced", "true");
-                                var t = document.getElementById("historyEraTimelineWrap");
-                                t && !e.querySelector('.history-bottom-inner > div:not([style*="none"])') && (t.style.display = "flex", 
-                                t.setAttribute("data-onboard-forced", "true"));
-                            }
-                            return e;
-                        }
-                        return document.querySelector("#histErasTimelineWrap") || document.querySelector("#historySliderWrap");
-                    },
-                    icon: "⏳",
-                    titleKey: "histOnboard2Title",
-                    textKey: "histOnboard2Text"
-                }, {
-                    getEl: function() {
-                        return document.getElementById("histTerrainBtn") || document.getElementById("histModernBordersToggle") || document.getElementById("histOpacityControl");
-                    },
-                    icon: "🏔️",
-                    titleKey: "histOnboard3Title",
-                    textKey: "histOnboard3Text"
-                }, {
-                    getEl: function() {
-                        return window.innerWidth <= 768 ? document.querySelector("#mobileLayersBtn") : (document.querySelector("#barLayersBtn") || document.querySelector("#layersToggleBtn"));
-                    },
-                    icon: "🗂️",
-                    titleKey: "histOnboardLayersTitle",
-                    textKey: "histOnboardLayersText"
-                }, {
-                    getEl: function() {
-                        return window.innerWidth <= 768 ? document.querySelector("#mobileToolsBtn") : document.querySelector("#annotateBtn");
-                    },
-                    icon: "✏️",
-                    titleKey: "histOnboardAnnotateTitle",
-                    textKey: "histOnboardAnnotateText"
-                }, {
-                    getEl: function() {
-                        return window.innerWidth <= 768 ? document.querySelector("#mobileToolsBtn") : document.querySelector("#quizBtn");
-                    },
-                    icon: "🧠",
-                    titleKey: "histOnboardQuizTitle",
-                    textKey: "histOnboardQuizText"
-                }, {
-                    getEl: function() {
-                        var e = window.innerWidth <= 768;
-                        return document.querySelector(e ? "#mobileSearchInput" : "#searchInput") || document.querySelector(".search-box");
-                    },
-                    icon: "🔍",
-                    titleKey: "histOnboard4Title",
-                    textKey: "histOnboard4Text"
-                }, {
-                    getEl: function() {
-                        var e = document.getElementById("onboardHistExploreZone");
-                        return e && e.parentNode && e.parentNode.removeChild(e), document.getElementById("mapContainer") || document.getElementById("mapSvg") || document.querySelector("svg");
-                    },
-                    icon: "🏛️",
-                    titleKey: "histOnboard5Title",
-                    textKey: "histOnboard5Text"
-                }, {
-                    getEl: function() {
-                        return document.getElementById("legend");
-                    },
-                    icon: "🎨",
-                    titleKey: "histOnboard6Title",
-                    textKey: "histOnboard6Text"
-                }, {
-                    getEl: function() {
-                        return (window.innerWidth <= 768 ? document.querySelector("#mobileToolsBtn") : document.querySelector("#toolsBtn")) || document.getElementById("toolsDropdown");
-                    },
-                    icon: "📚",
-                    titleKey: "histOnboard7Title",
-                    textKey: "histOnboard7Text"
-                }, {
-                    getEl: function() {
-                        return document.querySelector("#sectionToggle") || document.querySelector("#sectionHistoryBtn");
-                    },
-                    icon: "🗺️",
-                    titleKey: "onboardSectionToggleTitle",
-                    textKey: "onboardSectionToggleText"
-                }, {
-                    getEl: function() {
-                        var e = window.innerWidth <= 768;
-                        return document.querySelector(e ? "#mobileLangToggle" : "#langToggle");
-                    },
-                    icon: "🌐",
-                    titleKey: "histOnboardLangTitle",
-                    textKey: "histOnboardLangText"
-                }, {
-                    getEl: function() {
-                        return document.querySelector("#themeToggleBtn");
-                    },
-                    icon: "🌓",
-                    titleKey: "onboardThemeToggleTitle",
-                    textKey: "onboardThemeToggleText"
-                }, {
-                    getEl: function() {
-                        return document.querySelector("#colorblindToggle");
-                    },
-                    icon: "👁️",
-                    titleKey: "onboardColorblindTitle",
-                    textKey: "onboardColorblindText"
-                } ], cMobile = [
+                var c = [
                     {
-                        getEl: function() { return document.querySelector("#mobileSearchInput") || document.querySelector(".search-box"); },
+                        getEl: function() {
+                            return document.querySelector("#searchInput") || document.querySelector(".search-box");
+                        },
                         icon: "🔍",
                         titleKey: "onboardStep1Title",
                         textKey: "onboardStep1Text"
                     },
                     {
-                        getEl: function() { return document.querySelector("#mobileModeBtn"); },
+                        getEl: function() {
+                            return document.querySelector("#sectionToggle") || document.querySelector("#sectionGeoBtn");
+                        },
+                        icon: "🗺️",
+                        titleKey: "onboardSectionToggleTitle",
+                        textKey: "onboardSectionToggleText"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#langToggle");
+                        },
+                        icon: "🌐",
+                        titleKey: "onboardStep2Title",
+                        textKey: "onboardStep2Text"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#themeToggleBtn");
+                        },
+                        icon: "🌓",
+                        titleKey: "onboardThemeToggleTitle",
+                        textKey: "onboardThemeToggleText"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#colorblindToggle");
+                        },
+                        icon: "👁️",
+                        titleKey: "onboardColorblindTitle",
+                        textKey: "onboardColorblindText"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#toolsBtn");
+                        },
+                        icon: "🔧",
+                        titleKey: "onboardStep3Title",
+                        textKey: "onboardStep3Text"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#modeButtons");
+                        },
                         icon: "🎨",
                         titleKey: "onboardStep4Title",
                         textKey: "onboardStep4Text"
                     },
                     {
-                        getEl: function() { return document.querySelector("#mobileLayersBtn"); },
+                        getEl: function() {
+                            return document.querySelector("#barDivisionBtn") || document.querySelector("#filterRow");
+                        },
+                        icon: "🎯",
+                        titleKey: "onboardStep5Title",
+                        textKey: "onboardStep5Text"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#barLayersBtn") || document.querySelector("#layersToggleBtn");
+                        },
                         icon: "🗂️",
                         titleKey: "onboardStep6Title",
                         textKey: "onboardStep6Text"
                     },
                     {
-                        getEl: function() { return document.querySelector("#mobileDrawerBtn"); },
-                        icon: "⚙️",
-                        titleKey: "onboardMobileDrawerTitle",
-                        textKey: "onboardMobileDrawerText"
+                        getEl: function() {
+                            return document.getElementById("legend");
+                        },
+                        icon: "📋",
+                        titleKey: "onboardStep7Title",
+                        textKey: "onboardStep7Text"
                     },
                     {
-                        getEl: function() { return document.querySelector("#sectionToggle") || document.querySelector("#sectionGeoBtn"); },
-                        icon: "🗺️",
-                        titleKey: "onboardSectionToggleTitle",
-                        textKey: "onboardSectionToggleText"
-                    }
-                ], dMobile = [
+                        getEl: function() {
+                            return document.querySelector(".zoom-controls");
+                        },
+                        icon: "🔍",
+                        titleKey: "onboardStep8Title",
+                        textKey: "onboardStep8Text"
+                    },
                     {
-                        getEl: function() { return document.querySelector("#mobileHistoryNav"); },
+                        getEl: function() {
+                            return document.getElementById("mapContainer") || document.getElementById("mapSvg");
+                        },
+                        icon: "🌍",
+                        titleKey: "onboardStep9Title",
+                        textKey: "onboardStep9Text"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#quizBtn");
+                        },
+                        icon: "🎯",
+                        titleKey: "onboardStep10Title",
+                        textKey: "onboardStep10Text"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#globeViewBtn");
+                        },
+                        icon: "🌏",
+                        titleKey: "onboardStep11Title",
+                        textKey: "onboardStep11Text"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#compareProjectionsBtn");
+                        },
+                        icon: "📐",
+                        titleKey: "onboardStep12Title",
+                        textKey: "onboardStep12Text"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#annotateBtn");
+                        },
+                        icon: "✏️",
+                        titleKey: "onboardStep13Title",
+                        textKey: "onboardStep13Text"
+                    }
+                ],
+                d = [
+                    {
+                        getEl: function() {
+                            return document.querySelector("#historyModeDock") || document.querySelector("#histErasPopoverBtn");
+                        },
                         icon: "📜",
                         titleKey: "histOnboard1Title",
                         textKey: "histOnboard1Text"
                     },
                     {
-                        getEl: function() { return document.getElementById("historyBottomBar") || document.querySelector("#histErasTimelineWrap") || document.querySelector("#historySliderWrap"); },
+                        getEl: function() {
+                            var bar = document.getElementById("historyBottomBar");
+                            if (bar) {
+                                if ("none" === getComputedStyle(bar).display) {
+                                    bar.style.display = "flex";
+                                    bar.setAttribute("data-onboard-forced", "true");
+                                    var wrap = document.getElementById("historyEraTimelineWrap");
+                                    wrap && !bar.querySelector('.history-bottom-inner > div:not([style*="none"])') && (wrap.style.display = "flex", wrap.setAttribute("data-onboard-forced", "true"));
+                                }
+                                return bar;
+                            }
+                            return document.querySelector("#historyEraTimelineWrap") || document.querySelector("#historyBottomBar");
+                        },
                         icon: "⏳",
                         titleKey: "histOnboard2Title",
                         textKey: "histOnboard2Text"
                     },
                     {
-                        getEl: function() { return document.querySelector("#mobileDrawerBtn"); },
+                        getEl: function() {
+                            return document.getElementById("histTerrainBtn") || document.querySelector("#filterRow");
+                        },
+                        icon: "🏔️",
+                        titleKey: "histOnboardTerrainTitle",
+                        textKey: "histOnboardTerrainText"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#barLayersBtn") || document.querySelector("#layersToggleBtn");
+                        },
+                        icon: "🗂️",
+                        titleKey: "histOnboardLayersTitle",
+                        textKey: "histOnboardLayersText"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#annotateBtn");
+                        },
+                        icon: "✏️",
+                        titleKey: "histOnboardAnnotateTitle",
+                        textKey: "histOnboardAnnotateText"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#quizBtn");
+                        },
+                        icon: "🧠",
+                        titleKey: "histOnboardQuizTitle",
+                        textKey: "histOnboardQuizText"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#searchInput") || document.querySelector(".search-box");
+                        },
+                        icon: "🔍",
+                        titleKey: "histOnboardSearchTitle",
+                        textKey: "histOnboardSearchText"
+                    },
+                    {
+                        getEl: function() {
+                            return document.getElementById("mapContainer") || document.getElementById("mapSvg");
+                        },
+                        icon: "🏛️",
+                        titleKey: "histOnboard4Title",
+                        textKey: "histOnboard4Text"
+                    },
+                    {
+                        getEl: function() {
+                            return document.getElementById("legend");
+                        },
+                        icon: "🎨",
+                        titleKey: "histOnboard5Title",
+                        textKey: "histOnboard5Text"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#toolsBtn") || document.getElementById("toolsDropdown");
+                        },
+                        icon: "📚",
+                        titleKey: "histOnboard7Title",
+                        textKey: "histOnboard7Text"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#sectionToggle") || document.querySelector("#sectionHistoryBtn");
+                        },
+                        icon: "🗺️",
+                        titleKey: "onboardSectionToggleTitle",
+                        textKey: "onboardSectionToggleText"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#langToggle");
+                        },
+                        icon: "🌐",
+                        titleKey: "histOnboardLangTitle",
+                        textKey: "histOnboardLangText"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#themeToggleBtn");
+                        },
+                        icon: "🌓",
+                        titleKey: "onboardThemeToggleTitle",
+                        textKey: "onboardThemeToggleText"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#colorblindToggle");
+                        },
+                        icon: "👁️",
+                        titleKey: "onboardColorblindTitle",
+                        textKey: "onboardColorblindText"
+                    }
+                ],
+                cMobile = [
+                    {
+                        getEl: function() {
+                            return document.querySelector("#mobileSearchInput") || document.querySelector(".search-box");
+                        },
+                        icon: "🔍",
+                        titleKey: "onboardStep1Title",
+                        textKey: "onboardStep1Text"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#mobileModeBtn");
+                        },
+                        icon: "🎨",
+                        titleKey: "onboardStep4Title",
+                        textKey: "onboardStep4Text"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#mobileLayersBtn");
+                        },
+                        icon: "🗂️",
+                        titleKey: "onboardStep6Title",
+                        textKey: "onboardStep6Text"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#mobileDrawerBtn");
+                        },
                         icon: "⚙️",
                         titleKey: "onboardMobileDrawerTitle",
                         textKey: "onboardMobileDrawerText"
                     },
                     {
-                        getEl: function() { return document.querySelector("#sectionToggle") || document.querySelector("#sectionHistoryBtn"); },
+                        getEl: function() {
+                            return document.querySelector("#sectionToggle") || document.querySelector("#sectionGeoBtn");
+                        },
                         icon: "🗺️",
                         titleKey: "onboardSectionToggleTitle",
                         textKey: "onboardSectionToggleText"
                     }
-                ], u = 0, p = !1;
+                ],
+                dMobile = [
+                    {
+                        getEl: function() {
+                            return document.querySelector("#mobileHistoryNav");
+                        },
+                        icon: "📜",
+                        titleKey: "histOnboard1Title",
+                        textKey: "histOnboard1Text"
+                    },
+                    {
+                        getEl: function() {
+                            return document.getElementById("historyBottomBar") || document.getElementById("historyEraTimelineWrap");
+                        },
+                        icon: "⏳",
+                        titleKey: "histOnboard2Title",
+                        textKey: "histOnboard2Text"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#mobileDrawerBtn");
+                        },
+                        icon: "⚙️",
+                        titleKey: "onboardMobileDrawerTitle",
+                        textKey: "onboardMobileDrawerText"
+                    },
+                    {
+                        getEl: function() {
+                            return document.querySelector("#sectionToggle") || document.querySelector("#sectionHistoryBtn");
+                        },
+                        icon: "🗺️",
+                        titleKey: "onboardSectionToggleTitle",
+                        textKey: "onboardSectionToggleText"
+                    }
+                ],
+                u = 0,
+                p = !1;
+
                 s.addEventListener("click", function() {
                     y ? B() : _();
-                }), l.addEventListener("click", function() {
-                    y ? function() {
-                        if (++g >= v.length) return void B();
-                        n.style.animation = "none", n.offsetHeight, n.style.animation = "onboardCardIn 0.35s ease both", 
-                        L();
-                    }() : ++u >= w().length ? _() : (n.style.animation = "none", n.offsetHeight, n.style.animation = "onboardCardIn 0.35s ease both", 
-                    x());
-                }), e.addEventListener("click", function(t) {
-                    t.target === e && n && (n.classList.remove("onboard-pulse-hint"), n.offsetWidth, 
-                    n.classList.add("onboard-pulse-hint"));
                 });
+
+                l.addEventListener("click", function() {
+                    if (y) {
+                        if (++g >= v.length) return void B();
+                        n.style.animation = "none";
+                        n.offsetHeight;
+                        n.style.animation = "onboardCardIn 0.35s ease both";
+                        L();
+                    } else {
+                        if (++u >= w().length) return void _();
+                        n.style.animation = "none";
+                        n.offsetHeight;
+                        n.style.animation = "onboardCardIn 0.35s ease both";
+                        x();
+                    }
+                });
+
+                e.addEventListener("click", function(evt) {
+                    evt.target === e && n && (n.classList.remove("onboard-pulse-hint"), n.offsetWidth, n.classList.add("onboard-pulse-hint"));
+                });
+
                 var m = C;
                 window.startOnboarding = function() {
                     m();
                 };
-                var f = void 0 !== Ke && "history" === Ke ? "history" : "geo", h = !1;
+                window.closeOnboarding = _;
+
+                var f = void 0 !== Ke && "history" === Ke ? "history" : "geo",
+                    h = !1;
                 try {
                     h = "1" === localStorage.getItem("onboardDone_" + f) || "1" === localStorage.getItem("onboardCompleted_" + f) || "1" === localStorage.getItem("onboardDone") || "1" === localStorage.getItem("onboardCompleted");
-                } catch (e) {}
+                } catch (err) {}
+
                 h || setTimeout(function() {
                     p || C();
-                }, 800), window.addEventListener("resize", function() {
-                    var e = w();
-                    if (p && e && e[u]) {
-                        var t = e[u].getEl ? e[u].getEl() : null;
-                        t && (E(t), k(t));
+                }, 800);
+
+                window.addEventListener("resize", function() {
+                    var curSteps = w();
+                    if (p && curSteps && curSteps[u]) {
+                        var target = curSteps[u].getEl ? curSteps[u].getEl() : null;
+                        var isMap = target && (target.id === "mapContainer" || target.id === "mapSvg" || target.tagName === "svg");
+                        if (target && !isMap) {
+                            E(target);
+                            k(target);
+                        } else {
+                            n.style.left = "50%";
+                            n.style.top = "50%";
+                            n.style.transform = "translate(-50%,-50%)";
+                        }
+                    } else if (y && v && v[g]) {
+                        var annotTarget = v[g].el ? v[g].el() : null;
+                        if (annotTarget && annotTarget.offsetWidth > 0 && annotTarget.offsetParent) {
+                            E(annotTarget);
+                            k(annotTarget);
+                        } else {
+                            n.style.left = "50%";
+                            n.style.top = "50%";
+                            n.style.transform = "translate(-50%,-50%)";
+                        }
                     }
                 });
-                var y = !1, g = 0, v = [ {
-                    el: function() {
-                        return document.getElementById("annotateBtn");
-                    },
-                    textKey: "annotationTutorialIntro"
-                }, {
-                    el: function() {
-                        return document.getElementById("annotationKindRegion");
-                    },
-                    textKey: "annotationTutorialRegion"
-                }, {
-                    el: function() {
-                        return document.getElementById("annotationKindDraw");
-                    },
-                    textKey: "annotationTutorialDraw"
-                }, {
-                    el: function() {
-                        return document.getElementById("annotationManageBtn");
-                    },
-                    textKey: "annotationTutorialManage"
-                }, {
-                    el: function() {
-                        return document.getElementById("annotationKindPin");
-                    },
-                    textKey: "annotationTutorialPin"
-                } ];
+
+                var y = !1,
+                    g = 0,
+                    v = [
+                        {
+                            el: function() {
+                                return document.getElementById("annotateBtn");
+                            },
+                            textKey: "annotationTutorialIntro"
+                        },
+                        {
+                            el: function() {
+                                return document.getElementById("annotationKindRegion");
+                            },
+                            textKey: "annotationTutorialRegion"
+                        },
+                        {
+                            el: function() {
+                                return document.getElementById("annotationKindDraw");
+                            },
+                            textKey: "annotationTutorialDraw"
+                        },
+                        {
+                            el: function() {
+                                return document.getElementById("annotationManageBtn");
+                            },
+                            textKey: "annotationTutorialManage"
+                        },
+                        {
+                            el: function() {
+                                return document.getElementById("annotationKindPin");
+                            },
+                            textKey: "annotationTutorialPin"
+                        }
+                    ];
+
                 window.startAnnotationTutorial = function() {
-                    e && t && n && (y || (y = !0, g = 0, L(), e.classList.add("active")));
-                }, window.closeAnnotationTutorial = B;
+                    if (e && t && n && !y) {
+                        y = !0;
+                        g = 0;
+                        e.classList.add("active");
+                        L();
+                    }
+                };
+                window.closeAnnotationTutorial = B;
             }
-            function b(e) {
-                var t = document.getElementById("historyBottomBar");
-                if (t) if (void 0 !== Ke && "history" === Ke && 1 === e) {
-                    if ("none" === getComputedStyle(t).display) {
-                        t.style.display = "flex", t.setAttribute("data-onboard-forced", "true");
-                        var n = document.getElementById("historyEraTimelineWrap");
-                        n && !t.querySelector('.history-bottom-inner > div:not([style*="none"])') && (n.style.display = "flex", 
-                        n.setAttribute("data-onboard-forced", "true"));
+
+            function b(stepIdx) {
+                var bar = document.getElementById("historyBottomBar");
+                if (!bar) return;
+                if (void 0 !== Ke && "history" === Ke && 1 === stepIdx) {
+                    if ("none" === getComputedStyle(bar).display) {
+                        bar.style.display = "flex";
+                        bar.setAttribute("data-onboard-forced", "true");
+                        var wrap = document.getElementById("historyEraTimelineWrap");
+                        wrap && !bar.querySelector('.history-bottom-inner > div:not([style*="none"])') && (wrap.style.display = "flex", wrap.setAttribute("data-onboard-forced", "true"));
                     }
-                    var i = document.getElementById("histTimeline");
-                    !i || "none" !== getComputedStyle(i).display && i.children.length || (i.style.display = "block", 
-                    i.innerHTML = '<div class="history-era-timeline-thumb" style="left:38%;"></div><span class="history-tl-dot" style="left:12%;"></span><span class="history-tl-dot active" style="left:38%;"></span><span class="history-tl-dot" style="left:64%;"></span><span class="history-tl-dot" style="left:88%;"></span>', 
-                    i.setAttribute("data-onboard-forced", "true"));
-                    var a = document.getElementById("histCurrentYearBadge");
-                    a && !a.textContent.trim() && (a.textContent = Wc(1250), a.setAttribute("data-onboard-forced", "true"));
+                    var timeline = document.getElementById("histTimeline");
+                    if (timeline && ("none" === getComputedStyle(timeline).display || !timeline.children.length)) {
+                        timeline.style.display = "block";
+                        timeline.innerHTML = '<div class="history-era-timeline-thumb" style="left:38%;"></div><span class="history-tl-dot" style="left:12%;"></span><span class="history-tl-dot active" style="left:38%;"></span><span class="history-tl-dot" style="left:64%;"></span><span class="history-tl-dot" style="left:88%;"></span>';
+                        timeline.setAttribute("data-onboard-forced", "true");
+                    }
+                    var badge = document.getElementById("histCurrentYearBadge");
+                    if (badge && !badge.textContent.trim()) {
+                        badge.textContent = typeof Wc === "function" ? Wc(1250) : "1250 م";
+                        badge.setAttribute("data-onboard-forced", "true");
+                    }
                 } else {
-                    if ("true" === t.getAttribute("data-onboard-forced")) {
-                        t.removeAttribute("data-onboard-forced");
-                        var r = t.querySelector('#historyEraTimelineWrap[data-onboard-forced="true"]');
-                        r && (r.removeAttribute("data-onboard-forced"), r.style.display = "none"), "function" == typeof renderHistoryBar ? renderHistoryBar() : t.style.display = "none";
+                    if ("true" === bar.getAttribute("data-onboard-forced")) {
+                        bar.removeAttribute("data-onboard-forced");
+                        var forcedWrap = bar.querySelector('#historyEraTimelineWrap[data-onboard-forced="true"]');
+                        forcedWrap && (forcedWrap.removeAttribute("data-onboard-forced"), forcedWrap.style.display = "none");
+                        typeof renderHistoryBar === "function" ? renderHistoryBar() : (bar.style.display = "none");
                     }
-                    var o = document.querySelector('#histTimeline[data-onboard-forced="true"]');
-                    o && (o.removeAttribute("data-onboard-forced"), o.innerHTML = "", He || (o.style.display = "none"));
-                    var s = document.querySelector('#histCurrentYearBadge[data-onboard-forced="true"]');
-                    s && (s.removeAttribute("data-onboard-forced"), s.textContent = "");
+                    var forcedTimeline = document.querySelector('#histTimeline[data-onboard-forced="true"]');
+                    forcedTimeline && (forcedTimeline.removeAttribute("data-onboard-forced"), forcedTimeline.innerHTML = "", typeof He !== "undefined" && He || (forcedTimeline.style.display = "none"));
+                    var forcedBadge = document.querySelector('#histCurrentYearBadge[data-onboard-forced="true"]');
+                    forcedBadge && (forcedBadge.removeAttribute("data-onboard-forced"), forcedBadge.textContent = "");
                 }
             }
+
             function w() {
                 var isMob = window.innerWidth <= 768;
                 return void 0 !== Ke && "history" === Ke ? (isMob ? dMobile : d) : (isMob ? cMobile : c);
             }
-            function E(e) {
-                if (e) {
-                    var n = e.getBoundingClientRect();
-                    t.style.left = n.left - 8 + "px", t.style.top = n.top - 8 + "px", t.style.width = n.width + 16 + "px", 
-                    t.style.height = n.height + 16 + "px";
+
+            function E(target) {
+                if (target) {
+                    var rect = target.getBoundingClientRect();
+                    t.style.left = rect.left - 8 + "px";
+                    t.style.top = rect.top - 8 + "px";
+                    t.style.width = rect.width + 16 + "px";
+                    t.style.height = rect.height + 16 + "px";
                 }
             }
-            function k(e) {
-                if (e) {
-                    var t, i, a = e.getBoundingClientRect(), r = n.offsetWidth || 300, o = n.offsetHeight || 200, s = window.innerWidth, l = window.innerHeight;
-                    if (s <= 768) {
-                        if (a.top > l / 2) {
-                            i = 64;
+
+            function k(target) {
+                if (target) {
+                    var posX, posY,
+                        rect = target.getBoundingClientRect(),
+                        cardW = n.offsetWidth || 300,
+                        cardH = n.offsetHeight || 200,
+                        winW = window.innerWidth,
+                        winH = window.innerHeight;
+
+                    if (winW <= 768) {
+                        if (rect.top > winH / 2) {
+                            posY = 64;
                         } else {
-                            i = Math.max(10, l - o - 76);
+                            posY = Math.max(10, winH - cardH - 76);
                         }
-                        t = Math.max(10, Math.min(s / 2 - r / 2, s - r - 10));
-                        n.style.left = t + "px", n.style.top = i + "px";
+                        posX = Math.max(10, Math.min(winW / 2 - cardW / 2, winW - cardW - 10));
+                        n.style.left = posX + "px";
+                        n.style.top = posY + "px";
                         return;
                     }
-                    i = a.bottom + 14, t = a.left + a.width / 2 - r / 2, i + o > l - 10 && (i = a.top - o - 14), 
-                    i < 10 && (i = l / 2 - o / 2, t = s / 2 - r / 2), t < 10 && (t = 10), t + r > s - 10 && (t = s - r - 10), 
-                    n.style.left = t + "px", n.style.top = i + "px";
+
+                    posY = rect.bottom + 14;
+                    posX = rect.left + rect.width / 2 - cardW / 2;
+
+                    if (posY + cardH > winH - 10) {
+                        posY = rect.top - cardH - 14;
+                    }
+                    if (posY < 10) {
+                        posY = winH / 2 - cardH / 2;
+                        posX = winW / 2 - cardW / 2;
+                    }
+                    if (posX < 10) posX = 10;
+                    if (posX + cardW > winW - 10) posX = winW - cardW - 10;
+
+                    n.style.left = posX + "px";
+                    n.style.top = posY + "px";
                 }
             }
+
             function x() {
                 b(u);
-                var e = w()[u], c = e.getEl ? e.getEl() : null;
-                if (c && c.offsetWidth === 0 && c.offsetHeight === 0 && !c.offsetParent) c = null;
-                c ? (t.style.display = "", n.style.transform = "") : (t.style.display = "none", 
-                n.style.left = "50%", n.style.top = "50%", n.style.transform = "translate(-50%,-50%)"), 
-                i.textContent = e.icon, a.textContent = zi(e.titleKey), r.textContent = zi(e.textKey), 
-                o.innerHTML = "", w().forEach(function(e, t) {
-                    var n = document.createElement("span");
-                    n.className = "onboard-dot" + (t === u ? " active" : ""), o.appendChild(n);
-                }), s.textContent = zi("onboardSkip"), u === w().length - 1 ? l.textContent = zi("onboardFinish") : l.textContent = zi("onboardNext"), 
-                l.textContent = "ar" === Ht ? l.textContent.replace("←", "→") : l.textContent.replace("→", "→"), 
-                c && (E(c), k(c));
-            }
-            function _() {
-                b(-1), e.classList.remove("active"), p = !1, t.style.width = "0", t.style.height = "0", 
-                t.style.opacity = "0";
-                var n = void 0 !== Ke && "history" === Ke ? "history" : "geo";
-                try {
-                    localStorage.setItem("onboardDone_" + n, "1");
-                } catch (e) {}
-                try {
-                    localStorage.setItem("onboardCompleted_" + n, "1");
-                } catch (e) {}
-                try {
-                    localStorage.setItem("onboardDone", "1");
-                } catch (e) {}
-                try {
-                    localStorage.setItem("onboardCompleted", "1");
-                } catch (e) {}
-            }
-            function C() {
-                var n = document.getElementById("langOverlay"), i = document.getElementById("sectionPickerOverlay"), a = document.getElementById("projectionOverlay");
-                n && "none" !== getComputedStyle(n).display || i && "none" !== getComputedStyle(i).display || a && a.classList.contains("active") || (u = 0, 
-                e.classList.add("active"), p = !0, t.style.opacity = "1", x());
-            }
-            function L() {
-                var e = v[g];
-                i.textContent = "📝", a.textContent = zi("annotationTutorialTitle"), r.textContent = zi(e.textKey), 
-                o.innerHTML = "", v.forEach(function(e, t) {
-                    var n = document.createElement("span");
-                    n.className = "onboard-dot" + (t === g ? " active" : ""), o.appendChild(n);
-                }), s.textContent = zi("onboardSkip"), l.textContent = g === v.length - 1 ? zi("onboardFinish") : zi("onboardNext"), 
+                var cur = w()[u];
+                if (!cur) return;
+                var target = cur.getEl ? cur.getEl() : null;
+                if (target && target.offsetWidth === 0 && target.offsetHeight === 0 && !target.offsetParent) {
+                    target = null;
+                }
+                if (target) {
+                    t.style.display = "";
+                    t.style.opacity = "1";
+                    n.style.transform = "";
+                    E(target);
+                    k(target);
+                } else {
+                    t.style.display = "none";
+                    n.style.left = "50%";
+                    n.style.top = "50%";
+                    n.style.transform = "translate(-50%,-50%)";
+                }
+
+                i.textContent = cur.icon;
+                a.textContent = zi(cur.titleKey);
+                r.textContent = zi(cur.textKey);
+                o.innerHTML = "";
+                w().forEach(function(item, idx) {
+                    var dot = document.createElement("span");
+                    dot.className = "onboard-dot" + (idx === u ? " active" : "");
+                    o.appendChild(dot);
+                });
+                s.textContent = zi("onboardSkip");
+                u === w().length - 1 ? (l.textContent = zi("onboardFinish")) : (l.textContent = zi("onboardNext"));
                 l.textContent = "ar" === Ht ? l.textContent.replace("←", "→") : l.textContent.replace("→", "→");
-                var t = e.el();
-                t && (E(t), k(t));
+
+                if (target) {
+                    E(target);
+                    k(target);
+                }
             }
+
+            function _() {
+                b(-1);
+                e.classList.remove("active");
+                p = !1;
+                t.style.width = "0";
+                t.style.height = "0";
+                t.style.opacity = "0";
+                var sec = void 0 !== Ke && "history" === Ke ? "history" : "geo";
+                try { localStorage.setItem("onboardDone_" + sec, "1"); } catch(err) {}
+                try { localStorage.setItem("onboardCompleted_" + sec, "1"); } catch(err) {}
+                try { localStorage.setItem("onboardDone", "1"); } catch(err) {}
+                try { localStorage.setItem("onboardCompleted", "1"); } catch(err) {}
+            }
+
+            function C() {
+                var langOver = document.getElementById("langOverlay"),
+                    secOver = document.getElementById("sectionPickerOverlay"),
+                    projOver = document.getElementById("projectionOverlay");
+                if (langOver && "none" !== getComputedStyle(langOver).display) return;
+                if (secOver && "none" !== getComputedStyle(secOver).display) return;
+                if (projOver && projOver.classList.contains("active")) return;
+
+                u = 0;
+                e.classList.add("active");
+                p = !0;
+                t.style.opacity = "1";
+                x();
+            }
+
+            function L() {
+                var cur = v[g];
+                if (!cur) return;
+                i.textContent = "📝";
+                a.textContent = zi("annotationTutorialTitle");
+                r.textContent = zi(cur.textKey);
+                o.innerHTML = "";
+                v.forEach(function(item, idx) {
+                    var dot = document.createElement("span");
+                    dot.className = "onboard-dot" + (idx === g ? " active" : "");
+                    o.appendChild(dot);
+                });
+                s.textContent = zi("onboardSkip");
+                l.textContent = g === v.length - 1 ? zi("onboardFinish") : zi("onboardNext");
+                l.textContent = "ar" === Ht ? l.textContent.replace("←", "→") : l.textContent.replace("→", "→");
+
+                var targetEl = cur.el ? cur.el() : null;
+                if (targetEl && targetEl.offsetWidth === 0 && targetEl.offsetHeight === 0 && !targetEl.offsetParent) {
+                    targetEl = null;
+                }
+                if (targetEl) {
+                    t.style.display = "";
+                    t.style.opacity = "1";
+                    n.style.transform = "";
+                    E(targetEl);
+                    k(targetEl);
+                } else {
+                    t.style.display = "none";
+                    n.style.left = "50%";
+                    n.style.top = "50%";
+                    n.style.transform = "translate(-50%,-50%)";
+                }
+            }
+
             function B() {
                 if (y) {
-                    y = !1, e.classList.remove("active"), t.style.width = "0", t.style.height = "0", 
+                    y = !1;
+                    e.classList.remove("active");
+                    t.style.width = "0";
+                    t.style.height = "0";
                     t.style.opacity = "0";
                     try {
                         localStorage.setItem("annotateExplained", "1");
-                    } catch (e) {}
+                    } catch (err) {}
                 }
             }
         }(), function() {
@@ -11304,7 +11524,12 @@
     }, d.addEventListener("click", function(e) {
         e.stopPropagation();
         var t = document.getElementById("langDropdownMenu");
-        t && (t.classList.contains("visible") || p(), t.classList.toggle("visible"));
+        if (t) {
+            var isOpening = !t.classList.contains("visible");
+            t.classList.toggle("visible", isOpening);
+            d.setAttribute("aria-expanded", isOpening ? "true" : "false");
+            if (isOpening) p();
+        }
     }), window.addEventListener("resize", function() {
         u && u.classList.contains("visible") && p();
     }), document.getElementById("themeToggleBtn").addEventListener("click", function() {
@@ -11328,12 +11553,12 @@
             var t = this.dataset.lang;
             t !== Ht && fo(t), document.querySelectorAll(".lang-dropdown-menu.visible").forEach(function(e) {
                 e.classList.remove("visible");
-            });
+            }), d && d.setAttribute("aria-expanded", "false");
         });
     }), document.addEventListener("click", function() {
         document.querySelectorAll(".lang-dropdown-menu.visible").forEach(function(e) {
             e.classList.remove("visible");
-        });
+        }), d && d.setAttribute("aria-expanded", "false");
     }), document.addEventListener("DOMContentLoaded", function() {
         const e = document.getElementById("toolsBtn"), t = document.getElementById("toolsDropdownMenu");
         e && t ? e.dataset.menuBound || (e.dataset.menuBound = "1", e.addEventListener("click", function(n) {
@@ -11726,6 +11951,7 @@
             if (t && t.classList.contains("visible") || n && n.classList.contains("visible")) return void window.closeEraModals();
         }
         "Escape" === e.key && "function" == typeof window.closeAnnotationTutorial && window.closeAnnotationTutorial(), 
+        "Escape" === e.key && "function" == typeof window.closeOnboarding && window.closeOnboarding(), 
         "Escape" === e.key && Bt && qo(), "Escape" === e.key && document.querySelectorAll(".lang-dropdown-menu.visible").forEach(function(e) {
             e.classList.remove("visible");
         });

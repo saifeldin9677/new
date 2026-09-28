@@ -17,8 +17,7 @@
             try { window.updateThemeOcean(); } catch (err) {}
         }
     }
-    window.APP_BUILD && "2026-09-16D" !== window.APP_BUILD && "1" !== sessionStorage.getItem("lepidosBuildChecked") && (sessionStorage.setItem("lepidosBuildChecked", "1"), 
-    location.reload()), window.refreshLucideIcons = t, window.switchSection = function(e) {
+    window.refreshLucideIcons = t, window.switchSection = function(e) {
         window.applySection && window.applySection(e);
     }, i(function() {
         var e = null;
@@ -7659,6 +7658,26 @@
                     throw De = null, e;
                 })), De);
             }
+            function loadHistoricalPolitiesData() {
+                if (window.HISTORICAL_POLITIES_DATA || window.historicalPolitiesData) {
+                    return Promise.resolve(window.HISTORICAL_POLITIES_DATA || window.historicalPolitiesData);
+                }
+                if (window.__politiesDataLoadingPromise) return window.__politiesDataLoadingPromise;
+                var s = document.createElement("script");
+                s.src = e + "historical-polities-data.js?v=" + (window.APP_BUILD || "2026-09-18A");
+                window.__politiesDataLoadingPromise = new Promise(function(resolve) {
+                    s.onload = function() {
+                        resolve(window.HISTORICAL_POLITIES_DATA || window.historicalPolitiesData);
+                    };
+                    s.onerror = function(err) {
+                        console.warn("Failed to lazy load historical polities data:", err);
+                        resolve(null);
+                    };
+                    document.head.appendChild(s);
+                });
+                return window.__politiesDataLoadingPromise;
+            }
+            window.loadHistoricalPolitiesData = loadHistoricalPolitiesData;
             function Sa() {
                 return Ne && Ne.length && He && Ne.find(function(e) {
                     return e.id === He;
@@ -8070,6 +8089,7 @@
                         typeof lc === "function" && lc();
                         if ("history" === e) {
                             Ke = "history";
+                            typeof loadHistoricalPolitiesData === "function" && loadHistoricalPolitiesData();
                             la(forceQuiz);
                         } else {
                             Ke = "geo";
@@ -12302,12 +12322,14 @@
         if (!e) return Rs(), void qd();
         var t = document.getElementById("langModalTitle");
         t && (t.textContent = "Lepidos Atlas");
-        var n = null;
+        var n = window.__earlySelectedLang || null;
         try {
-            n = localStorage.getItem("mapLang");
+            n = n || localStorage.getItem("mapLang");
         } catch (e) {}
-        if (n && [ "ar", "en", "ru", "uz", "es" ].includes(n)) return e.remove(), Rs(), 
-        void qd();
+        if (n && [ "ar", "en", "ru", "uz", "es" ].includes(n)) {
+            Ht = n;
+            return e.remove(), Rs(), void qd();
+        }
         try {
             localStorage.removeItem("onboardDone"), localStorage.removeItem("onboardDone_geo"), 
             localStorage.removeItem("onboardDone_history"), localStorage.removeItem("onboardCompleted_geo"), 

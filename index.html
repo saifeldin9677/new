@@ -8,6 +8,18 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#14B8A6">
+    <link rel="preload" href="countries-110m.json" as="fetch" crossorigin>
+    <link rel="preload" href="microstates-data.json" as="fetch" crossorigin>
+    <script>
+        (function() {
+            try {
+                var l = localStorage.getItem("mapLang");
+                if (l && ["ar","en","ru","uz","es"].indexOf(l) !== -1) {
+                    document.documentElement.classList.add("has-map-lang");
+                }
+            } catch(e) {}
+        })();
+    </script>
     <link rel="stylesheet" href="fonts/fonts.css">
     <script src="vendor/d3.min.js"></script>
     <script src="vendor/d3-geo-projection.min.js"></script>
@@ -1216,6 +1228,31 @@
                 </div>
             </div>
         </div>
+        <script>
+            (function() {
+                var o = document.getElementById("langOverlay");
+                if (!o) return;
+                try {
+                    var l = localStorage.getItem("mapLang");
+                    if (l && ["ar","en","ru","uz","es"].indexOf(l) !== -1) {
+                        o.style.display = "none";
+                        return;
+                    }
+                } catch(e) {}
+                o.querySelectorAll(".lang-overlay-btn").forEach(function(b) {
+                    b.addEventListener("click", function() {
+                        var lang = this.getAttribute("data-lang");
+                        if (lang) {
+                            try { localStorage.setItem("mapLang", lang); } catch(err) {}
+                            o.style.display = "none";
+                            o.classList.add("hidden");
+                            document.documentElement.classList.add("has-map-lang");
+                            window.__earlySelectedLang = lang;
+                        }
+                    });
+                });
+            })();
+        </script>
 
         <!-- First-run projection explainer -->
         <div class="onboard-overlay" id="projectionOverlay">
@@ -3319,7 +3356,6 @@
 
     <script src="boot.js?v=2026-09-16G"></script>
     <script src="data.js?v=2026-09-16G"></script>
-    <script src="historical-polities-data.js?v=2026-09-16G"></script>
     <script src="app.js?v=2026-09-16G"></script>
     <script src="teacher-auth-gate.js?v=2026-09-16G"></script>
     <script src="account-system.js?v=2026-09-25"></script>

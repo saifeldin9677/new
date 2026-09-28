@@ -3080,11 +3080,12 @@ body.section-geo #mobileHistoryNav {
     opacity: 1;
     transition: opacity var(--dur-base) var(--ease);
 }
+.has-map-lang .lang-overlay,
 .lang-overlay.hidden {
-    opacity: 0;
-    pointer-events: none;
-    visibility: hidden;
-    display: none;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    display: none !important;
 }
 .lang-overlay-content {
     text-align: center;

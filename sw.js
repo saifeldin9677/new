@@ -1,6 +1,6 @@
-const LEPIDOS_CACHE_VERSION = 'lepidos-v38';
-const LEPIDOS_CACHE_PRECACHE = 'lepidos-precache-v38';
-const LEPIDOS_CACHE_RUNTIME = 'lepidos-runtime-v38';
+const LEPIDOS_CACHE_VERSION = 'lepidos-v39';
+const LEPIDOS_CACHE_PRECACHE = 'lepidos-precache-v39';
+const LEPIDOS_CACHE_RUNTIME = 'lepidos-runtime-v39';
 
 const PRECACHE_URLS = [
     './',
@@ -11,22 +11,8 @@ const PRECACHE_URLS = [
     './data.js',
     './teacher-auth-gate.js',
     './account-system.js',
-    './historical-polities-data.js',
     './firebase.js',
     './manifest.json',
-    './admin-boundaries-data.json',
-    './glaciated-areas-data.json',
-    './admin-name-translations.json',
-    './historical-eras-data.json',
-    './historical-wars-data.json',
-    './historical-travelers-data.json',
-    './historical-capitals-data.json',
-    './historical-battles-data.json',
-    './historical-wonders-data.json',
-    './historical-sacred-sites-data.json',
-    './historical-terrain-data.json',
-    './timezone-data.json',
-    './religions-history-data.json',
     './countries-110m.json',
     './microstates-data.json',
     './icon-192.png',
@@ -38,21 +24,9 @@ const PRECACHE_URLS = [
     './vendor/d3-geo-projection.min.js',
     './vendor/topojson-client.min.js',
     './vendor/lucide.min.js',
-    './vendor/html2canvas.min.js',
-    './vendor/jspdf.umd.min.js',
     './fonts/fonts.css',
-    './fonts/inter-cyrillic-ext.woff2',
-    './fonts/inter-cyrillic.woff2',
-    './fonts/inter-greek-ext.woff2',
-    './fonts/inter-greek.woff2',
-    './fonts/inter-latin-ext.woff2',
-    './fonts/inter-latin.woff2',
-    './fonts/inter-vietnamese.woff2',
     './fonts/noto-arabic.woff2',
-    './fonts/noto-latin-ext.woff2',
-    './fonts/noto-latin.woff2',
-    './fonts/noto-math.woff2',
-    './fonts/noto-symbols.woff2'
+    './fonts/inter-latin.woff2'
 ];
 
 const RUNTIME_ORIGINS = [

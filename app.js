@@ -16504,13 +16504,15 @@
             }
         };
 
-        var chokePointsData = [
-            { id: "mandeb", name: "مضيق باب المندب (بوابة البحر الأحمر)", shortName: "مضيق باب المندب", coords: [43.34, 12.58], controller: "desert", bonus: "+30% دفاع بحري وبري" },
-            { id: "hormuz", name: "مضيق هرمز (عقدة تجارة التوابل)", shortName: "مضيق هرمز", coords: [56.45, 26.56], controller: "desert", bonus: "+30% رسوم ترانزيت" },
-            { id: "cilician", name: "بوابات قيليقية (الممر الجبلي للأناضول)", shortName: "بوابات قيليقية", coords: [34.78, 37.28], controller: "anatolia", bonus: "+30% حصانة دفاعية" },
-            { id: "khyber", name: "ممر خيبر (بوابة الهند وآسيا الوسطى)", shortName: "ممر خيبر", coords: [71.15, 34.10], controller: "steppes", bonus: "+30% كمائن فرسان" },
-            { id: "gibraltar", name: "مضيق جبل طارق (معبر الأطلسي والمتوسط)", shortName: "مضيق جبل طارق", coords: [-5.35, 35.98], controller: "mediterranean", bonus: "+30% سيطرة بحرية" }
-        ];
+        var chokePointsData = (typeof window !== "undefined" && window.GeoEngine && window.GeoEngine.CHOKE_POINTS_DATA)
+            ? window.GeoEngine.CHOKE_POINTS_DATA
+            : [
+                { id: "mandeb", name: "مضيق باب المندب (بوابة البحر الأحمر)", shortName: "مضيق باب المندب", coords: [43.34, 12.58], controller: "desert", bonus: "+30% دفاع بحري وبري" },
+                { id: "hormuz", name: "مضيق هرمز (عقدة تجارة التوابل)", shortName: "مضيق هرمز", coords: [56.45, 26.56], controller: "desert", bonus: "+30% رسوم ترانزيت" },
+                { id: "cilician", name: "بوابات قيليقية (الممر الجبلي للأناضول)", shortName: "بوابات قيليقية", coords: [34.78, 37.28], controller: "anatolia", bonus: "+30% حصانة دفاعية" },
+                { id: "khyber", name: "ممر خيبر (بوابة الهند وآسيا الوسطى)", shortName: "ممر خيبر", coords: [71.15, 34.10], controller: "steppes", bonus: "+30% كمائن فرسان" },
+                { id: "gibraltar", name: "مضيق جبل طارق (معبر الأطلسي والمتوسط)", shortName: "مضيق جبل طارق", coords: [-5.35, 35.98], controller: "mediterranean", bonus: "+30% سيطرة بحرية" }
+            ];
 
         var nationsData = {};
 
@@ -16561,6 +16563,10 @@
 
         // --- Sandbox Geopolitical GIS Inference Engine ---
         function inferTerritoryGeoProfile(polygonPoints, customName) {
+            if (typeof window !== "undefined" && window.GeoEngine && typeof window.GeoEngine.inferTerritoryGeoProfile === "function") {
+                var nationCount = (simState && simState.customNations) ? Object.keys(simState.customNations).length + 1 : 1;
+                return window.GeoEngine.inferTerritoryGeoProfile(polygonPoints, customName, nationCount);
+            }
             if (!polygonPoints || polygonPoints.length < 3) return null;
 
             var closedTerritory = polygonPoints.slice();
@@ -17474,24 +17480,33 @@
             var targ = nationsData[targKey];
             if (!orig || !targ || !Array.isArray(orig.coords) || !Array.isArray(targ.coords)) return;
 
-            var distRad = typeof d3 !== "undefined" && d3.geoDistance ? d3.geoDistance(orig.coords, targ.coords) : 0.15;
-            var distKm = Math.max(1, Math.round(distRad * 6371));
-            var friction = 1.0;
-            var frictionLabel = "1.0x (سهول ممهدة وطرق نهرية)";
+            var distKm, frictionLabel, hours, daysHist;
+            if (typeof window !== "undefined" && window.GeoEngine && typeof window.GeoEngine.calculateDistanceAndFriction === "function") {
+                var calc = window.GeoEngine.calculateDistanceAndFriction(orig.coords, targ.coords, origKey, targKey);
+                distKm = calc.distKm;
+                frictionLabel = calc.frictionLabel;
+                hours = calc.hours;
+                daysHist = calc.daysHist;
+            } else {
+                var distRad = typeof d3 !== "undefined" && d3.geoDistance ? d3.geoDistance(orig.coords, targ.coords) : 0.15;
+                distKm = Math.max(1, Math.round(distRad * 6371));
+                var friction = 1.0;
+                frictionLabel = "1.0x (سهول ممهدة وطرق نهرية)";
 
-            if (origKey === "anatolia" || targKey === "anatolia") {
-                friction = 1.35;
-                frictionLabel = "1.35x (ممرات جبلية شديدة الوعورة)";
-            } else if (origKey === "desert" || targKey === "desert") {
-                friction = 1.25;
-                frictionLabel = "1.25x (كثبان رملية ومسافات بين الآبار)";
-            } else if (origKey === "steppes" || targKey === "steppes") {
-                friction = 1.15;
-                frictionLabel = "1.15x (سهوب فسيحة وسرعة فرسان)";
+                if (origKey === "anatolia" || targKey === "anatolia") {
+                    friction = 1.35;
+                    frictionLabel = "1.35x (ممرات جبلية شديدة الوعورة)";
+                } else if (origKey === "desert" || targKey === "desert") {
+                    friction = 1.25;
+                    frictionLabel = "1.25x (كثبان رملية ومسافات بين الآبار)";
+                } else if (origKey === "steppes" || targKey === "steppes") {
+                    friction = 1.15;
+                    frictionLabel = "1.15x (سهوب فسيحة وسرعة فرسان)";
+                }
+
+                hours = Math.max(4, Math.round((distKm * friction) / 25));
+                daysHist = Math.max(1, Math.round(hours / 2));
             }
-
-            var hours = Math.max(4, Math.round((distKm * friction) / 25));
-            var daysHist = Math.max(1, Math.round(hours / 2));
 
             if (simCalcDistanceKm) simCalcDistanceKm.textContent = distKm.toLocaleString() + " كم";
             if (simCalcTerrainFriction) simCalcTerrainFriction.textContent = frictionLabel;
@@ -17500,6 +17515,9 @@
 
         // Civilization Power Index Calculation
         function calculateCivilizationScores() {
+            if (typeof window !== "undefined" && window.GeoEngine && typeof window.GeoEngine.calculateCivilizationScores === "function") {
+                return window.GeoEngine.calculateCivilizationScores(nationsData, chokePointsData);
+            }
             var ranked = Object.keys(nationsData).map(function(k) {
                 var n = nationsData[k];
                 var cpCount = chokePointsData.filter(function(cp) { return cp.controller === n.id; }).length;

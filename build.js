@@ -67,6 +67,10 @@ if (fs.existsSync(path.join(SRC, 'fonts'))) {
 } else {
     console.log('  Skipped fonts/ (directory not found)');
 }
+if (fs.existsSync(path.join(SRC, 'shared'))) {
+    fs.cpSync(path.join(SRC, 'shared'), path.join(DIST, 'shared'), { recursive: true });
+    console.log('  Copied shared/');
+}
 ['boot.js', 'firebase.js', 'teacher-auth-gate.js', 'account-system.js'].forEach(function(f) {
     var srcPath = path.join(SRC, f);
     if (fs.existsSync(srcPath)) {

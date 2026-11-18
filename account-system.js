@@ -6,9 +6,30 @@
 (function() {
     'use strict';
 
+    var _localCurrentUser = null;
+    var _localCurrentOrg = null;
+
     var state = {
-        currentUser: null,
-        currentOrg: null,
+        get currentUser() {
+            if (window.LepidosAccounts && typeof window.LepidosAccounts.getCurrentUser === 'function') {
+                var u = window.LepidosAccounts.getCurrentUser();
+                if (u) return u;
+            }
+            return _localCurrentUser;
+        },
+        set currentUser(u) {
+            _localCurrentUser = u;
+        },
+        get currentOrg() {
+            if (window.LepidosAccounts && typeof window.LepidosAccounts.getInstitution === 'function') {
+                var o = window.LepidosAccounts.getInstitution();
+                if (o) return o;
+            }
+            return _localCurrentOrg;
+        },
+        set currentOrg(o) {
+            _localCurrentOrg = o;
+        },
         activeClassId: null,
         isExpiredDemo: false,
         orgUsers: [],
@@ -38,43 +59,54 @@
             .replace(/"/g, '&quot;');
     }
 
-    async function refreshAccountProfile() {
-        if (typeof window.firebaseAccountGetProfile !== 'function') return;
-        try {
-            var res = await window.firebaseAccountGetProfile();
-            if (res && (res.ok || res.isExpiredDemo)) {
-                if (res.user) {
-                    state.currentUser = res.user;
-                }
-                if (res.org) {
-                    state.currentOrg = res.org;
-                }
-                state.isExpiredDemo = !!res.isExpiredDemo;
-
-                if (state.currentUser && state.currentUser.role === 'teacher') {
-                    var classes = state.currentUser.classIds || [];
-                    if (!state.activeClassId || !classes.includes(state.activeClassId)) {
-                        state.activeClassId = classes[0] || 'default-class';
-                    }
-                }
-
-                if (state.currentUser && state.currentUser.orgId && !state.isExpiredDemo) {
-                    await loadOrgUsers(state.currentUser.orgId);
-                }
-                if (state.currentUser && state.currentUser.role === 'superAdmin') {
-                    await loadAllOrganizations();
-                }
-            } else {
-                state.currentUser = null;
-                state.currentOrg = null;
-                state.isExpiredDemo = false;
-                state.orgUsers = [];
-            }
-        } catch(e) {
-            console.warn('Error refreshing account profile:', e);
+    async function syncStateAndRerender() {
+        if (window.LepidosAccounts && typeof window.LepidosAccounts.isExpiredDemo === 'function') {
+            state.isExpiredDemo = !!window.LepidosAccounts.isExpiredDemo();
         }
+        var curUser = state.currentUser;
+        if (curUser && curUser.role === 'teacher') {
+            var classes = curUser.classIds || [];
+            if (!state.activeClassId || !classes.includes(state.activeClassId)) {
+                state.activeClassId = classes[0] || 'default-class';
+            }
+        }
+
+        if (curUser && curUser.orgId && !state.isExpiredDemo) {
+            await loadOrgUsers(curUser.orgId);
+        }
+        if (curUser && curUser.role === 'superAdmin') {
+            await loadAllOrganizations();
+        }
+
         updateAccountBadge();
         renderAccountModalContent();
+    }
+
+    async function refreshAccountProfile() {
+        if (window.LepidosAccounts && typeof window.LepidosAccounts.refresh === 'function') {
+            try {
+                await window.LepidosAccounts.refresh();
+            } catch(e) {
+                console.warn('[account-system] LepidosAccounts refresh error:', e);
+            }
+        } else if (typeof window.firebaseAccountGetProfile === 'function') {
+            try {
+                var res = await window.firebaseAccountGetProfile();
+                if (res && (res.ok || res.isExpiredDemo)) {
+                    _localCurrentUser = res.user || null;
+                    _localCurrentOrg = res.org || null;
+                    state.isExpiredDemo = !!res.isExpiredDemo;
+                } else {
+                    _localCurrentUser = null;
+                    _localCurrentOrg = null;
+                    state.isExpiredDemo = false;
+                }
+            } catch(e) {
+                console.warn('Error refreshing account profile:', e);
+            }
+        }
+
+        await syncStateAndRerender();
     }
 
     async function loadOrgUsers(orgId) {
@@ -975,7 +1007,11 @@
         }
 
         // Listen for auth state changes
-        if (typeof window.firebaseOnAuthChange === 'function') {
+        if (window.LepidosAccounts && typeof window.LepidosAccounts.onAuthChange === 'function') {
+            window.LepidosAccounts.onAuthChange(function(user, org) {
+                syncStateAndRerender();
+            });
+        } else if (typeof window.firebaseOnAuthChange === 'function') {
             window.firebaseOnAuthChange(function(user) {
                 refreshAccountProfile();
             });

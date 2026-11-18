@@ -8,9 +8,20 @@
     let isConfirmedTeacher = false;
     let authInitialized = false;
 
-    // 1. Wait for Firebase Auth to become ready on window
+    // 1. Wait for Firebase Auth or LepidosAccounts to become ready on window
     function initAuthListener() {
-        if (typeof window.firebaseOnAuthChange === 'function' && typeof window.firebaseCheckIsAccountTeacher === 'function') {
+        if (window.LepidosAccounts && typeof window.LepidosAccounts.onAuthChange === 'function') {
+            window.LepidosAccounts.onAuthChange(async function(user) {
+                currentAuthUser = user;
+                if (!user) {
+                    isConfirmedTeacher = false;
+                    authInitialized = true;
+                    return;
+                }
+                isConfirmedTeacher = window.LepidosAccounts.hasRole('teacher');
+                authInitialized = true;
+            });
+        } else if (typeof window.firebaseOnAuthChange === 'function') {
             window.firebaseOnAuthChange(async function(user) {
                 currentAuthUser = user;
                 if (!user) {
@@ -22,6 +33,9 @@
                     let isAccount = false;
                     if (typeof window.firebaseCheckIsAccountTeacher === 'function') {
                         isAccount = await window.firebaseCheckIsAccountTeacher(user.uid);
+                    }
+                    if (!isAccount && typeof window.firebaseCheckIsTeacher === 'function') {
+                        isAccount = await window.firebaseCheckIsTeacher(user.uid);
                     }
                     isConfirmedTeacher = isAccount;
                 } catch(e) {
@@ -47,8 +61,11 @@
         // Must run in CAPTURE phase to intercept before app.js bubble handler
         teacherBtn.addEventListener('click', function(event) {
             var isLocalTest = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-            if (isConfirmedTeacher ||
-                (window.accountSystemState && window.accountSystemState.currentUser && window.accountSystemState.currentUser.role === 'teacher') ||
+            var hasTeacher = (window.LepidosAccounts && typeof window.LepidosAccounts.hasRole === 'function')
+                ? window.LepidosAccounts.hasRole('teacher')
+                : (isConfirmedTeacher || (window.accountSystemState && window.accountSystemState.currentUser && window.accountSystemState.currentUser.role === 'teacher'));
+
+            if (isConfirmedTeacher || hasTeacher ||
                 (isLocalTest && (window.__bypassTeacherAuth || localStorage.getItem('isTeacher') === '1' || localStorage.getItem('lepidos_is_teacher') === '1'))) {
                 // Confirmed teacher: let event proceed normally to app.js handler
                 return;
@@ -142,11 +159,17 @@
                     return;
                 }
 
-                // Verify teacher status via account system role == teacher
+                // Verify teacher status via account system role == teacher or legacy teachers doc
                 let isTeacher = false;
                 try {
-                    if (typeof window.firebaseCheckIsAccountTeacher === 'function') {
+                    if (window.LepidosAccounts && typeof window.LepidosAccounts.hasRole === 'function') {
+                        isTeacher = window.LepidosAccounts.hasRole('teacher');
+                    }
+                    if (!isTeacher && typeof window.firebaseCheckIsAccountTeacher === 'function') {
                         isTeacher = await window.firebaseCheckIsAccountTeacher(res.uid);
+                    }
+                    if (!isTeacher && typeof window.firebaseCheckIsTeacher === 'function') {
+                        isTeacher = await window.firebaseCheckIsTeacher(res.uid);
                     }
                 } catch(e) {
                     console.warn('Teacher check error:', e);

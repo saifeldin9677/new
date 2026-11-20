@@ -121,44 +121,63 @@
             _currentOrg = null;
         }
 
-        function waitForFirebase(timeoutMs) {
-            return new Promise(function(resolve) {
-                var maxWait = timeoutMs || 6000;
-                var start = Date.now();
+        // ----- Firebase binding -----
+        // Firebase is loaded by a separate module script and can arrive late.
+        // whenReady() waits up to READY_TIMEOUT_MS and then resolves signed-out,
+        // but the module keeps checking slowly in the background and binds as
+        // soon as Firebase appears, so a slow network no longer leaves the whole
+        // session signed-out until the page is reloaded.
+        var READY_TIMEOUT_MS = 6000;
+        var FAST_POLL_MS = 25;
+        var SLOW_POLL_MS = 500;
+        var _firebaseBound = false;
 
-                function check() {
-                    if (typeof host.firebaseOnAuthChange === 'function') {
-                        resolve(true);
-                        return;
-                    }
-                    if (Date.now() - start >= maxWait) {
-                        console.warn('[LepidosAccounts] Timed out waiting for window.firebaseOnAuthChange');
-                        resolve(false);
-                        return;
-                    }
-                    setTimeout(check, 25);
-                }
-                check();
+        function scheduleCheck(fn, ms, background) {
+            var handle = setTimeout(fn, ms);
+            // In Node, a background check must never keep the process alive.
+            if (background && handle && typeof handle.unref === 'function') handle.unref();
+            return handle;
+        }
+
+        function bindFirebaseAuth(settleReady) {
+            if (_firebaseBound) return true;
+            if (typeof host.firebaseOnAuthChange !== 'function') return false;
+            _firebaseBound = true;
+            _firebaseUnsub = host.firebaseOnAuthChange(async function(authUser) {
+                await fetchProfileForAuthUser(authUser);
+                _isReady = true;
+                notifyListeners();
+                settleReady();
             });
+            return true;
         }
 
         function initAuthBinding() {
             if (_readyPromise) return _readyPromise;
 
-            _readyPromise = new Promise(async function(resolve) {
-                var available = await waitForFirebase(6000);
-                if (!available || typeof host.firebaseOnAuthChange !== 'function') {
-                    _isReady = true;
-                    resolve({ user: null, org: null });
-                    return;
+            _readyPromise = new Promise(function(resolve) {
+                var startedAt = Date.now();
+                var settled = false;
+                var timedOut = false;
+
+                function settleReady() {
+                    if (settled) return;
+                    settled = true;
+                    resolve({ user: sanitizeUser(_currentUser), org: sanitizeOrg(_currentOrg) });
                 }
 
-                _firebaseUnsub = host.firebaseOnAuthChange(async function(authUser) {
-                    await fetchProfileForAuthUser(authUser);
-                    _isReady = true;
-                    notifyListeners();
-                    resolve({ user: sanitizeUser(_currentUser), org: sanitizeOrg(_currentOrg) });
-                });
+                function poll() {
+                    if (bindFirebaseAuth(settleReady)) return;
+                    if (!timedOut && Date.now() - startedAt >= READY_TIMEOUT_MS) {
+                        timedOut = true;
+                        console.warn('[LepidosAccounts] Firebase not available after ' + READY_TIMEOUT_MS + ' ms; continuing signed-out and still waiting for it.');
+                        _isReady = true;
+                        settleReady();
+                    }
+                    scheduleCheck(poll, timedOut ? SLOW_POLL_MS : FAST_POLL_MS, timedOut);
+                }
+
+                poll();
             });
 
             return _readyPromise;
@@ -178,10 +197,17 @@
             return sanitizeOrg(_currentOrg);
         }
 
+        // Rank of a role name; -1 for anything that is not a known role.
+        // An unknown or missing name must never be treated as a low known role.
+        function rankOf(roleName) {
+            if (typeof roleName !== 'string') return -1;
+            return Object.prototype.hasOwnProperty.call(ROLE_RANKS, roleName) ? ROLE_RANKS[roleName] : -1;
+        }
+
         function hasRole(roleOrRoles) {
             if (!_currentUser) return false;
             var currentRole = _currentUser.role || 'student';
-            var currentRank = ROLE_RANKS[currentRole] || 20;
+            var currentRank = rankOf(currentRole);
 
             // Handle legacy standalone teacher exception
             if (_currentUser.isLegacyStandaloneTeacher && currentRole !== 'teacher') {
@@ -191,7 +217,10 @@
             var targets = Array.isArray(roleOrRoles) ? roleOrRoles : [roleOrRoles];
             for (var i = 0; i < targets.length; i++) {
                 var targetRole = targets[i];
-                var targetRank = ROLE_RANKS[targetRole] || 20;
+                var targetRank = rankOf(targetRole);
+
+                // Unknown or missing target role: never grants access (fail closed)
+                if (targetRank < 0) continue;
 
                 // Exact role match or inherited privilege via hierarchy
                 if (currentRole === targetRole) return true;

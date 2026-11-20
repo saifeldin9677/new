@@ -1,6 +1,6 @@
-const LEPIDOS_CACHE_VERSION = 'lepidos-v39';
-const LEPIDOS_CACHE_PRECACHE = 'lepidos-precache-v39';
-const LEPIDOS_CACHE_RUNTIME = 'lepidos-runtime-v39';
+const LEPIDOS_CACHE_VERSION = 'lepidos-v40';
+const LEPIDOS_CACHE_PRECACHE = 'lepidos-precache-v40';
+const LEPIDOS_CACHE_RUNTIME = 'lepidos-runtime-v40';
 
 const PRECACHE_URLS = [
     './',
@@ -11,6 +11,8 @@ const PRECACHE_URLS = [
     './data.js',
     './teacher-auth-gate.js',
     './account-system.js',
+    './shared/geo-engine.js',
+    './shared/accounts-core.js',
     './firebase.js',
     './manifest.json',
     './countries-110m.json',
@@ -89,7 +91,7 @@ self.addEventListener('fetch', function(event) {
     // App shell (own HTML/CSS/JS): network-first so deploys reach users
     // immediately; the cached copy is the offline fallback. The pre-cache
     // is refreshed on every successful fetch.
-    var isAppShell = isSameOrigin && /(index\.html|style\.css|app\.js|data\.js|teacher-auth-gate\.js|account-system\.js|sw\.js)$/.test(url.pathname);
+    var isAppShell = isSameOrigin && /(index\.html|style\.css|app\.js|data\.js|teacher-auth-gate\.js|account-system\.js|geo-engine\.js|accounts-core\.js|sw\.js)$/.test(url.pathname);
     if (isAppShell) {
         event.respondWith(
             fetch(request).then(function(response) {
